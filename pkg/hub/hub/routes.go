@@ -75,7 +75,7 @@ func (h *hub) serve(addr string) {
 
 	// ==================== basic auth (TODO) =======================
 	// root auth
-	r.NotFoundHandler = h.basicauth(http.FileServer(http.Dir("/home/aaron/conntroll.github.io")))
+	r.NotFoundHandler = h.basicauth(http.FileServer(http.Dir("conntroll.github.io")))
 
 	// list active agents
 	r.HandleFunc("/api/agents/", h.basicauth(http.HandlerFunc(h.handleAgents))).Methods("GET")
