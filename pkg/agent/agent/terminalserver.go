@@ -47,11 +47,11 @@ func serveTerminal(ln net.Listener, fac types.TtyFactory) {
 			go func() {
 				for {
 					var (
-						re     = <-server.ResizeEvent()
-						width  = int(re.Width)
-						height = int(re.Height)
+						re   = <-server.ResizeEvent()
+						rows = int(re.Height)
+						cols = int(re.Width)
 					)
-					err := term.Resize(width, height)
+					err := term.Resize(rows, cols)
 					if err != nil {
 						log.Println(err)
 						break
