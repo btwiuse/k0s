@@ -1,8 +1,10 @@
 Architecture:
 ```
-SlaveFactory ---\                  /--- Client/Browser
-SlaveFactory ------[Master/Server]----- Client/Browser
-SlaveFactory ---/                  \--- Client/Browser
+(1) SlaveTTY ----- NodeAgent ---\         /--- (1) Client/Browser
+                 /               \       /
+(2) SlaveTTY ---/  NodeAgent ----- [Hub] ----- (2) Client/Cmdline
+                                 /       \
+(3) SlaveTTY ----- NodeAgent ---/         \--- (3) Client/Browser
 ```
 
 GOAL:
@@ -11,8 +13,10 @@ GOAL:
 - [DONE] stream client command output    
 
 Requirements:
-- [DONE] HTTP -> TCP                     
-- [DONE] TCP  -> RPC
+- [DONE] HTTP(S)  ->  TCP                     
+- [DONE] TCP      ->  RPC
+- [DONE] TCP      ->  gRPC
+- [DONE] gRPC    <=>  Websocket
 
 Similar stuff:
 - https://en.wikipedia.org/wiki/TCP_Gender_Changer
