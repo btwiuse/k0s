@@ -12,11 +12,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/gorilla/websocket"
 	"github.com/btwiuse/gotty/assets"
 	"github.com/btwiuse/gotty/utils"
 	"github.com/btwiuse/gotty/wetty"
+	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"modernc.org/httpfs"
 
 	"github.com/btwiuse/invctrl/protocol"
@@ -187,16 +187,41 @@ func wsrelay(w http.ResponseWriter, r *http.Request, slave *Slave) {
 		slaver io.ReadWriter = &utils.WsWrapper{connRemote}
 	)
 
-        // 4
+	// 4
 
 	// todo: notify backend to kill slave
-        err = wetty.Pipe(master, slaver)
-        log.Println("wetty.Pipe: todo ClientDead", err)
-        if _, err := slaver.Write([]byte{wetty.ClientDead}); err != nil {
-        	log.Println("wetty.Pipe:", err)
-        }
-
+	handleConnectionError(slaver, wetty.Pipe(master, slaver))
 	return
+}
+
+// https://github.com/frankdejonge/golang-websocket-example/blob/master/connection.go
+func handleConnectionError(slave io.Writer, err error) {
+	ers := []int{
+	// websocket.CloseNormalClosure,
+	// websocket.CloseGoingAway,
+	// websocket.CloseProtocolError,
+	// websocket.CloseUnsupportedData,
+		websocket.CloseNoStatusReceived,
+	// websocket.CloseAbnormalClosure,
+	// websocket.CloseInvalidFramePayloadData,
+	// websocket.ClosePolicyViolation,
+	// websocket.CloseMessageTooBig,
+	// websocket.CloseMandatoryExtension,
+	// websocket.CloseInternalServerErr,
+	// websocket.CloseServiceRestart,
+	// websocket.CloseTryAgainLater,
+	// websocket.CloseTLSHandshake,
+	}
+
+	if websocket.IsUnexpectedCloseError(err, ers...) {
+		log.Printf("Unexpected error from connection: %q", err)
+	} else {
+		log.Printf("Client close detected: %q, sending ClientDead message to slave", err)
+	}
+
+	if _, err := slave.Write([]byte{wetty.ClientDead}); err != nil {
+		log.Println("wetty.Pipe:", err)
+	}
 }
 
 /*
