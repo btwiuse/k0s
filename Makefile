@@ -4,18 +4,15 @@ GOARCH = $(shell go env GOARCH)
 
 all:
 	go run bin.go
-	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) $(BIN)
-	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) agent
-	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) hub
-	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) client
 
 release:
-	go run bin.go -strip -upx
-	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) $(BIN)
-	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) agent
-	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) hub
-	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) client
+	go run bin.go -strip -upx linux/{amd64,386} darwin/amd64
+
+link:
+	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) bin/$(BIN)
+	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) bin/agent
+	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) bin/hub
+	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) bin/client
 
 clean:
-	rm -rf bin conntroll agent hub client
-
+	rm -r bin

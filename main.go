@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func main() {
@@ -17,12 +18,12 @@ func main() {
 
 	exe = filepath.Base(exe)
 
-	switch exe {
-	case "agent":
+	switch {
+	case strings.HasSuffix(exe, "agent"):
 		agentCmd(os.Args[1:])
-	case "hub":
+	case strings.HasSuffix(exe, "hub"):
 		hubCmd(os.Args[1:])
-	case "client":
+	case strings.HasSuffix(exe, "client"):
 		clientCmd(os.Args[1:])
 	default:
 		if len(os.Args) < 2 {

@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -18,14 +19,10 @@ type Combo struct {
 }
 
 var (
-	Basename  = "conntroll"
-	Path      = "bin"
-	Delimeter = "-"
-	Combos    = []Combo{
-		Combo{"linux", "amd64"},
-		Combo{"linux", "386"},
-		Combo{"darwin", "amd64"},
-	}
+	Basename     = "conntroll"
+	Path         = "bin"
+	Delimeter    = "-"
+	DefaultCombo = Combo{runtime.GOOS, runtime.GOARCH}
 	GlobalEnv = []string{
 		"CGO_ENABLED=0",
 	}
@@ -43,6 +40,17 @@ func (c Combo) Env() []string {
 	)
 }
 
+func parseCombo(osarch string) Combo {
+	parts := strings.Split(osarch, "/")
+	if len(parts) != 2 {
+		log.Fatalln("error parsing combo", osarch)
+	}
+	return Combo{
+		OS:   parts[0],
+		ARCH: parts[1],
+	}
+}
+
 func main() {
 	var (
 		stripFlag bool
@@ -53,7 +61,16 @@ func main() {
 	flag.BoolVar(&upxFlag, "upx", false, "compress binary with upx")
 	flag.Parse()
 
-	for _, c := range Combos {
+	combos := []Combo{}
+	for _, arg := range flag.Args() {
+		combos = append(combos, parseCombo(arg))
+	}
+
+	if len(combos) == 0 {
+		combos = append(combos, DefaultCombo)
+	}
+
+	for _, c := range combos {
 		var (
 			build = exec.Command(
 				"go", "build",
@@ -94,5 +111,22 @@ func main() {
 				log.Fatalln(err)
 			}
 		}
+
+		if c == DefaultCombo {
+			for _, bin := range []string{"conntroll", "agent", "hub", "client"} {
+				src := filepath.Join(Path, fmt.Sprintf("%s-%s-%s", Basename, c.OS, c.ARCH))
+				dst := filepath.Join(Path, bin)
+				ln(src, dst)
+			}
+		}
+	}
+}
+
+func ln(from, to string) {
+	lnf := exec.Command("ln", "-f", "-v", from, to)
+	lnf.Stdout = os.Stdout
+	lnf.Stderr = os.Stderr
+	if err := lnf.Run(); err != nil {
+		log.Fatalln(err)
 	}
 }
