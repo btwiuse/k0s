@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"regexp"
 	"strings"
 	"text/tabwriter"
 
@@ -98,9 +97,10 @@ func (cl *client) Run() error {
 			col := fmt.Sprintf(
 				strings.ReplaceAll("%s %s %s %s %s %s %t %s", " ", "\t"),
 				ag.GetName(), ag.GetUsername(), ag.GetHostname(), ag.GetOS(),
-				ag.GetArch(), ag.GetDistro(), ag.GetAuth(), "@"+pretty.JsonString(ag),
+				ag.GetArch(), ag.GetDistro(), ag.GetAuth(), "@"+ag.GetID(),
 			)
-			fmt.Fprintf(w, col)
+			// log.Println(col)
+			fmt.Fprintln(w, col)
 		}
 		w.Flush()
 		pw.Close()
@@ -125,13 +125,19 @@ func (cl *client) Run() error {
 		"--reverse",
 		"--with-nth", "1",
 		"--header-lines", "1",
-		"--preview-window", "right:40%",
-		"--preview", "echo {}|cut -d @ -f 2-|jq -r .|yj -jy",
 	}
 	fzf.Run(fzf.ParseOptions(args, opts...), "revision")
 
-	uuidMatcher := regexp.MustCompile(`\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b`)
-	idd = strings.TrimSpace(uuidMatcher.FindString(id.String()))
+	if strings.TrimSpace(id.String()) == "" {
+		log.Fatalln("fzf empty result", id, idd)
+	}
+
+	parts := strings.Split(id.String(), "@")
+	if len(parts) == 0 {
+		log.Fatalln("fzf bad output format")
+	}
+
+	idd = strings.TrimSpace(parts[len(parts)-1])
 
 	if len(cl.GetRedir()) > 0 {
 		go cl.RunRedir()
@@ -144,7 +150,7 @@ func (cl *client) Run() error {
 	}
 
 	if idd == "" {
-		os.Exit(0)
+		log.Fatalln("fzf bad result", id, idd)
 	}
 
 	var (

@@ -1675,8 +1675,10 @@ func (t *Terminal) Loop() {
 					case reqRedraw:
 						t.redraw()
 					case reqClose:
-						t.eventBox.Set(EvtReturn, true)
 						exit(func() int {
+							defer func() {
+								t.eventBox.Set(EvtReturn, true)
+							}()
 							if t.output() {
 								return exitOk
 							}

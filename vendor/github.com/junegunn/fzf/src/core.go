@@ -244,7 +244,7 @@ func Run(opts *Options, revision string) {
 
 	canc := false
 	for {
-		delay := false
+		delay := true
 		ticks++
 		input := func() []rune {
 			if opts.Phony {
