@@ -53,6 +53,11 @@ github.com/emirpasic/gods/lists
 github.com/emirpasic/gods/lists/doublylinkedlist
 github.com/emirpasic/gods/maps
 github.com/emirpasic/gods/utils
+# github.com/gdamore/encoding v0.0.0-20151215212835-b23993cbb635
+github.com/gdamore/encoding
+# github.com/gdamore/tcell v0.0.0-20170915061752-0a0db94084df
+github.com/gdamore/tcell
+github.com/gdamore/tcell/encoding
 # github.com/ghodss/yaml v1.0.0
 github.com/ghodss/yaml
 # github.com/go-kit/kit v0.9.0
@@ -86,10 +91,24 @@ github.com/gorilla/mux
 github.com/gorilla/websocket
 # github.com/hodgesds/perf-utils v0.0.7
 github.com/hodgesds/perf-utils
+# github.com/junegunn/fzf v0.0.0-20200124164155-3918c45ceda5
+## explicit
+github.com/junegunn/fzf/src
+github.com/junegunn/fzf/src/algo
+github.com/junegunn/fzf/src/tui
+github.com/junegunn/fzf/src/util
 # github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515
 github.com/kr/logfmt
+# github.com/lucasb-eyer/go-colorful v0.0.0-20170223221042-c900de9dbbc7
+github.com/lucasb-eyer/go-colorful
 # github.com/lufia/iostat v0.0.0-20170605150913-9f7362b77ad3
 github.com/lufia/iostat
+# github.com/mattn/go-isatty v0.0.0-20160806122752-66b8e73f3f5c
+github.com/mattn/go-isatty
+# github.com/mattn/go-runewidth v0.0.0-20170201023540-14207d285c6c
+github.com/mattn/go-runewidth
+# github.com/mattn/go-shellwords v1.0.3
+github.com/mattn/go-shellwords
 # github.com/mattn/go-xmlrpc v0.0.3
 github.com/mattn/go-xmlrpc
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
@@ -229,9 +248,13 @@ golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
 # golang.org/x/text v0.3.0
 golang.org/x/text/encoding
+golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/internal
 golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/encoding/japanese
+golang.org/x/text/encoding/korean
 golang.org/x/text/encoding/simplifiedchinese
+golang.org/x/text/encoding/traditionalchinese
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
