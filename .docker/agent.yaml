@@ -32,7 +32,7 @@ tags:
   # - Raspberry Pi 3B+
   # - ro
   # - demo
-  - alpine docker image
+  - container
 
 # use htpasswd to add "username: bcrypt_hashed_password" entries
 # you may need to run `apt install apache2-utils` first  
