@@ -8,6 +8,8 @@ Type=simple
 User=%i
 WorkingDirectory=/home/%i
 ExecStart=/usr/bin/agent -auth conn:troll -tags systemd
+Restart=on-failure
+RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
