@@ -3,8 +3,13 @@ package wrap
 import (
 	"io"
 	"net"
+	"net/http"
 	"time"
 )
+
+func Hijack(http.ResponseWriter) (net.Conn, error) {
+	return HijackConn(w.(http.Hijacker).Hijack())
+}
 
 func HijackConn(conn net.Conn, buf io.Reader, err error) (net.Conn, error) {
 	return &Conn{

@@ -180,7 +180,7 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 			path = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id+"/rootfs")
 		)
 
-		conn, err := wrap.HijackConn(w.(http.Hijacker).Hijack())
+		conn, err := wrap.Hijack(w)
 		if err != nil {
 			log.Println(err)
 			return
@@ -229,7 +229,7 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 
 func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 	log.Println("handleRPC")
-	conn, err := wrap.HijackConn(w.(http.Hijacker).Hijack())
+	conn, err := wrap.Hijack(w)
 	if err != nil {
 		log.Println("error hijacking:", err)
 		return
@@ -277,7 +277,7 @@ func (h *hub) handleSession(w http.ResponseWriter, r *http.Request) {
 		id   = vars["id"]
 	)
 
-	conn, err := wrap.HijackConn(w.(http.Hijacker).Hijack())
+	conn, err := wrap.Hijack(w)
 	if err != nil {
 		log.Println("error hijacking:", err)
 		return
