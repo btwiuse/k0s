@@ -128,6 +128,7 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	client.Info = pretty.JSONString(v)
 
 	log.Println("connected:", uuid, conn.RemoteAddr(), client.Info)
+	conn.Write([]byte("OK"))
 
 	ClientPool.Add(client)
 	ClientPool.Dump()

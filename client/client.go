@@ -2,12 +2,14 @@ package main
 
 import (
 	"bufio"
+	"io"
+	"io/ioutil"
 	"log"
 	"net"
 	"os"
 	"os/exec"
 	"strings"
-	"time"
+	//"time"
 
 	"github.com/navigaid/pretty"
 )
@@ -68,8 +70,6 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	log.Println("connected:", conn.LocalAddr(), conn.RemoteAddr())
-	time.Sleep(time.Second)
 	conn.Write(
 		[]byte(pretty.JSONString(&Header{
 			BuildCode:  buildCode,
@@ -88,6 +88,11 @@ func main() {
 			CreatedAt:  createdAt,
 		})),
 	)
+	// block until "OK" is received, which indicates header has been successfully read by controller
+	// here the result is discarded and not verified
+	ioutil.ReadAll(io.LimitReader(conn, 2))
+	log.Println("connected:", conn.LocalAddr(), conn.RemoteAddr())
+	//time.Sleep(time.Second)
 	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		line := scanner.Text() //+ "\n"
