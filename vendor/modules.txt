@@ -8,13 +8,13 @@ github.com/alecthomas/template
 github.com/alecthomas/template/parse
 # github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4
 github.com/alecthomas/units
+# github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5
+## explicit
+github.com/armon/go-socks5
 # github.com/beevik/ntp v0.2.0
 github.com/beevik/ntp
 # github.com/beorn7/perks v1.0.1
 github.com/beorn7/perks/quantile
-# github.com/briandowns/spinner v1.8.0
-## explicit
-github.com/briandowns/spinner
 # github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 ## explicit
 github.com/btwiuse/gods/maps/linkedhashmap
@@ -88,6 +88,7 @@ github.com/kr/pty
 # github.com/lufia/iostat v0.0.0-20170605150913-9f7362b77ad3
 github.com/lufia/iostat
 # github.com/mattn/go-colorable v0.1.2
+## explicit
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.8
 github.com/mattn/go-isatty

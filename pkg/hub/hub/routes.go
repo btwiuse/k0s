@@ -104,6 +104,7 @@ func (h *hub) initServer(addr string) {
 	// alternative websocket implementation:
 	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
 	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/socks5", h.handleSocks5).Methods("GET").Queries("id", "{id}")
 
 	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
@@ -166,6 +167,26 @@ func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
 	h.GetAgent(id).AddSessionConn(conn)
 }
 
+func (h *hub) handleSocks5(w http.ResponseWriter, r *http.Request) {
+	var (
+		vars = mux.Vars(r)
+		id   = vars["id"]
+	)
+
+	if !h.Has(id) {
+		log.Println("no such id", id)
+		return
+	}
+
+	conn, err := wrconn(w, r)
+	if err != nil {
+		log.Println("error accepting grpc:", err)
+		return
+	}
+
+	h.GetAgent(id).AddSocks5Conn(conn)
+}
+
 func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars                           = mux.Vars(r)
@@ -194,6 +215,8 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		ag.BasicAuth(http.HandlerFunc(wsRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/rootfs"):
 		ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
+	case strings.HasPrefix(subpath, "/socks5"):
+		ag.BasicAuth(http.HandlerFunc(socks5Relay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):
 		metricsRelay(ag)(w, r)
 	default:

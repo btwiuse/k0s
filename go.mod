@@ -7,7 +7,7 @@ go 1.14
 
 require (
 	github.com/abbot/go-http-auth v0.4.0
-	github.com/briandowns/spinner v1.8.0
+	github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.24
@@ -21,6 +21,7 @@ require (
 	github.com/gorilla/mux v1.7.3
 	github.com/gorilla/websocket v1.4.1
 	github.com/kr/pty v1.1.8
+	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/prometheus/client_golang v1.2.1
 	github.com/prometheus/common v0.7.0
 	github.com/prometheus/node_exporter v0.18.1-0.20200101121053-3ddc82c2d8d1

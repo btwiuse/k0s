@@ -197,3 +197,47 @@ func metricsRelay(ag types.Agent) http.HandlerFunc {
 		}
 	}
 }
+
+func socks5Relay(ag types.Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		wsconn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
+			InsecureSkipVerify: true,
+		})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
+
+		socks5Conn := ag.NewSocks5()
+		defer socks5Conn.Close()
+
+		// io.Copy(io.MultiWriter(os.Stderr, socks5Conn), conn)
+		// io.Copy(os.Stderr, conn)
+
+		/*
+			pr, pw := io.Pipe()
+			go func() {
+				buf := make([]byte, 1)
+				for {
+					pr.Read(buf)
+					fmt.Printf("%x %s\n", buf, string(buf[0]))
+				}
+			}()
+		*/
+
+		go func() {
+			_, err := io.Copy(conn, socks5Conn)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+		}()
+		// _, err = io.Copy(socks5Conn, io.TeeReader(conn, pw))
+		_, err = io.Copy(socks5Conn, conn)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+}

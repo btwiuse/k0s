@@ -63,18 +63,23 @@ type Agent interface {
 	Config
 	Dialer
 	AgentRegister(net.Conn) (RPC, error)
-	Accept() (net.Conn, error)
+	AcceptGrpc() (net.Conn, error)
+	AcceptSocks5() (net.Conn, error)
 	ConnectAndServe() error
 	Serve(RPC) error
-	GRPCServer
+	GrpcChanConn() chan<- net.Conn
+	Socks5ChanConn() chan<- net.Conn
 	// RPC
 	// ServeGRPC() error
 	// Connect() (RPC, error)
 }
 
-type GRPCServer interface {
+type Socks5Server interface {
 	ChanConn() chan<- net.Conn
-	// TtyFactory
+}
+
+type GrpcServer interface {
+	ChanConn() chan<- net.Conn
 }
 
 type TtyFactory interface {
