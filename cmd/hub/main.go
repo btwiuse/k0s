@@ -6,16 +6,16 @@ import (
 
 	//"github.com/davecgh/go-spew/spew"
 
-	"github.com/btwiuse/invctrl/pkg/server"
+	"github.com/btwiuse/invctrl/pkg/hub"
 )
 
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	go server.Input()
+	go hub.Input()
 	addr := ":8000"
 	if len(os.Args) > 1 {
 		addr = os.Args[1]
 	}
-	log.Fatalln(server.NewServer(addr).Run())
+	log.Fatalln(hub.NewServer(addr).Run())
 }
