@@ -57,40 +57,6 @@ func (h *Bash) Execute(req Request, res *Response) error {
 	return err
 }
 
-type Conn struct{}
-
-type ConnRequest struct {
-	Id    string
-	Nonce string
-}
-
-type ConnResponse struct {
-	Message string
-}
-
-func (c *Conn) New(req ConnRequest, res *ConnResponse) error {
-	log.Println("Conn.New called with", req)
-
-	if req.Id == "" {
-		return errors.New("id cannot be empty")
-	}
-	if req.Nonce == "" {
-		return errors.New("nonce cannot be empty")
-	}
-	// log.Println(config.Default)
-	res.Message = "OK"
-	conn := dial.Dial(config.Default)
-	dial.HandshakeAppend(conn, req.Nonce)
-	println("dial.HandshakeAppend")
-	go serveHTTP(conn)
-	return nil
-}
-
-func serveHTTP(conn net.Conn) {
-	conn.Write([]byte("HTTP/1.1 200 OK\r\nContent-Length: 76\r\nContent-Type: text/plain; charset=utf-8\r\nDate: Wed, 19 Jul 1972 19:00:00 GMT\r\n\r\nGo is a general-purpose language designed with systems programming in mind.\n"))
-	// conn.Close()
-}
-
 type WsConn struct{}
 
 type WsConnRequest struct {
@@ -203,7 +169,7 @@ type GRPCConnResponse struct {
 	Message string
 }
 
-func (*GRPCConn) New(req ConnRequest, res *ConnResponse) error {
+func (*GRPCConn) New(req GRPCConnRequest, res *GRPCConnResponse) error {
 	log.Println("GRPCConn.New called with", req)
 
 	if req.Id == "" {

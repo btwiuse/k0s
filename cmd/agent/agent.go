@@ -24,7 +24,7 @@ func main() {
 	log.Println("connected:", c.Id)
 
 	rpcServer := rpc.NewServer()
-	rpcServer.Register(new(rpcimpl.Conn))
+	// rpcServer.Register(new(rpcimpl.Conn))
 	rpcServer.Register(new(rpcimpl.WsConn))
 	rpcServer.Register(new(rpcimpl.GRPCConn))
 	log.Println("serveconn")

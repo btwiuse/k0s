@@ -161,6 +161,7 @@ func NewSlave(w http.ResponseWriter) (*Slave, error) {
 	log.Println("connected:", slave.UUID, slave.RemoteAddr)
 
 	GlobalSlavePool.Add(slave)
+	/*
 	factory := func() (net.Conn, error) {
 		log.Println("infactory")
 		nonce := uuid.New().String()
@@ -181,6 +182,7 @@ func NewSlave(w http.ResponseWriter) (*Slave, error) {
 		return conn, nil
 	}
 	_ = factory
+	*/
 	// log.Println("pool.NewChannelPool")
 	// slave.Pool, err = pool.NewChannelPool(5, 30, factory)
 	// if err != nil {
