@@ -12,18 +12,18 @@ import (
 )
 
 type Agent struct {
-	RPCClient      *rpc.Client `json:"-"`
+	RPCClient      *rpc.Client           `json:"-"`
 	GRPCClientConn chan *grpc.ClientConn `json:"-"`
 
 	// Metadata
-	Id             string `json:"id"`
-	Connected      int64 `json:"connected"`
-	Hostname       string `json:"hostname"`
-	Whoami         string `json:"whoami"`
-	Pwd            string `json:"pwd"`
-	OS             string `json:"os"`
-	ARCH           string `json:"arch"`
-	IP             string `json:"ip"`
+	Id        string `json:"id"`
+	Connected int64  `json:"connected"`
+	Hostname  string `json:"hostname"`
+	Whoami    string `json:"whoami"`
+	Pwd       string `json:"pwd"`
+	OS        string `json:"os"`
+	ARCH      string `json:"arch"`
+	IP        string `json:"ip"`
 	// Info           url.Values
 }
 

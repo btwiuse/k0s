@@ -4,8 +4,8 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
-	"strings"
 	"runtime"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -24,8 +24,8 @@ var (
 	pwd      = strings.TrimSpace(string(run(`pwd`)))
 	whoami   = strings.TrimSpace(string(run(`whoami`)))
 	hostname = strings.TrimSpace(string(run(`hostname`)))
-	goos = runtime.GOOS
-	goarch = runtime.GOARCH
+	goos     = runtime.GOOS
+	goarch   = runtime.GOARCH
 )
 
 type Config struct {

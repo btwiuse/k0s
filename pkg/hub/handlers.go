@@ -216,12 +216,12 @@ func newAgentOrSession(w http.ResponseWriter, r *http.Request) {
 		agent := &Agent{
 			GRPCClientConn: make(chan *grpc.ClientConn),
 			// Meta
-			Id: values["id"][0],
-			Pwd: values["pwd"][0],
-			Whoami: values["whoami"][0],
-			Hostname: values["hostname"][0],
+			Id:        values["id"][0],
+			Pwd:       values["pwd"][0],
+			Whoami:    values["whoami"][0],
+			Hostname:  values["hostname"][0],
 			Connected: time.Now().Unix(),
-			IP: conn.RemoteAddr().String(),
+			IP:        conn.RemoteAddr().String(),
 		}
 		if len(values["os"]) != 0 {
 			agent.OS = values["os"][0]
