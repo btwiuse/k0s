@@ -23,15 +23,13 @@ type Client struct {
 	UUID string
 	Conn net.Conn
 	RPC  *rpc.Client
-	Quit chan struct{}
 	Info string
 }
 
-func NewClient(uuid string, conn net.Conn, quit chan struct{}, rpc *rpc.Client) *Client {
+func NewClient(uuid string, conn net.Conn, rpc *rpc.Client) *Client {
 	return &Client{
 		UUID: uuid,
 		Conn: conn,
-		Quit: quit,
 		RPC:  rpc,
 	}
 }
@@ -119,7 +117,6 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(nil)
 	}
-	quit := make(chan struct{})
 
 	var v interface{}
 	decoder := json.NewDecoder(io.MultiReader(hibuf, conn))
@@ -138,7 +135,6 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	copy := func(dst io.Writer, src io.Reader) {
 		defer ClientPool.Dump()
 		defer log.Println("disconnected:", uuid, conn.RemoteAddr())
-		defer close(quit)
 		defer ClientPool.Del(uuid)
 
 		if _, err := io.Copy(dst, src); err != nil {
@@ -150,7 +146,7 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	rpc.Register(new(protocol.Hello))
 	rpcClient := rpc.NewClient(NewRWC(pr, conn))
 
-	client := NewClient(uuid, conn, quit, rpcClient)
+	client := NewClient(uuid, conn, rpcClient)
 	client.Info = header
 
 	ClientPool.Add(client)
