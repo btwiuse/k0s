@@ -12,16 +12,16 @@ func Hijack(w http.ResponseWriter) (net.Conn, error) {
 
 func HijackConn(conn net.Conn, buf io.Reader, err error) (net.Conn, error) {
 	return &Conn{
-		TCPConn: conn.(*net.TCPConn),
-		Buf:     buf,
+		Conn: conn,
+		Buf:  buf,
 	}, err
 }
 
 type Conn struct {
-	*net.TCPConn // net.Conn
-	Buf          io.Reader
+	net.Conn
+	Buf io.Reader
 }
 
 func (c *Conn) Read(b []byte) (int, error) {
-	return io.MultiReader(c.Buf, c.TCPConn).Read(b)
+	return io.MultiReader(c.Buf, c.Conn).Read(b)
 }
