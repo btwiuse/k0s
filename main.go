@@ -4,24 +4,41 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-	if len(os.Args) < 2 {
-		usage()
-		os.Exit(1)
+
+	exe, err := os.Executable()
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	switch subcmd := os.Args[1]; subcmd {
+	exe = filepath.Base(exe)
+
+	switch exe {
 	case "agent":
-		agentCmd(os.Args[2:])
+		agentCmd(os.Args[1:])
 	case "hub":
-		hubCmd(os.Args[2:])
+		hubCmd(os.Args[1:])
 	case "client":
-		clientCmd(os.Args[2:])
+		clientCmd(os.Args[1:])
 	default:
-		log.Fatalln("unknown subcommand:", subcmd)
+		if len(os.Args) < 2 {
+			usage()
+			os.Exit(1)
+		}
+		switch subcmd := os.Args[1]; subcmd {
+		case "agent":
+			agentCmd(os.Args[2:])
+		case "hub":
+			hubCmd(os.Args[2:])
+		case "client":
+			clientCmd(os.Args[2:])
+		default:
+			log.Fatalln("unknown subcommand:", subcmd)
+		}
 	}
 }
 
