@@ -39,17 +39,19 @@ type hub struct {
 
 	*http.Server
 
-	ba   bool
-	user string
-	pass string
+	ba      bool
+	localui bool // load webui assets from local dir for debugging purpose
+	user    string
+	pass    string
 }
 
 func NewHub(c types.Config) types.Hub {
 	h := &hub{
 		AgentManager: NewAgentManager(),
+		localui:      c.LocalUI(),
 	}
-	h.serve(c.Port())
 	h.user, h.pass, h.ba = c.BasicAuth()
+	h.serve(c.Port())
 	return h
 }
 
@@ -76,13 +78,17 @@ func (h *hub) serve(addr string) {
 
 	// ==================== basic auth (TODO) =======================
 	// root auth
-	// r.NotFoundHandler = h.basicauth(http.FileServer(http.Dir("conntroll.github.io")))
-	mergedAssets := assets.Assets
-	for k, v := range webui.Assets {
-		mergedAssets[k] = v
+
+	if h.localui {
+		r.NotFoundHandler = h.basicauth(http.FileServer(http.Dir("conntroll.github.io")))
+	} else {
+		mergedAssets := assets.Assets
+		for k, v := range webui.Assets {
+			mergedAssets[k] = v
+		}
+		mergedAssets["favicon.ico"] = ""
+		r.NotFoundHandler = h.basicauth(http.FileServer(httpfs.NewFileSystem(mergedAssets, time.Now())))
 	}
-	mergedAssets["favicon.ico"] = ""
-	r.NotFoundHandler = h.basicauth(http.FileServer(httpfs.NewFileSystem(mergedAssets, time.Now())))
 
 	// list active agents
 	r.HandleFunc("/api/agents/", h.basicauth(http.HandlerFunc(h.handleAgents))).Methods("GET")
@@ -151,7 +157,7 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 			wsRelay(ag)(w, r)
 		case strings.HasPrefix(subpath, "/rootfs"):
 			fsRelay(ag)(w, r)
-		case false:
+		case h.localui:
 			staticFileHandler.ServeHTTP(w, r)
 		default:
 			w.Write([]byte(fmt.Sprintf(`<!doctype html>

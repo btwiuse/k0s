@@ -12,6 +12,7 @@ import (
 type Config interface {
 	Port() string
 	UseTLS() bool
+	LocalUI() bool
 	Cert() string
 	Key() string
 	BasicAuth() (string, string, bool)
