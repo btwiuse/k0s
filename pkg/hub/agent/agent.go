@@ -62,6 +62,7 @@ func SetUsername(u string) Opt {
 func SetBasicAuthHash(bahash string) Opt {
 	return func(ag *agent) {
 		ag.bahash = bahash
+		ag.Auth = true
 	}
 }
 
@@ -154,6 +155,7 @@ type agent struct {
 	OS        string `json:"os"`
 	ARCH      string `json:"arch"`
 	IP        string `json:"ip"`
+	Auth      bool   `json:"auth"`
 }
 
 func (ag *agent) BasicAuth(next http.Handler) http.Handler {
