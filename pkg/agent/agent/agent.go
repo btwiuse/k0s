@@ -198,7 +198,7 @@ func (ag *agent) ConnectAndServe() error {
 	var (
 		conn net.Conn
 		err  error
-		path = "/api/terminal"
+		path = "/api/rpc"
 		// unused: "id=" + ag.GetID()
 		query = ""
 	)

@@ -1,6 +1,7 @@
 package client
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -12,14 +13,20 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/btwiuse/pretty"
 	"github.com/txthinking/brook"
 	"k0s.io/conntroll/pkg"
 	types "k0s.io/conntroll/pkg/client"
 	"k0s.io/conntroll/pkg/client/socksdialer"
 	"k0s.io/conntroll/pkg/client/wsdialer"
+	"k0s.io/conntroll/pkg/hub"
+	"k0s.io/conntroll/pkg/hub/agent/info"
 )
 
-var idd string
+var (
+	_   types.Client = (*client)(nil)
+	idd string
+)
 
 func NewClient(c types.Config) types.Client {
 	cl := &client{
@@ -32,7 +39,7 @@ type client struct {
 	types.Config
 }
 
-func (cl *client) Run() error {
+func (cl *client) ListAgents() ([]hub.AgentInfo, error) {
 	var (
 		c  = cl.Config
 		ub = &url.URL{
@@ -40,26 +47,56 @@ func (cl *client) Run() error {
 			Host:   c.GetAddr(),
 			Path:   "/api/agents/list",
 		}
-		u = ub.String()
+		u    = ub.String()
+		ags  = []*info.Info{}
+		agis = []hub.AgentInfo{}
+		resp *http.Response
+		err  error
 	)
-	resp, err := http.Get(u)
+	resp, err = http.Get(u)
 	if err != nil {
-		log.Fatalln(err)
+		return agis, err
 	}
 
-	// id := &bytes.Buffer{}
-	id := &strings.Builder{}
+	var (
+		dec = json.NewDecoder(resp.Body)
+	)
+	err = dec.Decode(&ags)
+	if err != nil {
+		return agis, err
+	}
 
-	head := exec.Command("echo", "agent username hostname os arch distro auth")
-	headStdoutPipe, _ := head.StdoutPipe()
+	for _, j := range ags {
+		agis = append(agis, j)
+	}
 
-	jq := exec.Command("jq", "-cr", `.[]|"\(.name) \(.username) \(.hostname) \(.os) \(.arch) \(.distro) \(.auth) @\(.)"`)
-	jq.Stdin = resp.Body
-	jq.Stderr = os.Stderr
-	jqStdoutPipe, _ := jq.StdoutPipe()
+	return agis, err
+}
+
+func (cl *client) Run() error {
+	var (
+		c        = cl.Config
+		id       = &strings.Builder{}
+		pr, pw   = io.Pipe()
+		ags, err = cl.ListAgents()
+	)
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		fmt.Fprintln(pw, "agent username hostname os arch distro auth")
+		for _, ag := range ags {
+			fmt.Fprintf(pw, "%s %s %s %s %s %s %t %s",
+				ag.GetName(), ag.GetUsername(), ag.GetHostname(), ag.GetOS(),
+				ag.GetArch(), ag.GetDistro(), ag.GetAuth(), "@"+pretty.JsonString(ag),
+			)
+		}
+		pw.Close()
+	}()
 
 	column := exec.Command("column", "-t")
-	column.Stdin = io.MultiReader(headStdoutPipe, jqStdoutPipe)
+	column.Stdin = pr
 	columnStdoutPipe, _ := column.StdoutPipe()
 
 	/*
@@ -85,8 +122,6 @@ func (cl *client) Run() error {
 	fzf.Stdout = id //os.Stdout
 	fzf.Stderr = os.Stderr
 
-	head.Start()
-	jq.Start()
 	column.Start()
 	fzf.Start()
 	fzf.Wait()
@@ -121,12 +156,14 @@ func (cl *client) Run() error {
 	}
 
 	{
-		ub = &url.URL{
-			Scheme: c.GetSchemeWS(),
-			Host:   c.GetAddr(),
-			Path:   fmt.Sprintf("/api/agent/%s/terminal", idd),
-		}
-		u = ub.String()
+		var (
+			ub = &url.URL{
+				Scheme: c.GetSchemeWS(),
+				Host:   c.GetAddr(),
+				Path:   fmt.Sprintf("/api/agent/%s/terminal", idd),
+			}
+			u = ub.String()
+		)
 		terminal(u)
 	}
 	return nil

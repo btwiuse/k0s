@@ -14,5 +14,8 @@ func clientCmd(args []string) {
 
 	cl := client.NewClient(c)
 
-	cl.Run()
+	err := cl.Run()
+	if err != nil {
+		log.Println(err)
+	}
 }

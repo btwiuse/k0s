@@ -7,8 +7,8 @@ import (
 	"time"
 
 	auth "github.com/abbot/go-http-auth"
+	"github.com/btwiuse/pretty"
 	"k0s.io/conntroll/pkg/hub"
-	"k0s.io/conntroll/pkg/hub/agent/info"
 	"k0s.io/conntroll/pkg/hub/session"
 )
 
@@ -16,9 +16,10 @@ var (
 	_ hub.Agent = (*agent)(nil)
 )
 
-func NewAgent(rpc hub.RPC, info hub.Info, xopts ...Opt) hub.Agent {
+func NewAgent(rpc hub.RPC, info hub.AgentInfo) hub.Agent {
 	ag := &agent{
 		rpc:            rpc,
+		created:        time.Now(),
 		SessionManager: NewSessionManager(),
 		// TerminalManager: NewTerminalManager(),
 		termch:    make(chan net.Conn),
@@ -26,39 +27,25 @@ func NewAgent(rpc hub.RPC, info hub.Info, xopts ...Opt) hub.Agent {
 		socks5ch:  make(chan net.Conn),
 		fsch:      make(chan net.Conn),
 		metricsch: make(chan net.Conn),
-		created:   time.Now(),
-		Connected: time.Now().Unix(),
-		IP:        rpc.RemoteIP(),
-		Auth:      new(bool),
 	}
-	ag.fromInfo(info)
 
-	for _, opt := range xopts {
-		opt(ag)
+	info.SetIP(rpc.RemoteIP())
+	ag.AgentInfo = info
+
+	if info.GetAuth() {
+		ag.htpasswd = info.GetHtpasswd()
 	}
 
 	return ag
 }
 
-func (ag *agent) fromInfo(info hub.Info) {
-	ag.ID_ = info.GetID()
-	ag.Name_ = info.GetName()
-	ag.Tags = info.GetTags()
-
-	if htpasswd := info.GetHtpasswd(); len(htpasswd) != 0 {
-		ag.htpasswd = htpasswd
-		*ag.Auth = true
-	}
-
-	ag.OS = info.GetOS()
-	ag.Pwd = info.GetPwd()
-	ag.Arch = info.GetArch()
-	ag.Distro = info.GetDistro()
-	ag.Username = info.GetUsername()
-	ag.Hostname = info.GetHostname()
+func (ag *agent) MarshalJSON() ([]byte, error) {
+	return []byte(pretty.JSONString(ag.AgentInfo)), nil
 }
 
 type agent struct {
+	hub.AgentInfo // `json:"-"` // inherit methods
+
 	hub.SessionManager `json:"-"`
 	// hub.TerminalManager `json:"-"`
 	rpc       hub.RPC
@@ -73,32 +60,6 @@ type agent struct {
 
 	grpcCounter int
 	rpcCounter  int
-
-	info.Info `json:"-"` // inherit methods
-
-	// Metadata, for flatten json output
-
-	ID_       string   `json:"id"`
-	Name_     string   `json:"name"`
-	Tags      []string `json:"tags"`
-	Auth      *bool    `json:"auth,omitempty"`
-	Connected int64    `json:"connected"`
-	IP        string   `json:"ip"`
-
-	OS       string `json:"os"`
-	Pwd      string `json:"pwd"`
-	Arch     string `json:"arch"`
-	Distro   string `json:"distro,omitempty"`
-	Username string `json:"username"`
-	Hostname string `json:"hostname"`
-}
-
-type Opt func(*agent)
-
-func SetIP(ip string) Opt {
-	return func(ag *agent) {
-		ag.IP = ip
-	}
 }
 
 func (ag *agent) NewSocks5() net.Conn {
@@ -151,11 +112,11 @@ func (ag *agent) Time() time.Time {
 }
 
 func (ag *agent) ID() string {
-	return ag.ID_
+	return ag.GetID()
 }
 
 func (ag *agent) Name() string {
-	return ag.Name_
+	return ag.GetName()
 }
 
 // blocks until agent.NewFS reads the channel

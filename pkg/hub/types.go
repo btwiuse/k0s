@@ -11,10 +11,11 @@ import (
 	"k0s.io/conntroll/pkg/api"
 )
 
-type Info interface {
+type AgentInfo interface {
 	GetID() string
 	GetName() string
 	GetTags() []string
+	GetAuth() bool
 	GetHtpasswd() map[string]string
 
 	GetOS() string
@@ -23,6 +24,8 @@ type Info interface {
 	GetDistro() string
 	GetHostname() string
 	GetUsername() string
+
+	SetIP(string)
 }
 
 type Config interface {
@@ -51,6 +54,7 @@ type AgentManager interface {
 }
 
 type Agent interface {
+	AgentInfo
 	pkg.Tider
 	SessionManager
 
