@@ -10,3 +10,4 @@
 # skip verify hub https certificate
 #
 # insecure: false
+cache_credentials: true

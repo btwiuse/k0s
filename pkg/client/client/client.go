@@ -1,9 +1,11 @@
 package client
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -13,6 +15,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/VojtechVitek/yaml-cli/pkg/cli"
 	"github.com/btwiuse/pretty"
 	"github.com/containerd/console"
 	"github.com/txthinking/brook"
@@ -155,7 +158,20 @@ func (cl *client) Run() error {
 		if ag.GetID() == idd {
 			pretty.YAML(ag)
 			if ag.GetAuth() {
-				{
+				var (
+					name  = ag.GetName()
+					creds = c.GetCredentials()
+				)
+				ks, ok := creds[name]
+				if ok && len(ks) > 0 {
+					log.Println("loading cached credentials from", c.GetConfigLocation())
+					// load first entry in map
+					for k, v := range ks {
+						user = k
+						pass = v
+						break
+					}
+				} else {
 					// setup terminal
 					oldState, err := terminal.MakeRaw(0)
 					if err != nil {
@@ -174,6 +190,37 @@ func (cl *client) Run() error {
 						return err
 					}
 					terminal.Restore(0, oldState)
+
+					{
+						set := func(conf string, kv string) {
+							log.Println("saving password to", conf)
+							args := []string{"set", kv}
+							fr, err := os.Open(conf)
+							if err != nil {
+								log.Println(err)
+								return
+							}
+							defer fr.Close()
+
+							b := bytes.NewBuffer(nil)
+							err = cli.Run(b, fr, args)
+							if err != nil {
+								log.Println(err)
+								return
+							}
+
+							err = ioutil.WriteFile(conf, b.Bytes(), 0600)
+							if err != nil {
+								log.Println(err)
+								return
+							}
+						}
+
+						if conf := c.GetConfigLocation(); conf != "" && c.GetCacheCredentials() {
+							// log.Println("yes")
+							set(conf, fmt.Sprintf("credentials.%s.%s: %s", ag.GetName(), user, pass))
+						}
+					}
 				}
 				userinfo = url.UserPassword(user, pass)
 			}

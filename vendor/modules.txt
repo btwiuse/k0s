@@ -1,5 +1,9 @@
 # github.com/BurntSushi/toml v0.3.1
 github.com/BurntSushi/toml
+# github.com/VojtechVitek/yaml-cli v0.0.5
+## explicit
+github.com/VojtechVitek/yaml-cli
+github.com/VojtechVitek/yaml-cli/pkg/cli
 # github.com/abbot/go-http-auth v0.4.0
 ## explicit
 github.com/abbot/go-http-auth
@@ -66,6 +70,8 @@ github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
+# github.com/google/go-cmp v0.3.1
+## explicit
 # github.com/google/uuid v1.1.1
 ## explicit
 github.com/google/uuid
@@ -103,6 +109,7 @@ github.com/miekg/dns
 # github.com/patrickmn/go-cache v2.1.0+incompatible
 github.com/patrickmn/go-cache
 # github.com/pkg/errors v0.8.1
+## explicit
 github.com/pkg/errors
 # github.com/prometheus/client_golang v1.2.1
 ## explicit
@@ -144,6 +151,9 @@ github.com/shurcooL/sanitized_anchor_name
 github.com/siebenmann/go-kstat
 # github.com/soundcloud/go-runit v0.0.0-20150630195641-06ad41a06c4a
 github.com/soundcloud/go-runit/runit
+# github.com/spf13/pflag v1.0.5
+## explicit
+github.com/spf13/pflag
 # github.com/txthinking/brook v0.0.0-20200108130909-e46d71f06441
 ## explicit
 github.com/txthinking/brook
@@ -289,6 +299,9 @@ gopkg.in/russross/blackfriday.v2
 # gopkg.in/yaml.v2 v2.2.7
 ## explicit
 gopkg.in/yaml.v2
+# gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71
+## explicit
+gopkg.in/yaml.v3
 # honnef.co/go/tools v0.0.1-2019.2.3
 honnef.co/go/tools/arg
 honnef.co/go/tools/cmd/staticcheck

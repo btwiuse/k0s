@@ -34,16 +34,31 @@ func (i *arrayFlags) Set(value string) error {
 }
 
 type config struct {
-	Redir        string `json:"-" yaml:"redir"`
-	Socks        string `json:"-" yaml:"socks"`
-	Socks5ToHTTP string `json:"-" yaml:"socks5tohttp"`
-	Verbose      bool   `json:"-" yaml:"verbose"`
-	Insecure     bool   `json:"-" yaml:"insecure"`
-	Hub          string `json:"-" yaml:"hub"`
+	Redir            string                     `json:"-" yaml:"redir"`
+	Socks            string                     `json:"-" yaml:"socks"`
+	Socks5ToHTTP     string                     `json:"-" yaml:"socks5tohttp"`
+	Verbose          bool                       `json:"-" yaml:"verbose"`
+	Insecure         bool                       `json:"-" yaml:"insecure"`
+	CacheCredentials bool                       `json:"-" yaml:"cache_credentials"`
+	Credentials      map[string]client.KeyStore `json:"-" yaml:"credentials"`
+	ConfigLocation   string                     `json:"-" yaml:"-"`
+	Hub              string                     `json:"-" yaml:"hub"`
 
 	uri *url.URL `json:"-"` // where server scheme, host, port, addr are defined
 
 	Version pkg.Version `json:"version" yaml:"-"`
+}
+
+func (c *config) GetConfigLocation() string {
+	return c.ConfigLocation
+}
+
+func (c *config) GetCacheCredentials() bool {
+	return c.CacheCredentials
+}
+
+func (c *config) GetCredentials() map[string]client.KeyStore {
+	return c.Credentials
 }
 
 func (c *config) GetSocks() string {
@@ -116,6 +131,12 @@ func (c *config) GetScheme() string {
 }
 
 type Opt func(c *config)
+
+func SetCacheCredentials(cc bool) Opt {
+	return func(c *config) {
+		c.CacheCredentials = cc
+	}
+}
 
 func SetHub(h string) Opt {
 	return func(c *config) {
@@ -206,8 +227,9 @@ func probeConfigFile() string {
 
 func loadConfigFile(file string) *config {
 	c := &config{
-		Hub:     pkg.DEFAULT_HUB_ADDRESS,
-		Version: version.GetVersion(),
+		Hub:            pkg.DEFAULT_HUB_ADDRESS,
+		Version:        version.GetVersion(),
+		ConfigLocation: file,
 	}
 	if file == "" {
 		return c
@@ -238,7 +260,8 @@ func Parse(args []string) client.Config {
 		verbose      *bool   = fset.Bool("verbose", false, "Verbose log.")
 		version      *bool   = fset.Bool("version", false, "Show agent/hub version info.")
 		insecure     *bool   = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
-		c            *string = fset.String("c", probeConfigFile(), "Config file location.")
+		// cc           *bool   = fset.Bool("cc", false, "Cache credentials.")
+		c *string = fset.String("c", probeConfigFile(), "Config file location.")
 	)
 
 	err := fset.Parse(args)
@@ -247,6 +270,11 @@ func Parse(args []string) client.Config {
 	}
 
 	fset.Visit(func(f *flag.Flag) {
+		/*
+			if f.Name == "cc" {
+				opts = append(opts, SetCacheCredentials(*cc))
+			}
+		*/
 		if f.Name == "hub" {
 			opts = append(opts, SetHub(*hubapi))
 		}

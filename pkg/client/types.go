@@ -27,6 +27,9 @@ type Config interface {
 	GetRedir() string
 	GetSocks() string
 	GetSocks5ToHTTP() string
+	GetCacheCredentials() bool
+	GetCredentials() map[string]KeyStore
+	GetConfigLocation() string
 
 	GetVersion() pkg.Version
 	GetInsecure() bool
@@ -35,3 +38,5 @@ type Config interface {
 type Dialer interface {
 	Dial(string) (net.Conn, error)
 }
+
+type KeyStore map[string]string
