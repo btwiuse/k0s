@@ -24,6 +24,7 @@ type agent struct {
 	types.Dialer
 	// types.RPC
 
+	types.FileServer
 	types.GrpcServer
 	types.Socks5Server
 	// grpcln chan<- net.Conn
@@ -42,6 +43,7 @@ func NewAgent(c types.Config) types.Agent {
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
 	}
+	fileServer := StartFileServer(c)
 	grpcServer := StartGrpcServer(c)
 	socks5Server := StartSocks5Server(c)
 
@@ -49,11 +51,16 @@ func NewAgent(c types.Config) types.Agent {
 		Group:        eg,
 		Config:       c,
 		Dialer:       dialer.New(c),
+		FileServer:   fileServer,
 		GrpcServer:   grpcServer,
 		Socks5Server: socks5Server,
 		id:           id,
 		name:         name,
 	}
+}
+
+func (ag *agent) FSChanConn() chan<- net.Conn {
+	return ag.FileServer.ChanConn()
 }
 
 func (ag *agent) GrpcChanConn() chan<- net.Conn {
@@ -62,6 +69,20 @@ func (ag *agent) GrpcChanConn() chan<- net.Conn {
 
 func (ag *agent) Socks5ChanConn() chan<- net.Conn {
 	return ag.Socks5Server.ChanConn()
+}
+
+func (ag *agent) AcceptFS() (net.Conn, error) {
+	var (
+		conn net.Conn
+		err  error
+	)
+
+	conn, err = ag.Dial("/api/fs?id=" + ag.GetID())
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
 }
 
 func (ag *agent) AcceptSocks5() (net.Conn, error) {

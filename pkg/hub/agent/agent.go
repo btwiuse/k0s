@@ -22,6 +22,7 @@ func NewAgent(rpc hub.RPC, info hub.Info, xopts ...Opt) hub.Agent {
 		SessionManager: NewSessionManager(),
 		sch:            make(chan hub.Session),
 		socks5ch:       make(chan net.Conn),
+		fsch:           make(chan net.Conn),
 		created:        time.Now(),
 		Connected:      time.Now().Unix(),
 		IP:             rpc.RemoteIP(),
@@ -59,6 +60,7 @@ type agent struct {
 	rpc                hub.RPC
 	sch                chan hub.Session
 	socks5ch           chan net.Conn
+	fsch               chan net.Conn
 
 	created  time.Time
 	htpasswd map[string]string
@@ -98,6 +100,11 @@ func (ag *agent) NewSocks5() net.Conn {
 	return <-ag.socks5ch
 }
 
+func (ag *agent) NewFS() net.Conn {
+	ag.rpc.NewFS()
+	return <-ag.fsch
+}
+
 func (ag *agent) NewSession() hub.Session {
 	ag.rpc.NewSession()
 	return <-ag.sch
@@ -135,7 +142,12 @@ func (ag *agent) Name() string {
 	return ag.Name_
 }
 
-// blocks until agent.NewSession reads the channel
+// blocks until agent.NewFS reads the channel
+func (ag *agent) AddFSConn(conn net.Conn) {
+	ag.fsch <- conn
+}
+
+// blocks until agent.NewSocks5 reads the channel
 func (ag *agent) AddSocks5Conn(conn net.Conn) {
 	ag.socks5ch <- conn
 }

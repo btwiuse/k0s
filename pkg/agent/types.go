@@ -63,15 +63,24 @@ type Agent interface {
 	Config
 	Dialer
 	AgentRegister(net.Conn) (RPC, error)
+
+	AcceptFS() (net.Conn, error)
 	AcceptGrpc() (net.Conn, error)
 	AcceptSocks5() (net.Conn, error)
+
 	ConnectAndServe() error
 	Serve(RPC) error
+
+	FSChanConn() chan<- net.Conn
 	GrpcChanConn() chan<- net.Conn
 	Socks5ChanConn() chan<- net.Conn
 	// RPC
 	// ServeGRPC() error
 	// Connect() (RPC, error)
+}
+
+type FileServer interface {
+	ChanConn() chan<- net.Conn
 }
 
 type Socks5Server interface {

@@ -1,5 +1,3 @@
-// +build nhooyr
-
 package hub
 
 import (
