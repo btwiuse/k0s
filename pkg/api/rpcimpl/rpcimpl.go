@@ -44,6 +44,6 @@ func (c *Session) New(req SessionRequest, res *SessionResponse) error {
 	onAccept := func() {
 		log.Println("Gender Change: TCP Client -> gRPC Server")
 	}
-	grpcServer.Serve(&wrap.SingleListener{conn, onAccept})
+	grpcServer.Serve(wrap.NewSingleListener(conn, onAccept))
 	return nil
 }
