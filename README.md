@@ -1,10 +1,10 @@
 Architecture:
 ```
-(1) SlaveTTY ----- NodeAgent ---\         /--- (1) Client/Browser
-                 /               \       /
-(2) SlaveTTY ---/  NodeAgent ----- [Hub] ----- (2) Client/Cmdline
-                                 /       \
-(3) SlaveTTY ----- NodeAgent ---/         \--- (3) Client/Browser
+(1) Session ----- NodeAgent ---\         /--- (1) Browser
+                /               \       /
+(2) Session ---/  NodeAgent ----- [Hub] ----- (2) Cmdline
+                                /       \
+(3) Session ----- NodeAgent ---/         \--- (3) Browser
 ```
 
 GOAL:
