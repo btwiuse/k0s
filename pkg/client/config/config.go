@@ -1,7 +1,6 @@
 package config
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -10,16 +9,12 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"os/exec"
 	"strings"
 
 	"github.com/btwiuse/pretty"
 	"gopkg.in/yaml.v2"
 	"k0s.io/conntroll/pkg"
-	"k0s.io/conntroll/pkg/agent"
-	"k0s.io/conntroll/pkg/agent/info"
-	"k0s.io/conntroll/pkg/rng"
-	"k0s.io/conntroll/pkg/uuid"
+	"k0s.io/conntroll/pkg/client"
 	"k0s.io/conntroll/pkg/version"
 )
 
@@ -39,17 +34,8 @@ func (i *arrayFlags) Set(value string) error {
 }
 
 type config struct {
-	ID       string            `json:"id" yaml:"-"`
-	Name     string            `json:"name" yaml:"-"`
-	Tags     []string          `json:"tags" yaml:"tags"`
-	Htpasswd map[string]string `json:"htpasswd,omitempty" yaml:"htpasswd"`
-
-	agent.Info `json:"meta" yaml:"-"`
-
 	Verbose  bool   `json:"-" yaml:"verbose"`
-	ReadOnly bool   `json:"-" yaml:"ro"`
 	Insecure bool   `json:"-" yaml:"insecure"`
-	Cmd      string `json:"-" yaml:"cmd"`
 	Hub      string `json:"-" yaml:"hub"`
 
 	uri *url.URL `json:"-"` // where server scheme, host, port, addr are defined
@@ -65,36 +51,8 @@ func (c *config) GetVerbose() bool {
 	return c.Verbose
 }
 
-func (c *config) GetReadOnly() bool {
-	return c.ReadOnly
-}
-
 func (c *config) GetInsecure() bool {
 	return c.Insecure
-}
-
-func (c *config) GetCmd() []string {
-	shell := "bash"
-	if _, err := exec.LookPath(shell); err != nil {
-		shell = "sh"
-	}
-	args := []string{"/usr/bin/env", "TERM=xterm", shell}
-	if c.Cmd == "" {
-		return args
-	}
-	return append(args, "-c", c.Cmd)
-}
-
-func (c *config) GetID() string {
-	return c.ID
-}
-
-func (c *config) GetName() string {
-	return c.Name
-}
-
-func (c *config) GetTags() []string {
-	return c.Tags
 }
 
 func (c *config) GetPort() string {
@@ -128,12 +86,6 @@ func SetHub(h string) Opt {
 	}
 }
 
-func SetCmd(h string) Opt {
-	return func(c *config) {
-		c.Cmd = h
-	}
-}
-
 func SetInsecure(h bool) Opt {
 	return func(c *config) {
 		c.Insecure = h
@@ -143,6 +95,10 @@ func SetInsecure(h bool) Opt {
 func SetURI() Opt {
 	return func(c *config) {
 		var hubapi = c.Hub
+		// prepend host 127.0.0.1 to port without an explicit host :8000
+		if strings.HasPrefix(hubapi, ":") {
+			hubapi = "127.0.0.1" + hubapi
+		}
 		// default to http
 		if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
 			hubapi = "http://" + hubapi
@@ -156,39 +112,9 @@ func SetURI() Opt {
 	}
 }
 
-func SetReadOnly(ro bool) Opt {
-	return func(c *config) {
-		c.ReadOnly = ro
-	}
-}
-
 func SetVerbose(v bool) Opt {
 	return func(c *config) {
 		c.Verbose = v
-	}
-}
-
-func SetID(id string) Opt {
-	return func(c *config) {
-		c.ID = id
-	}
-}
-
-func SetName(name string) Opt {
-	return func(c *config) {
-		c.Name = name
-	}
-}
-
-func SetTags(tags []string) Opt {
-	return func(c *config) {
-		c.Tags = append(c.Tags, tags...)
-	}
-}
-
-func SetInfo(ifo agent.Info) Opt {
-	return func(c *config) {
-		c.Info = ifo
 	}
 }
 
@@ -207,9 +133,9 @@ func isExist(file string) bool {
 
 func probeConfigFile() string {
 	var (
-		globalConfig = "/etc/conntroll/agent.yaml"
-		userConfig   = os.ExpandEnv("${HOME}/.conntroll/agent.yaml")
-		localConfig  = "agent.yaml"
+		globalConfig = "/etc/conntroll/client.yaml"
+		userConfig   = os.ExpandEnv("${HOME}/.conntroll/client.yaml")
+		localConfig  = "client.yaml"
 	)
 	for _, conf := range []string{
 		localConfig,
@@ -226,7 +152,6 @@ func probeConfigFile() string {
 func loadConfigFile(file string) *config {
 	c := &config{
 		Hub:     pkg.DEFAULT_HUB_ADDRESS,
-		Tags:    []string{},
 		Version: version.GetVersion(),
 	}
 	if file == "" {
@@ -245,31 +170,18 @@ func loadConfigFile(file string) *config {
 	return c
 }
 
-func Parse(args []string) agent.Config {
+func Parse(args []string) client.Config {
 	var (
-		fset = flag.NewFlagSet("agent", flag.ExitOnError)
+		fset = flag.NewFlagSet("client", flag.ExitOnError)
 
-		// fset.StringVar(&id, "id", uuid.New(), "Agent ID, for debugging purpose only")
-		id   = uuid.New()
-		name = rng.New()
+		opts = []Opt{}
 
-		opts = []Opt{
-			SetID(id),
-			SetName(name),
-		}
-
-		hubapi   *string    = fset.String("hub", pkg.DEFAULT_HUB_ADDRESS, "Hub address.")
-		verbose  *bool      = fset.Bool("verbose", false, "Verbose log.")
-		version  *bool      = fset.Bool("version", false, "Show agent/hub version info.")
-		ro       *bool      = fset.Bool("ro", false, "Make shell readonly.")
-		insecure *bool      = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
-		cmd      *string    = fset.String("cmd", "", "Command to run.")
-		c        *string    = fset.String("c", probeConfigFile(), "Config file location.")
-		tags     arrayFlags = []string{}
+		hubapi   *string = fset.String("hub", pkg.DEFAULT_HUB_ADDRESS, "Hub address.")
+		verbose  *bool   = fset.Bool("verbose", false, "Verbose log.")
+		version  *bool   = fset.Bool("version", false, "Show agent/hub version info.")
+		insecure *bool   = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
+		c        *string = fset.String("c", probeConfigFile(), "Config file location.")
 	)
-
-	// Should be comma separated values like foo,bar
-	fset.Var(&tags, "tags", "Agent tags.")
 
 	err := fset.Parse(args)
 	if err != nil {
@@ -280,20 +192,11 @@ func Parse(args []string) agent.Config {
 		if f.Name == "hub" {
 			opts = append(opts, SetHub(*hubapi))
 		}
-		if f.Name == "ro" {
-			opts = append(opts, SetReadOnly(*ro))
-		}
 		if f.Name == "verbose" {
 			opts = append(opts, SetVerbose(*verbose))
 		}
 		if f.Name == "insecure" {
 			opts = append(opts, SetInsecure(*insecure))
-		}
-		if f.Name == "tags" {
-			opts = append(opts, SetTags(tags))
-		}
-		if f.Name == "cmd" {
-			opts = append(opts, SetCmd(*cmd))
 		}
 	})
 
@@ -303,7 +206,6 @@ func Parse(args []string) agent.Config {
 	}
 
 	opts = append(opts, SetURI())
-	opts = append(opts, SetInfo(info.CollectInfo()))
 
 	baseConfig := loadConfigFile(*c)
 
@@ -312,7 +214,7 @@ func Parse(args []string) agent.Config {
 	}
 
 	if *version {
-		printAgentVersion(baseConfig)
+		printClientVersion(baseConfig)
 		printHubVersion(baseConfig)
 		os.Exit(0)
 	}
@@ -320,20 +222,20 @@ func Parse(args []string) agent.Config {
 	return baseConfig
 }
 
-type agentVersion struct {
-	Agent pkg.Version
+type clientVersion struct {
+	Client pkg.Version
 }
 
 type hubVersion struct {
 	Hub pkg.Version
 }
 
-func printAgentVersion(c agent.Config) {
-	av := &agentVersion{c.GetVersion()}
+func printClientVersion(c client.Config) {
+	av := &clientVersion{c.GetVersion()}
 	fmt.Println(pretty.YAMLString(av))
 }
 
-func printHubVersion(c agent.Config) {
+func printHubVersion(c client.Config) {
 	resp, err := http.Get(c.GetScheme() + "://" + c.GetAddr() + "/version")
 	if err != nil {
 		log.Fatalln(err)
@@ -359,6 +261,7 @@ func (c *config) String() string {
 	return pretty.JsonString(c)
 }
 
+/*
 func Decode(data []byte) (agent.Info, error) {
 	v := &config{
 		Info: info.EmptyInfo(),
@@ -369,3 +272,4 @@ func Decode(data []byte) (agent.Info, error) {
 	}
 	return v, err
 }
+*/

@@ -1,18 +1,14 @@
 package main
 
 import (
-	"log"
-
-	"k0s.io/conntroll/pkg/agent/agent"
-	"k0s.io/conntroll/pkg/agent/config"
+	"k0s.io/conntroll/pkg/client/client"
+	"k0s.io/conntroll/pkg/client/config"
 )
 
 func clientCmd(args []string) {
-	log.Println("TODO")
-	return
 	c := config.Parse(args)
 
-	ag := agent.NewAgent(c)
+	cl := client.NewClient(c)
 
-	_ = ag
+	cl.Run()
 }
