@@ -55,7 +55,11 @@ type lys struct {
 func (l *lys) Handler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Println("hijacking", r.RequestURI)
-		conn, _ := wrap.Hijack(w)
+		conn, err := wrap.Hijack(w)
+		if err != nil {
+			log.Println("hijack failed", r.RequestURI, err)
+			return
+		}
 		log.Println("hijacked", r.RequestURI, ", sending conn to l.conns")
 		l.conns <- conn
 		conn.Write([]byte(" "))
@@ -68,7 +72,7 @@ func (l *lys) SetDeadline(t time.Time) error {
 }
 
 func (l *lys) Accept() (net.Conn, error) {
-	return (<-l.conns).(*wrap.Conn).TCPConn, nil
+	return <-l.conns, nil
 }
 
 func (l *lys) Close() error {
@@ -89,7 +93,7 @@ func (l *lys) String() string {
 
 func NewLys() *lys {
 	return &lys{
-		conns: make(chan net.Conn, 100),
+		conns: make(chan net.Conn),
 	}
 }
 

@@ -147,7 +147,7 @@ func NewServer(conf ServerConfig) *Server {
 func (srv *Server) ListenAndServe() (err error) {
 	var (
 		rawln net.Listener
-		yln   Listener
+		yln   net.Listener
 	)
 
 	if srv.conf.ListenFunc != nil {
@@ -162,8 +162,7 @@ func (srv *Server) ListenAndServe() (err error) {
 	if srv.conf.OverlayNetwork != nil {
 		yln = srv.conf.OverlayNetwork(rawln)
 	} else {
-		println("setting conf.ln to tcp listener")
-		yln = rawln.(Listener) //(*net.TCPListener)
+		yln = rawln
 	}
 
 	return srv.Serve(yln)
@@ -172,12 +171,6 @@ func (srv *Server) ListenAndServe() (err error) {
 // BindingConfig for retrieve ServerConfig
 func (srv *Server) BindingConfig() ServerConfig {
 	return srv.conf
-}
-
-// Listener defines required listener methods for qrpc
-type Listener interface {
-	net.Listener
-	SetDeadline(t time.Time) error
 }
 
 var (
@@ -199,17 +192,12 @@ var (
 //
 // Serve always returns a non-nil error. After Shutdown or Close, the
 // returned error is ErrServerClosed.
-func (srv *Server) Serve(ln Listener) error {
+func (srv *Server) Serve(ln net.Listener) error {
 	var tempDelay time.Duration // how long to sleep on accept failure
-
-	ln = NewTCPKeepAliveListener(ln)
-	// srv.trackListener(ln, true)
-	// defer srv.trackListener(ln, false)
 
 	serveCtx, cancelFunc := context.WithCancel(context.Background())
 	defer cancelFunc()
 	for {
-		ln.SetDeadline(time.Now().Add(defaultAcceptTimeout))
 		rw, e := ln.Accept()
 		if e != nil {
 			select {
@@ -249,46 +237,6 @@ func (srv *Server) Serve(ln Listener) error {
 			c.serve()
 		})
 	}
-}
-
-func NewTCPKeepAliveListener(ln Listener) Listener {
-	return &tcpKeepAliveListener{ln}
-}
-
-// tcpKeepAliveListener sets TCP keep-alive timeouts on accepted
-// connections.
-type tcpKeepAliveListener struct {
-	Listener
-}
-
-// TCPConn in qrpc's aspect
-type TCPConn interface {
-	net.Conn
-	SetKeepAlive(keepalive bool) error
-	SetKeepAlivePeriod(d time.Duration) error
-	SetWriteBuffer(bytes int) error
-	SetReadBuffer(bytes int) error
-}
-
-func (ln *tcpKeepAliveListener) Accept() (c net.Conn, err error) {
-	c, err = ln.Listener.Accept()
-	if err != nil {
-		return
-	}
-
-	var (
-		tc TCPConn
-		ok bool
-	)
-	if tc, ok = c.(TCPConn); !ok {
-		err = ErrListenerAcceptReturnType
-		return
-	}
-
-	tc.SetKeepAlive(true)
-	tc.SetKeepAlivePeriod(20 * time.Second)
-
-	return
 }
 
 // Create new connection from rwc.

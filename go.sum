@@ -117,8 +117,8 @@ github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81P
 github.com/yrpc/rpheap v0.0.0-20191222053847-9002d7e5a1a1/go.mod h1:pdRdvCrlr5Wj6yPccY7ieIEQdz7Y7HNUOZpcQnWyaag=
 github.com/yrpc/util v0.0.0-20191229105456-04e44c1bb858 h1:w3AUE/DLL+g6BKLgJbOfjVrxqabaA445sYSBatEAoBo=
 github.com/yrpc/util v0.0.0-20191229105456-04e44c1bb858/go.mod h1:kF71GVeJKrU3yMXCc2c3k0huNqiqtEkrUV6Fnl2Vo7w=
-github.com/yrpc/yrpc v0.0.0-20191229154638-d3a878acf54a h1:NedIuOuHUO9VyFEcVsLI7dnuUwY0AUHopAbsjmQXt+8=
-github.com/yrpc/yrpc v0.0.0-20191229154638-d3a878acf54a/go.mod h1:DSgyLQuMXH7oWPaKWID4Viy/HGKuHjMuXlc65TTAtAE=
+github.com/yrpc/yrpc v0.0.0-20191230043512-613ecaa6d5b4 h1:WQfkVU1E2mvW7v4TPQQMNNK0i7OVc7mU5zUTbLEmdTU=
+github.com/yrpc/yrpc v0.0.0-20191230043512-613ecaa6d5b4/go.mod h1:DSgyLQuMXH7oWPaKWID4Viy/HGKuHjMuXlc65TTAtAE=
 go.uber.org/atomic v1.5.0 h1:OI5t8sDa1Or+q8AeE+yKeB/SDYioSHAgcVljj9JIETY=
 go.uber.org/atomic v1.5.0/go.mod h1:sABNBOSYdrvTF6hTgEIbc7YasKWGhgEQZyfxyTvoXHQ=
 go.uber.org/multierr v1.3.0 h1:sFPn2GLc3poCkfrpIXGhBD2X0CMIo4Q/zSULXrj/+uc=

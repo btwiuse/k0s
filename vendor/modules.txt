@@ -64,7 +64,7 @@ github.com/pupapaik/sysinfo/cpuid
 github.com/rs/cors
 # github.com/yrpc/util v0.0.0-20191229105456-04e44c1bb858
 github.com/yrpc/util/logger
-# github.com/yrpc/yrpc v0.0.0-20191229154638-d3a878acf54a
+# github.com/yrpc/yrpc v0.0.0-20191230043512-613ecaa6d5b4
 ## explicit
 github.com/yrpc/yrpc
 # go.uber.org/atomic v1.5.0

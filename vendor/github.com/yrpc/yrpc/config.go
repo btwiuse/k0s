@@ -18,11 +18,11 @@ type ServerConfig struct {
 	MaxFrameSize        int
 	MaxCloseRate        int // per second
 	ListenFunc          func(network, address string) (net.Listener, error)
-	OverlayNetwork      func(net.Listener) Listener
+	OverlayNetwork      func(net.Listener) net.Listener
 	OnKickCB            func(w FrameWriter)
 	LatencyMetric       metrics.Histogram
 	CounterMetric       metrics.Counter
-	ln                  Listener
+	ln                  net.Listener
 }
 
 // SubFunc for subscribe callback
