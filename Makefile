@@ -18,15 +18,15 @@ link:
 install:
 	install -Dvm755 bin/$(BIN) /usr/bin/$(BIN)
 	ln -f /usr/bin/$(BIN) /usr/bin/agent
-	@# ln -f /usr/bin/$(BIN) /usr/bin/hub
-	@# ln -f /usr/bin/$(BIN) /usr/bin/client
 	install -Dvm644 agent@.service /usr/lib/systemd/system/agent@.service
-	@ echo "Now manually run:"
+	make systemd
+
+systemd:
+	@ echo 'Run this manually to initialize/restart the agent systemd service'
 	@ echo 'sudo systemctl daemon-reload'
-	@ echo 'sudo systemctl restart agent@$$USER'
-	@ echo 'or, if you are installing for the first time'
 	@ echo 'sudo systemctl enable agent@$$USER'
 	@ echo 'sudo systemctl start agent@$$USER'
+	@ echo 'sudo systemctl restart agent@$$USER'
 
 clean:
 	rm -r bin
