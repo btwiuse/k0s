@@ -26,7 +26,7 @@ func NewRPC(conn net.Conn) types.RPC {
 		done:     make(chan struct{}),
 		spinner:  spinner.New(spinner.CharSets[9], pingChan),
 	}
-	ys.spinner.Start()
+	// ys.spinner.Start()
 	go ys.plumbing()
 	return ys
 }
@@ -66,7 +66,7 @@ func (rpc *YS) plumbing() {
 				// send conn to grpc server
 				ag.ChanConn() <- conn
 			}
-			log.Println(cmd)
+			// log.Println(cmd)
 		default:
 			cmd = "UNKNOWN_CMD: " + cmd
 			log.Println(cmd)
