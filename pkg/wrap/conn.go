@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func Hijack(http.ResponseWriter) (net.Conn, error) {
+func Hijack(w http.ResponseWriter) (net.Conn, error) {
 	return HijackConn(w.(http.Hijacker).Hijack())
 }
 
