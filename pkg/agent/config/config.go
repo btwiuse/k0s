@@ -40,10 +40,16 @@ func (c *config) Addr() string{
 }
 
 func (c *config) Scheme() string {
+	if c.URL.Scheme == "http" && c.URL.Hostname() == "" && c.URL.Port() == "443" {
+		return "https"
+	}
 	return c.URL.Scheme
 }
 
 func (c *config) Hostname() string {
+	if c.URL.Hostname() == "" {
+		return "127.0.0.1"
+	}
 	return c.URL.Hostname()
 }
 
