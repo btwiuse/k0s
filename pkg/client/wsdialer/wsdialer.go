@@ -2,7 +2,9 @@ package wsdialer
 
 import (
 	"context"
+	"encoding/base64"
 	"net"
+	"net/http"
 	"net/url"
 
 	"k0s.io/conntroll/pkg/client"
@@ -23,7 +25,7 @@ type wsdialer struct {
 	c client.Config
 }
 
-func (d *wsdialer) Dial(p string) (conn net.Conn, err error) {
+func (d *wsdialer) Dial(p string, userinfo *url.Userinfo) (conn net.Conn, err error) {
 	var (
 		c  = d.c
 		ub = &url.URL{
@@ -32,9 +34,18 @@ func (d *wsdialer) Dial(p string) (conn net.Conn, err error) {
 			Path:   p,
 		}
 		u = ub.String()
+		h = http.Header{
+			"Authorization": {
+				"Basic " + base64.StdEncoding.EncodeToString([]byte(userinfo.String())),
+			},
+		}
 	)
 
-	wsconn, _, err := websocket.Dial(context.Background(), u, nil)
+	opts := &websocket.DialOptions{
+		HTTPHeader: h,
+	}
+
+	wsconn, _, err := websocket.Dial(context.Background(), u, opts)
 
 	if err != nil {
 		return nil, err

@@ -2,6 +2,7 @@ package client
 
 import (
 	"net"
+	"net/url"
 
 	"k0s.io/conntroll/pkg"
 	"k0s.io/conntroll/pkg/hub"
@@ -36,7 +37,7 @@ type Config interface {
 }
 
 type Dialer interface {
-	Dial(string) (net.Conn, error)
+	Dial(string, *url.Userinfo) (net.Conn, error)
 }
 
 type KeyStore map[string]string

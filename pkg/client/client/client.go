@@ -42,6 +42,7 @@ func NewClient(c types.Config) types.Client {
 
 type client struct {
 	types.Config
+	userinfo *url.Userinfo
 }
 
 func (cl *client) ListAgents() ([]hub.AgentInfo, error) {
@@ -139,24 +140,13 @@ func (cl *client) Run() error {
 
 	idd = strings.TrimSpace(parts[len(parts)-1])
 
-	if len(cl.GetRedir()) > 0 {
-		go cl.RunRedir()
-	}
-	if len(cl.GetSocks()) > 0 || len(cl.GetSocks5ToHTTP()) > 0 {
-		go cl.RunSocks()
-	}
-	if len(cl.GetSocks5ToHTTP()) > 0 {
-		go cl.RunSocks5ToHTTP()
-	}
-
 	if idd == "" {
 		log.Fatalln("fzf bad result", id, idd)
 	}
 
 	var (
-		user     string
-		pass     string
-		userinfo *url.Userinfo
+		user string
+		pass string
 	)
 
 	for _, ag := range ags {
@@ -227,10 +217,20 @@ func (cl *client) Run() error {
 						}
 					}
 				}
-				userinfo = url.UserPassword(user, pass)
+				cl.userinfo = url.UserPassword(user, pass)
 			}
 			break
 		}
+	}
+
+	if len(cl.GetRedir()) > 0 {
+		go cl.RunRedir()
+	}
+	if len(cl.GetSocks()) > 0 || len(cl.GetSocks5ToHTTP()) > 0 {
+		go cl.RunSocks()
+	}
+	if len(cl.GetSocks5ToHTTP()) > 0 {
+		go cl.RunSocks5ToHTTP()
 	}
 
 	{
@@ -239,7 +239,7 @@ func (cl *client) Run() error {
 				Scheme: c.GetScheme(),
 				Host:   c.GetAddr(),
 				Path:   fmt.Sprintf("/api/agent/%s/", idd),
-				User:   userinfo,
+				User:   cl.userinfo,
 			}
 			u = ub.String()
 		)
@@ -257,7 +257,7 @@ func (cl *client) Run() error {
 			}
 			u = ub.String()
 		)
-		terminalConnect(u, userinfo)
+		terminalConnect(u, cl.userinfo)
 	}
 	return nil
 }
@@ -294,7 +294,7 @@ func (cl *client) RunSocks() error {
 		di := socksdialer.New(c, ep)
 		tr := &http.Transport{
 			Dial: func(network, addr string) (net.Conn, error) {
-				return di.Dial(addr)
+				return di.Dial(addr, cl.userinfo)
 			},
 		}
 		client := http.Client{Transport: tr}
@@ -313,7 +313,7 @@ func (cl *client) RunSocks() error {
 			continue
 		}
 		go func() {
-			wsconn, err := wsd.Dial(ep)
+			wsconn, err := wsd.Dial(ep, cl.userinfo)
 			if err != nil {
 				log.Println(err)
 				return
