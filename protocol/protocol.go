@@ -19,8 +19,8 @@ import (
 	"github.com/btwiuse/gotty/wetty"
 	"google.golang.org/grpc"
 
-	"github.com/btwiuse/invctrl/client/config"
-	"github.com/btwiuse/invctrl/client/dial"
+	"github.com/btwiuse/invctrl/slave/config"
+	"github.com/btwiuse/invctrl/slave/dial"
 	"github.com/btwiuse/invctrl/pkg/api"
 )
 
