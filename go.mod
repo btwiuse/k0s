@@ -11,6 +11,7 @@ require (
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.25
+	github.com/containerd/console v0.0.0-20191219165238-8375c3424e4d
 	github.com/docker/docker v1.13.1
 	github.com/golang/protobuf v1.3.2
 	github.com/google/uuid v1.1.1

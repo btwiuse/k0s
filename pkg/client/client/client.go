@@ -100,8 +100,10 @@ func (cl *client) Run() error {
 	if idd == "" {
 		os.Exit(0)
 	}
-	log.Println("You selected:", idd)
-	select {}
+	log.Println("You selected:", fmt.Sprintf("%s://%s/api/agent/%s/", c.GetScheme(), c.GetAddr(), idd))
+	ep := fmt.Sprintf("%s://%s/api/agent/%s/terminal", "ws", c.GetAddr(), idd)
+	terminal(ep)
+	return nil
 }
 
 func (cl *client) RunRedir() error {
