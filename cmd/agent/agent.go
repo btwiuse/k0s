@@ -4,11 +4,11 @@ import (
 	"log"
 	"net/rpc"
 
-	"github.com/google/uuid"
 	"github.com/btwiuse/conntroll/pkg/agent/config"
 	"github.com/btwiuse/conntroll/pkg/agent/dial"
 	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
 	"github.com/btwiuse/wetty/pkg/localcmd"
+	"github.com/google/uuid"
 )
 
 func main() {

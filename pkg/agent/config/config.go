@@ -34,8 +34,8 @@ var Default *Config
 
 func Init() {
 	config := &Config{
-		Info: make(map[string][]string),
-		Server: "45.32.65.48:8000",
+		Info:         make(map[string][]string),
+		Server:       "45.32.65.48:8000",
 		DialBasePath: "/api/new",
 	}
 

@@ -13,10 +13,10 @@ import (
 
 	"github.com/btwiuse/conntroll/pkg/api"
 	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
-	"github.com/btwiuse/wetty/pkg/msg"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
+	"github.com/btwiuse/wetty/pkg/msg"
 	"github.com/btwiuse/wetty/pkg/utils"
 	"github.com/btwiuse/wetty/pkg/wetty"
 	"github.com/gorilla/websocket"
