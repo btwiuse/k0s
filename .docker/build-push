@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
 for bin in {conntroll,agent,hub,client}; do
-  docker build -f Dockerfile.${bin} . -t conntroll/${bin}
-  docker push $_
+  img=conntroll/${bin}
+  echo ====== building conntroll/${bin} ======
+  docker build -f Dockerfile.${bin} . -t $img
+  docker push $img
 done
 
 for distro in {alpine,ubuntu,debian,centos,fedora,gentoo,arch}; do
-  docker build -f Dockerfile.agent.${distro} . -t conntroll/agent:${distro}
-  docker push $_
+  img=conntroll/agent:${distro}
+  echo ====== building $img ========
+  docker build -f Dockerfile.agent.${distro} . -t img
+  docker push $img
 done
