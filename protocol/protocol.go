@@ -164,3 +164,19 @@ func (*Rootfs) New(req RootfsRequest, res *RootfsResponse) error {
 	}
 	return nil
 }
+
+type Echo struct{}
+
+type EchoRequest struct {
+	Payload string
+}
+
+type EchoResponse struct {
+	Payload string
+}
+
+func (*Echo) New(req EchoRequest, res *EchoResponse) error {
+	log.Println("Echo.New called with", req.Payload)
+	res.Payload = req.Payload
+	return nil
+}

@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	//"github.com/davecgh/go-spew/spew"
@@ -41,6 +42,19 @@ func Input() {
 				fmt.Println(err)
 			}
 
+			echo := func(line string, client *Client) {
+				req := protocol.EchoRequest{
+					Payload: line,
+				}
+				resp := new(protocol.EchoResponse)
+				err := client.RPC.Call("Echo.New", req, resp)
+				if err != nil {
+					log.Println(resp.Payload, err)
+					return
+				}
+				log.Println("rpc echo response received:\n\n", resp.Payload)
+			}
+
 			bash := func(line string, client *Client) {
 				req := protocol.Request{
 					Command: line,
@@ -54,11 +68,32 @@ func Input() {
 				log.Println("rpc message received:\n\n", resp.Message)
 			}
 			switch {
+			case strings.HasPrefix(line, "Echo"):
+				line = strings.TrimPrefix(line, "Echo")
+				num, err := strconv.Atoi(line)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+				for i := 0; i < num; i++ {
+					/*
+						v := ClientPool.Clients.Values()[0]
+						client := v.(*Client)
+					*/
+					client := ClientPool.GetRandom()
+					go echo(strconv.Itoa(i), client)
+				}
+				/*
+					for _, v := range ClientPool.Clients.Values() {
+						client := v.(*Client)
+						go echo(line, client)
+					}
+				*/
+				continue
 			case strings.HasPrefix(line, "!map "):
 				line = strings.TrimPrefix(line, "!map ")
 				for _, v := range ClientPool.Clients.Values() {
 					client := v.(*Client)
-					//client.Conn.Write([]byte(line + "\n"))
 					go bash(line, client)
 				}
 				continue

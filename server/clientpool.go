@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net"
 	"net/http"
 	"net/rpc"
 	"strconv"
 	"strings"
+	"time"
 
 	//"github.com/davecgh/go-spew/spew"
 	"github.com/fatih/pool"
@@ -52,6 +54,19 @@ func (p *Pool) Del(uuid string) {
 	if (p.Current != nil) && (p.Current.UUID.String() == uuid) {
 		p.Current = nil //new(Client)
 	}
+}
+
+func (p *Pool) GetRandom() *Client {
+	rand.Seed(time.Now().UnixNano())
+	iter := p.Clients.Iterator()
+	iter.Begin()
+	n := p.Clients.Size()
+	r := rand.Intn(n)
+	log.Println(r, n)
+	for i := 0; i <= r; i++ {
+		iter.Next()
+	}
+	return iter.Value().(*Client)
 }
 
 func (p *Pool) Get(uuid string) *Client {
