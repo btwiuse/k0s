@@ -26,6 +26,10 @@ func (d *dialr) Dial(p string) (conn net.Conn, err error) {
 		})
 	}
 
+	if err != nil {
+		return nil, err
+	}
+
 	_, err = io.WriteString(conn, fmt.Sprintf("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n", p, c.GetHostname()))
 	if err != nil {
 		return nil, err
