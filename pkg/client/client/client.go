@@ -143,12 +143,35 @@ func (cl *client) Run() error {
 		os.Exit(0)
 	}
 
+	var (
+		user     string
+		pass     string
+		userinfo *url.Userinfo
+	)
+
+	for _, ag := range ags {
+		if ag.GetID() == idd {
+			log.Println(ag)
+			pretty.JSON(ag)
+			pretty.YAML(ag)
+			if ag.GetAuth() {
+				fmt.Print("user: ")
+				fmt.Scanln(&user)
+				fmt.Print("pass: ")
+				fmt.Scanln(&pass)
+				userinfo = url.UserPassword(user, pass)
+			}
+			break
+		}
+	}
+
 	{
 		var (
 			ub = &url.URL{
 				Scheme: c.GetScheme(),
 				Host:   c.GetAddr(),
 				Path:   fmt.Sprintf("/api/agent/%s/", idd),
+				User:   userinfo,
 			}
 			u = ub.String()
 		)
@@ -161,10 +184,12 @@ func (cl *client) Run() error {
 				Scheme: c.GetSchemeWS(),
 				Host:   c.GetAddr(),
 				Path:   fmt.Sprintf("/api/agent/%s/terminal", idd),
+				// User name and password are not allowed in websocket URIs.
+				// User:   userinfo,
 			}
 			u = ub.String()
 		)
-		terminal(u)
+		terminal(u, userinfo)
 	}
 	return nil
 }
