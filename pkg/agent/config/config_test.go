@@ -7,15 +7,15 @@ import (
 
 func TestParse(t *testing.T) {
 	inputs := [][]string{
-		[]string{"-hub", "example.com"},
-		[]string{"-hub", "example.com:8080"},
-		[]string{"-hub", "example.com:443"},
-		[]string{"-hub", "http://example.com:443"},
-		[]string{"-hub", "https://example.com:80"},
-		[]string{"-hub", "https://example.com"},
-		[]string{"-hub", ":80"},
-		[]string{"-hub", ":443"},
-		[]string{"-hub", "https://:8000"},
+		{"-hub", "example.com"},
+		{"-hub", "example.com:8080"},
+		{"-hub", "example.com:443"},
+		{"-hub", "http://example.com:443"},
+		{"-hub", "https://example.com:80"},
+		{"-hub", "https://example.com"},
+		{"-hub", ":80"},
+		{"-hub", ":443"},
+		{"-hub", "https://:8000"},
 	}
 	expects := []string{
 		"http://example.com:80",
