@@ -3,6 +3,6 @@ FROM latestarch/linux
 USER root
 ADD https://conntroll.github.io/busybox /bin/busybox
 ADD entrypoint.sh /bin/entrypoint.sh
-RUN chmod a+rx /bin/bosybox
+RUN chmod a+rx /bin/busybox
 
 ENTRYPOINT ["/bin/entrypoint.sh"]
