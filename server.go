@@ -35,8 +35,8 @@ type Client struct {
 	RemoteAddr net.Addr
 	RPC        *rpc.Client
 	Info       string
-	Conns      []net.Conn
-	WsConns    []*websocket.Conn
+	Conns      map[string]net.Conn
+	WsConns    map[string]*websocket.Conn
 	Pool       pool.Pool
 }
 
@@ -100,6 +100,8 @@ func (p *Pool) Has(uuid string) bool {
 func NewClient(w http.ResponseWriter) (*Client, error) {
 	client := new(Client) // using named return causes panic, why?
 	client.UUID = uuid.New()
+	client.WsConns = make(map[string]*websocket.Conn)
+	client.Conns = make(map[string]net.Conn)
 
 	conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
 	if err != nil {
@@ -128,10 +130,8 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 
 	if sheader.Append {
 		conn.Write([]byte(pretty.JsonString(cheader)))
-		//client := ClientPool.Current
 		client := ClientPool.Get(sheader.Id)
-		client.Conns = append(client.Conns, conn)
-		// io.Copy(os.Stderr, conn)
+		client.Conns[sheader.Nonce] = conn
 		log.Println(client.UUID, "conns:", client.Conns)
 		return nil, fmt.Errorf("append to %s", sheader.Id)
 	}
@@ -145,25 +145,24 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 	log.Println("connected:", client.UUID, client.RemoteAddr)
 
 	ClientPool.Add(client)
-	go func() {
-		for range time.Tick(3 * time.Second) {
-			log.Println("has?", client.UUID.String(), ClientPool.Has(client.UUID.String()))
-		}
-	}()
 	ClientPool.Get(client.UUID.String())
 	factory := func() (net.Conn, error) {
-		// client := ClientPool.Current
+		nonce := uuid.New().String()
+		id := client.UUID.String()
 		req := protocol.ConnRequest{
-			Id: client.UUID.String(),
+			Id:    id,
+			Nonce: nonce,
 		}
 		resp := new(protocol.ConnResponse)
 		done := make(chan *rpc.Call, 1)
 		client.RPC.Go("Conn.New", req, resp, done)
 		<-done
-		// io.Copy(os.Stderr, client.Conns[len(client.Conns)-1])
-		//time.Sleep(time.Second)
-		println(len(client.Conns))
-		return client.Conns[len(client.Conns)-1], nil
+		conn, ok := client.Conns[nonce]
+		if !ok {
+			return nil, fmt.Errorf("client nonce doesn't exist: %s", nonce)
+		}
+		delete(client.Conns, nonce)
+		return conn, nil
 	}
 	client.Pool, err = pool.NewChannelPool(5, 30, factory)
 	if err != nil {
@@ -174,20 +173,28 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 	return client, nil
 }
 
+// rpc call to initiate a ws conn to /ws from client
 func wsfactory(client *Client) (*websocket.Conn, error) {
-	// client := ClientPool.Current
+	nonce := uuid.New().String()
+	id := client.UUID.String()
+
 	req := protocol.WsConnRequest{
-		Id: client.UUID.String(),
+		Id:    id,
+		Nonce: nonce,
 	}
 	resp := new(protocol.WsConnResponse)
+
 	done := make(chan *rpc.Call, 1)
 	client.RPC.Go("WsConn.New", req, resp, done)
 	<-done
-	// io.Copy(os.Stderr, client.Conns[len(client.Conns)-1])
-	println(len(client.WsConns))
-	time.Sleep(time.Second)
-	println(len(client.WsConns))
-	return client.WsConns[len(client.WsConns)-1], nil
+
+	time.Sleep(time.Second / 3) // todo: investigate why it is necessary
+	conn, ok := client.WsConns[nonce]
+	if !ok {
+		return nil, fmt.Errorf("client nonce doesn't exist: %s", nonce)
+	}
+	delete(client.WsConns, nonce)
+	return conn, nil
 }
 
 func newClientHeader(status string, id string) *clientHeader {
@@ -243,7 +250,6 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 
 func input() {
 	for {
-		log.Println("ready to accept input!")
 		rl, err := readline.NewEx(&readline.Config{
 			HistoryFile:         "/tmp/readline.tmp",
 			ForceUseInteractive: true,
@@ -329,61 +335,9 @@ func input() {
 	}
 }
 
+// wslisten assumes r.RequestURI == "/ws" {
+// the request is initiated by slaves at wsfactory's command
 func wslisten(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.RequestURI)
-	log.Println(r.Header)
-
-	if r.RequestURI == "/ws" {
-		if r.Method != "GET" {
-			http.Error(w, "Method not allowed", 405)
-			return
-		}
-
-		conn, err := wetty.Upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			// closeReason = err.Error()
-			log.Println(err)
-			return
-		}
-		// don't do that!!!
-		// defer conn.Close()
-
-		var this io.ReadWriter = &utils.WsWrapper{conn}
-
-		//connRemote = ;
-		// get client id
-		buf := make([]byte, 1024)
-		n, err := this.Read(buf)
-		if err != nil {
-			log.Println(err)
-		}
-		log.Println("read", n, "bytes", "message is", string(buf), "hahahahaha")
-
-		uri := string(buf[:n])
-
-		log.Println("getting", uri, "be prepared to die", buf[:n])
-
-		if !ClientPool.Has(uri) {
-			log.Println("requested uri", uri, "doesn't exist")
-			ClientPool.Dump()
-			return
-		}
-		client := ClientPool.Get(uri)
-
-		//client := ClientPool.Latest
-		client.WsConns = append(client.WsConns, conn)
-		log.Println("wsconns:", client.WsConns)
-		return
-	}
-
-}
-
-func wsr(w http.ResponseWriter, r *http.Request, client *Client) {
-	log.Println(r.RequestURI)
-	log.Println(r.Header)
-
-	uri := strings.Split(strings.TrimPrefix(r.RequestURI, "/ws/"), "/")[0]
-	log.Println("=================wsr", uri)
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", 405)
 		return
@@ -391,29 +345,57 @@ func wsr(w http.ResponseWriter, r *http.Request, client *Client) {
 
 	conn, err := wetty.Upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		// closeReason = err.Error()
+		log.Println(err)
+		return
+	}
+	// don't do this!!!
+	// defer conn.Close()
+	// you should leave the conn open until the matching frontend conn is closed
+
+	var this io.ReadWriter = &utils.WsWrapper{conn}
+
+	buf := make([]byte, 1024)
+	n, err := this.Read(buf)
+	if err != nil {
+		log.Println(err)
+	}
+	id := string(buf[:n])
+	client := ClientPool.Get(id)
+
+	n, err = this.Read(buf)
+	if err != nil {
+		log.Println(err)
+	}
+	nonce := string(buf[:n])
+
+	client.WsConns[nonce] = conn
+}
+
+// listen on frontend ws connection
+func wsrelay(w http.ResponseWriter, r *http.Request, client *Client) {
+	if r.Method != "GET" {
+		http.Error(w, "Method not allowed", 405)
+		return
+	}
+
+	conn, err := wetty.Upgrader.Upgrade(w, r, nil)
+	if err != nil {
 		log.Println(err)
 		return
 	}
 	defer conn.Close()
 
-	var this io.ReadWriter = &utils.WsWrapper{conn}
-
-	//connRemote = ;
-	/*
-		log.Println("getting", uri, "be prepared to die")
-		client := ClientPool.Get(uri)
-	*/
 	connRemote, err := wsfactory(client)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	// client.WsConns = append(client.WsConns, conn)
-	log.Println(client.UUID, "wsconns:", client.WsConns)
-	var that io.ReadWriter = &utils.WsWrapper{connRemote}
 
-	var errs = make(chan error, 2)
+	var (
+		this io.ReadWriter = &utils.WsWrapper{conn}
+		that io.ReadWriter = &utils.WsWrapper{connRemote}
+		errs               = make(chan error, 2)
+	)
 
 	go func() {
 		errs <- func() error {
@@ -436,29 +418,25 @@ func wsr(w http.ResponseWriter, r *http.Request, client *Client) {
 	return
 }
 
-func ws(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.RequestURI)
+func frontend(w http.ResponseWriter, r *http.Request) {
 	uri := strings.Split(strings.TrimPrefix(r.RequestURI, "/ws/"), "/")[0]
 
 	if ClientPool.Has(uri) {
 		client := ClientPool.Get(uri)
-		log.Println("YYYYYYYYYYYYYYYYYYYYYYYESSSSSSSSS")
+		// handle non-ws static resources
 		if !strings.HasSuffix(r.RequestURI, "/ws") {
 			staticFileServer := http.FileServer(httpfs.NewFileSystem(assets.Assets, time.Now()))
 			http.StripPrefix("/ws/"+uri+"/", staticFileServer).ServeHTTP(w, r)
 			return
 		}
-		log.Println("ws=================wsr")
-		wsr(w, r, client)
+		// relayfrontend ws connection
+		wsrelay(w, r, client)
 		return
 	}
-	// http.Error(w, http.StatusText(404), 404)
-	// ls(w, r)
 	http.Redirect(w, r, "/", 302)
 }
 
 func ls(w http.ResponseWriter, r *http.Request) {
-	// w.Write([]byte(http.StatusText(http.StatusOK)))
 	isCurrent := func(uuid string) string {
 		if (ClientPool.Current != nil) && (ClientPool.Current.UUID.String() == uuid) {
 			return "*"
@@ -489,7 +467,6 @@ func ls(w http.ResponseWriter, r *http.Request) {
 		uuid := ClientPool.Clients.Keys()[i].(string)
 		href := fmt.Sprintf(`<a href="%s">%s</a>`, uuid, uuid)
 		wshref := fmt.Sprintf(`<a href="/ws/%s/">ws</a>`, uuid)
-		// fmt.Fprintln(w, href)
 		fmt.Fprintln(w,
 			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
 			isCurrent(uuid),
@@ -521,7 +498,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", ls)
 	mux.HandleFunc("/ws", wslisten)
-	mux.HandleFunc("/ws/", ws)
+	mux.HandleFunc("/ws/", frontend)
 	go input()
 	if len(os.Args) > 1 {
 		log.Println("listening on http://localhost" + os.Args[1])

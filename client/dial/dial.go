@@ -73,10 +73,11 @@ func Dial(c *config.Config) net.Conn {
 	return conn
 }
 
-func writeConnAppend(conn net.Conn) {
+func writeConnAppend(conn net.Conn, nonce string) {
 	header := pretty.JSONString(&header.Header{
 		Append: true,
 		Id:     config.Default.Id,
+		Nonce:  nonce,
 	})
 	conn.Write([]byte(header))
 }
@@ -125,7 +126,7 @@ func Handshake(conn net.Conn) string {
 	return readConn(conn)
 }
 
-func HandshakeAppend(conn net.Conn) {
-	writeConnAppend(conn)
+func HandshakeAppend(conn net.Conn, nonce string) {
+	writeConnAppend(conn, nonce)
 	readConn(conn)
 }

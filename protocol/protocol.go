@@ -52,7 +52,8 @@ func (h *Bash) Execute(req Request, res *Response) error {
 type Conn struct{}
 
 type ConnRequest struct {
-	Id string
+	Id    string
+	Nonce string
 }
 
 type ConnResponse struct {
@@ -65,10 +66,13 @@ func (c *Conn) New(req ConnRequest, res *ConnResponse) error {
 	if req.Id == "" {
 		return errors.New("id cannot be empty")
 	}
+	if req.Nonce == "" {
+		return errors.New("nonce cannot be empty")
+	}
 	// log.Println(config.Default)
 	res.Message = "OK"
 	conn := dial.Dial(config.Default)
-	dial.HandshakeAppend(conn)
+	dial.HandshakeAppend(conn, req.Nonce)
 	println("dial.HandshakeAppend")
 	go serveHTTP(conn)
 	return nil
@@ -82,7 +86,8 @@ func serveHTTP(conn net.Conn) {
 type WsConn struct{}
 
 type WsConnRequest struct {
-	Id string
+	Id    string
+	Nonce string
 }
 
 type WsConnResponse struct {
@@ -94,6 +99,9 @@ func (c *WsConn) New(req WsConnRequest, res *WsConnResponse) error {
 
 	if req.Id == "" {
 		return errors.New("id cannot be empty")
+	}
+	if req.Nonce == "" {
+		return errors.New("nonce cannot be empty")
 	}
 	// log.Println(config.Default)
 	res.Message = "OK"
@@ -108,6 +116,7 @@ func (c *WsConn) New(req WsConnRequest, res *WsConnResponse) error {
 	}
 	rw := &utils.WsWrapper{conn}
 	rw.Write([]byte(string(req.Id)))
+	rw.Write([]byte(string(req.Nonce)))
 	go serveWS(conn, factory)
 	return nil
 }

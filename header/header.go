@@ -9,6 +9,7 @@ type ClientHeader struct {
 type Header struct {
 	Append bool   `json:"append"`
 	Id     string `json"id"`
+	Nonce  string `json"nonce"`
 
 	BuildCode  string `json:"build_code"`
 	DockerRepo string `json:"docker_repo"`
