@@ -10,11 +10,12 @@ all:
 release:
 	@ go run bin.go -d releases/latest -strip -upx -ldflags="${LDFLAGS}" linux/{arm,arm64,amd64,386} darwin/amd64
 	@ ./releases/update-latest-index
-	@ mkdir -p releases/$(shell git rev-parse HEAD)
-	@ cp -rv releases/latest/* releases/$(shell git rev-parse HEAD)
+	@ sh -c 'git rev-parse HEAD; git tag -l --points-at HEAD' | \
+		xargs -L1 -I@ sh -c 'mkdir -p releases/@; cp -rv releases/latest/* releases/@'
 	@ ./releases/update-index
 	@ git -C releases add .
 	@ git -C releases commit -m $(shell git rev-parse HEAD)
+	@ git -C releases push
 
 link:
 	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) bin/$(BIN)
