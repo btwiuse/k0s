@@ -83,7 +83,20 @@ func (c *config) GetPort() string {
 }
 
 func (c *config) GetAddr() string {
-	return c.GetHost() + ":" + c.GetPort()
+	var (
+		scheme = c.GetScheme()
+		host   = c.GetHost()
+		port   = c.GetPort()
+	)
+	// omit port if already on standard port
+	switch {
+	case scheme == "http" && port == "80":
+		return host
+	case scheme == "https" && port == "443":
+		return host
+	default:
+		return fmt.Sprintf("%s:%s", host, port)
+	}
 }
 
 func (c *config) GetSchemeWS() string {
@@ -290,7 +303,15 @@ func printClientVersion(c client.Config) {
 }
 
 func printHubVersion(c client.Config) {
-	resp, err := http.Get(c.GetScheme() + "://" + c.GetAddr() + "/version")
+	var (
+		ub = &url.URL{
+			Scheme: c.GetScheme(),
+			Host:   c.GetAddr(),
+			Path:   "/version",
+		}
+		u = ub.String()
+	)
+	resp, err := http.Get(u)
 	if err != nil {
 		log.Fatalln(err)
 	}
