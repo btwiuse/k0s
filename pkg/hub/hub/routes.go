@@ -91,7 +91,8 @@ func (h *hub) serve(addr string) {
 	}
 
 	// list active agents
-	r.HandleFunc("/api/agents/", h.basicauth(http.HandlerFunc(h.handleAgents))).Methods("GET")
+	r.HandleFunc("/api/agents/list", h.basicauth(http.HandlerFunc(h.handleAgentsList))).Methods("GET")
+	r.HandleFunc("/api/agents/watch", h.basicauth(http.HandlerFunc(h.handleAgentsWatch))).Methods("GET")
 
 	// client /api/agent/{id}/rootfs/{path} hijack => net.Conn <(copy) hijacked grpc fs conn
 	// client /api/agent/{id}/ws => ws <(pipe)> hijacked grpc ws conn
@@ -124,7 +125,26 @@ func (h *hub) serve(addr string) {
 	}
 }
 
-func (h *hub) handleAgents(w http.ResponseWriter, r *http.Request) {
+func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	wsconn, err := wetty.Upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer wsconn.Close()
+	rwc := wrap.WsConnToReadWriteCloser(wsconn)
+	for range time.Tick(time.Second) {
+		_, err := rwc.Write([]byte(pretty.JSONString(h.GetAgents())))
+		if err != nil {
+			log.Println(err)
+			break
+		}
+	}
+}
+
+func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(pretty.JSONString(h.GetAgents())))
 }
