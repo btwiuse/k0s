@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
-	"fmt"
 )
 
 func main() {
@@ -25,7 +25,7 @@ func main() {
 	}
 }
 
-func usage(){
+func usage() {
 	fmt.Println(`please specify one of the subcommands: 
 - agent
 - hub
