@@ -14,6 +14,7 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+	"text/tabwriter"
 
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
 	"github.com/btwiuse/pretty"
@@ -90,19 +91,20 @@ func (cl *client) Run() error {
 	}
 
 	go func() {
-		fmt.Fprintln(pw, "agent username hostname os arch distro auth")
+		w := new(tabwriter.Writer)
+		w.Init(pw, 2, 0, 2, ' ', 0)
+		fmt.Fprintf(w, strings.ReplaceAll("agent username hostname os arch distro auth @", " ", "\t"))
 		for _, ag := range ags {
-			fmt.Fprintf(pw, "%s %s %s %s %s %s %t %s",
+			col := fmt.Sprintf(
+				strings.ReplaceAll("%s %s %s %s %s %s %t %s", " ", "\t"),
 				ag.GetName(), ag.GetUsername(), ag.GetHostname(), ag.GetOS(),
 				ag.GetArch(), ag.GetDistro(), ag.GetAuth(), "@"+pretty.JsonString(ag),
 			)
+			fmt.Fprintf(w, col)
 		}
+		w.Flush()
 		pw.Close()
 	}()
-
-	column := exec.Command("column", "-t")
-	column.Stdin = pr
-	columnStdoutPipe, _ := column.StdoutPipe()
 
 	/*
 		(echo 'agent username hostname os arch distro auth';
@@ -123,11 +125,10 @@ func (cl *client) Run() error {
 		"--preview", "echo {}|cut -d @ -f 2-|jq -r .|yj -jy",
 	)
 	// fzf.Stdin = pr
-	fzf.Stdin = columnStdoutPipe
+	fzf.Stdin = pr
 	fzf.Stdout = id //os.Stdout
 	fzf.Stderr = os.Stderr
 
-	column.Start()
 	fzf.Start()
 	fzf.Wait()
 
