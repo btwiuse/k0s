@@ -6,7 +6,7 @@ package dialer
 
 import (
 	"net"
-	"path"
+	"net/url"
 
 	"github.com/gorilla/websocket"
 	"k0s.io/conntroll/pkg/wrap"
@@ -14,16 +14,14 @@ import (
 
 func (d *dialr) Dial(p string) (conn net.Conn, err error) {
 	var (
-		c = d.c
+		c  = d.c
+		ub = &url.URL{
+			Scheme: c.GetSchemeWS(),
+			Host:   c.GetAddr(),
+			Path:   p,
+		}
 		u string
 	)
-
-	switch c.GetScheme() {
-	case "http":
-		u = "ws://" + path.Join(c.GetAddr(), p)
-	case "https":
-		u = "wss://" + path.Join(c.GetAddr(), p)
-	}
 
 	wsconn, _, err := websocket.DefaultDialer.Dial(u, nil)
 

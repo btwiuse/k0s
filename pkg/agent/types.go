@@ -27,6 +27,7 @@ type Config interface {
 	GetPort() string
 	GetAddr() string
 	GetScheme() string
+	GetSchemeWS() string
 
 	GetCmd() []string
 	GetReadOnly() bool
