@@ -121,7 +121,7 @@ func newClient(w http.ResponseWriter) (client *Client, err error) {
 		return nil, err
 	}
 
-	header, rest, err := getHeader(io.MultiReader(hibuf, conn))
+	header, buffered, err := getHeader(io.MultiReader(hibuf, conn))
 	if err != nil {
 		conn.Write([]byte("NO"))
 		return nil, err
@@ -129,10 +129,10 @@ func newClient(w http.ResponseWriter) (client *Client, err error) {
 	conn.Write([]byte("OK"))
 
 	rpcClient := NewRPC(
-		io.MultiReader(hibuf, rest),
+		io.MultiReader(hibuf, buffered),
 
 		// order matters here
-		// io.MultiReader(rest, hibuf),
+		// io.MultiReader(buffered, hibuf),
 		// will cause error:
 		// In[2]:= 2019/05/15 23:43:24  gob: unknown type id or corrupted data
 
