@@ -147,10 +147,12 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 				return // err
 			}
 			// log.Println(req.Type, fmt.Sprintf("%q", string(req.Body)))
+			/* this causes infinite log loop, be careful
 			recorder.Info("send",
 				zap.String("type", req.Type.String()),
 				zap.String("content", string(req.Body)),
 			)
+			*/
 		}
 		return // nil
 	}()
