@@ -32,7 +32,7 @@ func TestParse(t *testing.T) {
 		var (
 			c        = Parse(input)
 			expected = expects[i]
-			output   = fmt.Sprintf("%s://%s", c.Scheme(), c.Addr())
+			output   = fmt.Sprintf("%s://%s", c.GetScheme(), c.GetAddr())
 		)
 		if output != expected {
 			t.Errorf("f(%s) = %s, expected: %s\n", input, output, expected)

@@ -2,20 +2,19 @@ package config
 
 import (
 	"crypto/sha256"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"net/url"
-	"os"
 	"os/exec"
-	"os/user"
-	"runtime"
 	"strings"
 
 	"github.com/btwiuse/conntroll/pkg/agent"
-	"github.com/btwiuse/conntroll/pkg/distro"
-	"github.com/btwiuse/conntroll/pkg/name"
+	"github.com/btwiuse/conntroll/pkg/agent/info"
+	"github.com/btwiuse/conntroll/pkg/rng"
 	"github.com/btwiuse/conntroll/pkg/uuid"
+	"github.com/btwiuse/pretty"
 )
 
 const DEFAULT_HUB_ADDRESS = "https://hub.libredot.com"
@@ -36,24 +35,28 @@ func (i *arrayFlags) Set(value string) error {
 }
 
 type config struct {
-	id   string
-	name string
-	tags []string
-	*url.URL
-	verb  bool
-	insec bool
-	cmd   string
+	ID   string   `json:"id"`
+	Name string   `json:"name"`
+	Tags []string `json:"tags"`
+	Auth string   `json:"auth,omitempty"`
+
+	agent.Info `json:"info"`
+
+	verbose  bool
+	insecure bool
+	cmd      string
+	uri      *url.URL `json:"-"` // where server scheme, host, port, addr are defined
 }
 
-func (c *config) Verbose() bool {
-	return c.verb
+func (c *config) GetVerbose() bool {
+	return c.verbose
 }
 
-func (c *config) Insecure() bool {
-	return c.insec
+func (c *config) GetInsecure() bool {
+	return c.insecure
 }
 
-func (c *config) Cmd() []string {
+func (c *config) GetCmd() []string {
 	shell := "bash"
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
@@ -65,120 +68,105 @@ func (c *config) Cmd() []string {
 	return append(args, "-c", c.cmd)
 }
 
-func (c *config) ID() string {
-	return c.id
+func (c *config) GetID() string {
+	return c.ID
 }
 
-func (c *config) Name() string {
-	return c.name
+func (c *config) GetName() string {
+	return c.Name
 }
 
-func (c *config) Tags() []string {
-	return c.tags
+func (c *config) GetTags() []string {
+	return c.Tags
 }
 
-func (c *config) Port() string {
-	if c.URL.Port() == "" {
-		switch c.URL.Scheme {
+func (c *config) GetPort() string {
+	if c.uri.Port() == "" {
+		switch c.uri.Scheme {
 		case "http":
 			return "80"
 		case "https":
 			return "443"
 		}
 	}
-	return c.URL.Port()
+	return c.uri.Port()
 }
 
-func (c *config) Addr() string {
-	return c.Hostname() + ":" + c.Port()
+func (c *config) GetAddr() string {
+	return c.GetHost() + ":" + c.GetPort()
 }
 
-func (c *config) Scheme() string {
-	if c.URL.Scheme == "http" && c.URL.Hostname() == "" && c.URL.Port() == "443" {
+func (c *config) GetScheme() string {
+	if c.uri.Scheme == "http" && c.uri.Hostname() == "" && c.uri.Port() == "443" {
 		return "https"
 	}
-	return c.URL.Scheme
+	return c.uri.Scheme
 }
 
-func (c *config) Hostname() string {
-	if c.URL.Hostname() == "" {
+func (c *config) GetHost() string {
+	host := c.uri.Hostname()
+	if host == "" {
 		return "127.0.0.1"
 	}
-	return c.URL.Hostname()
+	return host
 }
 
-func (c *config) NewYRPCAgentRequestBody() []byte {
-	return []byte(fmt.Sprintf("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n", "/api/yrpc", c.Hostname()))
-}
-
-func (c *config) NewAgentRequestBody() []byte {
-	return []byte(fmt.Sprintf("GET %s?%s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n", "/api/rpc", c.RawQuery, c.Hostname()))
-}
-
-func (c *config) NewSessionRequestBody() []byte {
-	return []byte(fmt.Sprintf("GET %s?%s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n", "/api/grpc", "id="+c.URL.Query().Get("id"), c.Hostname()))
+func (c *config) FakeHeader(p string) []byte {
+	return []byte(
+		fmt.Sprintf(
+			"GET %s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n",
+			p,
+			c.GetHost(),
+		),
+	)
 }
 
 func Parse(args []string) agent.Config {
 	var (
-		fset        = flag.NewFlagSet("agent", flag.ExitOnError)
-		id   string = uuid.New()
-		cmd  string
+		fset = flag.NewFlagSet("agent", flag.ExitOnError)
 
-		pwd, _      = os.Getwd()
-		_user, _    = user.Current()
-		username    = _user.Username
-		hostname, _ = os.Hostname()
-		goos        = runtime.GOOS
-		goarch      = runtime.GOARCH
+		id              = uuid.New()
+		name            = rng.New()
+		tags arrayFlags = []string{}
 
 		hubapi   string = DEFAULT_HUB_ADDRESS
-		tags     arrayFlags
 		bahash   string
 		verbose  bool
 		insecure bool
-
-		query url.Values = make(map[string][]string)
-		nam              = name.New()
-		dist             = distro.Vendor()
+		cmd      string
 	)
 
 	// fset.StringVar(&id, "id", uuid.New(), "Agent ID, for debugging purpose only")
-	fset.StringVar(&cmd, "c", "", "Command to run.")
-	fset.Var(&tags, "tags", "Agent tags. ")                             // Should be comma separated values like foo,bar
-	fset.StringVar(&hubapi, "hub", DEFAULT_HUB_ADDRESS, "Hub address.") //  The 1st positional argument is used if you leave the -hub part.
-	fset.BoolVar(&verbose, "verbose", false, "Verbose log.")            //  The 1st positional argument is used if you leave the -hub part.
+
+	// Should be comma separated values like foo,bar
+	fset.Var(&tags, "tags", "Agent tags. ")
+
+	// "Protect shell and filesystem access using basicauth. Value should be supplied in user:pass form.
+	// (Only hash of user:pass will be sent. hub will use the hash value to authorize access to the agent)"
+	fset.StringVar(&bahash, "auth", "conn:troll", "Set user:pass for shell/fs access. Use `-auth offff` to disable auth")
+
+	//  The 1st positional argument is used if you leave the -hub part.
+	fset.StringVar(&hubapi, "hub", DEFAULT_HUB_ADDRESS, "Hub address.")
+
+	//  The 1st positional argument is used if you leave the -hub part.
+	fset.BoolVar(&verbose, "verbose", false, "Verbose log.")
+
 	fset.BoolVar(&insecure, "insecure", false, "Allow insecure server connections when using SSL")
-	fset.StringVar(&bahash, "auth", "conn:troll", "Set user:pass for shell/fs access. Use `-auth offff` to disable auth") // "Protect shell and filesystem access using basicauth. Value should be supplied in user:pass form. (Only hash of user:pass will be sent. hub will use the hash value to authorize access to the agent)"
+
+	fset.StringVar(&cmd, "c", "", "Command to run.")
 
 	err := fset.Parse(args)
 	if err != nil {
-		log.Println(err)
+		log.Fatalln(err)
 	}
 
 	if hubapi == DEFAULT_HUB_ADDRESS && len(fset.Args()) != 0 {
 		hubapi = fset.Args()[0]
 	}
 
+	// default to http
 	if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
 		hubapi = "http://" + hubapi
-	}
-
-	u, err := url.Parse(hubapi)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	query.Set("id", id)
-	query.Set("pwd", pwd)
-	query.Set("username", username)
-	query.Set("hostname", hostname)
-	query.Set("os", goos)
-	query.Set("arch", goarch)
-	query.Set("name", nam)
-	query.Set("tags", tags.String())
-	if dist != "" {
-		query.Set("distro", dist)
 	}
 
 	if strings.Contains(bahash, ":") {
@@ -186,26 +174,39 @@ func Parse(args []string) agent.Config {
 	} else {
 		bahash = ""
 	}
-	query.Set("bahash", bahash)
 
-	u.RawQuery = query.Encode()
-
-	/* TODO: erase -auth user:pass sensitive info
-	defer func(){
-		if bahash != "" {
-			log.Println(os.Args)
-			os.Args[0] = "wtf"
-			log.Println(os.Args)
-		}
-	}()
-	*/
+	uri, err := url.Parse(hubapi)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	return &config{
-		URL:   u,
-		id:    id,
-		cmd:   cmd,
-		name:  nam,
-		verb:  verbose,
-		insec: insecure,
+		Info: info.CollectInfo(),
+
+		uri: uri,
+
+		ID:   id,
+		Name: name,
+		Tags: tags,
+		Auth: bahash,
+
+		verbose:  verbose,
+		insecure: insecure,
+		cmd:      cmd,
 	}
+}
+
+func (c *config) String() string {
+	return pretty.JSONString(c)
+}
+
+func Decode(data []byte) (agent.Info, error) {
+	v := &config{
+		Info: info.EmptyInfo(),
+	}
+	err := json.Unmarshal(data, v)
+	if err != nil {
+		return nil, err
+	}
+	return v, err
 }
