@@ -7,7 +7,7 @@ Wants=network-online.target
 Type=simple
 User=%i
 WorkingDirectory=/home/%i
-ExecStart=/usr/bin/agent -auth conn:troll -tags systemd
+ExecStart=/usr/bin/agent -tags systemd
 Restart=on-failure
 RestartSec=3
 
