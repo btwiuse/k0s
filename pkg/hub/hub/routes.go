@@ -10,26 +10,24 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"net/http/httputil"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/btwiuse/conntroll/pkg/api"
 	types "github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/hub/agent"
 	agentinfo "github.com/btwiuse/conntroll/pkg/hub/agent/info"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
-	"github.com/btwiuse/wetty/pkg/msg"
 	"github.com/btwiuse/wetty/pkg/wetty"
 	webui "github.com/conntroll/conntroll.github.io"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	gows "github.com/gorilla/websocket"
 	"github.com/rs/cors"
-	"golang.org/x/sync/errgroup"
 	"modernc.org/httpfs"
+	"nhooyr.io/websocket"
 )
 
 var (
@@ -41,11 +39,11 @@ type hub struct {
 
 	*http.Server
 
-	ba         bool
-	localui    bool // load webui assets from local dir for debugging purpose
-	user       string
-	pass       string
-	handleYRPC http.Handler // http.Handler|net.Listener
+	ba        bool
+	localui   bool // load webui assets from local dir for debugging purpose
+	user      string
+	pass      string
+	handleRPC http.Handler // http.Handler|net.Listener
 }
 
 func NewHub(c types.Config) types.Hub {
@@ -53,7 +51,7 @@ func NewHub(c types.Config) types.Hub {
 		AgentManager: NewAgentManager(),
 		localui:      c.LocalUI(),
 	}
-	h.startYRPCServer()
+	h.startRPCServer()
 	h.user, h.pass, h.ba = c.BasicAuth()
 	h.initServer(c.Port())
 	return h
@@ -77,9 +75,8 @@ func (h *hub) basicauth(next http.Handler) http.HandlerFunc {
 	}
 }
 
-func (h *hub) serveYRPC(ln net.Listener) {
+func (h *hub) serveRPC(ln net.Listener) {
 	for {
-		log.Println("listening YRPC conns")
 		conn, err := ln.Accept()
 		if err != nil {
 			log.Println(err)
@@ -130,9 +127,6 @@ func (h *hub) toAgent(conn net.Conn) {
 func (h *hub) initServer(addr string) {
 	r := mux.NewRouter()
 
-	// ==================== basic auth (TODO) =======================
-	// root auth
-
 	if h.localui {
 		r.NotFoundHandler = h.basicauth(http.FileServer(http.Dir("conntroll.github.io")))
 	} else {
@@ -154,13 +148,17 @@ func (h *hub) initServer(addr string) {
 	// s.Handler(h.basicauth(http.HandlerFunc(h.handleAgent))).Methods("GET")
 	s.Handler(http.HandlerFunc(h.handleAgent)).Methods("GET")
 
-	// ========================== public ============================
+	// public api
 	// agent hijack => yrpc -> hub.RPC -> hub.Agent
-	r.Handle("/api/yrpc", h.handleYRPC).Methods("GET")
+	// alternative websocket implementation:
+	// http upgrade => websocket conn => net.Conn => hub.RPC -> hub.Agent
+	r.Handle("/api/yrpc", h.handleRPC).Methods("GET") // TODO: remove this legacy endpoint in the future
+	r.Handle("/api/rpc", h.handleRPC).Methods("GET")
 
 	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
-	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").
-		Queries("id", "{id}")
+	// alternative websocket implementation:
+	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
+	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").Queries("id", "{id}")
 
 	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
 	h.Server = &http.Server{
@@ -246,153 +244,43 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 	ag.BasicAuth(delegate).ServeHTTP(w, r)
 }
 
-func wsRelay(ag types.Agent) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		wsconn, err := wetty.Upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		defer wsconn.Close()
-		session := ag.NewSession()
-		sessionSendClient, err := session.Send(context.Background())
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		// common error: ws transport is closing
-		log.Println(pipe(wrap.WsConnToReadWriteCloser(wsconn), sessionSendClient))
-	}
-}
-
-// (through chan Message{Type, Body} instead of interface)
-func pipe(ws io.ReadWriteCloser, session api.Session_SendClient) error {
-	defer ws.Close()
-	g, ctx := errgroup.WithContext(context.TODO())
-	_ = ctx
-	g.Go(func() error {
-		log.Println("pipe: client(ws) => session(grpc)")
-		// TODO: io.Copy(session, ws), CopyBuffer, session.ReadFrom
-		buf := make([]byte, 1<<12) // maximum input message is 4096 bytes
-		for {
-			n, err := ws.Read(buf)
-			if err != nil {
-				return err
-			}
-			msg := &api.Message{Type: msg.Type(buf[0]), Body: buf[1:n]}
-			err = session.Send(msg)
-			if err != nil {
-				return err
-			}
-		}
-		return nil
-	})
-
-	g.Go(func() error {
-		log.Println("pipe: client(ws) <= session(grpc)")
-		// TODO: io.Copy(ws, session), CopyBuffer, session.WriteTo
-		for {
-			resp, err := session.Recv()
-			if err != nil {
-				return err
-			}
-			_, err = ws.Write(append([]byte{byte(resp.Type)}, resp.Body...))
-			if err != nil {
-				return err
-				break
-			}
-		}
-		return nil
-	})
-
-	return g.Wait()
-}
-
-func fsRelay(ag types.Agent) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var (
-			vars = mux.Vars(r)
-			id   = vars["id"]
-			path = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id+"/rootfs")
-		)
-
-		conn, err := wrap.Hijack(w)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		defer conn.Close()
-
-		r.RequestURI = path
-
-		reqbuf, err := httputil.DumpRequest(r, true)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		_ = reqbuf
-
-		session := ag.NewSession()
-		chunkRequest := &api.ChunkRequest{
-			Path:    path,
-			Request: reqbuf,
-		}
-		sessionChunkerClient, err := session.Chunker(context.Background(), chunkRequest)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		// TODO make a io.Reader from session.Chunker_Client, then call io.Copy
-		for {
-			chunk, err := sessionChunkerClient.Recv()
-			if err == io.EOF {
-				break
-			}
-			if err != nil {
-				log.Println(err)
-				break
-			}
-
-			_, err = conn.Write(chunk.Chunk)
-			if err != nil {
-				log.Println(err)
-				break
-			}
-		}
-	}
-}
-
 func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
 	var (
-		vars = mux.Vars(r)
-		id   = vars["id"]
+		vars   = mux.Vars(r)
+		id     = vars["id"]
+		wsconn *websocket.Conn
+		conn   net.Conn
+		err    error
 	)
-
-	conn, err := wrap.Hijack(w)
-	if err != nil {
-		log.Println("error hijacking:", err)
-		return
-	}
 
 	if !h.Has(id) {
 		log.Println("no such id", id)
 		return
 	}
 
+	if gows.IsWebSocketUpgrade(r) {
+		wsconn, err = websocket.Accept(w, r, &websocket.AcceptOptions{
+			InsecureSkipVerify: true,
+		})
+		conn = websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
+	} else {
+		conn, err = wrap.Hijack(w)
+	}
+
+	if err != nil {
+		log.Println("error accepting grpc:", err)
+		return
+	}
+
 	h.GetAgent(id).AddSessionConn(conn)
 }
 
-func (h *hub) startYRPCServer() {
+func (h *hub) startRPCServer() {
 	var (
 		listhand              = NewHandleHijackListener()
 		handler  http.Handler = listhand
 		listener net.Listener = listhand
 	)
-	log.Println(handler)
-	log.Println(listener)
-	h.handleYRPC = handler
-	go h.serveYRPC(listener)
+	h.handleRPC = handler
+	go h.serveRPC(listener)
 }

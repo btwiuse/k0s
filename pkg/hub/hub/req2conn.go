@@ -1,10 +1,14 @@
 package hub
 
 import (
+	"context"
+	"log"
 	"net"
 	"net/http"
 
 	"github.com/btwiuse/conntroll/pkg/wrap"
+	gows "github.com/gorilla/websocket"
+	"nhooyr.io/websocket"
 )
 
 var (
@@ -18,11 +22,30 @@ type lys struct {
 	conns chan net.Conn
 }
 
+// support two methods of converting http request to net.Conn
+// 1. websocket  (http2 support coming)
+// 2. hijack     (no http2 support)
 func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	conn, err := wrap.Hijack(w)
+	var (
+		wsconn *websocket.Conn
+		conn   net.Conn
+		err    error
+	)
+
+	if gows.IsWebSocketUpgrade(r) {
+		wsconn, err = websocket.Accept(w, r, &websocket.AcceptOptions{
+			InsecureSkipVerify: true,
+		})
+		conn = websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
+	} else {
+		conn, err = wrap.Hijack(w)
+	}
+
 	if err != nil {
+		log.Println("error ws accept:", err)
 		return
 	}
+
 	l.conns <- conn
 }
 

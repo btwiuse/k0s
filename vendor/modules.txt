@@ -197,3 +197,6 @@ honnef.co/go/tools/version
 modernc.org/httpfs
 # nhooyr.io/websocket v1.7.4
 ## explicit
+nhooyr.io/websocket
+nhooyr.io/websocket/internal/bpool
+nhooyr.io/websocket/internal/wsjs
