@@ -30,6 +30,6 @@ func NewSession(sc api.SessionClient) hub.Session {
 	return &session{
 		id:            uuid.New(),
 		SessionClient: sc,
-		created: time.Now(),
+		created:       time.Now(),
 	}
 }

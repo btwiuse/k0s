@@ -10,8 +10,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/btwiuse/conntroll/pkg/uuid"
 	"github.com/btwiuse/conntroll/pkg/agent"
+	"github.com/btwiuse/conntroll/pkg/uuid"
 )
 
 type config struct {
@@ -35,7 +35,7 @@ func (c *config) Port() string {
 	return c.URL.Port()
 }
 
-func (c *config) Addr() string{
+func (c *config) Addr() string {
 	return c.Hostname() + ":" + c.Port()
 }
 
@@ -64,7 +64,7 @@ func (c *config) NewSessionRequestBody() []byte {
 func Parse(args []string) agent.Config {
 	var (
 		fset = flag.NewFlagSet("agent", flag.ExitOnError)
-		id string
+		id   string
 
 		pwd, _      = os.Getwd()
 		_user, _    = user.Current()
@@ -75,7 +75,7 @@ func Parse(args []string) agent.Config {
 
 		hubapi string
 
-		query  url.Values = make(map[string][]string)
+		query url.Values = make(map[string][]string)
 	)
 
 	fset.StringVar(&id, "id", uuid.New(), "agent id, for debugging purpose only")

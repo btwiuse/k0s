@@ -6,8 +6,8 @@ import (
 
 	//"github.com/davecgh/go-spew/spew"
 
-	"github.com/btwiuse/conntroll/pkg/hub/hub"
 	"github.com/btwiuse/conntroll/pkg/hub/config"
+	"github.com/btwiuse/conntroll/pkg/hub/hub"
 )
 
 func main() {

@@ -4,9 +4,9 @@ import (
 	"context"
 	"io"
 	"log"
-	"time"
 	"net"
 	"net/rpc"
+	"time"
 
 	"github.com/btwiuse/conntroll/pkg/api"
 	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
@@ -25,7 +25,7 @@ func NewAgent(conn net.Conn, opts ...AgentOpt) hub.Agent {
 		sch:            make(chan hub.Session),
 		SessionManager: NewSessionManager(),
 		RPCManager:     NewRPCManager(),
-		created: time.Now(),
+		created:        time.Now(),
 	}
 	for _, opt := range opts {
 		opt(ag)
@@ -183,7 +183,7 @@ func (ag *agent) AddRPCConn(c net.Conn) {
 // onclose is called when rpc connection is lost
 func (ag *agent) onRPCClose() {
 	log.Println("disconnected:", ag.Id)
-	ag.Del(ag.Id)
+	// ag.Del(ag.Id)
 	// assuming there are other rpc conn left
 	ag.NewRPC()
 }

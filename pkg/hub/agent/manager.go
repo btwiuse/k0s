@@ -58,7 +58,7 @@ func NewRPCManager() hub.RPCManager {
 
 type rpcc struct {
 	created time.Time
-	id string
+	id      string
 	*rpc.Client
 }
 
@@ -73,7 +73,7 @@ func (r *rpcc) ID() string {
 func ToRPC(rc *rpc.Client) hub.RPC {
 	return &rpcc{
 		created: time.Now(),
-		id:     uuid.New(),
-		Client: rc,
+		id:      uuid.New(),
+		Client:  rc,
 	}
 }

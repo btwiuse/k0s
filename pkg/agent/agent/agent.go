@@ -3,8 +3,8 @@ package agent
 import (
 	"context"
 	"crypto/tls"
-	"log"
 	"errors"
+	"log"
 	"net"
 	"net/rpc"
 

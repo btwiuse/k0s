@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestParse(t *testing.T){
+func TestParse(t *testing.T) {
 	inputs := [][]string{
 		[]string{"-hub", "example.com"},
 		[]string{"-hub", "example.com:8080"},
@@ -28,9 +28,9 @@ func TestParse(t *testing.T){
 	}
 	for i, input := range inputs {
 		var (
-			c = Parse(input)
+			c        = Parse(input)
 			expected = expects[i]
-			output = fmt.Sprintf("%s://%s", c.Scheme(), c.Addr())
+			output   = fmt.Sprintf("%s://%s", c.Scheme(), c.Addr())
 		)
 		if output != expected {
 			t.Errorf("f(%s) = %s, expected: %s\n", input, output, expected)
