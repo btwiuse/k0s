@@ -195,3 +195,5 @@ honnef.co/go/tools/version
 # modernc.org/httpfs v1.0.0
 ## explicit
 modernc.org/httpfs
+# nhooyr.io/websocket v1.7.4
+## explicit

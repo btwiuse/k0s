@@ -2,6 +2,7 @@ package agent
 
 import (
 	"io"
+	"net"
 )
 
 type Info interface {
@@ -32,30 +33,38 @@ type Config interface {
 	FakeHeader(p string) []byte
 
 	String() string
-
-	// NewYRPCAgentRequestBody() []byte
-	// NewAgentRequestBody() []byte
-	// NewSessionRequestBody() []byte
 }
 
 type RPC interface {
-	AgentRegister()
-	NewConnection()
-	// create a session capable of either shell or file system access
-	// CreateSession() (net.Conn, error)
-	// Accept() (net.Conn, error)
-	// YRPCConnectAndServe() error
+	// NewConnection()
+	// Ping()
+	// Pong()
 	// Connect() (net.Conn, error)
-	// Dial() (net.Conn, error)
-
-	// Go(func() error)
-	// Wait() error
+	Close()
+	Done() <-chan struct{}
+	Actions() <-chan func(Agent)
 }
 
+// inside agent there are:
+// config (static)
+// grpcServer (long lived)
+// rpc client/server (ephemeral)
 type Agent interface {
 	Config
-	// Connect() (RPC, error)
+	AgentRegister(net.Conn) (RPC, error)
+	Accept() (net.Conn, error)
+	Dial() (net.Conn, error)
 	ConnectAndServe() error
+	Serve(RPC)
+	GRPCServer
+	// RPC
+	// ServeGRPC() error
+	// Connect() (RPC, error)
+}
+
+type GRPCServer interface {
+	ChanConn() chan<- net.Conn
+	// TtyFactory
 }
 
 type TtyFactory interface {

@@ -28,4 +28,5 @@ require (
 	google.golang.org/grpc v1.26.0
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 	modernc.org/httpfs v1.0.0
+	nhooyr.io/websocket v1.7.4 // indirect
 )

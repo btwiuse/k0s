@@ -1,7 +1,6 @@
 package agent
 
 import (
-	"bufio"
 	"context"
 	"crypto/tls"
 	"errors"
@@ -11,71 +10,23 @@ import (
 	"os/exec"
 
 	types "github.com/btwiuse/conntroll/pkg/agent"
-	"github.com/btwiuse/conntroll/pkg/agent/tty"
-	"github.com/btwiuse/conntroll/pkg/api"
-	"github.com/btwiuse/conntroll/pkg/api/grpcimpl"
 	"golang.org/x/net/proxy"
 	"golang.org/x/sync/errgroup"
-	"google.golang.org/grpc"
 )
 
 var (
 	_ types.Agent = (*agent)(nil)
 )
 
-// lys implements net.Listener
-type lys struct {
-	conns chan net.Conn
-}
-
-func (l *lys) Chan() chan<- net.Conn {
-	return l.conns
-}
-
-func (l *lys) Accept() (net.Conn, error) {
-	return <-l.conns, nil
-}
-
-func (l *lys) Close() error {
-	return nil
-}
-
-func (l *lys) Addr() net.Addr {
-	return l
-}
-
-func (l *lys) Network() string {
-	return "hijack"
-}
-
-func (l *lys) String() string {
-	return l.Network()
-}
-
-func NewLys() *lys {
-	return &lys{
-		conns: make(chan net.Conn),
-	}
-}
-
 type agent struct {
 	*errgroup.Group
-	types.RPC
-
 	types.Config
-	ch   chan<- net.Conn
+	// types.RPC
+
+	types.GRPCServer
+	// grpcln chan<- net.Conn
 	id   string
 	name string
-}
-
-func StartGRPCServer(cmd []string) chan<- net.Conn {
-	grpcServer := grpc.NewServer()
-	api.RegisterSessionServer(grpcServer, &grpcimpl.Session{
-		TtyFactory: tty.NewFactory(cmd),
-	})
-	grpcListener := NewLys()
-	go grpcServer.Serve(grpcListener)
-	return grpcListener.Chan()
 }
 
 func NewAgent(c types.Config) types.Agent {
@@ -89,14 +40,14 @@ func NewAgent(c types.Config) types.Agent {
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
 	}
-	ch := StartGRPCServer(c.GetCmd())
+	grpcServer := StartGRPCServer(c.GetCmd())
 
 	return &agent{
-		Group:  eg,
-		id:     id,
-		name:   name,
-		ch:     ch,
-		Config: c,
+		Group:      eg,
+		Config:     c,
+		GRPCServer: grpcServer,
+		id:         id,
+		name:       name,
 	}
 }
 
@@ -144,7 +95,7 @@ func (ag *agent) Dial() (conn net.Conn, err error) {
 	return nil, errors.New("unknown scheme")
 }
 
-func (ag *agent) Connect(conn net.Conn) (*YS, error) {
+func (ag *agent) AgentRegister(conn net.Conn) (types.RPC, error) {
 	// connect
 	_, err := conn.Write(ag.Config.FakeHeader("/api/yrpc"))
 	if err != nil {
@@ -157,33 +108,17 @@ func (ag *agent) Connect(conn net.Conn) (*YS, error) {
 		return nil, err
 	}
 
-	return &YS{
-		Scanner: bufio.NewScanner(conn),
-	}, nil
+	return NewRPC(conn), nil
 }
 
-type YS struct {
-	// net.Conn
-	*bufio.Scanner
-}
-
-func (ag *agent) Serve(ys *YS) error {
-	for ys.Scan() {
-		cmd := ys.Text()
-		switch cmd {
-		case "ACCEPT":
-			go func() {
-				conn, err := ag.Accept()
-				if err != nil {
-					log.Println(err)
-				}
-				// send conn to grpc server
-				ag.ch <- conn
-			}()
-		default:
-			cmd = "UNKNOWN_CMD: " + cmd
+func (ag *agent) Serve(rpc types.RPC) error {
+	for {
+		select {
+		case f := <-rpc.Actions():
+			go f(ag)
+		case <-rpc.Done():
+			break
 		}
-		log.Println(cmd)
 	}
 	return errors.New("yrpc connection closed")
 }
@@ -194,14 +129,14 @@ func (ag *agent) ConnectAndServe() error {
 		return err
 	}
 
-	ys, err := ag.Connect(conn)
+	rpc, err := ag.AgentRegister(conn)
 	if err != nil {
 		return err
 	}
 
 	log.Println("Connect ok")
 
-	err = ag.Serve(ys)
+	err = ag.Serve(rpc)
 	if err != nil {
 		log.Println("Serve:", err)
 		return err
