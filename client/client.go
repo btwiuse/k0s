@@ -130,6 +130,7 @@ func main() {
 
 	rpcServer := rpc.NewServer()
 	rpcServer.Register(new(protocol.Hello))
+	rpcServer.Register(new(protocol.Bash))
 	log.Println("serveconn")
 	rpcServer.ServeConn(conn)
 	log.Fatalln("bye")
