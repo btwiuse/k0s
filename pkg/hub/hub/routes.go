@@ -2,6 +2,7 @@ package hub
 
 import (
 	"context"
+	"crypto/tls"
 	"io"
 	"log"
 	"net"
@@ -65,8 +66,9 @@ func (h *hub) serve(addr string) {
 			"id", "{id}",
 		)
 	h.Server = &http.Server{
-		Addr:    addr,
-		Handler: handlers.LoggingHandler(os.Stderr, cors.Default().Handler(r)),
+		Addr:         addr,
+		Handler:      handlers.LoggingHandler(os.Stderr, cors.Default().Handler(r)),
+		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
 }
 
