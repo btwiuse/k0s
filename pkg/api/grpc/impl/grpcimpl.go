@@ -2,24 +2,24 @@ package impl
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
-	"fmt"
 
 	"github.com/btwiuse/conntroll/pkg/api"
-	"github.com/btwiuse/wetty/localcmd"
-	"github.com/btwiuse/wetty/wetty"
+	"github.com/btwiuse/wetty/pkg/localcmd"
+	"github.com/btwiuse/wetty/pkg/message"
 	"github.com/kr/pty"
 )
 
-type Slave struct {
+type Session struct {
 	*localcmd.Factory
 	Name string
 	// client id/index, to distinguish logs of different commands
 }
 
-func (bs *Slave) Send(sendServer api.Slave_SendServer) error {
-	lc, err := bs.Factory.New()
+func (session *Session) Send(sendServer api.Session_SendServer) error {
+	lc, err := session.Factory.New()
 	if err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func (bs *Slave) Send(sendServer api.Slave_SendServer) error {
 			if err != nil {
 				return // err
 			}
-			outputMsg := &api.Message{Type: []byte{wetty.Output}, Body: buf[:n]}
+			outputMsg := &api.Message{Type: []byte{message.SessionOutput}, Body: buf[:n]}
 			err = sendServer.Send(outputMsg)
 			if err != nil {
 				return // err
@@ -53,15 +53,15 @@ func (bs *Slave) Send(sendServer api.Slave_SendServer) error {
 		if err != nil {
 			return nil
 		}
-		log.Println(bs.Name, wetty.IotaString(msg.Type[0]), fmt.Sprintf("%q", string(msg.Body)))
+		log.Println(session.Name, message.ToString(msg.Type[0]), fmt.Sprintf("%q", string(msg.Body)))
 		switch msgType := msg.Type[0]; msgType {
-		case wetty.Input:
+		case message.ClientInput:
 			_, err = lc.Write(msg.Body)
 			if err != nil {
-				log.Println(bs.Name, "error writing to lc:", err)
+				log.Println(session.Name, "error writing to lc:", err)
 				return err
 			}
-		case wetty.ResizeTerminal:
+		case message.SessionResize:
 			sz := &pty.Winsize{}
 			err = json.Unmarshal(msg.Body, sz)
 			if err != nil {
@@ -71,7 +71,7 @@ func (bs *Slave) Send(sendServer api.Slave_SendServer) error {
 			if err != nil {
 				return err
 			}
-		case wetty.ClientDead:
+		case message.SessionClose:
 			return lc.Close()
 		}
 	}

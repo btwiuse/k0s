@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package api;
 
-// caller: Hub <=> server: Agent/Factory::Slave
-service Slave {
+// caller: Hub <=> server: Agent/Factory::Session
+service Session {
     rpc Send(stream Message) returns (stream Message) {};
 }
 

@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/url"
 
-	"github.com/btwiuse/wetty/localcmd"
-	"github.com/btwiuse/wetty/utils"
+	"github.com/btwiuse/wetty/pkg/localcmd"
+	"github.com/btwiuse/wetty/pkg/utils"
 	"google.golang.org/grpc"
 
 	"github.com/btwiuse/conntroll/pkg/agent/config"
@@ -14,26 +14,26 @@ import (
 	grpcimpl "github.com/btwiuse/conntroll/pkg/api/grpc/impl"
 )
 
-type NewSlave struct {
+type NewSession struct {
 	*localcmd.Factory
 	Name string
 }
 
-type NewSlaveRequest struct {
+type NewSessionRequest struct {
 	Info url.Values
 }
 
-type NewSlaveResponse struct{}
+type NewSessionResponse struct{}
 
-func (c *NewSlave) New(req NewSlaveRequest, res *NewSlaveResponse) error {
-	log.Println("NewSlave.New called with", req)
+func (c *NewSession) New(req NewSessionRequest, res *NewSessionResponse) error {
+	log.Println("NewSession.New called with", req)
 
 	conn, err := dial.WithInfo(config.Default.Server, req.Info)
 	if err != nil {
 		return err
 	}
 	grpcServer := grpc.NewServer()
-	api.RegisterSlaveServer(grpcServer, &grpcimpl.Slave{Factory: c.Factory, Name: c.Name})
+	api.RegisterSessionServer(grpcServer, &grpcimpl.Session{Factory: c.Factory, Name: c.Name})
 	grpcServer.Serve(&utils.SingleListener{conn})
 	return nil
 }

@@ -79,15 +79,15 @@ func init() {
 func init() { proto.RegisterFile("api.proto", fileDescriptor_00212fb1f9d3bf1c) }
 
 var fileDescriptor_00212fb1f9d3bf1c = []byte{
-	// 118 bytes of a gzipped FileDescriptorProto
+	// 120 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4c, 0x2c, 0xc8, 0xd4,
 	0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x4e, 0x2c, 0xc8, 0x54, 0x32, 0xe4, 0x62, 0xf7, 0x4d,
 	0x2d, 0x2e, 0x4e, 0x4c, 0x4f, 0x15, 0x12, 0xe2, 0x62, 0x29, 0xa9, 0x2c, 0x48, 0x95, 0x60, 0x54,
 	0x60, 0xd4, 0xe0, 0x09, 0x02, 0xb3, 0x41, 0x62, 0x49, 0xf9, 0x29, 0x95, 0x12, 0x4c, 0x10, 0x31,
-	0x10, 0xdb, 0xc8, 0x90, 0x8b, 0x35, 0x38, 0x27, 0xb1, 0x2c, 0x55, 0x48, 0x83, 0x8b, 0x25, 0x38,
-	0x35, 0x2f, 0x45, 0x88, 0x47, 0x0f, 0x64, 0x28, 0xd4, 0x18, 0x29, 0x14, 0x9e, 0x12, 0x83, 0x06,
-	0xa3, 0x01, 0x63, 0x12, 0x1b, 0xd8, 0x46, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0x7d, 0x5d,
-	0x5c, 0x44, 0x7e, 0x00, 0x00, 0x00,
+	0x10, 0xdb, 0xc8, 0x98, 0x8b, 0x3d, 0x38, 0xb5, 0xb8, 0x38, 0x33, 0x3f, 0x4f, 0x48, 0x83, 0x8b,
+	0x25, 0x38, 0x35, 0x2f, 0x45, 0x88, 0x47, 0x0f, 0x64, 0x2c, 0xd4, 0x20, 0x29, 0x14, 0x9e, 0x12,
+	0x83, 0x06, 0xa3, 0x01, 0x63, 0x12, 0x1b, 0xd8, 0x4e, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff,
+	0x0b, 0xb6, 0x4c, 0x1b, 0x80, 0x00, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -98,45 +98,45 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// SlaveClient is the client API for Slave service.
+// SessionClient is the client API for Session service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type SlaveClient interface {
-	Send(ctx context.Context, opts ...grpc.CallOption) (Slave_SendClient, error)
+type SessionClient interface {
+	Send(ctx context.Context, opts ...grpc.CallOption) (Session_SendClient, error)
 }
 
-type slaveClient struct {
+type sessionClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewSlaveClient(cc *grpc.ClientConn) SlaveClient {
-	return &slaveClient{cc}
+func NewSessionClient(cc *grpc.ClientConn) SessionClient {
+	return &sessionClient{cc}
 }
 
-func (c *slaveClient) Send(ctx context.Context, opts ...grpc.CallOption) (Slave_SendClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_Slave_serviceDesc.Streams[0], "/api.Slave/Send", opts...)
+func (c *sessionClient) Send(ctx context.Context, opts ...grpc.CallOption) (Session_SendClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Session_serviceDesc.Streams[0], "/api.Session/Send", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &slaveSendClient{stream}
+	x := &sessionSendClient{stream}
 	return x, nil
 }
 
-type Slave_SendClient interface {
+type Session_SendClient interface {
 	Send(*Message) error
 	Recv() (*Message, error)
 	grpc.ClientStream
 }
 
-type slaveSendClient struct {
+type sessionSendClient struct {
 	grpc.ClientStream
 }
 
-func (x *slaveSendClient) Send(m *Message) error {
+func (x *sessionSendClient) Send(m *Message) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *slaveSendClient) Recv() (*Message, error) {
+func (x *sessionSendClient) Recv() (*Message, error) {
 	m := new(Message)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -144,42 +144,42 @@ func (x *slaveSendClient) Recv() (*Message, error) {
 	return m, nil
 }
 
-// SlaveServer is the server API for Slave service.
-type SlaveServer interface {
-	Send(Slave_SendServer) error
+// SessionServer is the server API for Session service.
+type SessionServer interface {
+	Send(Session_SendServer) error
 }
 
-// UnimplementedSlaveServer can be embedded to have forward compatible implementations.
-type UnimplementedSlaveServer struct {
+// UnimplementedSessionServer can be embedded to have forward compatible implementations.
+type UnimplementedSessionServer struct {
 }
 
-func (*UnimplementedSlaveServer) Send(srv Slave_SendServer) error {
+func (*UnimplementedSessionServer) Send(srv Session_SendServer) error {
 	return status.Errorf(codes.Unimplemented, "method Send not implemented")
 }
 
-func RegisterSlaveServer(s *grpc.Server, srv SlaveServer) {
-	s.RegisterService(&_Slave_serviceDesc, srv)
+func RegisterSessionServer(s *grpc.Server, srv SessionServer) {
+	s.RegisterService(&_Session_serviceDesc, srv)
 }
 
-func _Slave_Send_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(SlaveServer).Send(&slaveSendServer{stream})
+func _Session_Send_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(SessionServer).Send(&sessionSendServer{stream})
 }
 
-type Slave_SendServer interface {
+type Session_SendServer interface {
 	Send(*Message) error
 	Recv() (*Message, error)
 	grpc.ServerStream
 }
 
-type slaveSendServer struct {
+type sessionSendServer struct {
 	grpc.ServerStream
 }
 
-func (x *slaveSendServer) Send(m *Message) error {
+func (x *sessionSendServer) Send(m *Message) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *slaveSendServer) Recv() (*Message, error) {
+func (x *sessionSendServer) Recv() (*Message, error) {
 	m := new(Message)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -187,14 +187,14 @@ func (x *slaveSendServer) Recv() (*Message, error) {
 	return m, nil
 }
 
-var _Slave_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "api.Slave",
-	HandlerType: (*SlaveServer)(nil),
+var _Session_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "api.Session",
+	HandlerType: (*SessionServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Send",
-			Handler:       _Slave_Send_Handler,
+			Handler:       _Session_Send_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},

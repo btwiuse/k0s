@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
-	github.com/btwiuse/wetty v0.0.22
+	github.com/btwiuse/wetty v0.0.23
 	github.com/chzyer/logex v1.1.10 // indirect
 	github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1 // indirect
 	github.com/creack/pty v1.1.9 // indirect

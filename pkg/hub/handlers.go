@@ -15,9 +15,10 @@ import (
 	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
-	"github.com/btwiuse/wetty/assets"
-	"github.com/btwiuse/wetty/utils"
-	"github.com/btwiuse/wetty/wetty"
+	"github.com/btwiuse/wetty/pkg/assets"
+	"github.com/btwiuse/wetty/pkg/utils"
+	"github.com/btwiuse/wetty/pkg/wetty"
+	"github.com/btwiuse/wetty/pkg/message"
 	"github.com/gorilla/websocket"
 	"google.golang.org/grpc"
 	"modernc.org/httpfs"
@@ -27,20 +28,20 @@ func getAgents(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	infos := []url.Values{}
 	for _, v := range GlobalAgentPool.Agents.Values() {
-		slave := v.(*Agent)
-		infos = append(infos, slave.Info)
+		agent := v.(*Agent)
+		infos = append(infos, agent.Info)
 	}
 	w.Write([]byte(pretty.JSONString(infos)))
 }
 
 func grpcfactory(agent *Agent) (*grpc.ClientConn, error) {
-	req := rpcimpl.NewSlaveRequest{
+	req := rpcimpl.NewSessionRequest{
 		Info: agent.Info,
 	}
-	resp := new(rpcimpl.NewSlaveResponse)
+	resp := new(rpcimpl.NewSessionResponse)
 
 	done := make(chan *rpc.Call, 1)
-	agent.RPCClient.Go("NewSlave.New", req, resp, done)
+	agent.RPCClient.Go("NewSession.New", req, resp, done)
 	<-done
 
 	time.Sleep(time.Second / 3) // todo: investigate why it is necessary
@@ -74,34 +75,35 @@ func grpcrelayws(agent *Agent) http.HandlerFunc {
 		}
 
 		// to bidiStreamClient
-		bidiStreamClient := api.NewSlaveClient(cc)
+		sessionClient := api.NewSessionClient(cc)
 
-		// to sendClient
-		slave, err := bidiStreamClient.Send(context.Background())
+		// to sessionSendClient
+		session, err := sessionClient.Send(context.Background())
 		if err != nil {
-			log.Fatalln(slave, err)
+			log.Println(err)
+			return
 		}
 
-		pipe(utils.WsConnToReadWriter(wsconn), slave)
+		pipe(utils.WsConnToReadWriter(wsconn), session)
 	}
 }
 
-// here master and slave are connected via network
+// here client and session are connected via hub
 // go for send Input   <=	   websocket
 // go for send Resize  <= [ Pipe ] websocket
 // for recv Output     =>	   websocket
 // (through chan Message{Type, Body} instead of interface)
-func pipe(ws io.ReadWriteCloser, slave api.Slave_SendClient) error {
+func pipe(ws io.ReadWriteCloser, session api.Session_SendClient) error {
 	errs := make(chan error, 2)
 	closeall := func() {
-		ws.Write([]byte{wetty.SlaveDead})
-		slave.Send(&api.Message{Type: []byte{wetty.ClientDead}})
+		ws.Write([]byte{message.ClientClose})
+		session.Send(&api.Message{Type: []byte{message.SessionClose}})
 		ws.Close()
-		slave.CloseSend()
+		session.CloseSend()
 	}
 
 	go func() {
-		log.Println("pipe: client(ws) => slave(grpc)")
+		log.Println("pipe: client(ws) => session(grpc)")
 		defer closeall()
 		buf := make([]byte, 1<<12)
 		for {
@@ -111,7 +113,7 @@ func pipe(ws io.ReadWriteCloser, slave api.Slave_SendClient) error {
 				break
 			}
 			msg := &api.Message{Type: buf[:1], Body: buf[1:n]}
-			err = slave.Send(msg)
+			err = session.Send(msg)
 			if err != nil {
 				errs <- err
 				return
@@ -120,10 +122,10 @@ func pipe(ws io.ReadWriteCloser, slave api.Slave_SendClient) error {
 	}()
 
 	go func() {
-		log.Println("pipe: client(ws) <= slave(grpc)")
+		log.Println("pipe: client(ws) <= session(grpc)")
 		defer closeall()
 		for {
-			resp, err := slave.Recv()
+			resp, err := session.Recv()
 			if err != nil {
 				errs <- err
 				break
@@ -142,7 +144,7 @@ func pipe(ws io.ReadWriteCloser, slave api.Slave_SendClient) error {
 }
 
 // https://github.com/frankdejonge/golang-websocket-example/blob/master/connection.go
-func handleConnectionError(slave io.Writer, err error) {
+func handleConnectionError(session io.Writer, err error) {
 	ers := []int{
 		// websocket.CloseNormalClosure,
 		// websocket.CloseGoingAway,
@@ -163,10 +165,10 @@ func handleConnectionError(slave io.Writer, err error) {
 	if websocket.IsUnexpectedCloseError(err, ers...) {
 		log.Printf("Unexpected error from connection: %q", err)
 	} else {
-		log.Printf("Client close detected: %q, sending ClientDead message to slave", err)
+		log.Printf("Client close detected: %q, sending ClientDead message to session", err)
 	}
 
-	if _, err := slave.Write([]byte{wetty.ClientDead}); err != nil {
+	if _, err := session.Write([]byte{message.SessionClose}); err != nil {
 		log.Println("pipe:", err)
 	}
 }
@@ -196,9 +198,9 @@ func static(w http.ResponseWriter, r *http.Request) {
 	case "ws":
 		grpcrelayws(GlobalAgentPool.Get(id))(w, r)
 	case "rootfs":
-		// slave := GlobalAgentPool.Get(id)
+		// session := GlobalAgentPool.Get(id)
 		// p := "/" + path.Join(parts[2:]...)
-		// fsrelay(w, r, slave, p)
+		// fsrelay(w, r, session, p)
 	default:
 		// handle non-ws static resources
 		staticFileHandler.ServeHTTP(w, r)
@@ -208,7 +210,7 @@ HOME:
 	http.Redirect(w, r, "/", 302)
 }
 
-func newAgentSlave(w http.ResponseWriter, r *http.Request) {
+func newAgentOrSession(w http.ResponseWriter, r *http.Request) {
 	conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
 	if err != nil {
 		log.Println("error hijacking:", err)
@@ -216,6 +218,7 @@ func newAgentSlave(w http.ResponseWriter, r *http.Request) {
 	}
 	id := r.URL.Query().Get("id")
 
+	// new agent
 	if !GlobalAgentPool.Has(id) {
 		agent := &Agent{
 			Info:           r.URL.Query(),
@@ -228,9 +231,10 @@ func newAgentSlave(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// new session
 	agent := GlobalAgentPool.Get(id)
 	agent.GRPCClientConn <- toGRPCClientConn(conn)
-	log.Println("new slave connected:", agent.Info.Get("id"))
+	log.Println("new session created from agent:", agent.Info.Get("id"))
 }
 
 func toGRPCClientConn(c net.Conn) *grpc.ClientConn {

@@ -8,7 +8,7 @@ import (
 	"github.com/btwiuse/conntroll/pkg/agent/config"
 	"github.com/btwiuse/conntroll/pkg/agent/dial"
 	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
-	"github.com/btwiuse/wetty/localcmd"
+	"github.com/btwiuse/wetty/pkg/localcmd"
 )
 
 func main() {
@@ -29,6 +29,6 @@ func main() {
 	}
 
 	rpcServer := rpc.NewServer()
-	rpcServer.Register(&rpcimpl.NewSlave{Factory: factory, Name: uuid.New().String()})
+	rpcServer.Register(&rpcimpl.NewSession{Factory: factory, Name: uuid.New().String()})
 	rpcServer.ServeConn(conn)
 }

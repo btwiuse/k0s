@@ -4,6 +4,6 @@ import (
 	"github.com/btwiuse/conntroll/pkg/api"
 )
 
-type Slave struct {
-	api.SlaveClient
+type Session struct {
+	api.SessionClient
 }

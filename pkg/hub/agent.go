@@ -44,12 +44,12 @@ func (p *AgentPool) Add(agent *Agent) {
 func (p *AgentPool) Dump() {
 	log.Println("[agent pool]")
 	for i, v := range p.Agents.Values() {
-		slave := v.(*Agent)
+		agent := v.(*Agent)
 		uuid := p.Agents.Keys()[i].(string)
 		fmt.Println(
 			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
 			uuid,
-			slave.Info,
+			agent.Info,
 		)
 	}
 }
@@ -60,7 +60,7 @@ func (p *AgentPool) Has(uuid string) bool {
 }
 
 // we use NewRPCClient over rpc.NewClient(conn)
-// so we can remove slave from pool immediately when it is disconnected
+// so we can remove agent from pool immediately when it is disconnected
 
 /*
                 c                           b                  a
@@ -79,8 +79,7 @@ func (agent *Agent) MakeInterceptedRPCClient(c io.ReadWriteCloser) {
 	agent.RPCClient = rpc.NewClient(wrap.WrapReadWriteCloser(a, c))
 }
 
-// onclose is called when slave goes offline
-// slave.UUID, slave.RemoteAddr, slave.Info
+// onclose is called when agent goes offline
 func (agent *Agent) onClose() {
 	defer GlobalAgentPool.Dump()
 	log.Println("disconnected:", agent.Info.Get("id"))
