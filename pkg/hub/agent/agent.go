@@ -28,7 +28,7 @@ func NewAgent(conn net.Conn, opts ...Opt) hub.Agent {
 		SessionManager: NewSessionManager(),
 		rpcManager:     NewRPCManager(),
 		created:        time.Now(),
-		connected:      time.Now().Unix(),
+		Connected:      time.Now().Unix(),
 		done:           make(chan struct{}),
 		once:           &sync.Once{},
 	}
