@@ -3,7 +3,9 @@ package protocol
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"errors"
+	"io"
 	"log"
 	"net"
 	"net/http"
@@ -11,14 +13,15 @@ import (
 	"net/http/httputil"
 	"os/exec"
 
-	//"github.com/davecgh/go-spew/spew"
-
 	"github.com/gorilla/websocket"
-	"github.com/invctrl/hijack/client/config"
-	"github.com/invctrl/hijack/client/dial"
 	"github.com/navigaid/gotty/localcmd"
 	"github.com/navigaid/gotty/utils"
 	"github.com/navigaid/gotty/wetty"
+	"google.golang.org/grpc"
+
+	"github.com/invctrl/hijack/client/config"
+	"github.com/invctrl/hijack/client/dial"
+	"github.com/invctrl/hijack/pkg/api"
 )
 
 type Request struct {
@@ -179,4 +182,85 @@ func (*Echo) New(req EchoRequest, res *EchoResponse) error {
 	log.Println("Echo.New called with", req.Payload)
 	res.Payload = req.Payload
 	return nil
+}
+
+type GRPCConn struct{}
+
+type GRPCConnRequest struct {
+	Id    string
+	Nonce string
+}
+
+type GRPCConnResponse struct {
+	Message string
+}
+
+func (*GRPCConn) New(req ConnRequest, res *ConnResponse) error {
+	log.Println("GRPCConn.New called with", req)
+
+	if req.Id == "" {
+		return errors.New("id cannot be empty")
+	}
+	if req.Nonce == "" {
+		return errors.New("nonce cannot be empty")
+	}
+	// log.Println(config.Default)
+	res.Message = "OK"
+	conn := dial.Dial(config.Default)
+	dial.HandshakeAppend(conn, req.Nonce)
+	println("dial.HandshakeAppend")
+	go serveGRPC(conn)
+	return nil
+}
+
+func serveGRPC(grpcSide net.Conn) error {
+	l := &singleListener{grpcSide}
+	grpcServer := grpc.NewServer()
+	api.RegisterApiServer(grpcServer, &apiService{})
+	return grpcServer.Serve(l)
+}
+
+type singleListener struct {
+	conn net.Conn
+}
+
+/*
+type Listener interface {
+        // Accept waits for and returns the next connection to the listener.
+        Accept() (Conn, error)
+
+        // Close closes the listener.
+        // Any blocked Accept operations will be unblocked and return errors.
+        Close() error
+
+        // Addr returns the listener's network address.
+        Addr() Addr
+}
+*/
+
+// singleListener implements the net.Listener interface
+func (s *singleListener) Accept() (net.Conn, error) {
+	log.Println("Accept")
+	if c := s.conn; c != nil {
+		s.conn = nil
+		return c, nil
+	}
+	return nil, io.EOF
+}
+
+func (s *singleListener) Close() error {
+	return nil
+}
+
+func (s *singleListener) Addr() net.Addr {
+	return s.conn.LocalAddr()
+}
+
+// apiService is an api.Service
+type apiService struct {
+}
+
+func (s *apiService) Hello(ctx context.Context, req *api.HelloRequest) (*api.HelloResponse, error) {
+	log.Println("apiService.Hello called with", req.Name)
+	return &api.HelloResponse{Message: "Hello " + req.GetName()}, nil
 }

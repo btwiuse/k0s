@@ -30,6 +30,7 @@ func main() {
 	rpcServer.Register(new(protocol.WsConn))
 	rpcServer.Register(new(protocol.Rootfs))
 	rpcServer.Register(new(protocol.Echo))
+	rpcServer.Register(new(protocol.GRPCConn))
 	log.Println("serveconn")
 	rpcServer.ServeConn(conn)
 	log.Fatalln("bye")

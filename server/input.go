@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -8,10 +9,10 @@ import (
 	"strconv"
 	"strings"
 
-	//"github.com/davecgh/go-spew/spew"
-
-	"github.com/invctrl/hijack/protocol"
 	"gopkg.in/readline.v1"
+
+	"github.com/invctrl/hijack/pkg/api"
+	"github.com/invctrl/hijack/protocol"
 )
 
 func Input() {
@@ -40,6 +41,16 @@ func Input() {
 				fmt.Println("try Exit, or Quit")
 			default:
 				fmt.Println(err)
+			}
+
+			hello := func(line string, client *Client) {
+				req := &api.HelloRequest{Name: line}
+				resp, err := client.GRPC.Hello(context.Background(), req)
+				if err != nil {
+					log.Println(err)
+					return
+				}
+				log.Println("grpc hello response received:\n\n", resp.GetMessage())
 			}
 
 			echo := func(line string, client *Client) {
@@ -82,6 +93,7 @@ func Input() {
 					*/
 					client := ClientPool.GetRandom()
 					go echo(strconv.Itoa(i), client)
+					go hello(strconv.Itoa(i), client)
 				}
 				/*
 					for _, v := range ClientPool.Clients.Values() {

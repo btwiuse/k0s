@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -17,11 +18,14 @@ import (
 	"github.com/fatih/pool"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
-	"github.com/invctrl/hijack/header"
-	"github.com/invctrl/hijack/protocol"
-	"github.com/invctrl/hijack/wrap"
 	"github.com/navigaid/gods/maps/linkedhashmap"
 	"github.com/navigaid/pretty"
+	"google.golang.org/grpc"
+
+	"github.com/invctrl/hijack/header"
+	"github.com/invctrl/hijack/pkg/api"
+	"github.com/invctrl/hijack/protocol"
+	"github.com/invctrl/hijack/wrap"
 )
 
 type Client struct {
@@ -29,6 +33,7 @@ type Client struct {
 	LocalAddr  net.Addr
 	RemoteAddr net.Addr
 	RPC        *rpc.Client
+	GRPC       api.ApiClient
 	Info       string
 	Conns      map[string]net.Conn
 	WsConns    map[string]*websocket.Conn
@@ -60,10 +65,13 @@ func (p *Pool) GetRandom() *Client {
 	rand.Seed(time.Now().UnixNano())
 	iter := p.Clients.Iterator()
 	iter.Begin()
-	n := p.Clients.Size()
-	r := rand.Intn(n)
-	log.Println(r, n)
-	for i := 0; i <= r; i++ {
+	/*
+		n := p.Clients.Size()
+		r := rand.Intn(n)
+		log.Println(r, n)
+		for i := 0; i <= r; i++ {
+	*/
+	for i := 0; i <= rand.Intn(p.Clients.Size()); i++ {
 		iter.Next()
 	}
 	return iter.Value().(*Client)
@@ -153,8 +161,8 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 	log.Println("connected:", client.UUID, client.RemoteAddr)
 
 	ClientPool.Add(client)
-	ClientPool.Get(client.UUID.String())
 	factory := func() (net.Conn, error) {
+		log.Println("infactory")
 		nonce := uuid.New().String()
 		id := client.UUID.String()
 		req := protocol.ConnRequest{
@@ -172,9 +180,35 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 		delete(client.Conns, nonce)
 		return conn, nil
 	}
+	log.Println("pool.NewChannelPool")
 	client.Pool, err = pool.NewChannelPool(5, 30, factory)
 	if err != nil {
 		return nil, err
+	}
+
+	log.Println("new grpc!!!")
+	{
+		nonce := uuid.New().String()
+		id := client.UUID.String()
+		req := protocol.GRPCConnRequest{
+			Id:    id,
+			Nonce: nonce,
+		}
+		resp := new(protocol.GRPCConnResponse)
+		done := make(chan *rpc.Call, 1)
+		client.RPC.Go("GRPCConn.New", req, resp, done)
+		<-done
+		time.Sleep(time.Second / 3)
+		conn, ok := client.Conns[nonce]
+		if !ok {
+			return nil, fmt.Errorf("client nonce doesn't exist: %s", nonce)
+		}
+		delete(client.Conns, nonce)
+		cc, err := NewGRPCClientConn(conn)
+		if err != nil {
+			return nil, err
+		}
+		client.GRPC = api.NewApiClient(cc)
 	}
 
 	ClientPool.Dump()
@@ -209,4 +243,17 @@ func NewRPCClient(conn io.ReadWriteCloser, onclose func()) *rpc.Client {
 	pr, pw := io.Pipe()
 	go copy(pw, conn)
 	return rpc.NewClient(wrap.WrapReadWriteCloser(pr, conn))
+}
+
+func NewGRPCClientConn(grpcSide net.Conn) (*grpc.ClientConn, error) {
+	return grpc.Dial(
+		"",
+		[]grpc.DialOption{
+			grpc.WithInsecure(),
+			grpc.WithContextDialer(
+				func(ctx context.Context, s string) (net.Conn, error) {
+					return grpcSide, nil
+				}),
+		}...,
+	)
 }
