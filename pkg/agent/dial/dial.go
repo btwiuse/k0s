@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/websocket"
-	"github.com/btwiuse/invctrl/pkg/slave/config"
+	"github.com/btwiuse/invctrl/pkg/agent/config"
 	"github.com/btwiuse/invctrl/header"
 	"github.com/btwiuse/pretty"
 )

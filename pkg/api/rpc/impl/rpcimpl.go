@@ -18,8 +18,8 @@ import (
 	"github.com/btwiuse/wetty/wetty"
 	"google.golang.org/grpc"
 
-	"github.com/btwiuse/invctrl/pkg/slave/config"
-	"github.com/btwiuse/invctrl/pkg/slave/dial"
+	"github.com/btwiuse/invctrl/pkg/agent/config"
+	"github.com/btwiuse/invctrl/pkg/agent/dial"
 	"github.com/btwiuse/invctrl/pkg/api"
 	grpcimpl "github.com/btwiuse/invctrl/pkg/api/grpc/impl"
 )
