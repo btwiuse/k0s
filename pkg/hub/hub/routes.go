@@ -22,6 +22,7 @@ import (
 	"github.com/btwiuse/wetty/pkg/msg"
 	"github.com/btwiuse/wetty/pkg/utils"
 	"github.com/btwiuse/wetty/pkg/wetty"
+	webui "github.com/conntroll/conntroll.github.io"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -75,7 +76,8 @@ func (h *hub) serve(addr string) {
 
 	// ==================== basic auth (TODO) =======================
 	// root auth
-	r.NotFoundHandler = h.basicauth(http.FileServer(http.Dir("conntroll.github.io")))
+	// r.NotFoundHandler = h.basicauth(http.FileServer(http.Dir("conntroll.github.io")))
+	r.NotFoundHandler = h.basicauth(http.FileServer(httpfs.NewFileSystem(webui.Assets, time.Now())))
 
 	// list active agents
 	r.HandleFunc("/api/agents/", h.basicauth(http.HandlerFunc(h.handleAgents))).Methods("GET")
