@@ -5,9 +5,19 @@ package api;
 import "msg/types.proto";
 // import "github.com/btwiuse/wetty/pkg/msg/types.proto";
 
+message ChunkRequest {
+    string path = 1;
+    bytes request = 2;
+}
+
+message Chunk {
+    bytes chunk = 1;
+}
+
 // caller: Hub <=> server: Agent/Factory::Session
 service Session {
     rpc Send(stream Message) returns (stream Message) {};
+    rpc Chunker(ChunkRequest) returns (stream Chunk) {};
 }
 
 message Message {

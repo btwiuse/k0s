@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/rpc"
 
+	"github.com/btwiuse/conntroll/pkg/api"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/gods/maps/linkedhashmap"
 
@@ -14,6 +15,7 @@ import (
 type Agent struct {
 	RPCClient      *rpc.Client           `json:"-"`
 	GRPCClientConn chan *grpc.ClientConn `json:"-"`
+	SessionClient  api.SessionClient     `json:"-"`
 
 	// Metadata
 	Id        string `json:"id"`

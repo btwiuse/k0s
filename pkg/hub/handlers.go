@@ -6,12 +6,11 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"net/rpc"
+	"net/http/httputil"
 	"strings"
 	"time"
 
 	"github.com/btwiuse/conntroll/pkg/api"
-	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
@@ -30,20 +29,6 @@ func getAgents(w http.ResponseWriter, r *http.Request) {
 		agents = append(agents, v.(*Agent))
 	}
 	w.Write([]byte(pretty.JSONString(agents)))
-}
-
-func grpcfactory(agent *Agent) (*grpc.ClientConn, error) {
-	req := rpcimpl.NewSessionRequest{
-		// Info: agent.Info,
-	}
-	resp := new(rpcimpl.NewSessionResponse)
-
-	done := make(chan *rpc.Call, 1)
-	agent.RPCClient.Go("NewSession.New", req, resp, done)
-	<-done
-
-	time.Sleep(time.Second / 3) // todo: investigate why it is necessary
-	return <-agent.GRPCClientConn, nil
 }
 
 // listen on frontend ws connection
@@ -65,24 +50,14 @@ func grpcrelayws(agent *Agent) http.HandlerFunc {
 		}
 		defer wsconn.Close()
 
-		// 2, 3
-		cc, err := grpcfactory(agent)
+		session := NewSession(agent)
+		sessionSendClient, err := session.Send(context.Background())
 		if err != nil {
 			log.Println(err)
 			return
 		}
 
-		// to bidiStreamClient
-		sessionClient := api.NewSessionClient(cc)
-
-		// to sessionSendClient
-		session, err := sessionClient.Send(context.Background())
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		pipe(utils.WsConnToReadWriter(wsconn), session)
+		pipe(utils.WsConnToReadWriter(wsconn), sessionSendClient)
 	}
 }
 
@@ -170,14 +145,16 @@ func static(w http.ResponseWriter, r *http.Request) {
 	base := strings.TrimPrefix(r.RequestURI, "/agent/")
 	parts := strings.Split(base, "/")
 	if len(parts) == 0 {
-		goto HOME
+		http.Redirect(w, r, "/", 302)
+		return
 	}
 	id = parts[0]
 	staticFileServer = http.FileServer(httpfs.NewFileSystem(assets.Assets, time.Now()))
 	staticFileHandler = http.StripPrefix("/agent/"+id+"/", staticFileServer)
 
 	if !GlobalAgentPool.Has(id) {
-		goto HOME
+		http.Redirect(w, r, "/", 302)
+		return
 	}
 
 	if len(parts) == 1 {
@@ -185,20 +162,68 @@ func static(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	agent := GlobalAgentPool.Get(id)
+
 	switch parts[1] {
 	case "ws":
-		grpcrelayws(GlobalAgentPool.Get(id))(w, r)
+		grpcrelayws(agent)(w, r)
 	case "rootfs":
-		// session := GlobalAgentPool.Get(id)
-		// p := "/" + path.Join(parts[2:]...)
-		// fsrelay(w, r, session, p)
+		fsrelay(agent)(w, r)
 	default:
 		// handle non-ws static resources
 		staticFileHandler.ServeHTTP(w, r)
 	}
-	return
-HOME:
-	http.Redirect(w, r, "/", 302)
+}
+
+func fsrelay(agent *Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// 0.
+		path := strings.SplitN(r.RequestURI, "rootfs", 2)[1]
+		r.RequestURI = path
+
+		// 1.
+		reqbuf, err := httputil.DumpRequest(r, true)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		chunkRequest := &api.ChunkRequest{
+			Path:    path,
+			Request: reqbuf,
+		}
+		session := NewSession(agent)
+		sessionChunkerClient, err := session.Chunker(context.Background(), chunkRequest)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		// 5. hijack slave http request -> net.Conn
+		rwc, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		defer rwc.Close() // tell browser to stop loading
+
+		for {
+			chunk, err := sessionChunkerClient.Recv()
+			if err != nil {
+				if err != io.EOF {
+					log.Println(err)
+				}
+				break
+			}
+			if _, err := rwc.Write(chunk.Chunk); err != nil {
+				log.Println(err)
+				break
+			}
+		}
+
+		return
+	}
 }
 
 func newAgentOrSession(w http.ResponseWriter, r *http.Request) {
