@@ -2,10 +2,12 @@ package client
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 
 	"k0s.io/conntroll/pkg"
@@ -35,19 +37,44 @@ func (cl *client) Run() error {
 	// id := &bytes.Buffer{}
 	id := &strings.Builder{}
 
-	jq := exec.Command("jq", "-r", ".[].id")
+	head := exec.Command("echo", "agent username hostname os arch distro auth")
+	headStdoutPipe, _ := head.StdoutPipe()
+
+	jq := exec.Command("jq", "-cr", `.[]|"\(.name) \(.username) \(.hostname) \(.os) \(.arch) \(.distro) \(.auth) @\(.)"`)
 	jq.Stdin = resp.Body
-	// jq.Stdout = pw
 	jq.Stderr = os.Stderr
 	jqStdoutPipe, _ := jq.StdoutPipe()
 
-	fzf := exec.Command("fzf")
+	column := exec.Command("column", "-t")
+	column.Stdin = io.MultiReader(headStdoutPipe, jqStdoutPipe)
+	columnStdoutPipe, _ := column.StdoutPipe()
+
+	/*
+		(echo 'agent username hostname os arch distro auth';
+		curl -s https://hub.k0s.io/api/agents/list |
+		jq -cr '.[]|"\(.name) \(.username) \(.hostname) \(.os) \(.arch) \(.distro) \(.auth) @\(.)"')
+		| column -t | fzf --preview 'echo {} | cut -d "@" -f 2- |jq -r .|yj -jy'
+		--reverse --tac --cycle -d '@' --with-nth=1 --header-lines=1 --preview-window=right:40%
+	*/
+
+	fzf := exec.Command("fzf",
+		"--tac",
+		"--cycle",
+		"-d", "@",
+		"--reverse",
+		"--with-nth", "1",
+		"--header-lines", "1",
+		"--preview-window", "right:40%",
+		"--preview", "echo {}|cut -d @ -f 2-|jq -r .|yj -jy",
+	)
 	// fzf.Stdin = pr
-	fzf.Stdin = jqStdoutPipe
+	fzf.Stdin = columnStdoutPipe
 	fzf.Stdout = id //os.Stdout
 	fzf.Stderr = os.Stderr
 
+	head.Start()
 	jq.Start()
+	column.Start()
 	fzf.Start()
 	fzf.Wait()
 
@@ -56,10 +83,13 @@ func (cl *client) Run() error {
 		wsScheme = "wss"
 	}
 
+	uuidMatcher := regexp.MustCompile(`\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b`)
+	idd := uuidMatcher.FindString(id.String())
+
 	websocat := exec.Command("websocat",
 		"tcp-l:0.0.0.0"+pkg.SOCKS5_PROXY_PORT,
 		"--binary",
-		fmt.Sprintf("%s://%s/api/agent/%s/socks5", wsScheme, c.GetHost(), strings.TrimSpace(id.String())),
+		fmt.Sprintf("%s://%s/api/agent/%s/socks5", wsScheme, c.GetHost(), strings.TrimSpace(idd)),
 	)
 	brook := exec.Command("brook",
 		"socks5tohttp",
