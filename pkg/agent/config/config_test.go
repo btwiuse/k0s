@@ -15,6 +15,7 @@ func TestParse(t *testing.T) {
 		[]string{"-hub", "https://example.com"},
 		[]string{"-hub", ":80"},
 		[]string{"-hub", ":443"},
+		[]string{"-hub", "https://:8000"},
 	}
 	expects := []string{
 		"http://example.com:80",
@@ -25,6 +26,7 @@ func TestParse(t *testing.T) {
 		"https://example.com:443",
 		"http://127.0.0.1:80",
 		"https://127.0.0.1:443",
+		"https://127.0.0.1:8000",
 	}
 	for i, input := range inputs {
 		var (
