@@ -56,7 +56,6 @@ type Agent interface {
 	// AddRPCConn(net.Conn)
 	AddSessionConn(net.Conn)
 
-	// NewRPC()
 	NewSession() Session
 
 	Close()
@@ -64,6 +63,8 @@ type Agent interface {
 
 	BasicAuth(http.Handler) http.Handler
 
+	// TODO: remove this
+	// currently it is used to generate index.html in localui mode
 	GetUsername() string
 	GetHostname() string
 }
@@ -86,11 +87,8 @@ type Session interface {
 type RPC interface {
 	pkg.Tider
 
-	// *rpc.Client
-	// Call(serviceMethod string, args interface{}, reply interface{}) error
-	// Close() error
-	// Go(serviceMethod string, args interface{}, reply interface{}, done chan *rpc.Call) *rpc.Call
 	NewSession() // Session
+	RemoteIP() string
 }
 
 type RPCManager interface {

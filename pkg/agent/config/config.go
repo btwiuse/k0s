@@ -197,7 +197,7 @@ func Parse(args []string) agent.Config {
 }
 
 func (c *config) String() string {
-	return strings.TrimSpace(pretty.JSONString(c))
+	return pretty.JsonString(c)
 }
 
 func Decode(data []byte) (agent.Info, error) {

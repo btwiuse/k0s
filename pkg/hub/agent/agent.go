@@ -4,24 +4,16 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
-
-	// "io"
 	"log"
 	"net"
 	"net/http"
-
-	// "net/rpc"
 	"sync"
 	"time"
 
 	"github.com/btwiuse/conntroll/pkg/api"
-	// "github.com/btwiuse/conntroll/pkg/api/rpcimpl"
 	"github.com/btwiuse/conntroll/pkg/hub"
-	"github.com/btwiuse/conntroll/pkg/hub/session"
-
-	// "github.com/btwiuse/conntroll/pkg/uuid"
-	// "github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/conntroll/pkg/hub/agent/info"
+	"github.com/btwiuse/conntroll/pkg/hub/session"
 	"google.golang.org/grpc"
 )
 
@@ -31,46 +23,48 @@ var (
 
 func NewAgent(rpc hub.RPC, info hub.Info, xopts ...Opt) hub.Agent {
 	ag := &agent{
-		sch:            make(chan hub.Session),
+		rpc:            rpc,
 		SessionManager: NewSessionManager(),
-		// rpcManager:     NewRPCManager(),
-		rpc:       rpc,
-		created:   time.Now(),
-		Connected: time.Now().Unix(),
-		done:      make(chan struct{}),
-		once:      &sync.Once{},
+		sch:            make(chan hub.Session),
+		created:        time.Now(),
+		Connected:      time.Now().Unix(),
+		done:           make(chan struct{}),
+		closeOnceDone:  &sync.Once{},
+		IP:             rpc.RemoteIP(),
+		Auth:		new(bool),
 	}
 	ag.fromInfo(info)
 
 	for _, opt := range xopts {
 		opt(ag)
 	}
-	// ag.AddRPCConn(conn)
+
 	return ag
 }
 
 func (ag *agent) fromInfo(info hub.Info) {
+	ag.ID_ = info.GetID()
+	ag.Name_ = info.GetName()
+	ag.Tags = info.GetTags()
+	if bahash := info.GetAuth(); bahash != "" {
+		ag.bahash = bahash
+		*ag.Auth = true
+	}
+
 	ag.OS = info.GetOS()
 	ag.Pwd = info.GetPwd()
 	ag.Arch = info.GetArch()
 	ag.Distro = info.GetDistro()
 	ag.Username = info.GetUsername()
 	ag.Hostname = info.GetHostname()
-	ag.ID_ = info.GetID()
-	ag.Name_ = info.GetName()
-	ag.Tags = info.GetTags()
-	if info.GetAuth() != "" {
-		ag.Auth = true
-	}
 }
 
 type agent struct {
 	hub.SessionManager `json:"-"`
-	// rpcManager         hub.RPCManager
-	rpc  hub.RPC
-	sch  chan hub.Session
-	done chan struct{}
-	once *sync.Once
+	rpc                hub.RPC
+	sch                chan hub.Session
+	done               chan struct{}
+	closeOnceDone      *sync.Once
 
 	created time.Time
 	bahash  string
@@ -85,7 +79,7 @@ type agent struct {
 	ID_       string   `json:"id"`
 	Name_     string   `json:"name"`
 	Tags      []string `json:"tags"`
-	Auth      bool     `json:"auth,omitempty"`
+	Auth      *bool    `json:"auth,omitempty"`
 	Connected int64    `json:"connected"`
 	IP        string   `json:"ip"`
 
@@ -99,19 +93,6 @@ type agent struct {
 
 type Opt func(*agent)
 
-func SetBasicAuthHash(bahash string) Opt {
-	return func(ag *agent) {
-		ag.bahash = bahash
-		ag.Auth = true
-	}
-}
-
-func SetQuit(quit chan struct{}) Opt {
-	return func(ag *agent) {
-		ag.done = quit
-	}
-}
-
 func SetIP(ip string) Opt {
 	return func(ag *agent) {
 		ag.IP = ip
@@ -119,7 +100,7 @@ func SetIP(ip string) Opt {
 }
 
 func (ag *agent) newSession() {
-	ag.rpc.NewSession() // involves sending AcceptRequest
+	ag.rpc.NewSession()
 }
 
 func (ag *agent) NewSession() hub.Session {
@@ -128,7 +109,7 @@ func (ag *agent) NewSession() hub.Session {
 }
 
 func (ag *agent) Close() {
-	ag.once.Do(func() {
+	ag.closeOnceDone.Do(func() {
 		close(ag.done)
 	})
 }

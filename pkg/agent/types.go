@@ -2,7 +2,6 @@ package agent
 
 import (
 	"io"
-	"net"
 )
 
 type Info interface {
@@ -39,21 +38,24 @@ type Config interface {
 	// NewSessionRequestBody() []byte
 }
 
-type Agent interface {
-	Config
-
-	// TtyFactory
-
+type RPC interface {
+	AgentRegister()
+	NewConnection()
 	// create a session capable of either shell or file system access
 	// CreateSession() (net.Conn, error)
-	Accept() (net.Conn, error)
-	// ConnectAndServe() error
-	YRPCConnectAndServe() error
+	// Accept() (net.Conn, error)
+	// YRPCConnectAndServe() error
 	// Connect() (net.Conn, error)
 	// Dial() (net.Conn, error)
 
 	// Go(func() error)
 	// Wait() error
+}
+
+type Agent interface {
+	Config
+	// Connect() (RPC, error)
+	ConnectAndServe() error
 }
 
 type TtyFactory interface {

@@ -1,6 +1,7 @@
 package hub
 
 import (
+	"bufio"
 	"context"
 	"crypto/subtle"
 	"crypto/tls"
@@ -29,7 +30,6 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	"github.com/yrpc/yrpc"
 	"golang.org/x/sync/errgroup"
 	"modernc.org/httpfs"
 )
@@ -80,69 +80,55 @@ func (h *hub) basicauth(next http.Handler) http.HandlerFunc {
 }
 
 func (h *hub) serveYRPC(ln net.Listener) {
-	ymux := yrpc.NewServeMux()
-	ymux.Handle(api.AgentRegisterRequest, yrpc.HandlerFunc(func(w yrpc.FrameWriter, r *yrpc.RequestFrame) {
-		info, err := agentinfo.Decode(r.Payload)
+	for {
+		log.Println("listening YRPC conns")
+		conn, err := ln.Accept()
 		if err != nil {
 			log.Println(err)
-			w.StartWrite(r.RequestID, api.AgentRegisterResponse, 0)
-			w.WriteBytes([]byte(string(err.Error())))
-			w.EndWrite()
-			// close client
-			// r.Close()
-			return
-		}
-		var (
-			raddr    = r.ConnectionInfo().RemoteAddr()
-			ip, _, _ = net.SplitHostPort(raddr)
-			id       = info.GetID()
-			bahash   = info.GetAuth()
-		)
-
-		w.StartWrite(r.RequestID, api.AgentRegisterResponse, yrpc.StreamFlag)
-		w.WriteBytes([]byte("OK"))
-		w.EndWrite()
-
-		if h.Has(id) {
-			// h.GetAgent(id).AddRPCConn(conn)
-			return
+			continue
 		}
 
-		quit := make(chan struct{})
-		opts := []agent.Opt{
-			agent.SetQuit(quit),
-			agent.SetIP(ip),
+		// parse agent info
+		scanner := bufio.NewScanner(conn)
+		if !scanner.Scan() {
+			continue
 		}
-		if bahash != "" {
-			opts = append(opts, agent.SetBasicAuthHash(bahash))
+
+		buf := scanner.Bytes()
+		info, err := agentinfo.Decode(buf)
+		if err != nil {
+			log.Println(err)
+			continue
 		}
-		ys := ToYRPC(w, r)
 
-		ag := agent.NewAgent(ys, info, opts...)
-		log.Println(id)
-		log.Println(info.GetID())
-		h.Add(ag)
-		log.Println(ag.ID())
+		log.Println(info)
 
-		ci := r.ConnectionInfo()
-		ci.NotifyWhenClose(func() {
-			log.Println(ag.ID(), "closed")
-			ag.Close()
-		})
+		go h.toAgent(info, conn)
+	}
+}
 
-		select {
-		case <-ag.Done():
-			h.Del(id)
-			log.Println("time to quit", ag.ID(), ag.Name())
-		}
-	}))
+func (h *hub) toAgent(info types.Info, conn net.Conn) {
+	if h.Has(info.GetID()) {
+		io.WriteString(conn, "duplicate id\n")
+		return
+	}
 
-	ys := yrpc.NewServer(yrpc.ServerConfig{
-		ListenFunc: func(network, addr string) (net.Listener, error) { return ln, nil },
-		Handler:    ymux,
-	})
+	var (
+		rpc = ToRPC(conn)
+		ag  = agent.NewAgent(rpc, info)
+	)
 
-	go ys.ListenAndServe()
+	h.Add(ag)
+
+	defer func() {
+		h.Del(info.GetID())
+		ag.Close()
+	}()
+
+	scanner := bufio.NewScanner(conn)
+	for scanner.Scan() {
+		log.Println(info.GetID(), scanner.Text())
+	}
 }
 
 func (h *hub) initServer(addr string) {
@@ -410,16 +396,11 @@ type lys struct {
 }
 
 func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// log.Println("hijacking", r.RequestURI)
 	conn, err := wrap.Hijack(w)
 	if err != nil {
-		log.Println("hijack failed", r.RequestURI, err)
 		return
 	}
-	// log.Println("hijacked", r.RequestURI, ", sending conn to l.conns")
 	l.conns <- conn
-	conn.Write([]byte(" "))
-	// log.Println("sent hijack confirmation byte")
 }
 
 func (l *lys) Accept() (net.Conn, error) {
@@ -442,21 +423,28 @@ func (l *lys) String() string {
 	return l.Network()
 }
 
-func (h *hub) startYRPCServer() {
-	listhand := &lys{
-		conns: make(chan net.Conn),
-	}
-	h.handleYRPC = listhand
-	go h.serveYRPC(listhand)
+func NewHandleHijackListener() *lys {
+	return &lys{conns: make(chan net.Conn)}
 }
 
-func ToYRPC(w yrpc.FrameWriter, r *yrpc.RequestFrame) types.RPC {
+func (h *hub) startYRPCServer() {
+	var (
+		listhand              = NewHandleHijackListener()
+		handler  http.Handler = listhand
+		listener net.Listener = listhand
+	)
+	log.Println(handler)
+	log.Println(listener)
+	h.handleYRPC = handler
+	go h.serveYRPC(listener)
+}
+
+func ToRPC(conn net.Conn) types.RPC {
 	return &YS{
 		id:      uuid.New(),
 		name:    rng.New(),
 		created: time.Now(),
-		w:       w,
-		r:       r,
+		Conn:    conn,
 	}
 }
 
@@ -472,20 +460,18 @@ func (ys *YS) ID() string {
 	return ys.id
 }
 
+func (ys *YS) RemoteIP() string {
+	ip, _, _ := net.SplitHostPort(ys.Conn.RemoteAddr().String())
+	return ip
+}
+
 type YS struct {
 	id      string
 	name    string
 	created time.Time
-	w       yrpc.FrameWriter
-	r       *yrpc.RequestFrame
+	net.Conn
 }
 
 func (ys *YS) NewSession() {
-	var (
-		w = ys.w
-		r = ys.r
-	)
-	w.StartWrite(r.RequestID, api.AcceptRequest, yrpc.StreamFlag)
-	w.EndWrite()
-	<-r.FrameCh()
+	io.WriteString(ys.Conn, fmt.Sprintln("ACCEPT"))
 }
