@@ -236,6 +236,7 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars     = mux.Vars(r)
 		id       = vars["id"]
+		pwd      = vars["pwd"]
 		ip, _, _ = net.SplitHostPort(conn.RemoteAddr().String())
 		username = vars["username"]
 		hostname = vars["hostname"]
@@ -251,6 +252,7 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 	ag := agent.NewAgent(conn,
 		agent.SetID(id),
 		agent.SetIP(ip),
+		agent.SetPWD(pwd),
 		agent.SetUsername(username),
 		agent.SetHostname(hostname),
 		agent.SetOS(goos),

@@ -61,9 +61,9 @@ func SetIP(ip string) Opt {
 	}
 }
 
-func SetPwd(p string) Opt {
+func SetPWD(p string) Opt {
 	return func(ag *agent) {
-		ag.Pwd = p
+		ag.PWD = p
 	}
 }
 
@@ -145,7 +145,7 @@ type agent struct {
 	Connected int64  `json:"connected"`
 	Hostname  string `json:"hostname"`
 	Username  string `json:"username"`
-	Pwd       string `json:"pwd"`
+	PWD       string `json:"pwd"`
 	OS        string `json:"os"`
 	ARCH      string `json:"arch"`
 	IP        string `json:"ip"`
