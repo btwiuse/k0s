@@ -7,6 +7,7 @@ package mux
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"path"
 	"regexp"
@@ -173,7 +174,7 @@ func (r *Router) Match(req *http.Request, match *RouteMatch) bool {
 // When there is a match, the route variables can be retrieved calling
 // mux.Vars(request).
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	if !r.skipClean {
+	if !r.skipClean && req.Method != http.MethodConnect {
 		path := req.URL.Path
 		if r.useEncodedPath {
 			path = req.URL.EscapedPath()
@@ -190,6 +191,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 			w.Header().Set("Location", p)
 			w.WriteHeader(http.StatusMovedPermanently)
+			log.Println("wtf", p, url)
 			return
 		}
 	}

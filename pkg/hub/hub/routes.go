@@ -82,8 +82,15 @@ func (h *hub) register(conn net.Conn) {
 	}
 }
 
+func notFound(w http.ResponseWriter, r *http.Request) {
+	log.Println("not found:", r.RequestURI)
+}
+
 func (h *hub) initServer(addr string) {
 	r := mux.NewRouter()
+
+	// r.HandleFunc("/")
+	r.NotFoundHandler = http.HandlerFunc(notFound)
 
 	// list active agents
 	r.HandleFunc("/api/agents/list", http.HandlerFunc(h.handleAgentsList)).Methods("GET")
@@ -91,8 +98,8 @@ func (h *hub) initServer(addr string) {
 
 	// client /api/agent/{id}/rootfs/{path} hijack => net.Conn <(copy) hijacked grpc fs conn
 	// client /api/agent/{id}/ws => ws <(pipe)> hijacked grpc ws conn
-	s := r.PathPrefix("/api/agent/{id}")
-	s.Handler(http.HandlerFunc(h.handleAgent)).Methods("GET")
+	s := r.PathPrefix("/api/agent/{id}").Methods("GET", "CONNECT")
+	s.Handler(http.HandlerFunc(h.handleAgent))
 
 	// public api
 	// agent hijack => yrpc -> hub.RPC -> hub.Agent
@@ -167,6 +174,7 @@ func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.RequestURI)
 	var (
 		vars                           = mux.Vars(r)
 		id                             = vars["id"]
@@ -194,6 +202,9 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		ag.BasicAuth(http.HandlerFunc(wsRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/rootfs"):
 		ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
+	case strings.HasPrefix(subpath, "/connect"):
+		log.Println("connect!!!!!")
+		ag.BasicAuth(http.HandlerFunc(connectRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):
 		metricsRelay(ag)(w, r)
 	default:

@@ -7,6 +7,7 @@ package mux
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -313,6 +314,7 @@ func (v routeRegexpGroup) setMatch(req *http.Request, m *RouteMatch, r *Route) {
 					} else {
 						u.Path += "/"
 					}
+					log.Println(u.String())
 					m.Handler = http.RedirectHandler(u.String(), http.StatusMovedPermanently)
 				}
 			}
