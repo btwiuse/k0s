@@ -17,7 +17,7 @@ import (
 	"k0s.io/conntroll/pkg/uuid"
 )
 
-const DEFAULT_HUB_ADDRESS = "https://hub.libredot.com"
+const DEFAULT_HUB_ADDRESS = "https://hub.k0s.io"
 
 type arrayFlags []string
 
