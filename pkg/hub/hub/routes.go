@@ -16,6 +16,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"k0s.io/conntroll/pkg/exporter"
 	types "k0s.io/conntroll/pkg/hub"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
@@ -30,15 +31,17 @@ type hub struct {
 
 	*http.Server
 
-	ba        bool
-	user      string
-	pass      string
-	handleRPC http.Handler // http.Handler|net.Listener
+	ba             bool
+	user           string
+	pass           string
+	handleRPC      http.Handler // http.Handler|net.Listener
+	MetricsHandler http.Handler
 }
 
 func NewHub(c types.Config) types.Hub {
 	h := &hub{
-		AgentManager: NewAgentManager(),
+		AgentManager:   NewAgentManager(),
+		MetricsHandler: exporter.NewHandler(),
 	}
 	h.startRPCServer()
 	h.user, h.pass, h.ba = c.BasicAuth()
@@ -116,6 +119,8 @@ func (h *hub) initServer(addr string) {
 	// alternative websocket implementation:
 	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
 	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").Queries("id", "{id}")
+
+	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
 
 	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
 	h.Server = &http.Server{
