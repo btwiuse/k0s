@@ -2,6 +2,8 @@ package hub
 
 import (
 	"net/http"
+
+	"github.com/rs/cors"
 )
 
 func NewServer(addr string) *http.Server {
@@ -11,6 +13,6 @@ func NewServer(addr string) *http.Server {
 	mux.HandleFunc("/api/new", newAgentSlave)
 	return &http.Server{
 		Addr:    addr,
-		Handler: mux,
+		Handler: cors.Default().Handler(mux),
 	}
 }
