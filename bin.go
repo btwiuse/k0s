@@ -21,7 +21,7 @@ type Combo struct {
 var (
 	Basename     = "conntroll"
 	Path         = "bin"
-	Delimeter    = "-"
+	Delimeter    = "/"
 	DefaultCombo = Combo{runtime.GOOS, runtime.GOARCH}
 	GlobalEnv    = []string{
 		"CGO_ENABLED=0",
@@ -29,7 +29,7 @@ var (
 )
 
 func (c Combo) ReleaseName() string {
-	return strings.Join([]string{Basename, c.OS, c.ARCH}, Delimeter)
+	return strings.Join([]string{c.OS, c.ARCH, Basename}, Delimeter)
 }
 
 func (c Combo) Env() []string {
@@ -57,6 +57,7 @@ func main() {
 		upxFlag   bool
 	)
 
+	flag.StringVar(&Path, "d", Path, "output directory")
 	flag.BoolVar(&stripFlag, "strip", false, "strip binary")
 	flag.BoolVar(&upxFlag, "upx", false, "compress binary with upx")
 	flag.Parse()
@@ -114,7 +115,7 @@ func main() {
 
 		if c == DefaultCombo {
 			for _, bin := range []string{"conntroll", "agent", "hub", "client"} {
-				src := filepath.Join(Path, fmt.Sprintf("%s-%s-%s", Basename, c.OS, c.ARCH))
+				src := filepath.Join(Path, c.ReleaseName())
 				dst := filepath.Join(Path, bin)
 				ln(src, dst)
 			}

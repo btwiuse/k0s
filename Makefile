@@ -6,7 +6,7 @@ all:
 	go run bin.go
 
 release:
-	go run bin.go -strip -upx linux/{amd64,386} darwin/amd64
+	go run bin.go -d releases/$(shell git rev-parse HEAD) -strip -upx linux/{amd64,386} darwin/amd64
 
 link:
 	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) bin/$(BIN)
