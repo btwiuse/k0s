@@ -3,6 +3,7 @@ package hub
 import (
 	"context"
 	"io"
+	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -27,7 +28,7 @@ import (
 func getAgents(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	infos := []url.Values{}
-	for _, v := range GlobalAgentPool.Agents.Values() {
+	for _, v := range GlobalAgentPool.Values() {
 		agent := v.(*Agent)
 		infos = append(infos, agent.Info)
 	}
@@ -213,8 +214,10 @@ func newAgentOrSession(w http.ResponseWriter, r *http.Request) {
 
 	// new agent
 	if !GlobalAgentPool.Has(id) {
+		values := r.URL.Query()
+		values["connected"] = []string{fmt.Sprintf("%d", time.Now().Unix())}
 		agent := &Agent{
-			Info:           r.URL.Query(),
+			Info:           values,
 			GRPCClientConn: make(chan *grpc.ClientConn),
 		}
 		agent.MakeInterceptedRPCClient(conn)

@@ -21,31 +21,29 @@ type Agent struct {
 }
 
 type AgentPool struct {
-	Agents *linkedhashmap.Map
-	Latest *Agent
+	*linkedhashmap.Map
 }
 
-var GlobalAgentPool = &AgentPool{Agents: linkedhashmap.New()}
+var GlobalAgentPool = &AgentPool{Map: linkedhashmap.New()}
 
 func (p *AgentPool) Del(uuid string) {
-	p.Agents.Remove(uuid)
+	p.Remove(uuid)
 }
 
 func (p *AgentPool) Get(uuid string) *Agent {
-	v, _ := p.Agents.Get(uuid)
+	v, _ := p.Map.Get(uuid)
 	return v.(*Agent)
 }
 
 func (p *AgentPool) Add(agent *Agent) {
-	p.Agents.Put(agent.Info.Get("id"), agent)
-	p.Latest = agent
+	p.Put(agent.Info.Get("id"), agent)
 }
 
 func (p *AgentPool) Dump() {
 	log.Println("[agent pool]")
-	for i, v := range p.Agents.Values() {
+	for i, v := range p.Values() {
 		agent := v.(*Agent)
-		uuid := p.Agents.Keys()[i].(string)
+		uuid := p.Keys()[i].(string)
 		fmt.Println(
 			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
 			uuid,
@@ -55,7 +53,7 @@ func (p *AgentPool) Dump() {
 }
 
 func (p *AgentPool) Has(uuid string) bool {
-	_, found := p.Agents.Get(uuid)
+	_, found := p.Map.Get(uuid)
 	return found
 }
 
