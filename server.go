@@ -121,7 +121,6 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	}
 	quit := make(chan struct{})
 
-	//v := make(map[string]interface{})
 	var v interface{}
 	decoder := json.NewDecoder(io.MultiReader(hibuf, conn))
 	if err := decoder.Decode(&v); err != nil {
@@ -141,13 +140,9 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 		defer log.Println("disconnected:", uuid, conn.RemoteAddr())
 		defer close(quit)
 		defer ClientPool.Del(uuid)
-		buf := make([]byte, 1)
-		for {
-			_, err := src.Read(buf)
-			if err != nil {
-				return
-			}
-			dst.Write(buf)
+
+		if _, err := io.Copy(dst, src); err != nil {
+			log.Println(err)
 		}
 	}
 	go copy(pw, io.MultiReader(hibuf, decoder.Buffered(), conn))
