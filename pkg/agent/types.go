@@ -3,6 +3,8 @@ package agent
 import (
 	"io"
 	"net"
+
+	"k0s.io/conntroll/pkg"
 )
 
 type Info interface {
@@ -32,6 +34,8 @@ type Config interface {
 	GetInsecure() bool
 
 	String() string
+
+	GetVersion() pkg.Version
 }
 
 type Dialer interface {

@@ -1,12 +1,13 @@
-BIN    = conntroll
-GOOS   = $(shell go env GOOS)
-GOARCH = $(shell go env GOARCH)
+BIN     = conntroll
+GOOS    = $(shell go env GOOS)
+GOARCH  = $(shell go env GOARCH)
+LDFLAGS = $(shell ./pkg/version/ldflags)
 
 all:
-	go run bin.go -tags "$(TAGS)"
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"
 
 release:
-	go run bin.go -d releases/$(shell git rev-parse HEAD) -strip -upx linux/{arm,arm64,amd64,386} darwin/amd64
+	@ go run bin.go -d releases/$(shell git rev-parse HEAD) -strip -upx -ldflags="${LDFLAGS}" linux/{arm,arm64,amd64,386} darwin/amd64
 
 link:
 	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) bin/$(BIN)

@@ -56,10 +56,12 @@ func main() {
 		stripFlag bool
 		upxFlag   bool
 		tags      string
+		ldflags   string
 	)
 
 	flag.StringVar(&Path, "d", Path, "output directory")
 	flag.StringVar(&tags, "tags", "", "build tags")
+	flag.StringVar(&ldflags, "ldflags", "", "ldflags")
 	flag.BoolVar(&stripFlag, "strip", false, "strip binary")
 	flag.BoolVar(&upxFlag, "upx", false, "compress binary with upx")
 	flag.Parse()
@@ -75,15 +77,16 @@ func main() {
 
 	for _, c := range combos {
 		var (
-			build = exec.Command(
-				"go", "build",
+			buildArgs = []string{"build",
+				"-o", filepath.Join(Path, c.ReleaseName()),
 				"-mod=vendor",
 				"-trimpath",
+				"-ldflags", ldflags,
 				"-tags", tags,
 				"-v",
-				"-o", filepath.Join(Path, c.ReleaseName()),
 				".",
-			)
+			}
+			build = exec.Command("go", buildArgs...)
 			strip = exec.Command(
 				"strip",
 				filepath.Join(Path, c.ReleaseName()),
@@ -97,7 +100,10 @@ func main() {
 		build.Env = append(os.Environ(), c.Env()...)
 		build.Stdout = os.Stdout
 		build.Stderr = os.Stderr
-		log.Println(c.Env(), build)
+		log.Println("Env:", c.Env())
+		for i, arg := range buildArgs {
+			log.Println(fmt.Sprintf("%d %q", i, arg))
+		}
 
 		if err := build.Run(); err != nil {
 			log.Fatalln(err)

@@ -31,6 +31,7 @@ type hub struct {
 
 	*http.Server
 
+	c              types.Config
 	ba             bool
 	user           string
 	pass           string
@@ -40,6 +41,7 @@ type hub struct {
 
 func NewHub(c types.Config) types.Hub {
 	h := &hub{
+		c:              c,
 		AgentManager:   NewAgentManager(),
 		MetricsHandler: exporter.NewHandler(),
 	}
@@ -47,6 +49,10 @@ func NewHub(c types.Config) types.Hub {
 	h.user, h.pass, h.ba = c.BasicAuth()
 	h.initServer(c.Port())
 	return h
+}
+
+func (h *hub) GetConfig() types.Config {
+	return h.c
 }
 
 // https://stackoverflow.com/questions/21936332/idiomatic-way-of-requiring-http-basic-auth-in-go/39591234#39591234
@@ -121,6 +127,7 @@ func (h *hub) initServer(addr string) {
 	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").Queries("id", "{id}")
 
 	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
+	r.HandleFunc("/version", h.handleVersion).Methods("GET")
 
 	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
 	h.Server = &http.Server{
@@ -128,6 +135,11 @@ func (h *hub) initServer(addr string) {
 		Handler:      handlers.LoggingHandler(os.Stderr, cors.AllowAll().Handler(r)),
 		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
+}
+
+func (h *hub) handleVersion(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(pretty.JSONString(h.GetConfig().GetVersion())))
 }
 
 func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {

@@ -8,6 +8,7 @@ import (
 	"net"
 	"os/exec"
 
+	"github.com/btwiuse/pretty"
 	"golang.org/x/sync/errgroup"
 	types "k0s.io/conntroll/pkg/agent"
 	"k0s.io/conntroll/pkg/agent/dialer"
@@ -67,7 +68,11 @@ func (ag *agent) Accept() (net.Conn, error) {
 }
 
 func (ag *agent) AgentRegister(conn net.Conn) (types.RPC, error) {
-	_, err := io.WriteString(conn, ag.Config.String())
+	agentInfo := ag.Config.String()
+	if ag.Config.GetVerbose() {
+		log.Print(pretty.JSONString(ag.Config))
+	}
+	_, err := io.WriteString(conn, agentInfo)
 	if err != nil {
 		return nil, err
 	}

@@ -30,3 +30,15 @@ type Manager interface {
 	Values() []Tider
 	Size() int
 }
+
+type Version interface {
+	GetGitCommit() string
+	GetGitState() string
+	GetGitBranch() string
+	GetGitSummary() string
+	GetBuildDate() string
+	GetVersion() string
+
+	YAMLString() string
+	JsonString() string
+}

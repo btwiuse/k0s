@@ -3,6 +3,7 @@ package info
 import (
 	"encoding/json"
 
+	"k0s.io/conntroll/pkg"
 	"k0s.io/conntroll/pkg/hub"
 )
 
@@ -23,7 +24,8 @@ type Info struct {
 	Tags     []string          `json:"tags"`
 	Htpasswd map[string]string `json:"htpasswd,omitempty"`
 
-	Meta `json:"meta"`
+	Meta        `json:"meta"`
+	pkg.Version `json:"version"`
 }
 
 func Decode(data []byte) (hub.Info, error) {

@@ -30,12 +30,14 @@ type Config interface {
 	Cert() string
 	Key() string
 	BasicAuth() (string, string, bool)
+	GetVersion() pkg.Version
 }
 
 type Hub interface {
 	AgentManager
 
 	// Serve(net.Listener) error
+	GetConfig() Config
 	ListenAndServe() error
 	ListenAndServeTLS(certFile, keyFile string) error
 }

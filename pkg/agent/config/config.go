@@ -3,7 +3,10 @@ package config
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"net/url"
 	"os"
 	"os/exec"
@@ -11,10 +14,12 @@ import (
 
 	"github.com/btwiuse/pretty"
 	"gopkg.in/yaml.v2"
+	"k0s.io/conntroll/pkg"
 	"k0s.io/conntroll/pkg/agent"
 	"k0s.io/conntroll/pkg/agent/info"
 	"k0s.io/conntroll/pkg/rng"
 	"k0s.io/conntroll/pkg/uuid"
+	"k0s.io/conntroll/pkg/version"
 )
 
 const DEFAULT_HUB_ADDRESS = "https://hub.k0s.io"
@@ -49,6 +54,12 @@ type config struct {
 	Hub      string `json:"-" yaml:"hub"`
 
 	uri *url.URL `json:"-"` // where server scheme, host, port, addr are defined
+
+	Version pkg.Version `json:"version" yaml:"-"`
+}
+
+func (c *config) GetVersion() pkg.Version {
+	return c.Version
 }
 
 func (c *config) GetVerbose() bool {
@@ -215,8 +226,9 @@ func probeConfigFile() string {
 
 func loadConfigFile(file string) *config {
 	c := &config{
-		Hub:  DEFAULT_HUB_ADDRESS,
-		Tags: []string{},
+		Hub:     DEFAULT_HUB_ADDRESS,
+		Tags:    []string{},
+		Version: version.GetVersion(),
 	}
 	if file == "" {
 		return c
@@ -249,6 +261,7 @@ func Parse(args []string) agent.Config {
 
 		hubapi   *string    = fset.String("hub", DEFAULT_HUB_ADDRESS, "Hub address.")
 		verbose  *bool      = fset.Bool("verbose", false, "Verbose log.")
+		version  *bool      = fset.Bool("version", false, "Show agent/hub version info.")
 		ro       *bool      = fset.Bool("ro", false, "Make shell readonly.")
 		insecure *bool      = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
 		cmd      *string    = fset.String("cmd", "", "Command to run.")
@@ -299,7 +312,48 @@ func Parse(args []string) agent.Config {
 		opt(baseConfig)
 	}
 
+	if *version {
+		printAgentVersion(baseConfig)
+		printHubVersion(baseConfig)
+		os.Exit(0)
+	}
+
 	return baseConfig
+}
+
+type agentVersion struct {
+	Agent pkg.Version
+}
+
+type hubVersion struct {
+	Hub pkg.Version
+}
+
+func printAgentVersion(c agent.Config) {
+	av := &agentVersion{c.GetVersion()}
+	fmt.Println(pretty.YAMLString(av))
+}
+
+func printHubVersion(c agent.Config) {
+	resp, err := http.Get(c.GetScheme() + "://" + c.GetAddr() + "/version")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	buf, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer resp.Body.Close()
+
+	// log.Println(string(buf))
+	v, err := version.Decode(buf)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	hv := &hubVersion{v}
+	fmt.Print(pretty.YAMLString(hv))
 }
 
 func (c *config) String() string {
