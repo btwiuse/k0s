@@ -20,6 +20,7 @@ require (
 	github.com/kr/pty v1.1.8
 	github.com/pupapaik/sysinfo v0.0.0-20190423145051-de6f0de9b519
 	github.com/rs/cors v1.7.0
+	github.com/yrpc/yrpc v0.0.0-20191229154638-d3a878acf54a
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	google.golang.org/grpc v1.26.0
 	gopkg.in/yaml.v2 v2.2.7 // indirect

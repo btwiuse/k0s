@@ -26,6 +26,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"github.com/yrpc/yrpc"
 	"golang.org/x/sync/errgroup"
 	"modernc.org/httpfs"
 )
@@ -43,12 +44,60 @@ type hub struct {
 	localui bool // load webui assets from local dir for debugging purpose
 	user    string
 	pass    string
+	ly      *lys // yrpc.Listener
+}
+
+// lys implements net.Listener
+type lys struct {
+	conns chan net.Conn
+}
+
+func (l *lys) Handler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println("hijacking", r.RequestURI)
+		conn, _ := wrap.Hijack(w)
+		log.Println("hijacked", r.RequestURI, ", sending conn to l.conns")
+		l.conns <- conn
+		conn.Write([]byte(" "))
+		log.Println("sent hijack confirmation byte")
+	})
+}
+
+func (l *lys) SetDeadline(t time.Time) error {
+	return nil
+}
+
+func (l *lys) Accept() (net.Conn, error) {
+	return (<-l.conns).(*wrap.Conn).TCPConn, nil
+}
+
+func (l *lys) Close() error {
+	return nil
+}
+
+func (l *lys) Addr() net.Addr {
+	return l
+}
+
+func (l *lys) Network() string {
+	return "hijack"
+}
+
+func (l *lys) String() string {
+	return l.Network()
+}
+
+func NewLys() *lys {
+	return &lys{
+		conns: make(chan net.Conn, 100),
+	}
 }
 
 func NewHub(c types.Config) types.Hub {
 	h := &hub{
 		AgentManager: NewAgentManager(),
 		localui:      c.LocalUI(),
+		ly:           NewLys(),
 	}
 	h.user, h.pass, h.ba = c.BasicAuth()
 	h.serve(c.Port())
@@ -73,7 +122,62 @@ func (h *hub) basicauth(next http.Handler) http.HandlerFunc {
 	}
 }
 
+const (
+	Ping yrpc.Cmd = iota
+	Pong
+)
+
+func (h *hub) serveYRPC() {
+	ymux := yrpc.NewServeMux()
+	ymux.Handle(Ping, yrpc.HandlerFunc(func(w yrpc.FrameWriter, r *yrpc.RequestFrame) {
+		w.StartWrite(r.RequestID, Pong, yrpc.StreamFlag)
+		w.WriteBytes([]byte("stream begins"))
+		w.EndWrite()
+
+		// consule the first resp
+		<-r.FrameCh()
+
+		quit := make(chan struct{})
+		go func() {
+			for {
+				f := <-r.FrameCh()
+				if f == nil {
+					log.Println("nil chan")
+					close(quit)
+					return
+				}
+				log.Println("client response:", string(f.Payload))
+			}
+		}()
+
+		for i := 0; ; i++ {
+			select {
+			case <-quit:
+				break
+			default:
+				payload := fmt.Sprintf("server request %d", i)
+				w.StartWrite(r.RequestID, Ping, yrpc.StreamFlag)
+				w.WriteBytes([]byte(payload))
+				w.EndWrite() // send frame
+				log.Println(payload)
+			}
+			time.Sleep(time.Second)
+		}
+	}))
+
+	ys := yrpc.NewServer(yrpc.ServerConfig{
+		ListenFunc: func(network, addr string) (net.Listener, error) { return h.ly, nil },
+		Handler:    ymux,
+	})
+
+	go func() {
+		ys.ListenAndServe()
+	}()
+}
+
 func (h *hub) serve(addr string) {
+	h.serveYRPC()
+
 	r := mux.NewRouter()
 
 	// ==================== basic auth (TODO) =======================
@@ -102,6 +206,7 @@ func (h *hub) serve(addr string) {
 
 	// ========================== public ============================
 	// agent hijack => rpc
+	r.HandleFunc("/api/yrpc", h.handleYRPC).Methods("GET")
 	r.HandleFunc("/api/rpc", h.handleRPC).Methods("GET").
 		Queries("id", "{id}",
 			"name", "{name}",
@@ -317,6 +422,11 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 			}
 		}
 	}
+}
+
+func (h *hub) handleYRPC(w http.ResponseWriter, r *http.Request) {
+	log.Println("handleYRPC")
+	h.ly.Handler().ServeHTTP(w, r)
 }
 
 func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
