@@ -14,6 +14,7 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/handlers v1.4.0
 	github.com/gorilla/mux v1.7.3
+	github.com/gorilla/websocket v1.4.0
 	github.com/kr/pty v1.1.4
 	github.com/pupapaik/sysinfo v0.0.0-20190423145051-de6f0de9b519
 	github.com/rs/cors v1.7.0

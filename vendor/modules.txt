@@ -9,7 +9,6 @@ github.com/btwiuse/pretty
 github.com/btwiuse/wetty/pkg/assets
 github.com/btwiuse/wetty/pkg/localcmd
 github.com/btwiuse/wetty/pkg/msg
-github.com/btwiuse/wetty/pkg/utils
 github.com/btwiuse/wetty/pkg/wetty
 # github.com/conntroll/conntroll.github.io v0.0.0-19700101000000-b98271c6bd75
 ## explicit
@@ -45,6 +44,7 @@ github.com/gorilla/handlers
 ## explicit
 github.com/gorilla/mux
 # github.com/gorilla/websocket v1.4.0
+## explicit
 github.com/gorilla/websocket
 # github.com/kr/pty v1.1.4
 ## explicit
