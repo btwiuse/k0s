@@ -101,6 +101,7 @@ func Input() {
 				}
 			}
 
+			/*
 			if line == "N" {
 				client := GlobalSlavePool.Current
 				conn, err := client.Pool.Get()
@@ -113,6 +114,7 @@ func Input() {
 			} else {
 				go bash(line, GlobalSlavePool.Current)
 			}
+			*/
 
 			promptNum += 1
 		}

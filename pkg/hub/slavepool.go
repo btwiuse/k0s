@@ -15,7 +15,7 @@ import (
 	"time"
 
 	//"github.com/davecgh/go-spew/spew"
-	"github.com/fatih/pool"
+	//"github.com/fatih/pool"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/btwiuse/gods/maps/linkedhashmap"
@@ -37,7 +37,7 @@ type Slave struct {
 	Info       string
 	Conns      map[string]net.Conn
 	WsConns    map[string]*websocket.Conn
-	Pool       pool.Pool
+	// Pool       pool.Pool
 }
 
 type SlavePool struct {
@@ -180,11 +180,12 @@ func NewSlave(w http.ResponseWriter) (*Slave, error) {
 		delete(slave.Conns, nonce)
 		return conn, nil
 	}
-	log.Println("pool.NewChannelPool")
-	slave.Pool, err = pool.NewChannelPool(5, 30, factory)
-	if err != nil {
-		return nil, err
-	}
+	_ = factory
+	// log.Println("pool.NewChannelPool")
+	// slave.Pool, err = pool.NewChannelPool(5, 30, factory)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	log.Println("new grpc!!!")
 	{
