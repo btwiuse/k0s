@@ -84,6 +84,7 @@ func Parse(args []string) agent.Config {
 		bahash string
 
 		query url.Values = make(map[string][]string)
+		nam = name.New()
 	)
 
 	fset.StringVar(&id, "id", uuid.New(), "agent id, for debugging purpose only")
@@ -110,7 +111,7 @@ func Parse(args []string) agent.Config {
 	query.Set("hostname", hostname)
 	query.Set("os", goos)
 	query.Set("arch", goarch)
-	query.Set("name", name.New())
+	query.Set("name", nam)
 
 	if bahash != "" {
 		bahash = fmt.Sprintf("%x", sha256.Sum256([]byte(bahash)))
@@ -122,5 +123,6 @@ func Parse(args []string) agent.Config {
 	return &config{
 		URL: u,
 		id:  id,
+		name:  nam,
 	}
 }
