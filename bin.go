@@ -103,10 +103,9 @@ func main() {
 			log.Fatalln(err)
 		}
 
+		// strip fails on arm64 binary, here we simply ignore it
 		if stripFlag && c.OS == "linux" {
-			if err := strip.Run(); err != nil {
-				log.Fatalln(err)
-			}
+			strip.Run()
 		}
 
 		if upxFlag {
