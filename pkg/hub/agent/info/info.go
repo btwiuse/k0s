@@ -3,8 +3,8 @@ package info
 import (
 	"encoding/json"
 
-	"k0s.io/conntroll/pkg"
 	"k0s.io/conntroll/pkg/hub"
+	"k0s.io/conntroll/pkg/version"
 )
 
 var _ hub.Info = (*Info)(nil)
@@ -24,14 +24,12 @@ type Info struct {
 	Tags     []string          `json:"tags"`
 	Htpasswd map[string]string `json:"htpasswd,omitempty"`
 
-	Meta        `json:"meta"`
-	pkg.Version `json:"version"`
+	Meta            `json:"meta"`
+	version.Version `json:"version"`
 }
 
 func Decode(data []byte) (hub.Info, error) {
-	v := &Info{
-		// Meta: &Meta{},
-	}
+	v := &Info{}
 	err := json.Unmarshal(data, v)
 	if err != nil {
 		return nil, err
