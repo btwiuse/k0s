@@ -24,11 +24,13 @@ type Reader struct {
 	command  *string
 	killed   bool
 	wait     bool
+
+	Reader io.Reader
 }
 
 // NewReader returns new Reader object
-func NewReader(pusher func([]byte) bool, eventBox *util.EventBox, delimNil bool, wait bool) *Reader {
-	return &Reader{pusher, eventBox, delimNil, int32(EvtReady), make(chan bool, 1), sync.Mutex{}, nil, nil, false, wait}
+func NewReader(pusher func([]byte) bool, eventBox *util.EventBox, delimNil bool, wait bool, rd io.Reader) *Reader {
+	return &Reader{pusher, eventBox, delimNil, int32(EvtReady), make(chan bool, 1), sync.Mutex{}, nil, nil, false, wait, rd}
 }
 
 func (r *Reader) startEventPoller() {
@@ -94,7 +96,7 @@ func (r *Reader) restart(command string) {
 func (r *Reader) ReadSource() {
 	r.startEventPoller()
 	var success bool
-	if util.IsTty() {
+	if util.IsTty(os.Stdin) && false {
 		// The default command for *nix requires bash
 		shell := "bash"
 		cmd := os.Getenv("FZF_DEFAULT_COMMAND")
@@ -103,8 +105,10 @@ func (r *Reader) ReadSource() {
 		} else {
 			success = r.readFromCommand(nil, cmd)
 		}
+	} else if r.Reader != nil {
+		success = r.read(r.Reader)
 	} else {
-		success = r.readFromStdin()
+		success = r.read(os.Stdin)
 	}
 	r.fin(success)
 }
@@ -139,8 +143,8 @@ func (r *Reader) feed(src io.Reader) {
 	}
 }
 
-func (r *Reader) readFromStdin() bool {
-	r.feed(os.Stdin)
+func (r *Reader) read(rd io.Reader) bool {
+	r.feed(rd)
 	return true
 }
 

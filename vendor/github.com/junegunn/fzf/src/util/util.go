@@ -109,8 +109,8 @@ func DurWithin(
 }
 
 // IsTty returns true is stdin is a terminal
-func IsTty() bool {
-	return isatty.IsTerminal(os.Stdin.Fd())
+func IsTty(f *os.File) bool {
+	return isatty.IsTerminal(f.Fd())
 }
 
 // Once returns a function that returns the specified boolean value only once

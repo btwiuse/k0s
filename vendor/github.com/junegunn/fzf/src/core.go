@@ -44,6 +44,8 @@ Matcher  -> EvtHeader         -> Terminal (update header)
 
 // Run starts fzf
 func Run(opts *Options, revision string) {
+	// log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
 	sort := opts.Sort > 0
 	sortCriteria = opts.Criteria
 
@@ -140,7 +142,7 @@ func Run(opts *Options, revision string) {
 	if !streamingFilter {
 		reader = NewReader(func(data []byte) bool {
 			return chunkList.Push(data)
-		}, eventBox, opts.ReadZero, opts.Filter == nil)
+		}, eventBox, opts.ReadZero, opts.Filter == nil, opts.Reader)
 		go reader.ReadSource()
 	}
 
@@ -184,7 +186,7 @@ func Run(opts *Options, revision string) {
 						}
 					}
 					return false
-				}, eventBox, opts.ReadZero, false)
+				}, eventBox, opts.ReadZero, false, opts.Reader)
 			reader.ReadSource()
 		} else {
 			eventBox.Unwatch(EvtReadNew)
@@ -237,8 +239,12 @@ func Run(opts *Options, revision string) {
 		go reader.restart(command)
 	}
 	eventBox.Watch(EvtReadNew)
+
+	eventBox.Watch(EvtReturn)
+
+	canc := false
 	for {
-		delay := true
+		delay := false
 		ticks++
 		input := func() []rune {
 			if opts.Phony {
@@ -246,13 +252,17 @@ func Run(opts *Options, revision string) {
 			}
 			return []rune(terminal.Input())
 		}
+		if canc {
+			break
+		}
 		eventBox.Wait(func(events *util.Events) {
 			if _, fin := (*events)[EvtReadFin]; fin {
 				delete(*events, EvtReadNew)
 			}
 			for evt, value := range *events {
 				switch evt {
-
+				case EvtReturn:
+					canc = true
 				case EvtReadNew, EvtReadFin:
 					if evt == EvtReadFin && nextCommand != nil {
 						restart(*nextCommand)

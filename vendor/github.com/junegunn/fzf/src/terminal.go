@@ -125,6 +125,8 @@ type Terminal struct {
 	slab       *util.Slab
 	theme      *tui.ColorTheme
 	tui        tui.Renderer
+
+	Reader io.Reader
 }
 
 type selectedItem struct {
@@ -439,7 +441,9 @@ func NewTerminal(opts *Options, eventBox *util.EventBox) *Terminal {
 		startChan:  make(chan bool, 1),
 		killChan:   make(chan int),
 		tui:        renderer,
-		initFunc:   func() { renderer.Init() }}
+		initFunc:   func() { renderer.Init() },
+		Reader:     opts.Reader,
+	}
 	t.prompt, t.promptLen = t.processTabs([]rune(opts.Prompt), 0)
 	return &t
 }
@@ -1478,7 +1482,7 @@ func (t *Terminal) killPreview(code int) {
 	case t.killChan <- code:
 	default:
 		if code != exitCancel {
-			os.Exit(code)
+			// os.Exit(code)
 		}
 	}
 }
@@ -1671,6 +1675,7 @@ func (t *Terminal) Loop() {
 					case reqRedraw:
 						t.redraw()
 					case reqClose:
+						t.eventBox.Set(EvtReturn, true)
 						exit(func() int {
 							if t.output() {
 								return exitOk
@@ -1690,6 +1695,7 @@ func (t *Terminal) Loop() {
 							return exitOk
 						})
 					case reqQuit:
+						t.eventBox.Set(EvtReturn, true)
 						exit(func() int { return exitInterrupt })
 					}
 				}

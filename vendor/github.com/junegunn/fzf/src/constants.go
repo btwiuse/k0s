@@ -76,6 +76,7 @@ const (
 	EvtSearchFin
 	EvtHeader
 	EvtReady
+	EvtReturn
 )
 
 const (

@@ -1,6 +1,8 @@
 package util
 
-import "sync"
+import (
+	"sync"
+)
 
 // EventType is the type for fzf events
 type EventType int

@@ -2,6 +2,7 @@ package fzf
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"regexp"
 	"strconv"
@@ -211,6 +212,9 @@ type Options struct {
 	Tabstop     int
 	ClearOnExit bool
 	Version     bool
+
+	Reader io.Reader
+	Writer io.Writer
 }
 
 func defaultOptions() *Options {
@@ -262,7 +266,8 @@ func defaultOptions() *Options {
 		Unicode:     true,
 		Tabstop:     8,
 		ClearOnExit: true,
-		Version:     false}
+		Version:     false,
+	}
 }
 
 func help(code int) {
@@ -1372,8 +1377,26 @@ func postProcessOptions(opts *Options) {
 	}
 }
 
+type Opt func(o *Options)
+
+func WithReader(r io.Reader) Opt {
+	return func(o *Options) {
+		o.Reader = r
+	}
+}
+
+func WithWriter(w io.Writer) Opt {
+	return func(o *Options) {
+		// o.Writer = w
+		o.Printer = func(str string) {
+			fmt.Fprintln(w, str)
+			// log.Println(str)
+		}
+	}
+}
+
 // ParseOptions parses command-line options
-func ParseOptions() *Options {
+func ParseOptions(args []string, options ...Opt) *Options {
 	opts := defaultOptions()
 
 	// Options from Env var
@@ -1383,8 +1406,13 @@ func ParseOptions() *Options {
 	}
 
 	// Options from command-line arguments
-	parseOptions(opts, os.Args[1:])
+	parseOptions(opts, args)
 
 	postProcessOptions(opts)
+
+	for _, option := range options {
+		option(opts)
+	}
+
 	return opts
 }

@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"os/exec"
 	"regexp"
 	"strings"
 	"text/tabwriter"
@@ -19,6 +18,7 @@ import (
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
 	"github.com/btwiuse/pretty"
 	"github.com/containerd/console"
+	fzf "github.com/junegunn/fzf/src"
 	"github.com/txthinking/brook"
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io/conntroll/pkg"
@@ -114,7 +114,11 @@ func (cl *client) Run() error {
 		--reverse --tac --cycle -d '@' --with-nth=1 --header-lines=1 --preview-window=right:40%
 	*/
 
-	fzf := exec.Command("fzf",
+	opts := []fzf.Opt{
+		fzf.WithReader(pr),
+		fzf.WithWriter(id),
+	}
+	args := []string{
 		"--tac",
 		"--cycle",
 		"-d", "@",
@@ -123,14 +127,8 @@ func (cl *client) Run() error {
 		"--header-lines", "1",
 		"--preview-window", "right:40%",
 		"--preview", "echo {}|cut -d @ -f 2-|jq -r .|yj -jy",
-	)
-	// fzf.Stdin = pr
-	fzf.Stdin = pr
-	fzf.Stdout = id //os.Stdout
-	fzf.Stderr = os.Stderr
-
-	fzf.Start()
-	fzf.Wait()
+	}
+	fzf.Run(fzf.ParseOptions(args, opts...), "revision")
 
 	uuidMatcher := regexp.MustCompile(`\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b`)
 	idd = strings.TrimSpace(uuidMatcher.FindString(id.String()))
