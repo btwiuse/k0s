@@ -12,5 +12,11 @@ func hubCmd(args []string) {
 
 	log.Println("server is listening on", c.Port())
 
-	log.Fatalln(hub.NewHub(c).ListenAndServe())
+	h := hub.NewHub(c)
+
+	if c.UseTLS() {
+		log.Fatalln(h.ListenAndServeTLS(c.Cert(), c.Key()))
+	}
+
+	log.Fatalln(h.ListenAndServe())
 }

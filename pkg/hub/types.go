@@ -11,6 +11,9 @@ import (
 
 type Config interface {
 	Port() string
+	UseTLS() bool
+	Cert() string
+	Key() string
 }
 
 type Hub interface {
@@ -19,6 +22,7 @@ type Hub interface {
 
 	// Serve(net.Listener) error
 	ListenAndServe() error
+	ListenAndServeTLS(certFile, keyFile string) error
 }
 
 type AgentManager interface {
