@@ -5,6 +5,7 @@ GOAL:
 
 Requirements:
 - [DONE] HTTP -> TCP                     
+- [DONE] TCP  -> RPC
 
 Similar stuff:
 - https://en.wikipedia.org/wiki/TCP_Gender_Changer
@@ -24,3 +25,4 @@ References:
 - https://en.wikipedia.org/wiki/Botnet
 - https://www.malwaretech.com/2013/12/peer-to-peer-botnets-for-beginners.html
 - https://umbrella.cisco.com/blog/2014/05/23/cnc-botnet-english/
+- https://ops.tips/gists/example-go-rpc-client-and-server/

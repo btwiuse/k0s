@@ -40,11 +40,6 @@ var (
 	createdAt  = strings.TrimSpace(string(run(`env TZ=Asia/Shanghai docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.CreatedAt}}{{end}}' | grep .`)))
 
 	/* // ~/hello-wasm/simple/main.go
-	   fmt.Sprintf("GOOS: %s", runtime.GOOS),
-	   fmt.Sprintf("GOARCH: %s", runtime.GOARCH),
-	   fmt.Sprintf("GOROOT: %s", runtime.GOROOT()),
-	   fmt.Sprintf("Compiler: %s", runtime.Compiler),
-	   fmt.Sprintf("No. of CPU: %d", runtime.NumCPU()),
 	   fmt.Sprintf("In browser: %t", inBrowser()),
 	*/
 
@@ -135,21 +130,9 @@ func main() {
 	}
 	log.Println("connected:", conn.LocalAddr(), conn.RemoteAddr())
 
-	// rpc.Register(new(protocol.Hello))
 	rpcServer := rpc.NewServer()
 	rpcServer.Register(new(protocol.Hello))
 	log.Println("serveconn")
 	rpcServer.ServeConn(conn)
 	log.Fatalln("bye")
-	scanner := bufio.NewScanner(conn)
-	for scanner.Scan() {
-		line := scanner.Text() //+ "\n"
-		log.Println(line)
-		// conn.Write([]byte(line))
-		go func() {
-			comOut := run(line)
-			conn.Write(comOut)
-			os.Stdout.Write(comOut)
-		}()
-	}
 }

@@ -38,20 +38,19 @@ func NewClient(uuid string, conn net.Conn, quit chan struct{}, rpc *rpc.Client) 
 }
 
 type Pool struct {
-	Clients *linkedhashmap.Map // map[string]*Client
+	Clients *linkedhashmap.Map
 	Current *Client
 }
 
 func NewPool() *Pool {
 	return &Pool{
-		Clients: linkedhashmap.New(), //make(map[string]*Client),
+		Clients: linkedhashmap.New(),
 	}
 }
 
 var ClientPool = NewPool()
 
 func (p *Pool) Del(uuid string) {
-	// delete(p.Clients, uuid)
 	p.Clients.Remove(uuid)
 	if (p.Current != nil) && (p.Current.UUID == uuid) {
 		p.Current = nil //new(Client)
@@ -59,13 +58,11 @@ func (p *Pool) Del(uuid string) {
 }
 
 func (p *Pool) Get(uuid string) *Client {
-	// return p.Clients[uuid]
 	v, _ := p.Clients.Get(uuid)
 	return v.(*Client)
 }
 
 func (p *Pool) Add(client *Client) {
-	// p.Clients[client.UUID] = client
 	p.Clients.Put(client.UUID, client)
 }
 
@@ -135,28 +132,6 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	}
 	conn.Write([]byte("OK"))
 	header := pretty.JSONString(v)
-	//time.Sleep(time.Second)
-
-	/*
-		buf := make([]byte, 1)
-		header := ""
-		for {
-			io.MultiReader(hibuf, conn).Read(buf)
-			c := string(buf[0])
-			if c == "\n" {
-				break
-			}
-			header += c
-		}
-		v := make(map[string]string)
-		if err := json.Unmarshal([]byte(header), &v); err != nil {
-			conn.Write([]byte("NO"))
-			log.Println(err, header)
-			return
-		}
-		conn.Write([]byte("OK"))
-		header = pretty.JSONString(v)
-	*/
 
 	log.Println("connected:", uuid, conn.RemoteAddr(), header)
 
