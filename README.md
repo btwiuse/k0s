@@ -10,6 +10,7 @@ Similar stuff:
 - https://en.wikipedia.org/wiki/TCP_Gender_Changer
 - https://github.com/rancher/remotedialer
 - https://github.com/rofl0r/nat-tunnel
+- https://github.com/TreeHacks/botnet-hackpack
 
 Potential use cases:
 - distcc agent (cpu/io intensive)
@@ -18,3 +19,8 @@ Potential use cases:
 - ddos attack agent (generate SYN flood, ICMP, UDP, TCP traffic)
 - distributed web scraper (cpu/io intensive)
 - podman/buildah/skopeo build log streaming with dind (Docker in Docker)
+
+References:
+- https://en.wikipedia.org/wiki/Botnet
+- https://www.malwaretech.com/2013/12/peer-to-peer-botnets-for-beginners.html
+- https://umbrella.cisco.com/blog/2014/05/23/cnc-botnet-english/
