@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/btwiuse/gods/maps/linkedhashmap"
-	"github.com/btwiuse/invctrl/pkg/wrap"
+	"github.com/btwiuse/conntroll/pkg/wrap"
 
 	"google.golang.org/grpc"
 )

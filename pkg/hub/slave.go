@@ -1,7 +1,7 @@
 package hub
 
 import (
-	"github.com/btwiuse/invctrl/pkg/api"
+	"github.com/btwiuse/conntroll/pkg/api"
 )
 
 type Slave struct {

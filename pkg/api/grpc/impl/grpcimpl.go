@@ -6,7 +6,7 @@ import (
 	"log"
 	"fmt"
 
-	"github.com/btwiuse/invctrl/pkg/api"
+	"github.com/btwiuse/conntroll/pkg/api"
 	"github.com/btwiuse/wetty/localcmd"
 	"github.com/btwiuse/wetty/wetty"
 	"github.com/kr/pty"

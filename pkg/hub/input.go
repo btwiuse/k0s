@@ -12,7 +12,7 @@ import (
 
 	"gopkg.in/readline.v1"
 
-	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
+	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
 )
 
 func Input() {

@@ -1,4 +1,4 @@
-module github.com/btwiuse/invctrl
+module github.com/btwiuse/conntroll
 
 go 1.13
 

@@ -8,10 +8,10 @@ import (
 	"github.com/btwiuse/wetty/utils"
 	"google.golang.org/grpc"
 
-	"github.com/btwiuse/invctrl/pkg/agent/config"
-	"github.com/btwiuse/invctrl/pkg/agent/dial"
-	"github.com/btwiuse/invctrl/pkg/api"
-	grpcimpl "github.com/btwiuse/invctrl/pkg/api/grpc/impl"
+	"github.com/btwiuse/conntroll/pkg/agent/config"
+	"github.com/btwiuse/conntroll/pkg/agent/dial"
+	"github.com/btwiuse/conntroll/pkg/api"
+	grpcimpl "github.com/btwiuse/conntroll/pkg/api/grpc/impl"
 )
 
 type NewSlave struct {

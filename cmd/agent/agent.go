@@ -5,9 +5,9 @@ import (
 	"net/rpc"
 
 	"github.com/google/uuid"
-	"github.com/btwiuse/invctrl/pkg/agent/config"
-	"github.com/btwiuse/invctrl/pkg/agent/dial"
-	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
+	"github.com/btwiuse/conntroll/pkg/agent/config"
+	"github.com/btwiuse/conntroll/pkg/agent/dial"
+	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
 	"github.com/btwiuse/wetty/localcmd"
 )
 

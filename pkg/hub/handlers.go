@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/btwiuse/invctrl/pkg/api"
-	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
-	"github.com/btwiuse/invctrl/pkg/wrap"
+	"github.com/btwiuse/conntroll/pkg/api"
+	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
+	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/assets"
 	"github.com/btwiuse/wetty/utils"

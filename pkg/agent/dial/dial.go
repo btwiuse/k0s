@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/url"
 
-	"github.com/btwiuse/invctrl/pkg/agent/config"
+	"github.com/btwiuse/conntroll/pkg/agent/config"
 )
 
 func WithInfo(hostport string, info url.Values) (net.Conn, error) {
