@@ -130,11 +130,19 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 			if err != nil {
 				return // err
 			}
-			outputMsg := &api.Message{Type: msg.Type_SESSION_OUTPUT, Body: buf[:n]}
-			err = sendServer.Send(outputMsg)
+			var (
+				msgType = msg.Type_SESSION_OUTPUT
+				msgBody = buf[:n]
+				req = &api.Message{
+					Type: msgType,
+					Body: msgBody,
+				}
+			)
+			err = sendServer.Send(req)
 			if err != nil {
 				return // err
 			}
+			log.Println(req.Type, fmt.Sprintf("%q", string(req.Body)))
 		}
 		return // nil
 	}()
