@@ -125,7 +125,10 @@ func (h *hub) serveYRPC(ln net.Listener) {
 		log.Println(ag.ID())
 
 		ci := r.ConnectionInfo()
-		ci.NotifyWhenClose(ag.Close)
+		ci.NotifyWhenClose(func() {
+			log.Println(ag.ID(), "closed")
+			ag.Close()
+		})
 
 		select {
 		case <-ag.Done():
