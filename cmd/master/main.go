@@ -6,7 +6,7 @@ import (
 
 	//"github.com/davecgh/go-spew/spew"
 
-	"github.com/btwiuse/invctrl/server"
+	"github.com/btwiuse/invctrl/pkg/server"
 )
 
 func main() {

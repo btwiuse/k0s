@@ -43,7 +43,7 @@ func Input() {
 				fmt.Println(err)
 			}
 
-			hello := func(line string, client *Client) {
+			hello := func(line string, client *Slave) {
 				req := &api.HelloRequest{Name: line}
 				resp, err := client.GRPC.Hello(context.Background(), req)
 				if err != nil {
@@ -53,7 +53,7 @@ func Input() {
 				log.Println("grpc hello response received:\n\n", resp.GetMessage())
 			}
 
-			echo := func(line string, client *Client) {
+			echo := func(line string, client *Slave) {
 				req := protocol.EchoRequest{
 					Payload: line,
 				}
@@ -66,7 +66,7 @@ func Input() {
 				log.Println("rpc echo response received:\n\n", resp.Payload)
 			}
 
-			bash := func(line string, client *Client) {
+			bash := func(line string, client *Slave) {
 				req := protocol.Request{
 					Command: line,
 				}
@@ -88,24 +88,24 @@ func Input() {
 				}
 				for i := 0; i < num; i++ {
 					/*
-						v := ClientPool.Clients.Values()[0]
-						client := v.(*Client)
+						v := GlobalSlavePool.Slaves.Values()[0]
+						client := v.(*Slave)
 					*/
-					client := ClientPool.GetRandom()
+					client := GlobalSlavePool.GetRandom()
 					go echo(strconv.Itoa(i), client)
 					go hello(strconv.Itoa(i), client)
 				}
 				/*
-					for _, v := range ClientPool.Clients.Values() {
-						client := v.(*Client)
+					for _, v := range SlavePool.Slaves.Values() {
+						client := v.(*Slave)
 						go echo(line, client)
 					}
 				*/
 				continue
 			case strings.HasPrefix(line, "!map "):
 				line = strings.TrimPrefix(line, "!map ")
-				for _, v := range ClientPool.Clients.Values() {
-					client := v.(*Client)
+				for _, v := range GlobalSlavePool.Slaves.Values() {
+					client := v.(*Slave)
 					go bash(line, client)
 				}
 				continue
@@ -114,21 +114,21 @@ func Input() {
 			case line == "Exit", line == "Quit":
 				os.Exit(0)
 			case line == "Ls":
-				ClientPool.Dump()
+				GlobalSlavePool.Dump()
 				continue
-			case ClientPool.Has(line):
-				ClientPool.Current = ClientPool.Get(line)
-				log.Println("current client:", ClientPool.Current.UUID)
+			case GlobalSlavePool.Has(line):
+				GlobalSlavePool.Current = GlobalSlavePool.Get(line)
+				log.Println("current client:", GlobalSlavePool.Current.UUID)
 				continue
 			default:
-				if ClientPool.Current == nil {
+				if GlobalSlavePool.Current == nil {
 					fmt.Println("[INFO] Your current client is empty. Enter the uuid to the client you want to talk to first:")
 					continue
 				}
 			}
 
 			if line == "N" {
-				client := ClientPool.Current
+				client := GlobalSlavePool.Current
 				conn, err := client.Pool.Get()
 				log.Println("[POOL Size]", client.Pool.Len())
 				if err == nil {
@@ -137,7 +137,7 @@ func Input() {
 					log.Println(err)
 				}
 			} else {
-				go bash(line, ClientPool.Current)
+				go bash(line, GlobalSlavePool.Current)
 			}
 
 			promptNum += 1

@@ -28,7 +28,7 @@ import (
 	"github.com/btwiuse/invctrl/wrap"
 )
 
-type Client struct {
+type Slave struct {
 	UUID       uuid.UUID
 	LocalAddr  net.Addr
 	RemoteAddr net.Addr
@@ -40,99 +40,99 @@ type Client struct {
 	Pool       pool.Pool
 }
 
-type Pool struct {
-	Clients *linkedhashmap.Map
-	Current *Client
-	Latest  *Client
+type SlavePool struct {
+	Slaves *linkedhashmap.Map
+	Current *Slave
+	Latest  *Slave
 }
 
-func NewPool() *Pool {
-	return &Pool{
-		Clients: linkedhashmap.New(),
+func NewSlavePool() *SlavePool {
+	return &SlavePool{
+		Slaves: linkedhashmap.New(),
 	}
 }
 
-var ClientPool = NewPool()
+var GlobalSlavePool = NewSlavePool()
 
-func (p *Pool) Del(uuid string) {
-	p.Clients.Remove(uuid)
+func (p *SlavePool) Del(uuid string) {
+	p.Slaves.Remove(uuid)
 	if (p.Current != nil) && (p.Current.UUID.String() == uuid) {
-		p.Current = nil //new(Client)
+		p.Current = nil //new(Slave)
 	}
 }
 
-func (p *Pool) GetRandom() *Client {
+func (p *SlavePool) GetRandom() *Slave {
 	rand.Seed(time.Now().UnixNano())
-	iter := p.Clients.Iterator()
+	iter := p.Slaves.Iterator()
 	iter.Begin()
 	/*
-		n := p.Clients.Size()
+		n := p.Slaves.Size()
 		r := rand.Intn(n)
 		log.Println(r, n)
 		for i := 0; i <= r; i++ {
 	*/
-	for i := 0; i <= rand.Intn(p.Clients.Size()); i++ {
+	for i := 0; i <= rand.Intn(p.Slaves.Size()); i++ {
 		iter.Next()
 	}
-	return iter.Value().(*Client)
+	return iter.Value().(*Slave)
 }
 
-func (p *Pool) Get(uuid string) *Client {
-	v, _ := p.Clients.Get(uuid)
-	return v.(*Client)
+func (p *SlavePool) Get(uuid string) *Slave {
+	v, _ := p.Slaves.Get(uuid)
+	return v.(*Slave)
 }
 
-func (p *Pool) Add(client *Client) {
-	p.Clients.Put(client.UUID.String(), client)
-	p.Latest = client
+func (p *SlavePool) Add(slave *Slave) {
+	p.Slaves.Put(slave.UUID.String(), slave)
+	p.Latest = slave
 }
 
-func (p *Pool) Dump() {
-	log.Println("[client pool]")
+func (p *SlavePool) Dump() {
+	log.Println("[slave pool]")
 	isCurrent := func(uuid string) string {
 		if (p.Current != nil) && (p.Current.UUID.String() == uuid) {
 			return "*"
 		}
 		return " "
 	}
-	for i, v := range p.Clients.Values() {
-		client := v.(*Client)
-		uuid := p.Clients.Keys()[i].(string)
+	for i, v := range p.Slaves.Values() {
+		slave := v.(*Slave)
+		uuid := p.Slaves.Keys()[i].(string)
 		fmt.Println(
 			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
 			isCurrent(uuid),
 			uuid,
-			"ssh ubuntu@"+strings.Split(client.RemoteAddr.String(), ":")[0],
-			client.Info,
+			"ssh ubuntu@"+strings.Split(slave.RemoteAddr.String(), ":")[0],
+			slave.Info,
 		)
 	}
 }
 
-func (p *Pool) Has(uuid string) bool {
-	_, found := p.Clients.Get(uuid)
+func (p *SlavePool) Has(uuid string) bool {
+	_, found := p.Slaves.Get(uuid)
 	return found
 }
 
-func NewClient(w http.ResponseWriter) (*Client, error) {
-	client := new(Client) // using named return causes panic, why?
-	client.UUID = uuid.New()
-	client.WsConns = make(map[string]*websocket.Conn)
-	client.Conns = make(map[string]net.Conn)
+func NewSlave(w http.ResponseWriter) (*Slave, error) {
+	slave := new(Slave) // using named return causes panic, why?
+	slave.UUID = uuid.New()
+	slave.WsConns = make(map[string]*websocket.Conn)
+	slave.Conns = make(map[string]net.Conn)
 
 	conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
 	if err != nil {
 		return nil, err
 	}
 
-	client.RemoteAddr = conn.RemoteAddr()
-	client.LocalAddr = conn.LocalAddr()
+	slave.RemoteAddr = conn.RemoteAddr()
+	slave.LocalAddr = conn.LocalAddr()
 
-	sheader := &header.Header{}
-	cheader := &header.ClientHeader{}
+	sheader := &header.MasterHeader{}
+	cheader := &header.SlaveHeader{}
 	// here we don't cate about decoder.Buffered
-	// we can pretty much assume it is empty cuz after the client send it's header
+	// we can pretty much assume it is empty cuz after the slave send it's header
 	// to server, it will wait server's confirmation, during this period nothing will
-	// be sent from the client. so once the server receives the complete header, nothing
+	// be sent from the slave. so once the server receives the complete header, nothing
 	// is left in the buffer
 	// similarly hibuf is useless after this...
 	if err := json.NewDecoder(conn).Decode(&sheader); err != nil {
@@ -146,42 +146,42 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 
 	if sheader.Append {
 		conn.Write([]byte(pretty.JsonString(cheader)))
-		client := ClientPool.Get(sheader.Id)
-		client.Conns[sheader.Nonce] = conn
-		log.Println(client.UUID, "conns:", client.Conns)
+		slave := GlobalSlavePool.Get(sheader.Id)
+		slave.Conns[sheader.Nonce] = conn
+		log.Println(slave.UUID, "conns:", slave.Conns)
 		return nil, fmt.Errorf("append to %s", sheader.Id)
 	}
 
-	cheader.Id = client.UUID.String()
+	cheader.Id = slave.UUID.String()
 	conn.Write([]byte(pretty.JsonString(cheader)))
-	client.Info = pretty.JSONString(sheader)
+	slave.Info = pretty.JSONString(sheader)
 
-	client.RPC = NewRPCClient(conn, onclose(client))
+	slave.RPC = NewRPCClient(conn, onclose(slave))
 
-	log.Println("connected:", client.UUID, client.RemoteAddr)
+	log.Println("connected:", slave.UUID, slave.RemoteAddr)
 
-	ClientPool.Add(client)
+	GlobalSlavePool.Add(slave)
 	factory := func() (net.Conn, error) {
 		log.Println("infactory")
 		nonce := uuid.New().String()
-		id := client.UUID.String()
+		id := slave.UUID.String()
 		req := protocol.ConnRequest{
 			Id:    id,
 			Nonce: nonce,
 		}
 		resp := new(protocol.ConnResponse)
 		done := make(chan *rpc.Call, 1)
-		client.RPC.Go("Conn.New", req, resp, done)
+		slave.RPC.Go("Conn.New", req, resp, done)
 		<-done
-		conn, ok := client.Conns[nonce]
+		conn, ok := slave.Conns[nonce]
 		if !ok {
-			return nil, fmt.Errorf("client nonce doesn't exist: %s", nonce)
+			return nil, fmt.Errorf("slave nonce doesn't exist: %s", nonce)
 		}
-		delete(client.Conns, nonce)
+		delete(slave.Conns, nonce)
 		return conn, nil
 	}
 	log.Println("pool.NewChannelPool")
-	client.Pool, err = pool.NewChannelPool(5, 30, factory)
+	slave.Pool, err = pool.NewChannelPool(5, 30, factory)
 	if err != nil {
 		return nil, err
 	}
@@ -189,44 +189,44 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 	log.Println("new grpc!!!")
 	{
 		nonce := uuid.New().String()
-		id := client.UUID.String()
+		id := slave.UUID.String()
 		req := protocol.GRPCConnRequest{
 			Id:    id,
 			Nonce: nonce,
 		}
 		resp := new(protocol.GRPCConnResponse)
 		done := make(chan *rpc.Call, 1)
-		client.RPC.Go("GRPCConn.New", req, resp, done)
+		slave.RPC.Go("GRPCConn.New", req, resp, done)
 		<-done
 		time.Sleep(time.Second / 3)
-		conn, ok := client.Conns[nonce]
+		conn, ok := slave.Conns[nonce]
 		if !ok {
-			return nil, fmt.Errorf("client nonce doesn't exist: %s", nonce)
+			return nil, fmt.Errorf("slave nonce doesn't exist: %s", nonce)
 		}
-		delete(client.Conns, nonce)
+		delete(slave.Conns, nonce)
 		cc, err := NewGRPCClientConn(conn)
 		if err != nil {
 			return nil, err
 		}
-		client.GRPC = api.NewApiClient(cc)
+		slave.GRPC = api.NewApiClient(cc)
 	}
 
-	ClientPool.Dump()
-	return client, nil
+	GlobalSlavePool.Dump()
+	return slave, nil
 }
 
-// onclose is called when client goes offline
-// client.UUID, client.RemoteAddr, client.Info
-func onclose(client *Client) func() {
+// onclose is called when slave goes offline
+// slave.UUID, slave.RemoteAddr, slave.Info
+func onclose(slave *Slave) func() {
 	return func() {
-		ClientPool.Dump()
-		log.Println("disconnected:", client.UUID, client.RemoteAddr, client.Info)
-		ClientPool.Del(client.UUID.String())
+		GlobalSlavePool.Dump()
+		log.Println("disconnected:", slave.UUID, slave.RemoteAddr, slave.Info)
+		GlobalSlavePool.Del(slave.UUID.String())
 	}
 }
 
 // we use NewRPCClient over rpc.NewClient(conn)
-// so we can remove client from pool immediately when it is disconnected
+// so we can remove slave from pool immediately when it is disconnected
 
 /*
           / io.Reader >--->copy()---> io.PipeWriter ===> io.PipeReader = intercepted io.Reader \

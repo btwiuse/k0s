@@ -1,3 +1,10 @@
+Architecture:
+```
+SlaveFactory ---\                  /--- Client/Browser
+SlaveFactory ------[Master/Server]----- Client/Browser
+SlaveFactory ---/                  \--- Client/Browser
+```
+
 GOAL:
 - [DONE] control http client from server 
 - [DONE] switch between connected clients

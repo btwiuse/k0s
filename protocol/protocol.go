@@ -19,8 +19,8 @@ import (
 	"github.com/btwiuse/gotty/wetty"
 	"google.golang.org/grpc"
 
-	"github.com/btwiuse/invctrl/slave/config"
-	"github.com/btwiuse/invctrl/slave/dial"
+	"github.com/btwiuse/invctrl/pkg/slave/config"
+	"github.com/btwiuse/invctrl/pkg/slave/dial"
 	"github.com/btwiuse/invctrl/pkg/api"
 )
 
@@ -115,7 +115,9 @@ func (c *WsConn) New(req WsConnRequest, res *WsConnResponse) error {
 	res.Message = "OK"
 	conn := dial.WsDial(config.Default)
 	factory := &localcmd.Factory{
+		//Args: []string{"/usr/bin/env", "TERM=xterm", "htop"},
 		Args: []string{"/usr/bin/env", "TERM=xterm", "bash"},
+		//Args: []string{"/usr/bin/env", "TERM=xterm", "bash", "-c", "sleep 9"},
 		//Args: []string{"/bin/bash"},
 		//Args: []string{"neofetch"},
 		//Args: []string{"htop"},
@@ -140,7 +142,12 @@ func serveWS(conn *websocket.Conn, factory *localcmd.Factory) {
 		return
 	}
 	if err := wetty.NewMSPair(master, slave).Pipe(); err != nil {
+		// case 1: slave closed
+		//   notify the frontend and terminate connection gracefully
 		log.Println(err)
+                if _, err = master.Write([]byte{wetty.SlaveDead}); err != nil {
+			log.Println(err)
+		}
 	}
 }
 

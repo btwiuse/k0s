@@ -34,17 +34,17 @@ func hijack(original http.Handler) http.HandlerFunc {
 }
 
 func hijacker(w http.ResponseWriter, r *http.Request) {
-	_, err := NewClient(w)
+	_, err := NewSlave(w)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 }
 
-// rpc call to initiate a ws conn to /ws from client
-func wsfactory(client *Client) (*websocket.Conn, error) {
+// rpc call to initiate a ws conn to /ws from slave
+func wsfactory(slave *Slave) (*websocket.Conn, error) {
 	nonce := uuid.New().String()
-	id := client.UUID.String()
+	id := slave.UUID.String()
 
 	req := protocol.WsConnRequest{
 		Id:    id,
@@ -53,15 +53,15 @@ func wsfactory(client *Client) (*websocket.Conn, error) {
 	resp := new(protocol.WsConnResponse)
 
 	done := make(chan *rpc.Call, 1)
-	client.RPC.Go("WsConn.New", req, resp, done)
+	slave.RPC.Go("WsConn.New", req, resp, done)
 	<-done
 
 	time.Sleep(time.Second / 3) // todo: investigate why it is necessary
-	conn, ok := client.WsConns[nonce]
+	conn, ok := slave.WsConns[nonce]
 	if !ok {
-		return nil, fmt.Errorf("client nonce doesn't exist: %s", nonce)
+		return nil, fmt.Errorf("slave nonce doesn't exist: %s", nonce)
 	}
-	delete(client.WsConns, nonce)
+	delete(slave.WsConns, nonce)
 	return conn, nil
 }
 
@@ -87,35 +87,35 @@ func wslisten(w http.ResponseWriter, r *http.Request) {
 	// defer conn.Close()
 	// you should leave the conn open until the matching frontend conn is closed
 
-	var this io.ReadWriter = &utils.WsWrapper{conn}
+	var master io.ReadWriter = &utils.WsWrapper{conn}
 
 	buf := make([]byte, 1024)
-	n, err := this.Read(buf)
+	n, err := master.Read(buf)
 	if err != nil {
 		log.Println(err)
 	}
 	id := string(buf[:n])
-	client := ClientPool.Get(id)
+	slave := GlobalSlavePool.Get(id)
 
-	n, err = this.Read(buf)
+	n, err = master.Read(buf)
 	if err != nil {
 		log.Println(err)
 	}
 	nonce := string(buf[:n])
 
-	client.WsConns[nonce] = conn
+	slave.WsConns[nonce] = conn
 }
 
 // relay fs http request
 // drawback: poor performance handling large files
 // 0. rewrite request path
-// 1. record client request (httputil.DumpRequest)
+// 1. record slave request (httputil.DumpRequest)
 // (2. send recorded request to grpc
 // (3. record and dump grpc response (httptest.ResponseRecorder, httputil.DumpResponse)
 // (4. return grpc response
 // 5(theoretically). decode grpc response (http.ReadResponse)
 // 5(practically). hijack w.(http.Hijacker).Hijack()...Write(grpc.Response)
-func fsrelay(w http.ResponseWriter, r *http.Request, client *Client, p string) {
+func fsrelay(w http.ResponseWriter, r *http.Request, slave *Slave, p string) {
 	log.Println("request uri:", r.RequestURI)
 
 	// 0.
@@ -138,12 +138,12 @@ func fsrelay(w http.ResponseWriter, r *http.Request, client *Client, p string) {
 
 	log.Println("calling Rootfs.New")
 
-	if err := client.RPC.Call("Rootfs.New", req, resp); err != nil {
+	if err := slave.RPC.Call("Rootfs.New", req, resp); err != nil {
 		log.Println(err)
 		return
 	}
 
-	// 5. hijack client http request -> net.Conn
+	// 5. hijack slave http request -> net.Conn
 	rwc, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
 	if err != nil {
 		log.Println(err)
@@ -161,7 +161,7 @@ func fsrelay(w http.ResponseWriter, r *http.Request, client *Client, p string) {
 // listen on frontend ws connection
 // serve http://<host>/id/ws endpoint
 // see wslisten
-func wsrelay(w http.ResponseWriter, r *http.Request, client *Client) {
+func wsrelay(w http.ResponseWriter, r *http.Request, slave *Slave) {
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", 405)
 		return
@@ -176,36 +176,25 @@ func wsrelay(w http.ResponseWriter, r *http.Request, client *Client) {
 	defer conn.Close()
 
 	// 2, 3
-	connRemote, err := wsfactory(client)
+	connRemote, err := wsfactory(slave)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
 	var (
-		this io.ReadWriter = &utils.WsWrapper{conn}
-		that io.ReadWriter = &utils.WsWrapper{connRemote}
-		errs               = make(chan error, 2)
+		master io.ReadWriter = &utils.WsWrapper{conn}
+		slaver io.ReadWriter = &utils.WsWrapper{connRemote}
 	)
 
-	// 4
-	go func() {
-		errs <- func() error {
-			_, err := io.Copy(that, this)
-			log.Println(err)
-			return err
-		}()
-	}()
+        // 4
 
-	go func() {
-		errs <- func() error {
-			_, err := io.Copy(this, that)
-			log.Println(err)
-			return err
-		}()
-	}()
-
-	log.Println(<-errs)
+	// todo: notify backend to kill slave
+        err = wetty.Pipe(master, slaver)
+        log.Println("wetty.Pipe: todo ClientDead", err)
+        if _, err := slaver.Write([]byte{wetty.ClientDead}); err != nil {
+        	log.Println("wetty.Pipe:", err)
+        }
 
 	return
 }
@@ -239,7 +228,7 @@ func frontend(w http.ResponseWriter, r *http.Request) {
 	staticFileServer = http.FileServer(httpfs.NewFileSystem(assets.Assets, time.Now()))
 	staticFileHandler = http.StripPrefix("/ws/"+id+"/", staticFileServer)
 
-	if !ClientPool.Has(id) {
+	if !GlobalSlavePool.Has(id) {
 		goto REDIR
 	}
 
@@ -251,12 +240,12 @@ func frontend(w http.ResponseWriter, r *http.Request) {
 	switch parts[1] {
 	case "ws":
 		// relayfrontend ws connection
-		client := ClientPool.Get(id)
-		wsrelay(w, r, client)
+		slave := GlobalSlavePool.Get(id)
+		wsrelay(w, r, slave)
 	case "rootfs":
-		client := ClientPool.Get(id)
+		slave := GlobalSlavePool.Get(id)
 		p := "/" + path.Join(parts[2:]...)
-		fsrelay(w, r, client, p)
+		fsrelay(w, r, slave, p)
 	default:
 		// handle non-ws static resources
 		staticFileHandler.ServeHTTP(w, r)
@@ -267,10 +256,10 @@ REDIR:
 }
 
 // ls handles the index page
-// todo: refresh when clientpool changes (watcher)
+// todo: refresh when slavepool changes (watcher)
 func ls(w http.ResponseWriter, r *http.Request) {
 	isCurrent := func(uuid string) string {
-		if (ClientPool.Current != nil) && (ClientPool.Current.UUID.String() == uuid) {
+		if (GlobalSlavePool.Current != nil) && (GlobalSlavePool.Current.UUID.String() == uuid) {
 			return "*"
 		}
 		return " "
@@ -278,9 +267,9 @@ func ls(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "text/html; charset=UTF-8")
 	uri := strings.TrimPrefix(r.RequestURI, "/")
-	if ClientPool.Has(uri) {
+	if GlobalSlavePool.Has(uri) {
 		log.Println(uri)
-		client := ClientPool.Get(uri)
+		slave := GlobalSlavePool.Get(uri)
 		href := fmt.Sprintf(`<a href="/ws/%s/">%s</a>`, uri, uri)
 		fmt.Fprintln(w, href)
 		fmt.Fprintln(w, "<pre>")
@@ -288,17 +277,19 @@ func ls(w http.ResponseWriter, r *http.Request) {
 			fmt.Sprintf("[%s]", "N/A"),
 			isCurrent(uri),
 			uri,
-			"ssh ubuntu@"+strings.Split(client.RemoteAddr.String(), ":")[0],
-			client.Info,
+			"ssh ubuntu@"+strings.Split(slave.RemoteAddr.String(), ":")[0],
+			slave.Info,
 		)
 		fmt.Fprintln(w, "</pre>")
 		return
 	}
-	for i, v := range ClientPool.Clients.Values() {
-		client := v.(*Client)
-		uuid := ClientPool.Clients.Keys()[i].(string)
+	for i, v := range GlobalSlavePool.Slaves.Values() {
+		slave := v.(*Slave)
+		uuid := GlobalSlavePool.Slaves.Keys()[i].(string)
 		href := fmt.Sprintf(`<a href="%s">%s</a>`, uuid, uuid)
 		wshref := fmt.Sprintf(`<a href="/ws/%s/">ws</a>`, uuid)
+		wshref += fmt.Sprintf(`|<a href="/ws/%s/#xterm">xterm</a>`, uuid)
+		wshref += fmt.Sprintf(`|<a href="/ws/%s/#hterm">hterm</a>`, uuid)
 		fshref := fmt.Sprintf(`<a href="/ws/%s/rootfs/">fs</a>`, uuid)
 		fmt.Fprintln(w,
 			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
@@ -306,11 +297,11 @@ func ls(w http.ResponseWriter, r *http.Request) {
 			href,
 			wshref,
 			fshref,
-			"ssh ubuntu@"+strings.Split(client.RemoteAddr.String(), ":")[0],
+			"ssh ubuntu@"+strings.Split(slave.RemoteAddr.String(), ":")[0],
 		)
 		fmt.Fprintln(w, "<pre>")
 		fmt.Fprintln(w,
-			client.Info,
+			slave.Info,
 		)
 		fmt.Fprintln(w, "</pre>")
 	}

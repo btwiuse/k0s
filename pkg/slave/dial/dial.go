@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/websocket"
-	"github.com/btwiuse/invctrl/slave/config"
+	"github.com/btwiuse/invctrl/pkg/slave/config"
 	"github.com/btwiuse/invctrl/header"
 	"github.com/btwiuse/pretty"
 )
@@ -74,7 +74,7 @@ func Dial(c *config.Config) net.Conn {
 }
 
 func writeConnAppend(conn net.Conn, nonce string) {
-	header := pretty.JSONString(&header.Header{
+	header := pretty.JSONString(&header.MasterHeader{
 		Append: true,
 		Id:     config.Default.Id,
 		Nonce:  nonce,
@@ -83,7 +83,7 @@ func writeConnAppend(conn net.Conn, nonce string) {
 }
 
 func writeConn(conn net.Conn) {
-	header := pretty.JSONString(&header.Header{
+	header := pretty.JSONString(&header.MasterHeader{
 		BuildCode:  buildCode,
 		DockerRepo: dockerRepo,
 		GitBranch:  gitBranch,
@@ -111,7 +111,7 @@ func writeConn(conn net.Conn) {
 }
 
 func readConn(conn net.Conn) string {
-	cheader := &header.ClientHeader{}
+	cheader := &header.SlaveHeader{}
 	if err := json.NewDecoder(conn).Decode(&cheader); err != nil {
 		log.Fatalln(err)
 	}

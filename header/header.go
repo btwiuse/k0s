@@ -1,12 +1,12 @@
 package header
 
-type ClientHeader struct {
+type SlaveHeader struct {
 	Status string `json:"status"`
 	Id     string `json:"id"`
 	Err    string `json:"error,omitempty"`
 }
 
-type Header struct {
+type MasterHeader struct {
 	Append bool   `json:"append"`
 	Id     string `json"id"`
 	Nonce  string `json"nonce"`
