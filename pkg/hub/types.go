@@ -38,6 +38,9 @@ type Agent interface {
 
 	NewRPC()
 	NewSession() Session
+
+	Close()
+	Done() <-chan struct{}
 }
 
 type SessionManager interface {

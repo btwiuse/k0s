@@ -2,12 +2,14 @@ package agent
 
 import (
 	"context"
+	"sync"
 	"io"
 	"log"
 	"net"
 	"net/rpc"
 	"time"
 
+	"github.com/btwiuse/conntroll/pkg/uuid"
 	"github.com/btwiuse/conntroll/pkg/api"
 	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
 	"github.com/btwiuse/conntroll/pkg/hub"
@@ -26,16 +28,16 @@ func NewAgent(conn net.Conn, opts ...AgentOpt) hub.Agent {
 		SessionManager: NewSessionManager(),
 		RPCManager:     NewRPCManager(),
 		created:        time.Now(),
+		done:		make(chan struct{}),
+		once:		&sync.Once{},
 	}
 	for _, opt := range opts {
 		opt(ag)
 	}
 	ag.AddRPCConn(conn)
-	ag.NewRPC()
-	/*
+	for i := 0; i < 3; i ++ {
 		ag.NewRPC()
-		ag.NewRPC()
-	*/
+	}
 	return ag
 }
 
@@ -101,13 +103,12 @@ func SetARCH(a string) AgentOpt {
 func (ag *agent) NewRPC() {
 	req := rpcimpl.RPCRequest{}
 	resp := &rpcimpl.RPCResponse{}
-	/*
-
-		rc := ag.RPCManager.Last()
-		rc.Go("Session.New", req, resp, nil)
-	*/
-	// rc := ag.RPCManager.Last()
-	rc := ag.RPCConn
+	rc := ag.RPCManager.Last()
+	if rc == nil {
+		log.Println("client dead:", ag.ID())
+		ag.Close()
+		return
+	}
 	err := rc.Call("RPC.New", req, resp)
 	if err != nil {
 		log.Println("RPC.New", err)
@@ -127,11 +128,22 @@ func (ag *agent) NewSession() hub.Session {
 	return <-ag.sch
 }
 
+func (ag *agent) Close() {
+	ag.once.Do(func(){
+		close(ag.done)
+	})
+}
+
+func (ag *agent) Done() <-chan struct{} {
+	return ag.done
+}
+
 type agent struct {
 	hub.SessionManager `json:"-"`
 	RPCManager         hub.RPCManager   `json:"-"`
 	sch                chan hub.Session `json:"-"`
-	RPCConn            hub.RPC
+	done chan struct{}
+	once *sync.Once
 
 	created time.Time
 
@@ -163,9 +175,10 @@ func (ag *agent) ID() string {
 // we may assume the agent is always connected now
 // we should probably spawn another RPCClient onClose, instead of simply letting it die
 func (ag *agent) AddRPCConn(c net.Conn) {
+	id := uuid.New()
 	pr, pw := io.Pipe()
 	go func() {
-		defer ag.onRPCClose()
+		defer ag.onRPCClose(id)
 		if _, err := io.Copy(pw, c); err != nil {
 			log.Println(err)
 		}
@@ -175,16 +188,15 @@ func (ag *agent) AddRPCConn(c net.Conn) {
 		Writer: c,
 		Closer: c,
 	})
-	rc := ToRPC(rpcClient)
-	ag.RPCConn = rc
+	rc := ToRPC(id)(rpcClient)
 	ag.RPCManager.AddRPC(rc)
 }
 
 // onclose is called when rpc connection is lost
-func (ag *agent) onRPCClose() {
-	log.Println("disconnected:", ag.Id)
-	// ag.Del(ag.Id)
-	// assuming there are other rpc conn left
+func (ag *agent) onRPCClose(id string) {
+	log.Println("disconnected:", ag.Id, id)
+	ag.RPCManager.Del(id)
+	// assuming there are other rpc conns left
 	ag.NewRPC()
 }
 

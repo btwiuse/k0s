@@ -260,7 +260,14 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 		agent.SetConnected(time.Now().Unix()),
 	)
 	h.Add(ag)
-	// ag.NewSession()
+	go h.GC(ag)
+}
+
+func (h *hub) GC(ag types.Agent) {
+	select {
+	case <-ag.Done():
+		h.Del(ag.ID())
+	}
 }
 
 func (h *hub) handleSession(w http.ResponseWriter, r *http.Request) {

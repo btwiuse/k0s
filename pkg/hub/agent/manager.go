@@ -7,7 +7,6 @@ import (
 	"github.com/btwiuse/conntroll/pkg"
 	"github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/manager"
-	"github.com/btwiuse/conntroll/pkg/uuid"
 )
 
 var (
@@ -39,6 +38,9 @@ type rpcManager struct {
 
 // todo: use iterator
 func (rm *rpcManager) Last() hub.RPC {
+	if rm.Manager.Size() == 0 {
+		return nil
+	}
 	return rm.Values()[rm.Size()-1].(hub.RPC)
 }
 
@@ -70,10 +72,12 @@ func (r *rpcc) ID() string {
 	return r.id
 }
 
-func ToRPC(rc *rpc.Client) hub.RPC {
-	return &rpcc{
-		created: time.Now(),
-		id:      uuid.New(),
-		Client:  rc,
+func ToRPC(id string) func(*rpc.Client) hub.RPC {
+	return func(rc *rpc.Client) hub.RPC {
+		return &rpcc{
+			created: time.Now(),
+			id:      id,
+			Client:  rc,
+		}
 	}
 }
