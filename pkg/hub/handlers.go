@@ -2,34 +2,40 @@ package hub
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"log"
 	"net"
 	"net/http"
 	"net/rpc"
-	"os"
+	"net/url"
 	"strings"
 	"time"
 
 	"github.com/btwiuse/invctrl/pkg/api"
 	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
-	"github.com/btwiuse/invctrl/wrap"
+	"github.com/btwiuse/invctrl/pkg/wrap"
+	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/assets"
+	"github.com/btwiuse/wetty/utils"
 	"github.com/btwiuse/wetty/wetty"
 	"github.com/gorilla/websocket"
-	"github.com/kr/pty"
 	"google.golang.org/grpc"
 	"modernc.org/httpfs"
 )
 
 func getAgents(w http.ResponseWriter, r *http.Request) {
-	GlobalAgentPool.Dump()
+	w.Header().Set("Content-Type", "application/json")
+	infos := []url.Values{}
+	for _, v := range GlobalAgentPool.Agents.Values() {
+		slave := v.(*Agent)
+		infos = append(infos, slave.Info)
+	}
+	w.Write([]byte(pretty.JSONString(infos)))
 }
 
 func grpcfactory(agent *Agent) (*grpc.ClientConn, error) {
 	req := rpcimpl.NewSlaveRequest{
-		Args: agent.Info,
+		Info: agent.Info,
 	}
 	resp := new(rpcimpl.NewSlaveResponse)
 
@@ -68,102 +74,71 @@ func grpcrelayws(agent *Agent) http.HandlerFunc {
 		}
 
 		// to bidiStreamClient
-		bidiStreamClient := api.NewBidiStreamClient(cc)
+		bidiStreamClient := api.NewSlaveClient(cc)
 
 		// to sendClient
-		sendClient, err := bidiStreamClient.Send(context.Background())
+		slave, err := bidiStreamClient.Send(context.Background())
 		if err != nil {
-			log.Fatalln(bidiStreamClient, err)
+			log.Fatalln(slave, err)
 		}
 
-		// go for send Input   <=	    websocket
-		// go for send Resize  <= [wsrelay] websocket
-		// for recv Output     =>	    websocket
-		// (through chan Message{Type, Body} instead of interface)
-
-		// todo: read from ws instead of generating fake msg
-		go func() {
-			for range time.Tick(time.Second) {
-				rows, cols, err := pty.Getsize(os.Stdin)
-				if err != nil {
-					log.Println(err)
-					break
-				}
-
-				json := fmt.Sprintf(`{"Cols": %d, "Rows": %d}`, cols, rows)
-
-				resizeMsg := &api.Message{Type: []byte{wetty.ResizeTerminal}, Body: []byte(json)}
-				err = sendClient.Send(resizeMsg)
-				if err != nil {
-					log.Println(err)
-					return
-				}
-			}
-		}()
-
-		go func() {
-			buf := make([]byte, 1024)
-			for {
-				n, err := os.Stdin.Read(buf)
-				if err != nil {
-					log.Println(err)
-					break
-				}
-
-				inputMsg := &api.Message{Type: []byte{wetty.Input}, Body: buf[:n]}
-				err = sendClient.Send(inputMsg)
-				if err != nil {
-					log.Println(err)
-					continue
-				}
-			}
-		}()
-
-		for {
-			select {
-			// case <-ctx.Done():
-			// log.Println("client dead:", c.RemoteAddr())
-			// log.Println("client dead:")
-			// return
-			default:
-				resp, err := sendClient.Recv()
-				if err != nil {
-					log.Println(err)
-					return
-				}
-				fmt.Printf("%s", resp.Body)
-			}
-		}
-
+		pipe(utils.WsConnToReadWriter(wsconn), slave)
 	}
 }
 
 // here master and slave are connected via network
-func Pipe(client, slave io.ReadWriteCloser) error {
+// go for send Input   <=	   websocket
+// go for send Resize  <= [ Pipe ] websocket
+// for recv Output     =>	   websocket
+// (through chan Message{Type, Body} instead of interface)
+func pipe(ws io.ReadWriteCloser, slave api.Slave_SendClient) error {
 	errs := make(chan error, 2)
 	closeall := func() {
-		client.Close()
-		slave.Close()
+		ws.Write([]byte{wetty.SlaveDead})
+		slave.Send(&api.Message{Type: []byte{wetty.ClientDead}})
+		ws.Close()
+		slave.CloseSend()
 	}
 
 	go func() {
-		log.Println("Pipe: client <= slave")
+		log.Println("pipe: client(ws) => slave(grpc)")
 		defer closeall()
-		_, err := io.Copy(client, slave)
-		errs <- err
-		// if you set it to 400, master will receive 399- bytes on each read
-		// this value should at least CSPair.bufferSize + 1
-		// otherwise some messages may be partially sent
+		buf := make([]byte, 1<<12)
+		for {
+			n, err := ws.Read(buf)
+			if err != nil {
+				errs <- err
+				break
+			}
+			msg := &api.Message{Type: buf[:1], Body: buf[1:n]}
+			err = slave.Send(msg)
+			if err != nil {
+				errs <- err
+				return
+			}
+		}
 	}()
 
 	go func() {
-		log.Println("Pipe: client => slave")
+		log.Println("pipe: client(ws) <= slave(grpc)")
 		defer closeall()
-		_, err := io.Copy(slave, client)
-		errs <- err
+		for {
+			resp, err := slave.Recv()
+			if err != nil {
+				errs <- err
+				break
+			}
+			_, err = ws.Write(append(resp.Type, resp.Body...))
+			if err != nil {
+				errs <- err
+				break
+			}
+		}
 	}()
 
-	return <-errs
+	firstError := <-errs
+	log.Println(firstError)
+	return firstError
 }
 
 // https://github.com/frankdejonge/golang-websocket-example/blob/master/connection.go
@@ -192,38 +167,21 @@ func handleConnectionError(slave io.Writer, err error) {
 	}
 
 	if _, err := slave.Write([]byte{wetty.ClientDead}); err != nil {
-		log.Println("Pipe:", err)
+		log.Println("pipe:", err)
 	}
 }
 
-/*
-base :=
-static:
-$uuid
-$uuid/css/*
-$uuid/js/*
-$uuid/png/*
-
-grpcrelayws:
-$uuid/ws
-
-fsrelay:
-$uuid/rootfs
-
-new/slave:
-/new/slave
-*/
 func static(w http.ResponseWriter, r *http.Request) {
 	var staticFileServer, staticFileHandler http.Handler
 	var id string
-	base := strings.TrimPrefix(r.RequestURI, "/ws/")
+	base := strings.TrimPrefix(r.RequestURI, "/agent/")
 	parts := strings.Split(base, "/")
 	if len(parts) == 0 {
 		goto HOME
 	}
 	id = parts[0]
 	staticFileServer = http.FileServer(httpfs.NewFileSystem(assets.Assets, time.Now()))
-	staticFileHandler = http.StripPrefix("/ws/"+id+"/", staticFileServer)
+	staticFileHandler = http.StripPrefix("/agent/"+id+"/", staticFileServer)
 
 	if !GlobalAgentPool.Has(id) {
 		goto HOME
@@ -236,9 +194,7 @@ func static(w http.ResponseWriter, r *http.Request) {
 
 	switch parts[1] {
 	case "ws":
-		// relayfrontend ws connection
-		agent := GlobalAgentPool.Get(id)
-		grpcrelayws(agent)(w, r)
+		grpcrelayws(GlobalAgentPool.Get(id))(w, r)
 	case "rootfs":
 		// slave := GlobalAgentPool.Get(id)
 		// p := "/" + path.Join(parts[2:]...)
@@ -252,42 +208,32 @@ HOME:
 	http.Redirect(w, r, "/", 302)
 }
 
-func newAgent(w http.ResponseWriter, r *http.Request) {
-
+func newAgentSlave(w http.ResponseWriter, r *http.Request) {
 	conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
 	if err != nil {
 		log.Println("error hijacking:", err)
 		return
 	}
+	id := r.URL.Query().Get("id")
 
-	agent := new(Agent) // using named return causes panic, why?
-	agent.Info = r.URL.Query()
-	agent.GRPCClientConn = make(chan *grpc.ClientConn)
+	if !GlobalAgentPool.Has(id) {
+		agent := &Agent{
+			Info:           r.URL.Query(),
+			GRPCClientConn: make(chan *grpc.ClientConn),
+		}
+		agent.MakeInterceptedRPCClient(conn)
 
-	agent.RPCClient = agent.toRPCClient(conn)
-
-	log.Println("new agent connected:", agent.Info.Get("id"))
-
-	GlobalAgentPool.Add(agent)
-}
-
-func newSlave(w http.ResponseWriter, r *http.Request) {
-	agent := GlobalAgentPool.Get(r.URL.Query().Get("id"))
-
-	// extract conn
-	conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
-	if err != nil {
-		return // nil, err
+		GlobalAgentPool.Add(agent)
+		log.Println("new agent connected:", agent.Info.Get("id"))
+		return
 	}
 
-	// to client conn
-	cc := toClientConn(conn)
-
-	agent.GRPCClientConn <- cc
-	return
+	agent := GlobalAgentPool.Get(id)
+	agent.GRPCClientConn <- toGRPCClientConn(conn)
+	log.Println("new slave connected:", agent.Info.Get("id"))
 }
 
-func toClientConn(c net.Conn) *grpc.ClientConn {
+func toGRPCClientConn(c net.Conn) *grpc.ClientConn {
 	options := []grpc.DialOption{
 		// grpc.WithTransportCredentials(creds),
 		grpc.WithInsecure(),

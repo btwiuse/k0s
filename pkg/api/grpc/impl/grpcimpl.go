@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"log"
+	"fmt"
 
 	"github.com/btwiuse/invctrl/pkg/api"
 	"github.com/btwiuse/wetty/localcmd"
@@ -11,11 +12,13 @@ import (
 	"github.com/kr/pty"
 )
 
-type BidiStream struct{
+type Slave struct {
 	*localcmd.Factory
+	Name string
+	// client id/index, to distinguish logs of different commands
 }
 
-func (bs *BidiStream) Send(sendServer api.BidiStream_SendServer) error {
+func (bs *Slave) Send(sendServer api.Slave_SendServer) error {
 	lc, err := bs.Factory.New()
 	if err != nil {
 		return err
@@ -23,7 +26,7 @@ func (bs *BidiStream) Send(sendServer api.BidiStream_SendServer) error {
 
 	// send
 	go func() {
-		buf := make([]byte, 1<<16)
+		buf := make([]byte, 1<<12-1)
 		if err != nil {
 			return // err
 		}
@@ -50,13 +53,12 @@ func (bs *BidiStream) Send(sendServer api.BidiStream_SendServer) error {
 		if err != nil {
 			return nil
 		}
-		// log.Println(msg.Type, msg.Body)
-		log.Println(msg.Type, len(msg.Body))
+		log.Println(bs.Name, wetty.IotaString(msg.Type[0]), fmt.Sprintf("%q", string(msg.Body)))
 		switch msgType := msg.Type[0]; msgType {
 		case wetty.Input:
 			_, err = lc.Write(msg.Body)
 			if err != nil {
-				log.Println("error writing to lc:", err)
+				log.Println(bs.Name, "error writing to lc:", err)
 				return err
 			}
 		case wetty.ResizeTerminal:
@@ -69,7 +71,6 @@ func (bs *BidiStream) Send(sendServer api.BidiStream_SendServer) error {
 			if err != nil {
 				return err
 			}
-			log.Println("new sz:", sz)
 		}
 	}
 

@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/btwiuse/gods/maps/linkedhashmap"
-	"github.com/btwiuse/invctrl/wrap"
+	"github.com/btwiuse/invctrl/pkg/wrap"
 
 	"google.golang.org/grpc"
 )
@@ -43,20 +43,11 @@ func (p *AgentPool) Add(agent *Agent) {
 
 func (p *AgentPool) Dump() {
 	log.Println("[agent pool]")
-	isCurrent := func(uuid string) string {
-		/*
-			if (p.Current != nil) && (p.Current.UUID.String() == uuid) {
-				return "*"
-			}
-		*/
-		return " "
-	}
 	for i, v := range p.Agents.Values() {
 		slave := v.(*Agent)
 		uuid := p.Agents.Keys()[i].(string)
 		fmt.Println(
 			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
-			isCurrent(uuid),
 			uuid,
 			slave.Info,
 		)
@@ -72,20 +63,20 @@ func (p *AgentPool) Has(uuid string) bool {
 // so we can remove slave from pool immediately when it is disconnected
 
 /*
+                c                           b                  a
           / io.Reader >--->copy()---> io.PipeWriter ===> io.PipeReader = intercepted io.Reader \
 net.Conn  - io.Writer \                                                                        wrap.ReadWriteCloser() - rpc.NewClient - *rpc.Client
           \ io.Closer - io.WriteCloser ---------------------------------------------------------
 */
-func (agent *Agent) toRPCClient(conn io.ReadWriteCloser) *rpc.Client {
-	copy := func(dst io.Writer, src io.Reader) {
+func (agent *Agent) MakeInterceptedRPCClient(c io.ReadWriteCloser) {
+	a, b := io.Pipe()
+	go func() {
 		defer agent.onClose()
-		if _, err := io.Copy(dst, src); err != nil {
+		if _, err := io.Copy(b, c); err != nil {
 			log.Println(err)
 		}
-	}
-	pr, pw := io.Pipe()
-	go copy(pw, conn)
-	return rpc.NewClient(wrap.WrapReadWriteCloser(pr, conn))
+	}()
+	agent.RPCClient = rpc.NewClient(wrap.WrapReadWriteCloser(a, c))
 }
 
 // onclose is called when slave goes offline

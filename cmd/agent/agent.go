@@ -4,26 +4,31 @@ import (
 	"log"
 	"net/rpc"
 
-	"github.com/btwiuse/wetty/localcmd"
+	"github.com/google/uuid"
 	"github.com/btwiuse/invctrl/pkg/agent/config"
 	"github.com/btwiuse/invctrl/pkg/agent/dial"
 	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
+	"github.com/btwiuse/wetty/localcmd"
 )
 
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-	c := config.Init()
-	conn := dial.DialAgent(c.Server)
 
-	log.Println("connected:", c.Id)
+	config.Init()
+
+	conn, err := dial.WithInfo(config.Default.Server, config.Default.Info)
+	if err != nil {
+		log.Fatalln("err connecting to hub:", err)
+	}
+
+	log.Println(config.Default)
+	log.Println("connected as:", config.Default.Info.Get("id"))
 
 	factory := &localcmd.Factory{
 		Args: []string{"/usr/bin/env", "TERM=xterm", "bash"},
 	}
 
 	rpcServer := rpc.NewServer()
-	rpcServer.Register(&rpcimpl.NewSlave{factory})
-	log.Println("serveconn")
+	rpcServer.Register(&rpcimpl.NewSlave{Factory: factory, Name: uuid.New().String()})
 	rpcServer.ServeConn(conn)
-	log.Fatalln("bye")
 }

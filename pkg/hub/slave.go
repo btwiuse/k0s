@@ -5,6 +5,5 @@ import (
 )
 
 type Slave struct {
-	BidiStreamClient api.BidiStreamClient
-	Info             string
+	api.SlaveClient
 }

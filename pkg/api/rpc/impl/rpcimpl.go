@@ -1,12 +1,11 @@
 package impl
 
 import (
-	"io"
 	"log"
-	"net"
 	"net/url"
 
 	"github.com/btwiuse/wetty/localcmd"
+	"github.com/btwiuse/wetty/utils"
 	"google.golang.org/grpc"
 
 	"github.com/btwiuse/invctrl/pkg/agent/config"
@@ -15,50 +14,26 @@ import (
 	grpcimpl "github.com/btwiuse/invctrl/pkg/api/grpc/impl"
 )
 
-type NewSlave struct{
+type NewSlave struct {
 	*localcmd.Factory
+	Name string
 }
 
 type NewSlaveRequest struct {
-	Args url.Values
+	Info url.Values
 }
 
-type NewSlaveResponse struct {
-	Message string
-}
+type NewSlaveResponse struct{}
 
 func (c *NewSlave) New(req NewSlaveRequest, res *NewSlaveResponse) error {
 	log.Println("NewSlave.New called with", req)
 
-	res.Message = "OK"
-	conn := dial.DialSlave(config.Default.HttpServer, req.Args)
-	go func() {
-		grpcServer := grpc.NewServer()
-		api.RegisterBidiStreamServer(grpcServer, &grpcimpl.BidiStream{c.Factory})
-		grpcServer.Serve(&singleListener{conn})
-		log.Println("grpcServer exited")
-	}()
-	return nil
-}
-
-type singleListener struct {
-	conn net.Conn
-}
-
-// singleListener implements the net.Listener interface
-func (s *singleListener) Accept() (net.Conn, error) {
-	log.Println("Accept")
-	if c := s.conn; c != nil {
-		s.conn = nil
-		return c, nil
+	conn, err := dial.WithInfo(config.Default.Server, req.Info)
+	if err != nil {
+		return err
 	}
-	return nil, io.EOF
-}
-
-func (s *singleListener) Close() error {
+	grpcServer := grpc.NewServer()
+	api.RegisterSlaveServer(grpcServer, &grpcimpl.Slave{Factory: c.Factory, Name: c.Name})
+	grpcServer.Serve(&utils.SingleListener{conn})
 	return nil
-}
-
-func (s *singleListener) Addr() net.Addr {
-	return s.conn.LocalAddr()
 }
