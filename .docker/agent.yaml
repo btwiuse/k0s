@@ -20,7 +20,7 @@
 
 # skip verify hub https certificate
 #
-# insecure: false
+insecure: true
 
 # add tags
 # tags added through -tags flag will be appended to this array
