@@ -48,9 +48,20 @@ func (rpc *YS) plumbing() {
 		case "ACCEPT":
 			cmd = "ACCEPT"
 			rpc.actions <- func(ag types.Agent) {
-				conn, err := ag.Accept()
-				if err != nil {
-					log.Println(err)
+				var (
+					conn net.Conn
+					err  error
+				)
+				// make sure conn is not nil
+				for i := 0; ; i++ {
+					conn, err = ag.Accept()
+					if err != nil {
+						log.Println(i, err)
+						// retry on exponential interval
+						time.After(time.Duration(1<<i) * time.Millisecond)
+						continue
+					}
+					break
 				}
 				// send conn to grpc server
 				ag.ChanConn() <- conn
