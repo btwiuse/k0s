@@ -71,6 +71,8 @@ func (bs *Slave) Send(sendServer api.Slave_SendServer) error {
 			if err != nil {
 				return err
 			}
+		case wetty.ClientDead:
+			return lc.Close()
 		}
 	}
 
