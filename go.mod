@@ -21,6 +21,7 @@ require (
 	github.com/pupapaik/sysinfo v0.0.0-20190423145051-de6f0de9b519
 	github.com/rs/cors v1.7.0
 	github.com/yrpc/yrpc v0.0.0-20191230043512-613ecaa6d5b4
+	go.uber.org/zap v1.13.0
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	google.golang.org/grpc v1.26.0
 	gopkg.in/yaml.v2 v2.2.7 // indirect

@@ -17,6 +17,8 @@ import (
 	"github.com/btwiuse/conntroll/pkg/agent"
 	"github.com/btwiuse/conntroll/pkg/api"
 	"github.com/btwiuse/wetty/pkg/msg"
+
+	"go.uber.org/zap"
 )
 
 type Session struct {
@@ -111,6 +113,8 @@ func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session
 }
 
 func (session *Session) Send(sendServer api.Session_SendServer) error {
+	recorder, _ := zap.NewProduction()
+	defer recorder.Sync()
 	tty, err := session.TtyFactory.MakeTty()
 	if err != nil {
 		return err
@@ -133,7 +137,7 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 			var (
 				msgType = msg.Type_SESSION_OUTPUT
 				msgBody = buf[:n]
-				req = &api.Message{
+				req     = &api.Message{
 					Type: msgType,
 					Body: msgBody,
 				}
@@ -142,7 +146,11 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 			if err != nil {
 				return // err
 			}
-			log.Println(req.Type, fmt.Sprintf("%q", string(req.Body)))
+			// log.Println(req.Type, fmt.Sprintf("%q", string(req.Body)))
+			recorder.Info("send",
+				zap.String("type", req.Type.String()),
+				zap.String("content", string(req.Body)),
+			)
 		}
 		return // nil
 	}()
@@ -153,7 +161,11 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 		if err != nil {
 			return nil
 		}
-		log.Println(resp.Type, fmt.Sprintf("%q", string(resp.Body)))
+		// log.Println(resp.Type, fmt.Sprintf("%q", string(resp.Body)))
+		recorder.Info("recv",
+			zap.String("type", resp.Type.String()),
+			zap.String("content", string(resp.Body)),
+		)
 		switch resp.Type {
 		case msg.Type_CLIENT_INPUT:
 			_, err = tty.Write(resp.Body)
