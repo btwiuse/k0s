@@ -7,7 +7,6 @@ Wants=network-online.target
 Type=simple
 User=%i
 WorkingDirectory=/home/%i
-CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 ExecStart=/usr/bin/agent -auth conn:troll -tags systemd
 
 [Install]
