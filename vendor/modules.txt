@@ -10,7 +10,7 @@ github.com/btwiuse/wetty/pkg/assets
 github.com/btwiuse/wetty/pkg/localcmd
 github.com/btwiuse/wetty/pkg/msg
 github.com/btwiuse/wetty/pkg/wetty
-# github.com/conntroll/conntroll.github.io v0.0.0-19700101000000-b98271c6bd75
+# github.com/conntroll/conntroll.github.io v0.0.0-19700101000000-11e11a05ba6c
 ## explicit
 github.com/conntroll/conntroll.github.io
 # github.com/docker/docker v1.13.1
