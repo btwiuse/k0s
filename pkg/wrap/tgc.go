@@ -23,7 +23,9 @@ type singleListener struct {
 // singleListener implements the net.Listener interface
 func (s *singleListener) Accept() (net.Conn, error) {
 	if s.Conn != nil {
-		s.OnAccept()
+		if s.OnAccept != nil {
+			s.OnAccept()
+		}
 		c := s.Conn
 		s.Conn = nil
 		return c, nil
