@@ -12,7 +12,7 @@ github.com/alecthomas/units
 github.com/beevik/ntp
 # github.com/beorn7/perks v1.0.1
 github.com/beorn7/perks/quantile
-# github.com/btwiuse/asciitransport v0.0.0-20200126102441-03f210336d48
+# github.com/btwiuse/asciitransport v0.0.0-20200126193701-92ad33490cec
 ## explicit
 github.com/btwiuse/asciitransport
 # github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
@@ -21,11 +21,10 @@ github.com/btwiuse/gods/maps/linkedhashmap
 # github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 ## explicit
 github.com/btwiuse/pretty
-# github.com/btwiuse/wetty v0.0.24
+# github.com/btwiuse/wetty v0.0.25
 ## explicit
 github.com/btwiuse/wetty/pkg/assets
 github.com/btwiuse/wetty/pkg/localcmd
-github.com/btwiuse/wetty/pkg/msg
 # github.com/cespare/xxhash/v2 v2.1.0
 github.com/cespare/xxhash/v2
 # github.com/cirocosta/asciinema-edit v0.0.0-20190130154215-1c0971ae232a
@@ -84,7 +83,6 @@ github.com/hodgesds/perf-utils
 github.com/kr/logfmt
 # github.com/kr/pty v1.1.8
 ## explicit
-github.com/kr/pty
 # github.com/lufia/iostat v0.0.0-20170605150913-9f7362b77ad3
 github.com/lufia/iostat
 # github.com/mattn/go-xmlrpc v0.0.3

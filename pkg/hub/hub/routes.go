@@ -274,8 +274,6 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 
 	// delegate := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
 	switch {
-	case strings.HasPrefix(subpath, "/ws"): // deprecated in favor of /terminal
-		ag.BasicAuth(http.HandlerFunc(wsRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/rootfs"):
 		ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/socks5"):

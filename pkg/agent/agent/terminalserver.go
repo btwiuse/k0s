@@ -3,7 +3,6 @@ package agent
 import (
 	"log"
 	"net"
-	"os"
 
 	"github.com/btwiuse/asciitransport"
 	types "k0s.io/conntroll/pkg/agent"
@@ -38,8 +37,7 @@ func serveTerminal(ln net.Listener, fac types.TtyFactory) {
 
 			opts := []asciitransport.Opt{
 				asciitransport.WithReader(term),
-				asciitransport.WithReader(term),
-				asciitransport.WithLogger(os.Stderr),
+				asciitransport.WithWriter(term),
 			}
 			server := asciitransport.Server(conn, opts...)
 			// send
@@ -64,20 +62,3 @@ func serveTerminal(ln net.Listener, fac types.TtyFactory) {
 		}()
 	}
 }
-
-/*
-func StartGrpcServer(c types.Config) types.GrpcServer {
-	var (
-		cmd []string = c.GetCmd()
-		ro  bool     = c.GetReadOnly()
-	)
-	grpcListener := NewLys()
-	grpcServer := grpc.NewServer()
-	api.RegisterSessionServer(grpcServer, &grpcimpl.Session{
-		ReadOnly:   ro,
-		TtyFactory: tty.NewFactory(cmd),
-	})
-	go grpcServer.Serve(grpcListener)
-	return grpcListener
-}
-*/

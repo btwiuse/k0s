@@ -118,6 +118,9 @@ func (c *AsciiTransport) goReadConn(r io.Reader) {
 				buf  = scanner.Bytes()
 				line = scanner.Text()
 			)
+			if len(line) == 0 {
+				continue
+			}
 			if line[0] == '[' {
 				var (
 					e   = new(Event)
