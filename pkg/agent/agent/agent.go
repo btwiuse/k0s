@@ -102,10 +102,11 @@ func (ag *agent) Serve(rpc types.RPC) error {
 		case f := <-rpc.Actions():
 			go f(ag)
 		case <-rpc.Done():
-			break
+			goto exit
 		}
 	}
-	return errors.New("yrpc connection closed")
+exit:
+	return errors.New("rpc connection closed")
 }
 
 func (ag *agent) ConnectAndServe() error {
