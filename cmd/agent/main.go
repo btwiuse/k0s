@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/btwiuse/conntroll/pkg/agent/agent"
 	"github.com/btwiuse/conntroll/pkg/agent/config"
@@ -15,10 +16,12 @@ func main() {
 
 	ag := agent.NewAgent(c)
 
-	ag.Go(ag.ConnectAndServe)
+	for range time.Tick(time.Second) {
+		ag.Go(ag.ConnectAndServe)
 
-	err := ag.Wait()
-	if err != nil {
-		log.Println()
+		err := ag.Wait()
+		if err != nil {
+			log.Println()
+		}
 	}
 }
