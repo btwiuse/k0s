@@ -7,7 +7,13 @@ all:
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"
 
 release:
-	@ go run bin.go -d releases/$(shell git rev-parse HEAD) -strip -upx -ldflags="${LDFLAGS}" linux/{arm,arm64,amd64,386} darwin/amd64
+	@ go run bin.go -d releases/latest -strip -upx -ldflags="${LDFLAGS}" linux/{arm,arm64,amd64,386} darwin/amd64
+	@ ./releases/update-latest-index
+	@ mkdir -p releases/$(shell git rev-parse HEAD)
+	@ cp -rv releases/latest/* releases/$(shell git rev-parse HEAD)
+	@ ./releases/update-index
+	@ git -C releases add .
+	@ git -C releases commit -m $(shell git rev-parse HEAD)
 
 link:
 	ln -f bin/$(BIN)-$(GOOS)-$(GOARCH) bin/$(BIN)
