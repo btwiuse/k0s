@@ -1,12 +1,13 @@
 package impl
 
 import (
-	"github.com/btwiuse/wetty/pkg/utils"
-	"google.golang.org/grpc"
+	"log"
 
 	"github.com/btwiuse/conntroll/pkg/agent"
 	"github.com/btwiuse/conntroll/pkg/api"
 	grpcimpl "github.com/btwiuse/conntroll/pkg/api/grpc/impl"
+	"github.com/btwiuse/wetty/pkg/utils"
+	"google.golang.org/grpc"
 )
 
 type RPC struct {
@@ -19,7 +20,7 @@ type RPCResponse struct{}
 
 func (c *RPC) New(req RPCRequest, res *RPCResponse) error {
 	c.Agent.Go(c.Agent.ConnectAndServe)
-	println("rpc.new called")
+	log.Println("rpc.new called")
 	return nil
 }
 
