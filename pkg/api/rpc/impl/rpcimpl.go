@@ -1,38 +1,45 @@
 package impl
 
 import (
-	"log"
-
-	"github.com/btwiuse/wetty/pkg/localcmd"
 	"github.com/btwiuse/wetty/pkg/utils"
 	"google.golang.org/grpc"
 
-	"github.com/btwiuse/conntroll/pkg/agent/config"
-	"github.com/btwiuse/conntroll/pkg/agent/dial"
+	"github.com/btwiuse/conntroll/pkg/agent"
 	"github.com/btwiuse/conntroll/pkg/api"
 	grpcimpl "github.com/btwiuse/conntroll/pkg/api/grpc/impl"
 )
 
-type NewSession struct {
-	*localcmd.Factory
-	Name string
+type RPC struct {
+	Agent agent.Agent
 }
 
-type NewSessionRequest struct {
-	// Info url.Values
+type RPCRequest struct{}
+
+type RPCResponse struct{}
+
+func (c *RPC) New(req RPCRequest, res *RPCResponse) error {
+	c.Agent.Go(c.Agent.ConnectAndServe)
+	println("rpc.new called")
+	return nil
 }
 
-type NewSessionResponse struct{}
+type Session struct {
+	Agent agent.Agent
+}
 
-func (c *NewSession) New(req NewSessionRequest, res *NewSessionResponse) error {
-	log.Println("NewSession.New called with", req)
+type SessionRequest struct{}
 
-	conn, err := dial.WithInfo(config.Default.Server, config.Default.Info)
+type SessionResponse struct{}
+
+func (c *Session) New(req SessionRequest, res *SessionResponse) error {
+	conn, err := c.Agent.CreateSession()
 	if err != nil {
 		return err
 	}
 	grpcServer := grpc.NewServer()
-	api.RegisterSessionServer(grpcServer, &grpcimpl.Session{Factory: c.Factory, Name: c.Name})
+	api.RegisterSessionServer(grpcServer, &grpcimpl.Session{
+		TtyFactory: c.Agent,
+	})
 	grpcServer.Serve(&utils.SingleListener{conn})
 	return nil
 }

@@ -1,58 +1,69 @@
 package config
 
 import (
+	"flag"
+	"fmt"
+	"log"
 	"net/url"
 	"os"
-	"os/exec"
+	"os/user"
 	"runtime"
 	"strings"
 
-	"github.com/google/uuid"
-)
-
-func run(oneliner string) []byte {
-	cmd := exec.Command("/bin/bash", "-c", oneliner)
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		return []byte(err.Error())
-	}
-	return out
-}
-
-// TODO: use cross-platform golang package
-var (
-	pwd      = strings.TrimSpace(string(run(`pwd`)))
-	whoami   = strings.TrimSpace(string(run(`whoami`)))
-	hostname = strings.TrimSpace(string(run(`hostname`)))
-	goos     = runtime.GOOS
-	goarch   = runtime.GOARCH
+	"github.com/btwiuse/conntroll/pkg/uuid"
 )
 
 type Config struct {
-	Server       string
-	Info         url.Values
-	DialBasePath string
+	ID string
+	*url.URL
 }
 
-var Default *Config
+func (c *Config) NewAgentRequestBody() []byte {
+	return []byte(fmt.Sprintf("GET %s?%s HTTP/1.0\r\n\r\n", "/api/rpc", c.RawQuery))
+}
 
-func Init() {
-	config := &Config{
-		Info:         make(map[string][]string),
-		Server:       "45.32.65.48:8000",
-		DialBasePath: "/api/new",
+func (c *Config) NewSessionRequestBody() []byte {
+	return []byte(fmt.Sprintf("GET %s?%s HTTP/1.0\r\n\r\n", "/api/session", c.RawQuery))
+}
+
+func Parse() *Config {
+	var (
+		pwd, _      = os.Getwd()
+		_user, _    = user.Current()
+		username    = _user.Username
+		hostname, _ = os.Hostname()
+		goos        = runtime.GOOS
+		goarch      = runtime.GOARCH
+
+		hubapi string
+		query  url.Values = make(map[string][]string)
+	)
+
+	flag.StringVar(&hubapi, "hub", "https://libredot.com", "hub api")
+	flag.Parse()
+	if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
+		hubapi = "http://" + hubapi
 	}
 
-	if len(os.Args) > 1 {
-		config.Server = os.Args[1]
+	u, err := url.Parse(hubapi)
+	if err != nil {
+		log.Fatalln(err)
 	}
 
-	config.Info.Set("id", uuid.New().String())
-	config.Info.Set("pwd", pwd)
-	config.Info.Set("whoami", whoami)
-	config.Info.Set("hostname", hostname)
-	config.Info.Set("os", goos)
-	config.Info.Set("arch", goarch)
+	id := uuid.New()
+	query.Set("id", id)
+	query.Set("pwd", pwd)
+	query.Set("whoami", username)
+	query.Set("user", username)
+	query.Set("username", username)
+	query.Set("hostname", hostname)
+	query.Set("os", goos)
+	query.Set("arch", goarch)
 
-	Default = config
+	u.RawQuery = query.Encode()
+
+	return &Config{
+		URL: u,
+		ID:  id,
+	}
 }

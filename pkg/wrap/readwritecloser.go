@@ -5,23 +5,25 @@ import (
 )
 
 type ReadWriteCloser struct {
-	Reader      io.Reader
-	WriteCloser io.WriteCloser
+	Reader io.Reader
+	Writer io.Writer
+	Closer io.Closer
 }
 
-func WrapReadWriteCloser(r io.Reader, wc io.WriteCloser) *ReadWriteCloser {
+func WrapReadWriteCloser(r io.Reader, wc io.WriteCloser) io.ReadWriteCloser {
 	return &ReadWriteCloser{
-		Reader:      r,
-		WriteCloser: wc,
+		Reader: r,
+		Writer: wc,
+		Closer: wc,
 	}
 }
 
 func (b *ReadWriteCloser) Close() error {
-	return b.WriteCloser.Close()
+	return b.Closer.Close()
 }
 
 func (b *ReadWriteCloser) Write(p []byte) (int, error) {
-	return b.WriteCloser.Write(p)
+	return b.Writer.Write(p)
 }
 
 func (b *ReadWriteCloser) Read(p []byte) (int, error) {

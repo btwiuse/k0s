@@ -14,15 +14,13 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/btwiuse/conntroll/pkg/agent"
 	"github.com/btwiuse/conntroll/pkg/api"
-	"github.com/btwiuse/wetty/pkg/localcmd"
 	"github.com/btwiuse/wetty/pkg/msg"
-	"github.com/kr/pty"
 )
 
 type Session struct {
-	*localcmd.Factory
-	Name string
+	TtyFactory agent.TtyFactory
 	// client id/index, to distinguish logs of different commands
 }
 
@@ -113,7 +111,7 @@ func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session
 }
 
 func (session *Session) Send(sendServer api.Session_SendServer) error {
-	lc, err := session.Factory.New()
+	tty, err := session.TtyFactory.MakeTty()
 	if err != nil {
 		return err
 	}
@@ -125,7 +123,7 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 			return // err
 		}
 		for {
-			n, err := lc.Read(buf)
+			n, err := tty.Read(buf)
 			if err == io.EOF {
 				return // nil
 			}
@@ -147,26 +145,30 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 		if err != nil {
 			return nil
 		}
-		log.Println(session.Name, resp.Type, fmt.Sprintf("%q", string(resp.Body)))
+		log.Println(resp.Type, fmt.Sprintf("%q", string(resp.Body)))
 		switch resp.Type {
 		case msg.Type_CLIENT_INPUT:
-			_, err = lc.Write(resp.Body)
+			_, err = tty.Write(resp.Body)
 			if err != nil {
-				log.Println(session.Name, "error writing to lc:", err)
+				log.Println("error writing to tty:", err)
 				return err
 			}
 		case msg.Type_SESSION_RESIZE:
-			sz := &pty.Winsize{}
+			type Winsize struct {
+				Rows int
+				Cols int
+			}
+			sz := &Winsize{}
 			err = json.Unmarshal(resp.Body, sz)
 			if err != nil {
 				return err
 			}
-			err = lc.ResizeTerminal(sz)
+			err = tty.Resize(sz.Rows, sz.Cols)
 			if err != nil {
 				return err
 			}
 		case msg.Type_SESSION_CLOSE:
-			return lc.Close()
+			return tty.Close()
 		}
 	}
 
