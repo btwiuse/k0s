@@ -26,14 +26,6 @@ type Client struct {
 	Info string
 }
 
-func NewClient(uuid string, conn net.Conn, rpc *rpc.Client) *Client {
-	return &Client{
-		UUID: uuid,
-		Conn: conn,
-		RPC:  rpc,
-	}
-}
-
 type Pool struct {
 	Clients *linkedhashmap.Map
 	Current *Client
@@ -111,44 +103,73 @@ func lojacker(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func hijacker(w http.ResponseWriter, r *http.Request) {
+func getHeader(r io.Reader) (string, io.Reader, error) {
+	var v interface{}
+	decoder := json.NewDecoder(r)
+	if err := decoder.Decode(&v); err != nil {
+		return "", nil, err
+	}
+	return pretty.JSONString(v), decoder.Buffered(), nil
+}
+
+func newClient(w http.ResponseWriter) (client *Client, err error) {
 	uuid := uuid.New().String()
+
 	conn, hibuf, err := w.(http.Hijacker).Hijack()
 	if err != nil {
-		log.Println(nil)
+		return nil, err
 	}
 
-	var v interface{}
-	decoder := json.NewDecoder(io.MultiReader(hibuf, conn))
-	if err := decoder.Decode(&v); err != nil {
-		log.Println(err)
+	header, rest, err := getHeader(io.MultiReader(hibuf, conn))
+	if err != nil {
 		conn.Write([]byte("NO"))
-		conn.Close()
-		return
+		return nil, err
 	}
 	conn.Write([]byte("OK"))
-	header := pretty.JSONString(v)
 
-	log.Println("connected:", uuid, conn.RemoteAddr(), header)
+	rpcClient := NewRPC(
+		io.MultiReader(hibuf, rest),
+		conn,
+		callback(uuid, conn.RemoteAddr().String()),
+	)
 
-	pr, pw := io.Pipe()
+	return &Client{
+		UUID: uuid,
+		Conn: conn,
+		RPC:  rpcClient,
+		Info: header,
+	}, nil
+}
+
+func callback(uuid string, raddr string) func() {
+	return func() {
+		ClientPool.Dump()
+		log.Println("disconnected:", uuid, raddr)
+		ClientPool.Del(uuid)
+	}
+}
+
+// we use NewRPC over rpc.NewClient(conn)
+// so we can remove client from pool immediately when it is disconnected
+func NewRPC(mr io.Reader, conn io.ReadWriteCloser, callback func()) *rpc.Client {
 	copy := func(dst io.Writer, src io.Reader) {
-		defer ClientPool.Dump()
-		defer log.Println("disconnected:", uuid, conn.RemoteAddr())
-		defer ClientPool.Del(uuid)
-
 		if _, err := io.Copy(dst, src); err != nil {
 			log.Println(err)
 		}
+		callback()
 	}
-	go copy(pw, io.MultiReader(hibuf, decoder.Buffered(), conn))
+	pr, pw := io.Pipe()
+	go copy(pw, io.MultiReader(mr, conn))
+	return rpc.NewClient(NewRWC(pr, conn))
+}
 
-	rpc.Register(new(protocol.Hello))
-	rpcClient := rpc.NewClient(NewRWC(pr, conn))
-
-	client := NewClient(uuid, conn, rpcClient)
-	client.Info = header
-
+func hijacker(w http.ResponseWriter, r *http.Request) {
+	client, err := newClient(w)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	log.Println("connected:", client.UUID, client.Conn.RemoteAddr())
 	ClientPool.Add(client)
 	ClientPool.Dump()
 }
@@ -211,7 +232,7 @@ func input() {
 					Command: line,
 				}
 				resp := new(protocol.Response)
-				err := ClientPool.Current.RPC.Call("Bash.Execute", req, resp)
+				err := client.RPC.Call("Bash.Execute", req, resp)
 				if err != nil {
 					log.Println(resp.Message, err)
 					return
