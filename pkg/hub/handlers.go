@@ -213,15 +213,16 @@ func newAgentOrSession(w http.ResponseWriter, r *http.Request) {
 	if !GlobalAgentPool.Has(id) {
 		// TODO: validate request, ensure parameters are sane
 		values := r.URL.Query()
+		ip, _, _ := net.SplitHostPort(conn.RemoteAddr().String())
 		agent := &Agent{
 			GRPCClientConn: make(chan *grpc.ClientConn),
 			// Meta
 			Id:        values["id"][0],
+			IP:        ip,
 			Pwd:       values["pwd"][0],
 			Whoami:    values["whoami"][0],
 			Hostname:  values["hostname"][0],
 			Connected: time.Now().Unix(),
-			IP:        conn.RemoteAddr().String(),
 		}
 		if len(values["os"]) != 0 {
 			agent.OS = values["os"][0]
