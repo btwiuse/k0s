@@ -5,7 +5,9 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"net/rpc"
+	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -16,6 +18,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"github.com/invctrl/hijack/protocol"
+	"github.com/invctrl/hijack/wrap"
 	"github.com/navigaid/gotty/assets"
 	"github.com/navigaid/gotty/utils"
 	"github.com/navigaid/gotty/wetty"
@@ -99,6 +102,61 @@ func wslisten(w http.ResponseWriter, r *http.Request) {
 	client.WsConns[nonce] = conn
 }
 
+// relay fs http request
+func fsrelay(w http.ResponseWriter, r *http.Request, client *Client, p string) {
+	// r.RequestURI = p // strings.SplitN(r.RequestURI, "rootfs", 2)
+	log.Println("request uri:", r.RequestURI)
+	r.RequestURI = strings.SplitN(r.RequestURI, "rootfs", 2)[1]
+	log.Println("path:", r.RequestURI)
+	reqbuf, err := httputil.DumpRequest(r, true)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	/*
+		// log.Println(string(req), r.RequestURI, strings.SplitN(r.RequestURI, "rootfs", 2))
+		log.Println(string(req))
+	*/
+	/*
+		r2, err := http.ReadRequest(bufio.NewReader(bytes.NewBuffer(req)))
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		http.FileServer(http.Dir("/")).ServeHTTP(w, r2)
+	*/
+
+	req := protocol.RootfsRequest{
+		Request: reqbuf,
+	}
+	resp := new(protocol.RootfsResponse)
+
+	log.Println("calling Rootfs.New")
+
+	if err := client.RPC.Call("Rootfs.New", req, resp); err != nil {
+		log.Println(err)
+		return
+	}
+	/*
+		respbuf, err := httputil.DumpResponse((*http.Response)(resp), true)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	*/
+	rwc, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	if _, err := rwc.Write(resp.Response); err != nil {
+		log.Println(err)
+		return
+	}
+	rwc.Close()
+}
+
 // listen on frontend ws connection
 func wsrelay(w http.ResponseWriter, r *http.Request, client *Client) {
 	if r.Method != "GET" {
@@ -146,21 +204,53 @@ func wsrelay(w http.ResponseWriter, r *http.Request, client *Client) {
 	return
 }
 
-func frontend(w http.ResponseWriter, r *http.Request) {
-	uri := strings.Split(strings.TrimPrefix(r.RequestURI, "/ws/"), "/")[0]
+/*
+base :=
+$uuid
+$uuid/css/*
+$uuid/js/*
+$uuid/png/*
 
-	if ClientPool.Has(uri) {
-		client := ClientPool.Get(uri)
-		// handle non-ws static resources
-		if !strings.HasSuffix(r.RequestURI, "/ws") {
-			staticFileServer := http.FileServer(httpfs.NewFileSystem(assets.Assets, time.Now()))
-			http.StripPrefix("/ws/"+uri+"/", staticFileServer).ServeHTTP(w, r)
-			return
-		}
-		// relayfrontend ws connection
-		wsrelay(w, r, client)
+$uuid/ws
+
+$uuid/rootfs
+*/
+func frontend(w http.ResponseWriter, r *http.Request) {
+	var staticFileServer, staticFileHandler http.Handler
+	var id string
+	base := strings.TrimPrefix(r.RequestURI, "/ws/")
+	parts := strings.Split(base, "/")
+	if len(parts) == 0 {
+		goto REDIR
+	}
+	id = parts[0]
+	staticFileServer = http.FileServer(httpfs.NewFileSystem(assets.Assets, time.Now()))
+	staticFileHandler = http.StripPrefix("/ws/"+id+"/", staticFileServer)
+
+	if !ClientPool.Has(id) {
+		goto REDIR
+	}
+
+	if len(parts) == 1 {
+		staticFileHandler.ServeHTTP(w, r)
 		return
 	}
+
+	switch parts[1] {
+	case "ws":
+		// relayfrontend ws connection
+		client := ClientPool.Get(id)
+		wsrelay(w, r, client)
+	case "rootfs":
+		client := ClientPool.Get(id)
+		p := "/" + path.Join(parts[2:]...)
+		fsrelay(w, r, client, p)
+	default:
+		// handle non-ws static resources
+		staticFileHandler.ServeHTTP(w, r)
+	}
+	return
+REDIR:
 	http.Redirect(w, r, "/", 302)
 }
 
@@ -195,11 +285,13 @@ func ls(w http.ResponseWriter, r *http.Request) {
 		uuid := ClientPool.Clients.Keys()[i].(string)
 		href := fmt.Sprintf(`<a href="%s">%s</a>`, uuid, uuid)
 		wshref := fmt.Sprintf(`<a href="/ws/%s/">ws</a>`, uuid)
+		fshref := fmt.Sprintf(`<a href="/ws/%s/rootfs/">fs</a>`, uuid)
 		fmt.Fprintln(w,
 			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
 			isCurrent(uuid),
 			href,
 			wshref,
+			fshref,
 			"ssh ubuntu@"+strings.Split(client.RemoteAddr.String(), ":")[0],
 		)
 		fmt.Fprintln(w, "<pre>")

@@ -1,9 +1,14 @@
 package protocol
 
 import (
+	"bufio"
+	"bytes"
 	"errors"
 	"log"
 	"net"
+	"net/http"
+	"net/http/httptest"
+	"net/http/httputil"
 	"os/exec"
 
 	//"github.com/davecgh/go-spew/spew"
@@ -133,4 +138,29 @@ func serveWS(conn *websocket.Conn, factory *localcmd.Factory) {
 	if err := wetty.NewMSPair(master, slave).Pipe(); err != nil {
 		log.Println(err)
 	}
+}
+
+type Rootfs struct{}
+
+type RootfsRequest struct {
+	Request []byte
+}
+
+type RootfsResponse struct {
+	Response []byte
+}
+
+func (*Rootfs) New(req RootfsRequest, res *RootfsResponse) error {
+	log.Println("Rootfs.New called with", string(req.Request))
+	w := httptest.NewRecorder()
+	r, err := http.ReadRequest(bufio.NewReader(bytes.NewBuffer(req.Request)))
+	if err != nil {
+		return err
+	}
+	http.FileServer(http.Dir("/")).ServeHTTP(w, r)
+	res.Response, err = httputil.DumpResponse(w.Result(), true)
+	if err != nil {
+		return err
+	}
+	return nil
 }
