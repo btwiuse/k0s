@@ -27,7 +27,7 @@ func dial(p string, h http.Header) (conn net.Conn, err error) {
 	return utils.NetConn(wsconn), nil
 }
 
-func terminal(endpoint string, userinfo *url.Userinfo) {
+func terminalConnect(endpoint string, userinfo *url.Userinfo) {
 	log.Println("Press ESC twice to exit.")
 
 	var (

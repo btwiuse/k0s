@@ -14,7 +14,9 @@ import (
 	"strings"
 
 	"github.com/btwiuse/pretty"
+	"github.com/containerd/console"
 	"github.com/txthinking/brook"
+	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io/conntroll/pkg"
 	types "k0s.io/conntroll/pkg/client"
 	"k0s.io/conntroll/pkg/client/socksdialer"
@@ -151,14 +153,28 @@ func (cl *client) Run() error {
 
 	for _, ag := range ags {
 		if ag.GetID() == idd {
-			log.Println(ag)
-			pretty.JSON(ag)
 			pretty.YAML(ag)
 			if ag.GetAuth() {
-				fmt.Print("user: ")
-				fmt.Scanln(&user)
-				fmt.Print("pass: ")
-				fmt.Scanln(&pass)
+				{
+					// setup terminal
+					oldState, err := terminal.MakeRaw(0)
+					if err != nil {
+						return err
+					}
+
+					console := console.Current()
+					term := terminal.NewTerminal(console, "> ")
+					term.SetPrompt("Please enter username: ")
+					user, err = term.ReadLine()
+					if err != nil {
+						return err
+					}
+					pass, err = term.ReadPassword("Password: ")
+					if err != nil {
+						return err
+					}
+					terminal.Restore(0, oldState)
+				}
 				userinfo = url.UserPassword(user, pass)
 			}
 			break
@@ -189,7 +205,7 @@ func (cl *client) Run() error {
 			}
 			u = ub.String()
 		)
-		terminal(u, userinfo)
+		terminalConnect(u, userinfo)
 	}
 	return nil
 }

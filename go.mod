@@ -26,6 +26,7 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/txthinking/brook v0.0.0-20200108130909-e46d71f06441
 	github.com/yrpc/yrpc v0.0.0-20191230043512-613ecaa6d5b4
+	golang.org/x/crypto v0.0.0-20200128174031-69ecbb4d6d5d
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	google.golang.org/grpc v1.26.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
