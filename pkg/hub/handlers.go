@@ -13,12 +13,12 @@ import (
 
 	"github.com/btwiuse/conntroll/pkg/api"
 	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
+	"github.com/btwiuse/conntroll/pkg/msg"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
 	"github.com/btwiuse/wetty/pkg/utils"
 	"github.com/btwiuse/wetty/pkg/wetty"
-	"github.com/btwiuse/wetty/pkg/message"
 	"github.com/gorilla/websocket"
 	"google.golang.org/grpc"
 	"modernc.org/httpfs"
@@ -94,28 +94,22 @@ func grpcrelayws(agent *Agent) http.HandlerFunc {
 // for recv Output     =>	   websocket
 // (through chan Message{Type, Body} instead of interface)
 func pipe(ws io.ReadWriteCloser, session api.Session_SendClient) error {
+	defer ws.Close()
 	errs := make(chan error, 2)
-	closeall := func() {
-		ws.Write([]byte{message.ClientClose})
-		// session.Send(&api.Message{Type: []byte{message.SessionClose}})
-		ws.Close()
-		session.CloseSend()
-	}
 
 	go func() {
 		log.Println("pipe: client(ws) => session(grpc)")
-		defer closeall()
 		buf := make([]byte, 1<<12)
 		for {
 			n, err := ws.Read(buf)
 			if err != nil {
-				errs <- err
+				errs <- err // client closed
 				break
 			}
-			msg := &api.Message{Type: buf[:1], Body: buf[1:n]}
+			msg := &api.Message{Type: msg.Type(buf[0]), Body: buf[1:n]}
 			err = session.Send(msg)
 			if err != nil {
-				errs <- err
+				errs <- err // session closed
 				return
 			}
 		}
@@ -123,16 +117,15 @@ func pipe(ws io.ReadWriteCloser, session api.Session_SendClient) error {
 
 	go func() {
 		log.Println("pipe: client(ws) <= session(grpc)")
-		defer closeall()
 		for {
 			resp, err := session.Recv()
 			if err != nil {
-				errs <- err
+				errs <- err // session closed
 				break
 			}
-			_, err = ws.Write(append(resp.Type, resp.Body...))
+			_, err = ws.Write(append([]byte{byte(resp.Type)}, resp.Body...))
 			if err != nil {
-				errs <- err
+				errs <- err // client closed
 				break
 			}
 		}
@@ -168,7 +161,7 @@ func handleConnectionError(session io.Writer, err error) {
 		log.Printf("Client close detected: %q, sending ClientDead message to session", err)
 	}
 
-	// if _, err := session.Write([]byte{message.SessionClose}); err != nil {
+	// if _, err := session.Write([]byte{msg.Type_SESSION_CLOSE}); err != nil {
 	//	log.Println("pipe:", err)
 	// }
 }

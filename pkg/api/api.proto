@@ -2,12 +2,15 @@ syntax = "proto3";
 
 package api;
 
+import "msg/types.proto";
+// import "github.com/btwiuse/conntroll/pkg/msg/types.proto";
+
 // caller: Hub <=> server: Agent/Factory::Session
 service Session {
     rpc Send(stream Message) returns (stream Message) {};
 }
 
 message Message {
-    bytes type = 1;
+    msg.Type type = 1;
     bytes body = 2;
 }

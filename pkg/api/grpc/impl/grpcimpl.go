@@ -7,8 +7,8 @@ import (
 	"log"
 
 	"github.com/btwiuse/conntroll/pkg/api"
+	"github.com/btwiuse/conntroll/pkg/msg"
 	"github.com/btwiuse/wetty/pkg/localcmd"
-	"github.com/btwiuse/wetty/pkg/message"
 	"github.com/kr/pty"
 )
 
@@ -38,7 +38,7 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 			if err != nil {
 				return // err
 			}
-			outputMsg := &api.Message{Type: []byte{message.SessionOutput}, Body: buf[:n]}
+			outputMsg := &api.Message{Type: msg.Type_SESSION_OUTPUT, Body: buf[:n]}
 			err = sendServer.Send(outputMsg)
 			if err != nil {
 				return // err
@@ -49,21 +49,21 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 
 	// recv
 	for {
-		msg, err := sendServer.Recv()
+		resp, err := sendServer.Recv()
 		if err != nil {
 			return nil
 		}
-		log.Println(session.Name, message.ToString(msg.Type[0]), fmt.Sprintf("%q", string(msg.Body)))
-		switch msgType := msg.Type[0]; msgType {
-		case message.ClientInput:
-			_, err = lc.Write(msg.Body)
+		log.Println(session.Name, resp.Type, fmt.Sprintf("%q", string(resp.Body)))
+		switch resp.Type {
+		case msg.Type_CLIENT_INPUT:
+			_, err = lc.Write(resp.Body)
 			if err != nil {
 				log.Println(session.Name, "error writing to lc:", err)
 				return err
 			}
-		case message.SessionResize:
+		case msg.Type_SESSION_RESIZE:
 			sz := &pty.Winsize{}
-			err = json.Unmarshal(msg.Body, sz)
+			err = json.Unmarshal(resp.Body, sz)
 			if err != nil {
 				return err
 			}
@@ -71,7 +71,7 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 			if err != nil {
 				return err
 			}
-		case message.SessionClose:
+		case msg.Type_SESSION_CLOSE:
 			return lc.Close()
 		}
 	}

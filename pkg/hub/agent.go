@@ -8,8 +8,8 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/btwiuse/gods/maps/linkedhashmap"
 	"github.com/btwiuse/conntroll/pkg/wrap"
+	"github.com/btwiuse/gods/maps/linkedhashmap"
 
 	"google.golang.org/grpc"
 )
