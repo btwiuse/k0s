@@ -25,9 +25,10 @@ type agent struct {
 	// types.RPC
 
 	types.FileServer
-	types.GrpcServer
+	types.GrpcServer // deprecated in favor of types.TerminalServer
 	types.Socks5Server
 	types.MetricsServer
+	types.TerminalServer
 	// grpcln chan<- net.Conn
 	id   string
 	name string
@@ -40,10 +41,11 @@ func NewAgent(c types.Config) types.Agent {
 		name  = c.GetName()
 		shell = "bash"
 
-		fileServer    = StartFileServer(c)
-		grpcServer    = StartGrpcServer(c)
-		socks5Server  = StartSocks5Server(c)
-		metricsServer = StartMetricsServer(c)
+		fileServer     = StartFileServer(c)
+		grpcServer     = StartGrpcServer(c)
+		socks5Server   = StartSocks5Server(c)
+		metricsServer  = StartMetricsServer(c)
+		terminalServer = StartTerminalServer(c)
 	)
 	if c.GetVerbose() {
 		log.Println("new agent", id, name)
@@ -53,15 +55,16 @@ func NewAgent(c types.Config) types.Agent {
 	}
 
 	return &agent{
-		Group:         eg,
-		Config:        c,
-		Dialer:        dialer.New(c),
-		FileServer:    fileServer,
-		GrpcServer:    grpcServer,
-		Socks5Server:  socks5Server,
-		MetricsServer: metricsServer,
-		id:            id,
-		name:          name,
+		Group:          eg,
+		Config:         c,
+		Dialer:         dialer.New(c),
+		FileServer:     fileServer,
+		GrpcServer:     grpcServer,
+		Socks5Server:   socks5Server,
+		MetricsServer:  metricsServer,
+		TerminalServer: terminalServer,
+		id:             id,
+		name:           name,
 	}
 }
 
@@ -79,6 +82,10 @@ func (ag *agent) Socks5ChanConn() chan<- net.Conn {
 
 func (ag *agent) MetricsChanConn() chan<- net.Conn {
 	return ag.MetricsServer.ChanConn()
+}
+
+func (ag *agent) TerminalChanConn() chan<- net.Conn {
+	return ag.TerminalServer.ChanConn()
 }
 
 func (ag *agent) AcceptFS() (net.Conn, error) {
@@ -130,6 +137,20 @@ func (ag *agent) AcceptMetrics() (net.Conn, error) {
 	)
 
 	conn, err = ag.Dial("/api/metrics?id=" + ag.GetID())
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
+}
+
+func (ag *agent) AcceptTerminal() (net.Conn, error) {
+	var (
+		conn net.Conn
+		err  error
+	)
+
+	conn, err = ag.Dial("/api/terminal?id=" + ag.GetID())
 	if err != nil {
 		return nil, err
 	}

@@ -64,6 +64,28 @@ func (rpc *YS) plumbing() {
 				ag.GrpcChanConn() <- conn
 			}
 			// log.Println(cmd)
+		case "TERMINAL":
+			cmd = "TERMINAL"
+			rpc.actions <- func(ag types.Agent) {
+				var (
+					conn net.Conn
+					err  error
+				)
+				// make sure conn is not nil
+				for i := 0; ; i++ {
+					conn, err = ag.AcceptTerminal()
+					if err != nil {
+						log.Println(i, err)
+						// retry on exponential interval
+						time.After(time.Duration(1<<i) * time.Millisecond)
+						continue
+					}
+					break
+				}
+				// send conn to grpc server
+				ag.TerminalChanConn() <- conn
+			}
+			// log.Println(cmd)
 		case "SOCKS5":
 			cmd = "SOCKS5"
 			rpc.actions <- func(ag types.Agent) {

@@ -18,6 +18,29 @@ import (
 	"nhooyr.io/websocket"
 )
 
+// new wire format
+func terminalRelay(ag types.Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		wsc, err := websocket.Accept(w, r, &websocket.AcceptOptions{
+			InsecureSkipVerify: true,
+			Subprotocols:       []string{"wetty"},
+		})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
+		defer wsconn.Close()
+
+		conn := ag.NewTerminal()
+		defer conn.Close()
+
+		go io.Copy(wsconn, conn)
+		io.Copy(conn, wsconn)
+	}
+}
+
+// deprecated in favor of terminalRelay
 func wsRelay(ag types.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		wsconn, err := websocket.Accept(w, r, &websocket.AcceptOptions{

@@ -20,14 +20,16 @@ func NewAgent(rpc hub.RPC, info hub.Info, xopts ...Opt) hub.Agent {
 	ag := &agent{
 		rpc:            rpc,
 		SessionManager: NewSessionManager(),
-		sch:            make(chan hub.Session),
-		socks5ch:       make(chan net.Conn),
-		fsch:           make(chan net.Conn),
-		metricsch:      make(chan net.Conn),
-		created:        time.Now(),
-		Connected:      time.Now().Unix(),
-		IP:             rpc.RemoteIP(),
-		Auth:           new(bool),
+		// TerminalManager: NewTerminalManager(),
+		termch:    make(chan net.Conn),
+		sch:       make(chan hub.Session),
+		socks5ch:  make(chan net.Conn),
+		fsch:      make(chan net.Conn),
+		metricsch: make(chan net.Conn),
+		created:   time.Now(),
+		Connected: time.Now().Unix(),
+		IP:        rpc.RemoteIP(),
+		Auth:      new(bool),
 	}
 	ag.fromInfo(info)
 
@@ -58,11 +60,13 @@ func (ag *agent) fromInfo(info hub.Info) {
 
 type agent struct {
 	hub.SessionManager `json:"-"`
-	rpc                hub.RPC
-	sch                chan hub.Session
-	socks5ch           chan net.Conn
-	fsch               chan net.Conn
-	metricsch          chan net.Conn
+	// hub.TerminalManager `json:"-"`
+	rpc       hub.RPC
+	sch       chan hub.Session
+	socks5ch  chan net.Conn
+	fsch      chan net.Conn
+	termch    chan net.Conn
+	metricsch chan net.Conn
 
 	created  time.Time
 	htpasswd map[string]string
@@ -115,6 +119,11 @@ func (ag *agent) NewMetrics() net.Conn {
 func (ag *agent) NewSession() hub.Session {
 	ag.rpc.NewSession()
 	return <-ag.sch
+}
+
+func (ag *agent) NewTerminal() net.Conn {
+	ag.rpc.NewTerminal()
+	return <-ag.termch
 }
 
 func (ag *agent) BasicAuth(next http.Handler) http.Handler {
@@ -170,4 +179,9 @@ func (ag *agent) AddSessionConn(conn net.Conn) {
 	name := fmt.Sprintf("%s.%d", ag.Name(), ag.grpcCounter)
 	// ag.sch <- session.NewSession(name, api.NewSessionClient(toGRPCClientConn(c)))
 	ag.sch <- session.NewSession(name, conn)
+}
+
+// blocks until agent.NewTerminal reads the channel
+func (ag *agent) AddTerminalConn(conn net.Conn) {
+	ag.termch <- conn
 }

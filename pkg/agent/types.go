@@ -68,6 +68,7 @@ type Agent interface {
 	AcceptGrpc() (net.Conn, error)
 	AcceptSocks5() (net.Conn, error)
 	AcceptMetrics() (net.Conn, error)
+	AcceptTerminal() (net.Conn, error)
 
 	ConnectAndServe() error
 	Serve(RPC) error
@@ -76,6 +77,7 @@ type Agent interface {
 	GrpcChanConn() chan<- net.Conn
 	Socks5ChanConn() chan<- net.Conn
 	MetricsChanConn() chan<- net.Conn
+	TerminalChanConn() chan<- net.Conn
 	// RPC
 	// ServeGRPC() error
 	// Connect() (RPC, error)
@@ -94,6 +96,10 @@ type Socks5Server interface {
 }
 
 type GrpcServer interface {
+	ChanConn() chan<- net.Conn
+}
+
+type TerminalServer interface {
 	ChanConn() chan<- net.Conn
 }
 
