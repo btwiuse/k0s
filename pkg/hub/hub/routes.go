@@ -59,7 +59,7 @@ func (h *hub) basicauth(next http.Handler) http.HandlerFunc {
 			username, password, ok := r.BasicAuth()
 			log.Println("basicauth:", username, password, ok)
 			if !ok || subtle.ConstantTimeCompare([]byte(h.user), []byte(username)) != 1 || subtle.ConstantTimeCompare([]byte(h.pass), []byte(password)) != 1 {
-				realm := "realm"
+				realm := "please enter hub password"
 				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`"`)
 				w.WriteHeader(401)
 				w.Write([]byte("Unauthorised.\n"))
@@ -93,6 +93,7 @@ func (h *hub) serve(addr string) {
 			"pwd", "{pwd}",
 			"os", "{os}",
 			"arch", "{arch}",
+			"bahash", "{bahash}",
 			"username", "{username}",
 			"hostname", "{hostname}")
 
@@ -133,27 +134,20 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	agent := h.GetAgent(id)
+	ag := h.GetAgent(id)
 
-	delegate := func(http.ResponseWriter, *http.Request) {
+	delegate := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
 		switch {
 		case strings.HasPrefix(subpath, "/ws"):
-			wsRelay(agent)(w, r)
+			wsRelay(ag)(w, r)
 		case strings.HasPrefix(subpath, "/rootfs"):
-			fsRelay(agent)(w, r)
+			fsRelay(ag)(w, r)
 		default:
 			staticFileHandler.ServeHTTP(w, r)
 		}
-	}
+	})
 
-	// if agent is password protected
-	/*
-		if {
-			ag.basicauth(delegate(w, r))
-		}
-	*/
-
-	delegate(w, r)
+	ag.BasicAuth(delegate).ServeHTTP(w, r)
 }
 
 func wsRelay(ag types.Agent) http.HandlerFunc {
@@ -291,6 +285,7 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 		hostname = vars["hostname"]
 		goos     = vars["os"]
 		goarch   = vars["arch"]
+		bahash   = vars["bahash"]
 	)
 
 	if h.Has(id) {
@@ -298,7 +293,7 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ag := agent.NewAgent(conn,
+	opts := []agent.Opt{
 		agent.SetID(id),
 		agent.SetIP(ip),
 		agent.SetPWD(pwd),
@@ -306,7 +301,13 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 		agent.SetHostname(hostname),
 		agent.SetOS(goos),
 		agent.SetARCH(goarch),
-	)
+	}
+
+	if bahash != "" {
+		opts = append(opts, agent.SetBasicAuthHash(bahash))
+	}
+
+	ag := agent.NewAgent(conn, opts...)
 	h.Add(ag)
 	go h.GC(ag)
 }

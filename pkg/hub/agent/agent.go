@@ -2,9 +2,12 @@ package agent
 
 import (
 	"context"
+	"crypto/sha256"
+	"fmt"
 	"io"
 	"log"
 	"net"
+	"net/http"
 	"net/rpc"
 	"sync"
 	"time"
@@ -53,6 +56,12 @@ func SetID(id string) Opt {
 func SetUsername(u string) Opt {
 	return func(ag *agent) {
 		ag.Username = u
+	}
+}
+
+func SetBasicAuthHash(bahash string) Opt {
+	return func(ag *agent) {
+		ag.bahash = bahash
 	}
 }
 
@@ -128,12 +137,13 @@ func (ag *agent) Done() <-chan struct{} {
 
 type agent struct {
 	hub.SessionManager `json:"-"`
-	rpcManager         hub.RPCManager   `json:"-"`
-	sch                chan hub.Session `json:"-"`
+	rpcManager         hub.RPCManager
+	sch                chan hub.Session
 	done               chan struct{}
 	once               *sync.Once
 
 	created time.Time
+	bahash  string
 
 	// Metadata
 	Id        string `json:"id"`
@@ -144,6 +154,24 @@ type agent struct {
 	OS        string `json:"os"`
 	ARCH      string `json:"arch"`
 	IP        string `json:"ip"`
+}
+
+func (ag *agent) BasicAuth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if ag.bahash != "" {
+			username, password, ok := r.BasicAuth()
+			uphash := fmt.Sprintf("%x", sha256.Sum256([]byte(username+":"+password)))
+			log.Println(uphash, ag.bahash)
+			if (!ok) || (uphash != ag.bahash) {
+				realm := "please enter agent password"
+				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`"`)
+				w.WriteHeader(401)
+				w.Write([]byte("Unauthorised.\n"))
+				return
+			}
+		}
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (ag *agent) Time() time.Time {

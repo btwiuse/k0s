@@ -1,6 +1,7 @@
 package config
 
 import (
+	"crypto/sha256"
 	"flag"
 	"fmt"
 	"log"
@@ -74,12 +75,14 @@ func Parse(args []string) agent.Config {
 		goarch      = runtime.GOARCH
 
 		hubapi string
+		bahash string
 
 		query url.Values = make(map[string][]string)
 	)
 
 	fset.StringVar(&id, "id", uuid.New(), "agent id, for debugging purpose only")
 	fset.StringVar(&hubapi, "hub", "https://libredot.com", "hub api")
+	fset.StringVar(&bahash, "basicauth", "", "protect api with basicauth, value should be supplied in user:pass form. (Only hash of user:pass will be sent. hub will use the hash value to authorize access to the agent)")
 
 	err := fset.Parse(args)
 	if err != nil {
@@ -101,6 +104,11 @@ func Parse(args []string) agent.Config {
 	query.Set("hostname", hostname)
 	query.Set("os", goos)
 	query.Set("arch", goarch)
+
+	if bahash != "" {
+		bahash = fmt.Sprintf("%x", sha256.Sum256([]byte(bahash)))
+	}
+	query.Set("bahash", bahash)
 
 	u.RawQuery = query.Encode()
 

@@ -80,7 +80,7 @@ func Parse(args []string) hub.Config {
 		tls:       tls,
 		cert:      cert,
 		key:       key,
-		basicauth: true,
+		basicauth: basicauth != "",
 		user:      user,
 		pass:      pass,
 	}

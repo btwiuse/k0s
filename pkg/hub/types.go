@@ -1,8 +1,8 @@
 package hub
 
 import (
-	// "io"
 	"net"
+	"net/http"
 	"net/rpc"
 
 	"github.com/btwiuse/conntroll/pkg"
@@ -46,6 +46,8 @@ type Agent interface {
 
 	Close()
 	Done() <-chan struct{}
+
+	BasicAuth(http.Handler) http.Handler
 }
 
 type SessionManager interface {
