@@ -29,7 +29,6 @@ type Config interface {
 	UseTLS() bool
 	Cert() string
 	Key() string
-	BasicAuth() (string, string, bool)
 	GetVersion() pkg.Version
 }
 

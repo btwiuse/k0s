@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/btwiuse/pretty"
 	"k0s.io/conntroll/pkg"
@@ -14,22 +13,15 @@ import (
 )
 
 type config struct {
-	port      string
-	tls       bool
-	cert      string
-	key       string
-	basicauth bool
-	user      string
-	pass      string
-	version   pkg.Version
+	port    string
+	tls     bool
+	cert    string
+	key     string
+	version pkg.Version
 }
 
 func (c *config) Port() string {
 	return c.port
-}
-
-func (c *config) BasicAuth() (string, string, bool) {
-	return c.user, c.pass, c.basicauth
 }
 
 func (c *config) UseTLS() bool {
@@ -55,16 +47,12 @@ func Parse(args []string) hub.Config {
 		tls         bool
 		cert        string
 		key         string
-		basicauth   string
-		user        string
-		pass        string
 		showVersion bool
 	)
 
 	fset.StringVar(&port, "port", ":8000", "hub listening port")
 	fset.StringVar(&cert, "cert", "", "path to tls cert file")
 	fset.StringVar(&key, "key", "", "path to tls key file")
-	fset.StringVar(&basicauth, "auth", "", "protect api with basicauth, value should be supplied in user:pass form. Currently only one user:pass pair is supported")
 	fset.BoolVar(&showVersion, "version", false, "Show hub version info.")
 	err := fset.Parse(args)
 	if err != nil {
@@ -81,21 +69,12 @@ func Parse(args []string) hub.Config {
 		}
 	}
 
-	if basicauth != "" {
-		ba := strings.SplitN(basicauth, ":", 2)
-		user = ba[0]
-		pass = ba[1]
-	}
-
 	c := &config{
-		port:      port,
-		tls:       tls,
-		cert:      cert,
-		key:       key,
-		basicauth: basicauth != "",
-		user:      user,
-		pass:      pass,
-		version:   version.GetVersion(),
+		port:    port,
+		tls:     tls,
+		cert:    cert,
+		key:     key,
+		version: version.GetVersion(),
 	}
 
 	if showVersion {

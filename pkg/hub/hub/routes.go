@@ -2,7 +2,6 @@ package hub
 
 import (
 	"context"
-	"crypto/subtle"
 	"crypto/tls"
 	"log"
 	"net"
@@ -46,31 +45,12 @@ func NewHub(c types.Config) types.Hub {
 		MetricsHandler: exporter.NewHandler(),
 	}
 	h.startRPCServer()
-	h.user, h.pass, h.ba = c.BasicAuth()
 	h.initServer(c.Port())
 	return h
 }
 
 func (h *hub) GetConfig() types.Config {
 	return h.c
-}
-
-// https://stackoverflow.com/questions/21936332/idiomatic-way-of-requiring-http-basic-auth-in-go/39591234#39591234
-func (h *hub) basicauth(next http.Handler) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if h.ba {
-			username, password, ok := r.BasicAuth()
-			log.Println("basicauth:", username, password, ok)
-			if !ok || subtle.ConstantTimeCompare([]byte(h.user), []byte(username)) != 1 || subtle.ConstantTimeCompare([]byte(h.pass), []byte(password)) != 1 {
-				realm := "please enter hub password"
-				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`"`)
-				w.WriteHeader(401)
-				w.Write([]byte("Unauthorised.\n"))
-				return
-			}
-		}
-		next.ServeHTTP(w, r)
-	}
 }
 
 func (h *hub) serveRPC(ln net.Listener) {
@@ -106,13 +86,12 @@ func (h *hub) initServer(addr string) {
 	r := mux.NewRouter()
 
 	// list active agents
-	r.HandleFunc("/api/agents/list", h.basicauth(http.HandlerFunc(h.handleAgentsList))).Methods("GET")
-	r.HandleFunc("/api/agents/watch", h.basicauth(http.HandlerFunc(h.handleAgentsWatch))).Methods("GET")
+	r.HandleFunc("/api/agents/list", http.HandlerFunc(h.handleAgentsList)).Methods("GET")
+	r.HandleFunc("/api/agents/watch", http.HandlerFunc(h.handleAgentsWatch)).Methods("GET")
 
 	// client /api/agent/{id}/rootfs/{path} hijack => net.Conn <(copy) hijacked grpc fs conn
 	// client /api/agent/{id}/ws => ws <(pipe)> hijacked grpc ws conn
 	s := r.PathPrefix("/api/agent/{id}")
-	// s.Handler(h.basicauth(http.HandlerFunc(h.handleAgent))).Methods("GET")
 	s.Handler(http.HandlerFunc(h.handleAgent)).Methods("GET")
 
 	// public api
@@ -186,6 +165,7 @@ func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
 
 	h.GetAgent(id).AddSessionConn(conn)
 }
+
 func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars                           = mux.Vars(r)
