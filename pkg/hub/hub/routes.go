@@ -46,12 +46,12 @@ func NewHub(c types.Config) types.Hub {
 }
 
 // TODO better gorilla mux router
-func (u *hub) serve(addr string) {
+func (h *hub) serve(addr string) {
 	r := mux.NewRouter()
-	r.HandleFunc("/api/agents/", u.handleAgents).Methods("GET")
+	r.HandleFunc("/api/agents/", h.handleAgents).Methods("GET")
 	s := r.PathPrefix("/api/agent/{id}")
-	s.HandlerFunc(u.handleAgent).Methods("GET")
-	r.HandleFunc("/api/rpc", u.handleRPC).Methods("GET").
+	s.HandlerFunc(h.handleAgent).Methods("GET")
+	r.HandleFunc("/api/rpc", h.handleRPC).Methods("GET").
 		Queries(
 			"id", "{id}",
 			"pwd", "{pwd}",
@@ -62,11 +62,11 @@ func (u *hub) serve(addr string) {
 			"whoami", "{whoami}",
 			"hostname", "{hostname}",
 		)
-	r.HandleFunc("/api/session", u.handleSession).Methods("GET").
+	r.HandleFunc("/api/session", h.handleSession).Methods("GET").
 		Queries(
 			"id", "{id}",
 		)
-	u.Server = &http.Server{
+	h.Server = &http.Server{
 		Addr:    addr,
 		Handler: handlers.LoggingHandler(os.Stderr, cors.Default().Handler(r)),
 	}
@@ -180,7 +180,7 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 			path = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id+"/rootfs")
 		)
 
-		conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
+		conn, err := wrap.HijackConn(w.(http.Hijacker).Hijack())
 		if err != nil {
 			log.Println(err)
 			return
@@ -229,7 +229,7 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 
 func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 	log.Println("handleRPC")
-	conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
+	conn, err := wrap.HijackConn(w.(http.Hijacker).Hijack())
 	if err != nil {
 		log.Println("error hijacking:", err)
 		return
@@ -276,7 +276,7 @@ func (h *hub) handleSession(w http.ResponseWriter, r *http.Request) {
 		id   = vars["id"]
 	)
 
-	conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
+	conn, err := wrap.HijackConn(w.(http.Hijacker).Hijack())
 	if err != nil {
 		log.Println("error hijacking:", err)
 		return

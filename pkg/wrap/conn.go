@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func WrapConn(conn net.Conn, buf io.Reader, err error) (net.Conn, error) {
+func HijackConn(conn net.Conn, buf io.Reader, err error) (net.Conn, error) {
 	return &Conn{
 		Conn: conn,
 		Buf:  buf,

@@ -22,7 +22,7 @@ var (
 	_ hub.Agent = (*agent)(nil)
 )
 
-func NewAgent(conn net.Conn, opts ...AgentOpt) hub.Agent {
+func NewAgent(conn net.Conn, opts ...Opt) hub.Agent {
 	ag := &agent{
 		sch:            make(chan hub.Session),
 		SessionManager: NewSessionManager(),
@@ -41,58 +41,58 @@ func NewAgent(conn net.Conn, opts ...AgentOpt) hub.Agent {
 	return ag
 }
 
-type AgentOpt func(*agent)
+type Opt func(*agent)
 
-func SetID(id string) AgentOpt {
+func SetID(id string) Opt {
 	return func(ag *agent) {
 		ag.Id = id
 	}
 }
 
-func SetUsername(u string) AgentOpt {
+func SetUsername(u string) Opt {
 	return func(ag *agent) {
 		ag.Username = u
 	}
 }
 
-func SetIP(ip string) AgentOpt {
+func SetIP(ip string) Opt {
 	return func(ag *agent) {
 		ag.IP = ip
 	}
 }
 
-func SetPwd(p string) AgentOpt {
+func SetPwd(p string) Opt {
 	return func(ag *agent) {
 		ag.Pwd = p
 	}
 }
 
-func SetUser(u string) AgentOpt {
+func SetUser(u string) Opt {
 	return func(ag *agent) {
 		ag.User = u
 		ag.Whoami = u
 	}
 }
 
-func SetHostname(h string) AgentOpt {
+func SetHostname(h string) Opt {
 	return func(ag *agent) {
 		ag.Hostname = h
 	}
 }
 
-func SetConnected(t int64) AgentOpt {
+func SetConnected(t int64) Opt {
 	return func(ag *agent) {
 		ag.Connected = t
 	}
 }
 
-func SetOS(o string) AgentOpt {
+func SetOS(o string) Opt {
 	return func(ag *agent) {
 		ag.OS = o
 	}
 }
 
-func SetARCH(a string) AgentOpt {
+func SetARCH(a string) Opt {
 	return func(ag *agent) {
 		ag.ARCH = a
 	}
@@ -194,7 +194,7 @@ func (ag *agent) AddRPCConn(c net.Conn) {
 
 // onclose is called when rpc connection is lost
 func (ag *agent) onRPCClose(id string) {
-	log.Println("disconnected:", ag.Id, id)
+	log.Println("disconnected:", ag.ID(), id)
 	ag.RPCManager.Del(id)
 	// assuming there are other rpc conns left
 	ag.NewRPC()

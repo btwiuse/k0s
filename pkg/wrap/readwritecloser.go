@@ -10,14 +10,6 @@ type ReadWriteCloser struct {
 	Closer io.Closer
 }
 
-func WrapReadWriteCloser(r io.Reader, wc io.WriteCloser) io.ReadWriteCloser {
-	return &ReadWriteCloser{
-		Reader: r,
-		Writer: wc,
-		Closer: wc,
-	}
-}
-
 func (b *ReadWriteCloser) Close() error {
 	return b.Closer.Close()
 }
