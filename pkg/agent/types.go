@@ -55,7 +55,7 @@ type Agent interface {
 	Accept() (net.Conn, error)
 	Dial() (net.Conn, error)
 	ConnectAndServe() error
-	Serve(RPC)
+	Serve(RPC) error
 	GRPCServer
 	// RPC
 	// ServeGRPC() error
