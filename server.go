@@ -118,6 +118,7 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 	client.LocalAddr = conn.LocalAddr()
 
 	var header interface{}
+	cheader := &clientHeader{}
 	// here we don't cate about decoder.Buffered
 	// we can pretty much assume it is empty cuz after the client send it's header
 	// to server, it will wait server's confirmation, during this period nothing will
@@ -125,15 +126,37 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 	// is left in the buffer
 	// similarly hibuf is useless after this...
 	if err := json.NewDecoder(conn).Decode(&header); err != nil {
-		conn.Write([]byte("NO"))
+		/*
+			conn.Write([]byte("NO"))
+			return nil, err
+		*/
+		cheader.Status = "NO"
+		cheader.Err = err.Error()
+		conn.Write([]byte(pretty.JsonString(cheader)))
 		return nil, err
 	}
-	conn.Write([]byte("OK"))
+	cheader.Status = "OK"
+	cheader.Id = client.UUID.String()
+	conn.Write([]byte(pretty.JsonString(cheader)))
+	// conn.Write([]byte("OK"))
 	client.Info = pretty.JSONString(header)
 
 	client.RPC = NewRPCClient(conn, onclose(client))
 
 	return client, nil
+}
+
+func newClientHeader(status string, id string) *clientHeader {
+	return &clientHeader{
+		Status: status,
+		Id:     id,
+	}
+}
+
+type clientHeader struct {
+	Status string `json:"status"`
+	Id     string `json:"id"`
+	Err    string `json:"error,omitempty"`
 }
 
 // onclose is called when client goes offline

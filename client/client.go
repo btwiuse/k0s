@@ -1,8 +1,7 @@
 package main
 
 import (
-	"io"
-	"io/ioutil"
+	"encoding/json"
 	"log"
 	"net"
 	"net/rpc"
@@ -78,6 +77,12 @@ type Header struct {
 	Branch string `json:"branch"`
 }
 
+type clientHeader struct {
+	Status string `json:"status"`
+	Id     string `json:"id"`
+	Err    string `json:"error,omitempty"`
+}
+
 func main() {
 	server := "45.32.65.48:8000"
 	if len(os.Args) > 1 {
@@ -118,15 +123,25 @@ func main() {
 	log.Println(header)
 	conn.Write([]byte(header))
 
-	// block until "OK" or "NO" is received, which indicates if header has been successfully read by controller
-	okno, err := ioutil.ReadAll(io.LimitReader(conn, 2))
-	if err != nil {
+	cheader := &clientHeader{}
+	if err := json.NewDecoder(conn).Decode(&cheader); err != nil {
 		log.Fatalln(err)
 	}
-	if string(okno) != "OK" {
-		log.Fatalln(string(okno))
+	if cheader.Status != "OK" {
+		log.Fatalln(cheader.Status, cheader.Err)
 	}
-	log.Println("connected:", conn.LocalAddr(), conn.RemoteAddr())
+
+	// block until "OK" or "NO" is received, which indicates if header has been successfully read by controller
+	/*
+		okno, err := ioutil.ReadAll(io.LimitReader(conn, 2))
+		if err != nil {
+			log.Fatalln(err)
+		}
+		if string(okno) != "OK" {
+			log.Fatalln(string(okno))
+		}
+	*/
+	log.Println("connected:", conn.LocalAddr(), conn.RemoteAddr(), cheader.Id)
 
 	rpcServer := rpc.NewServer()
 	rpcServer.Register(new(protocol.Hello))
