@@ -90,11 +90,13 @@ func (ag *agent) TerminalChanConn() chan<- net.Conn {
 
 func (ag *agent) AcceptFS() (net.Conn, error) {
 	var (
-		conn net.Conn
-		err  error
+		conn  net.Conn
+		err   error
+		path  = "/api/fs"
+		query = "id=" + ag.GetID()
 	)
 
-	conn, err = ag.Dial("/api/fs?id=" + ag.GetID())
+	conn, err = ag.Dial(path, query)
 	if err != nil {
 		return nil, err
 	}
@@ -104,11 +106,13 @@ func (ag *agent) AcceptFS() (net.Conn, error) {
 
 func (ag *agent) AcceptSocks5() (net.Conn, error) {
 	var (
-		conn net.Conn
-		err  error
+		conn  net.Conn
+		err   error
+		path  = "/api/socks5"
+		query = "id=" + ag.GetID()
 	)
 
-	conn, err = ag.Dial("/api/socks5?id=" + ag.GetID())
+	conn, err = ag.Dial(path, query)
 	if err != nil {
 		return nil, err
 	}
@@ -118,11 +122,13 @@ func (ag *agent) AcceptSocks5() (net.Conn, error) {
 
 func (ag *agent) AcceptGrpc() (net.Conn, error) {
 	var (
-		conn net.Conn
-		err  error
+		conn  net.Conn
+		err   error
+		path  = "/api/grpc"
+		query = "id=" + ag.GetID()
 	)
 
-	conn, err = ag.Dial("/api/grpc?id=" + ag.GetID())
+	conn, err = ag.Dial(path, query)
 	if err != nil {
 		return nil, err
 	}
@@ -132,11 +138,13 @@ func (ag *agent) AcceptGrpc() (net.Conn, error) {
 
 func (ag *agent) AcceptMetrics() (net.Conn, error) {
 	var (
-		conn net.Conn
-		err  error
+		conn  net.Conn
+		err   error
+		path  = "/api/metrics"
+		query = "id=" + ag.GetID()
 	)
 
-	conn, err = ag.Dial("/api/metrics?id=" + ag.GetID())
+	conn, err = ag.Dial(path, query)
 	if err != nil {
 		return nil, err
 	}
@@ -146,11 +154,13 @@ func (ag *agent) AcceptMetrics() (net.Conn, error) {
 
 func (ag *agent) AcceptTerminal() (net.Conn, error) {
 	var (
-		conn net.Conn
-		err  error
+		conn  net.Conn
+		err   error
+		path  = "/api/terminal"
+		query = "id=" + ag.GetID()
 	)
 
-	conn, err = ag.Dial("/api/terminal?id=" + ag.GetID())
+	conn, err = ag.Dial(path, query)
 	if err != nil {
 		return nil, err
 	}
@@ -185,7 +195,15 @@ exit:
 }
 
 func (ag *agent) ConnectAndServe() error {
-	conn, err := ag.Dial("/api/rpc")
+	var (
+		conn net.Conn
+		err  error
+		path = "/api/terminal"
+		// unused: "id=" + ag.GetID()
+		query = ""
+	)
+
+	conn, err = ag.Dial(path, query)
 	if err != nil {
 		return err
 	}

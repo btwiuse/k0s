@@ -43,7 +43,7 @@ type Dialer interface {
 	// Dial() (net.Conn, error)
 	// /api/rpc
 	// /api/grpc?id=*
-	Dial(string) (net.Conn, error)
+	Dial(string, string) (net.Conn, error)
 }
 
 type RPC interface {
