@@ -10,7 +10,7 @@ branch(){
 }
 
 state(){
-  [[ -n $(git status --porcelain) ]] && echo clean || echo dirty
+  [[ -n $(git status --porcelain) ]] && echo dirty || echo clean
 }
 
 summary(){
