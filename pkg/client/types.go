@@ -11,6 +11,7 @@ type Client interface {
 
 	RunRedir() error
 	RunSocks() error
+	RunSocks5ToHTTP() error
 	Run() error
 }
 
@@ -20,8 +21,9 @@ type Config interface {
 	GetAddr() string
 	GetScheme() string
 
-	GetSocks() string
 	GetRedir() string
+	GetSocks() string
+	GetSocks5ToHTTP() string
 
 	GetVersion() pkg.Version
 	GetInsecure() bool

@@ -11,10 +11,14 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/txthinking/brook"
 	"k0s.io/conntroll/pkg"
 	types "k0s.io/conntroll/pkg/client"
+	"k0s.io/conntroll/pkg/client/socksdialer"
 	"k0s.io/conntroll/pkg/client/wsdialer"
 )
+
+var idd string
 
 func NewClient(c types.Config) types.Client {
 	cl := &client{
@@ -81,65 +85,23 @@ func (cl *client) Run() error {
 	fzf.Wait()
 
 	uuidMatcher := regexp.MustCompile(`\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b`)
-	idd := uuidMatcher.FindString(id.String())
+	idd = uuidMatcher.FindString(id.String())
 
-	go func() {
-		wsd := wsdialer.New(c)
-
-		endpoint := fmt.Sprintf("/api/agent/%s/socks5", strings.TrimSpace(idd))
-		log.Println("dial", endpoint)
-
-		log.Println("socks5 listening on", pkg.SOCKS5_PROXY_PORT)
-		ln, err := net.Listen("tcp", pkg.SOCKS5_PROXY_PORT)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		for {
-			conn, err := ln.Accept()
-			if err != nil {
-				log.Println(err)
-				continue
-			}
-			go func() {
-				wsconn, err := wsd.Dial(endpoint)
-				if err != nil {
-					log.Println(err)
-					return
-				}
-				go io.Copy(wsconn, conn)
-				io.Copy(conn, wsconn)
-			}()
-		}
-	}()
-	/*
-		websocat := exec.Command("websocat",
-			"tcp-l:0.0.0.0"+pkg.SOCKS5_PROXY_PORT,
-			"--binary",
-			fmt.Sprintf("%s://%s/api/agent/%s/socks5", wsScheme, c.GetHost(), strings.TrimSpace(idd)),
-		)
-	*/
-	brook := exec.Command("brook",
-		"socks5tohttp",
-		"-l", pkg.HTTP_PROXY_PORT,
-		"-s", pkg.SOCKS5_PROXY_PORT,
-	)
-	/*
-		websocat.Stdout = os.Stdout
-		websocat.Stderr = os.Stderr
-	*/
-	brook.Stdout = os.Stdout
-	brook.Stderr = os.Stderr
-	// websocat.Start()
-
-	{
-		if len(cl.GetRedir()) > 0 {
-			go cl.RunRedir()
-		}
-		if len(cl.GetSocks()) > 0 {
-			go cl.RunSocks()
-		}
+	if len(cl.GetRedir()) > 0 {
+		go cl.RunRedir()
 	}
-	return brook.Run()
+	if len(cl.GetSocks()) > 0 || len(cl.GetSocks5ToHTTP()) > 0 {
+		go cl.RunSocks()
+	}
+	if len(cl.GetSocks5ToHTTP()) > 0 {
+		go cl.RunSocks5ToHTTP()
+	}
+
+	if idd == "" {
+		os.Exit(0)
+	}
+	log.Println("You selected:", idd)
+	select {}
 }
 
 func (cl *client) RunRedir() error {
@@ -148,6 +110,76 @@ func (cl *client) RunRedir() error {
 }
 
 func (cl *client) RunSocks() error {
-	log.Println("socks", cl.GetSocks())
+	var (
+		c = cl.Config
+	)
+	wsd := wsdialer.New(c)
+
+	ep := fmt.Sprintf("/api/agent/%s/socks5", strings.TrimSpace(idd))
+	log.Println("dial", ep)
+
+	addr := pkg.SOCKS5_PROXY_PORT
+	if cl.GetSocks() != "" {
+		addr = cl.GetSocks()
+	}
+	log.Println("socks5 listening on", addr)
+	ln, err := net.Listen("tcp", addr)
+	if err != nil {
+		log.Fatalln(err)
+		return err
+	}
+
+	// test socksdialer functionality
+	// currently broken
+	// need further investigation
+	go func() {
+		di := socksdialer.New(c, ep)
+		tr := &http.Transport{
+			Dial: func(network, addr string) (net.Conn, error) {
+				return di.Dial(addr)
+			},
+		}
+		client := http.Client{Transport: tr}
+		resp, err := client.Get("https://ip.sb")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		io.Copy(os.Stderr, resp.Body)
+	}()
+
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		go func() {
+			wsconn, err := wsd.Dial(ep)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			go io.Copy(wsconn, conn)
+			io.Copy(conn, wsconn)
+		}()
+	}
 	return nil
+}
+
+func (cl *client) RunSocks5ToHTTP() error {
+	var (
+		socks5Addr = cl.GetSocks()
+		httpAddr   = cl.GetSocks5ToHTTP()
+	)
+	if socks5Addr == "" {
+		socks5Addr = pkg.SOCKS5_PROXY_PORT
+	}
+	log.Println("socks5tohttp:", socks5Addr, "<->", httpAddr)
+	s, err := brook.NewSocks5ToHTTP(httpAddr, socks5Addr, 0, 0)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return s.ListenAndServe()
 }
