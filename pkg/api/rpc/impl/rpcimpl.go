@@ -20,7 +20,7 @@ type RPCResponse struct{}
 
 func (c *RPC) New(req RPCRequest, res *RPCResponse) error {
 	c.Agent.Go(c.Agent.ConnectAndServe)
-	log.Println("rpc.new called")
+	log.Println("RPC.New invoked")
 	return nil
 }
 
