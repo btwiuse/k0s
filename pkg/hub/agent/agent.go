@@ -27,7 +27,7 @@ var (
 
 func NewAgent(conn net.Conn, opts ...Opt) hub.Agent {
 	ag := &agent{
-		sch:            make(chan hub.Session),
+		sch:            make(chan hub.Session, 5),
 		SessionManager: NewSessionManager(),
 		rpcManager:     NewRPCManager(),
 		created:        time.Now(),
@@ -41,6 +41,9 @@ func NewAgent(conn net.Conn, opts ...Opt) hub.Agent {
 	ag.AddRPCConn(conn)
 	for i := 0; i < 3; i++ {
 		ag.NewRPC()
+	}
+	for i := 0; i < 5; i++ {
+		ag.newSession()
 	}
 	return ag
 }
@@ -73,7 +76,7 @@ func SetID(id string) Opt {
 
 func SetUsername(u string) Opt {
 	return func(ag *agent) {
-		ag.Username = u
+		ag.Usernam = u
 	}
 }
 
@@ -98,7 +101,7 @@ func SetPWD(p string) Opt {
 
 func SetHostname(h string) Opt {
 	return func(ag *agent) {
-		ag.Hostname = h
+		ag.Hostnam = h
 	}
 }
 
@@ -131,16 +134,23 @@ func (ag *agent) NewRPC() {
 	}
 }
 
-func (ag *agent) NewSession() hub.Session {
+func (ag *agent) newSession() {
 	req := rpcimpl.SessionRequest{}
 	resp := &rpcimpl.SessionResponse{}
+	rc := ag.rpcManager.Last()
+	if rc == nil {
+		log.Println("client dead:", ag.ID())
+		ag.Close()
+		return
+	}
+	rc.Go("Session.New", req, resp, nil)
+}
 
-	done := make(chan *rpc.Call, 1)
-	rpcClient := ag.rpcManager.Last()
-
-	rpcClient.Go("Session.New", req, resp, done)
-	<-done
-
+func (ag *agent) NewSession() hub.Session {
+	if len(ag.sch) < 3 {
+		ag.newSession()
+		ag.newSession()
+	}
 	return <-ag.sch
 }
 
@@ -172,8 +182,8 @@ type agent struct {
 	Nam       string   `json:"name"`
 	Tag       []string `json:"tags"` // ,omitempty
 	Connected int64    `json:"connected"`
-	Hostname  string   `json:"hostname"`
-	Username  string   `json:"username"`
+	Hostnam   string   `json:"hostname"`
+	Usernam   string   `json:"username"`
 	PWD       string   `json:"pwd"`
 	OS        string   `json:"os"`
 	Distro    string   `json:"distro,omitempty"`
@@ -214,6 +224,14 @@ func (ag *agent) ID() string {
 
 func (ag *agent) Tags() []string {
 	return ag.Tag
+}
+
+func (ag *agent) Username() string {
+	return ag.Usernam
+}
+
+func (ag *agent) Hostname() string {
+	return ag.Hostnam
 }
 
 // we use NewRPCClient over rpc.NewClient(conn)

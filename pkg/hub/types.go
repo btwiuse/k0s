@@ -47,6 +47,9 @@ type Agent interface {
 	Done() <-chan struct{}
 
 	BasicAuth(http.Handler) http.Handler
+
+	Username() string
+	Hostname() string
 }
 
 type SessionManager interface {

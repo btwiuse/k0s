@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/subtle"
 	"crypto/tls"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -77,7 +78,12 @@ func (h *hub) serve(addr string) {
 	// ==================== basic auth (TODO) =======================
 	// root auth
 	// r.NotFoundHandler = h.basicauth(http.FileServer(http.Dir("conntroll.github.io")))
-	r.NotFoundHandler = h.basicauth(http.FileServer(httpfs.NewFileSystem(webui.Assets, time.Now())))
+	mergedAssets := assets.Assets
+	for k, v := range webui.Assets {
+		mergedAssets[k] = v
+	}
+	mergedAssets["favicon.ico"] = ""
+	r.NotFoundHandler = h.basicauth(http.FileServer(httpfs.NewFileSystem(mergedAssets, time.Now())))
 
 	// list active agents
 	r.HandleFunc("/api/agents/", h.basicauth(http.HandlerFunc(h.handleAgents))).Methods("GET")
@@ -146,8 +152,24 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 			wsRelay(ag)(w, r)
 		case strings.HasPrefix(subpath, "/rootfs"):
 			fsRelay(ag)(w, r)
-		default:
+		case false:
 			staticFileHandler.ServeHTTP(w, r)
+		default:
+			w.Write([]byte(fmt.Sprintf(`<!doctype html>
+<html>
+  <head>
+    <title>%s@%s</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/xterm.css" />
+    <link rel="stylesheet" href="/css/xterm_customize.css" />
+  </head>
+  <body>
+    <div id="terminal"></div>
+    <script src="/js/wetty-bundle.js"></script>
+  </body>
+</html>
+`, ag.Username(), ag.Hostname())))
 		}
 	})
 
