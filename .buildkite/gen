@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+gen(){
+	bkyml steps
+	bkyml command --command make --artifact-paths 'bin/*' --label 'linux/amd64'
+}
+
+main(){
+  gen | grep .
+}
+
+main

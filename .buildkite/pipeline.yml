@@ -1,0 +1,4 @@
+steps:
+  - label: linux/amd64
+    command: make
+    artifact_paths: bin/*

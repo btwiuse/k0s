@@ -32,3 +32,6 @@ clean:
 
 up:
 	cd .docker-compose && ./up
+
+buildkite:
+	cd .buildkite && ./gen | tee /dev/stderr > pipeline.yml
