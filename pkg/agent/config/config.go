@@ -97,8 +97,6 @@ func Parse(args []string) agent.Config {
 
 	query.Set("id", id)
 	query.Set("pwd", pwd)
-	query.Set("whoami", username)
-	query.Set("user", username)
 	query.Set("username", username)
 	query.Set("hostname", hostname)
 	query.Set("os", goos)

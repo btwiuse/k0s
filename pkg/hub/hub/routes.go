@@ -57,9 +57,7 @@ func (h *hub) serve(addr string) {
 			"pwd", "{pwd}",
 			"os", "{os}",
 			"arch", "{arch}",
-			"user", "{user}",
 			"username", "{username}",
-			"whoami", "{whoami}",
 			"hostname", "{hostname}",
 		)
 	r.HandleFunc("/api/session", h.handleSession).Methods("GET").

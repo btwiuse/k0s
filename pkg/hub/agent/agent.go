@@ -67,13 +67,6 @@ func SetPwd(p string) Opt {
 	}
 }
 
-func SetUser(u string) Opt {
-	return func(ag *agent) {
-		ag.User = u
-		ag.Whoami = u
-	}
-}
-
 func SetHostname(h string) Opt {
 	return func(ag *agent) {
 		ag.Hostname = h
@@ -151,9 +144,7 @@ type agent struct {
 	Id        string `json:"id"`
 	Connected int64  `json:"connected"`
 	Hostname  string `json:"hostname"`
-	Whoami    string `json:"whoami"`
-	User      string `json:"user"`     // compat
-	Username  string `json:"username"` // compat
+	Username  string `json:"username"`
 	Pwd       string `json:"pwd"`
 	OS        string `json:"os"`
 	ARCH      string `json:"arch"`
