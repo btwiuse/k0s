@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "tax";
+option go_package = "./tax";
 
 service TaxComputer {
 	rpc Tax(Amount) returns (Amount) {}
