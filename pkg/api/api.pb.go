@@ -8,7 +8,7 @@ import (
 	fmt "fmt"
 	math "math"
 
-	msg "github.com/btwiuse/conntroll/pkg/msg"
+	msg "github.com/btwiuse/wetty/pkg/msg"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"

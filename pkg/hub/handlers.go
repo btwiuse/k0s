@@ -13,7 +13,7 @@ import (
 
 	"github.com/btwiuse/conntroll/pkg/api"
 	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
-	"github.com/btwiuse/conntroll/pkg/msg"
+	"github.com/btwiuse/wetty/pkg/msg"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"

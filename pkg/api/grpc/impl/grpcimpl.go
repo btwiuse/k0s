@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/btwiuse/conntroll/pkg/api"
-	"github.com/btwiuse/conntroll/pkg/msg"
+	"github.com/btwiuse/wetty/pkg/msg"
 	"github.com/btwiuse/wetty/pkg/localcmd"
 	"github.com/kr/pty"
 )

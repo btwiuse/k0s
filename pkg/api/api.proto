@@ -3,7 +3,7 @@ syntax = "proto3";
 package api;
 
 import "msg/types.proto";
-// import "github.com/btwiuse/conntroll/pkg/msg/types.proto";
+// import "github.com/btwiuse/wetty/pkg/msg/types.proto";
 
 // caller: Hub <=> server: Agent/Factory::Session
 service Session {
