@@ -81,7 +81,9 @@ func (agent *Agent) MakeInterceptedRPCClient(c io.ReadWriteCloser) {
 
 // onclose is called when agent goes offline
 func (agent *Agent) onClose() {
-	defer GlobalAgentPool.Dump()
+	// TODO: remove Dump
+	// panic: runtime error: index out of range [3] with length 3
+	// defer GlobalAgentPool.Dump()
 	log.Println("disconnected:", agent.Info.Get("id"))
 	GlobalAgentPool.Del(agent.Info.Get("id"))
 }
