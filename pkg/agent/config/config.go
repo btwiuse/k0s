@@ -18,6 +18,7 @@ func run(oneliner string) []byte {
 	return out
 }
 
+// TODO: use cross-platform golang package
 var (
 	pwd      = strings.TrimSpace(string(run(`pwd`)))
 	whoami   = strings.TrimSpace(string(run(`whoami`)))

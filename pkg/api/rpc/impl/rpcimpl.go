@@ -2,7 +2,6 @@ package impl
 
 import (
 	"log"
-	"net/url"
 
 	"github.com/btwiuse/wetty/pkg/localcmd"
 	"github.com/btwiuse/wetty/pkg/utils"
@@ -20,7 +19,7 @@ type NewSession struct {
 }
 
 type NewSessionRequest struct {
-	Info url.Values
+	// Info url.Values
 }
 
 type NewSessionResponse struct{}
@@ -28,7 +27,7 @@ type NewSessionResponse struct{}
 func (c *NewSession) New(req NewSessionRequest, res *NewSessionResponse) error {
 	log.Println("NewSession.New called with", req)
 
-	conn, err := dial.WithInfo(config.Default.Server, req.Info)
+	conn, err := dial.WithInfo(config.Default.Server, config.Default.Info)
 	if err != nil {
 		return err
 	}

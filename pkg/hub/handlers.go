@@ -3,12 +3,10 @@ package hub
 import (
 	"context"
 	"io"
-	"fmt"
 	"log"
 	"net"
 	"net/http"
 	"net/rpc"
-	"net/url"
 	"strings"
 	"time"
 
@@ -27,17 +25,16 @@ import (
 
 func getAgents(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	infos := []url.Values{}
+	agents := []*Agent{}
 	for _, v := range GlobalAgentPool.Values() {
-		agent := v.(*Agent)
-		infos = append(infos, agent.Info)
+		agents = append(agents, v.(*Agent))
 	}
-	w.Write([]byte(pretty.JSONString(infos)))
+	w.Write([]byte(pretty.JSONString(agents)))
 }
 
 func grpcfactory(agent *Agent) (*grpc.ClientConn, error) {
 	req := rpcimpl.NewSessionRequest{
-		Info: agent.Info,
+		// Info: agent.Info,
 	}
 	resp := new(rpcimpl.NewSessionResponse)
 
@@ -214,23 +211,28 @@ func newAgentOrSession(w http.ResponseWriter, r *http.Request) {
 
 	// new agent
 	if !GlobalAgentPool.Has(id) {
+		// TODO: validate request, ensure parameters are sane
 		values := r.URL.Query()
-		values["connected"] = []string{fmt.Sprintf("%d", time.Now().Unix())}
 		agent := &Agent{
-			Info:           values,
 			GRPCClientConn: make(chan *grpc.ClientConn),
+			// Meta
+			Id: values["id"][0],
+			Pwd: values["pwd"][0],
+			Whoami: values["whoami"][0],
+			Hostname: values["hostname"][0],
+			Connected: time.Now().Unix(),
 		}
 		agent.MakeInterceptedRPCClient(conn)
 
 		GlobalAgentPool.Add(agent)
-		log.Println("new agent connected:", agent.Info.Get("id"))
+		log.Println("new agent connected:", agent.Id)
 		return
 	}
 
 	// new session
 	agent := GlobalAgentPool.Get(id)
 	agent.GRPCClientConn <- toGRPCClientConn(conn)
-	log.Println("new session created from agent:", agent.Info.Get("id"))
+	log.Println("new session created for agent", agent.Id)
 }
 
 func toGRPCClientConn(c net.Conn) *grpc.ClientConn {
