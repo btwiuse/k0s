@@ -1,4 +1,5 @@
 all:
-	go build -v -trimpath -o conntroll .
-	strip conntroll
-	upx conntroll
+	go run bin.go
+
+clean:
+	rm -rf bin conntroll
