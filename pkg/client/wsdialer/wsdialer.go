@@ -3,7 +3,7 @@ package wsdialer
 import (
 	"context"
 	"net"
-	"path"
+	"net/url"
 
 	"k0s.io/conntroll/pkg/client"
 	"nhooyr.io/websocket"
@@ -25,16 +25,14 @@ type wsdialer struct {
 
 func (d *wsdialer) Dial(p string) (conn net.Conn, err error) {
 	var (
-		c = d.c
-		u string
+		c  = d.c
+		ub = &url.URL{
+			Scheme: c.GetSchemeWS(),
+			Host:   c.GetAddr(),
+			Path:   p,
+		}
+		u = ub.String()
 	)
-
-	switch c.GetScheme() {
-	case "http":
-		u = "ws://" + path.Join(c.GetAddr(), p)
-	case "https":
-		u = "wss://" + path.Join(c.GetAddr(), p)
-	}
 
 	wsconn, _, err := websocket.Dial(context.Background(), u, nil)
 

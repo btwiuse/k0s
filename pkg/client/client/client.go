@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"regexp"
@@ -33,9 +34,15 @@ type client struct {
 
 func (cl *client) Run() error {
 	var (
-		c = cl.Config
+		c  = cl.Config
+		ub = &url.URL{
+			Scheme: c.GetScheme(),
+			Host:   c.GetAddr(),
+			Path:   "/api/agents/list",
+		}
+		u = ub.String()
 	)
-	resp, err := http.Get(c.GetScheme() + "://" + c.GetAddr() + "/api/agents/list")
+	resp, err := http.Get(u)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -85,7 +92,7 @@ func (cl *client) Run() error {
 	fzf.Wait()
 
 	uuidMatcher := regexp.MustCompile(`\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b`)
-	idd = uuidMatcher.FindString(id.String())
+	idd = strings.TrimSpace(uuidMatcher.FindString(id.String()))
 
 	if len(cl.GetRedir()) > 0 {
 		go cl.RunRedir()
@@ -100,15 +107,28 @@ func (cl *client) Run() error {
 	if idd == "" {
 		os.Exit(0)
 	}
-	log.Println("You selected:", fmt.Sprintf("%s://%s/api/agent/%s/", c.GetScheme(), c.GetAddr(), idd))
 
-	wss := "wss"
-	if c.GetScheme() == "http" {
-		wss = "ws"
+	{
+		var (
+			ub = &url.URL{
+				Scheme: c.GetScheme(),
+				Host:   c.GetAddr(),
+				Path:   fmt.Sprintf("/api/agent/%s/", idd),
+			}
+			u = ub.String()
+		)
+		log.Println("You selected:", u)
 	}
 
-	ep := fmt.Sprintf("%s://%s/api/agent/%s/terminal", wss, c.GetAddr(), idd)
-	terminal(ep)
+	{
+		ub = &url.URL{
+			Scheme: c.GetSchemeWS(),
+			Host:   c.GetAddr(),
+			Path:   fmt.Sprintf("/api/agent/%s/terminal", idd),
+		}
+		u = ub.String()
+		terminal(u)
+	}
 	return nil
 }
 
@@ -123,7 +143,7 @@ func (cl *client) RunSocks() error {
 	)
 	wsd := wsdialer.New(c)
 
-	ep := fmt.Sprintf("/api/agent/%s/socks5", strings.TrimSpace(idd))
+	ep := fmt.Sprintf("/api/agent/%s/socks5", idd)
 	log.Println("dial", ep)
 
 	addr := pkg.SOCKS5_PROXY_PORT

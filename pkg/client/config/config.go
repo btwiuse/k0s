@@ -86,6 +86,15 @@ func (c *config) GetAddr() string {
 	return c.GetHost() + ":" + c.GetPort()
 }
 
+func (c *config) GetSchemeWS() string {
+	switch c.GetScheme() {
+	case "https":
+		return "wss"
+	default:
+		return "ws"
+	}
+}
+
 func (c *config) GetScheme() string {
 	if c.uri.Scheme == "http" && c.uri.Hostname() == "" && c.uri.Port() == "443" {
 		return "https"

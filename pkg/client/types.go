@@ -20,6 +20,7 @@ type Config interface {
 	GetPort() string
 	GetAddr() string
 	GetScheme() string
+	GetSchemeWS() string
 
 	GetRedir() string
 	GetSocks() string
@@ -40,24 +41,17 @@ type Info interface {
 
 type Agent interface {
 	Info
+	Config
 
 	GetID() string
 	GetName() string
 	GetTags() []string
 
-	GetHost() string
-	GetPort() string
-	GetAddr() string
-	GetScheme() string
-
 	GetCmd() []string
 	GetReadOnly() bool
 	GetVerbose() bool
-	GetInsecure() bool
 
 	String() string
-
-	GetVersion() pkg.Version
 }
 
 type Dialer interface {
