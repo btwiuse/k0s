@@ -14,6 +14,7 @@ import (
 	"github.com/btwiuse/conntroll/pkg/agent/tty"
 	"github.com/btwiuse/conntroll/pkg/api"
 	"github.com/btwiuse/conntroll/pkg/api/grpcimpl"
+	"golang.org/x/net/proxy"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 )
@@ -120,15 +121,19 @@ func (ag *agent) Accept() (net.Conn, error) {
 
 func (ag *agent) Dial() (conn net.Conn, err error) {
 	var c = ag.Config
+	dialer := &net.Dialer{}
+	proxyDialer := proxy.FromEnvironmentUsing(dialer)
 	switch c.GetScheme() {
 	case "http":
-		conn, err = net.Dial("tcp", c.GetAddr())
+		// conn, err = net.Dial("tcp", c.GetAddr())
+		conn, err = proxyDialer.Dial("tcp", c.GetAddr())
 		if err != nil {
 			return nil, err
 		}
 		return conn, nil
 	case "https":
 		conn, err = tls.Dial("tcp", c.GetAddr(), &tls.Config{
+			// conn, err = tls.DialWithDialer(proxyDialer, "tcp", c.GetAddr(), &tls.Config{
 			InsecureSkipVerify: c.GetInsecure(),
 		})
 		if err != nil {
@@ -176,7 +181,7 @@ func (ag *agent) Serve(ys *YS) error {
 				ag.ch <- conn
 			}()
 		default:
-			cmd = "UNKNOWN_CMD"
+			cmd = "UNKNOWN_CMD: " + cmd
 		}
 		log.Println(cmd)
 	}
