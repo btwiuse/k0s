@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/btwiuse/wetty/pkg/msg"
+	"github.com/gorilla/handlers"
 	"k0s.io/conntroll/pkg/agent"
 	"k0s.io/conntroll/pkg/api"
 
@@ -78,6 +79,13 @@ func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session
 		statfail = true
 	}
 
+	var (
+		GzipMiddleware    = handlers.CompressHandler
+		LoggingMiddleware = func(next http.Handler) http.Handler {
+			return handlers.LoggingHandler(os.Stderr, next)
+		}
+	)
+
 	switch {
 	case path == "metrics":
 		w := httptest.NewRecorder()
@@ -85,7 +93,8 @@ func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session
 		if err != nil {
 			return err
 		}
-		session.MetricsHandler.ServeHTTP(w, r)
+		handler := LoggingMiddleware(GzipMiddleware(session.MetricsHandler))
+		handler.ServeHTTP(w, r)
 		resp, err := httputil.DumpResponse(w.Result(), true)
 		if err != nil {
 			return err
@@ -98,7 +107,8 @@ func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session
 		if err != nil {
 			return err
 		}
-		session.FileServer.ServeHTTP(w, r)
+		handler := LoggingMiddleware(session.FileServer)
+		handler.ServeHTTP(w, r)
 		resp, err := httputil.DumpResponse(w.Result(), true)
 		if err != nil {
 			return err
