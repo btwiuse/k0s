@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
+	github.com/btwiuse/jiri v0.0.0-20191125065820-53353bcfef54
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.24
 	github.com/emirpasic/gods v1.12.0 // indirect

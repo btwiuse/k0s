@@ -2,6 +2,8 @@ cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMT
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0 h1:RamJoBgLnq2tsdeXwKc/+ytJ30rftG+MBDreHGFWpSw=
 github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0/go.mod h1:HemNeMkO+h/A3mRCi9Sr2x3aEzE1sc0nUUl3Eg539hU=
+github.com/btwiuse/jiri v0.0.0-20191125065820-53353bcfef54 h1:Z/xMSML3u6yDWi5o9LXNGyWVEDy7KpXIFar4zUfGcfU=
+github.com/btwiuse/jiri v0.0.0-20191125065820-53353bcfef54/go.mod h1:xkrAjHtnvaaA9nWS8fOq2hgV3kSPEWswdqtz/Rq0UgE=
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882 h1:bO0cdWOtgJk7rlRCOObS/TqtbvAisBWSoWpmdJEOius=
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882/go.mod h1:ylRP8/cdGCVHKukmdQkTjIkbVPykEIC8iGT54pOh/KA=
 github.com/btwiuse/wetty v0.0.24 h1:EuZ5helRZGxijDr4OWfR1pkB47acYQl8FYlpZ3hdCb8=
@@ -43,6 +45,7 @@ golang.org/x/net v0.0.0-20180826012351-8a410e7b638d/go.mod h1:mL1N/T3taQHkDXs73r
 golang.org/x/net v0.0.0-20190213061140-3a22650c66bd/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/net v0.0.0-20190311183353-d8887717615a h1:oWX7TPOiFAMXLq8o0ikBYfCJVlRHBcsciT5bXOrH628=
 golang.org/x/net v0.0.0-20190311183353-d8887717615a/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
+golang.org/x/net v0.0.0-20190909003024-a7b16738d86b/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
 golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
 golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sync v0.0.0-20181108010431-42b317875d0f/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
