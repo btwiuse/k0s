@@ -22,6 +22,7 @@ import (
 )
 
 type Session struct {
+	ReadOnly       bool
 	TtyFactory     agent.TtyFactory
 	FileServer     http.Handler
 	MetricsHandler http.Handler
@@ -194,6 +195,9 @@ func (session *Session) Send(sendServer api.Session_SendServer) error {
 		)
 		switch resp.Type {
 		case msg.Type_CLIENT_INPUT:
+			if session.ReadOnly {
+				break
+			}
 			_, err = tty.Write(resp.Body)
 			if err != nil {
 				log.Println("error writing to tty:", err)

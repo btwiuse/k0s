@@ -27,6 +27,7 @@ type Config interface {
 	GetScheme() string
 
 	GetCmd() []string
+	GetReadOnly() bool
 	GetVerbose() bool
 	GetInsecure() bool
 

@@ -51,9 +51,6 @@ github.com/emirpasic/gods/utils
 # github.com/fatih/color v1.8.0
 ## explicit
 github.com/fatih/color
-# github.com/foomo/htpasswd v0.0.0-20180422071726-cb63c4ac0e50
-## explicit
-github.com/foomo/htpasswd
 # github.com/ghodss/yaml v1.0.0
 ## explicit
 github.com/ghodss/yaml
@@ -86,8 +83,6 @@ github.com/gorilla/mux
 github.com/gorilla/websocket
 # github.com/hodgesds/perf-utils v0.0.7
 github.com/hodgesds/perf-utils
-# github.com/konsorten/go-windows-terminal-sequences v1.0.2
-## explicit
 # github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515
 github.com/kr/logfmt
 # github.com/kr/pty v1.1.8
@@ -111,9 +106,6 @@ github.com/mdlayher/netlink/nlenc
 # github.com/mdlayher/wifi v0.0.0-20190303161829-b1436901ddee
 github.com/mdlayher/wifi
 github.com/mdlayher/wifi/internal/nl80211
-# github.com/mitchellh/go-homedir v1.1.0
-## explicit
-github.com/mitchellh/go-homedir
 # github.com/prometheus/client_golang v1.2.1
 ## explicit
 github.com/prometheus/client_golang/prometheus
@@ -171,8 +163,6 @@ go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
-# golang.org/dl v0.0.0-20191220003028-84da647cadd0
-## explicit
 # golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish

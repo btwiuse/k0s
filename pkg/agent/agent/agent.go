@@ -40,7 +40,7 @@ func NewAgent(c types.Config) types.Agent {
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
 	}
-	grpcServer := StartGRPCServer(c.GetCmd())
+	grpcServer := StartGRPCServer(c)
 
 	return &agent{
 		Group:      eg,

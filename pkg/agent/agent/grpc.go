@@ -51,9 +51,14 @@ func NewLys() *lys {
 	}
 }
 
-func StartGRPCServer(cmd []string) types.GRPCServer {
+func StartGRPCServer(c types.Config) types.GRPCServer {
+	var (
+		cmd []string = c.GetCmd()
+		ro  bool     = c.GetReadOnly()
+	)
 	grpcServer := grpc.NewServer()
 	api.RegisterSessionServer(grpcServer, &grpcimpl.Session{
+		ReadOnly:       ro,
 		TtyFactory:     tty.NewFactory(cmd),
 		FileServer:     http.FileServer(http.Dir("/")),
 		MetricsHandler: exporter.NewHandler(),
