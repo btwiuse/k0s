@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/rpc"
+	"os/exec"
 
 	types "github.com/btwiuse/conntroll/pkg/agent"
 	"github.com/btwiuse/conntroll/pkg/agent/tty"
@@ -34,11 +35,15 @@ func NewAgent(c types.Config) types.Agent {
 	id := c.ID()
 	name := c.Name()
 	log.Println("new agent", id, name)
+	shell := "bash"
+	if _, err := exec.LookPath(shell); err != nil {
+		shell = "sh"
+	}
 	return &agent{
 		Group:      eg,
 		id:         id,
 		name:       name,
-		TtyFactory: tty.NewFactory([]string{"/usr/bin/env", "TERM=xterm", "bash"}),
+		TtyFactory: tty.NewFactory([]string{"/usr/bin/env", "TERM=xterm", shell}),
 		c:          c,
 	}
 }
