@@ -93,7 +93,7 @@ func (cl *client) Run() error {
 	go func() {
 		w := new(tabwriter.Writer)
 		w.Init(pw, 2, 0, 2, ' ', 0)
-		fmt.Fprintf(w, strings.ReplaceAll("agent username hostname os arch distro auth @", " ", "\t"))
+		fmt.Fprintln(w, strings.ReplaceAll("agent username hostname os arch distro auth @", " ", "\t"))
 		for _, ag := range ags {
 			col := fmt.Sprintf(
 				strings.ReplaceAll("%s %s %s %s %s %s %t %s", " ", "\t"),
