@@ -4,8 +4,12 @@
 package tax
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -74,4 +78,84 @@ var fileDescriptor_dc148b98924644b2 = []byte{
 	0x84, 0x24, 0xb9, 0x98, 0x43, 0x12, 0x2b, 0x84, 0xd8, 0xf5, 0x20, 0x9a, 0xa4, 0x60, 0x0c, 0x25,
 	0x06, 0x27, 0xf6, 0x28, 0x56, 0x3d, 0xfd, 0x92, 0xc4, 0x8a, 0x24, 0x36, 0xb0, 0xc9, 0xc6, 0x80,
 	0x00, 0x00, 0x00, 0xff, 0xff, 0x2e, 0xe6, 0xef, 0x7e, 0x66, 0x00, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// TaxComputerClient is the client API for TaxComputer service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type TaxComputerClient interface {
+	Tax(ctx context.Context, in *Amount, opts ...grpc.CallOption) (*Amount, error)
+}
+
+type taxComputerClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewTaxComputerClient(cc *grpc.ClientConn) TaxComputerClient {
+	return &taxComputerClient{cc}
+}
+
+func (c *taxComputerClient) Tax(ctx context.Context, in *Amount, opts ...grpc.CallOption) (*Amount, error) {
+	out := new(Amount)
+	err := c.cc.Invoke(ctx, "/TaxComputer/Tax", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// TaxComputerServer is the server API for TaxComputer service.
+type TaxComputerServer interface {
+	Tax(context.Context, *Amount) (*Amount, error)
+}
+
+// UnimplementedTaxComputerServer can be embedded to have forward compatible implementations.
+type UnimplementedTaxComputerServer struct {
+}
+
+func (*UnimplementedTaxComputerServer) Tax(ctx context.Context, req *Amount) (*Amount, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Tax not implemented")
+}
+
+func RegisterTaxComputerServer(s *grpc.Server, srv TaxComputerServer) {
+	s.RegisterService(&_TaxComputer_serviceDesc, srv)
+}
+
+func _TaxComputer_Tax_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Amount)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaxComputerServer).Tax(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/TaxComputer/Tax",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaxComputerServer).Tax(ctx, req.(*Amount))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _TaxComputer_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "TaxComputer",
+	HandlerType: (*TaxComputerServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Tax",
+			Handler:    _TaxComputer_Tax_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "tax.proto",
 }

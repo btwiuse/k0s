@@ -1,3 +1,3 @@
-//go:generate protoc --go_out=. tax.proto
+//go:generate protoc --go_out=plugins=grpc:. tax.proto
 
 package tax
