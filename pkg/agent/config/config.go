@@ -215,7 +215,8 @@ func probeConfigFile() string {
 
 func loadConfigFile(file string) *config {
 	c := &config{
-		Hub: DEFAULT_HUB_ADDRESS,
+		Hub:  DEFAULT_HUB_ADDRESS,
+		Tags: []string{},
 	}
 	if file == "" {
 		return c
