@@ -1,3 +1,5 @@
+// tcp gender changer impl. See https://en.wikipedia.org/wiki/TCP_Gender_Changer
+
 package wrap
 
 import (
@@ -5,15 +7,14 @@ import (
 	"net"
 )
 
-NewSingleListener(conn net.Conn, onAccept func()) net.Listener {
+func NewSingleListener(conn net.Conn, onAccept func()) net.Listener {
 	return &singleListener{
-		Conn: conn,
+		Conn:     conn,
 		OnAccept: onAccept,
 	}
 }
 
-// single listener converts/upgrades the current tcp connection into grpc
-// gender changer impl
+// single listener help construct a grpc server from a tcp connection
 type singleListener struct {
 	net.Conn
 	OnAccept func()
