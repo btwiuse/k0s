@@ -29,3 +29,6 @@ install:
 
 clean:
 	rm -r bin
+
+up:
+	cd .docker-compose && ./up

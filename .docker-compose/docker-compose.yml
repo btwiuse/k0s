@@ -19,3 +19,14 @@ services:
     - prometheus --storage.tsdb.path=prometheus --config.file=prometheus.yml --web.listen-address=127.0.0.1:9090 --web.external-url=https://k0s.io/prometheus --web.route-prefix=/prometheus
     volumes:
     - .:/work
+# prometheus-endpoint-updater:
+#   image: latestarch/linux
+#   network_mode: host
+#   working_dir: /work
+#   entrypoint:
+#   - /bin/bash
+#   command:
+#   - -c
+#   - "while :; do ./gen; sleep 2; done"
+#   volumes:
+#   - .:/work

@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+hub(){
+  echo '{"targets": ["hub.k0s.io"], "labels": {"job": "__hub__"}}'
+  # echo '{"targets": ["k0s.io:8000"], "labels": {"job": "__hub__"}}'
+}
+
+agents(){
+  curl -s https://hub.k0s.io/api/agents/list \
+  | jq -c '.[]|{"targets": ["hub.k0s.io"], "labels": {"job": "\(.name)", "__metrics_path__": "/api/agent/\(.id)/metrics"}}'
+}
+
+gen(){
+  (hub && agents) | jq -s . >/tmp/agents.json;
+  # test -f agents.json || cp /tmp/agents.json . && sudo chmod 777 agents.json
+  if ! diff agents.json /tmp/agents.json &>/dev/null; then
+    cp -v /tmp/agents.json .
+    cat agents.json | jq -c .[]
+  fi
+}
+
+genloop(){
+  while :; do gen; sleep 2; done
+}
+
+assert_exists(){
+  cmds="$@"
+  quit=""
+  for cmd in $cmds; do
+    echo "assert exists: $cmd"
+    command -v "$cmd" &>/dev/null || quit+="$cmd "
+  done
+  
+  [[ -n "$quit" ]] && echo "command not found: $quit" && exit 1
+}
+
+init(){
+  assert_exists curl jq docker-compose
+  touch agents.json
+  mkdir -p data grafana prometheus
+  chmod 777 agents.json data grafana prometheus
+}
+
+main(){
+  init
+  genloop &
+  docker-compose up
+}
+
+main
