@@ -7,3 +7,6 @@
 /.cache
 /conntroll.github.io
 /demo
+/.hideme
+!/.hideme/makeself/launch
+/hideme.tar

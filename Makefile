@@ -36,3 +36,11 @@ up:
 
 buildkite:
 	cd .buildkite && ./gen | tee /dev/stderr > pipeline.yml
+
+hideme:
+	@ go run bin.go -d .hideme/bin -strip -upx -ldflags="${LDFLAGS}"
+	cp -v .hideme/bin/agent .hideme/makeself
+	cp -v $(shell which daemonize) .hideme/makeself
+	tar -C .hideme/makeself -c agent launch daemonize > hideme.tar
+	tar -tvf hideme.tar
+	# makeself .hideme/makeself makeself.tar label ./agent

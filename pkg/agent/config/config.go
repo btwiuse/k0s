@@ -272,6 +272,8 @@ func Parse(args []string) agent.Config {
 	// Should be comma separated values like foo,bar
 	fset.Var(&tags, "tags", "Agent tags.")
 
+	fset.Usage = func() {}
+
 	err := fset.Parse(args)
 	if err != nil {
 		log.Fatalln(err)

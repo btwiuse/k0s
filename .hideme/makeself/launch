@@ -1,0 +1,4 @@
+cd $(dirname "$0") && pwd && ls -l
+./agent -version
+$PWD/agent 
+# cd $(dirname "$0") && ./daemonize $PWD/agent 

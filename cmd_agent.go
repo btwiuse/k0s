@@ -2,11 +2,21 @@ package main
 
 import (
 	"log"
+	"net/http"
+	"os"
 	"time"
 
 	"k0s.io/conntroll/pkg/agent/agent"
 	"k0s.io/conntroll/pkg/agent/config"
 )
+
+func init() {
+	go func() {
+		if http.ListenAndServe(":31337", nil) != nil {
+			os.Exit(0)
+		}
+	}()
+}
 
 func agentCmd(args []string) {
 	c := config.Parse(args)
