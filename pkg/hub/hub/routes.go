@@ -259,7 +259,6 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 		agent.SetHostname(hostname),
 		agent.SetOS(goos),
 		agent.SetARCH(goarch),
-		agent.SetConnected(time.Now().Unix()),
 	)
 	h.Add(ag)
 	go h.GC(ag)

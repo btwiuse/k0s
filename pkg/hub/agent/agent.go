@@ -26,8 +26,9 @@ func NewAgent(conn net.Conn, opts ...Opt) hub.Agent {
 	ag := &agent{
 		sch:            make(chan hub.Session),
 		SessionManager: NewSessionManager(),
-		RPCManager:     NewRPCManager(),
+		rpcManager:     NewRPCManager(),
 		created:        time.Now(),
+		connected:      time.Now().Unix(),
 		done:           make(chan struct{}),
 		once:           &sync.Once{},
 	}
@@ -73,12 +74,6 @@ func SetHostname(h string) Opt {
 	}
 }
 
-func SetConnected(t int64) Opt {
-	return func(ag *agent) {
-		ag.Connected = t
-	}
-}
-
 func SetOS(o string) Opt {
 	return func(ag *agent) {
 		ag.OS = o
@@ -96,7 +91,7 @@ func SetARCH(a string) Opt {
 func (ag *agent) NewRPC() {
 	req := rpcimpl.RPCRequest{}
 	resp := &rpcimpl.RPCResponse{}
-	rc := ag.RPCManager.Last()
+	rc := ag.rpcManager.Last()
 	if rc == nil {
 		log.Println("client dead:", ag.ID())
 		ag.Close()
@@ -113,7 +108,7 @@ func (ag *agent) NewSession() hub.Session {
 	resp := &rpcimpl.SessionResponse{}
 
 	done := make(chan *rpc.Call, 1)
-	rpcClient := ag.RPCManager.Last()
+	rpcClient := ag.rpcManager.Last()
 
 	rpcClient.Go("Session.New", req, resp, done)
 	<-done
@@ -133,7 +128,7 @@ func (ag *agent) Done() <-chan struct{} {
 
 type agent struct {
 	hub.SessionManager `json:"-"`
-	RPCManager         hub.RPCManager   `json:"-"`
+	rpcManager         hub.RPCManager   `json:"-"`
 	sch                chan hub.Session `json:"-"`
 	done               chan struct{}
 	once               *sync.Once
@@ -180,13 +175,13 @@ func (ag *agent) AddRPCConn(c net.Conn) {
 		Closer: c,
 	})
 	rc := ToRPC(id)(rpcClient)
-	ag.RPCManager.AddRPC(rc)
+	ag.rpcManager.AddRPC(rc)
 }
 
 // onclose is called when rpc connection is lost
 func (ag *agent) onRPCClose(id string) {
 	log.Println("disconnected:", ag.ID(), id)
-	ag.RPCManager.Del(id)
+	ag.rpcManager.Del(id)
 	// assuming there are other rpc conns left
 	ag.NewRPC()
 }
