@@ -25,6 +25,7 @@ import (
 type Session struct {
 	ReadOnly       bool
 	TtyFactory     agent.TtyFactory
+	TcpFactory     agent.TcpFactory
 	FileServer     http.Handler
 	MetricsHandler http.Handler
 	// client id/index, to distinguish logs of different commands
@@ -145,6 +146,50 @@ func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session
 		}
 	}
 	return nil
+}
+
+func (session *Session) Forward(forwardServer api.Session_ForwardServer) error {
+	fwdmsg, err := forwardServer.Recv()
+	if err != nil {
+		return err
+	}
+	addr := fwdmsg.Head
+	log.Println(addr)
+
+	/*
+		forwardServer.Send(&api.ForwardMessage{Body: []byte("HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n")})
+		return nil
+	*/
+
+	conn, err := session.TcpFactory.NewProxy(addr)
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		buf := make([]byte, 1<<12-1)
+		for {
+			n, err := conn.Read(buf)
+			if err == io.EOF {
+				return // nil
+			}
+			req := &api.ForwardMessage{
+				Body: buf[:n],
+			}
+			err = forwardServer.Send(req)
+			if err != nil {
+				return // err
+			}
+		}
+	}()
+
+	for {
+		resp, err := forwardServer.Recv()
+		if err != nil {
+			return nil
+		}
+		conn.Write(resp.Body)
+	}
 }
 
 func (session *Session) Send(sendServer api.Session_SendServer) error {

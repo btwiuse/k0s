@@ -96,6 +96,13 @@ func (ag *agent) NewSession() hub.Session {
 	return <-ag.sch
 }
 
+/*
+func (ag *agent) NewPortForwarder() hub.PortForwarder {
+	ag.rpc.NewPortForwarder()
+	return <-ag.sch
+}
+*/
+
 func (ag *agent) BasicAuth(next http.Handler) http.Handler {
 	if len(ag.htpasswd) == 0 {
 		return next

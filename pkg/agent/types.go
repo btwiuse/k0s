@@ -81,6 +81,10 @@ type TtyFactory interface {
 	MakeTty() (Tty, error)
 }
 
+type TcpFactory interface {
+	NewProxy(addr string) (net.Conn, error)
+}
+
 type Tty interface {
 	io.ReadWriteCloser
 	Resize(rows int, cols int) error

@@ -6,6 +6,7 @@ import (
 
 	"google.golang.org/grpc"
 	types "k0s.io/conntroll/pkg/agent"
+	"k0s.io/conntroll/pkg/agent/tcp"
 	"k0s.io/conntroll/pkg/agent/tty"
 	"k0s.io/conntroll/pkg/api"
 	"k0s.io/conntroll/pkg/api/grpcimpl"
@@ -60,6 +61,7 @@ func StartGRPCServer(c types.Config) types.GRPCServer {
 	api.RegisterSessionServer(grpcServer, &grpcimpl.Session{
 		ReadOnly:       ro,
 		TtyFactory:     tty.NewFactory(cmd),
+		TcpFactory:     tcp.NewFactory(),
 		FileServer:     http.FileServer(http.Dir("/")),
 		MetricsHandler: exporter.NewHandler(),
 	})

@@ -14,10 +14,16 @@ message Chunk {
     bytes chunk = 1;
 }
 
+message ForwardMessage {
+  string head = 1;
+  bytes body = 2;
+}
+
 // caller: Hub <=> server: Agent/Factory::Session
 service Session {
     rpc Send(stream Message) returns (stream Message) {};
     rpc Chunker(ChunkRequest) returns (stream Chunk) {};
+    rpc Forward(stream ForwardMessage) returns (stream ForwardMessage) {};
 }
 
 message Message {

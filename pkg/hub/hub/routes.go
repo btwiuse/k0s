@@ -194,6 +194,8 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		ag.BasicAuth(http.HandlerFunc(wsRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/rootfs"):
 		ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
+	case strings.HasPrefix(subpath, "/http/"):
+		ag.BasicAuth(http.HandlerFunc(httpRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):
 		metricsRelay(ag)(w, r)
 	default:
