@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
 
-	"github.com/invctrl/hijack/grpctax/tax"
+	"github.com/btwiuse/invctrl/grpctax/tax"
 )
 
 func init() {

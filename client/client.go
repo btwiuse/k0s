@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/rpc"
 
-	"github.com/invctrl/hijack/client/config"
-	"github.com/invctrl/hijack/client/dial"
-	"github.com/invctrl/hijack/protocol"
+	"github.com/btwiuse/invctrl/client/config"
+	"github.com/btwiuse/invctrl/client/dial"
+	"github.com/btwiuse/invctrl/protocol"
 )
 
 func main() {

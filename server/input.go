@@ -11,8 +11,8 @@ import (
 
 	"gopkg.in/readline.v1"
 
-	"github.com/invctrl/hijack/pkg/api"
-	"github.com/invctrl/hijack/protocol"
+	"github.com/btwiuse/invctrl/pkg/api"
+	"github.com/btwiuse/invctrl/protocol"
 )
 
 func Input() {

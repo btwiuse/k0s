@@ -19,8 +19,8 @@ import (
 	"github.com/navigaid/gotty/wetty"
 	"modernc.org/httpfs"
 
-	"github.com/invctrl/hijack/protocol"
-	"github.com/invctrl/hijack/wrap"
+	"github.com/btwiuse/invctrl/protocol"
+	"github.com/btwiuse/invctrl/wrap"
 )
 
 func hijack(original http.Handler) http.HandlerFunc {

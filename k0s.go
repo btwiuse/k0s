@@ -6,7 +6,7 @@ import (
 
 	//"github.com/davecgh/go-spew/spew"
 
-	"github.com/invctrl/hijack/server"
+	"github.com/btwiuse/invctrl/server"
 )
 
 func main() {

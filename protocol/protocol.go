@@ -19,9 +19,9 @@ import (
 	"github.com/navigaid/gotty/wetty"
 	"google.golang.org/grpc"
 
-	"github.com/invctrl/hijack/client/config"
-	"github.com/invctrl/hijack/client/dial"
-	"github.com/invctrl/hijack/pkg/api"
+	"github.com/btwiuse/invctrl/client/config"
+	"github.com/btwiuse/invctrl/client/dial"
+	"github.com/btwiuse/invctrl/pkg/api"
 )
 
 type Request struct {

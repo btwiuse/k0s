@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/rpc"
 
-	"github.com/invctrl/hijack/protocol"
+	"github.com/btwiuse/invctrl/protocol"
 )
 
 func main() {

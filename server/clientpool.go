@@ -22,10 +22,10 @@ import (
 	"github.com/navigaid/pretty"
 	"google.golang.org/grpc"
 
-	"github.com/invctrl/hijack/header"
-	"github.com/invctrl/hijack/pkg/api"
-	"github.com/invctrl/hijack/protocol"
-	"github.com/invctrl/hijack/wrap"
+	"github.com/btwiuse/invctrl/header"
+	"github.com/btwiuse/invctrl/pkg/api"
+	"github.com/btwiuse/invctrl/protocol"
+	"github.com/btwiuse/invctrl/wrap"
 )
 
 type Client struct {

@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/gorilla/websocket"
-	"github.com/invctrl/hijack/client/config"
-	"github.com/invctrl/hijack/header"
+	"github.com/btwiuse/invctrl/client/config"
+	"github.com/btwiuse/invctrl/header"
 	"github.com/navigaid/pretty"
 )
 
