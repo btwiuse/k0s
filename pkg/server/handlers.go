@@ -19,7 +19,7 @@ import (
 	"github.com/gorilla/websocket"
 	"modernc.org/httpfs"
 
-	"github.com/btwiuse/invctrl/protocol"
+	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
 	"github.com/btwiuse/invctrl/wrap"
 )
 
@@ -46,11 +46,11 @@ func wsfactory(slaveFactory *Slave) (*websocket.Conn, error) {
 	nonce := uuid.New().String()
 	id := slaveFactory.UUID.String()
 
-	req := protocol.WsConnRequest{
+	req := rpcimpl.WsConnRequest{
 		Id:    id,
 		Nonce: nonce,
 	}
-	resp := new(protocol.WsConnResponse)
+	resp := new(rpcimpl.WsConnResponse)
 
 	done := make(chan *rpc.Call, 1)
 	slaveFactory.RPC.Go("WsConn.New", req, resp, done)
@@ -131,10 +131,10 @@ func fsrelay(w http.ResponseWriter, r *http.Request, slave *Slave, p string) {
 	}
 
 	// 2.
-	req := protocol.RootfsRequest{
+	req := rpcimpl.RootfsRequest{
 		Request: reqbuf,
 	}
-	resp := new(protocol.RootfsResponse)
+	resp := new(rpcimpl.RootfsResponse)
 
 	log.Println("calling Rootfs.New")
 
@@ -311,6 +311,7 @@ REDIR:
 
 // ls handles the index page
 // todo: refresh when slavepool changes (watcher)
+// todo: json api: /slaves/
 func ls(w http.ResponseWriter, r *http.Request) {
 	isCurrent := func(uuid string) string {
 		if (GlobalSlavePool.Current != nil) && (GlobalSlavePool.Current.UUID.String() == uuid) {
@@ -321,6 +322,8 @@ func ls(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "text/html; charset=UTF-8")
 	uri := strings.TrimPrefix(r.RequestURI, "/")
+
+	// slave specific page
 	if GlobalSlavePool.Has(uri) {
 		log.Println(uri)
 		slave := GlobalSlavePool.Get(uri)
@@ -337,6 +340,8 @@ func ls(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "</pre>")
 		return
 	}
+
+	// root page
 	for i, v := range GlobalSlavePool.Slaves.Values() {
 		slave := v.(*Slave)
 		uuid := GlobalSlavePool.Slaves.Keys()[i].(string)

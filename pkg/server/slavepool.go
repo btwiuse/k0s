@@ -24,7 +24,7 @@ import (
 
 	"github.com/btwiuse/invctrl/header"
 	"github.com/btwiuse/invctrl/pkg/api"
-	"github.com/btwiuse/invctrl/protocol"
+	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
 	"github.com/btwiuse/invctrl/wrap"
 )
 
@@ -165,11 +165,11 @@ func NewSlave(w http.ResponseWriter) (*Slave, error) {
 		log.Println("infactory")
 		nonce := uuid.New().String()
 		id := slave.UUID.String()
-		req := protocol.ConnRequest{
+		req := rpcimpl.ConnRequest{
 			Id:    id,
 			Nonce: nonce,
 		}
-		resp := new(protocol.ConnResponse)
+		resp := new(rpcimpl.ConnResponse)
 		done := make(chan *rpc.Call, 1)
 		slave.RPC.Go("Conn.New", req, resp, done)
 		<-done
@@ -190,11 +190,11 @@ func NewSlave(w http.ResponseWriter) (*Slave, error) {
 	{
 		nonce := uuid.New().String()
 		id := slave.UUID.String()
-		req := protocol.GRPCConnRequest{
+		req := rpcimpl.GRPCConnRequest{
 			Id:    id,
 			Nonce: nonce,
 		}
-		resp := new(protocol.GRPCConnResponse)
+		resp := new(rpcimpl.GRPCConnResponse)
 		done := make(chan *rpc.Call, 1)
 		slave.RPC.Go("GRPCConn.New", req, resp, done)
 		<-done

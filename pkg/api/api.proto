@@ -2,6 +2,24 @@ syntax = "proto3";
 
 package api;
 
+// caller: Hub
+// server: SlaveFactory
+service SlaveFactory {
+    // IsReady|AreYouOK
+    rpc Info() returns (InfoResponse) {};
+    rpc NewSlave(NewSlaveRequest) returns () {};
+}
+
+message InfoResponse {
+    string hostname = 1;
+}
+
+message NewSlaveRequest {
+    string slave_id = 1;
+}
+
+// caller: Hub
+// server: Slave
 service BidiStream {
     rpc Send(stream Message) returns (stream Message) {};
 }

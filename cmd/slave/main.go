@@ -6,7 +6,7 @@ import (
 
 	"github.com/btwiuse/invctrl/pkg/slave/config"
 	"github.com/btwiuse/invctrl/pkg/slave/dial"
-	"github.com/btwiuse/invctrl/protocol"
+	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
 )
 
 func main() {
@@ -24,13 +24,9 @@ func main() {
 	log.Println("connected:", c.Id)
 
 	rpcServer := rpc.NewServer()
-	rpcServer.Register(new(protocol.Hello))
-	rpcServer.Register(new(protocol.Bash))
-	rpcServer.Register(new(protocol.Conn))
-	rpcServer.Register(new(protocol.WsConn))
-	rpcServer.Register(new(protocol.Rootfs))
-	rpcServer.Register(new(protocol.Echo))
-	rpcServer.Register(new(protocol.GRPCConn))
+	rpcServer.Register(new(rpcimpl.Conn))
+	rpcServer.Register(new(rpcimpl.WsConn))
+	rpcServer.Register(new(rpcimpl.GRPCConn))
 	log.Println("serveconn")
 	rpcServer.ServeConn(conn)
 	log.Fatalln("bye")

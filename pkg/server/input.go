@@ -10,7 +10,7 @@ import (
 
 	"gopkg.in/readline.v1"
 
-	"github.com/btwiuse/invctrl/protocol"
+	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
 )
 
 func Input() {
@@ -42,10 +42,10 @@ func Input() {
 			}
 
 			bash := func(line string, client *Slave) {
-				req := protocol.Request{
+				req := rpcimpl.Request{
 					Command: line,
 				}
-				resp := new(protocol.Response)
+				resp := new(rpcimpl.Response)
 				err := client.RPC.Call("Bash.Execute", req, resp)
 				if err != nil {
 					log.Println(resp.Message, err)

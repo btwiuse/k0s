@@ -1,4 +1,4 @@
-package protocol
+package impl
 
 import (
 	"bufio"
@@ -21,7 +21,7 @@ import (
 	"github.com/btwiuse/invctrl/pkg/slave/config"
 	"github.com/btwiuse/invctrl/pkg/slave/dial"
 	"github.com/btwiuse/invctrl/pkg/api"
-	"github.com/btwiuse/invctrl/pkg/api/impl"
+	grpcimpl "github.com/btwiuse/invctrl/pkg/api/grpc/impl"
 )
 
 type Request struct {
@@ -224,7 +224,7 @@ func (*GRPCConn) New(req ConnRequest, res *ConnResponse) error {
 func serveGRPC(grpcSide net.Conn) error {
 	l := &singleListener{grpcSide}
 	grpcServer := grpc.NewServer()
-	api.RegisterBidiStreamServer(grpcServer, &impl.BidiStream{})
+	api.RegisterBidiStreamServer(grpcServer, &grpcimpl.BidiStream{})
 	return grpcServer.Serve(l)
 }
 
