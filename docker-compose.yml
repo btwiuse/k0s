@@ -3,6 +3,8 @@ services:
   grafana:
     image: grafana/grafana:latest
     network_mode: host
+    environment:
+    - GF_PATHS_DATA=/grafana
     volumes:
     - ./grafana.ini:/etc/grafana/grafana.ini
     - ./grafana:/grafana
@@ -12,13 +14,8 @@ services:
     working_dir: /work
     entrypoint:
     - /bin/sh
-    - -c
     command:
-    - prometheus
-    - --web.console.libraries=/usr/share/prometheus/console_libraries
-    - --web.console.templates=/usr/share/prometheus/consoles
-    - --storage.tsdb.path=/prometheus
-    - --config.file=prometheus.yml
+    - -c
+    - prometheus --storage.tsdb.path=prometheus --config.file=prometheus.yml --web.listen-address=127.0.0.1:9090 --web.external-url=https://k0s.io/prometheus --web.route-prefix=/prometheus
     volumes:
     - .:/work
-    - ./prometheus:/prometheus

@@ -6,4 +6,4 @@ scrape_configs:
   scheme: https
   file_sd_configs:
   - files:
-    - '/work/agents.json'
+    - 'agents.json'
