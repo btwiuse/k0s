@@ -104,15 +104,6 @@ func lojacker(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getHeader(r io.Reader) (string, io.Reader, error) {
-	var v interface{}
-	decoder := json.NewDecoder(r)
-	if err := decoder.Decode(&v); err != nil {
-		return "", nil, err
-	}
-	return pretty.JSONString(v), decoder.Buffered(), nil
-}
-
 func newClient(w http.ResponseWriter) (client *Client, err error) {
 	uuid := uuid.New().String()
 
@@ -121,21 +112,20 @@ func newClient(w http.ResponseWriter) (client *Client, err error) {
 		return nil, err
 	}
 
-	header, buffered, err := getHeader(io.MultiReader(hibuf, conn))
-	if err != nil {
+	var header interface{}
+	// here we don't cate about decoder.Buffered
+	// we can pretty much assume it is empty cuz after the client send it's header
+	// to server, it will wait server's confirmation, during this period nothing will
+	// be sent from the client. so once the server receives the complete header, nothing
+	// is left in the buffer
+	// similarly hibuf is useless after this...
+	if err := json.NewDecoder(io.MultiReader(hibuf, conn)).Decode(&header); err != nil {
 		conn.Write([]byte("NO"))
 		return nil, err
 	}
 	conn.Write([]byte("OK"))
 
-	rpcClient := NewRPC(
-		io.MultiReader(hibuf, buffered),
-
-		// order matters here
-		// io.MultiReader(buffered, hibuf),
-		// will cause error:
-		// In[2]:= 2019/05/15 23:43:24  gob: unknown type id or corrupted data
-
+	rpcClient := NewRPCClient(
 		conn,
 		callback(uuid, conn.RemoteAddr().String()),
 	)
@@ -144,11 +134,12 @@ func newClient(w http.ResponseWriter) (client *Client, err error) {
 		UUID: uuid,
 		Conn: conn,
 		RPC:  rpcClient,
-		Info: header,
+		Info: pretty.JSONString(header),
 	}, nil
 }
 
-func callback(uuid string, raddr string) func() {
+// onclose is called when client goes offline
+func onclose(uuid string, raddr string) func() {
 	return func() {
 		ClientPool.Dump()
 		log.Println("disconnected:", uuid, raddr)
@@ -156,17 +147,23 @@ func callback(uuid string, raddr string) func() {
 	}
 }
 
-// we use NewRPC over rpc.NewClient(conn)
+// we use NewRPCClient over rpc.NewClient(conn)
 // so we can remove client from pool immediately when it is disconnected
-func NewRPC(mr io.Reader, conn io.ReadWriteCloser, callback func()) *rpc.Client {
+
+/*
+          / io.Reader >--->copy()---> io.PipeWriter ===> io.PipeReader = intercepted io.Reader \
+net.Conn  - io.Writer \                                                                        wrap.ReadWriteCloser() - rpc.NewClient - *rpc.Client
+          \ io.Closer - io.WriteCloser ---------------------------------------------------------
+*/
+func NewRPCClient(conn io.ReadWriteCloser, onclose func()) *rpc.Client {
 	copy := func(dst io.Writer, src io.Reader) {
 		if _, err := io.Copy(dst, src); err != nil {
 			log.Println(err)
 		}
-		callback()
+		onclose()
 	}
 	pr, pw := io.Pipe()
-	go copy(pw, io.MultiReader(mr, conn))
+	go copy(pw, conn)
 	return rpc.NewClient(wrap.WrapReadWriteCloser(pr, conn))
 }
 
