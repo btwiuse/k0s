@@ -34,6 +34,8 @@ func (i *arrayFlags) Set(value string) error {
 }
 
 type config struct {
+	Socks    string `json:"-" yaml:"socks"`
+	Redir    string `json:"-" yaml:"redir"`
 	Verbose  bool   `json:"-" yaml:"verbose"`
 	Insecure bool   `json:"-" yaml:"insecure"`
 	Hub      string `json:"-" yaml:"hub"`
@@ -41,6 +43,14 @@ type config struct {
 	uri *url.URL `json:"-"` // where server scheme, host, port, addr are defined
 
 	Version pkg.Version `json:"version" yaml:"-"`
+}
+
+func (c *config) GetSocks() string {
+	return c.Socks
+}
+
+func (c *config) GetRedir() string {
+	return c.Redir
 }
 
 func (c *config) GetVersion() pkg.Version {
@@ -83,6 +93,18 @@ type Opt func(c *config)
 func SetHub(h string) Opt {
 	return func(c *config) {
 		c.Hub = h
+	}
+}
+
+func SetRedir(h string) Opt {
+	return func(c *config) {
+		c.Redir = h
+	}
+}
+
+func SetSocks(h string) Opt {
+	return func(c *config) {
+		c.Socks = h
 	}
 }
 
@@ -177,6 +199,8 @@ func Parse(args []string) client.Config {
 		opts = []Opt{}
 
 		hubapi   *string = fset.String("hub", pkg.DEFAULT_HUB_ADDRESS, "Hub address.")
+		redir    *string = fset.String("redir", pkg.REDIR_PROXY_PORT, "Redir port.")
+		socks    *string = fset.String("socks", pkg.SOCKS5_PROXY_PORT, "Socks address.")
 		verbose  *bool   = fset.Bool("verbose", false, "Verbose log.")
 		version  *bool   = fset.Bool("version", false, "Show agent/hub version info.")
 		insecure *bool   = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
@@ -191,6 +215,12 @@ func Parse(args []string) client.Config {
 	fset.Visit(func(f *flag.Flag) {
 		if f.Name == "hub" {
 			opts = append(opts, SetHub(*hubapi))
+		}
+		if f.Name == "redir" {
+			opts = append(opts, SetRedir(*redir))
+		}
+		if f.Name == "socks" {
+			opts = append(opts, SetSocks(*socks))
 		}
 		if f.Name == "verbose" {
 			opts = append(opts, SetVerbose(*verbose))

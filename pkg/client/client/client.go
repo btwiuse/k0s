@@ -101,5 +101,24 @@ func (cl *client) Run() error {
 	brook.Stdout = os.Stdout
 	brook.Stderr = os.Stderr
 	websocat.Start()
+
+	{
+		if len(cl.GetRedir()) > 0 {
+			go cl.RunRedir()
+		}
+		if len(cl.GetSocks()) > 0 {
+			go cl.RunSocks()
+		}
+	}
 	return brook.Run()
+}
+
+func (cl *client) RunRedir() error {
+	log.Println("redir", cl.GetRedir())
+	return nil
+}
+
+func (cl *client) RunSocks() error {
+	log.Println("socks", cl.GetSocks())
+	return nil
 }

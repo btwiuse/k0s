@@ -8,6 +8,9 @@ import (
 
 type Client interface {
 	Config
+
+	RunRedir() error
+	RunSocks() error
 	Run() error
 }
 
@@ -16,6 +19,9 @@ type Config interface {
 	GetPort() string
 	GetAddr() string
 	GetScheme() string
+
+	GetSocks() string
+	GetRedir() string
 
 	GetVersion() pkg.Version
 	GetInsecure() bool
