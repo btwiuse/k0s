@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/rpc"
 
 	"github.com/invctrl/hijack/protocol"

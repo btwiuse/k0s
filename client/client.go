@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"io"
 	"io/ioutil"
 	"log"
@@ -11,7 +10,6 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
-	//"time"
 
 	"github.com/invctrl/hijack/protocol"
 	"github.com/navigaid/pretty"

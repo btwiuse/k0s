@@ -11,7 +11,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	//"time"
 
 	"github.com/google/uuid"
 	"github.com/invctrl/hijack/protocol"
