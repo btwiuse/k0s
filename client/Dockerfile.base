@@ -1,2 +1,2 @@
 FROM docker:dind
-RUN apk add --no-cache bash git vim jq moreutils openssl curl tzdata
+RUN apk add --no-cache bash git vim jq moreutils openssl curl tzdata tmux
