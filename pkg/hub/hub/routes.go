@@ -37,11 +37,11 @@ type hub struct {
 	*http.Server
 }
 
-func NewHub(addr string) types.Hub {
+func NewHub(c types.Config) types.Hub {
 	h := &hub{
 		AgentManager: NewAgentManager(),
 	}
-	h.serve(addr)
+	h.serve(c.Port())
 	return h
 }
 

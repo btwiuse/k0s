@@ -3,13 +3,12 @@ package agent
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
 	"log"
+	"errors"
 	"net"
 	"net/rpc"
 
 	types "github.com/btwiuse/conntroll/pkg/agent"
-	"github.com/btwiuse/conntroll/pkg/agent/config"
 	"github.com/btwiuse/conntroll/pkg/agent/tty"
 	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
 
@@ -26,12 +25,12 @@ type agent struct {
 	types.TtyFactory
 
 	id string
-	c  *config.Config
+	c  types.Config
 }
 
-func NewAgent(c *config.Config) types.Agent {
+func NewAgent(c types.Config) types.Agent {
 	eg, _ := errgroup.WithContext(context.Background())
-	id := c.ID
+	id := c.ID()
 	log.Println("new agent", id)
 	return &agent{
 		Group:      eg,
@@ -59,29 +58,11 @@ func (ag *agent) CreateSession() (net.Conn, error) {
 	var (
 		conn net.Conn
 		err  error
-		port string = c.Port()
 	)
 
-	if c.Scheme == "http" {
-		if port == "" {
-			port = "80"
-		}
-		conn, err = net.Dial("tcp", c.Hostname()+":"+port)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	if c.Scheme == "https" {
-		if port == "" {
-			port = "443"
-		}
-		conn, err = tls.Dial("tcp", c.Hostname()+":"+port, &tls.Config{
-			InsecureSkipVerify: true,
-		})
-		if err != nil {
-			return nil, err
-		}
+	conn, err = ag.Dial()
+	if err != nil {
+		return nil, err
 	}
 
 	_, err = conn.Write(c.NewSessionRequestBody())
@@ -92,35 +73,37 @@ func (ag *agent) CreateSession() (net.Conn, error) {
 	return conn, nil
 }
 
-func (ag *agent) Connect() (net.Conn, error) {
-	var c = ag.c
-	var (
-		conn net.Conn
-		err  error
-		port string = c.Port()
-	)
-
-	if c.Scheme == "http" {
-		if c.Port() == "" {
-			port = "80"
-		}
-		conn, err = net.Dial("tcp", c.Hostname()+":"+port)
+func (ag *agent) Dial() (conn net.Conn, err error) {
+	c := ag.c
+	switch c.Scheme() {
+	case "http":
+		conn, err = net.Dial("tcp", c.Addr())
 		if err != nil {
 			return nil, err
 		}
-	}
-
-	if c.Scheme == "https" {
-		if c.Port() == "" {
-			port = "443"
-		}
-		fmt.Println(c.Hostname() + ":" + port)
-		conn, err = tls.Dial("tcp", c.Hostname()+":"+port, &tls.Config{
+		return conn, nil
+	case "https":
+		conn, err = tls.Dial("tcp", c.Addr(), &tls.Config{
 			InsecureSkipVerify: true,
 		})
 		if err != nil {
 			return nil, err
 		}
+		return conn, nil
+	}
+	return nil, errors.New("unknown scheme")
+}
+
+func (ag *agent) Connect() (net.Conn, error) {
+	var c = ag.c
+	var (
+		conn net.Conn
+		err  error
+	)
+
+	conn, err = ag.Dial()
+	if err != nil {
+		return nil, err
 	}
 
 	_, err = conn.Write(c.NewAgentRequestBody())

@@ -1,6 +1,7 @@
 package hub
 
 import (
+	"github.com/btwiuse/conntroll/pkg"
 	types "github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/manager"
 )
@@ -10,7 +11,7 @@ var (
 )
 
 type agentManager struct {
-	types.Manager
+	pkg.Manager
 }
 
 func (am *agentManager) AddAgent(ag types.Agent) {

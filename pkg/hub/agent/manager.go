@@ -2,7 +2,9 @@ package agent
 
 import (
 	"net/rpc"
+	"time"
 
+	"github.com/btwiuse/conntroll/pkg"
 	"github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/manager"
 	"github.com/btwiuse/conntroll/pkg/uuid"
@@ -14,7 +16,7 @@ var (
 )
 
 type sessionManager struct {
-	hub.Manager
+	pkg.Manager
 }
 
 func (sm *sessionManager) AddSession(s hub.Session) {
@@ -32,7 +34,7 @@ func NewSessionManager() hub.SessionManager {
 }
 
 type rpcManager struct {
-	hub.Manager
+	pkg.Manager
 }
 
 // todo: use iterator
@@ -55,8 +57,13 @@ func NewRPCManager() hub.RPCManager {
 }
 
 type rpcc struct {
+	created time.Time
 	id string
 	*rpc.Client
+}
+
+func (r *rpcc) Time() time.Time {
+	return r.created
 }
 
 func (r *rpcc) ID() string {
@@ -65,6 +72,7 @@ func (r *rpcc) ID() string {
 
 func ToRPC(rc *rpc.Client) hub.RPC {
 	return &rpcc{
+		created: time.Now(),
 		id:     uuid.New(),
 		Client: rc,
 	}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/btwiuse/conntroll/pkg/agent/agent"
 	"github.com/btwiuse/conntroll/pkg/agent/config"
@@ -10,7 +11,7 @@ import (
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	c := config.Parse()
+	c := config.Parse(os.Args[1:])
 
 	ag := agent.NewAgent(c)
 

@@ -11,22 +11,56 @@ import (
 	"strings"
 
 	"github.com/btwiuse/conntroll/pkg/uuid"
+	"github.com/btwiuse/conntroll/pkg/agent"
 )
 
-type Config struct {
-	ID string
+type config struct {
+	id string
 	*url.URL
 }
 
-func (c *Config) NewAgentRequestBody() []byte {
+func (c *config) ID() string {
+	return c.id
+}
+
+func (c *config) Port() string {
+	if c.URL.Port() == "" {
+		switch c.URL.Scheme {
+		case "http":
+			return "80"
+		case "https":
+			return "443"
+		}
+	}
+	return c.URL.Port()
+}
+
+func (c *config) Addr() string{
+	return c.Hostname() + ":" + c.Port()
+}
+
+func (c *config) Scheme() string {
+	return c.URL.Scheme
+}
+
+func (c *config) Hostname() string {
+	return c.URL.Hostname()
+}
+
+func (c *config) NewAgentRequestBody() []byte {
 	return []byte(fmt.Sprintf("GET %s?%s HTTP/1.0\r\n\r\n", "/api/rpc", c.RawQuery))
 }
 
-func (c *Config) NewSessionRequestBody() []byte {
+func (c *config) NewSessionRequestBody() []byte {
 	return []byte(fmt.Sprintf("GET %s?%s HTTP/1.0\r\n\r\n", "/api/session", c.RawQuery))
 }
 
-func Parse() *Config {
+func Parse(args []string) agent.Config {
+	fset := flag.NewFlagSet("agent", flag.ExitOnError)
+	/*
+	fset.Usage = func(){
+		fmt.Println("usage:")
+	}*/
 	var (
 		pwd, _      = os.Getwd()
 		_user, _    = user.Current()
@@ -36,11 +70,24 @@ func Parse() *Config {
 		goarch      = runtime.GOARCH
 
 		hubapi string
+		// usage bool
 		query  url.Values = make(map[string][]string)
 	)
 
-	flag.StringVar(&hubapi, "hub", "https://libredot.com", "hub api")
-	flag.Parse()
+	fset.StringVar(&hubapi, "hub", "https://libredot.com", "hub api")
+	/*
+	fset.BoolVar(&usage, "h", false, "getting help")
+	fset.BoolVar(&usage, "help", false, "getting help")
+	*/
+	err := fset.Parse(args)
+	if err != nil {
+		log.Println(err)
+	}
+	/* log.Println(fset.Args())
+	if usage {
+		fset.Usage()
+		os.Exit(0)
+	}*/
 	if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
 		hubapi = "http://" + hubapi
 	}
@@ -62,8 +109,8 @@ func Parse() *Config {
 
 	u.RawQuery = query.Encode()
 
-	return &Config{
+	return &config{
 		URL: u,
-		ID:  id,
+		id:  id,
 	}
 }

@@ -5,12 +5,23 @@ import (
 	"net"
 )
 
+type Config interface {
+	ID() string
+	Port() string
+	Addr() string
+	Scheme() string
+	Hostname() string
+	NewAgentRequestBody() []byte
+	NewSessionRequestBody() []byte
+}
+
 type Agent interface {
 	TtyFactory
 
-	ConnectAndServe() error
 	CreateSession() (net.Conn, error)
+	ConnectAndServe() error
 	Connect() (net.Conn, error)
+	Dial() (net.Conn, error)
 
 	Go(func() error)
 	Wait() error

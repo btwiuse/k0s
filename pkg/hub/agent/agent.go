@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"log"
+	"time"
 	"net"
 	"net/rpc"
 
@@ -24,6 +25,7 @@ func NewAgent(conn net.Conn, opts ...AgentOpt) hub.Agent {
 		sch:            make(chan hub.Session),
 		SessionManager: NewSessionManager(),
 		RPCManager:     NewRPCManager(),
+		created: time.Now(),
 	}
 	for _, opt := range opts {
 		opt(ag)
@@ -131,6 +133,8 @@ type agent struct {
 	sch                chan hub.Session `json:"-"`
 	RPCConn            hub.RPC
 
+	created time.Time
+
 	// Metadata
 	Id        string `json:"id"`
 	Connected int64  `json:"connected"`
@@ -142,6 +146,10 @@ type agent struct {
 	OS        string `json:"os"`
 	ARCH      string `json:"arch"`
 	IP        string `json:"ip"`
+}
+
+func (ag *agent) Time() time.Time {
+	return ag.created
 }
 
 func (ag *agent) ID() string {

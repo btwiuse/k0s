@@ -5,21 +5,12 @@ import (
 	"net"
 	"net/rpc"
 
+	"github.com/btwiuse/conntroll/pkg"
 	"github.com/btwiuse/conntroll/pkg/api"
 )
 
-type IDer interface {
-	ID() string
-	// CreationTime() time.Time
-}
-
-type Manager interface {
-	Add(IDer)
-	Del(string)
-	Has(string) bool
-	Get(string) IDer
-	Values() []IDer
-	Size() int
+type Config interface {
+	Port() string
 }
 
 type Hub interface {
@@ -31,7 +22,7 @@ type Hub interface {
 }
 
 type AgentManager interface {
-	Manager
+	pkg.Manager
 
 	AddAgent(Agent)
 	GetAgent(string) Agent
@@ -39,7 +30,7 @@ type AgentManager interface {
 }
 
 type Agent interface {
-	IDer
+	pkg.Tider
 	SessionManager
 
 	AddRPCConn(net.Conn)
@@ -50,14 +41,14 @@ type Agent interface {
 }
 
 type SessionManager interface {
-	Manager
+	pkg.Manager
 
 	AddSession(Session)
 	GetSession(string) Session
 }
 
 type Session interface {
-	IDer
+	pkg.Tider
 	api.SessionClient
 
 	// TTY() io.ReaderFrom // | io.WriterTo
@@ -65,7 +56,7 @@ type Session interface {
 }
 
 type RPC interface {
-	IDer
+	pkg.Tider
 
 	// *rpc.Client
 	Call(serviceMethod string, args interface{}, reply interface{}) error
@@ -74,7 +65,7 @@ type RPC interface {
 }
 
 type RPCManager interface {
-	Manager
+	pkg.Manager
 
 	AddRPC(RPC)
 	Last() RPC

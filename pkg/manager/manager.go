@@ -1,22 +1,21 @@
 package manager
 
 import (
-	"github.com/btwiuse/conntroll/pkg/hub"
-
+	"github.com/btwiuse/conntroll/pkg"
 	"github.com/btwiuse/gods/maps/linkedhashmap"
 )
 
 var (
-	_ hub.Manager = (*manager)(nil)
+	_ pkg.Manager = NewManager()
 )
 
-func NewManager() hub.Manager {
+func NewManager() *manager {
 	return &manager{
 		Map: linkedhashmap.New(),
 	}
 }
 
-// key: string, value: IDer
+// key: string, value: Tider
 type manager struct {
 	// maps.Map
 	*linkedhashmap.Map
@@ -31,22 +30,19 @@ func (m *manager) Has(id string) bool {
 	return ok
 }
 
-func (m *manager) Get(id string) hub.IDer {
+func (m *manager) Get(id string) pkg.Tider {
 	v, _ := m.Map.Get(id)
-	return v.(hub.IDer)
+	return v.(pkg.Tider)
 }
 
-func (m *manager) Add(ider hub.IDer) {
-	m.Map.Put(ider.ID(), ider)
+func (m *manager) Add(idr pkg.Tider) {
+	m.Map.Put(idr.ID(), idr)
 }
 
-func (m *manager) Values() (ret []hub.IDer) {
+func (m *manager) Values() (ret []pkg.Tider) {
 	vals := m.Map.Values()
-	// TODO: document this!!
-	// ret := []hub.IDer{}
-	// ret := make([]hub.IDer, len(vals))
 	for _, v := range vals {
-		ret = append(ret, v.(hub.IDer))
+		ret = append(ret, v.(pkg.Tider))
 	}
 	return ret
 }
