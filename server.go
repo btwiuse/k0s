@@ -109,7 +109,7 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 	client := new(Client) // using named return causes panic, why?
 	client.UUID = uuid.New()
 
-	conn, hibuf, err := w.(http.Hijacker).Hijack()
+	conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
 	if err != nil {
 		return nil, err
 	}
@@ -124,17 +124,14 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 	// be sent from the client. so once the server receives the complete header, nothing
 	// is left in the buffer
 	// similarly hibuf is useless after this...
-	if err := json.NewDecoder(io.MultiReader(hibuf, conn)).Decode(&header); err != nil {
+	if err := json.NewDecoder(conn).Decode(&header); err != nil {
 		conn.Write([]byte("NO"))
 		return nil, err
 	}
 	conn.Write([]byte("OK"))
 	client.Info = pretty.JSONString(header)
 
-	client.RPC = NewRPCClient(
-		conn,
-		onclose(client),
-	)
+	client.RPC = NewRPCClient(conn, onclose(client))
 
 	return client, nil
 }
