@@ -145,7 +145,11 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 	log.Println("connected:", client.UUID, client.RemoteAddr)
 
 	ClientPool.Add(client)
-	log.Println("has?", client.UUID.String(), ClientPool.Has(client.UUID.String()))
+	go func() {
+		for range time.Tick(3 * time.Second) {
+			log.Println("has?", client.UUID.String(), ClientPool.Has(client.UUID.String()))
+		}
+	}()
 	ClientPool.Get(client.UUID.String())
 	factory := func() (net.Conn, error) {
 		// client := ClientPool.Current
@@ -325,7 +329,7 @@ func input() {
 	}
 }
 
-func wsr(w http.ResponseWriter, r *http.Request) {
+func wslisten(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.RequestURI)
 	log.Println(r.Header)
 
@@ -355,22 +359,28 @@ func wsr(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Println("read", n, "bytes", "message is", string(buf), "hahahahaha")
 
-		uri := string(buf)
+		uri := string(buf[:n])
 
-		log.Println("getting", uri, "be prepared to die")
-		/*
-			if !ClientPool.Has(uri) {
-				log.Println("requested uri", uri, "doesn't exist")
-				ClientPool.Dump()
-				return
-			}
-			client := ClientPool.Get(uri)
-		*/
-		client := ClientPool.Latest
+		log.Println("getting", uri, "be prepared to die", buf[:n])
+
+		if !ClientPool.Has(uri) {
+			log.Println("requested uri", uri, "doesn't exist")
+			ClientPool.Dump()
+			return
+		}
+		client := ClientPool.Get(uri)
+
+		//client := ClientPool.Latest
 		client.WsConns = append(client.WsConns, conn)
 		log.Println("wsconns:", client.WsConns)
 		return
 	}
+
+}
+
+func wsr(w http.ResponseWriter, r *http.Request, client *Client) {
+	log.Println(r.RequestURI)
+	log.Println(r.Header)
 
 	uri := strings.Split(strings.TrimPrefix(r.RequestURI, "/ws/"), "/")[0]
 	log.Println("=================wsr", uri)
@@ -390,8 +400,10 @@ func wsr(w http.ResponseWriter, r *http.Request) {
 	var this io.ReadWriter = &utils.WsWrapper{conn}
 
 	//connRemote = ;
-	log.Println("getting", uri, "be prepared to die")
-	client := ClientPool.Get(uri)
+	/*
+		log.Println("getting", uri, "be prepared to die")
+		client := ClientPool.Get(uri)
+	*/
 	connRemote, err := wsfactory(client)
 	if err != nil {
 		log.Println(err)
@@ -429,13 +441,15 @@ func ws(w http.ResponseWriter, r *http.Request) {
 	uri := strings.Split(strings.TrimPrefix(r.RequestURI, "/ws/"), "/")[0]
 
 	if ClientPool.Has(uri) {
+		client := ClientPool.Get(uri)
+		log.Println("YYYYYYYYYYYYYYYYYYYYYYYESSSSSSSSS")
 		if !strings.HasSuffix(r.RequestURI, "/ws") {
 			staticFileServer := http.FileServer(httpfs.NewFileSystem(assets.Assets, time.Now()))
 			http.StripPrefix("/ws/"+uri+"/", staticFileServer).ServeHTTP(w, r)
 			return
 		}
 		log.Println("ws=================wsr")
-		wsr(w, r)
+		wsr(w, r, client)
 		return
 	}
 	// http.Error(w, http.StatusText(404), 404)
@@ -506,7 +520,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", ls)
-	mux.HandleFunc("/ws", wsr)
+	mux.HandleFunc("/ws", wslisten)
 	mux.HandleFunc("/ws/", ws)
 	go input()
 	if len(os.Args) > 1 {
