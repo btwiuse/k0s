@@ -130,6 +130,12 @@ func newClient(w http.ResponseWriter) (client *Client, err error) {
 
 	rpcClient := NewRPC(
 		io.MultiReader(hibuf, rest),
+
+		// order matters here
+		// io.MultiReader(rest, hibuf),
+		// will cause error:
+		// In[2]:= 2019/05/15 23:43:24  gob: unknown type id or corrupted data
+
 		conn,
 		callback(uuid, conn.RemoteAddr().String()),
 	)
