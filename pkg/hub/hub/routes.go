@@ -90,6 +90,7 @@ func (h *hub) serve(addr string) {
 	// agent hijack => rpc
 	r.HandleFunc("/api/rpc", h.handleRPC).Methods("GET").
 		Queries("id", "{id}",
+			"name", "{name}",
 			"pwd", "{pwd}",
 			"os", "{os}",
 			"arch", "{arch}",
@@ -279,6 +280,7 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars     = mux.Vars(r)
 		id       = vars["id"]
+		name     = vars["name"]
 		pwd      = vars["pwd"]
 		ip, _, _ = net.SplitHostPort(conn.RemoteAddr().String())
 		username = vars["username"]
@@ -295,6 +297,7 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 
 	opts := []agent.Opt{
 		agent.SetID(id),
+		agent.SetName(name),
 		agent.SetIP(ip),
 		agent.SetPWD(pwd),
 		agent.SetUsername(username),

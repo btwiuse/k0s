@@ -47,6 +47,12 @@ func NewAgent(conn net.Conn, opts ...Opt) hub.Agent {
 
 type Opt func(*agent)
 
+func SetName(name string) Opt {
+	return func(ag *agent) {
+		ag.Nam = name
+	}
+}
+
 func SetID(id string) Opt {
 	return func(ag *agent) {
 		ag.Id = id
@@ -146,8 +152,12 @@ type agent struct {
 	created time.Time
 	bahash  string
 
+	grpcCounter int
+	rpcCounter  int
+
 	// Metadata
 	Id        string `json:"id"`
+	Nam       string `json:"name"`
 	Connected int64  `json:"connected"`
 	Hostname  string `json:"hostname"`
 	Username  string `json:"username"`
@@ -165,7 +175,7 @@ func (ag *agent) BasicAuth(next http.Handler) http.Handler {
 			uphash := fmt.Sprintf("%x", sha256.Sum256([]byte(username+":"+password)))
 			log.Println(uphash, ag.bahash)
 			if (!ok) || (uphash != ag.bahash) {
-				realm := "please enter agent password"
+				realm := "please enter password for " + ag.Name()
 				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`"`)
 				w.WriteHeader(401)
 				w.Write([]byte("Unauthorised.\n"))
@@ -178,6 +188,10 @@ func (ag *agent) BasicAuth(next http.Handler) http.Handler {
 
 func (ag *agent) Time() time.Time {
 	return ag.created
+}
+
+func (ag *agent) Name() string {
+	return ag.Nam
 }
 
 func (ag *agent) ID() string {
@@ -204,7 +218,9 @@ func (ag *agent) AddRPCConn(c net.Conn) {
 		Writer: c,
 		Closer: c,
 	})
-	rc := ToRPC(id)(rpcClient)
+	ag.rpcCounter += 1
+	name := fmt.Sprintf("%s-%d", ag.Name(), ag.rpcCounter)
+	rc := ToRPC(name, id)(rpcClient)
 	ag.rpcManager.AddRPC(rc)
 }
 
@@ -236,5 +252,7 @@ func (ag *agent) AddSessionConn(c net.Conn) {
 		}
 		return cc
 	}
-	ag.sch <- session.NewSession(api.NewSessionClient(toGRPCClientConn(c)))
+	ag.grpcCounter += 1
+	name := fmt.Sprintf("%s.%d", ag.Name(), ag.grpcCounter)
+	ag.sch <- session.NewSession(name, api.NewSessionClient(toGRPCClientConn(c)))
 }

@@ -12,16 +12,22 @@ import (
 	"strings"
 
 	"github.com/btwiuse/conntroll/pkg/agent"
+	"github.com/btwiuse/conntroll/pkg/name"
 	"github.com/btwiuse/conntroll/pkg/uuid"
 )
 
 type config struct {
-	id string
+	id   string
+	name string
 	*url.URL
 }
 
 func (c *config) ID() string {
 	return c.id
+}
+
+func (c *config) Name() string {
+	return c.name
 }
 
 func (c *config) Port() string {
@@ -104,6 +110,7 @@ func Parse(args []string) agent.Config {
 	query.Set("hostname", hostname)
 	query.Set("os", goos)
 	query.Set("arch", goarch)
+	query.Set("name", name.New())
 
 	if bahash != "" {
 		bahash = fmt.Sprintf("%x", sha256.Sum256([]byte(bahash)))

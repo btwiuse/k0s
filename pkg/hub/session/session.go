@@ -13,7 +13,8 @@ var (
 )
 
 type session struct {
-	id string
+	id   string
+	name string
 	api.SessionClient
 	created time.Time
 }
@@ -22,13 +23,18 @@ func (s *session) Time() time.Time {
 	return s.created
 }
 
+func (s *session) Name() string {
+	return s.name
+}
+
 func (s *session) ID() string {
 	return s.id
 }
 
-func NewSession(sc api.SessionClient) hub.Session {
+func NewSession(name string, sc api.SessionClient) hub.Session {
 	return &session{
 		id:            uuid.New(),
+		name:          name,
 		SessionClient: sc,
 		created:       time.Now(),
 	}

@@ -24,17 +24,20 @@ type agent struct {
 	*errgroup.Group
 	types.TtyFactory
 
-	id string
-	c  types.Config
+	id   string
+	name string
+	c    types.Config
 }
 
 func NewAgent(c types.Config) types.Agent {
 	eg, _ := errgroup.WithContext(context.Background())
 	id := c.ID()
-	log.Println("new agent", id)
+	name := c.Name()
+	log.Println("new agent", id, name)
 	return &agent{
 		Group:      eg,
 		id:         id,
+		name:       name,
 		TtyFactory: tty.NewFactory([]string{"/usr/bin/env", "TERM=xterm", "bash"}),
 		c:          c,
 	}

@@ -11,6 +11,10 @@ github.com/btwiuse/wetty/pkg/localcmd
 github.com/btwiuse/wetty/pkg/msg
 github.com/btwiuse/wetty/pkg/utils
 github.com/btwiuse/wetty/pkg/wetty
+# github.com/docker/docker v1.13.1
+## explicit
+github.com/docker/docker/pkg/namesgenerator
+github.com/docker/docker/pkg/random
 # github.com/emirpasic/gods v1.12.0
 ## explicit
 github.com/emirpasic/gods/containers

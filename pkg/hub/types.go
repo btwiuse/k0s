@@ -18,7 +18,6 @@ type Config interface {
 }
 
 type Hub interface {
-	// IDer
 	AgentManager
 
 	// Serve(net.Listener) error
