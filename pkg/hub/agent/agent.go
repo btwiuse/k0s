@@ -31,7 +31,7 @@ func NewAgent(rpc hub.RPC, info hub.Info, xopts ...Opt) hub.Agent {
 		done:           make(chan struct{}),
 		closeOnceDone:  &sync.Once{},
 		IP:             rpc.RemoteIP(),
-		Auth:		new(bool),
+		Auth:           new(bool),
 	}
 	ag.fromInfo(info)
 

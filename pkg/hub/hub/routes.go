@@ -88,26 +88,25 @@ func (h *hub) serveYRPC(ln net.Listener) {
 			continue
 		}
 
-		// parse agent info
-		scanner := bufio.NewScanner(conn)
-		if !scanner.Scan() {
-			continue
-		}
-
-		buf := scanner.Bytes()
-		info, err := agentinfo.Decode(buf)
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-
-		log.Println(info)
-
-		go h.toAgent(info, conn)
+		go h.toAgent(conn)
 	}
 }
 
-func (h *hub) toAgent(info types.Info, conn net.Conn) {
+func (h *hub) toAgent(conn net.Conn) {
+	// parse agent info
+	scanner := bufio.NewScanner(conn)
+	if !scanner.Scan() {
+		log.Println(scanner.Err())
+		return
+	}
+
+	buf := scanner.Bytes()
+	info, err := agentinfo.Decode(buf)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
 	if h.Has(info.GetID()) {
 		io.WriteString(conn, "duplicate id\n")
 		return
@@ -125,7 +124,6 @@ func (h *hub) toAgent(info types.Info, conn net.Conn) {
 		ag.Close()
 	}()
 
-	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		log.Println(info.GetID(), scanner.Text())
 	}
