@@ -9,6 +9,19 @@ import (
 	"github.com/btwiuse/conntroll/pkg/api"
 )
 
+type Info interface {
+	GetID() string
+	GetName() string
+	GetTags() []string
+
+	GetOS() string
+	GetPwd() string
+	GetArch() string
+	GetDistro() string
+	GetHostname() string
+	GetUsername() string
+}
+
 type Config interface {
 	Port() string
 	UseTLS() bool
