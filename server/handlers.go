@@ -212,14 +212,20 @@ func wsrelay(w http.ResponseWriter, r *http.Request, client *Client) {
 
 /*
 base :=
+frontend:
 $uuid
 $uuid/css/*
 $uuid/js/*
 $uuid/png/*
 
+wsrelay:
 $uuid/ws
 
+fsrelay:
 $uuid/rootfs
+
+wslisten:
+/ws
 */
 func frontend(w http.ResponseWriter, r *http.Request) {
 	var staticFileServer, staticFileHandler http.Handler
@@ -260,6 +266,8 @@ REDIR:
 	http.Redirect(w, r, "/", 302)
 }
 
+// ls handles the index page
+// todo: refresh when clientpool changes (watcher)
 func ls(w http.ResponseWriter, r *http.Request) {
 	isCurrent := func(uuid string) string {
 		if (ClientPool.Current != nil) && (ClientPool.Current.UUID.String() == uuid) {
