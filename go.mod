@@ -20,3 +20,5 @@ require (
 	gopkg.in/yaml.v2 v2.2.5 // indirect
 	modernc.org/httpfs v1.0.0
 )
+
+replace github.com/btwiuse/gotty => /home/aaron/gotty
