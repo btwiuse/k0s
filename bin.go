@@ -23,7 +23,7 @@ var (
 	Path         = "bin"
 	Delimeter    = "-"
 	DefaultCombo = Combo{runtime.GOOS, runtime.GOARCH}
-	GlobalEnv = []string{
+	GlobalEnv    = []string{
 		"CGO_ENABLED=0",
 	}
 )
