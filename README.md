@@ -12,6 +12,7 @@ Similar stuff:
 - https://github.com/rancher/remotedialer
 - https://github.com/rofl0r/nat-tunnel
 - https://github.com/TreeHacks/botnet-hackpack
+- https://github.com/peoples-cloud/pc
 
 Potential use cases:
 - distcc agent (cpu/io intensive)
@@ -26,3 +27,5 @@ References:
 - https://www.malwaretech.com/2013/12/peer-to-peer-botnets-for-beginners.html
 - https://umbrella.cisco.com/blog/2014/05/23/cnc-botnet-english/
 - https://ops.tips/gists/example-go-rpc-client-and-server/
+- https://github.com/topics/botnet?l=Go
+- https://rosettacode.org/wiki/Distributed_programming
