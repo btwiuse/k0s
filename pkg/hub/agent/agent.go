@@ -27,7 +27,7 @@ var (
 
 func NewAgent(conn net.Conn, opts ...Opt) hub.Agent {
 	ag := &agent{
-		sch:            make(chan hub.Session, 5),
+		sch:            make(chan hub.Session),
 		SessionManager: NewSessionManager(),
 		rpcManager:     NewRPCManager(),
 		created:        time.Now(),
@@ -39,12 +39,6 @@ func NewAgent(conn net.Conn, opts ...Opt) hub.Agent {
 		opt(ag)
 	}
 	ag.AddRPCConn(conn)
-	for i := 0; i < 3; i++ {
-		ag.NewRPC()
-	}
-	for i := 0; i < 5; i++ {
-		ag.newSession()
-	}
 	return ag
 }
 
@@ -147,10 +141,7 @@ func (ag *agent) newSession() {
 }
 
 func (ag *agent) NewSession() hub.Session {
-	if len(ag.sch) < 3 {
-		ag.newSession()
-		ag.newSession()
-	}
+	ag.newSession()
 	return <-ag.sch
 }
 
