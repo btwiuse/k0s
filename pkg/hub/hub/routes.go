@@ -21,7 +21,6 @@ import (
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
 	"github.com/btwiuse/wetty/pkg/msg"
-	"github.com/btwiuse/wetty/pkg/utils"
 	"github.com/btwiuse/wetty/pkg/wetty"
 	webui "github.com/conntroll/conntroll.github.io"
 	"github.com/gorilla/handlers"
@@ -192,7 +191,7 @@ func wsRelay(ag types.Agent) http.HandlerFunc {
 			return
 		}
 
-		log.Println(pipe(utils.WsConnToReadWriter(wsconn), sessionSendClient))
+		log.Println(pipe(wrap.WsConnToReadWriteCloser(wsconn), sessionSendClient))
 	}
 }
 

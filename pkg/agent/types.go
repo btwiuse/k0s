@@ -12,6 +12,8 @@ type Config interface {
 	Port() string
 	Addr() string
 	Scheme() string
+	Verbose() bool
+	Insecure() bool
 	Hostname() string
 	NewAgentRequestBody() []byte
 	NewSessionRequestBody() []byte

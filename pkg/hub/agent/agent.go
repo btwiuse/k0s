@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/btwiuse/conntroll/pkg/api"
-	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
+	"github.com/btwiuse/conntroll/pkg/api/rpcimpl"
 	"github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/hub/session"
 	"github.com/btwiuse/conntroll/pkg/uuid"

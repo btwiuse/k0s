@@ -50,10 +50,10 @@ func Parse(args []string) hub.Config {
 		pass      string
 	)
 
-	fset.StringVar(&port, "l", ":8000", "hub listening port")
+	fset.StringVar(&port, "port", ":8000", "hub listening port")
 	fset.StringVar(&cert, "cert", "", "path to tls cert file")
 	fset.StringVar(&key, "key", "", "path to tls key file")
-	fset.StringVar(&basicauth, "basicauth", "", "protect api with basicauth, value should be supplied in user:pass form. Currently only one user:pass pair is supported")
+	fset.StringVar(&basicauth, "auth", "", "protect api with basicauth, value should be supplied in user:pass form. Currently only one user:pass pair is supported")
 	err := fset.Parse(args)
 	if err != nil {
 		log.Println(err)

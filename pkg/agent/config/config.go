@@ -17,6 +17,8 @@ import (
 	"github.com/btwiuse/conntroll/pkg/uuid"
 )
 
+const DEFAULT_HUB_ADDRESS = "https://conntroll.libredot.com"
+
 type arrayFlags []string
 
 func (i *arrayFlags) String() string {
@@ -37,6 +39,16 @@ type config struct {
 	name string
 	tags []string
 	*url.URL
+	verb  bool
+	insec bool
+}
+
+func (c *config) Verbose() bool {
+	return c.verb
+}
+
+func (c *config) Insecure() bool {
+	return c.insec
 }
 
 func (c *config) ID() string {
@@ -91,8 +103,8 @@ func (c *config) NewSessionRequestBody() []byte {
 
 func Parse(args []string) agent.Config {
 	var (
-		fset = flag.NewFlagSet("agent", flag.ExitOnError)
-		id   string
+		fset        = flag.NewFlagSet("agent", flag.ExitOnError)
+		id   string = uuid.New()
 
 		pwd, _      = os.Getwd()
 		_user, _    = user.Current()
@@ -101,23 +113,31 @@ func Parse(args []string) agent.Config {
 		goos        = runtime.GOOS
 		goarch      = runtime.GOARCH
 
-		hubapi string
-		tags   arrayFlags
-		bahash string
+		hubapi   string = DEFAULT_HUB_ADDRESS
+		tags     arrayFlags
+		bahash   string
+		verbose  bool
+		insecure bool
 
 		query url.Values = make(map[string][]string)
 		nam              = name.New()
 		dist             = distro.Vendor()
 	)
 
-	fset.StringVar(&id, "id", uuid.New(), "agent id, for debugging purpose only")
-	fset.Var(&tags, "tags", "agent tags")
-	fset.StringVar(&hubapi, "hub", "https://libredot.com", "hub api")
-	fset.StringVar(&bahash, "basicauth", "", "protect api with basicauth, value should be supplied in user:pass form. (Only hash of user:pass will be sent. hub will use the hash value to authorize access to the agent)")
+	// fset.StringVar(&id, "id", uuid.New(), "Agent ID, for debugging purpose only")
+	fset.Var(&tags, "tags", "Agent tags. ")                             // Should be comma separated values like foo,bar
+	fset.StringVar(&hubapi, "hub", DEFAULT_HUB_ADDRESS, "Hub address.") //  The 1st positional argument is used if you leave the -hub part.
+	fset.BoolVar(&verbose, "verbose", false, "Verbose log.")            //  The 1st positional argument is used if you leave the -hub part.
+	fset.BoolVar(&insecure, "insecure", false, "Allow insecure server connections when using SSL")
+	fset.StringVar(&bahash, "auth", "conn:troll", "Set user:pass for shell/fs access. Use `-auth off` to disable auth") // "Protect shell and filesystem access using basicauth. Value should be supplied in user:pass form. (Only hash of user:pass will be sent. hub will use the hash value to authorize access to the agent)"
 
 	err := fset.Parse(args)
 	if err != nil {
 		log.Println(err)
+	}
+
+	if hubapi == DEFAULT_HUB_ADDRESS && len(fset.Args()) != 0 {
+		hubapi = fset.Args()[0]
 	}
 
 	if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
@@ -141,16 +161,20 @@ func Parse(args []string) agent.Config {
 		query.Set("distro", dist)
 	}
 
-	if bahash != "" {
+	if strings.Contains(bahash, ":") {
 		bahash = fmt.Sprintf("%x", sha256.Sum256([]byte(bahash)))
+	} else {
+		bahash = ""
 	}
 	query.Set("bahash", bahash)
 
 	u.RawQuery = query.Encode()
 
 	return &config{
-		URL:  u,
-		id:   id,
-		name: nam,
+		URL:   u,
+		id:    id,
+		name:  nam,
+		verb:  verbose,
+		insec: insecure,
 	}
 }

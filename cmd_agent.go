@@ -16,6 +16,6 @@ func agentCmd(args []string) {
 
 	err := ag.Wait()
 	if err != nil {
-		log.Println()
+		log.Println(err)
 	}
 }

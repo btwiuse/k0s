@@ -11,7 +11,7 @@ import (
 
 	types "github.com/btwiuse/conntroll/pkg/agent"
 	"github.com/btwiuse/conntroll/pkg/agent/tty"
-	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
+	"github.com/btwiuse/conntroll/pkg/api/rpcimpl"
 
 	// "github.com/btwiuse/conntroll/pkg/uuid"
 	"golang.org/x/sync/errgroup"
@@ -34,7 +34,9 @@ func NewAgent(c types.Config) types.Agent {
 	eg, _ := errgroup.WithContext(context.Background())
 	id := c.ID()
 	name := c.Name()
-	log.Println("new agent", id, name)
+	if c.Verbose() {
+		log.Println("new agent", id, name)
+	}
 	shell := "bash"
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
@@ -92,7 +94,7 @@ func (ag *agent) Dial() (conn net.Conn, err error) {
 		return conn, nil
 	case "https":
 		conn, err = tls.Dial("tcp", c.Addr(), &tls.Config{
-			InsecureSkipVerify: true,
+			InsecureSkipVerify: c.Insecure(),
 		})
 		if err != nil {
 			return nil, err
