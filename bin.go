@@ -3,11 +3,12 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"path/filepath"
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -43,22 +44,31 @@ func (c Combo) Env() []string {
 }
 
 func main() {
+	var (
+		stripFlag bool
+		upxFlag   bool
+	)
+
+	flag.BoolVar(&stripFlag, "strip", false, "strip binary")
+	flag.BoolVar(&upxFlag, "upx", false, "compress binary with upx")
+	flag.Parse()
+
 	for _, c := range Combos {
 		var (
 			build = exec.Command(
-				"go", "build", 
-				"-trimpath", 
-				"-v", 
-				"-o", filepath.Join(Path, c.ReleaseName()), 
+				"go", "build",
+				"-trimpath",
+				"-v",
+				"-o", filepath.Join(Path, c.ReleaseName()),
 				".",
 			)
 			strip = exec.Command(
-				"strip", 
-				filepath.Join(Path, c.ReleaseName()), 
+				"strip",
+				filepath.Join(Path, c.ReleaseName()),
 			)
 			upx = exec.Command(
-				"upx", 
-				filepath.Join(Path, c.ReleaseName()), 
+				"upx",
+				filepath.Join(Path, c.ReleaseName()),
 			)
 		)
 
@@ -66,24 +76,23 @@ func main() {
 		build.Stdout = os.Stdout
 		build.Stderr = os.Stderr
 		log.Println(c.Env(), build)
-		
+
 		if err := build.Run(); err != nil {
 			log.Fatalln(err)
 		}
 
-		if c.OS == "linux" {
+		if stripFlag && c.OS == "linux" {
 			if err := strip.Run(); err != nil {
 				log.Fatalln(err)
 			}
 		}
 
-		// upx.Env = append(os.Environ(), c.Env()...)
-		upx.Stdout = os.Stdout
-		upx.Stderr = os.Stderr
-		// log.Println(c.Env(), upx)
-
-		if err := upx.Run(); err != nil {
-			log.Fatalln(err)
+		if upxFlag {
+			upx.Stdout = os.Stdout
+			upx.Stderr = os.Stderr
+			if err := upx.Run(); err != nil {
+				log.Fatalln(err)
+			}
 		}
 	}
 }
