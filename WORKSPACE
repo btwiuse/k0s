@@ -19,8 +19,8 @@ go_register_toolchains(nogo = "@//:nogo")  # nogo is in the top-level BUILD file
 git_repository(
     name = "bazel_gazelle",
     # commit = "8c270274e8b64ed9c38e3b8025e7760ded83ebcf",
-    # tag = "v0.20.0",
-    branch = "master",
+    tag = "v0.21.1",
+    # branch = "master",
     remote = "https://github.com/bazelbuild/bazel-gazelle.git",
 )
 
