@@ -1,6 +1,6 @@
 module github.com/btwiuse/conntroll
 
-go 1.13
+go 1.14
 
 require (
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0

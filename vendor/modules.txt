@@ -1,40 +1,52 @@
 # github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
+## explicit
 github.com/btwiuse/gods/maps/linkedhashmap
 # github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
+## explicit
 github.com/btwiuse/pretty
 # github.com/btwiuse/wetty v0.0.24
+## explicit
 github.com/btwiuse/wetty/pkg/assets
 github.com/btwiuse/wetty/pkg/localcmd
 github.com/btwiuse/wetty/pkg/msg
 github.com/btwiuse/wetty/pkg/utils
 github.com/btwiuse/wetty/pkg/wetty
 # github.com/emirpasic/gods v1.12.0
+## explicit
 github.com/emirpasic/gods/containers
 github.com/emirpasic/gods/lists
 github.com/emirpasic/gods/lists/doublylinkedlist
 github.com/emirpasic/gods/maps
 github.com/emirpasic/gods/utils
 # github.com/ghodss/yaml v1.0.0
+## explicit
 github.com/ghodss/yaml
 # github.com/golang/protobuf v1.3.2
+## explicit
 github.com/golang/protobuf/proto
 github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/google/uuid v1.1.1
+## explicit
 github.com/google/uuid
 # github.com/gorilla/handlers v1.4.0
+## explicit
 github.com/gorilla/handlers
 # github.com/gorilla/mux v1.7.3
+## explicit
 github.com/gorilla/mux
 # github.com/gorilla/websocket v1.4.0
 github.com/gorilla/websocket
 # github.com/kr/pty v1.1.4
+## explicit
 github.com/kr/pty
 # github.com/rs/cors v1.7.0
+## explicit
 github.com/rs/cors
 # golang.org/x/net v0.0.0-20190909003024-a7b16738d86b
+## explicit
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
@@ -42,6 +54,7 @@ golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
 # golang.org/x/sync v0.0.0-20190423024810-112230192c58
+## explicit
 golang.org/x/sync/errgroup
 # golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a
 golang.org/x/sys/unix
@@ -53,6 +66,7 @@ golang.org/x/text/unicode/norm
 # google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.26.0
+## explicit
 google.golang.org/grpc
 google.golang.org/grpc/attributes
 google.golang.org/grpc/backoff
@@ -90,6 +104,8 @@ google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
 # gopkg.in/yaml.v2 v2.2.7
+## explicit
 gopkg.in/yaml.v2
 # modernc.org/httpfs v1.0.0
+## explicit
 modernc.org/httpfs
