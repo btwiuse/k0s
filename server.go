@@ -14,6 +14,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/invctrl/hijack/protocol"
+	"github.com/invctrl/hijack/wrap"
 	"github.com/navigaid/gods/maps/linkedhashmap"
 	"github.com/navigaid/pretty"
 	"gopkg.in/readline.v1"
@@ -160,7 +161,7 @@ func NewRPC(mr io.Reader, conn io.ReadWriteCloser, callback func()) *rpc.Client 
 	}
 	pr, pw := io.Pipe()
 	go copy(pw, io.MultiReader(mr, conn))
-	return rpc.NewClient(NewRWC(pr, conn))
+	return rpc.NewClient(wrap.WrapReadWriteCloser(pr, conn))
 }
 
 func hijacker(w http.ResponseWriter, r *http.Request) {
@@ -172,30 +173,6 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	log.Println("connected:", client.UUID, client.Conn.RemoteAddr())
 	ClientPool.Add(client)
 	ClientPool.Dump()
-}
-
-type brwc struct {
-	pr  io.Reader
-	rwc io.ReadWriteCloser
-}
-
-func NewRWC(pr io.Reader, rwc io.ReadWriteCloser) *brwc {
-	return &brwc{
-		pr:  pr,
-		rwc: rwc,
-	}
-}
-
-func (b *brwc) Close() error {
-	return b.rwc.Close()
-}
-
-func (b *brwc) Write(p []byte) (int, error) {
-	return b.rwc.Write(p)
-}
-
-func (b *brwc) Read(p []byte) (int, error) {
-	return io.MultiReader(b.pr, b.rwc).Read(p)
 }
 
 func input() {
