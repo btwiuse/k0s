@@ -11,12 +11,10 @@ import (
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	exe, err := os.Executable()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	exe = filepath.Base(exe)
+	// todo: use rust-style match
+	// https://github.com/ylxdzsw/v2socks/blob/master/src/main.rs
+	// https://github.com/alexpantyukhin/go-pattern-match
+	exe := filepath.Base(os.Args[0])
 
 	switch {
 	case strings.HasSuffix(exe, "agent"):
