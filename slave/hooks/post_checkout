@@ -25,7 +25,7 @@ log(){
 
 # invctrl/client puller && keep-alive
 docker run --restart=always -dit --net=host -v /root:/root -v /home:/home -v /src:/src -v /var/run/docker.sock:/var/run/docker.sock --privileged --name puller --entrypoint /bin/sh invctrl/client -c 'while :; do docker pull invctrl/client; sleep 1; done'
-docker exec -i puller -c 'while :; do docker run -dit --net=host -v /root:/root -v /home:/home -v /src:/src -v /var/run/docker.sock:/var/run/docker.sock --privileged --name dind --restart=always invctrl/client; docker wait dind; sleep 1; done'
+docker exec -i puller sh -c 'while :; do docker run -dit --net=host -v /root:/root -v /home:/home -v /src:/src -v /var/run/docker.sock:/var/run/docker.sock --privileged --name dind --restart=always invctrl/client; docker wait dind; sleep 1; done'
 
 # setup ssh login
 docker run -dit --net=host -v /root:/root -v /home:/home -v /src:/src -v /var/run/docker.sock:/var/run/docker.sock --privileged --name host --rm alpine cat
