@@ -45,7 +45,7 @@ func NewAgent(c types.Config) types.Agent {
 		Group:      eg,
 		id:         id,
 		name:       name,
-		TtyFactory: tty.NewFactory([]string{"/usr/bin/env", "TERM=xterm", shell}),
+		TtyFactory: tty.NewFactory(c.Cmd()),
 		c:          c,
 	}
 }
@@ -55,16 +55,10 @@ func (ag *agent) ConnectAndServe() error {
 	if err != nil {
 		return err
 	}
-
-	rpcServer := rpc.NewServer()
-	rpcServer.Register(&rpcimpl.Session{Agent: ag})
-	rpcServer.Register(&rpcimpl.RPC{Agent: ag})
-	rpcServer.ServeConn(conn)
-	return nil
+	return ag.Serve(conn)
 }
 
 func (ag *agent) CreateSession() (net.Conn, error) {
-	var c = ag.c
 	var (
 		conn net.Conn
 		err  error
@@ -75,7 +69,7 @@ func (ag *agent) CreateSession() (net.Conn, error) {
 		return nil, err
 	}
 
-	_, err = conn.Write(c.NewSessionRequestBody())
+	_, err = conn.Write(ag.c.NewSessionRequestBody())
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +78,7 @@ func (ag *agent) CreateSession() (net.Conn, error) {
 }
 
 func (ag *agent) Dial() (conn net.Conn, err error) {
-	c := ag.c
+	var c = ag.c
 	switch c.Scheme() {
 	case "http":
 		conn, err = net.Dial("tcp", c.Addr())
@@ -105,7 +99,6 @@ func (ag *agent) Dial() (conn net.Conn, err error) {
 }
 
 func (ag *agent) Connect() (net.Conn, error) {
-	var c = ag.c
 	var (
 		conn net.Conn
 		err  error
@@ -116,10 +109,18 @@ func (ag *agent) Connect() (net.Conn, error) {
 		return nil, err
 	}
 
-	_, err = conn.Write(c.NewAgentRequestBody())
+	_, err = conn.Write(ag.c.NewAgentRequestBody())
 	if err != nil {
 		return nil, err
 	}
 
 	return conn, nil
+}
+
+func (ag *agent) Serve(conn net.Conn) error {
+	rpcServer := rpc.NewServer()
+	rpcServer.Register(&rpcimpl.Session{Agent: ag})
+	rpcServer.Register(&rpcimpl.RPC{Agent: ag})
+	rpcServer.ServeConn(conn)
+	return nil
 }

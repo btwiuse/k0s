@@ -326,6 +326,7 @@ func wsRelay(ag types.Agent) http.HandlerFunc {
 			return
 		}
 
+		// common error: ws transport is closing
 		log.Println(pipe(wrap.WsConnToReadWriteCloser(wsconn), sessionSendClient))
 	}
 }

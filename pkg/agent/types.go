@@ -7,6 +7,7 @@ import (
 
 type Config interface {
 	ID() string
+	Cmd() []string
 	Name() string
 	Tags() []string
 	Port() string
@@ -22,10 +23,11 @@ type Config interface {
 type Agent interface {
 	TtyFactory
 
+	// create a session capable of either shell or file system access
 	CreateSession() (net.Conn, error)
 	ConnectAndServe() error
-	Connect() (net.Conn, error)
-	Dial() (net.Conn, error)
+	// Connect() (net.Conn, error)
+	// Dial() (net.Conn, error)
 
 	Go(func() error)
 	Wait() error

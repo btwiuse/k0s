@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"os/exec"
 	"os/user"
 	"runtime"
 	"strings"
@@ -17,7 +18,7 @@ import (
 	"github.com/btwiuse/conntroll/pkg/uuid"
 )
 
-const DEFAULT_HUB_ADDRESS = "https://conntroll.libredot.com"
+const DEFAULT_HUB_ADDRESS = "https://hub.libredot.com"
 
 type arrayFlags []string
 
@@ -41,6 +42,7 @@ type config struct {
 	*url.URL
 	verb  bool
 	insec bool
+	cmd   string
 }
 
 func (c *config) Verbose() bool {
@@ -49,6 +51,18 @@ func (c *config) Verbose() bool {
 
 func (c *config) Insecure() bool {
 	return c.insec
+}
+
+func (c *config) Cmd() []string {
+	shell := "bash"
+	if _, err := exec.LookPath(shell); err != nil {
+		shell = "sh"
+	}
+	args := []string{"/usr/bin/env", "TERM=xterm", shell}
+	if c.cmd == "" {
+		return args
+	}
+	return append(args, "-c", c.cmd)
 }
 
 func (c *config) ID() string {
@@ -93,6 +107,10 @@ func (c *config) Hostname() string {
 	return c.URL.Hostname()
 }
 
+func (c *config) NewYRPCAgentRequestBody() []byte {
+	return []byte(fmt.Sprintf("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n", "/api/yrpc", c.Hostname()))
+}
+
 func (c *config) NewAgentRequestBody() []byte {
 	return []byte(fmt.Sprintf("GET %s?%s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n", "/api/rpc", c.RawQuery, c.Hostname()))
 }
@@ -105,6 +123,7 @@ func Parse(args []string) agent.Config {
 	var (
 		fset        = flag.NewFlagSet("agent", flag.ExitOnError)
 		id   string = uuid.New()
+		cmd  string
 
 		pwd, _      = os.Getwd()
 		_user, _    = user.Current()
@@ -125,11 +144,12 @@ func Parse(args []string) agent.Config {
 	)
 
 	// fset.StringVar(&id, "id", uuid.New(), "Agent ID, for debugging purpose only")
+	fset.StringVar(&cmd, "c", "", "Command to run.")
 	fset.Var(&tags, "tags", "Agent tags. ")                             // Should be comma separated values like foo,bar
 	fset.StringVar(&hubapi, "hub", DEFAULT_HUB_ADDRESS, "Hub address.") //  The 1st positional argument is used if you leave the -hub part.
 	fset.BoolVar(&verbose, "verbose", false, "Verbose log.")            //  The 1st positional argument is used if you leave the -hub part.
 	fset.BoolVar(&insecure, "insecure", false, "Allow insecure server connections when using SSL")
-	fset.StringVar(&bahash, "auth", "conn:troll", "Set user:pass for shell/fs access. Use `-auth off` to disable auth") // "Protect shell and filesystem access using basicauth. Value should be supplied in user:pass form. (Only hash of user:pass will be sent. hub will use the hash value to authorize access to the agent)"
+	fset.StringVar(&bahash, "auth", "conn:troll", "Set user:pass for shell/fs access. Use `-auth offff` to disable auth") // "Protect shell and filesystem access using basicauth. Value should be supplied in user:pass form. (Only hash of user:pass will be sent. hub will use the hash value to authorize access to the agent)"
 
 	err := fset.Parse(args)
 	if err != nil {
@@ -170,9 +190,20 @@ func Parse(args []string) agent.Config {
 
 	u.RawQuery = query.Encode()
 
+	/* TODO: erase -auth user:pass sensitive info
+	defer func(){
+		if bahash != "" {
+			log.Println(os.Args)
+			os.Args[0] = "wtf"
+			log.Println(os.Args)
+		}
+	}()
+	*/
+
 	return &config{
 		URL:   u,
 		id:    id,
+		cmd:   cmd,
 		name:  nam,
 		verb:  verbose,
 		insec: insecure,
