@@ -1,15 +1,21 @@
 package main
 
 import (
-	"github.com/btwiuse/jiri"
-	"github.com/btwiuse/jiri/cmdline"
+	"log"
+
+	"github.com/btwiuse/conntroll/pkg/agent/agent"
+	"github.com/btwiuse/conntroll/pkg/agent/config"
 )
 
-var cmdAgent = &cmdline.Command{
-	Runner: jiri.RunnerFunc(runAgent),
-	Name:   "agent",
-}
+func agentCmd(args []string) {
+	c := config.Parse(args)
 
-func runAgent(jirix *jiri.X, args []string) error {
-	return nil
+	ag := agent.NewAgent(c)
+
+	ag.Go(ag.ConnectAndServe)
+
+	err := ag.Wait()
+	if err != nil {
+		log.Println()
+	}
 }

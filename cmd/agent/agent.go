@@ -17,5 +17,8 @@ func main() {
 
 	ag.Go(ag.ConnectAndServe)
 
-	log.Println(ag.Wait())
+	err := ag.Wait()
+	if err != nil {
+		log.Println()
+	}
 }

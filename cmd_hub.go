@@ -1,27 +1,16 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
-	"github.com/btwiuse/jiri"
-	"github.com/btwiuse/jiri/cmdline"
+	"github.com/btwiuse/conntroll/pkg/hub/config"
+	"github.com/btwiuse/conntroll/pkg/hub/hub"
 )
 
-var cmdHub = &cmdline.Command{
-	Runner: jiri.RunnerFunc(runHub),
-	Name:   "hub",
-}
+func hubCmd(args []string) {
+	c := config.Parse(args)
 
-var hubFlags struct {
-	portFlag string
-}
+	log.Println("server is listening on", c.Port())
 
-func init() {
-	flags := &cmdHub.Flags
-	flags.StringVar(&hubFlags.portFlag, "port", ":8000", "hub listening port")
-}
-
-func runHub(jirix *jiri.X, args []string) error {
-	fmt.Println(args)
-	return nil
+	log.Fatalln(hub.NewHub(c).ListenAndServe())
 }

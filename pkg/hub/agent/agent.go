@@ -2,18 +2,18 @@ package agent
 
 import (
 	"context"
-	"sync"
 	"io"
 	"log"
 	"net"
 	"net/rpc"
+	"sync"
 	"time"
 
-	"github.com/btwiuse/conntroll/pkg/uuid"
 	"github.com/btwiuse/conntroll/pkg/api"
 	rpcimpl "github.com/btwiuse/conntroll/pkg/api/rpc/impl"
 	"github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/hub/session"
+	"github.com/btwiuse/conntroll/pkg/uuid"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"google.golang.org/grpc"
 )
@@ -28,14 +28,14 @@ func NewAgent(conn net.Conn, opts ...AgentOpt) hub.Agent {
 		SessionManager: NewSessionManager(),
 		RPCManager:     NewRPCManager(),
 		created:        time.Now(),
-		done:		make(chan struct{}),
-		once:		&sync.Once{},
+		done:           make(chan struct{}),
+		once:           &sync.Once{},
 	}
 	for _, opt := range opts {
 		opt(ag)
 	}
 	ag.AddRPCConn(conn)
-	for i := 0; i < 3; i ++ {
+	for i := 0; i < 3; i++ {
 		ag.NewRPC()
 	}
 	return ag
@@ -129,7 +129,7 @@ func (ag *agent) NewSession() hub.Session {
 }
 
 func (ag *agent) Close() {
-	ag.once.Do(func(){
+	ag.once.Do(func() {
 		close(ag.done)
 	})
 }
@@ -142,8 +142,8 @@ type agent struct {
 	hub.SessionManager `json:"-"`
 	RPCManager         hub.RPCManager   `json:"-"`
 	sch                chan hub.Session `json:"-"`
-	done chan struct{}
-	once *sync.Once
+	done               chan struct{}
+	once               *sync.Once
 
 	created time.Time
 
