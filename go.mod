@@ -12,7 +12,6 @@ require (
 	github.com/btwiuse/wetty v0.0.24
 	github.com/docker/docker v1.13.1
 	github.com/emirpasic/gods v1.12.0 // indirect
-	github.com/fatih/color v1.8.0
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/golang/protobuf v1.3.2
 	github.com/google/uuid v1.1.1
@@ -20,7 +19,6 @@ require (
 	github.com/gorilla/mux v1.7.3
 	github.com/gorilla/websocket v1.4.1
 	github.com/kr/pty v1.1.8
-	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mdp/qrterminal v1.0.1 // indirect
 	github.com/miekg/dns v1.1.27 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
