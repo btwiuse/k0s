@@ -12,7 +12,7 @@ github.com/btwiuse/wetty/pkg/assets
 github.com/btwiuse/wetty/pkg/localcmd
 github.com/btwiuse/wetty/pkg/msg
 github.com/btwiuse/wetty/pkg/wetty
-# github.com/conntroll/conntroll.github.io v0.0.0-19700101000000-2c7e9c8c9e3c
+# github.com/conntroll/conntroll.github.io v0.0.0-19700101000000-a1a9eccaf77a
 ## explicit
 github.com/conntroll/conntroll.github.io
 # github.com/creack/pty v1.1.7

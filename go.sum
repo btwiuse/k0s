@@ -19,8 +19,8 @@ github.com/btwiuse/wetty v0.0.24/go.mod h1:7h4o2m8AR0GrOegVOnDxc//8cLO2f0p4UrYfF
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash/v2 v2.1.0/go.mod h1:dgIUBU3pDso/gPgZ1osOZ0iQf77oPR28Tjxl5dIMyVM=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/conntroll/conntroll.github.io v0.0.0-19700101000000-2c7e9c8c9e3c h1:Esbl+OepgbFPzG0/pfkCHSwbTsjRo3N4lyJLBL+QY/c=
-github.com/conntroll/conntroll.github.io v0.0.0-19700101000000-2c7e9c8c9e3c/go.mod h1:xi5DLlKJnzEcrD+ii2mmeMnVP+3CMlysGfWypXrUqV4=
+github.com/conntroll/conntroll.github.io v0.0.0-19700101000000-a1a9eccaf77a h1:mhlm9zWMM3dkcYy5vw0bEkYPrb5Tm+sTntl6AI+bPhw=
+github.com/conntroll/conntroll.github.io v0.0.0-19700101000000-a1a9eccaf77a/go.mod h1:xi5DLlKJnzEcrD+ii2mmeMnVP+3CMlysGfWypXrUqV4=
 github.com/creack/pty v1.1.7 h1:6pwm8kMQKCmgUg0ZHTm5+/YvRK0s3THD/28+T6/kk4A=
 github.com/creack/pty v1.1.7/go.mod h1:lj5s0c3V2DBrqTV7llrYr5NG6My20zk30Fl46Y7DoTY=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
