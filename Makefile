@@ -32,7 +32,7 @@ clean:
 	rm -r bin
 
 up:
-	cd .docker-compose && ./up
+	.docker-compose/up
 
 buildkite:
 	cd .buildkite && ./gen | tee /dev/stderr > pipeline.yml

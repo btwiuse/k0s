@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 
-hub(){
+get_hub(){
   echo '{"targets": ["hub.k0s.io"], "labels": {"job": "__hub__"}}'
-  # echo '{"targets": ["k0s.io:8000"], "labels": {"job": "__hub__"}}'
 }
 
-agents(){
+get_agents(){
   curl -s https://hub.k0s.io/api/agents/list \
   | jq -c '.[]|{"targets": ["hub.k0s.io"], "labels": {"job": "\(.name)", "__metrics_path__": "/api/agent/\(.id)/metrics"}}'
 }
 
-gen(){
-  (hub && agents) | jq -s . >/tmp/agents.json;
-  # test -f agents.json || cp /tmp/agents.json . && sudo chmod 777 agents.json
-  if ! diff agents.json /tmp/agents.json &>/dev/null; then
-    cp -v /tmp/agents.json .
-    cat agents.json | jq -c .[]
+update_targets(){
+  src=/tmp/${targets_file}
+  dst=./${targets_file}
+  (get_hub && get_agents) | jq -s . >$src;
+  if ! diff ${src} ${dst} &>/dev/null; then
+    cp -v ${src} ${dst}
+    cat ${dst} | jq -c .[]
   fi
 }
 
-genloop(){
-  while :; do gen; sleep 2; done
+update_targets_loop(){
+  while :; do update_targets; sleep 2; done
 }
 
 assert_exists(){
@@ -36,15 +36,17 @@ assert_exists(){
 
 init(){
   assert_exists curl jq docker-compose
-  touch agents.json
+  touch ${targets_file}
   mkdir -p data grafana prometheus
-  chmod 777 agents.json data grafana prometheus
+  chmod 777 ${targets_file} data grafana prometheus
 }
 
 main(){
+  targets_file="prometheus_scrape_targets.json"
+  cd $(dirname "$0")
   init
-  genloop &
+  update_targets_loop &
   docker-compose up
 }
 
-main
+main "$@"

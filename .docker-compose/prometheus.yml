@@ -2,8 +2,8 @@ global:
   scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
 
 scrape_configs:
-- job_name: 'agents'
+- job_name: 'hub_and_agents'
   scheme: https
   file_sd_configs:
   - files:
-    - 'agents.json'
+    - 'prometheus_scrape_targets.json'

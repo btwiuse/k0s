@@ -2,3 +2,4 @@ data
 grafana
 prometheus
 agents.json
+prometheus_scrape_targets.json
