@@ -19,7 +19,7 @@ install:
 	ln -f /usr/bin/$(BIN) /usr/bin/agent
 	@# ln -f /usr/bin/$(BIN) /usr/bin/hub
 	@# ln -f /usr/bin/$(BIN) /usr/bin/client
-	install -Dvm644 agent@.service /usr/lib/systemd/system/
+	install -Dvm644 agent@.service /usr/lib/systemd/system/agent@.service
 	@ echo "Now manually run:"
 	@ echo 'sudo systemctl daemon-reload'
 	@ echo 'sudo systemctl restart agent@$$USER'
