@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/rpc"
 
-	"github.com/btwiuse/invctrl/client/config"
-	"github.com/btwiuse/invctrl/client/dial"
+	"github.com/btwiuse/invctrl/slave/config"
+	"github.com/btwiuse/invctrl/slave/dial"
 	"github.com/btwiuse/invctrl/protocol"
 )
 
