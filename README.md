@@ -1,7 +1,7 @@
 GOAL:
 - [DONE] control http client from server 
 - [DONE] switch between connected clients
-- [TODO] stream client command output    
+- [DONE] stream client command output    
 
 Requirements:
 - [DONE] HTTP -> TCP                     

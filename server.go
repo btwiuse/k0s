@@ -11,11 +11,20 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
+	"modernc.org/httpfs"
+	//"github.com/davecgh/go-spew/spew"
+	"github.com/fatih/pool"
 	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
+	"github.com/invctrl/hijack/header"
 	"github.com/invctrl/hijack/protocol"
 	"github.com/invctrl/hijack/wrap"
 	"github.com/navigaid/gods/maps/linkedhashmap"
+	"github.com/navigaid/gotty/assets"
+	"github.com/navigaid/gotty/utils"
+	"github.com/navigaid/gotty/wetty"
 	"github.com/navigaid/pretty"
 	"gopkg.in/readline.v1"
 )
@@ -26,11 +35,15 @@ type Client struct {
 	RemoteAddr net.Addr
 	RPC        *rpc.Client
 	Info       string
+	Conns      []net.Conn
+	WsConns    []*websocket.Conn
+	Pool       pool.Pool
 }
 
 type Pool struct {
 	Clients *linkedhashmap.Map
 	Current *Client
+	Latest  *Client
 }
 
 func NewPool() *Pool {
@@ -55,6 +68,7 @@ func (p *Pool) Get(uuid string) *Client {
 
 func (p *Pool) Add(client *Client) {
 	p.Clients.Put(client.UUID.String(), client)
+	p.Latest = client
 }
 
 func (p *Pool) Dump() {
@@ -83,28 +97,6 @@ func (p *Pool) Has(uuid string) bool {
 	return found
 }
 
-func lojacker(w http.ResponseWriter, r *http.Request) {
-	// w.Write([]byte(http.StatusText(http.StatusOK)))
-	isCurrent := func(uuid string) string {
-		if (ClientPool.Current != nil) && (ClientPool.Current.UUID.String() == uuid) {
-			return "*"
-		}
-		return " "
-	}
-	w.Header().Add("Content-Type", "text/plain; charset=UTF-8")
-	for i, v := range ClientPool.Clients.Values() {
-		client := v.(*Client)
-		uuid := ClientPool.Clients.Keys()[i].(string)
-		fmt.Fprintln(w,
-			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
-			isCurrent(uuid),
-			uuid,
-			"ssh ubuntu@"+strings.Split(client.RemoteAddr.String(), ":")[0],
-			client.Info,
-		)
-	}
-}
-
 func NewClient(w http.ResponseWriter) (*Client, error) {
 	client := new(Client) // using named return causes panic, why?
 	client.UUID = uuid.New()
@@ -117,33 +109,81 @@ func NewClient(w http.ResponseWriter) (*Client, error) {
 	client.RemoteAddr = conn.RemoteAddr()
 	client.LocalAddr = conn.LocalAddr()
 
-	var header interface{}
-	cheader := &clientHeader{}
+	sheader := &header.Header{}
+	cheader := &header.ClientHeader{}
 	// here we don't cate about decoder.Buffered
 	// we can pretty much assume it is empty cuz after the client send it's header
 	// to server, it will wait server's confirmation, during this period nothing will
 	// be sent from the client. so once the server receives the complete header, nothing
 	// is left in the buffer
 	// similarly hibuf is useless after this...
-	if err := json.NewDecoder(conn).Decode(&header); err != nil {
-		/*
-			conn.Write([]byte("NO"))
-			return nil, err
-		*/
+	if err := json.NewDecoder(conn).Decode(&sheader); err != nil {
 		cheader.Status = "NO"
 		cheader.Err = err.Error()
 		conn.Write([]byte(pretty.JsonString(cheader)))
 		return nil, err
 	}
+
 	cheader.Status = "OK"
+
+	if sheader.Append {
+		conn.Write([]byte(pretty.JsonString(cheader)))
+		//client := ClientPool.Current
+		client := ClientPool.Get(sheader.Id)
+		client.Conns = append(client.Conns, conn)
+		// io.Copy(os.Stderr, conn)
+		log.Println(client.UUID, "conns:", client.Conns)
+		return nil, fmt.Errorf("append to %s", sheader.Id)
+	}
+
 	cheader.Id = client.UUID.String()
 	conn.Write([]byte(pretty.JsonString(cheader)))
-	// conn.Write([]byte("OK"))
-	client.Info = pretty.JSONString(header)
+	client.Info = pretty.JSONString(sheader)
 
 	client.RPC = NewRPCClient(conn, onclose(client))
 
+	log.Println("connected:", client.UUID, client.RemoteAddr)
+
+	ClientPool.Add(client)
+	log.Println("has?", client.UUID.String(), ClientPool.Has(client.UUID.String()))
+	ClientPool.Get(client.UUID.String())
+	factory := func() (net.Conn, error) {
+		// client := ClientPool.Current
+		req := protocol.ConnRequest{
+			Id: client.UUID.String(),
+		}
+		resp := new(protocol.ConnResponse)
+		done := make(chan *rpc.Call, 1)
+		client.RPC.Go("Conn.New", req, resp, done)
+		<-done
+		// io.Copy(os.Stderr, client.Conns[len(client.Conns)-1])
+		//time.Sleep(time.Second)
+		println(len(client.Conns))
+		return client.Conns[len(client.Conns)-1], nil
+	}
+	client.Pool, err = pool.NewChannelPool(5, 30, factory)
+	if err != nil {
+		return nil, err
+	}
+
+	ClientPool.Dump()
 	return client, nil
+}
+
+func wsfactory(client *Client) (*websocket.Conn, error) {
+	// client := ClientPool.Current
+	req := protocol.WsConnRequest{
+		Id: client.UUID.String(),
+	}
+	resp := new(protocol.WsConnResponse)
+	done := make(chan *rpc.Call, 1)
+	client.RPC.Go("WsConn.New", req, resp, done)
+	<-done
+	// io.Copy(os.Stderr, client.Conns[len(client.Conns)-1])
+	println(len(client.WsConns))
+	time.Sleep(time.Second)
+	println(len(client.WsConns))
+	return client.WsConns[len(client.WsConns)-1], nil
 }
 
 func newClientHeader(status string, id string) *clientHeader {
@@ -190,14 +230,11 @@ func NewRPCClient(conn io.ReadWriteCloser, onclose func()) *rpc.Client {
 }
 
 func hijacker(w http.ResponseWriter, r *http.Request) {
-	client, err := NewClient(w)
+	_, err := NewClient(w)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	log.Println("connected:", client.UUID, client.RemoteAddr)
-	ClientPool.Add(client)
-	ClientPool.Dump()
 }
 
 func input() {
@@ -268,7 +305,18 @@ func input() {
 				}
 			}
 
-			go bash(line, ClientPool.Current)
+			if line == "N" {
+				client := ClientPool.Current
+				conn, err := client.Pool.Get()
+				log.Println("[POOL Size]", client.Pool.Len())
+				if err == nil {
+					go io.Copy(os.Stderr, conn)
+				} else {
+					log.Println(err)
+				}
+			} else {
+				go bash(line, ClientPool.Current)
+			}
 
 			promptNum += 1
 		}
@@ -277,22 +325,190 @@ func input() {
 	}
 }
 
-func hilo(hijacker, lojacker func(w http.ResponseWriter, r *http.Request)) func(http.ResponseWriter, *http.Request) {
+func wsr(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.RequestURI)
+	log.Println(r.Header)
+
+	if r.RequestURI == "/ws" {
+		if r.Method != "GET" {
+			http.Error(w, "Method not allowed", 405)
+			return
+		}
+
+		conn, err := wetty.Upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			// closeReason = err.Error()
+			log.Println(err)
+			return
+		}
+		// don't do that!!!
+		// defer conn.Close()
+
+		var this io.ReadWriter = &utils.WsWrapper{conn}
+
+		//connRemote = ;
+		// get client id
+		buf := make([]byte, 1024)
+		n, err := this.Read(buf)
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println("read", n, "bytes", "message is", string(buf), "hahahahaha")
+
+		uri := string(buf)
+
+		log.Println("getting", uri, "be prepared to die")
+		/*
+			if !ClientPool.Has(uri) {
+				log.Println("requested uri", uri, "doesn't exist")
+				ClientPool.Dump()
+				return
+			}
+			client := ClientPool.Get(uri)
+		*/
+		client := ClientPool.Latest
+		client.WsConns = append(client.WsConns, conn)
+		log.Println("wsconns:", client.WsConns)
+		return
+	}
+
+	uri := strings.Split(strings.TrimPrefix(r.RequestURI, "/ws/"), "/")[0]
+	log.Println("=================wsr", uri)
+	if r.Method != "GET" {
+		http.Error(w, "Method not allowed", 405)
+		return
+	}
+
+	conn, err := wetty.Upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		// closeReason = err.Error()
+		log.Println(err)
+		return
+	}
+	defer conn.Close()
+
+	var this io.ReadWriter = &utils.WsWrapper{conn}
+
+	//connRemote = ;
+	log.Println("getting", uri, "be prepared to die")
+	client := ClientPool.Get(uri)
+	connRemote, err := wsfactory(client)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	// client.WsConns = append(client.WsConns, conn)
+	log.Println(client.UUID, "wsconns:", client.WsConns)
+	var that io.ReadWriter = &utils.WsWrapper{connRemote}
+
+	var errs = make(chan error, 2)
+
+	go func() {
+		errs <- func() error {
+			_, err := io.Copy(that, this)
+			log.Println(err)
+			return err
+		}()
+	}()
+
+	go func() {
+		errs <- func() error {
+			_, err := io.Copy(this, that)
+			log.Println(err)
+			return err
+		}()
+	}()
+
+	log.Println(<-errs)
+
+	return
+}
+
+func ws(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.RequestURI)
+	uri := strings.Split(strings.TrimPrefix(r.RequestURI, "/ws/"), "/")[0]
+
+	if ClientPool.Has(uri) {
+		if !strings.HasSuffix(r.RequestURI, "/ws") {
+			staticFileServer := http.FileServer(httpfs.NewFileSystem(assets.Assets, time.Now()))
+			http.StripPrefix("/ws/"+uri+"/", staticFileServer).ServeHTTP(w, r)
+			return
+		}
+		log.Println("ws=================wsr")
+		wsr(w, r)
+		return
+	}
+	// http.Error(w, http.StatusText(404), 404)
+	// ls(w, r)
+	http.Redirect(w, r, "/", 302)
+}
+
+func ls(w http.ResponseWriter, r *http.Request) {
+	// w.Write([]byte(http.StatusText(http.StatusOK)))
+	isCurrent := func(uuid string) string {
+		if (ClientPool.Current != nil) && (ClientPool.Current.UUID.String() == uuid) {
+			return "*"
+		}
+		return " "
+	}
+
+	w.Header().Add("Content-Type", "text/html; charset=UTF-8")
+	uri := strings.TrimPrefix(r.RequestURI, "/")
+	if ClientPool.Has(uri) {
+		log.Println(uri)
+		client := ClientPool.Get(uri)
+		href := fmt.Sprintf(`<a href="/ws/%s/">%s</a>`, uri, uri)
+		fmt.Fprintln(w, href)
+		fmt.Fprintln(w, "<pre>")
+		fmt.Fprintln(w,
+			fmt.Sprintf("[%s]", "N/A"),
+			isCurrent(uri),
+			uri,
+			"ssh ubuntu@"+strings.Split(client.RemoteAddr.String(), ":")[0],
+			client.Info,
+		)
+		fmt.Fprintln(w, "</pre>")
+		return
+	}
+	for i, v := range ClientPool.Clients.Values() {
+		client := v.(*Client)
+		uuid := ClientPool.Clients.Keys()[i].(string)
+		href := fmt.Sprintf(`<a href="%s">%s</a>`, uuid, uuid)
+		wshref := fmt.Sprintf(`<a href="/ws/%s/">ws</a>`, uuid)
+		// fmt.Fprintln(w, href)
+		fmt.Fprintln(w,
+			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
+			isCurrent(uuid),
+			href,
+			wshref,
+			"ssh ubuntu@"+strings.Split(client.RemoteAddr.String(), ":")[0],
+		)
+		fmt.Fprintln(w, "<pre>")
+		fmt.Fprintln(w,
+			client.Info,
+		)
+		fmt.Fprintln(w, "</pre>")
+	}
+}
+
+func hijack(original http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		pretty.JSON(r.Header)
 		if r.Header.Get(http.CanonicalHeaderKey("Hijack")) == "true" {
-			log.Println("hijack")
 			hijacker(w, r)
 			return
 		}
-		log.Println("lojack")
-		lojacker(w, r)
+		original.ServeHTTP(w, r)
 	}
 }
 
 func main() {
-	http.HandleFunc("/", hilo(hijacker, lojacker))
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", ls)
+	mux.HandleFunc("/ws", wsr)
+	mux.HandleFunc("/ws/", ws)
 	log.Println("listening on http://localhost:8000")
 	go input()
-	log.Fatalln(http.ListenAndServe(":8000", nil))
+	log.Fatalln(http.ListenAndServe(":8000", hijack(mux)))
 }
