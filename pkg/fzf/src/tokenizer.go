@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/junegunn/fzf/src/util"
+	"k0s.io/conntroll/pkg/fzf/util"
 )
 
 const rangeEllipsis = 0

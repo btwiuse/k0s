@@ -9,7 +9,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/junegunn/fzf/src/util"
+	"k0s.io/conntroll/pkg/fzf/util"
 )
 
 // Reader reads from command or standard input

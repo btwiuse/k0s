@@ -9,9 +9,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/junegunn/fzf/src/algo"
-	"github.com/junegunn/fzf/src/tui"
-	"github.com/junegunn/fzf/src/util"
+	"k0s.io/conntroll/pkg/fzf/algo"
+	"k0s.io/conntroll/pkg/fzf/tui"
+	"k0s.io/conntroll/pkg/fzf/util"
 
 	"github.com/mattn/go-shellwords"
 )

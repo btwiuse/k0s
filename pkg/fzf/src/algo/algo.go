@@ -84,7 +84,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/junegunn/fzf/src/util"
+	"k0s.io/conntroll/pkg/fzf/util"
 )
 
 var DEBUG bool
