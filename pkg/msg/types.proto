@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package msg;
 
+option go_package = "github.com/btwiuse/wetty/pkg/msg;msg";
+
 enum Type {
      CLIENT_INPUT   = 0; // Session <- Hub <- Client
      SESSION_OUTPUT = 1; // Session -> Hub -> Client
