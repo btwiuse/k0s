@@ -101,7 +101,13 @@ func (cl *client) Run() error {
 		os.Exit(0)
 	}
 	log.Println("You selected:", fmt.Sprintf("%s://%s/api/agent/%s/", c.GetScheme(), c.GetAddr(), idd))
-	ep := fmt.Sprintf("%s://%s/api/agent/%s/terminal", "ws", c.GetAddr(), idd)
+
+	wss := "wss"
+	if c.GetScheme() == "http" {
+		wss = "ws"
+	}
+
+	ep := fmt.Sprintf("%s://%s/api/agent/%s/terminal", wss, c.GetAddr(), idd)
 	terminal(ep)
 	return nil
 }
