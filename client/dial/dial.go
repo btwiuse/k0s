@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/btwiuse/invctrl/client/config"
 	"github.com/btwiuse/invctrl/header"
-	"github.com/navigaid/pretty"
+	"github.com/btwiuse/pretty"
 )
 
 func run(oneliner string) []byte {

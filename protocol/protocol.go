@@ -14,9 +14,9 @@ import (
 	"os/exec"
 
 	"github.com/gorilla/websocket"
-	"github.com/navigaid/gotty/localcmd"
-	"github.com/navigaid/gotty/utils"
-	"github.com/navigaid/gotty/wetty"
+	"github.com/btwiuse/gotty/localcmd"
+	"github.com/btwiuse/gotty/utils"
+	"github.com/btwiuse/gotty/wetty"
 	"google.golang.org/grpc"
 
 	"github.com/btwiuse/invctrl/client/config"

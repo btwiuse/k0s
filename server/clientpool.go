@@ -18,8 +18,8 @@ import (
 	"github.com/fatih/pool"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
-	"github.com/navigaid/gods/maps/linkedhashmap"
-	"github.com/navigaid/pretty"
+	"github.com/btwiuse/gods/maps/linkedhashmap"
+	"github.com/btwiuse/pretty"
 	"google.golang.org/grpc"
 
 	"github.com/btwiuse/invctrl/header"

@@ -14,9 +14,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
-	"github.com/navigaid/gotty/assets"
-	"github.com/navigaid/gotty/utils"
-	"github.com/navigaid/gotty/wetty"
+	"github.com/btwiuse/gotty/assets"
+	"github.com/btwiuse/gotty/utils"
+	"github.com/btwiuse/gotty/wetty"
 	"modernc.org/httpfs"
 
 	"github.com/btwiuse/invctrl/protocol"
