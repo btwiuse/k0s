@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/rpc"
 
+	"github.com/btwiuse/wetty/localcmd"
 	"github.com/btwiuse/invctrl/pkg/agent/config"
 	"github.com/btwiuse/invctrl/pkg/agent/dial"
 	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
@@ -12,21 +13,16 @@ import (
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	c := config.Init()
-	conn := dial.Dial(c)
-	c.Id = dial.Handshake(conn)
-	config.Default = c
-
-	/* subsequent call
-	        conn := dialRemote(config.Default)
-		handshake(conn)
-	*/
+	conn := dial.DialAgent(c.Server)
 
 	log.Println("connected:", c.Id)
 
+	factory := &localcmd.Factory{
+		Args: []string{"/usr/bin/env", "TERM=xterm", "bash"},
+	}
+
 	rpcServer := rpc.NewServer()
-	// rpcServer.Register(new(rpcimpl.Conn))
-	rpcServer.Register(new(rpcimpl.WsConn))
-	rpcServer.Register(new(rpcimpl.GRPCConn))
+	rpcServer.Register(&rpcimpl.NewSlave{factory})
 	log.Println("serveconn")
 	rpcServer.ServeConn(conn)
 	log.Fatalln("bye")

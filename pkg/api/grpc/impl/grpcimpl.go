@@ -11,10 +11,12 @@ import (
 	"github.com/kr/pty"
 )
 
-type BidiStream struct{}
+type BidiStream struct{
+	*localcmd.Factory
+}
 
 func (bs *BidiStream) Send(sendServer api.BidiStream_SendServer) error {
-	lc, err := localcmd.NewLc([]string{"htop"})
+	lc, err := bs.Factory.New()
 	if err != nil {
 		return err
 	}

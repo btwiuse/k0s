@@ -1,28 +1,17 @@
 package hub
 
 import (
-	"log"
 	"net/http"
-	//"github.com/davecgh/go-spew/spew"
 )
 
-func NewServer(addr string) *Server {
+func NewServer(addr string) *http.Server {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", ls)
-	mux.HandleFunc("/ws", wslisten)
-	mux.HandleFunc("/ws/", frontend)
-	return &Server{
+	mux.HandleFunc("/ws/", static)
+	mux.HandleFunc("/agents/", getAgents)
+	mux.HandleFunc("/new/agent", newAgent)
+	mux.HandleFunc("/new/slave", newSlave)
+	return &http.Server{
 		Addr:    addr,
-		Handler: hijack(mux),
+		Handler: mux,
 	}
-}
-
-func (s *Server) Run() error {
-	log.Println("listening on http://localhost" + s.Addr)
-	return http.ListenAndServe(s.Addr, s.Handler)
-}
-
-type Server struct {
-	Addr    string
-	Handler http.Handler
 }

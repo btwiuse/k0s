@@ -2,16 +2,17 @@ package dial
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net"
+	"net/url"
 	"os/exec"
-	"runtime"
 	"strings"
 
-	"github.com/gorilla/websocket"
 	"github.com/btwiuse/invctrl/pkg/agent/config"
-	"github.com/btwiuse/invctrl/header"
+	"github.com/btwiuse/invctrl/pkg/header"
 	"github.com/btwiuse/pretty"
+	"github.com/gorilla/websocket"
 )
 
 func run(oneliner string) []byte {
@@ -24,49 +25,53 @@ func run(oneliner string) []byte {
 }
 
 var (
-	buildCode  = strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv BUILD_CODE`)))
-	dockerRepo = strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv DOCKER_REPO`)))
-	gitBranch  = strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_BRANCH`)))
-	gitTag     = strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_TAG`)))
-	gitSha1    = strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_SHA1`)))
-	gitMsg     = strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_MSG`)))
-	ip         = strings.TrimSpace(string(run(`curl -sL ip.sb`)))
-	pwd        = strings.TrimSpace(string(run(`pwd`)))
-	whoami     = strings.TrimSpace(string(run(`whoami`)))
-	hostname   = strings.TrimSpace(string(run(`hostname`)))
-	createdAt  = strings.TrimSpace(string(run(`env TZ=Asia/Shanghai docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.CreatedAt}}{{end}}' | grep .`)))
-
-	/* // ~/hello-wasm/simple/main.go
-	   fmt.Sprintf("In browser: %t", inBrowser()),
-	*/
-
-	goarch    string = runtime.GOARCH
-	goos      string = runtime.GOOS
-	goroot    string = runtime.GOROOT()
-	gc        string = runtime.Compiler
-	goversion string = runtime.Version()
-	ncpu      int    = runtime.NumCPU()
-
-	commit string
-	built  string
-	branch string
+	pwd      = strings.TrimSpace(string(run(`pwd`)))
+	whoami   = strings.TrimSpace(string(run(`whoami`)))
+	hostname = strings.TrimSpace(string(run(`hostname`)))
 )
 
-func WsDial(c *config.Config) *websocket.Conn {
+func WsDial(url string) *websocket.Conn {
 	dialer := &websocket.Dialer{}
-	ws, _, err := dialer.Dial(c.WsServer, nil)
+	ws, _, err := dialer.Dial(url, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	return ws
 }
 
-func Dial(c *config.Config) net.Conn {
-	conn, err := net.Dial("tcp", c.Server)
+func DialSlave(hostport string, args url.Values) net.Conn {
+	basePath := "/new/slave"
+	queryString := args.Encode()
+	log.Println(queryString)
+	requestText := fmt.Sprintf("GET %s?%s HTTP/1.0\r\n\r\n", basePath, queryString)
+
+	conn, err := net.Dial("tcp", hostport)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	_, err = conn.Write([]byte("GET / HTTP/1.1\r\nHost: localhost:8000\r\nHijack: true\r\n\r\n"))
+	_, err = conn.Write([]byte(requestText))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return conn
+}
+
+func DialAgent(hostport string) net.Conn {
+	basePath := "/new/agent"
+	var agentInfo url.Values = make(map[string][]string)
+	agentInfo.Set("id", config.Default.Id)
+	agentInfo.Set("pwd", pwd)
+	agentInfo.Set("whoami", whoami)
+	agentInfo.Set("hostname", hostname)
+	queryString := agentInfo.Encode()
+	log.Println(queryString)
+	requestText := fmt.Sprintf("GET %s?%s HTTP/1.0\r\n\r\n", basePath, queryString)
+
+	conn, err := net.Dial("tcp", hostport)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	_, err = conn.Write([]byte(requestText))
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -74,7 +79,7 @@ func Dial(c *config.Config) net.Conn {
 }
 
 func writeConnAppend(conn net.Conn, nonce string) {
-	header := pretty.JSONString(&header.MasterHeader{
+	header := pretty.JSONString(&header.AgentHeader{
 		Append: true,
 		Id:     config.Default.Id,
 		Nonce:  nonce,
@@ -82,30 +87,11 @@ func writeConnAppend(conn net.Conn, nonce string) {
 	conn.Write([]byte(header))
 }
 
-func writeConn(conn net.Conn) {
-	header := pretty.JSONString(&header.MasterHeader{
-		BuildCode:  buildCode,
-		DockerRepo: dockerRepo,
-		GitBranch:  gitBranch,
-		GitTag:     gitTag,
-		GitSha1:    gitSha1,
-		GitMsg:     gitMsg,
-		IP:         ip,
-		Pwd:        pwd,
-		Whoami:     whoami,
-		Hostname:   hostname,
-		CreatedAt:  createdAt,
-
-		GOARCH:    goarch,
-		GOOS:      goos,
-		GOROOT:    goroot,
-		GC:        gc,
-		GOVERSION: goversion,
-		NCPU:      ncpu,
-
-		Commit: commit,
-		Built:  built,
-		Branch: branch,
+func writeAgentInfo(conn net.Conn) {
+	header := pretty.JSONString(&header.AgentHeader{
+		Pwd:      pwd,
+		Whoami:   whoami,
+		Hostname: hostname,
 	})
 	conn.Write([]byte(header))
 }
@@ -122,8 +108,9 @@ func readConn(conn net.Conn) string {
 }
 
 func Handshake(conn net.Conn) string {
-	writeConn(conn)
-	return readConn(conn)
+	writeAgentInfo(conn)
+	agentId := readConn(conn)
+	return agentId
 }
 
 func HandshakeAppend(conn net.Conn, nonce string) {

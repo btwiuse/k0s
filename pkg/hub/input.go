@@ -104,18 +104,18 @@ func Input() {
 			}
 
 			/*
-			if line == "N" {
-				client := GlobalSlavePool.Current
-				conn, err := client.Pool.Get()
-				log.Println("[POOL Size]", client.Pool.Len())
-				if err == nil {
-					go io.Copy(os.Stderr, conn)
+				if line == "N" {
+					client := GlobalSlavePool.Current
+					conn, err := client.Pool.Get()
+					log.Println("[POOL Size]", client.Pool.Len())
+					if err == nil {
+						go io.Copy(os.Stderr, conn)
+					} else {
+						log.Println(err)
+					}
 				} else {
-					log.Println(err)
+					go bash(line, GlobalSlavePool.Current)
 				}
-			} else {
-				go bash(line, GlobalSlavePool.Current)
-			}
 			*/
 
 			promptNum += 1

@@ -1,245 +1,188 @@
 package hub
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
-	"net/http/httputil"
 	"net/rpc"
-	"path"
-	"strconv"
+	"os"
 	"strings"
 	"time"
 
-	"github.com/btwiuse/wetty/assets"
-	"github.com/btwiuse/wetty/utils"
-	"github.com/btwiuse/wetty/wetty"
-	"github.com/google/uuid"
-	"github.com/gorilla/websocket"
-	"modernc.org/httpfs"
-
+	"github.com/btwiuse/invctrl/pkg/api"
 	rpcimpl "github.com/btwiuse/invctrl/pkg/api/rpc/impl"
 	"github.com/btwiuse/invctrl/wrap"
+	"github.com/btwiuse/wetty/assets"
+	"github.com/btwiuse/wetty/wetty"
+	"github.com/gorilla/websocket"
+	"github.com/kr/pty"
+	"google.golang.org/grpc"
+	"modernc.org/httpfs"
 )
 
-func hijack(original http.Handler) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get(http.CanonicalHeaderKey("Hijack")) == "true" {
-			hijacker(w, r)
-			return
-		}
-		original.ServeHTTP(w, r)
-	}
+func getAgents(w http.ResponseWriter, r *http.Request) {
+	GlobalAgentPool.Dump()
 }
 
-func hijacker(w http.ResponseWriter, r *http.Request) {
-	_, err := NewSlave(w)
-	if err != nil {
-		log.Println(err)
-		return
+func grpcfactory(agent *Agent) (*grpc.ClientConn, error) {
+	req := rpcimpl.NewSlaveRequest{
+		Args: agent.Info,
 	}
-}
-
-// rpc call to initiate a ws conn to /ws from slave
-func wsfactory(slaveFactory *Slave) (*websocket.Conn, error) {
-	nonce := uuid.New().String()
-	id := slaveFactory.UUID.String()
-
-	req := rpcimpl.WsConnRequest{
-		Id:    id,
-		Nonce: nonce,
-	}
-	resp := new(rpcimpl.WsConnResponse)
+	resp := new(rpcimpl.NewSlaveResponse)
 
 	done := make(chan *rpc.Call, 1)
-	slaveFactory.RPC.Go("WsConn.New", req, resp, done)
+	agent.RPCClient.Go("NewSlave.New", req, resp, done)
 	<-done
 
 	time.Sleep(time.Second / 3) // todo: investigate why it is necessary
-	conn, ok := slaveFactory.WsConns[nonce]
-	if !ok {
-		return nil, fmt.Errorf("slave nonce doesn't exist: %s", nonce)
-	}
-	delete(slaveFactory.WsConns, nonce)
-	return conn, nil
-}
-
-// wslisten assumes r.RequestURI == "/ws" {
-// the request is initiated by slaves at wsfactory's command
-// call chain:
-// 1. browser (ws:conn)-> ws://<host>/id/ws
-// 2. host (rpc on tcp)-> rpc://slave.WsConn.New(id, nounce)
-// 3. slave (ws:connRemote)-> ws://<host>/ws (with id and nounce to identify slave)
-// 4. browser <=(conn:ws:connRemote)=> slave
-func wslisten(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "Method not allowed", 405)
-		return
-	}
-
-	conn, err := wetty.Upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	// don't do this!!!
-	// defer conn.Close()
-	// you should leave the conn open until the matching frontend conn is closed
-
-	var master io.ReadWriteCloser = utils.WsConnToReadWriter(conn)
-
-	buf := make([]byte, 1024)
-	n, err := master.Read(buf)
-	if err != nil {
-		log.Println(err)
-	}
-	id := string(buf[:n])
-	slave := GlobalSlavePool.Get(id)
-
-	n, err = master.Read(buf)
-	if err != nil {
-		log.Println(err)
-	}
-	nonce := string(buf[:n])
-
-	slave.WsConns[nonce] = conn
-}
-
-// relay fs http request
-// drawback: poor performance handling large files
-// 0. rewrite request path
-// 1. record slave request (httputil.DumpRequest)
-// (2. send recorded request to grpc
-// (3. record and dump grpc response (httptest.ResponseRecorder, httputil.DumpResponse)
-// (4. return grpc response
-// 5(theoretically). decode grpc response (http.ReadResponse)
-// 5(practically). hijack w.(http.Hijacker).Hijack()...Write(grpc.Response)
-func fsrelay(w http.ResponseWriter, r *http.Request, slave *Slave, p string) {
-	log.Println("request uri:", r.RequestURI)
-
-	// 0.
-	r.RequestURI = strings.SplitN(r.RequestURI, "rootfs", 2)[1]
-
-	log.Println("path:", r.RequestURI)
-
-	// 1.
-	reqbuf, err := httputil.DumpRequest(r, true)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	// 2.
-	req := rpcimpl.RootfsRequest{
-		Request: reqbuf,
-	}
-	resp := new(rpcimpl.RootfsResponse)
-
-	log.Println("calling Rootfs.New")
-
-	if err := slave.RPC.Call("Rootfs.New", req, resp); err != nil {
-		log.Println(err)
-		return
-	}
-
-	// 5. hijack slave http request -> net.Conn
-	rwc, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	defer rwc.Close() // tell browser to stop loading
-
-	if _, err := rwc.Write(resp.Response); err != nil {
-		log.Println(err)
-		return
-	}
+	return <-agent.GRPCClientConn, nil
 }
 
 // listen on frontend ws connection
 // serve http://<host>/id/ws endpoint
 // see wslisten
 // todo: translate between grpc/ws
-func wsrelay(w http.ResponseWriter, r *http.Request, slaveFactory *Slave) {
-	if r.Method != "GET" {
-		http.Error(w, "Method not allowed", 405)
-		return
+func grpcrelayws(agent *Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "GET" {
+			http.Error(w, "Method not allowed", 405)
+			return
+		}
+
+		// 1
+		wsconn, err := wetty.Upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		defer wsconn.Close()
+
+		// 2, 3
+		cc, err := grpcfactory(agent)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		// to bidiStreamClient
+		bidiStreamClient := api.NewBidiStreamClient(cc)
+
+		// to sendClient
+		sendClient, err := bidiStreamClient.Send(context.Background())
+		if err != nil {
+			log.Fatalln(bidiStreamClient, err)
+		}
+
+		// go for send Input   <=	    websocket
+		// go for send Resize  <= [wsrelay] websocket
+		// for recv Output     =>	    websocket
+		// (through chan Message{Type, Body} instead of interface)
+
+		// todo: read from ws instead of generating fake msg
+		go func() {
+			for range time.Tick(time.Second) {
+				rows, cols, err := pty.Getsize(os.Stdin)
+				if err != nil {
+					log.Println(err)
+					break
+				}
+
+				json := fmt.Sprintf(`{"Cols": %d, "Rows": %d}`, cols, rows)
+
+				resizeMsg := &api.Message{Type: []byte{wetty.ResizeTerminal}, Body: []byte(json)}
+				err = sendClient.Send(resizeMsg)
+				if err != nil {
+					log.Println(err)
+					return
+				}
+			}
+		}()
+
+		go func() {
+			buf := make([]byte, 1024)
+			for {
+				n, err := os.Stdin.Read(buf)
+				if err != nil {
+					log.Println(err)
+					break
+				}
+
+				inputMsg := &api.Message{Type: []byte{wetty.Input}, Body: buf[:n]}
+				err = sendClient.Send(inputMsg)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+			}
+		}()
+
+		for {
+			select {
+			// case <-ctx.Done():
+			// log.Println("client dead:", c.RemoteAddr())
+			// log.Println("client dead:")
+			// return
+			default:
+				resp, err := sendClient.Recv()
+				if err != nil {
+					log.Println(err)
+					return
+				}
+				fmt.Printf("%s", resp.Body)
+			}
+		}
+
 	}
-
-	// 1
-	conn, err := wetty.Upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	defer conn.Close()
-
-	// 2, 3
-	connRemote, err := wsfactory(slaveFactory)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	var (
-		master io.ReadWriteCloser = utils.WsConnToReadWriter(conn)
-		slaver io.ReadWriteCloser = utils.WsConnToReadWriter(connRemote)
-	)
-
-	// 4
-
-	// todo: notify backend to kill slave
-	handleConnectionError(slaver, Pipe(master, slaver))
-	return
 }
 
 // here master and slave are connected via network
 func Pipe(client, slave io.ReadWriteCloser) error {
-        errs := make(chan error, 2)
-        closeall := func() {
-                client.Close()
-                slave.Close()
-        }
+	errs := make(chan error, 2)
+	closeall := func() {
+		client.Close()
+		slave.Close()
+	}
 
-        go func() {
-                log.Println("Pipe: client <= slave")
-                defer closeall()
-                _, err := io.Copy(client, slave)
-                errs <- err
-                // if you set it to 400, master will receive 399- bytes on each read
-                // this value should at least CSPair.bufferSize + 1
-                // otherwise some messages may be partially sent
-        }()
+	go func() {
+		log.Println("Pipe: client <= slave")
+		defer closeall()
+		_, err := io.Copy(client, slave)
+		errs <- err
+		// if you set it to 400, master will receive 399- bytes on each read
+		// this value should at least CSPair.bufferSize + 1
+		// otherwise some messages may be partially sent
+	}()
 
-        go func() {
-                log.Println("Pipe: client => slave")
-                defer closeall()
-                _, err := io.Copy(slave, client)
-                errs <- err
-        }()
+	go func() {
+		log.Println("Pipe: client => slave")
+		defer closeall()
+		_, err := io.Copy(slave, client)
+		errs <- err
+	}()
 
-        return <-errs
+	return <-errs
 }
 
 // https://github.com/frankdejonge/golang-websocket-example/blob/master/connection.go
 func handleConnectionError(slave io.Writer, err error) {
 	ers := []int{
-	// websocket.CloseNormalClosure,
-	// websocket.CloseGoingAway,
-	// websocket.CloseProtocolError,
-	// websocket.CloseUnsupportedData,
+		// websocket.CloseNormalClosure,
+		// websocket.CloseGoingAway,
+		// websocket.CloseProtocolError,
+		// websocket.CloseUnsupportedData,
 		websocket.CloseNoStatusReceived,
-	// websocket.CloseAbnormalClosure,
-	// websocket.CloseInvalidFramePayloadData,
-	// websocket.ClosePolicyViolation,
-	// websocket.CloseMessageTooBig,
-	// websocket.CloseMandatoryExtension,
-	// websocket.CloseInternalServerErr,
-	// websocket.CloseServiceRestart,
-	// websocket.CloseTryAgainLater,
-	// websocket.CloseTLSHandshake,
+		// websocket.CloseAbnormalClosure,
+		// websocket.CloseInvalidFramePayloadData,
+		// websocket.ClosePolicyViolation,
+		// websocket.CloseMessageTooBig,
+		// websocket.CloseMandatoryExtension,
+		// websocket.CloseInternalServerErr,
+		// websocket.CloseServiceRestart,
+		// websocket.CloseTryAgainLater,
+		// websocket.CloseTLSHandshake,
 	}
 
 	if websocket.IsUnexpectedCloseError(err, ers...) {
@@ -255,35 +198,35 @@ func handleConnectionError(slave io.Writer, err error) {
 
 /*
 base :=
-frontend:
+static:
 $uuid
 $uuid/css/*
 $uuid/js/*
 $uuid/png/*
 
-wsrelay:
+grpcrelayws:
 $uuid/ws
 
 fsrelay:
 $uuid/rootfs
 
-wslisten:
-/ws
+new/slave:
+/new/slave
 */
-func frontend(w http.ResponseWriter, r *http.Request) {
+func static(w http.ResponseWriter, r *http.Request) {
 	var staticFileServer, staticFileHandler http.Handler
 	var id string
 	base := strings.TrimPrefix(r.RequestURI, "/ws/")
 	parts := strings.Split(base, "/")
 	if len(parts) == 0 {
-		goto REDIR
+		goto HOME
 	}
 	id = parts[0]
 	staticFileServer = http.FileServer(httpfs.NewFileSystem(assets.Assets, time.Now()))
 	staticFileHandler = http.StripPrefix("/ws/"+id+"/", staticFileServer)
 
-	if !GlobalSlavePool.Has(id) {
-		goto REDIR
+	if !GlobalAgentPool.Has(id) {
+		goto HOME
 	}
 
 	if len(parts) == 1 {
@@ -294,74 +237,70 @@ func frontend(w http.ResponseWriter, r *http.Request) {
 	switch parts[1] {
 	case "ws":
 		// relayfrontend ws connection
-		slaveFactory := GlobalSlavePool.Get(id)
-		wsrelay(w, r, slaveFactory)
+		agent := GlobalAgentPool.Get(id)
+		grpcrelayws(agent)(w, r)
 	case "rootfs":
-		slave := GlobalSlavePool.Get(id)
-		p := "/" + path.Join(parts[2:]...)
-		fsrelay(w, r, slave, p)
+		// slave := GlobalAgentPool.Get(id)
+		// p := "/" + path.Join(parts[2:]...)
+		// fsrelay(w, r, slave, p)
 	default:
 		// handle non-ws static resources
 		staticFileHandler.ServeHTTP(w, r)
 	}
 	return
-REDIR:
+HOME:
 	http.Redirect(w, r, "/", 302)
 }
 
-// ls handles the index page
-// todo: refresh when slavepool changes (watcher)
-// todo: json api: /slaves/
-func ls(w http.ResponseWriter, r *http.Request) {
-	isCurrent := func(uuid string) string {
-		if (GlobalSlavePool.Current != nil) && (GlobalSlavePool.Current.UUID.String() == uuid) {
-			return "*"
-		}
-		return " "
-	}
+func newAgent(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Add("Content-Type", "text/html; charset=UTF-8")
-	uri := strings.TrimPrefix(r.RequestURI, "/")
-
-	// slave specific page
-	if GlobalSlavePool.Has(uri) {
-		log.Println(uri)
-		slave := GlobalSlavePool.Get(uri)
-		href := fmt.Sprintf(`<a href="/ws/%s/">%s</a>`, uri, uri)
-		fmt.Fprintln(w, href)
-		fmt.Fprintln(w, "<pre>")
-		fmt.Fprintln(w,
-			fmt.Sprintf("[%s]", "N/A"),
-			isCurrent(uri),
-			uri,
-			"ssh ubuntu@"+strings.Split(slave.RemoteAddr.String(), ":")[0],
-			slave.Info,
-		)
-		fmt.Fprintln(w, "</pre>")
+	conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
+	if err != nil {
+		log.Println("error hijacking:", err)
 		return
 	}
 
-	// root page
-	for i, v := range GlobalSlavePool.Slaves.Values() {
-		slave := v.(*Slave)
-		uuid := GlobalSlavePool.Slaves.Keys()[i].(string)
-		href := fmt.Sprintf(`<a href="%s">%s</a>`, uuid, uuid)
-		wshref := fmt.Sprintf(`<a href="/ws/%s/">ws</a>`, uuid)
-		wshref += fmt.Sprintf(`|<a href="/ws/%s/#xterm">xterm</a>`, uuid)
-		wshref += fmt.Sprintf(`|<a href="/ws/%s/#hterm">hterm</a>`, uuid)
-		fshref := fmt.Sprintf(`<a href="/ws/%s/rootfs/">fs</a>`, uuid)
-		fmt.Fprintln(w,
-			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
-			isCurrent(uuid),
-			href,
-			wshref,
-			fshref,
-			"ssh ubuntu@"+strings.Split(slave.RemoteAddr.String(), ":")[0],
-		)
-		fmt.Fprintln(w, "<pre>")
-		fmt.Fprintln(w,
-			slave.Info,
-		)
-		fmt.Fprintln(w, "</pre>")
+	agent := new(Agent) // using named return causes panic, why?
+	agent.Info = r.URL.Query()
+	agent.GRPCClientConn = make(chan *grpc.ClientConn)
+
+	agent.RPCClient = agent.toRPCClient(conn)
+
+	log.Println("new agent connected:", agent.Info.Get("id"))
+
+	GlobalAgentPool.Add(agent)
+}
+
+func newSlave(w http.ResponseWriter, r *http.Request) {
+	agent := GlobalAgentPool.Get(r.URL.Query().Get("id"))
+
+	// extract conn
+	conn, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
+	if err != nil {
+		return // nil, err
 	}
+
+	// to client conn
+	cc := toClientConn(conn)
+
+	agent.GRPCClientConn <- cc
+	return
+}
+
+func toClientConn(c net.Conn) *grpc.ClientConn {
+	options := []grpc.DialOption{
+		// grpc.WithTransportCredentials(creds),
+		grpc.WithInsecure(),
+		grpc.WithContextDialer(
+			func(ctx context.Context, s string) (net.Conn, error) {
+				return c, nil
+			},
+		),
+	}
+
+	cc, err := grpc.Dial("", options...)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	return cc
 }

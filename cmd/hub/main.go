@@ -16,5 +16,6 @@ func main() {
 	if len(os.Args) > 1 {
 		addr = os.Args[1]
 	}
-	log.Fatalln(hub.NewServer(addr).Run())
+	log.Println("server is listening on", addr)
+	log.Fatalln(hub.NewServer(addr).ListenAndServe())
 }
