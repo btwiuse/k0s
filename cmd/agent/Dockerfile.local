@@ -1,3 +1,0 @@
-FROM invctrl/client-base
-COPY ./client /bin/client
-ENTRYPOINT ["/bin/client"]
