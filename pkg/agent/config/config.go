@@ -43,7 +43,7 @@ type config struct {
 	ID       string            `json:"id" yaml:"-"`
 	Name     string            `json:"name" yaml:"-"`
 	Tags     []string          `json:"tags" yaml:"tags"`
-	Htpasswd map[string]string `json:"htpasswd,omitempty yaml:"htpasswd"`
+	Htpasswd map[string]string `json:"htpasswd,omitempty" yaml:"htpasswd"`
 
 	agent.Info `json:"meta" yaml:"-"`
 
