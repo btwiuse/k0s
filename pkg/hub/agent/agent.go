@@ -47,6 +47,18 @@ func NewAgent(conn net.Conn, opts ...Opt) hub.Agent {
 
 type Opt func(*agent)
 
+func SetTags(tags []string) Opt {
+	return func(ag *agent) {
+		ag.Tag = tags
+	}
+}
+
+func SetDistro(dist string) Opt {
+	return func(ag *agent) {
+		ag.Distro = dist
+	}
+}
+
 func SetName(name string) Opt {
 	return func(ag *agent) {
 		ag.Nam = name
@@ -156,16 +168,18 @@ type agent struct {
 	rpcCounter  int
 
 	// Metadata
-	Id        string `json:"id"`
-	Nam       string `json:"name"`
-	Connected int64  `json:"connected"`
-	Hostname  string `json:"hostname"`
-	Username  string `json:"username"`
-	PWD       string `json:"pwd"`
-	OS        string `json:"os"`
-	ARCH      string `json:"arch"`
-	IP        string `json:"ip"`
-	Auth      bool   `json:"auth"`
+	Id        string   `json:"id"`
+	Nam       string   `json:"name"`
+	Tag       []string `json:"tags"` // ,omitempty
+	Connected int64    `json:"connected"`
+	Hostname  string   `json:"hostname"`
+	Username  string   `json:"username"`
+	PWD       string   `json:"pwd"`
+	OS        string   `json:"os"`
+	Distro    string   `json:"distro,omitempty"`
+	ARCH      string   `json:"arch"`
+	IP        string   `json:"ip"`
+	Auth      bool     `json:"auth"`
 }
 
 func (ag *agent) BasicAuth(next http.Handler) http.Handler {
@@ -196,6 +210,10 @@ func (ag *agent) Name() string {
 
 func (ag *agent) ID() string {
 	return ag.Id
+}
+
+func (ag *agent) Tags() []string {
+	return ag.Tag
 }
 
 // we use NewRPCClient over rpc.NewClient(conn)

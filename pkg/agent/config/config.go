@@ -12,13 +12,30 @@ import (
 	"strings"
 
 	"github.com/btwiuse/conntroll/pkg/agent"
+	"github.com/btwiuse/conntroll/pkg/distro"
 	"github.com/btwiuse/conntroll/pkg/name"
 	"github.com/btwiuse/conntroll/pkg/uuid"
 )
 
+type arrayFlags []string
+
+func (i *arrayFlags) String() string {
+	return strings.Join(*i, ",")
+}
+
+func (i *arrayFlags) Set(value string) error {
+	if value == "" {
+		return nil
+	}
+	tags := strings.Split(value, ",")
+	*i = append(*i, tags...)
+	return nil
+}
+
 type config struct {
 	id   string
 	name string
+	tags []string
 	*url.URL
 }
 
@@ -28,6 +45,10 @@ func (c *config) ID() string {
 
 func (c *config) Name() string {
 	return c.name
+}
+
+func (c *config) Tags() []string {
+	return c.tags
 }
 
 func (c *config) Port() string {
@@ -81,13 +102,16 @@ func Parse(args []string) agent.Config {
 		goarch      = runtime.GOARCH
 
 		hubapi string
+		tags   arrayFlags
 		bahash string
 
 		query url.Values = make(map[string][]string)
-		nam = name.New()
+		nam              = name.New()
+		dist             = distro.Vendor()
 	)
 
 	fset.StringVar(&id, "id", uuid.New(), "agent id, for debugging purpose only")
+	fset.Var(&tags, "tags", "agent tags")
 	fset.StringVar(&hubapi, "hub", "https://libredot.com", "hub api")
 	fset.StringVar(&bahash, "basicauth", "", "protect api with basicauth, value should be supplied in user:pass form. (Only hash of user:pass will be sent. hub will use the hash value to authorize access to the agent)")
 
@@ -112,6 +136,10 @@ func Parse(args []string) agent.Config {
 	query.Set("os", goos)
 	query.Set("arch", goarch)
 	query.Set("name", nam)
+	query.Set("tags", tags.String())
+	if dist != "" {
+		query.Set("distro", dist)
+	}
 
 	if bahash != "" {
 		bahash = fmt.Sprintf("%x", sha256.Sum256([]byte(bahash)))
@@ -121,8 +149,8 @@ func Parse(args []string) agent.Config {
 	u.RawQuery = query.Encode()
 
 	return &config{
-		URL: u,
-		id:  id,
-		name:  nam,
+		URL:  u,
+		id:   id,
+		name: nam,
 	}
 }

@@ -46,6 +46,10 @@ github.com/gorilla/websocket
 # github.com/kr/pty v1.1.4
 ## explicit
 github.com/kr/pty
+# github.com/pupapaik/sysinfo v0.0.0-20190423145051-de6f0de9b519
+## explicit
+github.com/pupapaik/sysinfo
+github.com/pupapaik/sysinfo/cpuid
 # github.com/rs/cors v1.7.0
 ## explicit
 github.com/rs/cors

@@ -8,6 +8,7 @@ import (
 type Config interface {
 	ID() string
 	Name() string
+	Tags() []string
 	Port() string
 	Addr() string
 	Scheme() string

@@ -94,6 +94,7 @@ func (h *hub) serve(addr string) {
 			"pwd", "{pwd}",
 			"os", "{os}",
 			"arch", "{arch}",
+			"tags", "{tags}",
 			"bahash", "{bahash}",
 			"username", "{username}",
 			"hostname", "{hostname}")
@@ -279,6 +280,7 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		vars     = mux.Vars(r)
+		query    = r.URL.Query()
 		id       = vars["id"]
 		name     = vars["name"]
 		pwd      = vars["pwd"]
@@ -288,7 +290,14 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 		goos     = vars["os"]
 		goarch   = vars["arch"]
 		bahash   = vars["bahash"]
+		tagstr   = vars["tags"]
+		tags     = []string{}
+		distro   = query.Get("distro")
 	)
+
+	if tagstr != "" {
+		tags = strings.Split(tagstr, ",")
+	}
 
 	if h.Has(id) {
 		h.GetAgent(id).AddRPCConn(conn)
@@ -304,10 +313,15 @@ func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
 		agent.SetHostname(hostname),
 		agent.SetOS(goos),
 		agent.SetARCH(goarch),
+		agent.SetTags(tags),
 	}
 
 	if bahash != "" {
 		opts = append(opts, agent.SetBasicAuthHash(bahash))
+	}
+
+	if distro != "" {
+		opts = append(opts, agent.SetDistro(distro))
 	}
 
 	ag := agent.NewAgent(conn, opts...)
