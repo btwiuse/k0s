@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+for bin in {conntroll,agent,hub,client}; do
+  docker build -f Dockerfile.${bin} . -t conntroll/${bin}
+  docker push $_
+done
+
+for distro in {alpine,ubuntu,debian,centos,fedora,gentoo,arch}; do
+  docker build -f Dockerfile.agent.${distro} . -t conntroll/agent:${distro}
+  docker push $_
+done
