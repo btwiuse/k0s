@@ -62,12 +62,10 @@ func (c *config) NewSessionRequestBody() []byte {
 }
 
 func Parse(args []string) agent.Config {
-	fset := flag.NewFlagSet("agent", flag.ExitOnError)
-	/*
-	fset.Usage = func(){
-		fmt.Println("usage:")
-	}*/
 	var (
+		fset = flag.NewFlagSet("agent", flag.ExitOnError)
+		id string
+
 		pwd, _      = os.Getwd()
 		_user, _    = user.Current()
 		username    = _user.Username
@@ -76,24 +74,18 @@ func Parse(args []string) agent.Config {
 		goarch      = runtime.GOARCH
 
 		hubapi string
-		// usage bool
+
 		query  url.Values = make(map[string][]string)
 	)
 
+	fset.StringVar(&id, "id", uuid.New(), "agent id, for debugging purpose only")
 	fset.StringVar(&hubapi, "hub", "https://libredot.com", "hub api")
-	/*
-	fset.BoolVar(&usage, "h", false, "getting help")
-	fset.BoolVar(&usage, "help", false, "getting help")
-	*/
+
 	err := fset.Parse(args)
 	if err != nil {
 		log.Println(err)
 	}
-	/* log.Println(fset.Args())
-	if usage {
-		fset.Usage()
-		os.Exit(0)
-	}*/
+
 	if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
 		hubapi = "http://" + hubapi
 	}
@@ -103,7 +95,6 @@ func Parse(args []string) agent.Config {
 		log.Fatalln(err)
 	}
 
-	id := uuid.New()
 	query.Set("id", id)
 	query.Set("pwd", pwd)
 	query.Set("whoami", username)
