@@ -33,7 +33,7 @@ type Slave struct {
 	LocalAddr  net.Addr
 	RemoteAddr net.Addr
 	RPC        *rpc.Client
-	GRPC       api.ApiClient
+	BidiStreamClient       api.BidiStreamClient
 	Info       string
 	Conns      map[string]net.Conn
 	WsConns    map[string]*websocket.Conn
@@ -204,11 +204,11 @@ func NewSlave(w http.ResponseWriter) (*Slave, error) {
 			return nil, fmt.Errorf("slave nonce doesn't exist: %s", nonce)
 		}
 		delete(slave.Conns, nonce)
-		cc, err := NewGRPCClientConn(conn)
+		cc, err := toGrpcClientConn(conn)
 		if err != nil {
 			return nil, err
 		}
-		slave.GRPC = api.NewApiClient(cc)
+		slave.BidiStreamClient = api.NewBidiStreamClient(cc)
 	}
 
 	GlobalSlavePool.Dump()
@@ -245,14 +245,14 @@ func NewRPCClient(conn io.ReadWriteCloser, onclose func()) *rpc.Client {
 	return rpc.NewClient(wrap.WrapReadWriteCloser(pr, conn))
 }
 
-func NewGRPCClientConn(grpcSide net.Conn) (*grpc.ClientConn, error) {
+func toGrpcClientConn(c net.Conn) (*grpc.ClientConn, error) {
 	return grpc.Dial(
 		"",
 		[]grpc.DialOption{
 			grpc.WithInsecure(),
 			grpc.WithContextDialer(
 				func(ctx context.Context, s string) (net.Conn, error) {
-					return grpcSide, nil
+					return c, nil
 				}),
 		}...,
 	)

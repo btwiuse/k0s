@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/btwiuse/gotty/assets"
-	"github.com/btwiuse/gotty/utils"
-	"github.com/btwiuse/gotty/wetty"
+	"github.com/btwiuse/wetty/assets"
+	"github.com/btwiuse/wetty/utils"
+	"github.com/btwiuse/wetty/wetty"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 	"modernc.org/httpfs"
@@ -42,9 +42,9 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 }
 
 // rpc call to initiate a ws conn to /ws from slave
-func wsfactory(slave *Slave) (*websocket.Conn, error) {
+func wsfactory(slaveFactory *Slave) (*websocket.Conn, error) {
 	nonce := uuid.New().String()
-	id := slave.UUID.String()
+	id := slaveFactory.UUID.String()
 
 	req := protocol.WsConnRequest{
 		Id:    id,
@@ -53,15 +53,15 @@ func wsfactory(slave *Slave) (*websocket.Conn, error) {
 	resp := new(protocol.WsConnResponse)
 
 	done := make(chan *rpc.Call, 1)
-	slave.RPC.Go("WsConn.New", req, resp, done)
+	slaveFactory.RPC.Go("WsConn.New", req, resp, done)
 	<-done
 
 	time.Sleep(time.Second / 3) // todo: investigate why it is necessary
-	conn, ok := slave.WsConns[nonce]
+	conn, ok := slaveFactory.WsConns[nonce]
 	if !ok {
 		return nil, fmt.Errorf("slave nonce doesn't exist: %s", nonce)
 	}
-	delete(slave.WsConns, nonce)
+	delete(slaveFactory.WsConns, nonce)
 	return conn, nil
 }
 
@@ -87,7 +87,7 @@ func wslisten(w http.ResponseWriter, r *http.Request) {
 	// defer conn.Close()
 	// you should leave the conn open until the matching frontend conn is closed
 
-	var master io.ReadWriter = &utils.WsWrapper{conn}
+	var master io.ReadWriteCloser = utils.WsConnToReadWriter(conn)
 
 	buf := make([]byte, 1024)
 	n, err := master.Read(buf)
@@ -161,7 +161,8 @@ func fsrelay(w http.ResponseWriter, r *http.Request, slave *Slave, p string) {
 // listen on frontend ws connection
 // serve http://<host>/id/ws endpoint
 // see wslisten
-func wsrelay(w http.ResponseWriter, r *http.Request, slave *Slave) {
+// todo: translate between grpc/ws
+func wsrelay(w http.ResponseWriter, r *http.Request, slaveFactory *Slave) {
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", 405)
 		return
@@ -176,22 +177,50 @@ func wsrelay(w http.ResponseWriter, r *http.Request, slave *Slave) {
 	defer conn.Close()
 
 	// 2, 3
-	connRemote, err := wsfactory(slave)
+	connRemote, err := wsfactory(slaveFactory)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
 	var (
-		master io.ReadWriter = &utils.WsWrapper{conn}
-		slaver io.ReadWriter = &utils.WsWrapper{connRemote}
+		master io.ReadWriteCloser = utils.WsConnToReadWriter(conn)
+		slaver io.ReadWriteCloser = utils.WsConnToReadWriter(connRemote)
 	)
 
 	// 4
 
 	// todo: notify backend to kill slave
-	handleConnectionError(slaver, wetty.Pipe(master, slaver))
+	handleConnectionError(slaver, Pipe(master, slaver))
 	return
+}
+
+// here master and slave are connected via network
+func Pipe(client, slave io.ReadWriteCloser) error {
+        errs := make(chan error, 2)
+        closeall := func() {
+                client.Close()
+                slave.Close()
+        }
+
+        go func() {
+                log.Println("Pipe: client <= slave")
+                defer closeall()
+                _, err := io.Copy(client, slave)
+                errs <- err
+                // if you set it to 400, master will receive 399- bytes on each read
+                // this value should at least CSPair.bufferSize + 1
+                // otherwise some messages may be partially sent
+        }()
+
+        go func() {
+                log.Println("Pipe: client => slave")
+                defer closeall()
+                _, err := io.Copy(slave, client)
+                errs <- err
+        }()
+
+        return <-errs
 }
 
 // https://github.com/frankdejonge/golang-websocket-example/blob/master/connection.go
@@ -220,7 +249,7 @@ func handleConnectionError(slave io.Writer, err error) {
 	}
 
 	if _, err := slave.Write([]byte{wetty.ClientDead}); err != nil {
-		log.Println("wetty.Pipe:", err)
+		log.Println("Pipe:", err)
 	}
 }
 
@@ -265,8 +294,8 @@ func frontend(w http.ResponseWriter, r *http.Request) {
 	switch parts[1] {
 	case "ws":
 		// relayfrontend ws connection
-		slave := GlobalSlavePool.Get(id)
-		wsrelay(w, r, slave)
+		slaveFactory := GlobalSlavePool.Get(id)
+		wsrelay(w, r, slaveFactory)
 	case "rootfs":
 		slave := GlobalSlavePool.Get(id)
 		p := "/" + path.Join(parts[2:]...)

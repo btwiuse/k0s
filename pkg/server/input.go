@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"log"
@@ -11,7 +10,6 @@ import (
 
 	"gopkg.in/readline.v1"
 
-	"github.com/btwiuse/invctrl/pkg/api"
 	"github.com/btwiuse/invctrl/protocol"
 )
 
@@ -43,29 +41,6 @@ func Input() {
 				fmt.Println(err)
 			}
 
-			hello := func(line string, client *Slave) {
-				req := &api.HelloRequest{Name: line}
-				resp, err := client.GRPC.Hello(context.Background(), req)
-				if err != nil {
-					log.Println(err)
-					return
-				}
-				log.Println("grpc hello response received:\n\n", resp.GetMessage())
-			}
-
-			echo := func(line string, client *Slave) {
-				req := protocol.EchoRequest{
-					Payload: line,
-				}
-				resp := new(protocol.EchoResponse)
-				err := client.RPC.Call("Echo.New", req, resp)
-				if err != nil {
-					log.Println(resp.Payload, err)
-					return
-				}
-				log.Println("rpc echo response received:\n\n", resp.Payload)
-			}
-
 			bash := func(line string, client *Slave) {
 				req := protocol.Request{
 					Command: line,
@@ -91,9 +66,8 @@ func Input() {
 						v := GlobalSlavePool.Slaves.Values()[0]
 						client := v.(*Slave)
 					*/
-					client := GlobalSlavePool.GetRandom()
-					go echo(strconv.Itoa(i), client)
-					go hello(strconv.Itoa(i), client)
+					// client := GlobalSlavePool.GetRandom()
+					// go echo(strconv.Itoa(i), client)
 				}
 				/*
 					for _, v := range SlavePool.Slaves.Values() {

@@ -3,7 +3,6 @@ package protocol
 import (
 	"bufio"
 	"bytes"
-	"context"
 	"errors"
 	"io"
 	"log"
@@ -14,14 +13,15 @@ import (
 	"os/exec"
 
 	"github.com/gorilla/websocket"
-	"github.com/btwiuse/gotty/localcmd"
-	"github.com/btwiuse/gotty/utils"
-	"github.com/btwiuse/gotty/wetty"
+	"github.com/btwiuse/wetty/localcmd"
+	"github.com/btwiuse/wetty/utils"
+	"github.com/btwiuse/wetty/wetty"
 	"google.golang.org/grpc"
 
 	"github.com/btwiuse/invctrl/pkg/slave/config"
 	"github.com/btwiuse/invctrl/pkg/slave/dial"
 	"github.com/btwiuse/invctrl/pkg/api"
+	"github.com/btwiuse/invctrl/pkg/api/impl"
 )
 
 type Request struct {
@@ -125,7 +125,7 @@ func (c *WsConn) New(req WsConnRequest, res *WsConnResponse) error {
 		//Args: []string{"seq", "100"},
 		//Args: []string{"/home/aaron/go/bin/z", "tick", "100"},
 	}
-	rw := &utils.WsWrapper{conn}
+	rw := utils.WsConnToReadWriter(conn)
 	rw.Write([]byte(string(req.Id)))
 	rw.Write([]byte(string(req.Nonce)))
 	go serveWS(conn, factory)
@@ -133,7 +133,7 @@ func (c *WsConn) New(req WsConnRequest, res *WsConnResponse) error {
 }
 
 func serveWS(conn *websocket.Conn, factory *localcmd.Factory) {
-	var master wetty.Master = &utils.WsWrapper{conn}
+	var client wetty.Client = utils.WsConnToReadWriter(conn)
 	var slave wetty.Slave
 	var err error
 	slave, err = factory.New()
@@ -141,11 +141,11 @@ func serveWS(conn *websocket.Conn, factory *localcmd.Factory) {
 		log.Println(err)
 		return
 	}
-	if err := wetty.NewMSPair(master, slave).Pipe(); err != nil {
+	if err := wetty.NewCSPair(client, slave).Pipe(); err != nil {
 		// case 1: slave closed
 		//   notify the frontend and terminate connection gracefully
 		log.Println(err)
-                if _, err = master.Write([]byte{wetty.SlaveDead}); err != nil {
+                if _, err = client.Write([]byte{wetty.SlaveDead}); err != nil {
 			log.Println(err)
 		}
 	}
@@ -224,7 +224,7 @@ func (*GRPCConn) New(req ConnRequest, res *ConnResponse) error {
 func serveGRPC(grpcSide net.Conn) error {
 	l := &singleListener{grpcSide}
 	grpcServer := grpc.NewServer()
-	api.RegisterApiServer(grpcServer, &apiService{})
+	api.RegisterBidiStreamServer(grpcServer, &impl.BidiStream{})
 	return grpcServer.Serve(l)
 }
 
@@ -262,13 +262,4 @@ func (s *singleListener) Close() error {
 
 func (s *singleListener) Addr() net.Addr {
 	return s.conn.LocalAddr()
-}
-
-// apiService is an api.Service
-type apiService struct {
-}
-
-func (s *apiService) Hello(ctx context.Context, req *api.HelloRequest) (*api.HelloResponse, error) {
-	log.Println("apiService.Hello called with", req.Name)
-	return &api.HelloResponse{Message: "Hello " + req.GetName()}, nil
 }
