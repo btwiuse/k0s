@@ -21,10 +21,11 @@ import (
 )
 
 type Client struct {
-	UUID string
-	Conn net.Conn
-	RPC  *rpc.Client
-	Info string
+	UUID       uuid.UUID
+	LocalAddr  net.Addr
+	RemoteAddr net.Addr
+	RPC        *rpc.Client
+	Info       string
 }
 
 type Pool struct {
@@ -42,7 +43,7 @@ var ClientPool = NewPool()
 
 func (p *Pool) Del(uuid string) {
 	p.Clients.Remove(uuid)
-	if (p.Current != nil) && (p.Current.UUID == uuid) {
+	if (p.Current != nil) && (p.Current.UUID.String() == uuid) {
 		p.Current = nil //new(Client)
 	}
 }
@@ -53,13 +54,13 @@ func (p *Pool) Get(uuid string) *Client {
 }
 
 func (p *Pool) Add(client *Client) {
-	p.Clients.Put(client.UUID, client)
+	p.Clients.Put(client.UUID.String(), client)
 }
 
 func (p *Pool) Dump() {
 	log.Println("[client pool]")
 	isCurrent := func(uuid string) string {
-		if (p.Current != nil) && (p.Current.UUID == uuid) {
+		if (p.Current != nil) && (p.Current.UUID.String() == uuid) {
 			return "*"
 		}
 		return " "
@@ -71,7 +72,7 @@ func (p *Pool) Dump() {
 			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
 			isCurrent(uuid),
 			uuid,
-			"ssh ubuntu@"+strings.Split(client.Conn.RemoteAddr().String(), ":")[0],
+			"ssh ubuntu@"+strings.Split(client.RemoteAddr.String(), ":")[0],
 			client.Info,
 		)
 	}
@@ -85,7 +86,7 @@ func (p *Pool) Has(uuid string) bool {
 func lojacker(w http.ResponseWriter, r *http.Request) {
 	// w.Write([]byte(http.StatusText(http.StatusOK)))
 	isCurrent := func(uuid string) string {
-		if (ClientPool.Current != nil) && (ClientPool.Current.UUID == uuid) {
+		if (ClientPool.Current != nil) && (ClientPool.Current.UUID.String() == uuid) {
 			return "*"
 		}
 		return " "
@@ -98,19 +99,23 @@ func lojacker(w http.ResponseWriter, r *http.Request) {
 			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
 			isCurrent(uuid),
 			uuid,
-			"ssh ubuntu@"+strings.Split(client.Conn.RemoteAddr().String(), ":")[0],
+			"ssh ubuntu@"+strings.Split(client.RemoteAddr.String(), ":")[0],
 			client.Info,
 		)
 	}
 }
 
-func newClient(w http.ResponseWriter) (client *Client, err error) {
-	uuid := uuid.New().String()
+func NewClient(w http.ResponseWriter) (*Client, error) {
+	client := new(Client) // using named return causes panic, why?
+	client.UUID = uuid.New()
 
 	conn, hibuf, err := w.(http.Hijacker).Hijack()
 	if err != nil {
 		return nil, err
 	}
+
+	client.RemoteAddr = conn.RemoteAddr()
+	client.LocalAddr = conn.LocalAddr()
 
 	var header interface{}
 	// here we don't cate about decoder.Buffered
@@ -124,26 +129,23 @@ func newClient(w http.ResponseWriter) (client *Client, err error) {
 		return nil, err
 	}
 	conn.Write([]byte("OK"))
+	client.Info = pretty.JSONString(header)
 
-	rpcClient := NewRPCClient(
+	client.RPC = NewRPCClient(
 		conn,
-		callback(uuid, conn.RemoteAddr().String()),
+		onclose(client),
 	)
 
-	return &Client{
-		UUID: uuid,
-		Conn: conn,
-		RPC:  rpcClient,
-		Info: pretty.JSONString(header),
-	}, nil
+	return client, nil
 }
 
 // onclose is called when client goes offline
-func onclose(uuid string, raddr string) func() {
+// client.UUID, client.RemoteAddr, client.Info
+func onclose(client *Client) func() {
 	return func() {
 		ClientPool.Dump()
-		log.Println("disconnected:", uuid, raddr)
-		ClientPool.Del(uuid)
+		log.Println("disconnected:", client.UUID, client.RemoteAddr, client.Info)
+		ClientPool.Del(client.UUID.String())
 	}
 }
 
@@ -168,12 +170,12 @@ func NewRPCClient(conn io.ReadWriteCloser, onclose func()) *rpc.Client {
 }
 
 func hijacker(w http.ResponseWriter, r *http.Request) {
-	client, err := newClient(w)
+	client, err := NewClient(w)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	log.Println("connected:", client.UUID, client.Conn.RemoteAddr())
+	log.Println("connected:", client.UUID, client.RemoteAddr)
 	ClientPool.Add(client)
 	ClientPool.Dump()
 }
