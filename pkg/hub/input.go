@@ -1,3 +1,5 @@
+// +build input
+
 package hub
 
 import (

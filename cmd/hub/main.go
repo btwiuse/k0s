@@ -12,7 +12,6 @@ import (
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	go hub.Input()
 	addr := ":8000"
 	if len(os.Args) > 1 {
 		addr = os.Args[1]
