@@ -8,9 +8,6 @@ github.com/alecthomas/template
 github.com/alecthomas/template/parse
 # github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4
 github.com/alecthomas/units
-# github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5
-## explicit
-github.com/armon/go-socks5
 # github.com/beevik/ntp v0.2.0
 github.com/beevik/ntp
 # github.com/beorn7/perks v1.0.1
@@ -132,6 +129,9 @@ github.com/prometheus/procfs/xfs
 ## explicit
 github.com/pupapaik/sysinfo
 github.com/pupapaik/sysinfo/cpuid
+# github.com/riobard/go-shadowsocks2 v0.1.0
+## explicit
+github.com/riobard/go-shadowsocks2/socks
 # github.com/rs/cors v1.7.0
 ## explicit
 github.com/rs/cors
