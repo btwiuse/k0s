@@ -19,8 +19,6 @@ import (
 	types "github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/hub/agent"
 	agentinfo "github.com/btwiuse/conntroll/pkg/hub/agent/info"
-	"github.com/btwiuse/conntroll/pkg/rng"
-	"github.com/btwiuse/conntroll/pkg/uuid"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
@@ -387,44 +385,6 @@ func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
 	h.GetAgent(id).AddSessionConn(conn)
 }
 
-// lys is an http handler to net.Listener converter
-// lys implements net.Listener/http.Handler
-type lys struct {
-	conns chan net.Conn
-}
-
-func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	conn, err := wrap.Hijack(w)
-	if err != nil {
-		return
-	}
-	l.conns <- conn
-}
-
-func (l *lys) Accept() (net.Conn, error) {
-	return <-l.conns, nil
-}
-
-func (l *lys) Close() error {
-	return nil
-}
-
-func (l *lys) Addr() net.Addr {
-	return l
-}
-
-func (l *lys) Network() string {
-	return "hijack"
-}
-
-func (l *lys) String() string {
-	return l.Network()
-}
-
-func NewHandleHijackListener() *lys {
-	return &lys{conns: make(chan net.Conn)}
-}
-
 func (h *hub) startYRPCServer() {
 	var (
 		listhand              = NewHandleHijackListener()
@@ -435,41 +395,4 @@ func (h *hub) startYRPCServer() {
 	log.Println(listener)
 	h.handleYRPC = handler
 	go h.serveYRPC(listener)
-}
-
-func ToRPC(conn net.Conn) types.RPC {
-	return &YS{
-		id:      uuid.New(),
-		name:    rng.New(),
-		created: time.Now(),
-		Conn:    conn,
-	}
-}
-
-func (ys *YS) Time() time.Time {
-	return ys.created
-}
-
-func (ys *YS) Name() string {
-	return ys.name
-}
-
-func (ys *YS) ID() string {
-	return ys.id
-}
-
-func (ys *YS) RemoteIP() string {
-	ip, _, _ := net.SplitHostPort(ys.Conn.RemoteAddr().String())
-	return ip
-}
-
-type YS struct {
-	id      string
-	name    string
-	created time.Time
-	net.Conn
-}
-
-func (ys *YS) NewSession() {
-	io.WriteString(ys.Conn, fmt.Sprintln("ACCEPT"))
 }
