@@ -14,6 +14,7 @@ type Config interface {
 	UseTLS() bool
 	Cert() string
 	Key() string
+	BasicAuth() (string, string, bool)
 }
 
 type Hub interface {

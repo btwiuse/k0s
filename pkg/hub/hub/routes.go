@@ -2,6 +2,7 @@ package hub
 
 import (
 	"context"
+	"crypto/subtle"
 	"crypto/tls"
 	"io"
 	"log"
@@ -36,6 +37,10 @@ type hub struct {
 	types.AgentManager
 
 	*http.Server
+
+	ba   bool
+	user string
+	pass string
 }
 
 func NewHub(c types.Config) types.Hub {
@@ -43,20 +48,43 @@ func NewHub(c types.Config) types.Hub {
 		AgentManager: NewAgentManager(),
 	}
 	h.serve(c.Port())
+	h.user, h.pass, h.ba = c.BasicAuth()
 	return h
+}
+
+// https://stackoverflow.com/questions/21936332/idiomatic-way-of-requiring-http-basic-auth-in-go/39591234#39591234
+func (h *hub) basicauth(next http.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if h.ba {
+			username, password, ok := r.BasicAuth()
+			log.Println("basicauth:", username, password, ok)
+			if !ok || subtle.ConstantTimeCompare([]byte(h.user), []byte(username)) != 1 || subtle.ConstantTimeCompare([]byte(h.pass), []byte(password)) != 1 {
+				realm := "realm"
+				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`"`)
+				w.WriteHeader(401)
+				w.Write([]byte("Unauthorised.\n"))
+				return
+			}
+		}
+		next.ServeHTTP(w, r)
+	}
 }
 
 func (h *hub) serve(addr string) {
 	r := mux.NewRouter()
 
 	// ==================== basic auth (TODO) =======================
+	// root auth
+	r.NotFoundHandler = h.basicauth(http.FileServer(http.Dir("/home/aaron/conntroll.github.io")))
+
 	// list active agents
-	r.HandleFunc("/api/agents/", h.handleAgents).Methods("GET")
+	r.HandleFunc("/api/agents/", h.basicauth(http.HandlerFunc(h.handleAgents))).Methods("GET")
 
 	// client /api/agent/{id}/rootfs/{path} hijack => net.Conn <(copy) hijacked grpc fs conn
 	// client /api/agent/{id}/ws => ws <(pipe)> hijacked grpc ws conn
 	s := r.PathPrefix("/api/agent/{id}")
-	s.HandlerFunc(h.handleAgent).Methods("GET")
+	// s.Handler(h.basicauth(http.HandlerFunc(h.handleAgent))).Methods("GET")
+	s.Handler(http.HandlerFunc(h.handleAgent)).Methods("GET")
 
 	// ========================== public ============================
 	// agent hijack => rpc
@@ -81,8 +109,6 @@ func (h *hub) serve(addr string) {
 }
 
 func (h *hub) handleAgents(w http.ResponseWriter, r *http.Request) {
-	user, pass, ok := r.BasicAuth()
-	log.Println("handleAgents", user, pass, ok)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(pretty.JSONString(h.GetAgents())))
 }
@@ -109,14 +135,25 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 
 	agent := h.GetAgent(id)
 
-	switch {
-	case strings.HasPrefix(subpath, "/ws"):
-		wsRelay(agent)(w, r)
-	case strings.HasPrefix(subpath, "/rootfs"):
-		fsRelay(agent)(w, r)
-	default:
-		staticFileHandler.ServeHTTP(w, r)
+	delegate := func(http.ResponseWriter, *http.Request) {
+		switch {
+		case strings.HasPrefix(subpath, "/ws"):
+			wsRelay(agent)(w, r)
+		case strings.HasPrefix(subpath, "/rootfs"):
+			fsRelay(agent)(w, r)
+		default:
+			staticFileHandler.ServeHTTP(w, r)
+		}
 	}
+
+	// if agent is password protected
+	/*
+		if {
+			ag.basicauth(delegate(w, r))
+		}
+	*/
+
+	delegate(w, r)
 }
 
 func wsRelay(ag types.Agent) http.HandlerFunc {
