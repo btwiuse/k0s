@@ -115,7 +115,8 @@ func (c *WsConn) New(req WsConnRequest, res *WsConnResponse) error {
 	res.Message = "OK"
 	conn := dial.WsDial(config.Default)
 	factory := &localcmd.Factory{
-		Args: []string{"/bin/bash"},
+		Args: []string{"/usr/bin/env", "TERM=xterm", "bash"},
+		//Args: []string{"/bin/bash"},
 		//Args: []string{"neofetch"},
 		//Args: []string{"htop"},
 		//Args: []string{"tmux"},
