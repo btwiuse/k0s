@@ -18,15 +18,15 @@ type Meta struct {
 }
 
 type Info struct {
-	ID string `json:"id"`
-	Name string `json:"name"`
+	ID   string   `json:"id"`
+	Name string   `json:"name"`
 	Tags []string `json:"tags"`
-	Auth string `json:"auth,omitempty"`
+	Auth string   `json:"auth,omitempty"`
 
 	Meta `json:"meta"`
 }
 
-func Decode(data []byte) (*Info, error) {
+func Decode(data []byte) (hub.Info, error) {
 	v := &Info{
 		// Meta: &Meta{},
 	}
@@ -37,42 +37,42 @@ func Decode(data []byte) (*Info, error) {
 	return v, err
 }
 
-func (info *Info) GetOS() string{
+func (info *Info) GetOS() string {
 	return info.OS
 }
 
-func (info *Info) GetPwd() string{
+func (info *Info) GetPwd() string {
 	return info.Pwd
 }
 
-func (info *Info) GetArch() string{
+func (info *Info) GetArch() string {
 	return info.Arch
 }
 
-func (info *Info) GetDistro() string{
+func (info *Info) GetDistro() string {
 	return info.Distro
 }
 
-func (info *Info) GetUsername() string{
+func (info *Info) GetUsername() string {
 	return info.Username
 }
 
-func (info *Info) GetHostname() string{
+func (info *Info) GetHostname() string {
 	return info.Hostname
 }
 
-func (info *Info) GetID() string{
+func (info *Info) GetID() string {
 	return info.ID
 }
 
-func (info *Info) GetName() string{
+func (info *Info) GetName() string {
 	return info.Name
 }
 
-func (info *Info) GetTags() []string{
+func (info *Info) GetTags() []string {
 	return info.Tags
 }
 
-func (info *Info) GetAuth() string{
+func (info *Info) GetAuth() string {
 	return info.Auth
 }

@@ -1,4 +1,4 @@
-package name
+package rng
 
 import (
 	"math/rand"

@@ -17,6 +17,9 @@ import (
 	"github.com/btwiuse/conntroll/pkg/api"
 	types "github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/hub/agent"
+	agentinfo "github.com/btwiuse/conntroll/pkg/hub/agent/info"
+	"github.com/btwiuse/conntroll/pkg/rng"
+	"github.com/btwiuse/conntroll/pkg/uuid"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
@@ -40,71 +43,21 @@ type hub struct {
 
 	*http.Server
 
-	ba      bool
-	localui bool // load webui assets from local dir for debugging purpose
-	user    string
-	pass    string
-	ly      *lys // yrpc.Listener
-}
-
-// lys implements net.Listener
-type lys struct {
-	conns chan net.Conn
-}
-
-func (l *lys) Handler() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println("hijacking", r.RequestURI)
-		conn, err := wrap.Hijack(w)
-		if err != nil {
-			log.Println("hijack failed", r.RequestURI, err)
-			return
-		}
-		log.Println("hijacked", r.RequestURI, ", sending conn to l.conns")
-		l.conns <- conn
-		conn.Write([]byte(" "))
-		log.Println("sent hijack confirmation byte")
-	})
-}
-
-func (l *lys) SetDeadline(t time.Time) error {
-	return nil
-}
-
-func (l *lys) Accept() (net.Conn, error) {
-	return <-l.conns, nil
-}
-
-func (l *lys) Close() error {
-	return nil
-}
-
-func (l *lys) Addr() net.Addr {
-	return l
-}
-
-func (l *lys) Network() string {
-	return "hijack"
-}
-
-func (l *lys) String() string {
-	return l.Network()
-}
-
-func NewLys() *lys {
-	return &lys{
-		conns: make(chan net.Conn),
-	}
+	ba         bool
+	localui    bool // load webui assets from local dir for debugging purpose
+	user       string
+	pass       string
+	handleYRPC http.Handler // http.Handler|net.Listener
 }
 
 func NewHub(c types.Config) types.Hub {
 	h := &hub{
 		AgentManager: NewAgentManager(),
 		localui:      c.LocalUI(),
-		ly:           NewLys(),
 	}
+	h.startYRPCServer()
 	h.user, h.pass, h.ba = c.BasicAuth()
-	h.serve(c.Port())
+	h.initServer(c.Port())
 	return h
 }
 
@@ -126,62 +79,70 @@ func (h *hub) basicauth(next http.Handler) http.HandlerFunc {
 	}
 }
 
-const (
-	Ping yrpc.Cmd = iota
-	Pong
-)
-
-func (h *hub) serveYRPC() {
+func (h *hub) serveYRPC(ln net.Listener) {
 	ymux := yrpc.NewServeMux()
-	ymux.Handle(Ping, yrpc.HandlerFunc(func(w yrpc.FrameWriter, r *yrpc.RequestFrame) {
-		w.StartWrite(r.RequestID, Pong, yrpc.StreamFlag)
-		w.WriteBytes([]byte("stream begins"))
+	ymux.Handle(api.AgentRegisterRequest, yrpc.HandlerFunc(func(w yrpc.FrameWriter, r *yrpc.RequestFrame) {
+		info, err := agentinfo.Decode(r.Payload)
+		if err != nil {
+			log.Println(err)
+			w.StartWrite(r.RequestID, api.AgentRegisterResponse, 0)
+			w.WriteBytes([]byte(string(err.Error())))
+			w.EndWrite()
+			// close client
+			// r.Close()
+			return
+		}
+		var (
+			raddr    = r.ConnectionInfo().RemoteAddr()
+			ip, _, _ = net.SplitHostPort(raddr)
+			id       = info.GetID()
+			bahash   = info.GetAuth()
+		)
+
+		w.StartWrite(r.RequestID, api.AgentRegisterResponse, yrpc.StreamFlag)
+		w.WriteBytes([]byte("OK"))
 		w.EndWrite()
 
-		// consule the first resp
-		<-r.FrameCh()
+		if h.Has(id) {
+			// h.GetAgent(id).AddRPCConn(conn)
+			return
+		}
 
 		quit := make(chan struct{})
-		go func() {
-			for {
-				f := <-r.FrameCh()
-				if f == nil {
-					log.Println("nil chan")
-					close(quit)
-					return
-				}
-				log.Println("client response:", string(f.Payload))
-			}
-		}()
+		opts := []agent.Opt{
+			agent.SetQuit(quit),
+			agent.SetIP(ip),
+		}
+		if bahash != "" {
+			opts = append(opts, agent.SetBasicAuthHash(bahash))
+		}
+		ys := ToYRPC(w, r)
 
-		for i := 0; ; i++ {
-			select {
-			case <-quit:
-				break
-			default:
-				payload := fmt.Sprintf("server request %d", i)
-				w.StartWrite(r.RequestID, Ping, yrpc.StreamFlag)
-				w.WriteBytes([]byte(payload))
-				w.EndWrite() // send frame
-				log.Println(payload)
-			}
-			time.Sleep(time.Second)
+		ag := agent.NewAgent(ys, info, opts...)
+		log.Println(id)
+		log.Println(info.GetID())
+		h.Add(ag)
+		log.Println(ag.ID())
+
+		ci := r.ConnectionInfo()
+		ci.NotifyWhenClose(ag.Close)
+
+		select {
+		case <-ag.Done():
+			h.Del(id)
+			log.Println("time to quit", ag.ID(), ag.Name())
 		}
 	}))
 
 	ys := yrpc.NewServer(yrpc.ServerConfig{
-		ListenFunc: func(network, addr string) (net.Listener, error) { return h.ly, nil },
+		ListenFunc: func(network, addr string) (net.Listener, error) { return ln, nil },
 		Handler:    ymux,
 	})
 
-	go func() {
-		ys.ListenAndServe()
-	}()
+	go ys.ListenAndServe()
 }
 
-func (h *hub) serve(addr string) {
-	h.serveYRPC()
-
+func (h *hub) initServer(addr string) {
 	r := mux.NewRouter()
 
 	// ==================== basic auth (TODO) =======================
@@ -209,20 +170,10 @@ func (h *hub) serve(addr string) {
 	s.Handler(http.HandlerFunc(h.handleAgent)).Methods("GET")
 
 	// ========================== public ============================
-	// agent hijack => rpc
-	r.HandleFunc("/api/yrpc", h.handleYRPC).Methods("GET")
-	r.HandleFunc("/api/rpc", h.handleRPC).Methods("GET").
-		Queries("id", "{id}",
-			"name", "{name}",
-			"pwd", "{pwd}",
-			"os", "{os}",
-			"arch", "{arch}",
-			"tags", "{tags}",
-			"bahash", "{bahash}",
-			"username", "{username}",
-			"hostname", "{hostname}")
+	// agent hijack => yrpc -> hub.RPC -> hub.Agent
+	r.Handle("/api/yrpc", h.handleYRPC).Methods("GET")
 
-	// agent hijack => gRPC {ws, fs}
+	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
 	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").
 		Queries("id", "{id}")
 
@@ -232,6 +183,11 @@ func (h *hub) serve(addr string) {
 		Handler:      handlers.LoggingHandler(os.Stderr, cors.AllowAll().Handler(r)),
 		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
+}
+
+func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(pretty.JSONString(h.GetAgents())))
 }
 
 func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
@@ -251,11 +207,6 @@ func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-}
-
-func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(pretty.JSONString(h.GetAgents())))
 }
 
 func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
@@ -303,7 +254,7 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
     <script src="/js/wetty-bundle.js"></script>
   </body>
 </html>
-`, ag.Username(), ag.Hostname())))
+`, ag.GetUsername(), ag.GetHostname())))
 		}
 	})
 
@@ -318,7 +269,6 @@ func wsRelay(ag types.Agent) http.HandlerFunc {
 			return
 		}
 		defer wsconn.Close()
-
 		session := ag.NewSession()
 		sessionSendClient, err := session.Send(context.Background())
 		if err != nil {
@@ -397,6 +347,7 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 			log.Println(err)
 			return
 		}
+		_ = reqbuf
 
 		session := ag.NewSession()
 		chunkRequest := &api.ChunkRequest{
@@ -429,77 +380,6 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func (h *hub) handleYRPC(w http.ResponseWriter, r *http.Request) {
-	log.Println("handleYRPC")
-	h.ly.Handler().ServeHTTP(w, r)
-}
-
-func (h *hub) handleRPC(w http.ResponseWriter, r *http.Request) {
-	log.Println("handleRPC")
-	conn, err := wrap.Hijack(w)
-	if err != nil {
-		log.Println("error hijacking:", err)
-		return
-	}
-
-	var (
-		vars     = mux.Vars(r)
-		query    = r.URL.Query()
-		id       = vars["id"]
-		name     = vars["name"]
-		pwd      = vars["pwd"]
-		ip, _, _ = net.SplitHostPort(conn.RemoteAddr().String())
-		username = vars["username"]
-		hostname = vars["hostname"]
-		goos     = vars["os"]
-		goarch   = vars["arch"]
-		bahash   = vars["bahash"]
-		tagstr   = vars["tags"]
-		tags     = []string{}
-		distro   = query.Get("distro")
-	)
-
-	if tagstr != "" {
-		tags = strings.Split(tagstr, ",")
-	}
-
-	if h.Has(id) {
-		h.GetAgent(id).AddRPCConn(conn)
-		return
-	}
-
-	opts := []agent.Opt{
-		agent.SetID(id),
-		agent.SetName(name),
-		agent.SetIP(ip),
-		agent.SetPWD(pwd),
-		agent.SetUsername(username),
-		agent.SetHostname(hostname),
-		agent.SetOS(goos),
-		agent.SetARCH(goarch),
-		agent.SetTags(tags),
-	}
-
-	if bahash != "" {
-		opts = append(opts, agent.SetBasicAuthHash(bahash))
-	}
-
-	if distro != "" {
-		opts = append(opts, agent.SetDistro(distro))
-	}
-
-	ag := agent.NewAgent(conn, opts...)
-	h.Add(ag)
-	go h.GC(ag)
-}
-
-func (h *hub) GC(ag types.Agent) {
-	select {
-	case <-ag.Done():
-		h.Del(ag.ID())
-	}
-}
-
 func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars = mux.Vars(r)
@@ -518,4 +398,91 @@ func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.GetAgent(id).AddSessionConn(conn)
+}
+
+// lys is an http handler to net.Listener converter
+// lys implements net.Listener/http.Handler
+type lys struct {
+	conns chan net.Conn
+}
+
+func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// log.Println("hijacking", r.RequestURI)
+	conn, err := wrap.Hijack(w)
+	if err != nil {
+		log.Println("hijack failed", r.RequestURI, err)
+		return
+	}
+	// log.Println("hijacked", r.RequestURI, ", sending conn to l.conns")
+	l.conns <- conn
+	conn.Write([]byte(" "))
+	// log.Println("sent hijack confirmation byte")
+}
+
+func (l *lys) Accept() (net.Conn, error) {
+	return <-l.conns, nil
+}
+
+func (l *lys) Close() error {
+	return nil
+}
+
+func (l *lys) Addr() net.Addr {
+	return l
+}
+
+func (l *lys) Network() string {
+	return "hijack"
+}
+
+func (l *lys) String() string {
+	return l.Network()
+}
+
+func (h *hub) startYRPCServer() {
+	listhand := &lys{
+		conns: make(chan net.Conn),
+	}
+	h.handleYRPC = listhand
+	go h.serveYRPC(listhand)
+}
+
+func ToYRPC(w yrpc.FrameWriter, r *yrpc.RequestFrame) types.RPC {
+	return &YS{
+		id:      uuid.New(),
+		name:    rng.New(),
+		created: time.Now(),
+		w:       w,
+		r:       r,
+	}
+}
+
+func (ys *YS) Time() time.Time {
+	return ys.created
+}
+
+func (ys *YS) Name() string {
+	return ys.name
+}
+
+func (ys *YS) ID() string {
+	return ys.id
+}
+
+type YS struct {
+	id      string
+	name    string
+	created time.Time
+	w       yrpc.FrameWriter
+	r       *yrpc.RequestFrame
+}
+
+func (ys *YS) NewSession() {
+	var (
+		w = ys.w
+		r = ys.r
+	)
+	w.StartWrite(r.RequestID, api.AcceptRequest, yrpc.StreamFlag)
+	w.EndWrite()
+	<-r.FrameCh()
 }

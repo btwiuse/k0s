@@ -4,20 +4,24 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
-	"io"
+
+	// "io"
 	"log"
 	"net"
 	"net/http"
-	"net/rpc"
+
+	// "net/rpc"
 	"sync"
 	"time"
 
 	"github.com/btwiuse/conntroll/pkg/api"
-	"github.com/btwiuse/conntroll/pkg/api/rpcimpl"
+	// "github.com/btwiuse/conntroll/pkg/api/rpcimpl"
 	"github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/hub/session"
-	"github.com/btwiuse/conntroll/pkg/uuid"
-	"github.com/btwiuse/conntroll/pkg/wrap"
+
+	// "github.com/btwiuse/conntroll/pkg/uuid"
+	// "github.com/btwiuse/conntroll/pkg/wrap"
+	"github.com/btwiuse/conntroll/pkg/hub/agent/info"
 	"google.golang.org/grpc"
 )
 
@@ -25,59 +29,86 @@ var (
 	_ hub.Agent = (*agent)(nil)
 )
 
-func NewAgent(conn net.Conn, opts ...Opt) hub.Agent {
+func NewAgent(rpc hub.RPC, info hub.Info, xopts ...Opt) hub.Agent {
 	ag := &agent{
 		sch:            make(chan hub.Session),
 		SessionManager: NewSessionManager(),
-		rpcManager:     NewRPCManager(),
-		created:        time.Now(),
-		Connected:      time.Now().Unix(),
-		done:           make(chan struct{}),
-		once:           &sync.Once{},
+		// rpcManager:     NewRPCManager(),
+		rpc:       rpc,
+		created:   time.Now(),
+		Connected: time.Now().Unix(),
+		done:      make(chan struct{}),
+		once:      &sync.Once{},
 	}
-	for _, opt := range opts {
+	ag.fromInfo(info)
+
+	for _, opt := range xopts {
 		opt(ag)
 	}
-	ag.AddRPCConn(conn)
+	// ag.AddRPCConn(conn)
 	return ag
 }
 
+func (ag *agent) fromInfo(info hub.Info) {
+	ag.OS = info.GetOS()
+	ag.Pwd = info.GetPwd()
+	ag.Arch = info.GetArch()
+	ag.Distro = info.GetDistro()
+	ag.Username = info.GetUsername()
+	ag.Hostname = info.GetHostname()
+	ag.ID_ = info.GetID()
+	ag.Name_ = info.GetName()
+	ag.Tags = info.GetTags()
+	if info.GetAuth() != "" {
+		ag.Auth = true
+	}
+}
+
+type agent struct {
+	hub.SessionManager `json:"-"`
+	// rpcManager         hub.RPCManager
+	rpc  hub.RPC
+	sch  chan hub.Session
+	done chan struct{}
+	once *sync.Once
+
+	created time.Time
+	bahash  string
+
+	grpcCounter int
+	rpcCounter  int
+
+	info.Info `json:"-"` // inherit methods
+
+	// Metadata, for flatten json output
+
+	ID_       string   `json:"id"`
+	Name_     string   `json:"name"`
+	Tags      []string `json:"tags"`
+	Auth      bool     `json:"auth,omitempty"`
+	Connected int64    `json:"connected"`
+	IP        string   `json:"ip"`
+
+	OS       string `json:"os"`
+	Pwd      string `json:"pwd"`
+	Arch     string `json:"arch"`
+	Distro   string `json:"distro,omitempty"`
+	Username string `json:"username"`
+	Hostname string `json:"hostname"`
+}
+
 type Opt func(*agent)
-
-func SetTags(tags []string) Opt {
-	return func(ag *agent) {
-		ag.Tag = tags
-	}
-}
-
-func SetDistro(dist string) Opt {
-	return func(ag *agent) {
-		ag.Distro = dist
-	}
-}
-
-func SetName(name string) Opt {
-	return func(ag *agent) {
-		ag.Nam = name
-	}
-}
-
-func SetID(id string) Opt {
-	return func(ag *agent) {
-		ag.Id = id
-	}
-}
-
-func SetUsername(u string) Opt {
-	return func(ag *agent) {
-		ag.Usernam = u
-	}
-}
 
 func SetBasicAuthHash(bahash string) Opt {
 	return func(ag *agent) {
 		ag.bahash = bahash
 		ag.Auth = true
+	}
+}
+
+func SetQuit(quit chan struct{}) Opt {
+	return func(ag *agent) {
+		ag.done = quit
 	}
 }
 
@@ -87,57 +118,8 @@ func SetIP(ip string) Opt {
 	}
 }
 
-func SetPWD(p string) Opt {
-	return func(ag *agent) {
-		ag.PWD = p
-	}
-}
-
-func SetHostname(h string) Opt {
-	return func(ag *agent) {
-		ag.Hostnam = h
-	}
-}
-
-func SetOS(o string) Opt {
-	return func(ag *agent) {
-		ag.OS = o
-	}
-}
-
-func SetARCH(a string) Opt {
-	return func(ag *agent) {
-		ag.ARCH = a
-	}
-}
-
-// make server call AddRPCConn
-// this func is asynchronuous, we don't care the result
-func (ag *agent) NewRPC() {
-	req := rpcimpl.RPCRequest{}
-	resp := &rpcimpl.RPCResponse{}
-	rc := ag.rpcManager.Last()
-	if rc == nil {
-		log.Println("client dead:", ag.ID())
-		ag.Close()
-		return
-	}
-	err := rc.Call("RPC.New", req, resp)
-	if err != nil {
-		log.Println("RPC.New", err)
-	}
-}
-
 func (ag *agent) newSession() {
-	req := rpcimpl.SessionRequest{}
-	resp := &rpcimpl.SessionResponse{}
-	rc := ag.rpcManager.Last()
-	if rc == nil {
-		log.Println("client dead:", ag.ID())
-		ag.Close()
-		return
-	}
-	rc.Go("Session.New", req, resp, nil)
+	ag.rpc.NewSession() // involves sending AcceptRequest
 }
 
 func (ag *agent) NewSession() hub.Session {
@@ -153,34 +135,6 @@ func (ag *agent) Close() {
 
 func (ag *agent) Done() <-chan struct{} {
 	return ag.done
-}
-
-type agent struct {
-	hub.SessionManager `json:"-"`
-	rpcManager         hub.RPCManager
-	sch                chan hub.Session
-	done               chan struct{}
-	once               *sync.Once
-
-	created time.Time
-	bahash  string
-
-	grpcCounter int
-	rpcCounter  int
-
-	// Metadata
-	Id        string   `json:"id"`
-	Nam       string   `json:"name"`
-	Tag       []string `json:"tags"` // ,omitempty
-	Connected int64    `json:"connected"`
-	Hostnam   string   `json:"hostname"`
-	Usernam   string   `json:"username"`
-	PWD       string   `json:"pwd"`
-	OS        string   `json:"os"`
-	Distro    string   `json:"distro,omitempty"`
-	ARCH      string   `json:"arch"`
-	IP        string   `json:"ip"`
-	Auth      bool     `json:"auth"`
 }
 
 func (ag *agent) BasicAuth(next http.Handler) http.Handler {
@@ -205,58 +159,12 @@ func (ag *agent) Time() time.Time {
 	return ag.created
 }
 
-func (ag *agent) Name() string {
-	return ag.Nam
-}
-
 func (ag *agent) ID() string {
-	return ag.Id
+	return ag.ID_
 }
 
-func (ag *agent) Tags() []string {
-	return ag.Tag
-}
-
-func (ag *agent) Username() string {
-	return ag.Usernam
-}
-
-func (ag *agent) Hostname() string {
-	return ag.Hostnam
-}
-
-// we use NewRPCClient over rpc.NewClient(conn)
-// so we can remove agent from pool immediately when it is disconnected
-
-// when we have multiple RPC clients, things man change a bit
-// we may assume the agent is always connected now
-// we should probably spawn another RPCClient onClose, instead of simply letting it die
-func (ag *agent) AddRPCConn(c net.Conn) {
-	id := uuid.New()
-	pr, pw := io.Pipe()
-	go func() {
-		defer ag.onRPCClose(id)
-		if _, err := io.Copy(pw, c); err != nil {
-			log.Println(err)
-		}
-	}()
-	rpcClient := rpc.NewClient(&wrap.ReadWriteCloser{
-		Reader: pr,
-		Writer: c,
-		Closer: c,
-	})
-	ag.rpcCounter += 1
-	name := fmt.Sprintf("%s-%d", ag.Name(), ag.rpcCounter)
-	rc := ToRPC(name, id)(rpcClient)
-	ag.rpcManager.AddRPC(rc)
-}
-
-// onclose is called when rpc connection is lost
-func (ag *agent) onRPCClose(id string) {
-	log.Println("disconnected:", ag.ID(), id)
-	ag.rpcManager.Del(id)
-	// assuming there are other rpc conns left
-	ag.NewRPC()
+func (ag *agent) Name() string {
+	return ag.Name_
 }
 
 // blocks until agent.NewSession reads the channel

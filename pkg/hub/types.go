@@ -3,7 +3,8 @@ package hub
 import (
 	"net"
 	"net/http"
-	"net/rpc"
+
+	// "net/rpc"
 
 	"github.com/btwiuse/conntroll/pkg"
 	"github.com/btwiuse/conntroll/pkg/api"
@@ -13,6 +14,7 @@ type Info interface {
 	GetID() string
 	GetName() string
 	GetTags() []string
+	GetAuth() string
 
 	GetOS() string
 	GetPwd() string
@@ -51,10 +53,10 @@ type Agent interface {
 	pkg.Tider
 	SessionManager
 
-	AddRPCConn(net.Conn)
+	// AddRPCConn(net.Conn)
 	AddSessionConn(net.Conn)
 
-	NewRPC()
+	// NewRPC()
 	NewSession() Session
 
 	Close()
@@ -62,8 +64,8 @@ type Agent interface {
 
 	BasicAuth(http.Handler) http.Handler
 
-	Username() string
-	Hostname() string
+	GetUsername() string
+	GetHostname() string
 }
 
 type SessionManager interface {
@@ -85,9 +87,10 @@ type RPC interface {
 	pkg.Tider
 
 	// *rpc.Client
-	Call(serviceMethod string, args interface{}, reply interface{}) error
-	Close() error
-	Go(serviceMethod string, args interface{}, reply interface{}, done chan *rpc.Call) *rpc.Call
+	// Call(serviceMethod string, args interface{}, reply interface{}) error
+	// Close() error
+	// Go(serviceMethod string, args interface{}, reply interface{}, done chan *rpc.Call) *rpc.Call
+	NewSession() // Session
 }
 
 type RPCManager interface {

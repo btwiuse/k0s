@@ -40,7 +40,7 @@ type config struct {
 	Tags []string `json:"tags"`
 	Auth string   `json:"auth,omitempty"`
 
-	agent.Info `json:"info"`
+	agent.Info `json:"meta"`
 
 	verbose  bool
 	insecure bool
@@ -197,7 +197,7 @@ func Parse(args []string) agent.Config {
 }
 
 func (c *config) String() string {
-	return pretty.JSONString(c)
+	return strings.TrimSpace(pretty.JSONString(c))
 }
 
 func Decode(data []byte) (agent.Info, error) {

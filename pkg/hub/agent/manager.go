@@ -1,8 +1,8 @@
 package agent
 
 import (
-	"net/rpc"
-	"time"
+	// "net/rpc"
+	// "time"
 
 	"github.com/btwiuse/conntroll/pkg"
 	"github.com/btwiuse/conntroll/pkg/hub"
@@ -11,7 +11,7 @@ import (
 
 var (
 	_ hub.SessionManager = (*sessionManager)(nil)
-	_ hub.RPCManager     = (*rpcManager)(nil)
+	// _ hub.RPCManager     = (*rpcManager)(nil)
 )
 
 type sessionManager struct {
@@ -32,6 +32,7 @@ func NewSessionManager() hub.SessionManager {
 	}
 }
 
+/*
 type rpcManager struct {
 	pkg.Manager
 }
@@ -87,3 +88,4 @@ func ToRPC(name, id string) func(*rpc.Client) hub.RPC {
 		}
 	}
 }
+*/

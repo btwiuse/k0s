@@ -14,11 +14,9 @@ func agentCmd(args []string) {
 	ag := agent.NewAgent(c)
 
 	for range time.Tick(time.Second) {
-		ag.Go(ag.ConnectAndServe)
-
-		err := ag.Wait()
+		err := ag.YRPCConnectAndServe()
 		if err != nil {
-			log.Println(err)
+			log.Println(err, "Reconnect")
 		}
 	}
 }
