@@ -221,6 +221,13 @@ func newAgentOrSession(w http.ResponseWriter, r *http.Request) {
 			Whoami: values["whoami"][0],
 			Hostname: values["hostname"][0],
 			Connected: time.Now().Unix(),
+			IP: conn.RemoteAddr().String(),
+		}
+		if len(values["os"]) != 0 {
+			agent.OS = values["os"][0]
+		}
+		if len(values["arch"]) != 0 {
+			agent.ARCH = values["arch"][0]
 		}
 		agent.MakeInterceptedRPCClient(conn)
 

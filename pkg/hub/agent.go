@@ -21,6 +21,9 @@ type Agent struct {
 	Hostname       string `json:"hostname"`
 	Whoami         string `json:"whoami"`
 	Pwd            string `json:"pwd"`
+	OS             string `json:"os"`
+	ARCH           string `json:"arch"`
+	IP             string `json:"ip"`
 	// Info           url.Values
 }
 

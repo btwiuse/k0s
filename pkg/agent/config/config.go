@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"runtime"
 
 	"github.com/google/uuid"
 )
@@ -23,6 +24,8 @@ var (
 	pwd      = strings.TrimSpace(string(run(`pwd`)))
 	whoami   = strings.TrimSpace(string(run(`whoami`)))
 	hostname = strings.TrimSpace(string(run(`hostname`)))
+	goos = runtime.GOOS
+	goarch = runtime.GOARCH
 )
 
 type Config struct {
@@ -48,6 +51,8 @@ func Init() {
 	config.Info.Set("pwd", pwd)
 	config.Info.Set("whoami", whoami)
 	config.Info.Set("hostname", hostname)
+	config.Info.Set("os", goos)
+	config.Info.Set("arch", goarch)
 
 	Default = config
 }
