@@ -7,7 +7,7 @@ import (
 	"net"
 )
 
-func NewSingleListener(conn net.Conn, onAccept func()) net.Listener {
+func NewSingleListener(conn net.Conn, onAccept ...func()) net.Listener {
 	return &singleListener{
 		Conn:     conn,
 		OnAccept: onAccept,
@@ -17,14 +17,14 @@ func NewSingleListener(conn net.Conn, onAccept func()) net.Listener {
 // single listener help construct a grpc server from a tcp connection
 type singleListener struct {
 	net.Conn
-	OnAccept func()
+	OnAccept []func()
 }
 
 // singleListener implements the net.Listener interface
 func (s *singleListener) Accept() (net.Conn, error) {
 	if s.Conn != nil {
-		if s.OnAccept != nil {
-			s.OnAccept()
+		if len(s.OnAccept) != 0 {
+			s.OnAccept[0]()
 		}
 		c := s.Conn
 		s.Conn = nil
