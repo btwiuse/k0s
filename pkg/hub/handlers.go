@@ -97,7 +97,7 @@ func pipe(ws io.ReadWriteCloser, session api.Session_SendClient) error {
 	errs := make(chan error, 2)
 	closeall := func() {
 		ws.Write([]byte{message.ClientClose})
-		session.Send(&api.Message{Type: []byte{message.SessionClose}})
+		// session.Send(&api.Message{Type: []byte{message.SessionClose}})
 		ws.Close()
 		session.CloseSend()
 	}
@@ -168,9 +168,9 @@ func handleConnectionError(session io.Writer, err error) {
 		log.Printf("Client close detected: %q, sending ClientDead message to session", err)
 	}
 
-	if _, err := session.Write([]byte{message.SessionClose}); err != nil {
-		log.Println("pipe:", err)
-	}
+	// if _, err := session.Write([]byte{message.SessionClose}); err != nil {
+	//	log.Println("pipe:", err)
+	// }
 }
 
 func static(w http.ResponseWriter, r *http.Request) {
