@@ -58,7 +58,7 @@ func (c *config) NewAgentRequestBody() []byte {
 }
 
 func (c *config) NewSessionRequestBody() []byte {
-	return []byte(fmt.Sprintf("GET %s?%s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n", "/api/session", c.RawQuery, c.Hostname()))
+	return []byte(fmt.Sprintf("GET %s?%s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n", "/api/grpc", "id="+c.URL.Query().Get("id"), c.Hostname()))
 }
 
 func Parse(args []string) agent.Config {

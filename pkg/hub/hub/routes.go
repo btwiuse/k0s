@@ -46,33 +46,43 @@ func NewHub(c types.Config) types.Hub {
 	return h
 }
 
-// TODO better gorilla mux router
 func (h *hub) serve(addr string) {
 	r := mux.NewRouter()
+
+	// ==================== basic auth (TODO) =======================
+	// list active agents
 	r.HandleFunc("/api/agents/", h.handleAgents).Methods("GET")
+
+	// client /api/agent/{id}/rootfs/{path} hijack => net.Conn <(copy) hijacked grpc fs conn
+	// client /api/agent/{id}/ws => ws <(pipe)> hijacked grpc ws conn
 	s := r.PathPrefix("/api/agent/{id}")
 	s.HandlerFunc(h.handleAgent).Methods("GET")
+
+	// ========================== public ============================
+	// agent hijack => rpc
 	r.HandleFunc("/api/rpc", h.handleRPC).Methods("GET").
-		Queries(
-			"id", "{id}",
+		Queries("id", "{id}",
 			"pwd", "{pwd}",
 			"os", "{os}",
 			"arch", "{arch}",
 			"username", "{username}",
-			"hostname", "{hostname}",
-		)
-	r.HandleFunc("/api/session", h.handleSession).Methods("GET").
-		Queries(
-			"id", "{id}",
-		)
+			"hostname", "{hostname}")
+
+	// agent hijack => gRPC {ws, fs}
+	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").
+		Queries("id", "{id}")
+
+	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
 	h.Server = &http.Server{
 		Addr:         addr,
-		Handler:      handlers.LoggingHandler(os.Stderr, cors.Default().Handler(r)),
+		Handler:      handlers.LoggingHandler(os.Stderr, cors.AllowAll().Handler(r)),
 		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
 }
 
 func (h *hub) handleAgents(w http.ResponseWriter, r *http.Request) {
+	user, pass, ok := r.BasicAuth()
+	log.Println("handleAgents", user, pass, ok)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(pretty.JSONString(h.GetAgents())))
 }
@@ -271,7 +281,7 @@ func (h *hub) GC(ag types.Agent) {
 	}
 }
 
-func (h *hub) handleSession(w http.ResponseWriter, r *http.Request) {
+func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars = mux.Vars(r)
 		id   = vars["id"]
