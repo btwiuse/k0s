@@ -508,7 +508,11 @@ func main() {
 	mux.HandleFunc("/", ls)
 	mux.HandleFunc("/ws", wsr)
 	mux.HandleFunc("/ws/", ws)
-	log.Println("listening on http://localhost:8000")
 	go input()
+	if len(os.Args) > 1 {
+		log.Println("listening on http://localhost" + os.Args[1])
+		log.Fatalln(http.ListenAndServe(os.Args[1], hijack(mux)))
+	}
+	log.Println("listening on http://localhost:8000")
 	log.Fatalln(http.ListenAndServe(":8000", hijack(mux)))
 }
