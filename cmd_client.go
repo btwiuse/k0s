@@ -15,12 +15,4 @@ func clientCmd(args []string) {
 	ag := agent.NewAgent(c)
 
 	_ = ag
-/*
-	ag.Go(ag.ConnectAndServe)
-
-	err := ag.Wait()
-	if err != nil {
-		log.Println()
-	}
-*/
 }
