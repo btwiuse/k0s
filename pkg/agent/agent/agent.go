@@ -27,35 +27,41 @@ type agent struct {
 	types.FileServer
 	types.GrpcServer
 	types.Socks5Server
+	types.MetricsServer
 	// grpcln chan<- net.Conn
 	id   string
 	name string
 }
 
 func NewAgent(c types.Config) types.Agent {
-	eg, _ := errgroup.WithContext(context.Background())
-	id := c.GetID()
-	name := c.GetName()
+	var (
+		eg, _ = errgroup.WithContext(context.Background())
+		id    = c.GetID()
+		name  = c.GetName()
+		shell = "bash"
+
+		fileServer    = StartFileServer(c)
+		grpcServer    = StartGrpcServer(c)
+		socks5Server  = StartSocks5Server(c)
+		metricsServer = StartMetricsServer(c)
+	)
 	if c.GetVerbose() {
 		log.Println("new agent", id, name)
 	}
-	shell := "bash"
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
 	}
-	fileServer := StartFileServer(c)
-	grpcServer := StartGrpcServer(c)
-	socks5Server := StartSocks5Server(c)
 
 	return &agent{
-		Group:        eg,
-		Config:       c,
-		Dialer:       dialer.New(c),
-		FileServer:   fileServer,
-		GrpcServer:   grpcServer,
-		Socks5Server: socks5Server,
-		id:           id,
-		name:         name,
+		Group:         eg,
+		Config:        c,
+		Dialer:        dialer.New(c),
+		FileServer:    fileServer,
+		GrpcServer:    grpcServer,
+		Socks5Server:  socks5Server,
+		MetricsServer: metricsServer,
+		id:            id,
+		name:          name,
 	}
 }
 
@@ -69,6 +75,10 @@ func (ag *agent) GrpcChanConn() chan<- net.Conn {
 
 func (ag *agent) Socks5ChanConn() chan<- net.Conn {
 	return ag.Socks5Server.ChanConn()
+}
+
+func (ag *agent) MetricsChanConn() chan<- net.Conn {
+	return ag.MetricsServer.ChanConn()
 }
 
 func (ag *agent) AcceptFS() (net.Conn, error) {
@@ -106,6 +116,20 @@ func (ag *agent) AcceptGrpc() (net.Conn, error) {
 	)
 
 	conn, err = ag.Dial("/api/grpc?id=" + ag.GetID())
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
+}
+
+func (ag *agent) AcceptMetrics() (net.Conn, error) {
+	var (
+		conn net.Conn
+		err  error
+	)
+
+	conn, err = ag.Dial("/api/metrics?id=" + ag.GetID())
 	if err != nil {
 		return nil, err
 	}

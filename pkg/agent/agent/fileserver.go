@@ -7,10 +7,11 @@ import (
 )
 
 func StartFileServer(c types.Config) types.FileServer {
-	fsListener := NewLys()
-	fileServer := &http.Server{
-		Handler: http.FileServer(http.Dir("/")),
-	}
+	var (
+		fsListener = NewLys()
+		handler    = LoggingMiddleware(http.FileServer(http.Dir("/")))
+		fileServer = &http.Server{Handler: handler}
+	)
 	go fileServer.Serve(fsListener)
 	return fsListener
 }

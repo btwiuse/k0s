@@ -144,6 +144,13 @@ func (ys *YS) NewFS() {
 	}
 }
 
+func (ys *YS) NewMetrics() {
+	_, err := io.WriteString(ys.Conn, fmt.Sprintln("METRICS"))
+	if err != nil {
+		ys.Close()
+	}
+}
+
 func (ys *YS) NewSession() {
 	_, err := io.WriteString(ys.Conn, fmt.Sprintln("ACCEPT"))
 	if err != nil {

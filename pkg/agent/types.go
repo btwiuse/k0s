@@ -67,6 +67,7 @@ type Agent interface {
 	AcceptFS() (net.Conn, error)
 	AcceptGrpc() (net.Conn, error)
 	AcceptSocks5() (net.Conn, error)
+	AcceptMetrics() (net.Conn, error)
 
 	ConnectAndServe() error
 	Serve(RPC) error
@@ -74,9 +75,14 @@ type Agent interface {
 	FSChanConn() chan<- net.Conn
 	GrpcChanConn() chan<- net.Conn
 	Socks5ChanConn() chan<- net.Conn
+	MetricsChanConn() chan<- net.Conn
 	// RPC
 	// ServeGRPC() error
 	// Connect() (RPC, error)
+}
+
+type MetricsServer interface {
+	ChanConn() chan<- net.Conn
 }
 
 type FileServer interface {
