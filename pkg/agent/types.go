@@ -30,8 +30,6 @@ type Config interface {
 	GetVerbose() bool
 	GetInsecure() bool
 
-	FakeHeader(p string) []byte
-
 	String() string
 }
 
@@ -53,7 +51,7 @@ type Agent interface {
 	Config
 	AgentRegister(net.Conn) (RPC, error)
 	Accept() (net.Conn, error)
-	Dial() (net.Conn, error)
+	Dial(string) (net.Conn, error)
 	ConnectAndServe() error
 	Serve(RPC) error
 	GRPCServer

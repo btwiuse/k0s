@@ -111,16 +111,6 @@ func (c *config) GetHost() string {
 	return host
 }
 
-func (c *config) FakeHeader(p string) []byte {
-	return []byte(
-		fmt.Sprintf(
-			"GET %s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n",
-			p,
-			c.GetHost(),
-		),
-	)
-}
-
 func Parse(args []string) agent.Config {
 	var (
 		fset = flag.NewFlagSet("agent", flag.ExitOnError)

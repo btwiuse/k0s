@@ -2,16 +2,16 @@ package agent
 
 import (
 	"context"
-	"crypto/tls"
 	"errors"
 	"io"
 	"log"
 	"net"
 	"os/exec"
+	"path"
 
 	types "github.com/btwiuse/conntroll/pkg/agent"
-	"golang.org/x/net/proxy"
 	"golang.org/x/sync/errgroup"
+	"nhooyr.io/websocket"
 )
 
 var (
@@ -57,12 +57,7 @@ func (ag *agent) Accept() (net.Conn, error) {
 		err  error
 	)
 
-	conn, err = ag.Dial()
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = conn.Write(ag.Config.FakeHeader("/api/grpc?id=" + ag.GetID()))
+	conn, err = ag.Dial("/api/grpc?id=" + ag.GetID())
 	if err != nil {
 		return nil, err
 	}
@@ -70,40 +65,30 @@ func (ag *agent) Accept() (net.Conn, error) {
 	return conn, nil
 }
 
-func (ag *agent) Dial() (conn net.Conn, err error) {
-	var c = ag.Config
-	dialer := &net.Dialer{}
-	proxyDialer := proxy.FromEnvironmentUsing(dialer)
+func (ag *agent) Dial(p string) (conn net.Conn, err error) {
+	var (
+		c = ag.Config
+		u string
+	)
+
 	switch c.GetScheme() {
 	case "http":
-		// conn, err = net.Dial("tcp", c.GetAddr())
-		conn, err = proxyDialer.Dial("tcp", c.GetAddr())
-		if err != nil {
-			return nil, err
-		}
-		return conn, nil
+		u = "ws://" + path.Join(c.GetAddr(), p)
 	case "https":
-		conn, err = tls.Dial("tcp", c.GetAddr(), &tls.Config{
-			// conn, err = tls.DialWithDialer(proxyDialer, "tcp", c.GetAddr(), &tls.Config{
-			InsecureSkipVerify: c.GetInsecure(),
-		})
-		if err != nil {
-			return nil, err
-		}
-		return conn, nil
+		u = "wss://" + path.Join(c.GetAddr(), p)
 	}
-	return nil, errors.New("unknown scheme")
-}
 
-func (ag *agent) AgentRegister(conn net.Conn) (types.RPC, error) {
-	// connect
-	_, err := conn.Write(ag.Config.FakeHeader("/api/yrpc"))
+	wsconn, _, err := websocket.Dial(context.Background(), u, nil)
+
 	if err != nil {
 		return nil, err
 	}
 
-	// connect2
-	_, err = io.WriteString(conn, ag.Config.String())
+	return websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary), nil
+}
+
+func (ag *agent) AgentRegister(conn net.Conn) (types.RPC, error) {
+	_, err := io.WriteString(conn, ag.Config.String())
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +109,7 @@ func (ag *agent) Serve(rpc types.RPC) error {
 }
 
 func (ag *agent) ConnectAndServe() error {
-	conn, err := ag.Dial()
+	conn, err := ag.Dial("/api/rpc")
 	if err != nil {
 		return err
 	}

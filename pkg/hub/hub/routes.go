@@ -186,7 +186,7 @@ func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 	for range time.Tick(time.Second) {
 		_, err := rwc.Write([]byte(pretty.JSONString(h.GetAgents())))
 		if err != nil {
-			log.Println(err)
+			log.Println("agents watch:", err)
 			break
 		}
 	}
