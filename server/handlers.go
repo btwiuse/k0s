@@ -12,16 +12,15 @@ import (
 	"strings"
 	"time"
 
-	"modernc.org/httpfs"
-	//"github.com/davecgh/go-spew/spew"
-
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
-	"github.com/invctrl/hijack/protocol"
-	"github.com/invctrl/hijack/wrap"
 	"github.com/navigaid/gotty/assets"
 	"github.com/navigaid/gotty/utils"
 	"github.com/navigaid/gotty/wetty"
+	"modernc.org/httpfs"
+
+	"github.com/invctrl/hijack/protocol"
+	"github.com/invctrl/hijack/wrap"
 )
 
 func hijack(original http.Handler) http.HandlerFunc {
@@ -68,6 +67,11 @@ func wsfactory(client *Client) (*websocket.Conn, error) {
 
 // wslisten assumes r.RequestURI == "/ws" {
 // the request is initiated by slaves at wsfactory's command
+// call chain:
+// 1. browser (ws:conn)-> ws://<host>/id/ws
+// 2. host (rpc on tcp)-> rpc://slave.WsConn.New(id, nounce)
+// 3. slave (ws:connRemote)-> ws://<host>/ws (with id and nounce to identify slave)
+// 4. browser <=(conn:ws:connRemote)=> slave
 func wslisten(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", 405)
@@ -103,29 +107,30 @@ func wslisten(w http.ResponseWriter, r *http.Request) {
 }
 
 // relay fs http request
+// drawback: poor performance handling large files
+// 0. rewrite request path
+// 1. record client request (httputil.DumpRequest)
+// (2. send recorded request to grpc
+// (3. record and dump grpc response (httptest.ResponseRecorder, httputil.DumpResponse)
+// (4. return grpc response
+// 5(theoretically). decode grpc response (http.ReadResponse)
+// 5(practically). hijack w.(http.Hijacker).Hijack()...Write(grpc.Response)
 func fsrelay(w http.ResponseWriter, r *http.Request, client *Client, p string) {
-	// r.RequestURI = p // strings.SplitN(r.RequestURI, "rootfs", 2)
 	log.Println("request uri:", r.RequestURI)
+
+	// 0.
 	r.RequestURI = strings.SplitN(r.RequestURI, "rootfs", 2)[1]
+
 	log.Println("path:", r.RequestURI)
+
+	// 1.
 	reqbuf, err := httputil.DumpRequest(r, true)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	/*
-		// log.Println(string(req), r.RequestURI, strings.SplitN(r.RequestURI, "rootfs", 2))
-		log.Println(string(req))
-	*/
-	/*
-		r2, err := http.ReadRequest(bufio.NewReader(bytes.NewBuffer(req)))
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		http.FileServer(http.Dir("/")).ServeHTTP(w, r2)
-	*/
 
+	// 2.
 	req := protocol.RootfsRequest{
 		Request: reqbuf,
 	}
@@ -137,33 +142,32 @@ func fsrelay(w http.ResponseWriter, r *http.Request, client *Client, p string) {
 		log.Println(err)
 		return
 	}
-	/*
-		respbuf, err := httputil.DumpResponse((*http.Response)(resp), true)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-	*/
+
+	// 5. hijack client http request -> net.Conn
 	rwc, err := wrap.WrapConn(w.(http.Hijacker).Hijack())
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
+	defer rwc.Close() // tell browser to stop loading
+
 	if _, err := rwc.Write(resp.Response); err != nil {
 		log.Println(err)
 		return
 	}
-	rwc.Close()
 }
 
 // listen on frontend ws connection
+// serve http://<host>/id/ws endpoint
+// see wslisten
 func wsrelay(w http.ResponseWriter, r *http.Request, client *Client) {
 	if r.Method != "GET" {
 		http.Error(w, "Method not allowed", 405)
 		return
 	}
 
+	// 1
 	conn, err := wetty.Upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -171,6 +175,7 @@ func wsrelay(w http.ResponseWriter, r *http.Request, client *Client) {
 	}
 	defer conn.Close()
 
+	// 2, 3
 	connRemote, err := wsfactory(client)
 	if err != nil {
 		log.Println(err)
@@ -183,6 +188,7 @@ func wsrelay(w http.ResponseWriter, r *http.Request, client *Client) {
 		errs               = make(chan error, 2)
 	)
 
+	// 4
 	go func() {
 		errs <- func() error {
 			_, err := io.Copy(that, this)
