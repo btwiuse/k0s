@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+curl -X POST https://cloud.docker.com/api/build/v1/source/20c53fe8-6029-4605-b5cf-c6377c3a7671/trigger/e248ef85-d16b-4ba8-ae2f-67799bd9d391/call/
+
 while :; do
   docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock -v $PWD:$PWD -w $PWD invctrl/client
 done
