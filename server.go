@@ -13,12 +13,36 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(nil)
 	}
-	println("start scanning")
-	go io.Copy(os.Stdout, conn)
+	log.Println("connected:", conn.RemoteAddr())
+
+	quit := make(chan struct{})
+	copy := func(dst io.Writer, src io.Reader) {
+		defer log.Println("disconnected:", conn.RemoteAddr())
+		defer close(quit)
+		buf := make([]byte, 1)
+		for {
+			_, err := src.Read(buf)
+			if err != nil {
+				return
+			}
+			dst.Write(buf)
+		}
+	}
+	go copy(os.Stdout, conn)
+
 	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		line := scanner.Text() + "\n"
-		conn.Write([]byte(line))
+	for {
+		select {
+		case <-quit:
+			return
+		default:
+			if scanner.Scan() {
+				line := scanner.Text() + "\n"
+				conn.Write([]byte(line))
+			} else {
+				return
+			}
+		}
 	}
 }
 
