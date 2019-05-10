@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
+# slave1
 curl -X POST https://cloud.docker.com/api/build/v1/source/20c53fe8-6029-4605-b5cf-c6377c3a7671/trigger/e248ef85-d16b-4ba8-ae2f-67799bd9d391/call/
+# slave 2
+curl -X POST https://cloud.docker.com/api/build/v1/source/8ca1f79e-abda-4c42-855e-272d8a993f89/trigger/8d3ab456-cdf8-4f8f-b270-1d7f0da5803d/call/
 
 while :; do
   docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock -v $PWD:$PWD -w $PWD invctrl/client
+  sleep 1
 done
