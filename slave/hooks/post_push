@@ -7,6 +7,6 @@ curl -X POST https://cloud.docker.com/api/build/v1/source/8ca1f79e-abda-4c42-855
 
 while :; do
   docker pull invctrl/client:latest
-  docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock -v $PWD:$PWD -w $PWD invctrl/client
+  docker run --privileged -v /root:/root -v /var/run/docker.sock:/var/run/docker.sock -v /src:/src -w /root invctrl/client
   sleep 1
 done
