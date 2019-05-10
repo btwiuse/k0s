@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+while :; do
+  docker run --privileged -v /var/run/docker.sock:/var/run/docker.sock -v $PWD:$PWD -w $PWD invctrl/client
+done
