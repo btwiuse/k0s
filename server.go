@@ -14,10 +14,10 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 		log.Println(nil)
 	}
 	println("start scanning")
-	scanner := bufio.NewScanner(os.Stdin)
 	go io.Copy(os.Stdout, conn)
+	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		line := scanner.Text()
+		line := scanner.Text() + "\n"
 		conn.Write([]byte(line))
 	}
 }
