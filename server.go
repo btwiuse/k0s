@@ -26,23 +26,53 @@ func NewClient(uuid string, conn net.Conn, quit chan struct{}) *Client {
 	}
 }
 
-type Pool map[string]*Client
-
-var ClientPool = make(Pool)
-
-func (p Pool) Del(uuid string) {
-	delete(p, uuid)
+type Pool struct {
+	Clients map[string]*Client
+	Current *Client
 }
 
-func (p Pool) Add(client *Client) {
-	p[client.UUID] = client
-}
-
-func (p Pool) Dump() {
-	log.Println("[client pool]")
-	for uuid, client := range p {
-		fmt.Println(uuid, client.Conn.RemoteAddr())
+func NewPool() *Pool {
+	return &Pool{
+		Clients: make(map[string]*Client),
+		Current: new(Client),
 	}
+}
+
+var ClientPool = NewPool()
+
+func (p *Pool) Del(uuid string) {
+	delete(p.Clients, uuid)
+	if (p.Current != nil) && (p.Current.UUID == uuid) {
+		p.Current = new(Client)
+	}
+}
+
+func (p *Pool) Get(uuid string) *Client {
+	return p.Clients[uuid]
+}
+
+func (p *Pool) Add(client *Client) {
+	p.Clients[client.UUID] = client
+}
+
+func (p *Pool) Dump() {
+	log.Println("[client pool]")
+	isCurrent := func(uuid string) string {
+		if (p.Current != nil) && (p.Current.UUID == uuid) {
+			return "*"
+		}
+		return " "
+	}
+	for uuid, client := range p.Clients {
+		fmt.Println(isCurrent(uuid), uuid, client.Conn.RemoteAddr())
+	}
+}
+
+func (p *Pool) Has(uuid string) bool {
+	if _, ok := p.Clients[uuid]; ok {
+		return true
+	}
+	return false
 }
 
 func hijacker(w http.ResponseWriter, r *http.Request) {
@@ -78,7 +108,6 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 func input() {
 	for {
 		scanner := bufio.NewScanner(os.Stdin)
-		var client *Client
 		log.Println("ready to accept input!")
 		for scanner.Scan() {
 			line := scanner.Text()
@@ -86,16 +115,16 @@ func input() {
 				ClientPool.Dump()
 				continue
 			}
-			if c, ok := ClientPool[line]; ok {
-				client = c
-				log.Println("using client", client.UUID)
+			if ClientPool.Has(line) {
+				ClientPool.Current = ClientPool.Get(line)
+				log.Println("current client:", ClientPool.Current.UUID)
 				continue
 			}
-			if client == nil {
+			if ClientPool.Current == nil {
 				fmt.Println("[INFO] Your current client is empty. Enter the uuid to the client you want to talk to first:")
 				continue
 			}
-			client.Conn.Write([]byte(line + "\n"))
+			ClientPool.Current.Conn.Write([]byte(line + "\n"))
 		}
 		log.Println("stdin input closed")
 	}
