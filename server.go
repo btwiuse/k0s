@@ -34,7 +34,7 @@ type Pool struct {
 func NewPool() *Pool {
 	return &Pool{
 		Clients: make(map[string]*Client),
-		Current: new(Client),
+		// Current: new(Client),
 	}
 }
 
@@ -43,7 +43,7 @@ var ClientPool = NewPool()
 func (p *Pool) Del(uuid string) {
 	delete(p.Clients, uuid)
 	if (p.Current != nil) && (p.Current.UUID == uuid) {
-		p.Current = new(Client)
+		p.Current = nil //new(Client)
 	}
 }
 
