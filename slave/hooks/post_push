@@ -28,5 +28,4 @@ while :; do
   docker run -dit -v /root:/root -v /home:/home -v /src:/src -v /var/run/docker.sock:/var/run/docker.sock --privileged --name dind --rm invctrl/client 
   echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDX5+yq0TQrW6lxsx0hcT+93A4K0QZ92UWM0BY0cc8ahyIey9/biN54at0xSSnu351ltJJdcp3O5XYs4qwCMiRBL+4YiNod0GF7hUb9yvQh6+SeiKy5y+0ChipUTXo3hK2wZ7plq6rI9JUu63E8TDWWG2Miy0dpn7YrCe2h27Jb7SZ9cc6df9JLXhXBcleHFrY0MDPGWfaMD2jnXGQFfyiFFyH/PlL3Ztu2BghozbZUlq7n4y8QpLcyko4n8OhtupIuQ4NHF4bKxwNrVdhLmG24IqLTTRIyUkHEJvwCENmP2kNy3NkNw+pdhJzG/e8DrG30HKat7flyFZp8TDEluVwB' | docker exec -i dind /bin/sh -c 'cat >>/home/ubuntu/.ssh/authorized_keys'
   docker wait dind
-  sleep 1
 done
