@@ -73,24 +73,33 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	}
 	go copy(os.Stdout, conn)
 
-	scanner := bufio.NewScanner(os.Stdin)
+}
+
+func input() {
 	for {
-		select {
-		case <-quit:
-			return
-		default:
-			if scanner.Scan() {
-				line := scanner.Text() + "\n"
-				conn.Write([]byte(line))
-			} else {
-				return
+		scanner := bufio.NewScanner(os.Stdin)
+		var client *Client
+		log.Println("ready to accept input!")
+		for scanner.Scan() {
+			line := scanner.Text()
+			if line == "!dump" {
+				ClientPool.Dump()
+				continue
 			}
+			if c, ok := ClientPool[line]; ok {
+				client = c
+				log.Println("using client", client.UUID)
+				continue
+			}
+			client.Conn.Write([]byte(line + "\n"))
 		}
+		log.Println("stdin input closed")
 	}
 }
 
 func main() {
 	http.HandleFunc("/", hijacker)
 	log.Println("listening on http://localhost:8000")
+	go input()
 	http.ListenAndServe(":8000", nil)
 }
