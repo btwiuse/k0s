@@ -59,7 +59,7 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	ClientPool.Dump()
 	copy := func(dst io.Writer, src io.Reader) {
 		defer ClientPool.Dump()
-		defer log.Println("disconnected:", client.Conn.RemoteAddr())
+		defer log.Println("disconnected:", uuid, client.Conn.RemoteAddr())
 		defer close(client.Quit)
 		defer ClientPool.Del(uuid)
 		buf := make([]byte, 1)
@@ -89,6 +89,10 @@ func input() {
 			if c, ok := ClientPool[line]; ok {
 				client = c
 				log.Println("using client", client.UUID)
+				continue
+			}
+			if client == nil {
+				fmt.Println("[INFO] Your current client is empty. Enter the uuid to the client you want to talk to first:")
 				continue
 			}
 			client.Conn.Write([]byte(line + "\n"))
