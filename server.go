@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -111,6 +112,13 @@ func input() {
 		log.Println("ready to accept input!")
 		for scanner.Scan() {
 			line := scanner.Text()
+			if strings.HasPrefix(line, "!map ") {
+				line = strings.TrimPrefix(line, "!map ")
+				for _, client := range ClientPool.Clients {
+					client.Conn.Write([]byte(line + "\n"))
+				}
+				continue
+			}
 			if line == "!dump" {
 				ClientPool.Dump()
 				continue
