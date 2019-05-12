@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"log"
@@ -11,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"gopkg.in/readline.v1"
 )
 
 type Client struct {
@@ -108,16 +108,52 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 
 func input() {
 	for {
-		scanner := bufio.NewScanner(os.Stdin)
 		log.Println("ready to accept input!")
-		for scanner.Scan() {
-			line := scanner.Text()
+		rl, err := readline.NewEx(&readline.Config{
+			HistoryFile:         "/tmp/readline.tmp",
+			ForceUseInteractive: true,
+			// InterruptPrompt:     "exit?",
+		})
+		if err != nil {
+			panic(err)
+		}
+		defer rl.Close()
+		fmt.Println("Welcome to Expreduce!!!")
+		promptNum := 1
+	INNER:
+		for {
+			rl.SetPrompt(fmt.Sprintf("In[%d]:= ", promptNum))
+			line, err := rl.Readline()
+			switch err {
+			case nil: // NOP
+			case io.EOF:
+				fmt.Println("bye")
+				// os.Exit(0)
+				break INNER
+			case readline.ErrInterrupt:
+				// fmt.Println("hit ^D to exit")
+				fmt.Println("try !exit, or !quit")
+			default:
+				fmt.Println(err)
+			}
+			if line == "" {
+				continue
+			}
+			fmt.Println(line)
+			// process line
+
 			if strings.HasPrefix(line, "!map ") {
 				line = strings.TrimPrefix(line, "!map ")
 				for _, client := range ClientPool.Clients {
 					client.Conn.Write([]byte(line + "\n"))
 				}
 				continue
+			}
+			if line == "!quit" {
+				os.Exit(0)
+			}
+			if line == "!exit" {
+				os.Exit(0)
 			}
 			if line == "!dump" {
 				ClientPool.Dump()
@@ -133,7 +169,17 @@ func input() {
 				continue
 			}
 			ClientPool.Current.Conn.Write([]byte(line + "\n"))
+
+			promptNum += 1
 		}
+
+		/*
+			scanner := bufio.NewScanner(os.Stdin)
+			for scanner.Scan() {
+				line := scanner.Text()
+				// process line
+			}
+		*/
 		log.Println("stdin input closed")
 	}
 }
