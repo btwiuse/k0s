@@ -139,8 +139,8 @@ func input() {
 			if line == "" {
 				continue
 			}
-			fmt.Println(line)
 			// process line
+			// fmt.Println(line)
 
 			if strings.HasPrefix(line, "!map ") {
 				line = strings.TrimPrefix(line, "!map ")
