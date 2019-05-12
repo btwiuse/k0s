@@ -188,5 +188,5 @@ func main() {
 	http.HandleFunc("/", hijacker)
 	log.Println("listening on http://localhost:8000")
 	go input()
-	http.ListenAndServe(":8000", nil)
+	log.Fatalln(http.ListenAndServe(":8000", nil))
 }
