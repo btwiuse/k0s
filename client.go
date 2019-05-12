@@ -36,8 +36,10 @@ func main() {
 		line := scanner.Text() //+ "\n"
 		log.Println(line)
 		// conn.Write([]byte(line))
-		comOut := run(line)
-		conn.Write(comOut)
-		os.Stdout.Write(comOut)
+		go func() {
+			comOut := run(line)
+			conn.Write(comOut)
+			os.Stdout.Write(comOut)
+		}()
 	}
 }
