@@ -38,7 +38,6 @@ type Pool struct {
 func NewPool() *Pool {
 	return &Pool{
 		Clients: make(map[string]*Client),
-		// Current: new(Client),
 	}
 }
 
@@ -91,24 +90,9 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	quit := make(chan struct{})
 	client := NewClient(uuid, conn, quit)
 
-	/*
-		buf := make([]byte, 1)
-		header := ""
-		for {
-			conn.Read(buf)
-			c := string(buf[0])
-			if c == "\n" {
-				break
-			}
-			header += c
-			println(header)
-		}
-	*/
 	var v map[string]interface{}
 	decoder := json.NewDecoder(conn)
 	decoder.Decode(&v)
-	// client.Info = header
-	// client.Info = strings.ReplaceAll(pretty.JSONString(v), "\n", "")
 	client.Info = pretty.JSONString(v)
 
 	log.Println("connected:", uuid, conn.RemoteAddr(), client.Info)
@@ -129,9 +113,7 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 			dst.Write(buf)
 		}
 	}
-	//go copy(os.Stdout, conn)
 	go copy(os.Stdout, io.MultiReader(decoder.Buffered(), conn))
-
 }
 
 func input() {
@@ -156,58 +138,43 @@ func input() {
 			case nil: // NOP
 			case io.EOF:
 				fmt.Println("bye")
-				// os.Exit(0)
 				break INNER
 			case readline.ErrInterrupt:
-				// fmt.Println("hit ^D to exit")
 				fmt.Println("try !exit, or !quit")
 			default:
 				fmt.Println(err)
 			}
-			if line == "" {
-				continue
-			}
-			// process line
-			// fmt.Println(line)
 
-			if strings.HasPrefix(line, "!map ") {
+			switch {
+			case strings.HasPrefix(line, "!map "):
 				line = strings.TrimPrefix(line, "!map ")
 				for _, client := range ClientPool.Clients {
 					client.Conn.Write([]byte(line + "\n"))
 				}
 				continue
-			}
-			if line == "!quit" {
+			case line == "":
+				continue
+			case line == "!exit", line == "!quit", line == "Exit", line == "Qxit":
 				os.Exit(0)
-			}
-			if line == "!exit" {
-				os.Exit(0)
-			}
-			if line == "!dump" {
+			case line == "!dump":
 				ClientPool.Dump()
 				continue
-			}
-			if ClientPool.Has(line) {
+			case ClientPool.Has(line):
 				ClientPool.Current = ClientPool.Get(line)
 				log.Println("current client:", ClientPool.Current.UUID)
 				continue
+			default:
+				if ClientPool.Current == nil {
+					fmt.Println("[INFO] Your current client is empty. Enter the uuid to the client you want to talk to first:")
+					continue
+				}
 			}
-			if ClientPool.Current == nil {
-				fmt.Println("[INFO] Your current client is empty. Enter the uuid to the client you want to talk to first:")
-				continue
-			}
+
 			ClientPool.Current.Conn.Write([]byte(line + "\n"))
 
 			promptNum += 1
 		}
 
-		/*
-			scanner := bufio.NewScanner(os.Stdin)
-			for scanner.Scan() {
-				line := scanner.Text()
-				// process line
-			}
-		*/
 		log.Println("stdin input closed")
 	}
 }
