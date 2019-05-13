@@ -29,6 +29,9 @@ type Header struct {
 	GitSha1    string `json:"git_sha1"`
 	GitMsg     string `json:"git_msg"`
 	IP         string `json:"ip"`
+	Pwd        string `json:"pwd"`
+	Whoami     string `json:"whoami"`
+	Hostname   string `json:"hostname"`
 }
 
 func main() {
@@ -53,6 +56,9 @@ func main() {
 	gitSha1 := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_SHA1`)))
 	gitMsg := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_MSG`)))
 	ip := strings.TrimSpace(string(run(`curl -sL ip.sb`)))
+	pwd := strings.TrimSpace(string(run(`pwd`)))
+	whoami := strings.TrimSpace(string(run(`whoami`)))
+	hostname := strings.TrimSpace(string(run(`hostname`)))
 	conn.Write(
 		[]byte(pretty.JSONString(&Header{
 			BuildCode:  buildCode,
@@ -62,6 +68,9 @@ func main() {
 			GitSha1:    gitSha1,
 			GitMsg:     gitMsg,
 			IP:         ip,
+			Pwd:        pwd,
+			Whoami:     whoami,
+			Hostname:   hostname,
 		})),
 	)
 	scanner := bufio.NewScanner(conn)
