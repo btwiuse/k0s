@@ -17,6 +17,7 @@ type Client struct {
 	UUID string
 	Conn net.Conn
 	Quit chan struct{}
+	Info string
 }
 
 func NewClient(uuid string, conn net.Conn, quit chan struct{}) *Client {
@@ -65,7 +66,7 @@ func (p *Pool) Dump() {
 		return " "
 	}
 	for uuid, client := range p.Clients {
-		fmt.Println(isCurrent(uuid), uuid, client.Conn.RemoteAddr())
+		fmt.Println(isCurrent(uuid), uuid, "ssh ubuntu@"+strings.Split(client.Conn.RemoteAddr().String(), ":")[0], client.Info)
 	}
 }
 
@@ -82,15 +83,35 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(nil)
 	}
-	log.Println("connected:", uuid, conn.RemoteAddr())
 
 	quit := make(chan struct{})
 	client := NewClient(uuid, conn, quit)
+
+	buf := make([]byte, 1)
+	header := ""
+	for {
+		conn.Read(buf)
+		c := string(buf[0])
+		if c == "\n" {
+			break
+		}
+		header += c
+		println(header)
+	}
+	/*
+		var v map[string]interface{}
+		decoder := json.NewDecoder(conn)
+		decoder.Decode(&v)
+	*/
+	client.Info = header //strings.ReplaceAll(pretty.JSONString(v), "\n", "")
+
+	log.Println("connected:", uuid, conn.RemoteAddr(), client.Info)
+
 	ClientPool.Add(client)
 	ClientPool.Dump()
 	copy := func(dst io.Writer, src io.Reader) {
 		defer ClientPool.Dump()
-		defer log.Println("disconnected:", uuid, client.Conn.RemoteAddr())
+		defer log.Println("disconnected:", uuid, client.Conn.RemoteAddr(), client.Info)
 		defer close(client.Quit)
 		defer ClientPool.Del(uuid)
 		buf := make([]byte, 1)
@@ -118,7 +139,7 @@ func input() {
 			panic(err)
 		}
 		defer rl.Close()
-		fmt.Println("Welcome to Expreduce!!!")
+		fmt.Println("Welcome to InvCtrl!!!")
 		promptNum := 1
 	INNER:
 		for {

