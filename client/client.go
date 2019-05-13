@@ -47,7 +47,7 @@ func main() {
 	dockerRepo := string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv DOCKER_REPO`))
 	gitSha1 := string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_SHA1`))
 	gitMsg := string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_MSG`))
-	ip := string(run(`curl ip.sb`))
+	ip := string(run(`curl -sL ip.sb`))
 	conn.Write(
 		[]byte(pretty.JSONString(&Header{
 			BuildCode:  buildCode,
