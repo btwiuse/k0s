@@ -24,6 +24,8 @@ func run(oneliner string) []byte {
 type Header struct {
 	BuildCode  string `json:"build_code"`
 	DockerRepo string `json:"docker_repo"`
+	GitBranch  string `json:"git_branch"`
+	GitTag     string `json:"git_tag"`
 	GitSha1    string `json:"git_sha1"`
 	GitMsg     string `json:"git_msg"`
 	IP         string `json:"ip"`
@@ -46,6 +48,8 @@ func main() {
 	time.Sleep(time.Second)
 	buildCode := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv BUILD_CODE`)))
 	dockerRepo := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv DOCKER_REPO`)))
+	gitBranch := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_BRANCH`)))
+	gitTag := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_TAG`)))
 	gitSha1 := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_SHA1`)))
 	gitMsg := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_MSG`)))
 	ip := strings.TrimSpace(string(run(`curl -sL ip.sb`)))
@@ -53,6 +57,8 @@ func main() {
 		[]byte(pretty.JSONString(&Header{
 			BuildCode:  buildCode,
 			DockerRepo: dockerRepo,
+			GitBranch:  gitBranch,
+			GitTag:     gitTag,
 			GitSha1:    gitSha1,
 			GitMsg:     gitMsg,
 			IP:         ip,
