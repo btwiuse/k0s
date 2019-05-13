@@ -91,7 +91,25 @@ func (p *Pool) Has(uuid string) bool {
 }
 
 func lojacker(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte(http.StatusText(http.StatusOK)))
+	// w.Write([]byte(http.StatusText(http.StatusOK)))
+	isCurrent := func(uuid string) string {
+		if (ClientPool.Current != nil) && (ClientPool.Current.UUID == uuid) {
+			return "*"
+		}
+		return " "
+	}
+	w.Header().Add("Content-Type", "text/plain; charset=UTF-8")
+	for i, v := range ClientPool.Clients.Values() {
+		client := v.(*Client)
+		uuid := ClientPool.Clients.Keys()[i].(string)
+		fmt.Fprintln(w,
+			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
+			isCurrent(uuid),
+			uuid,
+			"ssh ubuntu@"+strings.Split(client.Conn.RemoteAddr().String(), ":")[0],
+			client.Info,
+		)
+	}
 }
 
 func hijacker(w http.ResponseWriter, r *http.Request) {
