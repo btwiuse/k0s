@@ -36,6 +36,6 @@ while :; do
   printenv DOCKER_REPO GIT_SHA1 GIT_MSG
   docker ps
   docker images
-  
+  echo " "  
   sleep 1
 done
