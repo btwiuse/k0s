@@ -21,7 +21,7 @@ highland=$(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 
 
 exec 3<>/dev/tcp/seashells.io/1337
 seashells=$(timeout 3 cat <&3 | grep -oE 'https://seashells.io/(.*)$')
-echo $IMAGE_NAME $seashells | log
+log "$DOCKER_REPO $seashells"
 #env | xargs | log
 
 docker logs -f $highland | grep --line-buffered --color=never . | ts -s '%T' | ts >&3
