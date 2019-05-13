@@ -62,7 +62,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	_, err = conn.Write([]byte("GET / HTTP/1.1\r\nHost: localhost:8000\r\n\r\n"))
+	_, err = conn.Write([]byte("GET / HTTP/1.1\r\nHost: localhost:8000\r\nHijack: true\r\n\r\n"))
 	if err != nil {
 		log.Fatalln(err)
 	}

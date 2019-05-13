@@ -90,6 +90,10 @@ func (p *Pool) Has(uuid string) bool {
 	return found
 }
 
+func lojacker(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(http.StatusText(http.StatusOK)))
+}
+
 func hijacker(w http.ResponseWriter, r *http.Request) {
 	uuid := uuid.New().String()
 	conn, _, err := w.(http.Hijacker).Hijack()
@@ -190,8 +194,21 @@ func input() {
 	}
 }
 
+func hilo(hijacker, lojacker func(w http.ResponseWriter, r *http.Request)) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		pretty.JSON(r.Header)
+		if r.Header.Get(http.CanonicalHeaderKey("Hijack")) == "true" {
+			log.Println("hijack")
+			hijacker(w, r)
+			return
+		}
+		log.Println("lojack")
+		lojacker(w, r)
+	}
+}
+
 func main() {
-	http.HandleFunc("/", hijacker)
+	http.HandleFunc("/", hilo(hijacker, lojacker))
 	log.Println("listening on http://localhost:8000")
 	go input()
 	log.Fatalln(http.ListenAndServe(":8000", nil))
