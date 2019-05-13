@@ -52,8 +52,8 @@ func main() {
 		[]byte(pretty.JSONString(&Header{
 			BuildCode:  buildCode,
 			DockerRepo: dockerRepo,
-			GIT_SHA1:   gitSha1,
-			GIT_MSG:    gitMsg,
+			GitSha1:    gitSha1,
+			GitMsg:     gitMsg,
 			IP:         ip,
 		})),
 	)
