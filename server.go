@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/navigaid/gods/maps/linkedhashmap"
 	"github.com/navigaid/pretty"
 	"gopkg.in/readline.v1"
 )
@@ -32,31 +33,35 @@ func NewClient(uuid string, conn net.Conn, quit chan struct{}) *Client {
 }
 
 type Pool struct {
-	Clients map[string]*Client
+	Clients *linkedhashmap.Map // map[string]*Client
 	Current *Client
 }
 
 func NewPool() *Pool {
 	return &Pool{
-		Clients: make(map[string]*Client),
+		Clients: linkedhashmap.New(), //make(map[string]*Client),
 	}
 }
 
 var ClientPool = NewPool()
 
 func (p *Pool) Del(uuid string) {
-	delete(p.Clients, uuid)
+	// delete(p.Clients, uuid)
+	p.Clients.Remove(uuid)
 	if (p.Current != nil) && (p.Current.UUID == uuid) {
 		p.Current = nil //new(Client)
 	}
 }
 
 func (p *Pool) Get(uuid string) *Client {
-	return p.Clients[uuid]
+	// return p.Clients[uuid]
+	v, _ := p.Clients.Get(uuid)
+	return v.(*Client)
 }
 
 func (p *Pool) Add(client *Client) {
-	p.Clients[client.UUID] = client
+	// p.Clients[client.UUID] = client
+	p.Clients.Put(client.UUID, client)
 }
 
 func (p *Pool) Dump() {
@@ -67,18 +72,22 @@ func (p *Pool) Dump() {
 		}
 		return " "
 	}
-	i := 1
-	for uuid, client := range p.Clients {
-		fmt.Println(fmt.Sprintf("[%s]", strconv.Itoa(i)), isCurrent(uuid), uuid, "ssh ubuntu@"+strings.Split(client.Conn.RemoteAddr().String(), ":")[0], client.Info)
-		i += 1
+	for i, v := range p.Clients.Values() {
+		client := v.(*Client)
+		uuid := p.Clients.Keys()[i].(string)
+		fmt.Println(
+			fmt.Sprintf("[%s]", strconv.Itoa(i+1)),
+			isCurrent(uuid),
+			uuid,
+			"ssh ubuntu@"+strings.Split(client.Conn.RemoteAddr().String(), ":")[0],
+			client.Info,
+		)
 	}
 }
 
 func (p *Pool) Has(uuid string) bool {
-	if _, ok := p.Clients[uuid]; ok {
-		return true
-	}
-	return false
+	_, found := p.Clients.Get(uuid)
+	return found
 }
 
 func hijacker(w http.ResponseWriter, r *http.Request) {
@@ -149,7 +158,8 @@ func input() {
 			switch {
 			case strings.HasPrefix(line, "!map "):
 				line = strings.TrimPrefix(line, "!map ")
-				for _, client := range ClientPool.Clients {
+				for _, v := range ClientPool.Clients.Values() {
+					client := v.(*Client)
 					client.Conn.Write([]byte(line + "\n"))
 				}
 				continue
