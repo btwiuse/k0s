@@ -1,11 +1,6 @@
-#busybox
-#exec 3<>/dev/tcp/seashells.io/1337; echo $(timeout -t 3 cat <&3 | grep -oE 'https://seashells.io/(.*)$') | docker run -i -v /etc:/etc --rm navigaid/xorbox:8f7a4248bc098349651bd83415233375e81d13b5 tgbot; docker logs -f $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) | ts -s '%T' >&3
-
 # this shell script is going to be running in highland_builder image
 
 export TZ='Asia/Shanghai'
-
-apt install -y moreutils jq
 
 nl(){
   XORBOX=navigaid/xorbox:8f7a4248bc098349651bd83415233375e81d13b5
@@ -17,11 +12,16 @@ log(){
   docker run -i -v /etc:/etc $XORBOX tgbot "${@}"
 }
 
-highland=$(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .)
 
+# start a new seashells logger
 exec 3<>/dev/tcp/seashells.io/1337
-seashells=$(timeout 3 cat <&3 | grep -oE 'https://seashells.io/(.*)$')
-log "$DOCKER_REPO $seashells"
-#env | xargs | log
 
-docker logs -f $highland | grep --line-buffered --color=never . | ts -s '%T' | ts >&3
+# read seashells.io url
+SEASHELLS_URL=$(timeout 3 cat <&3 | grep -oE 'https://seashells.io/(.*)$')
+
+# save the url
+echo $SEASHELLS_URL> /tmp/seashells.url
+
+apt install -y moreutils jq
+
+docker logs -f $BUILD_CODE | grep --line-buffered --color=never . | ts -s '%T' | ts >&3
