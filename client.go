@@ -36,7 +36,7 @@ func main() {
 	//go io.Copy(os.Stdout, conn)
 	//conn.Write(run(`docker exec $(docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.ID}}{{end}}' | grep .) printenv DOCKER_REPO || echo no DOCKER_REPO`))
 	time.Sleep(time.Second)
-	conn.Write([]byte(`{"env":{"SHELL":"/bin/bash","TERM":"screen"},"height":45,"timestamp":1548324095,"version":2,"width":174}` + "\n"))
+	conn.Write([]byte(`{"env":{"SHELL":"/bin/bash","TERM":"screen"},"height":45,"timestamp":1548324095,"version":2,"width":174}`))
 	scanner := bufio.NewScanner(conn)
 	for scanner.Scan() {
 		line := scanner.Text() //+ "\n"

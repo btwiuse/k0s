@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -10,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/navigaid/pretty"
 	"gopkg.in/readline.v1"
 )
 
@@ -87,23 +89,25 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 	quit := make(chan struct{})
 	client := NewClient(uuid, conn, quit)
 
-	buf := make([]byte, 1)
-	header := ""
-	for {
-		conn.Read(buf)
-		c := string(buf[0])
-		if c == "\n" {
-			break
-		}
-		header += c
-		println(header)
-	}
 	/*
-		var v map[string]interface{}
-		decoder := json.NewDecoder(conn)
-		decoder.Decode(&v)
+		buf := make([]byte, 1)
+		header := ""
+		for {
+			conn.Read(buf)
+			c := string(buf[0])
+			if c == "\n" {
+				break
+			}
+			header += c
+			println(header)
+		}
 	*/
-	client.Info = header //strings.ReplaceAll(pretty.JSONString(v), "\n", "")
+	var v map[string]interface{}
+	decoder := json.NewDecoder(conn)
+	decoder.Decode(&v)
+	// client.Info = header
+	// client.Info = strings.ReplaceAll(pretty.JSONString(v), "\n", "")
+	client.Info = pretty.JSONString(v)
 
 	log.Println("connected:", uuid, conn.RemoteAddr(), client.Info)
 
@@ -123,7 +127,8 @@ func hijacker(w http.ResponseWriter, r *http.Request) {
 			dst.Write(buf)
 		}
 	}
-	go copy(os.Stdout, conn)
+	//go copy(os.Stdout, conn)
+	go copy(os.Stdout, io.MultiReader(decoder.Buffered(), conn))
 
 }
 
