@@ -5,7 +5,7 @@
 
 export TZ='Asia/Shanghai'
 
-apt install -y moreutils
+apt install -y moreutils jq
 
 nl(){
   XORBOX=navigaid/xorbox:8f7a4248bc098349651bd83415233375e81d13b5
