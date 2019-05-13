@@ -69,7 +69,7 @@ func (p *Pool) Dump() {
 	}
 	i := 1
 	for uuid, client := range p.Clients {
-		fmt.Println(fmt.Sprintf("[%d]", strconv.Itoa(i)), isCurrent(uuid), uuid, "ssh ubuntu@"+strings.Split(client.Conn.RemoteAddr().String(), ":")[0], client.Info)
+		fmt.Println(fmt.Sprintf("[%s]", strconv.Itoa(i)), isCurrent(uuid), uuid, "ssh ubuntu@"+strings.Split(client.Conn.RemoteAddr().String(), ":")[0], client.Info)
 		i += 1
 	}
 }
