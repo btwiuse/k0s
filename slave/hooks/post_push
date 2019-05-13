@@ -33,4 +33,5 @@ while :; do
   docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}Started: {{.CreatedAt}}\tRunningFor: {{.RunningFor}}{{end}}' | grep .
   # date
   date
+  sleep 1
 done
