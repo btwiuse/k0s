@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/google/uuid"
@@ -140,7 +141,7 @@ func input() {
 				fmt.Println("bye")
 				break INNER
 			case readline.ErrInterrupt:
-				fmt.Println("try !exit, or !quit")
+				fmt.Println("try Exit, or Quit")
 			default:
 				fmt.Println(err)
 			}
@@ -154,9 +155,9 @@ func input() {
 				continue
 			case line == "":
 				continue
-			case line == "!exit", line == "!quit", line == "Exit", line == "Qxit":
+			case line == "Exit", line == "Quit":
 				os.Exit(0)
-			case line == "!dump":
+			case line == "Ls":
 				ClientPool.Dump()
 				continue
 			case ClientPool.Has(line):
