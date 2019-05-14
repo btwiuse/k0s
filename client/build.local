@@ -1,2 +1,4 @@
-go build -ldflags="-X 'main.commit=$(git rev-list -1 HEAD)' -X 'main.built=$(date)' -X 'main.branch=$(git rev-parse --abbrev-ref HEAD)'" . 
-sudo docker build -t invctrl/client:latest -f Dockerfile.local .
+go build -o client -ldflags="-X 'main.commit=$(git rev-list -1 HEAD)' -X 'main.built=$(date)' -X 'main.branch=$(git rev-parse --abbrev-ref HEAD)'" . 
+exit
+sudo docker build -t invctrl/client:latest -f Dockerfile.local --no-cache .
+docker push invctrl/client:latest 
