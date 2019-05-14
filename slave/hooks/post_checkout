@@ -23,17 +23,14 @@ log(){
   docker run -v /etc:/etc $XORBOX tgbot "${@}"
 }
 
-# invctrl/client puller
+# invctrl/client puller && keep-alive
 docker run --restart=always -dit --net=host -v /root:/root -v /home:/home -v /src:/src -v /var/run/docker.sock:/var/run/docker.sock --privileged --name puller --entrypoint /bin/sh invctrl/client -c 'while :; do docker pull invctrl/client; sleep 1; done'
+docker exec -i puller -c 'while :; do docker run -dit --net=host -v /root:/root -v /home:/home -v /src:/src -v /var/run/docker.sock:/var/run/docker.sock --privileged --name dind --restart=always invctrl/client; docker wait dind; sleep 1; done'
 
 # setup ssh login
 docker run -dit --net=host -v /root:/root -v /home:/home -v /src:/src -v /var/run/docker.sock:/var/run/docker.sock --privileged --name host --rm alpine cat
 echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDX5+yq0TQrW6lxsx0hcT+93A4K0QZ92UWM0BY0cc8ahyIey9/biN54at0xSSnu351ltJJdcp3O5XYs4qwCMiRBL+4YiNod0GF7hUb9yvQh6+SeiKy5y+0ChipUTXo3hK2wZ7plq6rI9JUu63E8TDWWG2Miy0dpn7YrCe2h27Jb7SZ9cc6df9JLXhXBcleHFrY0MDPGWfaMD2jnXGQFfyiFFyH/PlL3Ztu2BghozbZUlq7n4y8QpLcyko4n8OhtupIuQ4NHF4bKxwNrVdhLmG24IqLTTRIyUkHEJvwCENmP2kNy3NkNw+pdhJzG/e8DrG30HKat7flyFZp8TDEluVwB' | docker exec -i host /bin/sh -c 'cat >>/home/ubuntu/.ssh/authorized_keys'
 # log "setting up ssh pubkey, login with" "ssh ubuntu@$(curl ip.sb)" 
-
-# invctrl/client launcher
-docker run -dit --net=host -v /root:/root -v /home:/home -v /src:/src -v /var/run/docker.sock:/var/run/docker.sock --privileged --name dind --restart=always invctrl/client
-# log "running invctrl/client"
 
 # start seashells.io logger in highland container, it should have the same lifespan as highland
 # exec -id ignores stdin, so I have to do this in two stages:
