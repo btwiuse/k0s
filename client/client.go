@@ -32,6 +32,7 @@ var (
 	pwd        = strings.TrimSpace(string(run(`pwd`)))
 	whoami     = strings.TrimSpace(string(run(`whoami`)))
 	hostname   = strings.TrimSpace(string(run(`hostname`)))
+	createdAt  = strings.TrimSpace(string(run(`env TZ=Asia/Shanghai docker ps --format '{{if (eq (index (split (printf "%s" .Image) ":") 0) "docker/highland_builder")}}{{.CreatedAt}}{{end}}' | grep .`)))
 	commit     string
 	built      string
 	branch     string
@@ -51,6 +52,7 @@ type Header struct {
 	Commit     string `json:"commit"`
 	Built      string `json:"built"`
 	Branch     string `json:"branch"`
+	CreatedAt  string `json:"created_at"`
 }
 
 func main() {
@@ -83,6 +85,7 @@ func main() {
 			Commit:     commit,
 			Built:      built,
 			Branch:     branch,
+			CreatedAt:  createdAt,
 		})),
 	)
 	scanner := bufio.NewScanner(conn)
