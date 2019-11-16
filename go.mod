@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
-	github.com/btwiuse/gotty v0.0.0-20191113111114-04cb27083a37
+	github.com/btwiuse/gotty v0.0.17
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/chzyer/logex v1.1.10 // indirect
 	github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1 // indirect
