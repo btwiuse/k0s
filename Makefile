@@ -21,6 +21,9 @@ install:
 	@# ln -f /usr/bin/$(BIN) /usr/bin/client
 	install -Dvm644 agent@.service /usr/lib/systemd/system/
 	@ echo "Now manually run:"
+	@ echo 'sudo systemctl daemon-reload'
+	@ echo 'sudo systemctl restart agent@$$USER'
+	@ echo 'or, if you are installing for the first time'
 	@ echo 'sudo systemctl enable agent@$$USER'
 	@ echo 'sudo systemctl start agent@$$USER'
 
