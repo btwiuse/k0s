@@ -6,6 +6,7 @@ go 1.14
 // replace github.com/yrpc/yrpc => /home/aaron/yrpc/yrpc
 
 require (
+	github.com/briandowns/spinner v1.8.0
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.24
@@ -23,7 +24,6 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/yrpc/yrpc v0.0.0-20191230043512-613ecaa6d5b4
 	go.uber.org/zap v1.13.0
-	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	google.golang.org/grpc v1.26.0
 	gopkg.in/yaml.v2 v2.2.7 // indirect

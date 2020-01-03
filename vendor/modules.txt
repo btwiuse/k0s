@@ -1,5 +1,8 @@
 # github.com/BurntSushi/toml v0.3.1
 github.com/BurntSushi/toml
+# github.com/briandowns/spinner v1.8.0
+## explicit
+github.com/briandowns/spinner
 # github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 ## explicit
 github.com/btwiuse/gods/maps/linkedhashmap
@@ -28,6 +31,8 @@ github.com/emirpasic/gods/lists
 github.com/emirpasic/gods/lists/doublylinkedlist
 github.com/emirpasic/gods/maps
 github.com/emirpasic/gods/utils
+# github.com/fatih/color v1.7.0
+github.com/fatih/color
 # github.com/ghodss/yaml v1.0.0
 ## explicit
 github.com/ghodss/yaml
@@ -55,6 +60,10 @@ github.com/gorilla/websocket
 # github.com/kr/pty v1.1.8
 ## explicit
 github.com/kr/pty
+# github.com/mattn/go-colorable v0.1.2
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.8
+github.com/mattn/go-isatty
 # github.com/pupapaik/sysinfo v0.0.0-20190423145051-de6f0de9b519
 ## explicit
 github.com/pupapaik/sysinfo
@@ -88,14 +97,11 @@ go.uber.org/zap/zapcore
 golang.org/x/lint
 golang.org/x/lint/golint
 # golang.org/x/net v0.0.0-20190620200207-3b0461eec859
-## explicit
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
 golang.org/x/net/idna
-golang.org/x/net/internal/socks
 golang.org/x/net/internal/timeseries
-golang.org/x/net/proxy
 golang.org/x/net/trace
 # golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 ## explicit
