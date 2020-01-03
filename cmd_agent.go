@@ -16,7 +16,7 @@ func agentCmd(args []string) {
 	for range time.Tick(time.Second) {
 		err := ag.ConnectAndServe()
 		if err != nil {
-			log.Println(err, "Reconnect")
+			log.Println(err)
 		}
 	}
 }

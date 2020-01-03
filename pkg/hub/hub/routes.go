@@ -1,12 +1,10 @@
 package hub
 
 import (
-	"bufio"
 	"context"
 	"crypto/subtle"
 	"crypto/tls"
 	"fmt"
-	"io"
 	"log"
 	"net"
 	"net/http"
@@ -15,8 +13,6 @@ import (
 	"time"
 
 	types "github.com/btwiuse/conntroll/pkg/hub"
-	"github.com/btwiuse/conntroll/pkg/hub/agent"
-	agentinfo "github.com/btwiuse/conntroll/pkg/hub/agent/info"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
@@ -83,44 +79,24 @@ func (h *hub) serveRPC(ln net.Listener) {
 			continue
 		}
 
-		go h.toAgent(conn)
+		go h.register(conn)
 	}
 }
 
-func (h *hub) toAgent(conn net.Conn) {
-	// parse agent info
-	scanner := bufio.NewScanner(conn)
-	if !scanner.Scan() {
-		log.Println(scanner.Err())
-		return
-	}
+func (h *hub) register(conn net.Conn) {
+	var rpc = ToRPC(conn)
 
-	buf := scanner.Bytes()
-	info, err := agentinfo.Decode(buf)
-	if err != nil {
-		log.Println(err)
-		return
-	}
+	defer rpc.Unregister(h)
 
-	if h.Has(info.GetID()) {
-		io.WriteString(conn, "duplicate id\n")
-		return
-	}
-
-	var (
-		rpc = ToRPC(conn)
-		ag  = agent.NewAgent(rpc, info)
-	)
-
-	h.Add(ag)
-
-	defer func() {
-		h.Del(info.GetID())
-		ag.Close()
-	}()
-
-	for scanner.Scan() {
-		log.Println(info.GetID(), scanner.Text())
+	for {
+		select {
+		case f := <-rpc.Actions():
+			go f(h)
+		case <-rpc.Done():
+			return
+		case <-time.After(3 * time.Second):
+			go rpc.Ping()
+		}
 	}
 }
 

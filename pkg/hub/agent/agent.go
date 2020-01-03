@@ -7,7 +7,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/btwiuse/conntroll/pkg/api"
@@ -28,8 +27,6 @@ func NewAgent(rpc hub.RPC, info hub.Info, xopts ...Opt) hub.Agent {
 		sch:            make(chan hub.Session),
 		created:        time.Now(),
 		Connected:      time.Now().Unix(),
-		done:           make(chan struct{}),
-		closeOnceDone:  &sync.Once{},
 		IP:             rpc.RemoteIP(),
 		Auth:           new(bool),
 	}
@@ -63,8 +60,6 @@ type agent struct {
 	hub.SessionManager `json:"-"`
 	rpc                hub.RPC
 	sch                chan hub.Session
-	done               chan struct{}
-	closeOnceDone      *sync.Once
 
 	created time.Time
 	bahash  string
@@ -106,16 +101,6 @@ func (ag *agent) newSession() {
 func (ag *agent) NewSession() hub.Session {
 	ag.newSession()
 	return <-ag.sch
-}
-
-func (ag *agent) Close() {
-	ag.closeOnceDone.Do(func() {
-		close(ag.done)
-	})
-}
-
-func (ag *agent) Done() <-chan struct{} {
-	return ag.done
 }
 
 func (ag *agent) BasicAuth(next http.Handler) http.Handler {

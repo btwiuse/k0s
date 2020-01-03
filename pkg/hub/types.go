@@ -58,9 +58,6 @@ type Agent interface {
 
 	NewSession() Session
 
-	Close()
-	Done() <-chan struct{}
-
 	BasicAuth(http.Handler) http.Handler
 
 	// TODO: remove this
@@ -87,8 +84,14 @@ type Session interface {
 type RPC interface {
 	pkg.Tider
 
+	Close()
+	Done() <-chan struct{}
+
 	NewSession() // Session
+	Ping()
 	RemoteIP() string
+	Actions() <-chan func(Hub)
+	Unregister(Hub)
 }
 
 type RPCManager interface {

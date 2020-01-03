@@ -120,11 +120,8 @@ func (ag *agent) ConnectAndServe() error {
 		return err
 	}
 
-	log.Println("Connect ok")
-
 	err = ag.Serve(rpc)
 	if err != nil {
-		log.Println("Serve:", err)
 		return err
 	}
 
