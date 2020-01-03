@@ -75,6 +75,7 @@ func main() {
 		var (
 			build = exec.Command(
 				"go", "build",
+				"-mod=vendor",
 				"-trimpath",
 				"-v",
 				"-o", filepath.Join(Path, c.ReleaseName()),
