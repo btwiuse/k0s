@@ -13,14 +13,11 @@ import (
 	"time"
 
 	types "github.com/btwiuse/conntroll/pkg/hub"
-	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
-	"github.com/btwiuse/wetty/pkg/wetty"
 	webui "github.com/conntroll/conntroll.github.io"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	gows "github.com/gorilla/websocket"
 	"github.com/rs/cors"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
@@ -152,15 +149,19 @@ func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	wsconn, err := wetty.Upgrader.Upgrade(w, r, nil)
+	wsconn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
+		InsecureSkipVerify: true,
+	})
+
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	defer wsconn.Close()
-	rwc := wrap.WsConnToReadWriteCloser(wsconn)
+
+	conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
+
 	for range time.Tick(time.Second) {
-		_, err := rwc.Write([]byte(pretty.JSONString(h.GetAgents())))
+		_, err := conn.Write([]byte(pretty.JSONString(h.GetAgents())))
 		if err != nil {
 			log.Println("agents watch:", err)
 			break
@@ -234,14 +235,10 @@ func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if gows.IsWebSocketUpgrade(r) {
-		wsconn, err = websocket.Accept(w, r, &websocket.AcceptOptions{
-			InsecureSkipVerify: true,
-		})
-		conn = websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
-	} else {
-		conn, err = wrap.Hijack(w)
-	}
+	wsconn, err = websocket.Accept(w, r, &websocket.AcceptOptions{
+		InsecureSkipVerify: true,
+	})
+	conn = websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
 
 	if err != nil {
 		log.Println("error accepting grpc:", err)

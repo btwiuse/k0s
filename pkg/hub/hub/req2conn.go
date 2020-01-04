@@ -6,8 +6,6 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/btwiuse/conntroll/pkg/wrap"
-	gows "github.com/gorilla/websocket"
 	"nhooyr.io/websocket"
 )
 
@@ -68,16 +66,12 @@ func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		err    error
 	)
 
-	if gows.IsWebSocketUpgrade(r) {
-		wsconn, err = websocket.Accept(w, r, &websocket.AcceptOptions{
-			InsecureSkipVerify: true,
-		})
-		conn = websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
-		addr = NewAddr("websocket", r.RemoteAddr)
-		conn = ConnWithAddr(conn, addr)
-	} else {
-		conn, err = wrap.Hijack(w)
-	}
+	wsconn, err = websocket.Accept(w, r, &websocket.AcceptOptions{
+		InsecureSkipVerify: true,
+	})
+	conn = websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
+	addr = NewAddr("websocket", r.RemoteAddr)
+	conn = ConnWithAddr(conn, addr)
 
 	if err != nil {
 		log.Println("error ws accept:", err)

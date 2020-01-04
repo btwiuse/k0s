@@ -12,19 +12,23 @@ import (
 	types "github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/wetty/pkg/msg"
-	"github.com/btwiuse/wetty/pkg/wetty"
 	"github.com/gorilla/mux"
 	"golang.org/x/sync/errgroup"
+	"nhooyr.io/websocket"
 )
 
 func wsRelay(ag types.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		wsconn, err := wetty.Upgrader.Upgrade(w, r, nil)
+		wsconn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
+			InsecureSkipVerify: true,
+			Subprotocols:       []string{"wetty"},
+		})
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		defer wsconn.Close()
+		conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
+
 		session := ag.NewSession()
 		sessionSendClient, err := session.Send(context.Background())
 		if err != nil {
@@ -33,7 +37,7 @@ func wsRelay(ag types.Agent) http.HandlerFunc {
 		}
 
 		// common error: ws transport is closing
-		log.Println(pipe(wrap.WsConnToReadWriteCloser(wsconn), sessionSendClient))
+		log.Println(pipe(conn, sessionSendClient))
 	}
 }
 

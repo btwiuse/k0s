@@ -118,12 +118,12 @@ func (ys *YS) RemoteIP() string {
 }
 
 type YS struct {
-	agentId string
+	agentId   string
 	agentName string
-	id      string
-	name    string
-	created time.Time
-	actions chan func(types.Hub)
+	id        string
+	name      string
+	created   time.Time
+	actions   chan func(types.Hub)
 	net.Conn
 	*bufio.Scanner
 	done          chan struct{}
