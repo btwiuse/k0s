@@ -28,7 +28,7 @@ type Session struct {
 	// client id/index, to distinguish logs of different commands
 }
 
-func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session_ChunkerServer) error {
+func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session_ChunkerServer) (err error) {
 	// req.Path
 	// req.Request
 	// log.Println("Chunker called with", req)
@@ -57,7 +57,7 @@ func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session
 		if !info.IsDir() {
 			filesize = info.Size()
 			if filesize > 4*(1<<20) { // 4M
-				f, openerr := os.Open(req.Path)
+				f, openerr := os.Open(path)
 				if openerr == nil {
 					filename = filepath.Base(f.Name())
 					defer f.Close()
@@ -105,8 +105,15 @@ func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session
 		// fmt.Printf("%s", resp)
 		reader = bytes.NewReader(resp)
 	default:
-		log.Println("Chunker!!!", filename)
+		log.Println("sending large chunked file:", filename)
 	}
+
+	ns := []int{}
+	defer func() {
+		if err != nil {
+			log.Println(ns, err)
+		}
+	}()
 
 	buf := make([]byte, 64*1024)
 	for {
@@ -114,6 +121,7 @@ func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session
 		if err == io.EOF {
 			break
 		}
+		ns = append(ns, n)
 		if err != nil {
 			return err
 		}
