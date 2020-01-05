@@ -3,7 +3,7 @@ GOOS   = $(shell go env GOOS)
 GOARCH = $(shell go env GOARCH)
 
 all:
-	go run bin.go
+	go run bin.go -tags "$(TAGS)"
 
 release:
 	go run bin.go -d releases/$(shell git rev-parse HEAD) -strip -upx linux/{amd64,386} darwin/amd64

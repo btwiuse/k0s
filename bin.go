@@ -55,9 +55,11 @@ func main() {
 	var (
 		stripFlag bool
 		upxFlag   bool
+		tags      string
 	)
 
 	flag.StringVar(&Path, "d", Path, "output directory")
+	flag.StringVar(&tags, "tags", "", "build tags")
 	flag.BoolVar(&stripFlag, "strip", false, "strip binary")
 	flag.BoolVar(&upxFlag, "upx", false, "compress binary with upx")
 	flag.Parse()
@@ -77,6 +79,7 @@ func main() {
 				"go", "build",
 				"-mod=vendor",
 				"-trimpath",
+				"-tags", tags,
 				"-v",
 				"-o", filepath.Join(Path, c.ReleaseName()),
 				".",
