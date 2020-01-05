@@ -191,18 +191,24 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 
 	ag := h.GetAgent(id)
 
-	delegate := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
-		switch {
-		case strings.HasPrefix(subpath, "/ws"):
-			wsRelay(ag)(w, r)
-		case strings.HasPrefix(subpath, "/rootfs"):
-			fsRelay(ag)(w, r)
-		case strings.HasPrefix(subpath, "/metrics"):
-			metricsRelay(ag)(w, r)
-		case h.localui:
-			staticFileHandler.ServeHTTP(w, r)
-		default:
-			w.Write([]byte(fmt.Sprintf(`<!doctype html>
+	// delegate := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
+	switch {
+	case strings.HasPrefix(subpath, "/ws"):
+		ag.BasicAuth(http.HandlerFunc(wsRelay(ag))).ServeHTTP(w, r)
+	case strings.HasPrefix(subpath, "/rootfs"):
+		ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
+	case strings.HasPrefix(subpath, "/metrics"):
+		metricsRelay(ag)(w, r)
+	case h.localui:
+		ag.BasicAuth(staticFileHandler).ServeHTTP(w, r)
+	default:
+		ag.BasicAuth(agentIndexHandler(ag)).ServeHTTP(w, r)
+	}
+}
+
+func agentIndexHandler(ag types.Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(fmt.Sprintf(`<!doctype html>
 <html>
   <head>
     <title>%s@%s</title>
@@ -217,10 +223,7 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
   </body>
 </html>
 `, ag.GetUsername(), ag.GetHostname())))
-		}
-	})
-
-	ag.BasicAuth(delegate).ServeHTTP(w, r)
+	}
 }
 
 func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
