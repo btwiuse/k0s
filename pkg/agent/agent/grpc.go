@@ -2,11 +2,13 @@ package agent
 
 import (
 	"net"
+	"net/http"
 
 	types "github.com/btwiuse/conntroll/pkg/agent"
 	"github.com/btwiuse/conntroll/pkg/agent/tty"
 	"github.com/btwiuse/conntroll/pkg/api"
 	"github.com/btwiuse/conntroll/pkg/api/grpcimpl"
+	"github.com/btwiuse/conntroll/pkg/exporter"
 	"google.golang.org/grpc"
 )
 
@@ -52,7 +54,9 @@ func NewLys() *lys {
 func StartGRPCServer(cmd []string) types.GRPCServer {
 	grpcServer := grpc.NewServer()
 	api.RegisterSessionServer(grpcServer, &grpcimpl.Session{
-		TtyFactory: tty.NewFactory(cmd),
+		TtyFactory:     tty.NewFactory(cmd),
+		FileServer:     http.FileServer(http.Dir("/")),
+		MetricsHandler: exporter.NewHandler(),
 	})
 	grpcListener := NewLys()
 	go grpcServer.Serve(grpcListener)

@@ -7,8 +7,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/briandowns/spinner"
 	types "github.com/btwiuse/conntroll/pkg/agent"
+	"github.com/btwiuse/conntroll/pkg/spinner"
 )
 
 var (

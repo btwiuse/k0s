@@ -22,7 +22,9 @@ import (
 )
 
 type Session struct {
-	TtyFactory agent.TtyFactory
+	TtyFactory     agent.TtyFactory
+	FileServer     http.Handler
+	MetricsHandler http.Handler
 	// client id/index, to distinguish logs of different commands
 }
 
@@ -75,20 +77,34 @@ func (session *Session) Chunker(req *api.ChunkRequest, chunkerServer api.Session
 		statfail = true
 	}
 
-	if statfail || openfail || isdir || issmall {
+	switch {
+	case path == "metrics":
 		w := httptest.NewRecorder()
 		r, err := http.ReadRequest(bufio.NewReader(bytes.NewBuffer(req.Request)))
 		if err != nil {
 			return err
 		}
-		http.FileServer(http.Dir("/")).ServeHTTP(w, r)
+		session.MetricsHandler.ServeHTTP(w, r)
 		resp, err := httputil.DumpResponse(w.Result(), true)
 		if err != nil {
 			return err
 		}
 		// fmt.Printf("%s", resp)
 		reader = bytes.NewReader(resp)
-	} else {
+	case statfail || openfail || isdir || issmall:
+		w := httptest.NewRecorder()
+		r, err := http.ReadRequest(bufio.NewReader(bytes.NewBuffer(req.Request)))
+		if err != nil {
+			return err
+		}
+		session.FileServer.ServeHTTP(w, r)
+		resp, err := httputil.DumpResponse(w.Result(), true)
+		if err != nil {
+			return err
+		}
+		// fmt.Printf("%s", resp)
+		reader = bytes.NewReader(resp)
+	default:
 		log.Println("Chunker!!!", filename)
 	}
 

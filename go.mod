@@ -12,13 +12,23 @@ require (
 	github.com/btwiuse/wetty v0.0.24
 	github.com/conntroll/conntroll.github.io v0.0.0-19700101000000-a1a9eccaf77a
 	github.com/docker/docker v1.13.1
+	github.com/ema/qdisc v0.0.0-20190904071900-b82c76788043 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
+	github.com/fatih/color v1.8.0
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/golang/protobuf v1.3.2
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.3
+	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/kr/pty v1.1.8
+	github.com/mattn/go-xmlrpc v0.0.3 // indirect
+	github.com/mdlayher/genetlink v0.0.0-20190828143517-e35f2bf499b9 // indirect
+	github.com/mdlayher/wifi v0.0.0-20190303161829-b1436901ddee // indirect
+	github.com/prometheus/client_golang v1.2.1
+	github.com/prometheus/common v0.7.0
+	github.com/prometheus/node_exporter v0.18.1-0.20200101121053-3ddc82c2d8d1
+	github.com/prometheus/procfs v0.0.8 // indirect
 	github.com/pupapaik/sysinfo v0.0.0-20190423145051-de6f0de9b519
 	github.com/rs/cors v1.7.0
 	github.com/yrpc/yrpc v0.0.0-20191230043512-613ecaa6d5b4

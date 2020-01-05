@@ -139,3 +139,58 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 		}
 	}
 }
+
+func metricsRelay(ag types.Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var (
+			vars = mux.Vars(r)
+			id   = vars["id"]
+			path = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id)
+		)
+		conn, err := wrap.Hijack(w)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		defer conn.Close()
+
+		r.RequestURI = path
+
+		reqbuf, err := httputil.DumpRequest(r, true)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		_ = reqbuf
+
+		session := ag.NewSession()
+		chunkRequest := &api.ChunkRequest{
+			Path:    "metrics",
+			Request: reqbuf,
+		}
+		sessionChunkerClient, err := session.Chunker(context.Background(), chunkRequest)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		// TODO make a io.Reader from session.Chunker_Client, then call io.Copy
+		for {
+			chunk, err := sessionChunkerClient.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Println(err)
+				break
+			}
+
+			_, err = conn.Write(chunk.Chunk)
+			if err != nil {
+				log.Println(err)
+				break
+			}
+		}
+	}
+}

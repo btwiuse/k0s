@@ -197,6 +197,8 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 			wsRelay(ag)(w, r)
 		case strings.HasPrefix(subpath, "/rootfs"):
 			fsRelay(ag)(w, r)
+		case strings.HasPrefix(subpath, "/metrics"):
+			metricsRelay(ag)(w, r)
 		case h.localui:
 			staticFileHandler.ServeHTTP(w, r)
 		default:
