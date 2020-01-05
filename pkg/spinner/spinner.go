@@ -171,7 +171,7 @@ func validColor(c string) bool {
 
 // Spinner struct to hold the provided options
 type Spinner struct {
-	Delay      <-chan time.Time                 // Delay is the speed of the indicator
+	Delay      <-chan time.Time              // Delay is the speed of the indicator
 	chars      []string                      // chars holds the chosen character set
 	Prefix     string                        // Prefix is the text preppended to the indicator
 	Suffix     string                        // Suffix is the text appended to the indicator
