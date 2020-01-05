@@ -19,6 +19,7 @@ github.com/briandowns/spinner v1.8.0 h1:SeidJ8ASAayR4Wxl5Of54LHqgi8s6sBvAHg4kxKx
 github.com/briandowns/spinner v1.8.0/go.mod h1://Zf9tMcxfRUA36V23M6YGEAv+kECGfvpnLTnb8n4XQ=
 github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0 h1:RamJoBgLnq2tsdeXwKc/+ytJ30rftG+MBDreHGFWpSw=
 github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0/go.mod h1:HemNeMkO+h/A3mRCi9Sr2x3aEzE1sc0nUUl3Eg539hU=
+github.com/btwiuse/gotty v0.0.24 h1:OWM/3VsBT0pkyBs4mmVMaeXwmDstIuqpvdzqLE0VYGM=
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882 h1:bO0cdWOtgJk7rlRCOObS/TqtbvAisBWSoWpmdJEOius=
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882/go.mod h1:ylRP8/cdGCVHKukmdQkTjIkbVPykEIC8iGT54pOh/KA=
 github.com/btwiuse/wetty v0.0.24 h1:EuZ5helRZGxijDr4OWfR1pkB47acYQl8FYlpZ3hdCb8=
@@ -212,6 +213,8 @@ go.uber.org/tools v0.0.0-20190618225709-2cfd321de3ee h1:0mgffUl7nfd+FpvXMVz4IDEa
 go.uber.org/tools v0.0.0-20190618225709-2cfd321de3ee/go.mod h1:vJERXedbb3MVM5f9Ejo0C68/HhF8uaILCdgjnY+goOA=
 go.uber.org/zap v1.13.0 h1:nR6NoDBgAf67s68NhaXbsojM+2gxp3S1hWkHDl27pVU=
 go.uber.org/zap v1.13.0/go.mod h1:zwrFLgMcdUuIBviXEYEH1YKNaOBnKXsx2IPda5bBwHM=
+golang.org/dl v0.0.0-20191220003028-84da647cadd0 h1:4kVjWwk6tAUzbRCc1yRsjfRGIrKmotnz9COScK1NpWQ=
+golang.org/dl v0.0.0-20191220003028-84da647cadd0/go.mod h1:IUMfjQLJQd4UTqG1Z90tenwKoCX93Gn3MAQJMOSBsDQ=
 golang.org/x/crypto v0.0.0-20180904163835-0709b304e793/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=

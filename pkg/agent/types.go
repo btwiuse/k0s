@@ -33,6 +33,13 @@ type Config interface {
 	String() string
 }
 
+type Dialer interface {
+	// Dial() (net.Conn, error)
+	// /api/rpc
+	// /api/grpc?id=*
+	Dial(string) (net.Conn, error)
+}
+
 type RPC interface {
 	// NewConnection()
 	// Ping()
@@ -49,9 +56,9 @@ type RPC interface {
 // rpc client/server (ephemeral)
 type Agent interface {
 	Config
+	Dialer
 	AgentRegister(net.Conn) (RPC, error)
 	Accept() (net.Conn, error)
-	Dial(string) (net.Conn, error)
 	ConnectAndServe() error
 	Serve(RPC) error
 	GRPCServer

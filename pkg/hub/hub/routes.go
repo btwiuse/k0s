@@ -1,7 +1,6 @@
 package hub
 
 import (
-	"context"
 	"crypto/subtle"
 	"crypto/tls"
 	"fmt"
@@ -20,7 +19,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"modernc.org/httpfs"
-	"nhooyr.io/websocket"
 )
 
 var (
@@ -149,16 +147,11 @@ func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	wsconn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
-		InsecureSkipVerify: true,
-	})
-
+	conn, err := wrconn(w, r)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-
-	conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
 
 	for range time.Tick(time.Second) {
 		_, err := conn.Write([]byte(pretty.JSONString(h.GetAgents())))
@@ -169,6 +162,25 @@ func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
+	var (
+		vars = mux.Vars(r)
+		id   = vars["id"]
+	)
+
+	if !h.Has(id) {
+		log.Println("no such id", id)
+		return
+	}
+
+	conn, err := wrconn(w, r)
+	if err != nil {
+		log.Println("error accepting grpc:", err)
+		return
+	}
+
+	h.GetAgent(id).AddSessionConn(conn)
+}
 func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars                           = mux.Vars(r)
@@ -224,33 +236,6 @@ func agentIndexHandler(ag types.Agent) http.HandlerFunc {
 </html>
 `, ag.GetUsername(), ag.GetHostname())))
 	}
-}
-
-func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
-	var (
-		vars   = mux.Vars(r)
-		id     = vars["id"]
-		wsconn *websocket.Conn
-		conn   net.Conn
-		err    error
-	)
-
-	if !h.Has(id) {
-		log.Println("no such id", id)
-		return
-	}
-
-	wsconn, err = websocket.Accept(w, r, &websocket.AcceptOptions{
-		InsecureSkipVerify: true,
-	})
-	conn = websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
-
-	if err != nil {
-		log.Println("error accepting grpc:", err)
-		return
-	}
-
-	h.GetAgent(id).AddSessionConn(conn)
 }
 
 func (h *hub) startRPCServer() {

@@ -7,11 +7,10 @@ import (
 	"log"
 	"net"
 	"os/exec"
-	"path"
 
 	types "github.com/btwiuse/conntroll/pkg/agent"
+	"github.com/btwiuse/conntroll/pkg/agent/dialer"
 	"golang.org/x/sync/errgroup"
-	"nhooyr.io/websocket"
 )
 
 var (
@@ -21,6 +20,7 @@ var (
 type agent struct {
 	*errgroup.Group
 	types.Config
+	types.Dialer
 	// types.RPC
 
 	types.GRPCServer
@@ -45,6 +45,7 @@ func NewAgent(c types.Config) types.Agent {
 	return &agent{
 		Group:      eg,
 		Config:     c,
+		Dialer:     dialer.New(c),
 		GRPCServer: grpcServer,
 		id:         id,
 		name:       name,
@@ -63,28 +64,6 @@ func (ag *agent) Accept() (net.Conn, error) {
 	}
 
 	return conn, nil
-}
-
-func (ag *agent) Dial(p string) (conn net.Conn, err error) {
-	var (
-		c = ag.Config
-		u string
-	)
-
-	switch c.GetScheme() {
-	case "http":
-		u = "ws://" + path.Join(c.GetAddr(), p)
-	case "https":
-		u = "wss://" + path.Join(c.GetAddr(), p)
-	}
-
-	wsconn, _, err := websocket.Dial(context.Background(), u, nil)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary), nil
 }
 
 func (ag *agent) AgentRegister(conn net.Conn) (types.RPC, error) {
