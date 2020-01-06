@@ -11,7 +11,9 @@ import (
 )
 
 func init() {
-	log.Fatalln(http.ListenAndServe(":1337", nil))
+	go func(){
+		log.Fatalln(http.ListenAndServe(":1337", nil))
+	}()
 }
 
 func hubCmd(args []string) {
