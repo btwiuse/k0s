@@ -79,6 +79,9 @@ type Session interface {
 
 	// TTY() io.ReaderFrom // | io.WriterTo
 	// FS(api.ChunkRequest) io.ReaderFrom
+
+	// close the underlying *grpc.ClientConn to release memory
+	Close() error
 }
 
 type RPC interface {

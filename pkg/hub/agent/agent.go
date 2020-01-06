@@ -1,7 +1,6 @@
 package agent
 
 import (
-	"context"
 	"crypto/sha256"
 	"fmt"
 	"log"
@@ -9,11 +8,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/btwiuse/conntroll/pkg/api"
 	"github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/hub/agent/info"
 	"github.com/btwiuse/conntroll/pkg/hub/session"
-	"google.golang.org/grpc"
 )
 
 var (
@@ -94,12 +91,8 @@ func SetIP(ip string) Opt {
 	}
 }
 
-func (ag *agent) newSession() {
-	ag.rpc.NewSession()
-}
-
 func (ag *agent) NewSession() hub.Session {
-	ag.newSession()
+	ag.rpc.NewSession()
 	return <-ag.sch
 }
 
@@ -134,26 +127,9 @@ func (ag *agent) Name() string {
 }
 
 // blocks until agent.NewSession reads the channel
-func (ag *agent) AddSessionConn(c net.Conn) {
-	toGRPCClientConn := func(c net.Conn) *grpc.ClientConn {
-		options := []grpc.DialOption{
-			// grpc.WithTransportCredentials(creds),
-			grpc.WithInsecure(),
-			grpc.WithContextDialer(
-				func(ctx context.Context, s string) (net.Conn, error) {
-					return c, nil
-				},
-			),
-		}
-
-		// TODO: handle this
-		cc, err := grpc.Dial("", options...)
-		if err != nil {
-			log.Fatal(err.Error())
-		}
-		return cc
-	}
+func (ag *agent) AddSessionConn(conn net.Conn) {
 	ag.grpcCounter += 1
 	name := fmt.Sprintf("%s.%d", ag.Name(), ag.grpcCounter)
-	ag.sch <- session.NewSession(name, api.NewSessionClient(toGRPCClientConn(c)))
+	// ag.sch <- session.NewSession(name, api.NewSessionClient(toGRPCClientConn(c)))
+	ag.sch <- session.NewSession(name, conn)
 }

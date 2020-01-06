@@ -30,6 +30,7 @@ func wsRelay(ag types.Agent) http.HandlerFunc {
 		conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
 
 		session := ag.NewSession()
+		defer session.Close()
 		sessionSendClient, err := session.Send(context.Background())
 		if err != nil {
 			log.Println(err)
@@ -110,6 +111,7 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 		_ = reqbuf
 
 		session := ag.NewSession()
+		defer session.Close()
 		chunkRequest := &api.ChunkRequest{
 			Path:    path,
 			Request: reqbuf,
@@ -165,6 +167,7 @@ func metricsRelay(ag types.Agent) http.HandlerFunc {
 		_ = reqbuf
 
 		session := ag.NewSession()
+		defer session.Close()
 		chunkRequest := &api.ChunkRequest{
 			Path:    "metrics",
 			Request: reqbuf,
