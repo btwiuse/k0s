@@ -34,6 +34,8 @@ github.com/conntroll/conntroll.github.io v0.0.0-20200106000259-b70a210e6d88 h1:R
 github.com/conntroll/conntroll.github.io v0.0.0-20200106000259-b70a210e6d88/go.mod h1:xi5DLlKJnzEcrD+ii2mmeMnVP+3CMlysGfWypXrUqV4=
 github.com/conntroll/conntroll.github.io v0.0.0-20200106003014-d8246ad21427 h1:8KXT+8aXekciN3a88ZZWjh35pSZRAMMcA4dlKkdkqQ4=
 github.com/conntroll/conntroll.github.io v0.0.0-20200106003014-d8246ad21427/go.mod h1:xi5DLlKJnzEcrD+ii2mmeMnVP+3CMlysGfWypXrUqV4=
+github.com/conntroll/conntroll.github.io v0.0.0-20200106005245-0d4032578d19 h1:WagPYRxqgtqxYffFEqe6cmZkPCkjiC8wVLfd0YAiRu4=
+github.com/conntroll/conntroll.github.io v0.0.0-20200106005245-0d4032578d19/go.mod h1:xi5DLlKJnzEcrD+ii2mmeMnVP+3CMlysGfWypXrUqV4=
 github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e h1:Wf6HqHfScWJN9/ZjdUKyjop4mf3Qdd+1TvvltAvM3m8=
 github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e/go.mod h1:F5haX7vjVVG0kc13fIWeqUViNPyEJxv/OmvnBo0Yme4=
 github.com/creack/pty v1.1.7 h1:6pwm8kMQKCmgUg0ZHTm5+/YvRK0s3THD/28+T6/kk4A=
