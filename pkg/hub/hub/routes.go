@@ -1,6 +1,7 @@
 package hub
 
 import (
+	"context"
 	"crypto/subtle"
 	"crypto/tls"
 	"fmt"
@@ -19,6 +20,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"modernc.org/httpfs"
+	"nhooyr.io/websocket"
 )
 
 var (
@@ -123,7 +125,6 @@ func (h *hub) initServer(addr string) {
 	// agent hijack => yrpc -> hub.RPC -> hub.Agent
 	// alternative websocket implementation:
 	// http upgrade => websocket conn => net.Conn => hub.RPC -> hub.Agent
-	r.Handle("/api/yrpc", h.handleRPC).Methods("GET") // TODO: remove this legacy endpoint in the future
 	r.Handle("/api/rpc", h.handleRPC).Methods("GET")
 
 	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
@@ -145,13 +146,15 @@ func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	conn, err := wrconn(w, r)
+	// conn, err := wrconn(w, r)
+	wsconn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
+		InsecureSkipVerify: true,
+	})
 	if err != nil {
 		log.Println(err)
 		return
 	}
+	conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageText)
 
 	for range time.Tick(time.Second) {
 		_, err := conn.Write([]byte(pretty.JSONString(h.GetAgents())))

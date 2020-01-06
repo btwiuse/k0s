@@ -1,13 +1,13 @@
-// +build gorilla
+// +build nhooyr
 
 package dialer
 
 import (
+	"context"
 	"net"
 	"path"
 
-	"github.com/btwiuse/conntroll/pkg/wrap"
-	"github.com/gorilla/websocket"
+	"nhooyr.io/websocket"
 )
 
 func (d *dialr) Dial(p string) (conn net.Conn, err error) {
@@ -23,11 +23,11 @@ func (d *dialr) Dial(p string) (conn net.Conn, err error) {
 		u = "wss://" + path.Join(c.GetAddr(), p)
 	}
 
-	wsconn, _, err := websocket.DefaultDialer.Dial(u, nil)
+	wsconn, _, err := websocket.Dial(context.Background(), u, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return wrap.NetConn(wsconn), nil
+	return websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary), nil
 }

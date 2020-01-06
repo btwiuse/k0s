@@ -1,4 +1,4 @@
-// +build !gorilla
+// +build nhooyr
 
 package wrap
 
