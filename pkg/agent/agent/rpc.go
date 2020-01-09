@@ -59,6 +59,8 @@ func (rpc *YS) plumbing() {
 		default:
 			cmd = "UNKNOWN_CMD: " + cmd
 			log.Println(cmd)
+			// TODO: investigate 'Error: duplicate id'
+			break
 		}
 	}
 }
