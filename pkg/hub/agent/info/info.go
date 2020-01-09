@@ -18,10 +18,10 @@ type Meta struct {
 }
 
 type Info struct {
-	ID   string   `json:"id"`
-	Name string   `json:"name"`
-	Tags []string `json:"tags"`
-	Auth string   `json:"auth,omitempty"`
+	ID       string            `json:"id"`
+	Name     string            `json:"name"`
+	Tags     []string          `json:"tags"`
+	Htpasswd map[string]string `json:"htpasswd,omitempty"`
 
 	Meta `json:"meta"`
 }
@@ -73,6 +73,6 @@ func (info *Info) GetTags() []string {
 	return info.Tags
 }
 
-func (info *Info) GetAuth() string {
-	return info.Auth
+func (info *Info) GetHtpasswd() map[string]string {
+	return info.Htpasswd
 }

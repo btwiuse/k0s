@@ -1,13 +1,12 @@
 package agent
 
 import (
-	"crypto/sha256"
 	"fmt"
-	"log"
 	"net"
 	"net/http"
 	"time"
 
+	auth "github.com/abbot/go-http-auth"
 	"github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/conntroll/pkg/hub/agent/info"
 	"github.com/btwiuse/conntroll/pkg/hub/session"
@@ -40,8 +39,9 @@ func (ag *agent) fromInfo(info hub.Info) {
 	ag.ID_ = info.GetID()
 	ag.Name_ = info.GetName()
 	ag.Tags = info.GetTags()
-	if bahash := info.GetAuth(); bahash != "" {
-		ag.bahash = bahash
+
+	if htpasswd := info.GetHtpasswd(); len(htpasswd) != 0 {
+		ag.htpasswd = htpasswd
 		*ag.Auth = true
 	}
 
@@ -58,8 +58,8 @@ type agent struct {
 	rpc                hub.RPC
 	sch                chan hub.Session
 
-	created time.Time
-	bahash  string
+	created  time.Time
+	htpasswd map[string]string
 
 	grpcCounter int
 	rpcCounter  int
@@ -97,21 +97,20 @@ func (ag *agent) NewSession() hub.Session {
 }
 
 func (ag *agent) BasicAuth(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if ag.bahash != "" {
-			username, password, ok := r.BasicAuth()
-			uphash := fmt.Sprintf("%x", sha256.Sum256([]byte(username+":"+password)))
-			log.Println(uphash, ag.bahash)
-			if (!ok) || (uphash != ag.bahash) {
-				realm := "please enter password for " + ag.Name()
-				w.Header().Set("WWW-Authenticate", `Basic realm="`+realm+`"`)
-				w.WriteHeader(401)
-				w.Write([]byte("Unauthorised.\n"))
-				return
+	secret := func(user, realm string) string {
+		realm = "please enter password for " + ag.Name()
+		for k, v := range ag.htpasswd {
+			if user == k {
+				return v
 			}
 		}
+		return ""
+	}
+	authenticator := auth.NewBasicAuthenticator("", secret)
+	nextHandlerFunc := func(w http.ResponseWriter, r *http.Request) {
 		next.ServeHTTP(w, r)
-	})
+	}
+	return auth.JustCheck(authenticator, nextHandlerFunc)
 }
 
 func (ag *agent) Time() time.Time {

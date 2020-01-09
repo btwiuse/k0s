@@ -6,6 +6,7 @@ go 1.14
 // replace github.com/yrpc/yrpc => /home/aaron/yrpc/yrpc
 
 require (
+	github.com/abbot/go-http-auth v0.4.0
 	github.com/briandowns/spinner v1.8.0
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
@@ -14,6 +15,7 @@ require (
 	github.com/docker/docker v1.13.1
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/fatih/color v1.8.0
+	github.com/foomo/htpasswd v0.0.0-20180422071726-cb63c4ac0e50
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/golang/protobuf v1.3.2
 	github.com/google/uuid v1.1.1
@@ -22,6 +24,7 @@ require (
 	github.com/gorilla/websocket v1.4.1
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/kr/pty v1.1.8
+	github.com/mitchellh/go-homedir v1.1.0
 	github.com/prometheus/client_golang v1.2.1
 	github.com/prometheus/common v0.7.0
 	github.com/prometheus/node_exporter v0.18.1-0.20200101121053-3ddc82c2d8d1

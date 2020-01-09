@@ -14,7 +14,7 @@ type Info interface {
 	GetID() string
 	GetName() string
 	GetTags() []string
-	GetAuth() string
+	GetHtpasswd() map[string]string
 
 	GetOS() string
 	GetPwd() string

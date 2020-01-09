@@ -1,10 +1,8 @@
 package config
 
 import (
-	"crypto/sha256"
 	"encoding/json"
 	"flag"
-	"fmt"
 	"log"
 	"net/url"
 	"os/exec"
@@ -15,6 +13,9 @@ import (
 	"github.com/btwiuse/conntroll/pkg/rng"
 	"github.com/btwiuse/conntroll/pkg/uuid"
 	"github.com/btwiuse/pretty"
+
+	"github.com/foomo/htpasswd"
+	homedir "github.com/mitchellh/go-homedir"
 )
 
 const DEFAULT_HUB_ADDRESS = "https://hub.libredot.com"
@@ -35,10 +36,11 @@ func (i *arrayFlags) Set(value string) error {
 }
 
 type config struct {
-	ID   string   `json:"id"`
-	Name string   `json:"name"`
-	Tags []string `json:"tags"`
-	Auth string   `json:"auth,omitempty"`
+	ID       string            `json:"id"`
+	Name     string            `json:"name"`
+	Tags     []string          `json:"tags"`
+	Auth     string            `json:"auth,omitempty"`
+	Htpasswd map[string]string `json:"htpasswd,omitempty"`
 
 	agent.Info `json:"meta"`
 
@@ -120,7 +122,6 @@ func Parse(args []string) agent.Config {
 		tags arrayFlags = []string{}
 
 		hubapi   string = DEFAULT_HUB_ADDRESS
-		bahash   string
 		verbose  bool
 		insecure bool
 		cmd      string
@@ -130,10 +131,6 @@ func Parse(args []string) agent.Config {
 
 	// Should be comma separated values like foo,bar
 	fset.Var(&tags, "tags", "Agent tags. ")
-
-	// "Protect shell and filesystem access using basicauth. Value should be supplied in user:pass form.
-	// (Only hash of user:pass will be sent. hub will use the hash value to authorize access to the agent)"
-	fset.StringVar(&bahash, "auth", "conn:troll", "Set user:pass for shell/fs access. Use `-auth offff` to disable auth")
 
 	//  The 1st positional argument is used if you leave the -hub part.
 	fset.StringVar(&hubapi, "hub", DEFAULT_HUB_ADDRESS, "Hub address.")
@@ -159,15 +156,18 @@ func Parse(args []string) agent.Config {
 		hubapi = "http://" + hubapi
 	}
 
-	if strings.Contains(bahash, ":") {
-		bahash = fmt.Sprintf("%x", sha256.Sum256([]byte(bahash)))
-	} else {
-		bahash = ""
-	}
-
 	uri, err := url.Parse(hubapi)
 	if err != nil {
 		log.Fatalln(err)
+	}
+
+	var passwords map[string]string
+	htpasswdFile, err := homedir.Expand("~/.conntroll/htpasswd")
+	if err == nil {
+		passwords, err = htpasswd.ParseHtpasswdFile(htpasswdFile)
+		if err != nil {
+			passwords, _ = htpasswd.ParseHtpasswdFile("/etc/conntroll/htpasswd")
+		}
 	}
 
 	return &config{
@@ -175,10 +175,10 @@ func Parse(args []string) agent.Config {
 
 		uri: uri,
 
-		ID:   id,
-		Name: name,
-		Tags: tags,
-		Auth: bahash,
+		ID:       id,
+		Name:     name,
+		Tags:     tags,
+		Htpasswd: passwords,
 
 		verbose:  verbose,
 		insecure: insecure,

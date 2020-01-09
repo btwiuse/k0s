@@ -3,18 +3,9 @@ package main
 import (
 	"log"
 
-	"net/http"
-	_ "net/http/pprof"
-
 	"github.com/btwiuse/conntroll/pkg/hub/config"
 	"github.com/btwiuse/conntroll/pkg/hub/hub"
 )
-
-func init() {
-	go func(){
-		log.Fatalln(http.ListenAndServe(":1337", nil))
-	}()
-}
 
 func hubCmd(args []string) {
 	c := config.Parse(args)
