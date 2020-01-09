@@ -97,6 +97,9 @@ func (ag *agent) NewSession() hub.Session {
 }
 
 func (ag *agent) BasicAuth(next http.Handler) http.Handler {
+	if len(ag.htpasswd) == 0 {
+		return next
+	}
 	secret := func(user, realm string) string {
 		realm = "please enter password for " + ag.Name()
 		for k, v := range ag.htpasswd {
