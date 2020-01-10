@@ -14,9 +14,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/btwiuse/conntroll/pkg/agent"
-	"github.com/btwiuse/conntroll/pkg/api"
 	"github.com/btwiuse/wetty/pkg/msg"
+	"k0s.io/conntroll/pkg/agent"
+	"k0s.io/conntroll/pkg/api"
 
 	"go.uber.org/zap"
 )

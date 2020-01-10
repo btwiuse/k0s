@@ -4,12 +4,12 @@ import (
 	"net"
 	"net/http"
 
-	types "github.com/btwiuse/conntroll/pkg/agent"
-	"github.com/btwiuse/conntroll/pkg/agent/tty"
-	"github.com/btwiuse/conntroll/pkg/api"
-	"github.com/btwiuse/conntroll/pkg/api/grpcimpl"
-	"github.com/btwiuse/conntroll/pkg/exporter"
 	"google.golang.org/grpc"
+	types "k0s.io/conntroll/pkg/agent"
+	"k0s.io/conntroll/pkg/agent/tty"
+	"k0s.io/conntroll/pkg/api"
+	"k0s.io/conntroll/pkg/api/grpcimpl"
+	"k0s.io/conntroll/pkg/exporter"
 )
 
 var (

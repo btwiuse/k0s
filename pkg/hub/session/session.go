@@ -6,10 +6,10 @@ import (
 	"net"
 	"time"
 
-	"github.com/btwiuse/conntroll/pkg/api"
-	"github.com/btwiuse/conntroll/pkg/hub"
-	"github.com/btwiuse/conntroll/pkg/uuid"
 	"google.golang.org/grpc"
+	"k0s.io/conntroll/pkg/api"
+	"k0s.io/conntroll/pkg/hub"
+	"k0s.io/conntroll/pkg/uuid"
 )
 
 var (

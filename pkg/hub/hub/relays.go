@@ -8,12 +8,12 @@ import (
 	"net/http/httputil"
 	"strings"
 
-	"github.com/btwiuse/conntroll/pkg/api"
-	types "github.com/btwiuse/conntroll/pkg/hub"
-	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/btwiuse/wetty/pkg/msg"
 	"github.com/gorilla/mux"
 	"golang.org/x/sync/errgroup"
+	"k0s.io/conntroll/pkg/api"
+	types "k0s.io/conntroll/pkg/hub"
+	"k0s.io/conntroll/pkg/wrap"
 	"nhooyr.io/websocket"
 )
 

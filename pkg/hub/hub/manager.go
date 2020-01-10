@@ -1,9 +1,9 @@
 package hub
 
 import (
-	"github.com/btwiuse/conntroll/pkg"
-	types "github.com/btwiuse/conntroll/pkg/hub"
-	"github.com/btwiuse/conntroll/pkg/manager"
+	"k0s.io/conntroll/pkg"
+	types "k0s.io/conntroll/pkg/hub"
+	"k0s.io/conntroll/pkg/manager"
 )
 
 var (

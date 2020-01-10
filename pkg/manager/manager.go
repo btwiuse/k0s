@@ -3,8 +3,8 @@ package manager
 import (
 	"sync"
 
-	"github.com/btwiuse/conntroll/pkg"
 	"github.com/btwiuse/gods/maps/linkedhashmap"
+	"k0s.io/conntroll/pkg"
 )
 
 var (

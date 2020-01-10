@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/btwiuse/conntroll/pkg/wrap"
+	"k0s.io/conntroll/pkg/wrap"
 )
 
 func wrconn(w http.ResponseWriter, r *http.Request) (net.Conn, error) {

@@ -10,11 +10,11 @@ import (
 	"sync"
 	"time"
 
-	types "github.com/btwiuse/conntroll/pkg/hub"
-	"github.com/btwiuse/conntroll/pkg/hub/agent"
-	"github.com/btwiuse/conntroll/pkg/hub/agent/info"
-	"github.com/btwiuse/conntroll/pkg/rng"
-	"github.com/btwiuse/conntroll/pkg/uuid"
+	types "k0s.io/conntroll/pkg/hub"
+	"k0s.io/conntroll/pkg/hub/agent"
+	"k0s.io/conntroll/pkg/hub/agent/info"
+	"k0s.io/conntroll/pkg/rng"
+	"k0s.io/conntroll/pkg/uuid"
 )
 
 var (

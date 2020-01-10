@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/btwiuse/conntroll/pkg/agent/agent"
-	"github.com/btwiuse/conntroll/pkg/agent/config"
+	"k0s.io/conntroll/pkg/agent/agent"
+	"k0s.io/conntroll/pkg/agent/config"
 )
 
 func agentCmd(args []string) {

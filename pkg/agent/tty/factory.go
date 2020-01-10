@@ -1,9 +1,9 @@
 package tty
 
 import (
-	"github.com/btwiuse/conntroll/pkg/agent"
 	"github.com/btwiuse/wetty/pkg/localcmd"
 	"github.com/kr/pty"
+	"k0s.io/conntroll/pkg/agent"
 )
 
 func NewFactory(args []string) agent.TtyFactory {

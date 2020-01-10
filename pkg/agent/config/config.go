@@ -8,11 +8,11 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/btwiuse/conntroll/pkg/agent"
-	"github.com/btwiuse/conntroll/pkg/agent/info"
-	"github.com/btwiuse/conntroll/pkg/rng"
-	"github.com/btwiuse/conntroll/pkg/uuid"
 	"github.com/btwiuse/pretty"
+	"k0s.io/conntroll/pkg/agent"
+	"k0s.io/conntroll/pkg/agent/info"
+	"k0s.io/conntroll/pkg/rng"
+	"k0s.io/conntroll/pkg/uuid"
 
 	"github.com/foomo/htpasswd"
 	homedir "github.com/mitchellh/go-homedir"

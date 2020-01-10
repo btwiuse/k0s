@@ -5,8 +5,8 @@ import (
 	"os/user"
 	"runtime"
 
-	"github.com/btwiuse/conntroll/pkg/agent"
-	"github.com/btwiuse/conntroll/pkg/distro"
+	"k0s.io/conntroll/pkg/agent"
+	"k0s.io/conntroll/pkg/distro"
 )
 
 type info struct {

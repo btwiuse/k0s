@@ -1,4 +1,4 @@
-module github.com/btwiuse/conntroll
+module k0s.io/conntroll
 
 go 1.14
 

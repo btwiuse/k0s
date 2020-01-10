@@ -4,9 +4,9 @@ import (
 	// "net/rpc"
 	// "time"
 
-	"github.com/btwiuse/conntroll/pkg"
-	"github.com/btwiuse/conntroll/pkg/hub"
-	"github.com/btwiuse/conntroll/pkg/manager"
+	"k0s.io/conntroll/pkg"
+	"k0s.io/conntroll/pkg/hub"
+	"k0s.io/conntroll/pkg/manager"
 )
 
 var (

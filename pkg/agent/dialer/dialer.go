@@ -1,7 +1,7 @@
 package dialer
 
 import (
-	"github.com/btwiuse/conntroll/pkg/agent"
+	"k0s.io/conntroll/pkg/agent"
 )
 
 var (

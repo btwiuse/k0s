@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/btwiuse/conntroll/pkg/hub"
+	"k0s.io/conntroll/pkg/hub"
 )
 
 type config struct {

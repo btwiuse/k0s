@@ -6,8 +6,8 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/btwiuse/conntroll/pkg/wrap"
 	"github.com/gorilla/websocket"
+	"k0s.io/conntroll/pkg/wrap"
 )
 
 var up = &websocket.Upgrader{}

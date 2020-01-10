@@ -7,9 +7,9 @@ import (
 	"time"
 
 	auth "github.com/abbot/go-http-auth"
-	"github.com/btwiuse/conntroll/pkg/hub"
-	"github.com/btwiuse/conntroll/pkg/hub/agent/info"
-	"github.com/btwiuse/conntroll/pkg/hub/session"
+	"k0s.io/conntroll/pkg/hub"
+	"k0s.io/conntroll/pkg/hub/agent/info"
+	"k0s.io/conntroll/pkg/hub/session"
 )
 
 var (

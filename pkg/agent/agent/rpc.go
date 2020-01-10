@@ -7,8 +7,8 @@ import (
 	"net"
 	"time"
 
-	types "github.com/btwiuse/conntroll/pkg/agent"
-	"github.com/btwiuse/conntroll/pkg/spinner"
+	types "k0s.io/conntroll/pkg/agent"
+	"k0s.io/conntroll/pkg/spinner"
 )
 
 var (

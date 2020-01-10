@@ -12,13 +12,13 @@ import (
 	"strings"
 	"time"
 
-	types "github.com/btwiuse/conntroll/pkg/hub"
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
 	webui "github.com/conntroll/conntroll.github.io"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	types "k0s.io/conntroll/pkg/hub"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
 )

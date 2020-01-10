@@ -3,7 +3,7 @@ package info
 import (
 	"encoding/json"
 
-	"github.com/btwiuse/conntroll/pkg/hub"
+	"k0s.io/conntroll/pkg/hub"
 )
 
 var _ hub.Info = (*Info)(nil)

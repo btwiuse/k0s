@@ -8,9 +8,9 @@ import (
 	"net"
 	"os/exec"
 
-	types "github.com/btwiuse/conntroll/pkg/agent"
-	"github.com/btwiuse/conntroll/pkg/agent/dialer"
 	"golang.org/x/sync/errgroup"
+	types "k0s.io/conntroll/pkg/agent"
+	"k0s.io/conntroll/pkg/agent/dialer"
 )
 
 var (

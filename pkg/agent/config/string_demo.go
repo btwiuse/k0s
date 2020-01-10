@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/btwiuse/conntroll/pkg/agent/config"
+	"k0s.io/conntroll/pkg/agent/config"
 )
 
 func main() {
