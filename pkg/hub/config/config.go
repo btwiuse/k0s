@@ -14,7 +14,6 @@ type config struct {
 	cert      string
 	key       string
 	basicauth bool
-	localui   bool
 	user      string
 	pass      string
 }
@@ -29,10 +28,6 @@ func (c *config) BasicAuth() (string, string, bool) {
 
 func (c *config) UseTLS() bool {
 	return c.tls
-}
-
-func (c *config) LocalUI() bool {
-	return c.localui
 }
 
 func (c *config) Cert() string {
@@ -53,10 +48,8 @@ func Parse(args []string) hub.Config {
 		basicauth string
 		user      string
 		pass      string
-		localui   bool
 	)
 
-	fset.BoolVar(&localui, "localui", false, "load ui assets from local filesystem for debugging purpose")
 	fset.StringVar(&port, "port", ":8000", "hub listening port")
 	fset.StringVar(&cert, "cert", "", "path to tls cert file")
 	fset.StringVar(&key, "key", "", "path to tls key file")
@@ -90,6 +83,5 @@ func Parse(args []string) hub.Config {
 		basicauth: basicauth != "",
 		user:      user,
 		pass:      pass,
-		localui:   localui,
 	}
 }

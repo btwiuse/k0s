@@ -27,7 +27,6 @@ type Info interface {
 type Config interface {
 	Port() string
 	UseTLS() bool
-	LocalUI() bool
 	Cert() string
 	Key() string
 	BasicAuth() (string, string, bool)
@@ -59,11 +58,6 @@ type Agent interface {
 	NewSession() Session
 
 	BasicAuth(http.Handler) http.Handler
-
-	// TODO: remove this
-	// currently it is used to generate index.html in localui mode
-	GetUsername() string
-	GetHostname() string
 }
 
 type SessionManager interface {
