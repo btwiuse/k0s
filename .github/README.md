@@ -1,1 +1,1 @@
-![k0s](.github/cover.png)
+![k0s](cover.png)
