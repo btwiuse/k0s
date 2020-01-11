@@ -1,0 +1,24 @@
+version: '3'
+services:
+  grafana:
+    image: grafana/grafana:latest
+    network_mode: host
+    volumes:
+    - ./grafana.ini:/etc/grafana/grafana.ini
+    - ./grafana:/grafana
+  prometheus:
+    image: prom/prometheus
+    network_mode: host
+    working_dir: /work
+    entrypoint:
+    - /bin/sh
+    - -c
+    command:
+    - prometheus
+    - --web.console.libraries=/usr/share/prometheus/console_libraries
+    - --web.console.templates=/usr/share/prometheus/consoles
+    - --storage.tsdb.path=/prometheus
+    - --config.file=prometheus.yml
+    volumes:
+    - .:/work
+    - ./prometheus:/prometheus
