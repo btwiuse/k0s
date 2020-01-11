@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/subtle"
 	"crypto/tls"
-	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -14,7 +13,6 @@ import (
 
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
-	webui "github.com/conntroll/conntroll.github.io"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -33,7 +31,6 @@ type hub struct {
 	*http.Server
 
 	ba        bool
-	localui   bool // load webui assets from local dir for debugging purpose
 	user      string
 	pass      string
 	handleRPC http.Handler // http.Handler|net.Listener
@@ -42,7 +39,6 @@ type hub struct {
 func NewHub(c types.Config) types.Hub {
 	h := &hub{
 		AgentManager: NewAgentManager(),
-		localui:      c.LocalUI(),
 	}
 	h.startRPCServer()
 	h.user, h.pass, h.ba = c.BasicAuth()
@@ -99,17 +95,6 @@ func (h *hub) register(conn net.Conn) {
 
 func (h *hub) initServer(addr string) {
 	r := mux.NewRouter()
-
-	if h.localui {
-		r.NotFoundHandler = h.basicauth(http.FileServer(http.Dir("conntroll.github.io")))
-	} else {
-		mergedAssets := assets.Assets
-		for k, v := range webui.Assets {
-			mergedAssets[k] = v
-		}
-		mergedAssets["favicon.ico"] = ""
-		r.NotFoundHandler = h.basicauth(http.FileServer(httpfs.NewFileSystem(mergedAssets, time.Now())))
-	}
 
 	// list active agents
 	r.HandleFunc("/api/agents/list", h.basicauth(http.HandlerFunc(h.handleAgentsList))).Methods("GET")
@@ -214,30 +199,8 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):
 		metricsRelay(ag)(w, r)
-	case h.localui:
-		ag.BasicAuth(staticFileHandler).ServeHTTP(w, r)
 	default:
-		ag.BasicAuth(agentIndexHandler(ag)).ServeHTTP(w, r)
-	}
-}
-
-func agentIndexHandler(ag types.Agent) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(fmt.Sprintf(`<!doctype html>
-<html>
-  <head>
-    <title>%s@%s</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/index.css" />
-    <link rel="stylesheet" href="/css/xterm.css" />
-    <link rel="stylesheet" href="/css/xterm_customize.css" />
-  </head>
-  <body>
-    <div id="terminal"></div>
-    <script src="/js/wetty-bundle.js"></script>
-  </body>
-</html>
-`, ag.GetUsername(), ag.GetHostname())))
+		ag.BasicAuth(staticFileHandler).ServeHTTP(w, r)
 	}
 }
 

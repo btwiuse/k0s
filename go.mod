@@ -11,7 +11,6 @@ require (
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.24
-	github.com/conntroll/conntroll.github.io v0.0.0-20200106005245-0d4032578d19
 	github.com/docker/docker v1.13.1
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/fatih/color v1.8.0
@@ -29,6 +28,7 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/yrpc/yrpc v0.0.0-20191230043512-613ecaa6d5b4
 	go.uber.org/zap v1.13.0
+	golang.org/x/crypto v0.0.0-20190530122614-20be4c3c3ed5 // indirect
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	google.golang.org/grpc v1.26.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
