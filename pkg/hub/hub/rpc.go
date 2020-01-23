@@ -130,6 +130,13 @@ type YS struct {
 	closeOnceDone *sync.Once
 }
 
+func (ys *YS) NewSocks5() {
+	_, err := io.WriteString(ys.Conn, fmt.Sprintln("SOCKS5"))
+	if err != nil {
+		ys.Close()
+	}
+}
+
 func (ys *YS) NewSession() {
 	_, err := io.WriteString(ys.Conn, fmt.Sprintln("ACCEPT"))
 	if err != nil {
