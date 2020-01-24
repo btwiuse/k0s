@@ -1,5 +1,7 @@
 FROM alpine
 
+RUN apk add curl
+
 ADD https://conntroll.github.io/releases/latest/linux/amd64/conntroll /bin/conntroll
 ADD agent.yaml /etc/conntroll/agent.yaml
 RUN chmod +x /bin/conntroll
