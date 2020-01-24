@@ -2,6 +2,7 @@ BIN     = conntroll
 GOOS    = $(shell go env GOOS)
 GOARCH  = $(shell go env GOARCH)
 LDFLAGS = $(shell ./pkg/version/ldflags)
+TAGS    = "nhooyr"
 
 all:
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"

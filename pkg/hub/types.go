@@ -55,10 +55,14 @@ type Agent interface {
 
 	// AddRPCConn(net.Conn)
 	AddSessionConn(net.Conn)
+	AddMetricsConn(net.Conn)
 	AddSocks5Conn(net.Conn)
+	AddFSConn(net.Conn)
 
 	NewSession() Session
+	NewMetrics() net.Conn
 	NewSocks5() net.Conn
+	NewFS() net.Conn
 
 	BasicAuth(http.Handler) http.Handler
 }
@@ -88,7 +92,10 @@ type RPC interface {
 	Done() <-chan struct{}
 
 	NewSession() // Session
+	NewMetrics() // Session
 	NewSocks5()
+	NewFS()
+
 	Ping()
 	RemoteIP() string
 	Actions() <-chan func(Hub)

@@ -1,5 +1,3 @@
-// +build nhooyr
-
 package dialer
 
 import (

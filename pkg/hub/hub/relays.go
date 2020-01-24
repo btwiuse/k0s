@@ -1,6 +1,7 @@
 package hub
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"log"
@@ -92,15 +93,6 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 			id   = vars["id"]
 			path = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id+"/rootfs")
 		)
-
-		conn, err := wrap.Hijack(w)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		defer conn.Close()
-
 		r.RequestURI = path
 
 		reqbuf, err := httputil.DumpRequest(r, true)
@@ -108,37 +100,21 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 			log.Println(err)
 			return
 		}
-		_ = reqbuf
 
-		session := ag.NewSession()
-		defer session.Close()
-		chunkRequest := &api.ChunkRequest{
-			Path:    path,
-			Request: reqbuf,
-		}
-		sessionChunkerClient, err := session.Chunker(context.Background(), chunkRequest)
+		conn, err := wrap.Hijack(w)
 		if err != nil {
 			log.Println(err)
 			return
 		}
+		defer conn.Close()
 
-		// TODO make a io.Reader from session.Chunker_Client, then call io.Copy
-		for {
-			chunk, err := sessionChunkerClient.Recv()
-			if err == io.EOF {
-				break
-			}
-			if err != nil {
-				log.Println(err)
-				break
-			}
+		fsConn := ag.NewFS()
+		defer fsConn.Close()
 
-			_, err = conn.Write(chunk.Chunk)
-			if err != nil {
-				log.Println(err)
-				break
-			}
-		}
+		go func() {
+			io.Copy(fsConn, bytes.NewBuffer(reqbuf))
+		}()
+		io.Copy(conn, fsConn)
 	}
 }
 
@@ -149,14 +125,6 @@ func metricsRelay(ag types.Agent) http.HandlerFunc {
 			id   = vars["id"]
 			path = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id)
 		)
-		conn, err := wrap.Hijack(w)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		defer conn.Close()
-
 		r.RequestURI = path
 
 		reqbuf, err := httputil.DumpRequest(r, true)
@@ -164,37 +132,21 @@ func metricsRelay(ag types.Agent) http.HandlerFunc {
 			log.Println(err)
 			return
 		}
-		_ = reqbuf
 
-		session := ag.NewSession()
-		defer session.Close()
-		chunkRequest := &api.ChunkRequest{
-			Path:    "metrics",
-			Request: reqbuf,
-		}
-		sessionChunkerClient, err := session.Chunker(context.Background(), chunkRequest)
+		conn, err := wrap.Hijack(w)
 		if err != nil {
 			log.Println(err)
 			return
 		}
+		defer conn.Close()
 
-		// TODO make a io.Reader from session.Chunker_Client, then call io.Copy
-		for {
-			chunk, err := sessionChunkerClient.Recv()
-			if err == io.EOF {
-				break
-			}
-			if err != nil {
-				log.Println(err)
-				break
-			}
+		metricsConn := ag.NewMetrics()
+		defer metricsConn.Close()
 
-			_, err = conn.Write(chunk.Chunk)
-			if err != nil {
-				log.Println(err)
-				break
-			}
-		}
+		go func() {
+			io.Copy(metricsConn, bytes.NewBuffer(reqbuf))
+		}()
+		io.Copy(conn, metricsConn)
 	}
 }
 

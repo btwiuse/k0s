@@ -103,8 +103,9 @@ func (h *hub) initServer(addr string) {
 	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
 	// alternative websocket implementation:
 	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
-	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/socks5", h.handleSocks5).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/fs", h.handleFS).Methods("GET").Queries("id", "{id}")
 
 	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
@@ -180,11 +181,31 @@ func (h *hub) handleSocks5(w http.ResponseWriter, r *http.Request) {
 
 	conn, err := wrconn(w, r)
 	if err != nil {
-		log.Println("error accepting grpc:", err)
+		log.Println("error accepting socks5:", err)
 		return
 	}
 
 	h.GetAgent(id).AddSocks5Conn(conn)
+}
+
+func (h *hub) handleFS(w http.ResponseWriter, r *http.Request) {
+	var (
+		vars = mux.Vars(r)
+		id   = vars["id"]
+	)
+
+	if !h.Has(id) {
+		log.Println("no such id", id)
+		return
+	}
+
+	conn, err := wrconn(w, r)
+	if err != nil {
+		log.Println("error accepting ws:", err)
+		return
+	}
+
+	h.GetAgent(id).AddFSConn(conn)
 }
 
 func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {

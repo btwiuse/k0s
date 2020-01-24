@@ -1,4 +1,6 @@
 // +build gorilla
+// +build !nhooyr
+// +build !raw
 
 package hub
 
