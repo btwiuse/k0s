@@ -2,12 +2,13 @@ package info
 
 import (
 	"encoding/json"
+	"time"
 
 	"k0s.io/conntroll/pkg/hub"
 	"k0s.io/conntroll/pkg/version"
 )
 
-var _ hub.Info = (*Info)(nil)
+var _ hub.AgentInfo = (*Info)(nil)
 
 type Meta struct {
 	OS       string `json:"os"`
@@ -18,7 +19,9 @@ type Meta struct {
 	Hostname string `json:"hostname"`
 }
 
-type Info struct {
+// only Unmarshed from agent header
+// never Marshaled
+type privateInfo struct {
 	ID       string            `json:"id"`
 	Name     string            `json:"name"`
 	Tags     []string          `json:"tags"`
@@ -28,13 +31,62 @@ type Info struct {
 	version.Version `json:"version"`
 }
 
-func Decode(data []byte) (hub.Info, error) {
-	v := &Info{}
-	err := json.Unmarshal(data, v)
+// Metadata, for flatten json output
+// Marshed by hub /api/agents/list
+// Unmarshaled by client
+type Info struct {
+	ID        string   `json:"id"`
+	Name      string   `json:"name"`
+	Tags      []string `json:"tags"`
+	Auth      *bool    `json:"auth,omitempty"`
+	Connected int64    `json:"connected"`
+	IP        string   `json:"ip"`
+
+	OS       string `json:"os"`
+	Pwd      string `json:"pwd"`
+	Arch     string `json:"arch"`
+	Distro   string `json:"distro,omitempty"`
+	Username string `json:"username"`
+	Hostname string `json:"hostname"`
+
+	*privateInfo `json:"-"`
+}
+
+func Decode(data []byte) (hub.AgentInfo, error) {
+	pi := &privateInfo{}
+	err := json.Unmarshal(data, pi)
 	if err != nil {
 		return nil, err
 	}
-	return v, err
+
+	i := &Info{privateInfo: pi}
+	i.populatePublicInfo()
+	return i, err
+}
+
+func (info *Info) populatePublicInfo() {
+	pi := info.privateInfo
+
+	info.ID = pi.ID
+	info.Name = pi.Name
+	info.Tags = pi.Tags
+	info.Connected = time.Now().Unix()
+	info.Auth = new(bool)
+
+	info.OS = pi.OS
+	info.Pwd = pi.Pwd
+	info.Arch = pi.Arch
+	info.Distro = pi.Distro
+	info.Username = pi.Username
+	info.Hostname = pi.Hostname
+
+	if len(pi.Htpasswd) != 0 {
+		*info.Auth = true
+	}
+}
+
+func (info *Info) SetIP(ip string) {
+	info.IP = ip
 }
 
 func (info *Info) GetOS() string {
@@ -75,4 +127,8 @@ func (info *Info) GetTags() []string {
 
 func (info *Info) GetHtpasswd() map[string]string {
 	return info.Htpasswd
+}
+
+func (info *Info) GetAuth() bool {
+	return *info.Auth
 }

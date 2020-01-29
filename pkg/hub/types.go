@@ -6,14 +6,16 @@ import (
 
 	// "net/rpc"
 
+	"github.com/btwiuse/asciitransport"
 	"k0s.io/conntroll/pkg"
 	"k0s.io/conntroll/pkg/api"
 )
 
-type Info interface {
+type AgentInfo interface {
 	GetID() string
 	GetName() string
 	GetTags() []string
+	GetAuth() bool
 	GetHtpasswd() map[string]string
 
 	GetOS() string
@@ -22,6 +24,8 @@ type Info interface {
 	GetDistro() string
 	GetHostname() string
 	GetUsername() string
+
+	SetIP(string)
 }
 
 type Config interface {
@@ -50,15 +54,18 @@ type AgentManager interface {
 }
 
 type Agent interface {
+	AgentInfo
 	pkg.Tider
 	SessionManager
 
 	// AddRPCConn(net.Conn)
-	AddSessionConn(net.Conn)
+	AddTerminalConn(net.Conn)
+	AddSessionConn(net.Conn) // deprecated in favor of AddTerminalConn
 	AddMetricsConn(net.Conn)
 	AddSocks5Conn(net.Conn)
 	AddFSConn(net.Conn)
 
+	NewTerminal() net.Conn
 	NewSession() Session
 	NewMetrics() net.Conn
 	NewSocks5() net.Conn
@@ -72,6 +79,18 @@ type SessionManager interface {
 
 	AddSession(Session)
 	GetSession(string) Session
+}
+
+type TerminalManager interface {
+	pkg.Manager
+
+	AddTerminal(Terminal)
+	GetTerminal(string) Terminal
+}
+
+type Terminal interface {
+	pkg.Tider
+	asciitransport.AsciiTransportClient
 }
 
 type Session interface {
@@ -91,8 +110,9 @@ type RPC interface {
 	Close()
 	Done() <-chan struct{}
 
-	NewSession() // Session
-	NewMetrics() // Session
+	NewTerminal() // Terminal
+	NewSession()  // Session
+	NewMetrics()
 	NewSocks5()
 	NewFS()
 

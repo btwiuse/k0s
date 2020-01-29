@@ -3,23 +3,22 @@ package dialer
 import (
 	"context"
 	"net"
-	"path"
+	"net/url"
 
 	"nhooyr.io/websocket"
 )
 
-func (d *dialr) Dial(p string) (conn net.Conn, err error) {
+func (d *dialr) Dial(p string, q string) (conn net.Conn, err error) {
 	var (
-		c = d.c
-		u string
+		c  = d.c
+		ub = &url.URL{
+			Scheme:   c.GetSchemeWS(),
+			Host:     c.GetAddr(),
+			Path:     p,
+			RawQuery: q,
+		}
+		u = ub.String()
 	)
-
-	switch c.GetScheme() {
-	case "http":
-		u = "ws://" + path.Join(c.GetAddr(), p)
-	case "https":
-		u = "wss://" + path.Join(c.GetAddr(), p)
-	}
 
 	wsconn, _, err := websocket.Dial(context.Background(), u, nil)
 

@@ -10,8 +10,27 @@ import (
 )
 
 var (
-	_ hub.SessionManager = (*sessionManager)(nil)
+	_ hub.SessionManager  = (*sessionManager)(nil)
+	_ hub.TerminalManager = (*terminalManager)(nil)
 )
+
+type terminalManager struct {
+	pkg.Manager
+}
+
+func (sm *terminalManager) AddTerminal(s hub.Terminal) {
+	sm.Manager.Add(s)
+}
+
+func (sm *terminalManager) GetTerminal(id string) hub.Terminal {
+	return sm.Get(id).(hub.Terminal)
+}
+
+func NewTerminalManager() hub.TerminalManager {
+	return &terminalManager{
+		Manager: manager.NewManager(),
+	}
+}
 
 type sessionManager struct {
 	pkg.Manager

@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/kr/pty"
+	"github.com/creack/pty"
 )
 
 // Factory implements the server.Factory interface
@@ -22,7 +22,7 @@ func (factory *Factory) New() (*Lc, error) {
 	return NewLc(args)
 }
 
-// Lc implements the server.Slave interface {io.ReadWriteCloser,ResizeTerminal(),Kill()}
+// Lc implements the server.Slave interface {io.ReadWriteCloser,ResizeTerminal()}
 type Lc struct {
 	cmd       *exec.Cmd
 	pty       *os.File
@@ -31,6 +31,7 @@ type Lc struct {
 
 func NewLc(args []string) (*Lc, error) {
 	cmd := exec.Command(args[0], args[1:]...)
+	cmd.Env = append(os.Environ(), "TERM=xterm")
 
 	pty, err := pty.Start(cmd)
 	if err != nil {
@@ -56,6 +57,7 @@ func NewLc(args []string) (*Lc, error) {
 		lcmd.cmd.Wait()
 	}()
 
+	lcmd.Resize(24, 80)
 	return lcmd, nil
 }
 
@@ -79,7 +81,13 @@ func (lcmd *Lc) Close() error {
 	}
 }
 
-func (lcmd *Lc) ResizeTerminal(sz *pty.Winsize) error {
+func (lcmd *Lc) Resize(rows, cols int) error {
+	sz := &pty.Winsize{
+		uint16(rows),
+		uint16(cols),
+		0,
+		0,
+	}
 	_, _, errno := syscall.Syscall(
 		syscall.SYS_IOCTL,
 		lcmd.pty.Fd(),

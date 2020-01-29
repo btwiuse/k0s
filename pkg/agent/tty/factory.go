@@ -2,7 +2,6 @@ package tty
 
 import (
 	"github.com/btwiuse/wetty/pkg/localcmd"
-	"github.com/kr/pty"
 	"k0s.io/conntroll/pkg/agent"
 )
 
@@ -36,11 +35,7 @@ func (t *term) Read(p []byte) (int, error) {
 }
 
 func (t *term) Resize(rows, cols int) error {
-	sz := &pty.Winsize{
-		Rows: uint16(rows),
-		Cols: uint16(cols),
-	}
-	return t.Lc.ResizeTerminal(sz)
+	return t.Lc.Resize(rows, cols)
 }
 
 type factory struct {

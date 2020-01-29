@@ -12,22 +12,30 @@ github.com/alecthomas/units
 github.com/beevik/ntp
 # github.com/beorn7/perks v1.0.1
 github.com/beorn7/perks/quantile
+# github.com/btwiuse/asciitransport v0.0.0-20200126193701-92ad33490cec
+## explicit
+github.com/btwiuse/asciitransport
 # github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 ## explicit
 github.com/btwiuse/gods/maps/linkedhashmap
 # github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 ## explicit
 github.com/btwiuse/pretty
-# github.com/btwiuse/wetty v0.0.24
+# github.com/btwiuse/wetty v0.0.25
 ## explicit
 github.com/btwiuse/wetty/pkg/assets
 github.com/btwiuse/wetty/pkg/localcmd
-github.com/btwiuse/wetty/pkg/msg
+github.com/btwiuse/wetty/pkg/utils
 # github.com/cespare/xxhash/v2 v2.1.0
 github.com/cespare/xxhash/v2
+# github.com/cirocosta/asciinema-edit v0.0.0-20190130154215-1c0971ae232a
+github.com/cirocosta/asciinema-edit/cast
+# github.com/containerd/console v0.0.0-20191219165238-8375c3424e4d
+## explicit
+github.com/containerd/console
 # github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e
 github.com/coreos/go-systemd/dbus
-# github.com/creack/pty v1.1.7
+# github.com/creack/pty v1.1.9
 github.com/creack/pty
 # github.com/docker/docker v1.13.1
 ## explicit
@@ -36,14 +44,12 @@ github.com/docker/docker/pkg/random
 # github.com/ema/qdisc v0.0.0-20190904071900-b82c76788043
 github.com/ema/qdisc
 # github.com/emirpasic/gods v1.12.0
-## explicit
 github.com/emirpasic/gods/containers
 github.com/emirpasic/gods/lists
 github.com/emirpasic/gods/lists/doublylinkedlist
 github.com/emirpasic/gods/maps
 github.com/emirpasic/gods/utils
 # github.com/ghodss/yaml v1.0.0
-## explicit
 github.com/ghodss/yaml
 # github.com/go-kit/kit v0.9.0
 github.com/go-kit/kit/log
@@ -76,9 +82,6 @@ github.com/gorilla/websocket
 github.com/hodgesds/perf-utils
 # github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515
 github.com/kr/logfmt
-# github.com/kr/pty v1.1.8
-## explicit
-github.com/kr/pty
 # github.com/lufia/iostat v0.0.0-20170605150913-9f7362b77ad3
 github.com/lufia/iostat
 # github.com/mattn/go-xmlrpc v0.0.3
@@ -94,14 +97,13 @@ github.com/mdlayher/netlink/nlenc
 github.com/mdlayher/wifi
 github.com/mdlayher/wifi/internal/nl80211
 # github.com/mdp/qrterminal v1.0.1
-## explicit
 github.com/mdp/qrterminal
 # github.com/miekg/dns v1.1.27
-## explicit
 github.com/miekg/dns
 # github.com/patrickmn/go-cache v2.1.0+incompatible
-## explicit
 github.com/patrickmn/go-cache
+# github.com/pkg/errors v0.8.1
+github.com/pkg/errors
 # github.com/prometheus/client_golang v1.2.1
 ## explicit
 github.com/prometheus/client_golang/prometheus
@@ -137,7 +139,6 @@ github.com/riobard/go-shadowsocks2/socks
 ## explicit
 github.com/rs/cors
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
-## explicit
 github.com/shurcooL/sanitized_anchor_name
 # github.com/siebenmann/go-kstat v0.0.0-20160321171754-d34789b79745
 github.com/siebenmann/go-kstat
@@ -150,19 +151,15 @@ github.com/txthinking/brook/plugin
 github.com/txthinking/brook/sysproxy
 github.com/txthinking/brook/tproxy
 # github.com/txthinking/gotun2socks v0.0.0-20180829122610-35016fdae05e
-## explicit
 github.com/txthinking/gotun2socks
 github.com/txthinking/gotun2socks/gosocks
 github.com/txthinking/gotun2socks/internal/packet
 github.com/txthinking/gotun2socks/tun
 # github.com/txthinking/socks5 v0.0.0-20190404052647-254e122c4eaf
-## explicit
 github.com/txthinking/socks5
 # github.com/txthinking/x v0.0.0-20190708114625-99b19c1440b6
-## explicit
 github.com/txthinking/x
 # github.com/urfave/negroni v1.0.0
-## explicit
 github.com/urfave/negroni
 # github.com/yrpc/util v0.0.0-20191229105456-04e44c1bb858
 github.com/yrpc/util/logger
@@ -179,7 +176,6 @@ go.uber.org/ratelimit/internal/clock
 # go.uber.org/tools v0.0.0-20190618225709-2cfd321de3ee
 go.uber.org/tools/update-license
 # go.uber.org/zap v1.13.0
-## explicit
 go.uber.org/zap
 go.uber.org/zap/buffer
 go.uber.org/zap/internal/bufferpool
@@ -198,7 +194,6 @@ golang.org/x/crypto/hkdf
 golang.org/x/lint
 golang.org/x/lint/golint
 # golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa
-## explicit
 golang.org/x/net/bpf
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
@@ -288,7 +283,6 @@ google.golang.org/grpc/tap
 ## explicit
 gopkg.in/alecthomas/kingpin.v2
 # gopkg.in/russross/blackfriday.v2 v2.0.0
-## explicit
 gopkg.in/russross/blackfriday.v2
 # gopkg.in/yaml.v2 v2.2.7
 ## explicit

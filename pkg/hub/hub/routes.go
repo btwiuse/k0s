@@ -107,6 +107,7 @@ func (h *hub) initServer(addr string) {
 	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/socks5", h.handleSocks5).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/metrics", h.handleMetrics).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/terminal", h.handleTerminal).Methods("GET").Queries("id", "{id}")
 
 	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
@@ -202,11 +203,31 @@ func (h *hub) handleMetrics(w http.ResponseWriter, r *http.Request) {
 
 	conn, err := wrconn(w, r)
 	if err != nil {
-		log.Println("error accepting socks5:", err)
+		log.Println("error accepting metrics:", err)
 		return
 	}
 
 	h.GetAgent(id).AddMetricsConn(conn)
+}
+
+func (h *hub) handleTerminal(w http.ResponseWriter, r *http.Request) {
+	var (
+		vars = mux.Vars(r)
+		id   = vars["id"]
+	)
+
+	if !h.Has(id) {
+		log.Println("no such id", id)
+		return
+	}
+
+	conn, err := wrconn(w, r)
+	if err != nil {
+		log.Println("error accepting terminal:", err)
+		return
+	}
+
+	h.GetAgent(id).AddTerminalConn(conn)
 }
 
 func (h *hub) handleFS(w http.ResponseWriter, r *http.Request) {
@@ -253,14 +274,14 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 
 	// delegate := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
 	switch {
-	case strings.HasPrefix(subpath, "/ws"):
-		ag.BasicAuth(http.HandlerFunc(wsRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/rootfs"):
 		ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/socks5"):
 		ag.BasicAuth(http.HandlerFunc(socks5Relay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):
 		metricsRelay(ag)(w, r)
+	case strings.HasPrefix(subpath, "/terminal"):
+		ag.BasicAuth(http.HandlerFunc(terminalRelay(ag))).ServeHTTP(w, r)
 	default:
 		ag.BasicAuth(staticFileHandler).ServeHTTP(w, r)
 	}

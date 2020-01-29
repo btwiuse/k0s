@@ -4,6 +4,7 @@ import (
 	"net"
 
 	"k0s.io/conntroll/pkg"
+	"k0s.io/conntroll/pkg/hub"
 )
 
 type Client interface {
@@ -13,6 +14,7 @@ type Client interface {
 	RunSocks() error
 	RunSocks5ToHTTP() error
 	Run() error
+	ListAgents() ([]hub.AgentInfo, error)
 }
 
 type Config interface {
@@ -20,6 +22,7 @@ type Config interface {
 	GetPort() string
 	GetAddr() string
 	GetScheme() string
+	GetSchemeWS() string
 
 	GetRedir() string
 	GetSocks() string
@@ -27,37 +30,6 @@ type Config interface {
 
 	GetVersion() pkg.Version
 	GetInsecure() bool
-}
-
-type Info interface {
-	GetOS() string
-	GetPwd() string
-	GetArch() string
-	GetDistro() string
-	GetHostname() string
-	GetUsername() string
-}
-
-type Agent interface {
-	Info
-
-	GetID() string
-	GetName() string
-	GetTags() []string
-
-	GetHost() string
-	GetPort() string
-	GetAddr() string
-	GetScheme() string
-
-	GetCmd() []string
-	GetReadOnly() bool
-	GetVerbose() bool
-	GetInsecure() bool
-
-	String() string
-
-	GetVersion() pkg.Version
 }
 
 type Dialer interface {
