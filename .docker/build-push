@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -ex
+
 for distro in {alpine,ubuntu,debian,centos,fedora,gentoo,arch}; do
   img=conntroll/agent:${distro}
   echo ====== building $img ========
