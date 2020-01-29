@@ -5,7 +5,7 @@ set -ex
 for distro in {alpine,ubuntu,debian,centos,fedora,gentoo,arch}; do
   img=conntroll/agent:${distro}
   echo ====== building $img ========
-  docker build --no-cache -f Dockerfile.agent.${distro} . -t img
+  docker build --no-cache -f Dockerfile.agent.${distro} . -t $img
   docker push $img
 done
 
