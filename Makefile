@@ -1,4 +1,4 @@
-BIN     = conntroll
+BIN     = k0s
 GOOS    = $(shell go env GOOS)
 GOARCH  = $(shell go env GOARCH)
 LDFLAGS = $(shell ./pkg/version/ldflags)
@@ -25,7 +25,6 @@ link:
 
 install:
 	install -Dvm755 bin/$(BIN) /usr/bin/$(BIN)
-	ln -f /usr/bin/$(BIN) /usr/bin/agent
 	install -Dvm644 agent@.service /usr/lib/systemd/system/agent@.service
 	make systemd
 

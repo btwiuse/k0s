@@ -19,7 +19,7 @@ type Combo struct {
 }
 
 var (
-	Basename     = "conntroll"
+	Basename     = "k0s"
 	Path         = "bin"
 	Delimeter    = "/"
 	DefaultCombo = Combo{runtime.GOOS, runtime.GOARCH}
@@ -123,7 +123,7 @@ func main() {
 		}
 
 		if c == DefaultCombo {
-			for _, bin := range []string{"conntroll", "agent", "hub", "client"} {
+			for _, bin := range []string{"k0s"} {
 				src := filepath.Join(Path, c.ReleaseName())
 				dst := filepath.Join(Path, bin)
 				ln(src, dst)
