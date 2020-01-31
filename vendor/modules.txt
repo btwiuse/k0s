@@ -1,5 +1,8 @@
 # github.com/BurntSushi/toml v0.3.1
 github.com/BurntSushi/toml
+# github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf
+## explicit
+github.com/MaxRis/w32
 # github.com/VojtechVitek/yaml-cli v0.0.5
 ## explicit
 github.com/VojtechVitek/yaml-cli
@@ -100,6 +103,11 @@ github.com/hodgesds/perf-utils
 ## explicit
 # github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515
 github.com/kr/logfmt
+# github.com/kr/pty v1.1.8
+github.com/kr/pty
+# github.com/liamg/aminal v0.9.0
+## explicit
+github.com/liamg/aminal/platform
 # github.com/lucasb-eyer/go-colorful v0.0.0-20170223221042-c900de9dbbc7
 ## explicit
 github.com/lucasb-eyer/go-colorful
@@ -181,8 +189,6 @@ github.com/soundcloud/go-runit/runit
 # github.com/spf13/pflag v1.0.5
 ## explicit
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.4.0
-## explicit
 # github.com/txthinking/brook v0.0.0-20200108130909-e46d71f06441
 ## explicit
 github.com/txthinking/brook
