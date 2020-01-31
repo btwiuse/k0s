@@ -1,0 +1,13 @@
+# connect to a different hub server by uncommenting and modifying the hub field
+# default hub is https://hub.k0s.io
+#
+# hub: https://hub.k0s.io
+
+# log verbosely
+#
+# verbose: true
+
+# skip verify hub https certificate
+#
+# insecure: false
+cache_credentials: true
