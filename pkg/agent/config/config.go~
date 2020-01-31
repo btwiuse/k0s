@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/btwiuse/pretty"
@@ -73,7 +74,15 @@ func (c *config) GetInsecure() bool {
 }
 
 func (c *config) GetCmd() []string {
-	return c.getCmd()
+	shell := "bash"
+	if _, err := exec.LookPath(shell); err != nil {
+		shell = "sh"
+	}
+	args := []string{"/usr/bin/env", "TERM=xterm", shell}
+	if c.Cmd == "" {
+		return args
+	}
+	return append(args, "-c", c.Cmd)
 }
 
 func (c *config) GetID() string {
