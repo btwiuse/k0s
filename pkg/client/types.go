@@ -2,6 +2,7 @@ package client
 
 import (
 	"net"
+	"net/url"
 
 	"k0s.io/conntroll/pkg"
 	"k0s.io/conntroll/pkg/hub"
@@ -27,11 +28,16 @@ type Config interface {
 	GetRedir() string
 	GetSocks() string
 	GetSocks5ToHTTP() string
+	GetCacheCredentials() bool
+	GetCredentials() map[string]KeyStore
+	GetConfigLocation() string
 
 	GetVersion() pkg.Version
 	GetInsecure() bool
 }
 
 type Dialer interface {
-	Dial(string) (net.Conn, error)
+	Dial(string, *url.Userinfo) (net.Conn, error)
 }
+
+type KeyStore map[string]string

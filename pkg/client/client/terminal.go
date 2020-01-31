@@ -1,8 +1,11 @@
 package client
 
 import (
+	"encoding/base64"
 	"log"
 	"net"
+	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"syscall"
@@ -15,8 +18,8 @@ import (
 	"k0s.io/conntroll/pkg/uuid"
 )
 
-func dial(p string) (conn net.Conn, err error) {
-	wsconn, _, err := websocket.DefaultDialer.Dial(p, nil)
+func dial(p string, h http.Header) (conn net.Conn, err error) {
+	wsconn, _, err := websocket.DefaultDialer.Dial(p, h)
 	if err != nil {
 		return nil, err
 	}
@@ -24,16 +27,21 @@ func dial(p string) (conn net.Conn, err error) {
 	return utils.NetConn(wsconn), nil
 }
 
-func terminal(endpoint string) {
+func terminalConnect(endpoint string, userinfo *url.Userinfo) {
 	log.Println("Press ESC twice to exit.")
 
 	var (
 		conn net.Conn
 		err  error
+		h    = http.Header{
+			"Authorization": {
+				"Basic " + base64.StdEncoding.EncodeToString([]byte(userinfo.String())),
+			},
+		}
 	)
 	for {
 		// conn, err = net.Dial("tcp", ":12345")
-		conn, err = dial(endpoint)
+		conn, err = dial(endpoint, h)
 		if err != nil {
 			log.Println(err)
 			time.Sleep(time.Second)

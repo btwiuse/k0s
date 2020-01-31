@@ -3,6 +3,7 @@ package socksdialer
 import (
 	"context"
 	"net"
+	"net/url"
 
 	"k0s.io/conntroll/pkg/client"
 	"k0s.io/conntroll/pkg/client/wsdialer"
@@ -14,7 +15,7 @@ func New(c client.Config, ep string) client.Dialer {
 	d := &socksdialer{
 		sd: &socks.Dialer{
 			ProxyDial: func(ctx context.Context, network, addr string) (net.Conn, error) {
-				return wsd.Dial(ep)
+				return wsd.Dial(ep, nil)
 			},
 		},
 	}
@@ -25,6 +26,6 @@ type socksdialer struct {
 	sd *socks.Dialer
 }
 
-func (d *socksdialer) Dial(addr string) (net.Conn, error) {
+func (d *socksdialer) Dial(addr string, userinfo *url.Userinfo) (net.Conn, error) {
 	return d.sd.Dial("tcp", addr)
 }
