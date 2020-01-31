@@ -25,7 +25,7 @@ link:
 
 install:
 	install -Dvm755 bin/$(BIN) /usr/bin/$(BIN)
-	install -Dvm644 agent@.service /usr/lib/systemd/system/agent@.service
+	install -Dvm644 .systemd/agent@.service /usr/lib/systemd/system/agent@.service
 	make systemd
 
 systemd:
