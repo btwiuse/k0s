@@ -43,9 +43,10 @@ require (
 	github.com/yrpc/yrpc v0.0.0-20191230043512-613ecaa6d5b4
 	golang.org/x/crypto v0.0.0-20200128174031-69ecbb4d6d5d
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
+	golang.org/x/text v0.3.2 // indirect
 	google.golang.org/grpc v1.26.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
-	gopkg.in/yaml.v2 v2.2.7
+	gopkg.in/yaml.v2 v2.2.8
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71 // indirect
 	modernc.org/httpfs v1.0.0
 	nhooyr.io/websocket v1.7.4
