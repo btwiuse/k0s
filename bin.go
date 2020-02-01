@@ -44,15 +44,21 @@ func (c Combo) Env() []string {
 	)
 	switch c {
 	case Combo{OS: "android", ARCH: "arm64"}:
-		envs = append(envs, "CGO_ENABLED=1",
-			"CC=aarch64-linux-android29-clang",
-			"CXX=aarch64-linux-android29-clang++",
-		)
+		envs = append(envs, "CGO_ENABLED=1")
+		if c != DefaultCombo {
+			envs = append(envs,
+				"CC=aarch64-linux-android29-clang",
+				"CXX=aarch64-linux-android29-clang++",
+			)
+		}
 	case Combo{OS: "windows", ARCH: "amd64"}:
-		envs = append(envs, "CGO_ENABLED=1",
-			"CXX=x86_64-w64-mingw32-g++",
-			"CC=x86_64-w64-mingw32-gcc",
-		)
+		envs = append(envs, "CGO_ENABLED=1")
+		if c != DefaultCombo {
+			envs = append(envs,
+				"CXX=x86_64-w64-mingw32-g++",
+				"CC=x86_64-w64-mingw32-gcc",
+			)
+		}
 	}
 	return envs
 }
@@ -141,7 +147,7 @@ func main() {
 
 		if c == DefaultCombo {
 			for _, bin := range []string{"k0s"} {
-				src := filepath.Join(Path, c.ReleaseName())
+				src := filepath.Join(c.ReleaseName())
 				dst := filepath.Join(Path, bin)
 				ln(src, dst)
 			}
@@ -150,7 +156,7 @@ func main() {
 }
 
 func ln(from, to string) {
-	lnf := exec.Command("ln", "-f", "-v", from, to)
+	lnf := exec.Command("ln", "-s", "-f", "-v", from, to)
 	lnf.Stdout = os.Stdout
 	lnf.Stderr = os.Stderr
 	if err := lnf.Run(); err != nil {
