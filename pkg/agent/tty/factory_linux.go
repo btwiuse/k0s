@@ -1,3 +1,6 @@
+// +build linux
+// +build !windows
+
 package tty
 
 import (

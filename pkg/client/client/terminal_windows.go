@@ -1,3 +1,7 @@
+// +build windows
+// +build !linux
+// +build !darwin
+
 package client
 
 import (
@@ -7,8 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/btwiuse/asciitransport"
@@ -77,28 +79,30 @@ func terminalConnect(endpoint string, userinfo *url.Userinfo) {
 
 	// send
 	// r
-	go func() {
-		sig := make(chan os.Signal)
-		signal.Notify(sig, syscall.SIGWINCH)
+	/*
+		go func() {
+			sig := make(chan os.Signal)
+			signal.Notify(sig, syscall.SIGWINCH)
 
-		for {
-			currentSize, err := term.Size()
-			if err != nil {
-				log.Println(err)
-				continue
+			for {
+				currentSize, err := term.Size()
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+
+				// log.Println(currentSize)
+				client.Resize(
+					uint(currentSize.Height),
+					uint(currentSize.Width),
+				)
+
+				switch <-sig {
+				case syscall.SIGWINCH:
+				}
 			}
-
-			// log.Println(currentSize)
-			client.Resize(
-				uint(currentSize.Height),
-				uint(currentSize.Width),
-			)
-
-			switch <-sig {
-			case syscall.SIGWINCH:
-			}
-		}
-	}()
+		}()
+	*/
 
 	<-client.Done()
 }

@@ -6,6 +6,7 @@ go 1.14
 // replace github.com/yrpc/yrpc => /home/aaron/yrpc/yrpc
 
 require (
+	github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abbot/go-http-auth v0.4.0
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200123074003-485d70dbd53b
@@ -24,6 +25,7 @@ require (
 	github.com/gorilla/mux v1.7.3
 	github.com/gorilla/websocket v1.4.1
 	github.com/jtolds/gls v4.2.1+incompatible // indirect
+	github.com/liamg/aminal v0.9.0
 	github.com/lucasb-eyer/go-colorful v0.0.0-20170223221042-c900de9dbbc7 // indirect
 	github.com/mattn/go-isatty v0.0.0-20160806122752-66b8e73f3f5c
 	github.com/mattn/go-runewidth v0.0.0-20170201023540-14207d285c6c
