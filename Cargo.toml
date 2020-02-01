@@ -1,0 +1,18 @@
+[package]
+name = "k0s"
+version = "0.0.1"
+authors = ["navigaid <navigaid@gmail.com>"]
+license = "MIT"
+description = "aggregate your personal infrastructure"
+repository = "https://github.com/btwiuse/conntroll"
+
+include = [
+    "src/*.rs",
+    "Cargo.toml",
+]
+
+[profile.release]
+panic = "abort"
+lto = true
+
+[dependencies]
