@@ -33,11 +33,16 @@ func (c Combo) ReleaseName() string {
 }
 
 func (c Combo) Env() []string {
-	return append(
+	envs := append(
 		GlobalEnv,
 		fmt.Sprintf("GOOS=%s", c.OS),
 		fmt.Sprintf("GOARCH=%s", c.ARCH),
 	)
+	switch c.OS {
+	case "android", "windows":
+		envs = append(envs, "CGO_ENABLED=1")
+	}
+	return envs
 }
 
 func parseCombo(osarch string) Combo {
