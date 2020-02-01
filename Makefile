@@ -8,6 +8,7 @@ all:
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"
 
 release:
+	@ rm -r releases/latest
 	@ go run bin.go -d releases/latest -strip -upx -ldflags="${LDFLAGS}" \
 		{linux,android}/{armv6,armv7,arm64,amd64,386} darwin/amd64 windows/{386,amd64}
 	@ ./releases/update-latest-index

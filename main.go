@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/alexpantyukhin/go-pattern-match"
 )
@@ -12,7 +13,7 @@ import (
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	exe := filepath.Base(os.Args[0])
+	exe := strings.TrimSuffix(filepath.Base(os.Args[0]), ".exe")
 
 	osargs := append([]string{exe}, os.Args[1:]...)
 
