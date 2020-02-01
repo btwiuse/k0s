@@ -29,7 +29,11 @@ var (
 )
 
 func (c Combo) ReleaseName() string {
-	return strings.Join([]string{c.OS, c.ARCH, Basename}, Delimeter)
+	exe := Basename
+	if c.OS == "windows" {
+		exe = fmt.Sprintf("%s.exe", exe)
+	}
+	return strings.Join([]string{c.OS, c.ARCH, exe}, Delimeter)
 }
 
 func (c Combo) Env() []string {
@@ -123,11 +127,11 @@ func main() {
 		}
 
 		// strip fails on arm64 binary, here we simply ignore it
-		if stripFlag && c.OS == "linux" {
+		if stripFlag && c.OS == "linux" && c.ARCH != "arm64" {
 			strip.Run()
 		}
 
-		if upxFlag {
+		if upxFlag && c.ARCH != "arm64" {
 			upx.Stdout = os.Stdout
 			upx.Stderr = os.Stderr
 			if err := upx.Run(); err != nil {
