@@ -37,28 +37,103 @@ func (c Combo) ReleaseName() string {
 }
 
 func (c Combo) Env() []string {
-	envs := append(
-		GlobalEnv,
-		fmt.Sprintf("GOOS=%s", c.OS),
-		fmt.Sprintf("GOARCH=%s", c.ARCH),
-	)
+	envs := append(GlobalEnv, fmt.Sprintf("GOOS=%s", c.OS))
+	if strings.HasPrefix(c.ARCH, "armv") {
+		v := strings.TrimPrefix(c.ARCH, "armv")
+		envs = append(envs, fmt.Sprintf("GOARCH=%s", "arm"), fmt.Sprintf("GOARM=%s", v))
+	} else {
+		envs = append(envs, fmt.Sprintf("GOARCH=%s", c.ARCH))
+	}
 	switch c {
 	case Combo{OS: "android", ARCH: "arm64"}:
 		envs = append(envs, "CGO_ENABLED=1")
-		if c != DefaultCombo {
-			envs = append(envs,
-				"CC=aarch64-linux-android29-clang",
-				"CXX=aarch64-linux-android29-clang++",
-			)
+		if c == DefaultCombo {
+			break
 		}
+		envs = append(envs,
+			"CC=aarch64-linux-android29-clang",
+			"CXX=aarch64-linux-android29-clang++",
+		)
+	case Combo{OS: "android", ARCH: "armv7"}:
+		envs = append(envs, "CGO_ENABLED=1")
+		if c == DefaultCombo {
+			break
+		}
+		envs = append(envs,
+			"CC=armv7a-linux-androideabi29-clang",
+			"CXX=armv7a-linux-androideabi29-clang++",
+		)
+	case Combo{OS: "android", ARCH: "armv6"}:
+		envs = append(envs, "CGO_ENABLED=1")
+		if c == DefaultCombo {
+			break
+		}
+		envs = append(envs,
+			"CC=armv7a-linux-androideabi29-clang",
+			"CXX=armv7a-linux-androideabi29-clang++",
+		)
+	case Combo{OS: "android", ARCH: "amd64"}:
+		envs = append(envs, "CGO_ENABLED=1")
+		if c == DefaultCombo {
+			break
+		}
+		envs = append(envs,
+			"CC=x86_64-linux-android29-clang",
+			"CXX=x86_64-linux-android29-clang++",
+		)
+	case Combo{OS: "android", ARCH: "386"}:
+		envs = append(envs, "CGO_ENABLED=1")
+		if c == DefaultCombo {
+			break
+		}
+		envs = append(envs,
+			"CC=i686-linux-android29-clang",
+			"CXX=i686-linux-android29-clang++",
+		)
 	case Combo{OS: "windows", ARCH: "amd64"}:
 		envs = append(envs, "CGO_ENABLED=1")
-		if c != DefaultCombo {
-			envs = append(envs,
-				"CXX=x86_64-w64-mingw32-g++",
-				"CC=x86_64-w64-mingw32-gcc",
-			)
+		if c == DefaultCombo {
+			break
 		}
+		envs = append(envs,
+			"CXX=x86_64-w64-mingw32-g++",
+			"CC=x86_64-w64-mingw32-gcc",
+		)
+	case Combo{OS: "windows", ARCH: "386"}:
+		envs = append(envs, "CGO_ENABLED=1")
+		if c == DefaultCombo {
+			break
+		}
+		envs = append(envs,
+			"CXX=i686-w64-mingw32-g++",
+			"CC=i686-w64-mingw32-gcc",
+		)
+	// windows/arm doesn't work yet
+	case Combo{OS: "windows", ARCH: "arm"}:
+		envs = append(envs, "CGO_ENABLED=1")
+		if c == DefaultCombo {
+			break
+		}
+		envs = append(envs,
+			"CXX=clang++",
+			"CC=clang",
+		)
+	case Combo{OS: "linux", ARCH: "armv7"}:
+		if c == DefaultCombo {
+			break
+		}
+		envs = append(envs,
+			"CC=arm-linux-gnueabihf-gcc",
+			"CXX=arm-linux-gnueabihf-g++",
+		)
+	case Combo{OS: "android", ARCH: "armv6"}:
+		if c == DefaultCombo {
+			break
+		}
+		envs = append(envs,
+			"CC=arm-linux-gnueabihf-gcc",
+			"CXX=arm-linux-gnueabihf-g++",
+		)
 	}
 	return envs
 }

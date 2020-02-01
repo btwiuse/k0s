@@ -9,7 +9,7 @@ all:
 
 release:
 	@ go run bin.go -d releases/latest -strip -upx -ldflags="${LDFLAGS}" \
-		linux/{arm,arm64,amd64,386} darwin/amd64 android/arm64 windows/amd64
+		{linux,android}/{armv6,armv7,arm64,amd64,386} darwin/amd64 windows/{386,amd64}
 	@ ./releases/update-latest-index
 	@ sh -c 'git rev-parse HEAD; git tag -l --points-at HEAD' | \
 		xargs -L1 -I@ sh -c 'mkdir -p releases/@; cp -rv releases/latest/* releases/@'
