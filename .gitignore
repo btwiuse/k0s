@@ -9,3 +9,10 @@
 /demo
 /releases
 /*.log
+
+# cargo
+/target/
+**/*.rs.bk
+
+# windows
+**/*.un~
