@@ -1,6 +1,5 @@
 // +build linux
 // +build !android
-// +build !darwin
 
 package exporter
 
