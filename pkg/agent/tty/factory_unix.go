@@ -1,5 +1,4 @@
-// +build linux
-// +build !windows
+// +build linux darwin
 
 package tty
 
