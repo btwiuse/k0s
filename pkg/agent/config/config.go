@@ -78,7 +78,7 @@ func (c *config) GetCmd() []string {
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
 	}
-	args := []string{"/usr/bin/env", "TERM=xterm", shell}
+	args := []string{"env", "TERM=xterm", shell}
 	if c.Cmd == "" {
 		return args
 	}
