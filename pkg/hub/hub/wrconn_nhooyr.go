@@ -1,3 +1,6 @@
+// +build !gorilla
+// +build !raw
+
 package hub
 
 import (

@@ -5,6 +5,7 @@
 package dialer
 
 import (
+	"crypto/tls"
 	"net"
 	"net/url"
 
@@ -21,11 +22,20 @@ func (d *dialr) Dial(p string, q string) (conn net.Conn, err error) {
 			Path:     p,
 			RawQuery: q,
 		}
-		u = ub.String()
+		u                    = ub.String()
+		wd *websocket.Dialer = websocket.DefaultDialer
 	)
 
-	wsconn, _, err := websocket.DefaultDialer.Dial(u, nil)
+	if c.GetInsecure() {
+		wd = &websocket.Dialer{
+			TLSClientConfig: &tls.Config{
+				RootCAs:            nil,
+				InsecureSkipVerify: true,
+			},
+		}
+	}
 
+	wsconn, _, err := wd.Dial(u, nil)
 	if err != nil {
 		return nil, err
 	}

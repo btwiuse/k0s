@@ -2,6 +2,7 @@ package wsdialer
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/base64"
 	"net"
 	"net/http"
@@ -39,14 +40,20 @@ func (d *wsdialer) Dial(p string, userinfo *url.Userinfo) (conn net.Conn, err er
 				"Basic " + base64.StdEncoding.EncodeToString([]byte(userinfo.String())),
 			},
 		}
+		t = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: c.GetInsecure(),
+				},
+			},
+		}
+		opts = &websocket.DialOptions{
+			HTTPClient: t,
+			HTTPHeader: h,
+		}
 	)
 
-	opts := &websocket.DialOptions{
-		HTTPHeader: h,
-	}
-
 	wsconn, _, err := websocket.Dial(context.Background(), u, opts)
-
 	if err != nil {
 		return nil, err
 	}

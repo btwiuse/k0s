@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -45,7 +46,7 @@ type client struct {
 	userinfo *url.Userinfo
 }
 
-func (cl *client) ListAgents() ([]hub.AgentInfo, error) {
+func (cl *client) ListAgents() (agis []hub.AgentInfo, err error) {
 	var (
 		c  = cl.Config
 		ub = &url.URL{
@@ -53,13 +54,21 @@ func (cl *client) ListAgents() ([]hub.AgentInfo, error) {
 			Host:   c.GetAddr(),
 			Path:   "/api/agents/list",
 		}
-		u    = ub.String()
 		ags  = []*info.Info{}
-		agis = []hub.AgentInfo{}
 		resp *http.Response
-		err  error
+		req  = &http.Request{
+			Method: http.MethodGet,
+			URL:    ub,
+		}
+		t = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: c.GetInsecure(),
+				},
+			},
+		}
 	)
-	resp, err = http.Get(u)
+	resp, err = t.Do(req)
 	if err != nil {
 		return agis, err
 	}

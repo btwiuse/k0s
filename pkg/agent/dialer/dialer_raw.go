@@ -9,11 +9,19 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"net/url"
 )
 
-func (d *dialr) Dial(p string) (conn net.Conn, err error) {
+func (d *dialr) Dial(p string, q string) (conn net.Conn, err error) {
 	var (
-		c = d.c
+		c  = d.c
+		ub = &url.URL{
+			Scheme:   c.GetSchemeWS(),
+			Host:     c.GetAddr(),
+			Path:     p,
+			RawQuery: q,
+		}
+		reqURI = ub.RequestURI()
 	)
 
 	switch c.GetScheme() {
@@ -32,7 +40,7 @@ func (d *dialr) Dial(p string) (conn net.Conn, err error) {
 		return nil, err
 	}
 
-	_, err = io.WriteString(conn, fmt.Sprintf("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n", p, c.GetHostname()))
+	_, err = io.WriteString(conn, fmt.Sprintf("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: Keep-Alive\r\n\r\n", reqURI, c.GetHostname()))
 	if err != nil {
 		return nil, err
 	}

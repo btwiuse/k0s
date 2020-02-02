@@ -1,8 +1,13 @@
+// +build !gorilla
+// +build !raw
+
 package dialer
 
 import (
 	"context"
+	"crypto/tls"
 	"net"
+	"net/http"
 	"net/url"
 
 	"nhooyr.io/websocket"
@@ -18,10 +23,19 @@ func (d *dialr) Dial(p string, q string) (conn net.Conn, err error) {
 			RawQuery: q,
 		}
 		u = ub.String()
+		t = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: c.GetInsecure(),
+				},
+			},
+		}
+		opts = &websocket.DialOptions{
+			HTTPClient: t,
+		}
 	)
 
-	wsconn, _, err := websocket.Dial(context.Background(), u, nil)
-
+	wsconn, _, err := websocket.Dial(context.Background(), u, opts)
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"io"
@@ -337,9 +338,19 @@ func printHubVersion(c client.Config) {
 			Host:   c.GetAddr(),
 			Path:   "/version",
 		}
-		u = ub.String()
+		req = &http.Request{
+			Method: http.MethodGet,
+			URL:    ub,
+		}
+		t = &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					InsecureSkipVerify: c.GetInsecure(),
+				},
+			},
+		}
 	)
-	resp, err := http.Get(u)
+	resp, err := t.Do(req)
 	if err != nil {
 		log.Fatalln(err)
 	}
