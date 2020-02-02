@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/btwiuse/asciitransport"
-	"k0s.io/conntroll/pkg/hub"
-	"k0s.io/conntroll/pkg/uuid"
+	"k0s.io/k0s/pkg/hub"
+	"k0s.io/k0s/pkg/uuid"
 )
 
 var (

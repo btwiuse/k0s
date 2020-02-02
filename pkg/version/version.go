@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/btwiuse/pretty"
-	"k0s.io/conntroll/pkg"
+	"k0s.io/k0s/pkg"
 )
 
 var (

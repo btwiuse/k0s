@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"k0s.io/conntroll/pkg/agent/agent"
-	"k0s.io/conntroll/pkg/agent/config"
+	"k0s.io/k0s/pkg/agent/agent"
+	"k0s.io/k0s/pkg/agent/config"
 )
 
 func agentCmd(args []string) {

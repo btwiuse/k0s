@@ -5,9 +5,9 @@ import (
 	"net"
 	"net/url"
 
-	"k0s.io/conntroll/pkg/client"
-	"k0s.io/conntroll/pkg/client/wsdialer"
-	"k0s.io/conntroll/pkg/socks"
+	"k0s.io/k0s/pkg/client"
+	"k0s.io/k0s/pkg/client/wsdialer"
+	"k0s.io/k0s/pkg/socks"
 )
 
 func New(c client.Config, ep string) client.Dialer {

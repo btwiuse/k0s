@@ -7,8 +7,8 @@ import (
 	// "net/rpc"
 
 	"github.com/btwiuse/asciitransport"
-	"k0s.io/conntroll/pkg"
-	"k0s.io/conntroll/pkg/api"
+	"k0s.io/k0s/pkg"
+	"k0s.io/k0s/pkg/api"
 )
 
 type AgentInfo interface {

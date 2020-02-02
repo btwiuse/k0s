@@ -1,7 +1,7 @@
 package dialer
 
 import (
-	"k0s.io/conntroll/pkg/agent"
+	"k0s.io/k0s/pkg/agent"
 )
 
 var (

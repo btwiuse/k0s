@@ -4,7 +4,7 @@ import (
 	"io"
 	"net"
 
-	"k0s.io/conntroll/pkg"
+	"k0s.io/k0s/pkg"
 )
 
 type Info interface {

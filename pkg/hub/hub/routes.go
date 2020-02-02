@@ -15,8 +15,8 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	"k0s.io/conntroll/pkg/exporter"
-	types "k0s.io/conntroll/pkg/hub"
+	"k0s.io/k0s/pkg/exporter"
+	types "k0s.io/k0s/pkg/hub"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
 )

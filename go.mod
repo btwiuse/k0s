@@ -1,4 +1,4 @@
-module k0s.io/conntroll
+module k0s.io/k0s
 
 go 1.14
 

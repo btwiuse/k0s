@@ -1,7 +1,7 @@
 package fzf
 
 import (
-	"k0s.io/conntroll/pkg/fzf/util"
+	"k0s.io/k0s/pkg/fzf/util"
 )
 
 // Item represents each input line. 56 bytes.

@@ -2,10 +2,10 @@ package agent
 
 import (
 	"google.golang.org/grpc"
-	types "k0s.io/conntroll/pkg/agent"
-	"k0s.io/conntroll/pkg/agent/tty"
-	"k0s.io/conntroll/pkg/api"
-	"k0s.io/conntroll/pkg/api/grpcimpl"
+	types "k0s.io/k0s/pkg/agent"
+	"k0s.io/k0s/pkg/agent/tty"
+	"k0s.io/k0s/pkg/api"
+	"k0s.io/k0s/pkg/api/grpcimpl"
 )
 
 func StartGrpcServer(c types.Config) types.GrpcServer {

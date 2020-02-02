@@ -7,9 +7,9 @@ import (
 	"os"
 
 	"github.com/btwiuse/pretty"
-	"k0s.io/conntroll/pkg"
-	"k0s.io/conntroll/pkg/hub"
-	"k0s.io/conntroll/pkg/version"
+	"k0s.io/k0s/pkg"
+	"k0s.io/k0s/pkg/hub"
+	"k0s.io/k0s/pkg/version"
 )
 
 type config struct {

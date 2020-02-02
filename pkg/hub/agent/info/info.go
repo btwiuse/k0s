@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"k0s.io/conntroll/pkg/hub"
-	"k0s.io/conntroll/pkg/version"
+	"k0s.io/k0s/pkg/hub"
+	"k0s.io/k0s/pkg/version"
 )
 
 var _ hub.AgentInfo = (*Info)(nil)

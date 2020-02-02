@@ -7,7 +7,7 @@ import (
 	"net"
 	"net/http"
 
-	"k0s.io/conntroll/pkg/wrap"
+	"k0s.io/k0s/pkg/wrap"
 	"nhooyr.io/websocket"
 )
 

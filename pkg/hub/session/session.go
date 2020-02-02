@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	"k0s.io/conntroll/pkg/api"
-	"k0s.io/conntroll/pkg/hub"
-	"k0s.io/conntroll/pkg/uuid"
+	"k0s.io/k0s/pkg/api"
+	"k0s.io/k0s/pkg/hub"
+	"k0s.io/k0s/pkg/uuid"
 )
 
 var (

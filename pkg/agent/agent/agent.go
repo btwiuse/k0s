@@ -10,8 +10,8 @@ import (
 
 	"github.com/btwiuse/pretty"
 	"golang.org/x/sync/errgroup"
-	types "k0s.io/conntroll/pkg/agent"
-	"k0s.io/conntroll/pkg/agent/dialer"
+	types "k0s.io/k0s/pkg/agent"
+	"k0s.io/k0s/pkg/agent/dialer"
 )
 
 var (

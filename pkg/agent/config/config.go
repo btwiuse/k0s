@@ -15,12 +15,12 @@ import (
 
 	"github.com/btwiuse/pretty"
 	"gopkg.in/yaml.v2"
-	"k0s.io/conntroll/pkg"
-	"k0s.io/conntroll/pkg/agent"
-	"k0s.io/conntroll/pkg/agent/info"
-	"k0s.io/conntroll/pkg/rng"
-	"k0s.io/conntroll/pkg/uuid"
-	"k0s.io/conntroll/pkg/version"
+	"k0s.io/k0s/pkg"
+	"k0s.io/k0s/pkg/agent"
+	"k0s.io/k0s/pkg/agent/info"
+	"k0s.io/k0s/pkg/rng"
+	"k0s.io/k0s/pkg/uuid"
+	"k0s.io/k0s/pkg/version"
 )
 
 type arrayFlags []string

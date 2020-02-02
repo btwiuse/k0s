@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"k0s.io/conntroll/pkg/agent/config"
+	"k0s.io/k0s/pkg/agent/config"
 )
 
 func main() {
@@ -30,7 +30,7 @@ var data string = `{
   "auth": "08dac2d750d4fab218dad9e586451b845f9857576f2a6f8cda214aab49765002",
   "meta": {
     "os": "linux",
-    "pwd": "/home/aaron/go/src/k0s.io/conntroll/pkg/agent/config",
+    "pwd": "/home/aaron/go/src/k0s.io/k0s/pkg/agent/config",
     "username": "aaron",
     "hostname": "blackarcher"
   }

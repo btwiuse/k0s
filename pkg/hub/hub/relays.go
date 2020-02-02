@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	types "k0s.io/conntroll/pkg/hub"
-	"k0s.io/conntroll/pkg/wrap"
+	types "k0s.io/k0s/pkg/hub"
+	"k0s.io/k0s/pkg/wrap"
 	"nhooyr.io/websocket"
 )
 

@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"k0s.io/conntroll/pkg/fzf/util"
+	"k0s.io/k0s/pkg/fzf/util"
 )
 
 const (

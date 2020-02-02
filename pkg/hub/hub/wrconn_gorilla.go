@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"k0s.io/conntroll/pkg/wrap"
+	"k0s.io/k0s/pkg/wrap"
 )
 
 var up = &websocket.Upgrader{}

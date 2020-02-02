@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"k0s.io/conntroll/pkg/client/client"
-	"k0s.io/conntroll/pkg/client/config"
+	"k0s.io/k0s/pkg/client/client"
+	"k0s.io/k0s/pkg/client/config"
 )
 
 func clientCmd(args []string) {

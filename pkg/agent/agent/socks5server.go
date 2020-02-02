@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/riobard/go-shadowsocks2/socks"
-	types "k0s.io/conntroll/pkg/agent"
+	types "k0s.io/k0s/pkg/agent"
 )
 
 func StartSocks5Server(c types.Config) types.Socks5Server {

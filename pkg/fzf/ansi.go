@@ -7,7 +7,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"k0s.io/conntroll/pkg/fzf/tui"
+	"k0s.io/k0s/pkg/fzf/tui"
 )
 
 type ansiOffset struct {

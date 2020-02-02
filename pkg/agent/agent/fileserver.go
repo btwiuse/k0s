@@ -3,7 +3,7 @@ package agent
 import (
 	"net/http"
 
-	types "k0s.io/conntroll/pkg/agent"
+	types "k0s.io/k0s/pkg/agent"
 )
 
 func StartFileServer(c types.Config) types.FileServer {

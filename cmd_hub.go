@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"k0s.io/conntroll/pkg/hub/config"
-	"k0s.io/conntroll/pkg/hub/hub"
+	"k0s.io/k0s/pkg/hub/config"
+	"k0s.io/k0s/pkg/hub/hub"
 )
 
 func hubCmd(args []string) {
