@@ -58,9 +58,9 @@ func (rpc *YS) plumbing() {
 					name = ifo.GetName()
 				)
 
+				// clobber previous connection
 				if h.Has(id) {
-					io.WriteString(rpc.Conn, "Error: duplicate id\n")
-					return
+					h.Del(id)
 				}
 
 				// only set the values after we make sure !h.Has(id)
