@@ -14,22 +14,11 @@ import (
 	"time"
 
 	"github.com/btwiuse/asciitransport"
-	"github.com/btwiuse/wetty/pkg/utils"
 	"github.com/containerd/console"
-	"github.com/gorilla/websocket"
 	"k0s.io/k0s/pkg/uuid"
 )
 
-func dial(p string, h http.Header) (conn net.Conn, err error) {
-	wsconn, _, err := websocket.DefaultDialer.Dial(p, h)
-	if err != nil {
-		return nil, err
-	}
-
-	return utils.NetConn(wsconn), nil
-}
-
-func terminalConnect(endpoint string, userinfo *url.Userinfo) {
+func (cl *client) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 	log.Println("Press ESC twice to exit.")
 
 	var (
@@ -42,8 +31,7 @@ func terminalConnect(endpoint string, userinfo *url.Userinfo) {
 		}
 	)
 	for {
-		// conn, err = net.Dial("tcp", ":12345")
-		conn, err = dial(endpoint, h)
+		conn, err = cl.dial(endpoint, h)
 		if err != nil {
 			log.Println(err)
 			time.Sleep(time.Second)

@@ -11,6 +11,9 @@ TAGS     := ""
 default: help
 
 build:          ## Build binary for current platform
+	go build -v -o /dev/null -tags raw        # test compile with tag raw
+	go build -v -o /dev/null -tags nhooyr     # test compile with tag nhooyr
+	go build -v -o /dev/null -tags gorilla    # test compile with tag gorilla
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"
 
 release:        ## Build and upload binaries for all supported platforms

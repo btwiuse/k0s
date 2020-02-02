@@ -266,7 +266,7 @@ func (cl *client) Run() error {
 			}
 			u = ub.String()
 		)
-		terminalConnect(u, cl.userinfo)
+		cl.terminalConnect(u, cl.userinfo)
 	}
 	return nil
 }
