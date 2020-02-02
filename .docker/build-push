@@ -2,17 +2,10 @@
 
 set -e
 
-for distro in {alpine,ubuntu,debian,centos,fedora,gentoo,arch}; do
-  img=conntroll/agent:${distro}
+for distro in {alpine,ubuntu,debian,centos,fedora,gentoo,arch,latest}; do
+  img=btwiuse/k0s:${distro}
   echo ====== building $img ========
-  docker build -q --no-cache -f Dockerfile.agent.${distro} . -t $img
-  (docker push $img &>/dev/null && echo pushed $img) &
-done
-
-for bin in {conntroll,agent,hub,client}; do
-  img=conntroll/${bin}
-  echo ====== building conntroll/${bin} ======
-  docker build -q --no-cache -f Dockerfile.${bin} . -t $img
+  docker build -q --no-cache -f Dockerfile.${distro} . -t $img
   (docker push $img &>/dev/null && echo pushed $img) &
 done
 
