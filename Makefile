@@ -11,10 +11,10 @@ release:
 	@ rm -r releases/latest
 	@ go run bin.go -d releases/latest -strip -upx -ldflags="${LDFLAGS}" \
 		{linux,android}/{armv6,armv7,arm64,amd64,386} darwin/amd64 windows/{386,amd64}
-	@ ./releases/update-latest-index
+	@ pushd releases/latest; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
 	@ sh -c 'git rev-parse HEAD; git tag -l --points-at HEAD' | \
 		xargs -L1 -I@ sh -c 'mkdir -p releases/@; cp -rv releases/latest/* releases/@'
-	@ ./releases/update-index
+	@ pushd releases; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
 	@ git -C releases add .
 	@ git -C releases commit -m $(shell git rev-parse HEAD)
 	@ git -C releases push
