@@ -2,10 +2,10 @@
 
 set -e
 
-for distro in {alpine,ubuntu,debian,centos,fedora,gentoo,arch,latest}; do
+for distro in {alpine,latest,ubuntu,debian,centos,fedora,gentoo,arch}; do
   img=btwiuse/k0s:${distro}
   echo ====== building $img ========
-  docker build -q --no-cache -f Dockerfile.${distro} . -t $img
+  docker build --pull -q --no-cache -f Dockerfile.${distro} . -t $img
   (docker push $img &>/dev/null && echo pushed $img) &
 done
 
