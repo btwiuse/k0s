@@ -35,7 +35,7 @@ func (cl *client) dial(p string, h http.Header) (conn net.Conn, err error) {
 		}
 	}
 
-	wsconn, _, err := wd.Dial(u, nil)
+	wsconn, _, err := wd.Dial(u, h)
 	if err != nil {
 		return nil, err
 	}

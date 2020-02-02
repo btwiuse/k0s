@@ -31,6 +31,7 @@ func (cl *client) dial(p string, h http.Header) (conn net.Conn, err error) {
 		}
 		opts = &websocket.DialOptions{
 			HTTPClient: t,
+			HTTPHeader: h,
 		}
 	)
 

@@ -256,17 +256,7 @@ func (cl *client) Run() error {
 	}
 
 	{
-		var (
-			ub = &url.URL{
-				Scheme: c.GetSchemeWS(),
-				Host:   c.GetAddr(),
-				Path:   fmt.Sprintf("/api/agent/%s/terminal", idd),
-				// User name and password are not allowed in websocket URIs.
-				// User:   userinfo,
-			}
-			u = ub.String()
-		)
-		cl.terminalConnect(u, cl.userinfo)
+		cl.terminalConnect(fmt.Sprintf("/api/agent/%s/terminal", idd), cl.userinfo)
 	}
 	return nil
 }
