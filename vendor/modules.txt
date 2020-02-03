@@ -125,6 +125,9 @@ github.com/mattn/go-shellwords
 github.com/mattn/go-xmlrpc
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
 github.com/matttproud/golang_protobuf_extensions/pbutil
+# github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea
+## explicit
+github.com/mbndr/figlet4go
 # github.com/mdlayher/genetlink v0.0.0-20190828143517-e35f2bf499b9
 github.com/mdlayher/genetlink
 # github.com/mdlayher/netlink v0.0.0-20190828143259-340058475d09

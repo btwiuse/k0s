@@ -11,15 +11,13 @@ TAGS     := ""
 default: help
 
 build:          ## Build binary for current platform
-	go build -v -o /dev/null -tags raw        # test compile with tag raw
-	go build -v -o /dev/null -tags nhooyr     # test compile with tag nhooyr
-	go build -v -o /dev/null -tags gorilla    # test compile with tag gorilla
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"
 
 release:        ## Build and upload binaries for all supported platforms
 	@ mkdir -p releases/latest ; git -C releases init; rm -r releases/latest
 	@ go run bin.go -d releases/latest -strip -upx -ldflags="${LDFLAGS}" \
-		{linux,android}/{armv6,armv7,arm64,amd64,386} darwin/amd64 windows/{386,amd64}
+		{linux,android}/{armv6,armv7,arm64,amd64,386} {darwin,windows}/{386,amd64} \
+		linux/{mips{,64},ppc64}{,el},s390x}
 	@ pushd releases/latest; tree -H '.' --noreport --charset utf-8 > index.html; popd
 	@ sh -c 'git rev-parse HEAD; git tag -l --points-at HEAD' | \
 		xargs -L1 -I@ sh -c 'mkdir -p releases/@; cp -rv releases/latest/* releases/@'
@@ -48,6 +46,11 @@ up:             ## Start prometheus and grafana to scrape and display metrics
 
 buildkite:      ## Generate buildkite pipeline yml definition
 	cd .buildkite && ./gen | tee /dev/stderr > pipeline.yml
+
+test-build:           ## Check all build tags will compile
+	@ go run bin.go -tags raw        # test tag raw
+	@ go run bin.go -tags nhooyr     # test tag nhooyr
+	@ go run bin.go -tags gorilla    # test tag gorilla
 
 test:           ## Run all tests
 	@go clean --testcache && go test ./...

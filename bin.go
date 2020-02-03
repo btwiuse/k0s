@@ -11,7 +11,19 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/mbndr/figlet4go"
 )
+
+func figlet(str string) {
+	ascii := figlet4go.NewAsciiRender()
+	renderStr, _ := ascii.Render(str)
+	fmt.Print(renderStr)
+}
+
+func (c Combo) String() string {
+	return fmt.Sprintf("%s/%s", c.OS, c.ARCH)
+}
 
 type Combo struct {
 	OS   string
@@ -45,6 +57,12 @@ func (c Combo) Env() []string {
 		envs = append(envs, fmt.Sprintf("GOARCH=%s", c.ARCH))
 	}
 	switch c {
+	// currently I haven't figured out how to properly setup the toolchain for darwin/arm*
+	case
+		Combo{OS: "darwin", ARCH: "arm64"},
+		Combo{OS: "darwin", ARCH: "armv6"},
+		Combo{OS: "darwin", ARCH: "armv7"}:
+		envs = append(envs, "CGO_ENABLED=1")
 	case Combo{OS: "android", ARCH: "arm64"}:
 		envs = append(envs, "CGO_ENABLED=1")
 		if c == DefaultCombo {
@@ -174,6 +192,7 @@ func main() {
 	}
 
 	for _, c := range combos {
+		figlet(c.String())
 		var (
 			buildArgs = []string{"build",
 				"-o", filepath.Join(Path, c.ReleaseName()),
@@ -208,8 +227,13 @@ func main() {
 		}
 
 		// strip fails on arm64 binary, here we simply ignore it
-		if stripFlag && c.OS == "linux" && c.ARCH != "arm64" {
-			strip.Run()
+		if stripFlag && c.OS == "linux" {
+			switch c.ARCH {
+			case "arm64", "mips", "mipsle", "mips64", "mips64le", "s390x":
+				break
+			default:
+				strip.Run()
+			}
 		}
 
 		if upxFlag && c.ARCH != "arm64" {

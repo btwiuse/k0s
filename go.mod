@@ -30,6 +30,7 @@ require (
 	github.com/mattn/go-isatty v0.0.0-20160806122752-66b8e73f3f5c
 	github.com/mattn/go-runewidth v0.0.0-20170201023540-14207d285c6c
 	github.com/mattn/go-shellwords v1.0.3
+	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea
 	github.com/opencontainers/go-digest v1.0.0-rc1
 	github.com/philpearl/scratchbuild v0.0.0-20180910124120-809ccab2cc6e
 	github.com/pkg/errors v0.8.1
