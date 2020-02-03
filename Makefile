@@ -22,15 +22,9 @@ release:        ## Build and upload binaries for all supported platforms
 	@ sh -c 'git rev-parse HEAD; git tag -l --points-at HEAD' | \
 		xargs -L1 -I@ sh -c 'mkdir -p releases/@; cp -rv releases/latest/* releases/@'
 	@ pushd releases; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
-	@ git -C releases add .
-	@ git -C releases commit -m $(shell git rev-parse HEAD)
-	@ git -C releases push
 
-latest:         ## update latest tag
-	@ git push --delete origin latest || true
-	@ git tag -d latest || true
-	@ git tag latest HEAD
-	@ git push origin latest
+release-latest:         ## update latest tag
+	@ ./release-latest.sh
 
 install:        ## install binary to system paths
 	install -Dvm755 bin/$(NAME) /usr/bin/$(NAME)
