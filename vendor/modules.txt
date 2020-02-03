@@ -46,6 +46,9 @@ github.com/containerd/console
 github.com/coreos/go-systemd/dbus
 # github.com/creack/pty v1.1.9
 github.com/creack/pty
+# github.com/denisbrodbeck/machineid v1.0.1
+## explicit
+github.com/denisbrodbeck/machineid
 # github.com/docker/docker v1.13.1
 ## explicit
 github.com/docker/docker/pkg/namesgenerator

@@ -10,4 +10,9 @@
 # skip verify hub https certificate
 #
 # insecure: false
+
+# cache login credential so you don't need to type
+# your password every time you connect to an agent from the cli
+#
+# make sure you have write permission to this file
 cache_credentials: true

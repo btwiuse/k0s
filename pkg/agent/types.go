@@ -33,6 +33,7 @@ type Config interface {
 	GetReadOnly() bool
 	GetVerbose() bool
 	GetInsecure() bool
+	GetPet() bool
 
 	String() string
 

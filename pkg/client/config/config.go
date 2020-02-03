@@ -210,8 +210,8 @@ func isExist(file string) bool {
 
 func probeConfigFile() string {
 	var (
-		globalConfig = "/etc/conntroll/client.yaml"
-		userConfig   = os.ExpandEnv("${HOME}/.conntroll/client.yaml")
+		globalConfig = "/etc/k0s/client.yaml"
+		userConfig   = os.ExpandEnv("${HOME}/.k0s/client.yaml")
 		localConfig  = "client.yaml"
 	)
 	for _, conf := range []string{

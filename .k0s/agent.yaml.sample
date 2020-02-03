@@ -1,3 +1,11 @@
+# set the agent name to fixed value
+# if unset, a random name is used each time you start the agent
+# name: sponge_bob
+
+# derive the agent id from your machine-id
+# set to true if you are running it on real hardware
+# pet: true
+
 # connect to a different hub server by uncommenting and modifying the hub field
 # default hub is https://hub.k0s.io
 #

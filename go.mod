@@ -15,6 +15,7 @@ require (
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.28
 	github.com/containerd/console v0.0.0-20191219165238-8375c3424e4d
+	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/docker/docker v1.13.1
 	github.com/gdamore/encoding v0.0.0-20151215212835-b23993cbb635 // indirect
 	github.com/gdamore/tcell v0.0.0-20170915061752-0a0db94084df

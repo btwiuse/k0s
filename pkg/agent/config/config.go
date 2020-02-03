@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/btwiuse/pretty"
+	"github.com/denisbrodbeck/machineid"
 	"gopkg.in/yaml.v2"
 	"k0s.io/k0s/pkg"
 	"k0s.io/k0s/pkg/agent"
@@ -40,7 +41,7 @@ func (i *arrayFlags) Set(value string) error {
 
 type config struct {
 	ID       string            `json:"id" yaml:"-"`
-	Name     string            `json:"name" yaml:"-"`
+	Name     string            `json:"name" yaml:"name"`
 	Tags     []string          `json:"tags" yaml:"tags"`
 	Htpasswd map[string]string `json:"htpasswd,omitempty" yaml:"htpasswd"`
 
@@ -49,6 +50,7 @@ type config struct {
 	Verbose  bool   `json:"-" yaml:"verbose"`
 	ReadOnly bool   `json:"-" yaml:"ro"`
 	Insecure bool   `json:"-" yaml:"insecure"`
+	Pet      bool   `json:"-" yaml:"pet"`
 	Cmd      string `json:"-" yaml:"cmd"`
 	Hub      string `json:"-" yaml:"hub"`
 
@@ -71,6 +73,10 @@ func (c *config) GetReadOnly() bool {
 
 func (c *config) GetInsecure() bool {
 	return c.Insecure
+}
+
+func (c *config) GetPet() bool {
+	return c.Pet
 }
 
 func (c *config) GetCmd() []string {
@@ -148,6 +154,12 @@ func SetCmd(h string) Opt {
 	}
 }
 
+func SetPet(h bool) Opt {
+	return func(c *config) {
+		c.Pet = h
+	}
+}
+
 func SetInsecure(h bool) Opt {
 	return func(c *config) {
 		c.Insecure = h
@@ -221,8 +233,8 @@ func isExist(file string) bool {
 
 func probeConfigFile() string {
 	var (
-		globalConfig = "/etc/conntroll/agent.yaml"
-		userConfig   = os.ExpandEnv("${HOME}/.conntroll/agent.yaml")
+		globalConfig = "/etc/k0s/agent.yaml"
+		userConfig   = os.ExpandEnv("${HOME}/.k0s/agent.yaml")
 		localConfig  = "agent.yaml"
 	)
 	for _, conf := range []string{
@@ -264,12 +276,10 @@ func Parse(args []string) agent.Config {
 		fset = flag.NewFlagSet("agent", flag.ExitOnError)
 
 		// fset.StringVar(&id, "id", uuid.New(), "Agent ID, for debugging purpose only")
-		id   = uuid.New()
-		name = rng.New()
+		id = uuid.New()
 
 		opts = []Opt{
 			SetID(id),
-			SetName(name),
 		}
 
 		hubapi   *string    = fset.String("hub", pkg.DEFAULT_HUB_ADDRESS, "Hub address.")
@@ -277,6 +287,8 @@ func Parse(args []string) agent.Config {
 		version  *bool      = fset.Bool("version", false, "Show agent/hub version info.")
 		ro       *bool      = fset.Bool("ro", false, "Make shell readonly.")
 		insecure *bool      = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
+		pet      *bool      = fset.Bool("pet", false, "Run the agent like a pet, on real hardware.")
+		name     *string    = fset.String("name", rng.New(), "Set agent name.")
 		cmd      *string    = fset.String("cmd", "", "Command to run.")
 		c        *string    = fset.String("c", probeConfigFile(), "Config file location.")
 		tags     arrayFlags = []string{}
@@ -299,6 +311,17 @@ func Parse(args []string) agent.Config {
 		}
 		if f.Name == "verbose" {
 			opts = append(opts, SetVerbose(*verbose))
+		}
+		if f.Name == "name" {
+			opts = append(opts, SetName(*name))
+		}
+		if f.Name == "pet" {
+			mid, err := machineid.ID()
+			if err != nil {
+				log.Fatalln(err)
+			}
+			opts = append(opts, SetPet(*pet))
+			opts = append(opts, SetID(uuid.NewPet(mid)))
 		}
 		if f.Name == "insecure" {
 			opts = append(opts, SetInsecure(*insecure))
