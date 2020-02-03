@@ -13,7 +13,7 @@ require (
 	github.com/btwiuse/asciitransport v0.0.0-20200126193701-92ad33490cec
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
-	github.com/btwiuse/wetty v0.0.25
+	github.com/btwiuse/wetty v0.0.27
 	github.com/containerd/console v0.0.0-20191219165238-8375c3424e4d
 	github.com/docker/docker v1.13.1
 	github.com/gdamore/encoding v0.0.0-20151215212835-b23993cbb635 // indirect
@@ -30,6 +30,9 @@ require (
 	github.com/mattn/go-isatty v0.0.0-20160806122752-66b8e73f3f5c
 	github.com/mattn/go-runewidth v0.0.0-20170201023540-14207d285c6c
 	github.com/mattn/go-shellwords v1.0.3
+	github.com/opencontainers/go-digest v1.0.0-rc1
+	github.com/philpearl/scratchbuild v0.0.0-20180910124120-809ccab2cc6e
+	github.com/pkg/errors v0.8.1
 	github.com/prometheus/client_golang v1.2.1
 	github.com/prometheus/common v0.7.0
 	github.com/prometheus/node_exporter v0.18.1-0.20200101121053-3ddc82c2d8d1
@@ -48,6 +51,7 @@ require (
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v2 v2.2.8
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71 // indirect
+	k0s.io/conntroll v0.0.2-0.19700101000000-522c57413895
 	modernc.org/httpfs v1.0.0
 	nhooyr.io/websocket v1.7.4
 )
