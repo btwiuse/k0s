@@ -237,10 +237,15 @@ func main() {
 		}
 
 		if upxFlag && c.ARCH != "arm64" {
-			upx.Stdout = os.Stdout
-			upx.Stderr = os.Stderr
-			if err := upx.Run(); err != nil {
-				log.Fatalln(err)
+			switch c.ARCH {
+			case "arm64", "mips64", "mips64le", "s390x":
+				break
+			default:
+				upx.Stdout = os.Stdout
+				upx.Stderr = os.Stderr
+				if err := upx.Run(); err != nil {
+					log.Fatalln(err)
+				}
 			}
 		}
 
