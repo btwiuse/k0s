@@ -26,6 +26,12 @@ release:        ## Build and upload binaries for all supported platforms
 	@ git -C releases commit -m $(shell git rev-parse HEAD)
 	@ git -C releases push
 
+latest:         ## update latest tag
+	@ git push --delete origin latest || true
+	@ git tag -d latest || true
+	@ git tag latest HEAD
+	@ git push origin latest
+
 install:        ## install binary to system paths
 	install -Dvm755 bin/$(NAME) /usr/bin/$(NAME)
 	install -Dvm644 .systemd/agent@.service /usr/lib/systemd/system/agent@.service
