@@ -13,7 +13,7 @@ require (
 	github.com/btwiuse/asciitransport v0.0.0-20200126193701-92ad33490cec
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
-	github.com/btwiuse/wetty v0.0.27
+	github.com/btwiuse/wetty v0.0.28
 	github.com/containerd/console v0.0.0-20191219165238-8375c3424e4d
 	github.com/docker/docker v1.13.1
 	github.com/gdamore/encoding v0.0.0-20151215212835-b23993cbb635 // indirect

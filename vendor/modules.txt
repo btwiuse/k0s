@@ -31,7 +31,7 @@ github.com/btwiuse/gods/maps/linkedhashmap
 # github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 ## explicit
 github.com/btwiuse/pretty
-# github.com/btwiuse/wetty v0.0.27
+# github.com/btwiuse/wetty v0.0.28
 ## explicit
 github.com/btwiuse/wetty/pkg/assets
 github.com/btwiuse/wetty/pkg/localcmd
