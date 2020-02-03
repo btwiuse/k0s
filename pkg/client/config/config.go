@@ -40,6 +40,7 @@ type config struct {
 	Socks5ToHTTP     string                     `json:"-" yaml:"socks5tohttp"`
 	Verbose          bool                       `json:"-" yaml:"verbose"`
 	Insecure         bool                       `json:"-" yaml:"insecure"`
+	Record           bool                       `json:"-" yaml:"record"`
 	CacheCredentials bool                       `json:"-" yaml:"cache_credentials"`
 	Credentials      map[string]client.KeyStore `json:"-" yaml:"credentials"`
 	ConfigLocation   string                     `json:"-" yaml:"-"`
@@ -52,6 +53,10 @@ type config struct {
 
 func (c *config) GetConfigLocation() string {
 	return c.ConfigLocation
+}
+
+func (c *config) GetRecord() bool {
+	return c.Record
 }
 
 func (c *config) GetCacheCredentials() bool {
@@ -163,6 +168,12 @@ func SetSocks5ToHTTP(h string) Opt {
 	}
 }
 
+func SetRecord(h bool) Opt {
+	return func(c *config) {
+		c.Record = h
+	}
+}
+
 func SetInsecure(h bool) Opt {
 	return func(c *config) {
 		c.Insecure = h
@@ -261,6 +272,7 @@ func Parse(args []string) client.Config {
 		verbose      *bool   = fset.Bool("verbose", false, "Verbose log.")
 		version      *bool   = fset.Bool("version", false, "Show agent/hub version info.")
 		insecure     *bool   = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
+		record       *bool   = fset.Bool("record", false, "Record terminal events to a log file.")
 		// cc           *bool   = fset.Bool("cc", false, "Cache credentials.")
 		c *string = fset.String("c", probeConfigFile(), "Config file location.")
 	)
@@ -290,6 +302,9 @@ func Parse(args []string) client.Config {
 		}
 		if f.Name == "verbose" {
 			opts = append(opts, SetVerbose(*verbose))
+		}
+		if f.Name == "record" {
+			opts = append(opts, SetRecord(*record))
 		}
 		if f.Name == "insecure" {
 			opts = append(opts, SetInsecure(*insecure))

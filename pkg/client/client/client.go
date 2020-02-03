@@ -16,7 +16,6 @@ import (
 	"text/tabwriter"
 
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
-	"github.com/btwiuse/pretty"
 	"github.com/containerd/console"
 	"github.com/txthinking/brook"
 	"golang.org/x/crypto/ssh/terminal"
@@ -160,7 +159,6 @@ func (cl *client) Run() error {
 
 	for _, ag := range ags {
 		if ag.GetID() == idd {
-			pretty.YAML(ag)
 			if ag.GetAuth() {
 				var (
 					name  = ag.GetName()
@@ -240,19 +238,6 @@ func (cl *client) Run() error {
 	}
 	if len(cl.GetSocks5ToHTTP()) > 0 {
 		go cl.RunSocks5ToHTTP()
-	}
-
-	{
-		var (
-			ub = &url.URL{
-				Scheme: c.GetScheme(),
-				Host:   c.GetAddr(),
-				Path:   fmt.Sprintf("/api/agent/%s/", idd),
-				User:   cl.userinfo,
-			}
-			u = ub.String()
-		)
-		log.Println("You selected:", u)
 	}
 
 	{

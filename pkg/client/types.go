@@ -34,6 +34,7 @@ type Config interface {
 
 	GetVersion() pkg.Version
 	GetInsecure() bool
+	GetRecord() bool
 }
 
 type Dialer interface {

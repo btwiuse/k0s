@@ -20,9 +20,10 @@ import (
 )
 
 func (cl *client) terminalConnect(endpoint string, userinfo *url.Userinfo) {
-	log.Println("Press ESC twice to exit.")
+	log.Println("Press ESC twice to exit. (Some terminals don't supported it)")
 
 	var (
+		c    = cl.Config
 		conn net.Conn
 		err  error
 		h    = http.Header{
@@ -31,6 +32,7 @@ func (cl *client) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 			},
 		}
 	)
+
 	for {
 		conn, err = cl.dial(endpoint, h)
 		if err != nil {
@@ -51,19 +53,23 @@ func (cl *client) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 		panic(err)
 	}
 
-	logname := uuid.New() + ".log"
-	logfile, err := os.Create(logname)
-	if err != nil {
-		panic(err)
-	}
-	defer func() {
-		log.Println("log written to", logname)
-	}()
 	opts := []asciitransport.Opt{
-		asciitransport.WithLogger(logfile),
 		asciitransport.WithReader(os.Stdin),
 		asciitransport.WithWriter(os.Stdout),
 	}
+
+	if c.GetRecord() {
+		logname := uuid.New() + ".log"
+		logfile, err := os.Create(logname)
+		if err != nil {
+			panic(err)
+		}
+		defer func() {
+			log.Println("log written to", logname)
+		}()
+		opts = append(opts, asciitransport.WithLogger(logfile))
+	}
+
 	client := asciitransport.Client(conn, opts...)
 
 	// send
