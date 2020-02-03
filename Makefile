@@ -17,7 +17,7 @@ release:        ## Build and upload binaries for all supported platforms
 	@ mkdir -p releases/latest ; git -C releases init; rm -r releases/latest
 	@ go run bin.go -d releases/latest -strip -upx -ldflags="${LDFLAGS}" \
 		{linux,android}/{armv6,armv7,arm64,amd64,386} {darwin,windows}/{386,amd64} \
-	  linux/{{mips{,64},ppc64}{,el},s390x}
+	  linux/{{mips{,64},ppc64}{,le},s390x}
 	@ pushd releases/latest; tree -H '.' --noreport --charset utf-8 > index.html; popd
 	@ sh -c 'git rev-parse HEAD; git tag -l --points-at HEAD' | \
 		xargs -L1 -I@ sh -c 'mkdir -p releases/@; cp -rv releases/latest/* releases/@'
