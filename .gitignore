@@ -4,6 +4,7 @@
 /agent
 /client
 /hub
+/k0s
 /.cache
 /conntroll.github.io
 /demo
