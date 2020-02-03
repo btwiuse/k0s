@@ -18,6 +18,7 @@ type lys struct {
 }
 
 func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.Header)
 	conn, err := wrconn(w, r)
 	if err != nil {
 		log.Println("error ws accept:", err)
