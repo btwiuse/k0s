@@ -266,7 +266,7 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		for i, ider := range h.Values() {
 			log.Println(i, ider.ID())
 		}
-		http.Redirect(w, r, "https://k0s.io", 302)
+		http.Redirect(w, r, "/", 302)
 		return
 	}
 

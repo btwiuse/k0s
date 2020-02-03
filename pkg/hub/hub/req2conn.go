@@ -24,6 +24,11 @@ func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if forward := r.Header.Get("X-Forwarded-For"); forward != "" {
+		addr := NewAddr(conn.RemoteAddr().Network(), forward)
+		conn = ConnWithAddr(conn, addr)
+	}
+
 	l.conns <- conn
 }
 
