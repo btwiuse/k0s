@@ -31,7 +31,9 @@ func figlet(str string) {
 	}
 	fon, err := figletlib.GetFontByName("/usr/share/figlet/fonts/", "standard")
 	if err != nil {
-		log.Fatalln("Failed to load standard figlet font:", err)
+		log.Println("Failed to load standard figlet font:", err)
+		log.Println(str)
+		return
 	}
 	buf := bytes.NewBuffer(nil)
 	figletlib.FPrintMsg(buf, str, fon, width, fon.Settings(), "left")
