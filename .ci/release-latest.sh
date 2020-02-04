@@ -2,11 +2,12 @@
 
 ROOT_DIR=$(dirname $(dirname $(realpath -m ${0})))
 
+# unecessary
 refresh(){
-	git push --delete origin latest || true
-	git tag -d latest || true
-	git tag latest HEAD
-	git push origin latest
+##git push --delete origin latest || true
+##git tag -d latest || true
+##git tag latest HEAD
+##git push origin latest
   github release delete latest
 }
 
@@ -15,7 +16,7 @@ github(){
 }
 
 upload(){
-  github release create -m 'latest' latest
+  github release | grep latest || github release create -m 'latest' latest
   github release edit -m 'latest' latest -a "$1"
 }
 
@@ -43,8 +44,8 @@ loop_windows(){
 
 main(){
   refresh
-  loop_windows
   loop_unix
+  loop_windows
 }
 
 main
