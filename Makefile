@@ -19,7 +19,7 @@ release:        ## Build and upload binaries for all supported platforms
 		{linux,android}/{armv6,armv7,arm64,amd64,386} {darwin,windows}/{386,amd64} \
 	  linux/{{mips{,64},ppc64}{,le},s390x}
 	@ pushd releases/latest; tree -H '.' --noreport --charset utf-8 > index.html; popd
-	@ sh -c 'git rev-parse HEAD; git tag -l --points-at HEAD' | \
+	@ sh -c 'git rev-parse HEAD' | \
 		xargs -L1 -I@ sh -c 'mkdir -p releases/@; cp -rv releases/latest/* releases/@'
 	@ pushd releases; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
 
