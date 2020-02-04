@@ -316,12 +316,7 @@ func Parse(args []string) agent.Config {
 			opts = append(opts, SetName(*name))
 		}
 		if f.Name == "pet" {
-			mid, err := machineid.ID()
-			if err != nil {
-				log.Fatalln(err)
-			}
 			opts = append(opts, SetPet(*pet))
-			opts = append(opts, SetID(uuid.NewPet(mid)))
 		}
 		if f.Name == "insecure" {
 			opts = append(opts, SetInsecure(*insecure))
@@ -350,6 +345,27 @@ func Parse(args []string) agent.Config {
 
 	for _, opt := range opts {
 		opt(baseConfig)
+	}
+
+	if baseConfig.GetPet() {
+		mid, err := machineid.ID()
+		if err != nil {
+			log.Fatalln(err)
+		}
+		// on some platforms like android, mid is empty string
+		// assume user has set a fixed name
+		// generate a fixed id with best effort
+		// based on provided info
+		// use mid as seed
+		if mid == "" {
+			mid = baseConfig.GetOS() +
+				baseConfig.GetArch() +
+				baseConfig.GetName() +
+				baseConfig.GetUsername() +
+				baseConfig.GetHostname()
+		}
+		uid := uuid.NewPet(mid)
+		SetID(uid)(baseConfig)
 	}
 
 	if *version {

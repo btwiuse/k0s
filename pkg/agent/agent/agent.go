@@ -47,9 +47,8 @@ func NewAgent(c types.Config) types.Agent {
 		metricsServer  = StartMetricsServer(c)
 		terminalServer = StartTerminalServer(c)
 	)
-	if c.GetVerbose() {
-		log.Println("new agent", id, name)
-	}
+
+	log.Println("connected as", name)
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
 	}
