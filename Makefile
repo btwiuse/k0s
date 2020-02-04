@@ -20,9 +20,31 @@ dry:      ## Build binary for every supported platform
 	  linux/{{mips{,64},ppc64}{,le},s390x}
 
 build-all:      ## Build binary for every supported platform
+	@ make build-android
+	@ make build-linux
+	@ make build-linux-arm
+	@ make build-windows
+	@ make build-darwin
+
+build-android:  ## Build android binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-		{linux,android}/{armv6,armv7,arm64,amd64,386} {darwin,windows}/{386,amd64} \
-	  linux/{{mips{,64},ppc64}{,le},s390x}
+		android/{armv6,armv7,arm64,amd64,386}
+
+build-linux-arm: ## Build linux arm binaries
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+		linux/{armv6,armv7,arm64}
+
+build-linux:  	## Build linux binaries
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+	  linux/{amd64,386} linux/{{mips{,64},ppc64}{,le},s390x}
+
+build-windows:  ## Build windows binaries
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+		windows/{386,amd64}
+
+build-darwin:   ## Build darwin binaries
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+		darwin/{386,amd64}
 
 scratch-build:  ## Build without using existing build cache
 	@ go run bin.go -d releases/latest -ldflags="${LDFLAGS}" -- -a

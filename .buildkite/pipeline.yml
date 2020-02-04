@@ -2,5 +2,5 @@ steps:
   - label: linux/amd64
     command: make test-build
   - label: linux/amd64
-    command: make build
+    command: make build-linux
     artifact_paths: bin/*
