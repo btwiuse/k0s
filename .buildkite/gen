@@ -2,7 +2,7 @@
 
 gen(){
 	bkyml steps
-	bkyml command --command make --artifact-paths 'bin/*' --label 'linux/amd64'
+	bkyml command --command "make build" --artifact-paths 'bin/*' --label 'linux/amd64'
 }
 
 main(){
