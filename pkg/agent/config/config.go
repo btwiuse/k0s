@@ -344,6 +344,10 @@ func Parse(args []string) agent.Config {
 
 	baseConfig := loadConfigFile(*c)
 
+	if baseConfig.GetName() == "" {
+		opts = append(opts, SetName(*name))
+	}
+
 	for _, opt := range opts {
 		opt(baseConfig)
 	}
