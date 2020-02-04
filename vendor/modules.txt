@@ -115,6 +115,9 @@ github.com/liamg/aminal/platform
 github.com/lucasb-eyer/go-colorful
 # github.com/lufia/iostat v0.0.0-20170605150913-9f7362b77ad3
 github.com/lufia/iostat
+# github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
+## explicit
+github.com/lukesampson/figlet/figletlib
 # github.com/mattn/go-isatty v0.0.0-20160806122752-66b8e73f3f5c
 ## explicit
 github.com/mattn/go-isatty

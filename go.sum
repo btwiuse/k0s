@@ -31,12 +31,6 @@ github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882 h1:bO0cdWOtgJk7rlRC
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882/go.mod h1:ylRP8/cdGCVHKukmdQkTjIkbVPykEIC8iGT54pOh/KA=
 github.com/btwiuse/wetty v0.0.24 h1:EuZ5helRZGxijDr4OWfR1pkB47acYQl8FYlpZ3hdCb8=
 github.com/btwiuse/wetty v0.0.24/go.mod h1:7h4o2m8AR0GrOegVOnDxc//8cLO2f0p4UrYfFwSy1x4=
-github.com/btwiuse/wetty v0.0.25 h1:DE508TmDcxnKXIgvDXMwC6mLiMUaWcA6aaWyxLhCheE=
-github.com/btwiuse/wetty v0.0.25/go.mod h1:dSBTkHcBF+JAQxWnhsnlBRfxxJSpky9LRNps48sXQdI=
-github.com/btwiuse/wetty v0.0.26 h1:Je38LwnVnZQdr1rhHvC6PK1eepav5587+VNDM7kj2aQ=
-github.com/btwiuse/wetty v0.0.26/go.mod h1:dSBTkHcBF+JAQxWnhsnlBRfxxJSpky9LRNps48sXQdI=
-github.com/btwiuse/wetty v0.0.27 h1:LEfJzjLJBTJkb+Gl93zKL63hX6FTsi5SZkpWlIATtuc=
-github.com/btwiuse/wetty v0.0.27/go.mod h1:dSBTkHcBF+JAQxWnhsnlBRfxxJSpky9LRNps48sXQdI=
 github.com/btwiuse/wetty v0.0.28 h1:OUpouTbT5H0yXns1/SXbU2GBbpm0LtjLKPVZ9Ar0re8=
 github.com/btwiuse/wetty v0.0.28/go.mod h1:dSBTkHcBF+JAQxWnhsnlBRfxxJSpky9LRNps48sXQdI=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
@@ -153,6 +147,8 @@ github.com/lucasb-eyer/go-colorful v0.0.0-20170223221042-c900de9dbbc7 h1:G52I+Gk
 github.com/lucasb-eyer/go-colorful v0.0.0-20170223221042-c900de9dbbc7/go.mod h1:NXg0ArsFk0Y01623LgUqoqcouGDB+PwCCQlrwrG6xJ4=
 github.com/lufia/iostat v0.0.0-20170605150913-9f7362b77ad3 h1:XGhvld9vIpj929Gri5ybjukYZeyZwKkFkqgATqBQiOs=
 github.com/lufia/iostat v0.0.0-20170605150913-9f7362b77ad3/go.mod h1:lRgtFVamD7L7GaXOSwBiuXMwU3Aicfn5h66LVs4u2SA=
+github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42 h1:UtyD+eBVdLYSj5/pjfSR6mtnzMgIiOVcFT024G2l4CY=
+github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42/go.mod h1:/peI0OaxVYh7fzA72CD7rUsyGVdF7sCiFw7GcYqOcCw=
 github.com/lxc/lxd v0.0.0-20200125161832-63e35edd8a40/go.mod h1:2BaZflfwsv8a3uy3/Vw+de4Avn4DSrAiqaHJjCIXMV4=
 github.com/mattn/go-isatty v0.0.0-20160806122752-66b8e73f3f5c h1:3nKFouDdpgGUV/uerJcYWH45ZbJzX0SiVWfTgmUeTzc=
 github.com/mattn/go-isatty v0.0.0-20160806122752-66b8e73f3f5c/go.mod h1:M+lRXTBqGeGNdLjl/ufCoiOlB5xdOkqRJdNxMWT7Zi4=
@@ -390,7 +386,6 @@ honnef.co/go/tools v0.0.1-2019.2.3 h1:3JgtbtFHMiCmsznwGVTUWbgGov+pVqnlf1dEJTNAXe
 honnef.co/go/tools v0.0.1-2019.2.3/go.mod h1:a3bituU0lyd329TUQxRnasdCoJDkEUEAqEt0JzvZhAg=
 k0s.io/conntroll v0.0.2-0.19700101000000-522c57413895 h1:mBI2qYIwSthiCaebcutTjkDow6KzDRJ39wGV+pGtiVg=
 k0s.io/conntroll v0.0.2-0.19700101000000-522c57413895/go.mod h1:Tirm5Cs4gdWR25nqot7qip0Of1W3xKqEF0jXS/iGhTA=
-k0s.io/k0s v0.0.2-0.19700101000000-522c57413895/go.mod h1:Tirm5Cs4gdWR25nqot7qip0Of1W3xKqEF0jXS/iGhTA=
 modernc.org/httpfs v1.0.0 h1:LtuKNg6JMiaBKVQHKd6Phhvk+2GFp+pUcmDQgRjrds0=
 modernc.org/httpfs v1.0.0/go.mod h1:BSkfoMUcahSijQD5J/Vu4UMOxzmEf5SNRwyXC4PJBEw=
 nhooyr.io/websocket v1.7.4 h1:w/LGB2sZT0RV8lZYR7nfyaYz4PUbYZ5oF7NBon2M0NY=

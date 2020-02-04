@@ -3,8 +3,11 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -12,13 +15,27 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/mbndr/figlet4go"
+	"github.com/containerd/console"
+	"github.com/lukesampson/figlet/figletlib"
+	isatty "github.com/mattn/go-isatty"
 )
 
 func figlet(str string) {
-	ascii := figlet4go.NewAsciiRender()
-	renderStr, _ := ascii.Render(str)
-	fmt.Print(renderStr)
+	var width int = 80
+	if isatty.IsTerminal(os.Stdin.Fd()) {
+		var (
+			term    = console.Current()
+			size, _ = term.Size()
+		)
+		width = int(size.Width)
+	}
+	fon, err := figletlib.GetFontByName("/usr/share/figlet/fonts/", "standard")
+	if err != nil {
+		log.Fatalln("Failed to load standard figlet font:", err)
+	}
+	buf := bytes.NewBuffer(nil)
+	figletlib.FPrintMsg(buf, str, fon, width, fon.Settings(), "left")
+	fmt.Print(buf.String())
 }
 
 func (c Combo) String() string {
@@ -57,20 +74,33 @@ func (c Combo) Env() []string {
 		envs = append(envs, fmt.Sprintf("GOARCH=%s", c.ARCH))
 	}
 	switch c {
+	//      _                     _
+	//   __| | __ _ _ ____      _(_)_ __
+	//  / _` |/ _` | '__\ \ /\ / / | '_ \
+	// | (_| | (_| | |   \ V  V /| | | | |
+	//  \__,_|\__,_|_|    \_/\_/ |_|_| |_|
+	//
 	// currently I haven't figured out how to properly setup the toolchain for darwin/arm*
 	case
 		Combo{OS: "darwin", ARCH: "arm64"},
 		Combo{OS: "darwin", ARCH: "armv6"},
 		Combo{OS: "darwin", ARCH: "armv7"}:
 		envs = append(envs, "CGO_ENABLED=1")
-	case Combo{OS: "android", ARCH: "arm64"}:
+
+	//                  _           _     _
+	//   __ _ _ __   __| |_ __ ___ (_) __| |
+	//  / _` | '_ \ / _` | '__/ _ \| |/ _` |
+	// | (_| | | | | (_| | | | (_) | | (_| |
+	//  \__,_|_| |_|\__,_|_|  \___/|_|\__,_|
+	//
+	case Combo{OS: "android", ARCH: "armv6"}:
 		envs = append(envs, "CGO_ENABLED=1")
 		if c == DefaultCombo {
 			break
 		}
 		envs = append(envs,
-			"CC=aarch64-linux-android29-clang",
-			"CXX=aarch64-linux-android29-clang++",
+			"CC=armv7a-linux-androideabi29-clang",
+			"CXX=armv7a-linux-androideabi29-clang++",
 		)
 	case Combo{OS: "android", ARCH: "armv7"}:
 		envs = append(envs, "CGO_ENABLED=1")
@@ -81,23 +111,14 @@ func (c Combo) Env() []string {
 			"CC=armv7a-linux-androideabi29-clang",
 			"CXX=armv7a-linux-androideabi29-clang++",
 		)
-	case Combo{OS: "android", ARCH: "armv6"}:
+	case Combo{OS: "android", ARCH: "arm64"}:
 		envs = append(envs, "CGO_ENABLED=1")
 		if c == DefaultCombo {
 			break
 		}
 		envs = append(envs,
-			"CC=armv7a-linux-androideabi29-clang",
-			"CXX=armv7a-linux-androideabi29-clang++",
-		)
-	case Combo{OS: "android", ARCH: "amd64"}:
-		envs = append(envs, "CGO_ENABLED=1")
-		if c == DefaultCombo {
-			break
-		}
-		envs = append(envs,
-			"CC=x86_64-linux-android29-clang",
-			"CXX=x86_64-linux-android29-clang++",
+			"CC=aarch64-linux-android29-clang",
+			"CXX=aarch64-linux-android29-clang++",
 		)
 	case Combo{OS: "android", ARCH: "386"}:
 		envs = append(envs, "CGO_ENABLED=1")
@@ -108,24 +129,22 @@ func (c Combo) Env() []string {
 			"CC=i686-linux-android29-clang",
 			"CXX=i686-linux-android29-clang++",
 		)
-	case Combo{OS: "windows", ARCH: "amd64"}:
+	case Combo{OS: "android", ARCH: "amd64"}:
 		envs = append(envs, "CGO_ENABLED=1")
 		if c == DefaultCombo {
 			break
 		}
 		envs = append(envs,
-			"CXX=x86_64-w64-mingw32-g++",
-			"CC=x86_64-w64-mingw32-gcc",
+			"CC=x86_64-linux-android29-clang",
+			"CXX=x86_64-linux-android29-clang++",
 		)
-	case Combo{OS: "windows", ARCH: "386"}:
-		envs = append(envs, "CGO_ENABLED=1")
-		if c == DefaultCombo {
-			break
-		}
-		envs = append(envs,
-			"CXX=i686-w64-mingw32-g++",
-			"CC=i686-w64-mingw32-gcc",
-		)
+
+	//           _           _
+	// __      _(_)_ __   __| | _____      _____
+	// \ \ /\ / / | '_ \ / _` |/ _ \ \ /\ / / __|
+	//  \ V  V /| | | | | (_| | (_) \ V  V /\__ \
+	//   \_/\_/ |_|_| |_|\__,_|\___/ \_/\_/ |___/
+	//
 	// windows/arm doesn't work yet
 	case Combo{OS: "windows", ARCH: "arm"}:
 		envs = append(envs, "CGO_ENABLED=1")
@@ -136,15 +155,32 @@ func (c Combo) Env() []string {
 			"CXX=clang++",
 			"CC=clang",
 		)
-	case Combo{OS: "linux", ARCH: "armv7"}:
+	case Combo{OS: "windows", ARCH: "386"}:
+		envs = append(envs, "CGO_ENABLED=1")
 		if c == DefaultCombo {
 			break
 		}
 		envs = append(envs,
-			"CC=arm-linux-gnueabihf-gcc",
-			"CXX=arm-linux-gnueabihf-g++",
+			"CXX=i686-w64-mingw32-g++",
+			"CC=i686-w64-mingw32-gcc",
 		)
-	case Combo{OS: "android", ARCH: "armv6"}:
+	case Combo{OS: "windows", ARCH: "amd64"}:
+		envs = append(envs, "CGO_ENABLED=1")
+		if c == DefaultCombo {
+			break
+		}
+		envs = append(envs,
+			"CXX=x86_64-w64-mingw32-g++",
+			"CC=x86_64-w64-mingw32-gcc",
+		)
+
+	//  _ _
+	// | (_)_ __  _   ___  __
+	// | | | '_ \| | | \ \/ /
+	// | | | | | | |_| |>  <
+	// |_|_|_| |_|\__,_/_/\_\
+	//
+	case Combo{OS: "linux", ARCH: "armv7"}:
 		if c == DefaultCombo {
 			break
 		}
@@ -171,19 +207,31 @@ func main() {
 	var (
 		stripFlag bool
 		upxFlag   bool
+		dryRun    bool
 		tags      string
 		ldflags   string
+		bingo     *flag.FlagSet = flag.NewFlagSet("bingo", flag.ContinueOnError)
 	)
 
-	flag.StringVar(&Path, "d", Path, "output directory")
-	flag.StringVar(&tags, "tags", "", "build tags")
-	flag.StringVar(&ldflags, "ldflags", "", "ldflags")
-	flag.BoolVar(&stripFlag, "strip", false, "strip binary")
-	flag.BoolVar(&upxFlag, "upx", false, "compress binary with upx")
-	flag.Parse()
+	bingo.StringVar(&Path, "d", Path, "output directory")
+	bingo.StringVar(&tags, "tags", "", "build tags")
+	bingo.StringVar(&ldflags, "ldflags", "", "ldflags")
+	bingo.BoolVar(&stripFlag, "strip", false, "strip binary")
+	bingo.BoolVar(&upxFlag, "upx", false, "compress binary with upx")
+	bingo.BoolVar(&dryRun, "dry", false, "dry run")
+	bingo.Parse(os.Args[1:])
 
 	combos := []Combo{}
-	for _, arg := range flag.Args() {
+	freeArgs := []string{}
+
+	log.Println("Parsing positional arguments:")
+	for _, arg := range bingo.Args() {
+		if !strings.Contains(arg, "/") {
+			freeArgs = append(freeArgs, arg)
+			log.Println("-", arg, "# passthrough")
+			continue
+		}
+		log.Println("-", arg, "# combo")
 		combos = append(combos, parseCombo(arg))
 	}
 
@@ -193,16 +241,29 @@ func main() {
 
 	for _, c := range combos {
 		figlet(c.String())
+
+		log.Println("Go Build Env:", c.Env())
+
+		if dryRun {
+			continue
+		}
+
+		buildArgs := []string{"build",
+			"-o", filepath.Join(Path, c.ReleaseName()),
+			"-mod=vendor",
+			"-trimpath",
+			"-ldflags", ldflags,
+			"-tags", tags,
+			"-v",
+		}
+		buildArgs = append(buildArgs, freeArgs...)
+		buildArgs = append(buildArgs, ".")
+
+		for i, arg := range buildArgs {
+			log.Println(fmt.Sprintf("[%02d] = %q", i, arg))
+		}
+
 		var (
-			buildArgs = []string{"build",
-				"-o", filepath.Join(Path, c.ReleaseName()),
-				"-mod=vendor",
-				"-trimpath",
-				"-ldflags", ldflags,
-				"-tags", tags,
-				"-v",
-				".",
-			}
 			build = exec.Command("go", buildArgs...)
 			strip = exec.Command(
 				"strip",
@@ -214,14 +275,10 @@ func main() {
 			)
 		)
 
+		log.Println("Start compiling...")
 		build.Env = append(os.Environ(), c.Env()...)
 		build.Stdout = os.Stdout
-		build.Stderr = os.Stderr
-		log.Println("Env:", c.Env())
-		for i, arg := range buildArgs {
-			log.Println(fmt.Sprintf("%d %q", i, arg))
-		}
-
+		build.Stderr = ts(os.Stderr)
 		if err := build.Run(); err != nil {
 			log.Fatalln(err)
 		}
@@ -266,4 +323,21 @@ func ln(from, to string) {
 	if err := lnf.Run(); err != nil {
 		log.Fatalln(err)
 	}
+}
+
+func ts(next io.Writer) io.Writer {
+	var (
+		pr, pw  = io.Pipe()
+		scanner = bufio.NewScanner(pr)
+		logger  = log.New(next, "", log.Ldate|log.Ltime)
+	)
+
+	go func() {
+		for scanner.Scan() {
+			line := scanner.Text()
+			logger.Println(line)
+		}
+	}()
+
+	return pw
 }

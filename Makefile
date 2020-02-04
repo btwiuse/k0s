@@ -13,18 +13,29 @@ default: help
 build:          ## Build binary for current platform
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"
 
-release:        ## Build and upload binaries for all supported platforms
-	@ mkdir -p releases/latest ; git -C releases init; rm -r releases/latest
-	@ go run bin.go -d releases/latest -ldflags="${LDFLAGS}" \
+dry:      ## Build binary for every supported platform
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" -dry \
 		{linux,android}/{armv6,armv7,arm64,amd64,386} {darwin,windows}/{386,amd64} \
 	  linux/{{mips{,64},ppc64}{,le},s390x}
-	@ pushd releases/latest; tree -H '.' --noreport --charset utf-8 > index.html; popd
-	@ sh -c 'git rev-parse HEAD' | \
-		xargs -L1 -I@ sh -c 'mkdir -p releases/@; cp -rv releases/latest/* releases/@'
-	@ pushd releases; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
 
-release-latest:         ## update latest tag
-	@ ./release-latest.sh
+build-all:      ## Build binary for every supported platform
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+		{linux,android}/{armv6,armv7,arm64,amd64,386} {darwin,windows}/{386,amd64} \
+	  linux/{{mips{,64},ppc64}{,le},s390x}
+
+scratch-build:  ## Build without using existing build cache
+	@ go run bin.go -d releases/latest -ldflags="${LDFLAGS}" -- -a
+
+scratch-build-all:      ## Build binary for every supported platform ignoring build cache
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" -- -a\
+		{linux,android}/{armv6,armv7,arm64,amd64,386} {darwin,windows}/{386,amd64} \
+	  linux/{{mips{,64},ppc64}{,le},s390x}
+
+release:        ## Build and upload binaries for all supported platforms
+	@ mkdir -p bin/; git -C bin/ init
+	@ make build-all
+	@ pushd bin; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
+	@ .ci/release-latest.sh
 
 install:        ## install binary to system paths
 	install -Dvm755 bin/$(NAME) /usr/bin/$(NAME)

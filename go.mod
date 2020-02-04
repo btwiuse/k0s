@@ -28,6 +28,7 @@ require (
 	github.com/jtolds/gls v4.2.1+incompatible // indirect
 	github.com/liamg/aminal v0.9.0
 	github.com/lucasb-eyer/go-colorful v0.0.0-20170223221042-c900de9dbbc7 // indirect
+	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
 	github.com/mattn/go-isatty v0.0.0-20160806122752-66b8e73f3f5c
 	github.com/mattn/go-runewidth v0.0.0-20170201023540-14207d285c6c
 	github.com/mattn/go-shellwords v1.0.3
