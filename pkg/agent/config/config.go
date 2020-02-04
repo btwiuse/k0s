@@ -350,19 +350,20 @@ func Parse(args []string) agent.Config {
 	if baseConfig.GetPet() {
 		mid, err := machineid.ID()
 		if err != nil {
-			log.Fatalln(err)
-		}
-		// on some platforms like android, mid is empty string
-		// assume user has set a fixed name
-		// generate a fixed id with best effort
-		// based on provided info
-		// use mid as seed
-		if mid == "" {
-			mid = baseConfig.GetOS() +
-				baseConfig.GetArch() +
-				baseConfig.GetName() +
-				baseConfig.GetUsername() +
-				baseConfig.GetHostname()
+			log.Println(err)
+			log.Println("Using alternative approach")
+			// on some platforms like android, mid is empty string
+			// assume user has set a fixed name
+			// generate a fixed id with best effort
+			// based on provided info
+			// use mid as seed
+			if mid == "" {
+				mid = baseConfig.GetOS() +
+					baseConfig.GetArch() +
+					baseConfig.GetName() +
+					baseConfig.GetUsername() +
+					baseConfig.GetHostname()
+			}
 		}
 		uid := uuid.NewPet(mid)
 		SetID(uid)(baseConfig)
