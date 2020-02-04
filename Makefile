@@ -7,6 +7,7 @@ IMG_NAME := btwiuse/k0s
 IMAGE    := ${IMG_NAME}:${VERSION}
 LDFLAGS  := $(shell ./pkg/version/ldflags)
 TAGS     := ""
+SHELL    := bash
 
 default: help
 
