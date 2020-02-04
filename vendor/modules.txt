@@ -101,6 +101,9 @@ github.com/gorilla/mux
 github.com/gorilla/websocket
 # github.com/hodgesds/perf-utils v0.0.7
 github.com/hodgesds/perf-utils
+# github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3
+## explicit
+github.com/inancgumus/screen
 # github.com/jtolds/gls v4.2.1+incompatible
 ## explicit
 # github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515

@@ -17,6 +17,7 @@ import (
 
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
 	"github.com/containerd/console"
+	"github.com/inancgumus/screen"
 	"github.com/txthinking/brook"
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io/k0s/pkg"
@@ -241,6 +242,7 @@ func (cl *client) Run() error {
 	}
 
 	{
+		screen.Clear()
 		cl.terminalConnect(fmt.Sprintf("/api/agent/%s/terminal", idd), cl.userinfo)
 	}
 	return nil

@@ -25,6 +25,7 @@ require (
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.3
 	github.com/gorilla/websocket v1.4.1
+	github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3
 	github.com/jtolds/gls v4.2.1+incompatible // indirect
 	github.com/liamg/aminal v0.9.0
 	github.com/lucasb-eyer/go-colorful v0.0.0-20170223221042-c900de9dbbc7 // indirect
