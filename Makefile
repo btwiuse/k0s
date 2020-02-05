@@ -11,6 +11,11 @@ SHELL    := bash
 
 default: help
 
+fonts:
+	@ mkdir -p fonts/ pkg/fonts/; cp /usr/share/figlet/fonts/standard.flf fonts/
+	@ assets -d fonts/ -package fonts -o ./pkg/fonts/standard.go -map Fonts
+	@ rm -r fonts/
+
 build:          ## Build binary for current platform
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"
 
