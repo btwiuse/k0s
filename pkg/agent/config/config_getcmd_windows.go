@@ -1,9 +1,5 @@
 package config
 
-// +build windows
-// +build !linux
-// +build !darwin
-
 func (c *config) getCmd() []string {
 	shell := "cmd"
 	args := []string{shell}
