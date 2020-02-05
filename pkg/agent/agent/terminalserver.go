@@ -3,6 +3,7 @@ package agent
 import (
 	"log"
 	"net"
+	"os"
 
 	"github.com/btwiuse/asciitransport"
 	types "k0s.io/k0s/pkg/agent"
@@ -17,11 +18,11 @@ func StartTerminalServer(c types.Config) types.TerminalServer {
 		terminalListener          = NewLys()
 	)
 	_ = ro
-	go serveTerminal(terminalListener, fac)
+	go serveTerminal(c, terminalListener, fac)
 	return terminalListener
 }
 
-func serveTerminal(ln net.Listener, fac types.TtyFactory) {
+func serveTerminal(c types.Config, ln net.Listener, fac types.TtyFactory) {
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
@@ -38,6 +39,9 @@ func serveTerminal(ln net.Listener, fac types.TtyFactory) {
 			opts := []asciitransport.Opt{
 				asciitransport.WithReader(term),
 				asciitransport.WithWriter(term),
+			}
+			if c.GetVerbose() {
+				opts = append(opts, asciitransport.WithLogger(os.Stderr))
 			}
 			server := asciitransport.Server(conn, opts...)
 			// send
