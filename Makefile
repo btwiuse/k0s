@@ -23,6 +23,8 @@ build-all:      ## Build binary for every supported platform
 	@ make build-android
 	@ make build-linux
 	@ make build-linux-arm
+	@ make build-bsd
+	@ make build-bsd-arm
 	@ make build-windows
 	@ make build-darwin
 
@@ -33,6 +35,14 @@ build-android:  ## Build android binaries
 build-linux-arm: ## Build linux arm binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
 		linux/{armv6,armv7,arm64}
+
+build-bsd-arm:  	## Build bsd binaries
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+	  freebsd/{armv7,armv6} # ,arm64
+
+build-bsd:  	## Build bsd binaries
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+	  {freebsd,openbsd}/{amd64,386}
 
 build-linux:  	## Build linux binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \

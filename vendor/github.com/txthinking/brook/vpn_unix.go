@@ -1,3 +1,5 @@
+// +build freebsd openbsd netbsd
+
 // Copyright (c) 2016-present Cloud <cloud@txthinking.com>
 //
 // This program is free software; you can redistribute it and/or

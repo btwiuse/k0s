@@ -1,3 +1,5 @@
+// +build freebsd openbsd netbsd
+
 package tun
 
 import (
