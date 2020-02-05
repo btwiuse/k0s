@@ -18,7 +18,6 @@ import (
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
 	"github.com/containerd/console"
 	"github.com/inancgumus/screen"
-	"github.com/txthinking/brook"
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io/k0s/pkg"
 	types "k0s.io/k0s/pkg/client"
@@ -312,18 +311,5 @@ func (cl *client) RunSocks() error {
 }
 
 func (cl *client) RunSocks5ToHTTP() error {
-	var (
-		socks5Addr = cl.GetSocks()
-		httpAddr   = cl.GetSocks5ToHTTP()
-	)
-	if socks5Addr == "" {
-		socks5Addr = pkg.SOCKS5_PROXY_PORT
-	}
-	log.Println("socks5tohttp:", socks5Addr, "<->", httpAddr)
-	s, err := brook.NewSocks5ToHTTP(httpAddr, socks5Addr, 0, 0)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	return s.ListenAndServe()
+	return cl.runSocks5ToHTTP()
 }

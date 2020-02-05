@@ -1,6 +1,3 @@
-// +build linux darwin
-// +build !windows
-
 package client
 
 import (

@@ -1,7 +1,7 @@
+package config
+
 // +build linux darwin
 // +build !windows
-
-package config
 
 import "os/exec"
 
