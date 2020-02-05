@@ -18,10 +18,14 @@ import (
 	"github.com/containerd/console"
 	"github.com/lukesampson/figlet/figletlib"
 	isatty "github.com/mattn/go-isatty"
+	"k0s.io/k0s/pkg/fonts"
 )
 
 func figlet(str string) {
-	var width int = 80
+	var (
+		std, _     = fonts.Fonts["/standard.flf"]
+		width  int = 80
+	)
 	if isatty.IsTerminal(os.Stdin.Fd()) {
 		var (
 			term    = console.Current()
@@ -29,14 +33,14 @@ func figlet(str string) {
 		)
 		width = int(size.Width)
 	}
-	fon, err := figletlib.GetFontByName("/usr/share/figlet/fonts/", "standard")
+	stdFont, err := figletlib.ReadFontFromBytes([]byte(std))
 	if err != nil {
 		log.Println("Failed to load standard figlet font:", err)
 		log.Println(str)
 		return
 	}
 	buf := bytes.NewBuffer(nil)
-	figletlib.FPrintMsg(buf, str, fon, width, fon.Settings(), "left")
+	figletlib.FPrintMsg(buf, str, stdFont, width, stdFont.Settings(), "left")
 	fmt.Print(buf.String())
 }
 
