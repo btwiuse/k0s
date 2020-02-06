@@ -351,7 +351,7 @@ func printHubVersion(c client.Config) {
 		ub = &url.URL{
 			Scheme: c.GetScheme(),
 			Host:   c.GetAddr(),
-			Path:   "/version",
+			Path:   "/pkg/version",
 		}
 		req = &http.Request{
 			Method: http.MethodGet,

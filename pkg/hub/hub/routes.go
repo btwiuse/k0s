@@ -108,7 +108,10 @@ func (h *hub) initServer(addr string) {
 	r.HandleFunc("/api/socks5", h.handleSocks5).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/metrics", h.handleMetrics).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/terminal", h.handleTerminal).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/version", h.handleVersion).Methods("GET")
+	r.Handle("/api/metrics", h.MetricsHandler).Methods("GET")
 
+	// kept for backward compatibility. will remove in next stable release
 	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
 
