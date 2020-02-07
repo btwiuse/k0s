@@ -16,7 +16,7 @@ services:
     - /bin/sh
     command:
     - -c
-    - prometheus --storage.tsdb.path=prometheus --config.file=prometheus.yml --web.listen-address=127.0.0.1:9090 --web.external-url=https://k0s.io/prometheus --web.route-prefix=/prometheus
+    - prometheus --storage.tsdb.path=prometheus --config.file=prometheus.yml --web.listen-address=0.0.0.0:9090 --web.external-url=https://k0s.io/prometheus --web.route-prefix=/prometheus
     volumes:
     - .:/work
 # prometheus-endpoint-updater:
