@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+get_hub(){
+  echo '{"targets": ["hub.k0s.io"], "labels": {"job": "__hub__", "__metrics_path__": "/api/metrics"}}'
+}
+
+get_agents(){
+  curl -s https://hub.k0s.io/api/agents/list \
+  | jq -c '.[]|{"targets": ["hub.k0s.io"], "labels": {"job": "\(.name)", "__metrics_path__": "/api/agent/\(.id)/metrics"}}'
+}
+
+update_targets(){
+  src=/tmp/${targets_file}
+  dst=./${targets_file}
+  (get_hub && get_agents) | jq -s . >$src;
+  if ! diff ${src} ${dst} &>/dev/null; then
+    cp -v ${src} ${dst}
+    cat ${dst} | jq -c .[]
+  fi
+}
+
+update_targets_loop(){
+  while :; do update_targets; sleep 2; done
+}
+
+main(){
+  targets_file="prometheus_scrape_targets.json"
+  update_targets_loop
+}
+
+main "$@"

@@ -3,11 +3,12 @@ services:
   grafana:
     image: grafana/grafana:latest
     network_mode: host
+    working_dir: /work
     environment:
-    - GF_PATHS_DATA=/grafana
+    - GF_PATHS_DATA=grafana
+    - GF_PATHS_CONFIG=grafana.ini
     volumes:
-    - ./grafana.ini:/etc/grafana/grafana.ini
-    - ./grafana:/grafana
+    - .:/work
   prometheus:
     image: prom/prometheus
     network_mode: host
@@ -27,6 +28,6 @@ services:
 #   - /bin/bash
 #   command:
 #   - -c
-#   - "while :; do ./gen; sleep 2; done"
+#   - "./update_scrape_targets"
 #   volumes:
 #   - .:/work
