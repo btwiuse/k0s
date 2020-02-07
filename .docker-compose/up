@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 get_hub(){
-  echo '{"targets": ["hub.k0s.io"], "labels": {"job": "__hub__"}}'
+  echo '{"targets": ["hub.k0s.io"], "labels": {"job": "__hub__", "__metrics_path__": "/api/metrics"}}'
 }
 
 get_agents(){
