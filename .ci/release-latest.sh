@@ -22,7 +22,7 @@ upload(){
 
 loop_unix(){
   cd ${ROOT_DIR}/bin
-  ls -1d {android,darwin,linux}/*/ | while read dir; do
+  ls -1d {android,darwin,linux,freebsd,openbsd,netbsd}/*/ | while read dir; do
     pushd $dir
     compressed="${OLDPWD}/${dir////-}k0s.tar.gz"
     tar cz * > "$compressed"
