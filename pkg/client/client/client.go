@@ -17,7 +17,6 @@ import (
 
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
 	"github.com/containerd/console"
-	"github.com/inancgumus/screen"
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io/k0s/pkg"
 	types "k0s.io/k0s/pkg/client"
@@ -137,6 +136,8 @@ func (cl *client) Run() error {
 	}
 	fzf.Run(fzf.ParseOptions(args, opts...), "revision")
 
+	resetTerminal()
+
 	if strings.TrimSpace(id.String()) == "" {
 		log.Fatalln("fzf empty result", id, idd)
 	}
@@ -240,11 +241,13 @@ func (cl *client) Run() error {
 		go cl.RunSocks5ToHTTP()
 	}
 
-	{
-		screen.Clear()
-		cl.terminalConnect(fmt.Sprintf("/api/agent/%s/terminal", idd), cl.userinfo)
-	}
+	cl.terminalConnect(fmt.Sprintf("/api/agent/%s/terminal", idd), cl.userinfo)
 	return nil
+}
+
+func resetTerminal() {
+	console := console.Current()
+	console.Reset()
 }
 
 func (cl *client) RunRedir() error {
