@@ -6,3 +6,33 @@ steps:
     agents:
       linux: 'true'
     artifact_paths: bin/*/*/*
+  - label: linux-arm
+    command: make build-linux-arm
+    agents:
+      linux-arm: 'true'
+    artifact_paths: bin/*/*/*
+  - label: bsd
+    command: make build-bsd
+    agents:
+      bsd: 'true'
+    artifact_paths: bin/*/*/*
+  - label: bsd-arm
+    command: make build-bsd-arm
+    agents:
+      bsd-arm: 'true'
+    artifact_paths: bin/*/*/*
+  - label: darwin
+    command: make build-darwin
+    agents:
+      darwin: 'true'
+    artifact_paths: bin/*/*/*
+  - label: windows
+    command: make build-windows
+    agents:
+      windows: 'true'
+    artifact_paths: bin/*/*/*
+  - label: android
+    command: make build-android
+    agents:
+      android: 'true'
+    artifact_paths: bin/*/*/*

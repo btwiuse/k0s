@@ -3,7 +3,13 @@
 gen(){
 	bkyml steps
 	bkyml command --command "make test-build" --label 'test-build'
-	bkyml command --agents linux true --command "make build-linux" --artifact-paths 'bin/*/*/*' --label 'linux'
+	bkyml command --agents linux     true --command "make build-linux"     --artifact-paths 'bin/*/*/*' --label 'linux'
+	bkyml command --agents linux-arm true --command "make build-linux-arm" --artifact-paths 'bin/*/*/*' --label 'linux-arm'
+	bkyml command --agents bsd       true --command "make build-bsd"       --artifact-paths 'bin/*/*/*' --label 'bsd'
+	bkyml command --agents bsd-arm   true --command "make build-bsd-arm"   --artifact-paths 'bin/*/*/*' --label 'bsd-arm'
+	bkyml command --agents darwin    true --command "make build-darwin"    --artifact-paths 'bin/*/*/*' --label 'darwin'
+	bkyml command --agents windows   true --command "make build-windows"   --artifact-paths 'bin/*/*/*' --label 'windows'
+	bkyml command --agents android   true --command "make build-android"   --artifact-paths 'bin/*/*/*' --label 'android'
 }
 
 main(){
