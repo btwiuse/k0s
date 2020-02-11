@@ -1517,7 +1517,9 @@ func (t *Terminal) Loop() {
 		go func() {
 			for {
 				<-resizeChan
-				t.reqBox.Set(reqRedraw, nil)
+				if Running {
+					t.reqBox.Set(reqRedraw, nil)
+				}
 			}
 		}()
 

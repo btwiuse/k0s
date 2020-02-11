@@ -44,6 +44,10 @@ Matcher  -> EvtHeader         -> Terminal (update header)
 
 // Run starts fzf
 func Run(opts *Options, revision string) {
+	Running = true
+	defer func() {
+		Running = false
+	}()
 	// log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
 	sort := opts.Sort > 0
