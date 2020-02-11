@@ -1,6 +1,8 @@
 steps:
   - label: test-build
     command: make test-build
-  - label: build-linux
+  - label: linux
     command: make build-linux
+    agents:
+      linux: 'true'
     artifact_paths: bin/*/*/*
