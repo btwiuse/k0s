@@ -273,8 +273,6 @@ github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJy
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/txthinking/brook v0.0.0-20200108130909-e46d71f06441 h1:qov8O8Q4XCC+UVKo6+/uYcKc1AdrSwjsehItTd26KzQ=
 github.com/txthinking/brook v0.0.0-20200108130909-e46d71f06441/go.mod h1:0QbKACeXzW05TZp2R7UDGmIzrsuM3gZdtw5MtS+li9w=
-github.com/txthinking/brook v0.0.0-20200210064923-2f3f30838637 h1:vvBxv165J9q6sV+itqo+cGcaOuRGvN5bAbe600t0GxU=
-github.com/txthinking/brook v0.0.0-20200210064923-2f3f30838637/go.mod h1:0QbKACeXzW05TZp2R7UDGmIzrsuM3gZdtw5MtS+li9w=
 github.com/txthinking/gotun2socks v0.0.0-20180829122610-35016fdae05e h1:0S59/gOPf/wFIGztKRHfImRwlCi9vpsahVnywWv82LA=
 github.com/txthinking/gotun2socks v0.0.0-20180829122610-35016fdae05e/go.mod h1:vk4O/XIzXpjGZnB0M5u2e4Kz5pwjYe57rx8Ftt5J6LU=
 github.com/txthinking/socks5 v0.0.0-20190404052647-254e122c4eaf h1:ZrsN4g6dBxtjk0emNLtovRstNJSxb23NykzOV40uDzQ=

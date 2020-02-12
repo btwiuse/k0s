@@ -34,7 +34,9 @@ require (
 	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea
 	github.com/mdlayher/genetlink v1.0.0 // indirect
 	github.com/mdlayher/netlink v1.1.0 // indirect
+	github.com/mdp/qrterminal v1.0.1
 	github.com/opencontainers/go-digest v1.0.0-rc1
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/philpearl/scratchbuild v0.0.0-20180910124120-809ccab2cc6e
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.4.1
@@ -44,12 +46,16 @@ require (
 	github.com/riobard/go-shadowsocks2 v0.1.0
 	github.com/rs/cors v1.7.0
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/txthinking/brook v0.0.0-20200210064923-2f3f30838637
+	github.com/txthinking/gotun2socks v0.0.0-20180829122610-35016fdae05e
+	github.com/txthinking/socks5 v0.0.0-20190404052647-254e122c4eaf
+	github.com/txthinking/x v0.0.0-20190708114625-99b19c1440b6
+	github.com/urfave/negroni v1.0.0
 	github.com/yrpc/yrpc v0.0.0-20191231114812-451503bf48c2
 	go.uber.org/atomic v1.5.1 // indirect
 	go.uber.org/multierr v1.4.0 // indirect
 	golang.org/x/crypto v0.0.0-20200210222208-86ce3cb69678
 	golang.org/x/lint v0.0.0-20200130185559-910be7a94367 // indirect
+	golang.org/x/net v0.0.0-20200202094626-16171245cfb2
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4
 	golang.org/x/text v0.3.2 // indirect

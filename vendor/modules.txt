@@ -40,8 +40,6 @@ github.com/btwiuse/wetty/pkg/localcmd
 github.com/cespare/xxhash/v2
 # github.com/cirocosta/asciinema-edit v0.0.0-20190130154215-1c0971ae232a
 github.com/cirocosta/asciinema-edit/cast
-# github.com/containerd/console v0.0.0-20191219165238-8375c3424e4d
-## explicit
 # github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e
 github.com/coreos/go-systemd/dbus
 # github.com/creack/pty v1.1.9
@@ -137,8 +135,6 @@ github.com/golang/protobuf/ptypes/timestamp
 # github.com/google/uuid v1.1.1
 ## explicit
 github.com/google/uuid
-# github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e
-## explicit
 # github.com/gorilla/handlers v1.4.2
 ## explicit
 github.com/gorilla/handlers
@@ -151,8 +147,6 @@ github.com/gorilla/websocket
 # github.com/hodgesds/perf-utils v0.0.8
 ## explicit
 github.com/hodgesds/perf-utils
-# github.com/jtolds/gls v4.2.1+incompatible
-## explicit
 # github.com/kr/pty v1.1.8
 github.com/kr/pty
 # github.com/liamg/aminal v0.9.0
@@ -193,6 +187,7 @@ github.com/mdlayher/netlink/nlenc
 github.com/mdlayher/wifi
 github.com/mdlayher/wifi/internal/nl80211
 # github.com/mdp/qrterminal v1.0.1
+## explicit
 github.com/mdp/qrterminal
 # github.com/miekg/dns v1.1.27
 github.com/miekg/dns
@@ -200,6 +195,7 @@ github.com/miekg/dns
 ## explicit
 github.com/opencontainers/go-digest
 # github.com/patrickmn/go-cache v2.1.0+incompatible
+## explicit
 github.com/patrickmn/go-cache
 # github.com/philpearl/scratchbuild v0.0.0-20180910124120-809ccab2cc6e
 ## explicit
@@ -245,32 +241,25 @@ github.com/rs/cors
 github.com/shurcooL/sanitized_anchor_name
 # github.com/siebenmann/go-kstat v0.0.0-20160321171754-d34789b79745
 github.com/siebenmann/go-kstat
-# github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d
-## explicit
-# github.com/smartystreets/goconvey v0.0.0-20181108003508-044398e4856c
-## explicit
 # github.com/soundcloud/go-runit v0.0.0-20150630195641-06ad41a06c4a
 github.com/soundcloud/go-runit/runit
 # github.com/spf13/pflag v1.0.5
 ## explicit
 github.com/spf13/pflag
-# github.com/txthinking/brook v0.0.0-20200210064923-2f3f30838637
-## explicit
-github.com/txthinking/brook
-github.com/txthinking/brook/limits
-github.com/txthinking/brook/plugin
-github.com/txthinking/brook/sysproxy
-github.com/txthinking/brook/tproxy
 # github.com/txthinking/gotun2socks v0.0.0-20180829122610-35016fdae05e
+## explicit
 github.com/txthinking/gotun2socks
 github.com/txthinking/gotun2socks/gosocks
 github.com/txthinking/gotun2socks/internal/packet
 github.com/txthinking/gotun2socks/tun
 # github.com/txthinking/socks5 v0.0.0-20190404052647-254e122c4eaf
+## explicit
 github.com/txthinking/socks5
 # github.com/txthinking/x v0.0.0-20190708114625-99b19c1440b6
+## explicit
 github.com/txthinking/x
 # github.com/urfave/negroni v1.0.0
+## explicit
 github.com/urfave/negroni
 # github.com/yrpc/util v0.0.0-20191229105456-04e44c1bb858
 github.com/yrpc/util/logger
@@ -310,6 +299,7 @@ golang.org/x/crypto/ssh/terminal
 golang.org/x/lint
 golang.org/x/lint/golint
 # golang.org/x/net v0.0.0-20200202094626-16171245cfb2
+## explicit
 golang.org/x/net/bpf
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
