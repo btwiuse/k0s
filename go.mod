@@ -15,6 +15,7 @@ require (
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.28
+	github.com/coreos/go-systemd v0.0.0-20190719114852-fd7a80b32e1f // indirect
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/docker/docker v1.13.1
 	github.com/gdamore/tcell v1.3.0
