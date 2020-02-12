@@ -134,9 +134,8 @@ func (cl *client) Run() error {
 		"--with-nth", "1",
 		"--header-lines", "1",
 	}
-	fzf.Run(fzf.ParseOptions(args, opts...), "revision")
 
-	resetTerminal()
+	fzf.Run(fzf.ParseOptions(args, opts...), "revision")
 
 	if strings.TrimSpace(id.String()) == "" {
 		log.Fatalln("fzf empty result", id, idd)
@@ -243,11 +242,6 @@ func (cl *client) Run() error {
 
 	cl.terminalConnect(fmt.Sprintf("/api/agent/%s/terminal", idd), cl.userinfo)
 	return nil
-}
-
-func resetTerminal() {
-	console := console.Current()
-	console.Reset()
 }
 
 func (cl *client) RunRedir() error {
