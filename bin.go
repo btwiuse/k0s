@@ -41,7 +41,10 @@ func figlet(str string) {
 	}
 	buf := bytes.NewBuffer(nil)
 	figletlib.FPrintMsg(buf, str, stdFont, width, stdFont.Settings(), "left")
-	fmt.Print(buf.String())
+	lines := strings.Split(buf.String(), "\n")
+	for _, line := range lines {
+		log.Println(line)
+	}
 }
 
 func (c Combo) String() string {
