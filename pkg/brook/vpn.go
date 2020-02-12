@@ -21,8 +21,8 @@ import (
 
 	"github.com/txthinking/gotun2socks"
 	"github.com/txthinking/gotun2socks/tun"
-	"k0s.io/pkg/brook/limits"
-	"k0s.io/pkg/brook/sysproxy"
+	"k0s.io/k0s/pkg/brook/limits"
+	"k0s.io/k0s/pkg/brook/sysproxy"
 )
 
 // VPN.

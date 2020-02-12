@@ -29,8 +29,8 @@ import (
 	"github.com/txthinking/socks5"
 	"github.com/urfave/negroni"
 	"golang.org/x/crypto/acme/autocert"
-	"k0s.io/pkg/brook/limits"
-	"k0s.io/pkg/brook/plugin"
+	"k0s.io/k0s/pkg/brook/limits"
+	"k0s.io/k0s/pkg/brook/plugin"
 )
 
 // WSServer.

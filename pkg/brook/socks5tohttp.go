@@ -23,8 +23,8 @@ import (
 
 	"github.com/txthinking/x"
 	"golang.org/x/net/proxy"
-	"k0s.io/pkg/brook/limits"
-	"k0s.io/pkg/brook/plugin"
+	"k0s.io/k0s/pkg/brook/limits"
+	"k0s.io/k0s/pkg/brook/plugin"
 )
 
 type Socks5ToHTTP struct {

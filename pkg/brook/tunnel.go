@@ -22,7 +22,7 @@ import (
 
 	cache "github.com/patrickmn/go-cache"
 	"github.com/txthinking/socks5"
-	"k0s.io/pkg/brook/limits"
+	"k0s.io/k0s/pkg/brook/limits"
 )
 
 // Tunnel.
