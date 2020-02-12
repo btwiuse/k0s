@@ -8,8 +8,8 @@ package client
 import (
 	"log"
 
-	"github.com/txthinking/brook"
 	"k0s.io/k0s/pkg"
+	"k0s.io/k0s/pkg/brook"
 )
 
 func (cl *client) runSocks5ToHTTP() error {
@@ -21,7 +21,7 @@ func (cl *client) runSocks5ToHTTP() error {
 		socks5Addr = pkg.SOCKS5_PROXY_PORT
 	}
 	log.Println("socks5tohttp:", socks5Addr, "<->", httpAddr)
-	s, err := brook.NewSocks5ToHTTP(httpAddr, socks5Addr, 0, 0)
+	s, err := brook.NewSocks5ToHTTP(httpAddr, socks5Addr, "", "", 0, 0)
 	if err != nil {
 		log.Println(err)
 		return err

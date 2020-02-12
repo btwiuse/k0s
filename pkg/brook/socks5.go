@@ -21,8 +21,9 @@ import (
 	"time"
 
 	cache "github.com/patrickmn/go-cache"
-	"github.com/txthinking/brook/plugin"
 	"github.com/txthinking/socks5"
+	"k0s.io/pkg/brook/limits"
+	"k0s.io/pkg/brook/plugin"
 )
 
 // Socks5Server is raw socks5 server.
@@ -46,6 +47,9 @@ func NewSocks5Server(addr, ip, userName, password string, tcpTimeout, tcpDeadlin
 		return nil, err
 	}
 	cs := cache.New(cache.NoExpiration, cache.NoExpiration)
+	if err := limits.Raise(); err != nil {
+		log.Println("Try to raise system limits, got", err)
+	}
 	x := &Socks5Server{
 		Server:         s5,
 		TCPTimeout:     tcpTimeout,
@@ -79,14 +83,11 @@ func (x *Socks5Server) ListenAndForward(addr, username, password string) error {
 func (x *Socks5Server) TCPHandle(s *socks5.Server, c *net.TCPConn, r *socks5.Request) error {
 	if x.Socks5Middleman != nil {
 		done, err := x.Socks5Middleman.TCPHandle(s, c, r)
-		if err != nil {
-			if done {
-				return err
-			}
-			return ErrorReply(r, c, err)
-		}
 		if done {
-			return nil
+			return err
+		}
+		if err != nil {
+			return ErrorReply(r, c, err)
 		}
 	}
 
@@ -188,7 +189,17 @@ func (x *Socks5Server) TCPHandle(s *socks5.Server, c *net.TCPConn, r *socks5.Req
 // UDPHandle handles udp request.
 func (x *Socks5Server) UDPHandle(s *socks5.Server, addr *net.UDPAddr, d *socks5.Datagram) error {
 	if x.Socks5Middleman != nil {
-		if done, err := x.Socks5Middleman.UDPHandle(s, addr, d); err != nil || done {
+		done, err := x.Socks5Middleman.UDPHandle(s, addr, d)
+		if done {
+			return err
+		}
+		if err != nil {
+			v, ok := s.TCPUDPAssociate.Get(addr.String())
+			if ok {
+				ch := v.(chan byte)
+				ch <- 0x00
+				s.TCPUDPAssociate.Delete(addr.String())
+			}
 			return err
 		}
 	}
@@ -210,6 +221,12 @@ func (x *Socks5Server) UDPHandle(s *socks5.Server, addr *net.UDPAddr, d *socks5.
 
 	raddr, ok := x.Cache.Get("RUA")
 	if !ok {
+		v, ok := s.TCPUDPAssociate.Get(addr.String())
+		if ok {
+			ch := v.(chan byte)
+			ch <- 0x00
+			s.TCPUDPAssociate.Delete(addr.String())
+		}
 		return errors.New("Can not find remote udp address.")
 	}
 	tmp, err := Dial.Dial("udp", raddr.(string))
@@ -232,6 +249,7 @@ func (x *Socks5Server) UDPHandle(s *socks5.Server, addr *net.UDPAddr, d *socks5.
 		if ok {
 			ch := v.(chan byte)
 			ch <- 0x00
+			s.TCPUDPAssociate.Delete(addr.String())
 		}
 		ue.RemoteConn.Close()
 		return err
@@ -243,6 +261,7 @@ func (x *Socks5Server) UDPHandle(s *socks5.Server, addr *net.UDPAddr, d *socks5.
 			if ok {
 				ch := v.(chan byte)
 				ch <- 0x00
+				s.TCPUDPAssociate.Delete(addr.String())
 			}
 			s.UDPExchanges.Delete(ue.ClientAddr.String())
 			ue.RemoteConn.Close()

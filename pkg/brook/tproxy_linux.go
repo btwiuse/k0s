@@ -23,8 +23,9 @@ import (
 	"time"
 
 	cache "github.com/patrickmn/go-cache"
-	"github.com/txthinking/brook/tproxy"
 	"github.com/txthinking/socks5"
+	"k0s.io/pkg/brook/limits"
+	"k0s.io/pkg/brook/tproxy"
 )
 
 // Tproxy.
@@ -36,7 +37,7 @@ type Tproxy struct {
 	Password      []byte
 	TCPListen     *net.TCPListener
 	UDPConn       *net.UDPConn
-	UDPExchanges  *cache.Cache
+	Cache         *cache.Cache
 	TCPDeadline   int
 	TCPTimeout    int
 	UDPDeadline   int
@@ -61,13 +62,16 @@ func NewTproxy(addr, remote, password string, tcpTimeout, tcpDeadline, udpDeadli
 		return nil, err
 	}
 	cs := cache.New(cache.NoExpiration, cache.NoExpiration)
+	if err := limits.Raise(); err != nil {
+		log.Println("Try to raise system limits, got", err)
+	}
 	s := &Tproxy{
 		Password:      []byte(password),
 		TCPAddr:       taddr,
 		UDPAddr:       uaddr,
 		RemoteTCPAddr: rtaddr,
 		RemoteUDPAddr: ruaddr,
-		UDPExchanges:  cs,
+		Cache:         cs,
 		TCPTimeout:    tcpTimeout,
 		TCPDeadline:   tcpDeadline,
 		UDPDeadline:   udpDeadline,
@@ -195,11 +199,11 @@ func (s *Tproxy) TCPHandle(c *net.TCPConn) error {
 	if err != nil {
 		return err
 	}
-	rawaddr := make([]byte, 0, 7)
-	rawaddr = append(rawaddr, a)
-	rawaddr = append(rawaddr, address...)
-	rawaddr = append(rawaddr, port...)
-	n, err = WriteTo(rc, rawaddr, k, n, true)
+	ra := make([]byte, 0, 7)
+	ra = append(ra, a)
+	ra = append(ra, address...)
+	ra = append(ra, port...)
+	n, _, err = WriteTo(rc, ra, k, n, true)
 	if err != nil {
 		return err
 	}
@@ -242,7 +246,7 @@ func (s *Tproxy) TCPHandle(c *net.TCPConn) error {
 		if err != nil {
 			return nil
 		}
-		n, err = WriteTo(rc, b[0:i], k, n, false)
+		n, _, err = WriteTo(rc, b[0:i], k, n, false)
 		if err != nil {
 			return nil
 		}
@@ -250,7 +254,7 @@ func (s *Tproxy) TCPHandle(c *net.TCPConn) error {
 	return nil
 }
 
-type UDPExchange struct {
+type TproxyUDPExchange struct {
 	RemoteConn *net.UDPConn
 	LocalConn  *net.UDPConn
 }
@@ -260,13 +264,13 @@ func (s *Tproxy) UDPHandle(addr, daddr *net.UDPAddr, b []byte) error {
 	if err != nil {
 		return err
 	}
-	rawaddr := make([]byte, 0, 7)
-	rawaddr = append(rawaddr, a)
-	rawaddr = append(rawaddr, address...)
-	rawaddr = append(rawaddr, port...)
-	b = append(rawaddr, b...)
+	ra := make([]byte, 0, 7)
+	ra = append(ra, a)
+	ra = append(ra, address...)
+	ra = append(ra, port...)
+	b = append(ra, b...)
 
-	send := func(ue *UDPExchange, data []byte) error {
+	send := func(ue *TproxyUDPExchange, data []byte) error {
 		cd, err := Encrypt(s.Password, data)
 		if err != nil {
 			return err
@@ -278,10 +282,10 @@ func (s *Tproxy) UDPHandle(addr, daddr *net.UDPAddr, b []byte) error {
 		return nil
 	}
 
-	var ue *UDPExchange
-	iue, ok := s.UDPExchanges.Get(addr.String())
+	var ue *TproxyUDPExchange
+	iue, ok := s.Cache.Get(addr.String())
 	if ok {
-		ue = iue.(*UDPExchange)
+		ue = iue.(*TproxyUDPExchange)
 		return send(ue, b)
 	}
 
@@ -297,7 +301,7 @@ func (s *Tproxy) UDPHandle(addr, daddr *net.UDPAddr, b []byte) error {
 		rc.Close()
 		return errors.New(fmt.Sprintf("src: %s dst: %s %s", daddr.String(), addr.String(), err.Error()))
 	}
-	ue = &UDPExchange{
+	ue = &TproxyUDPExchange{
 		RemoteConn: rc,
 		LocalConn:  c,
 	}
@@ -306,10 +310,10 @@ func (s *Tproxy) UDPHandle(addr, daddr *net.UDPAddr, b []byte) error {
 		ue.LocalConn.Close()
 		return err
 	}
-	s.UDPExchanges.Set(ue.LocalConn.RemoteAddr().String(), ue, cache.DefaultExpiration)
-	go func(ue *UDPExchange) {
+	s.Cache.Set(ue.LocalConn.RemoteAddr().String(), ue, cache.DefaultExpiration)
+	go func(ue *TproxyUDPExchange) {
 		defer func() {
-			s.UDPExchanges.Delete(ue.LocalConn.RemoteAddr().String())
+			s.Cache.Delete(ue.LocalConn.RemoteAddr().String())
 			ue.RemoteConn.Close()
 			ue.LocalConn.Close()
 		}()

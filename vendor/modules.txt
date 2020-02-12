@@ -42,7 +42,6 @@ github.com/cespare/xxhash/v2
 github.com/cirocosta/asciinema-edit/cast
 # github.com/containerd/console v0.0.0-20191219165238-8375c3424e4d
 ## explicit
-github.com/containerd/console
 # github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e
 github.com/coreos/go-systemd/dbus
 # github.com/creack/pty v1.1.9

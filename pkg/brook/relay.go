@@ -21,6 +21,7 @@ import (
 
 	cache "github.com/patrickmn/go-cache"
 	"github.com/txthinking/socks5"
+	"k0s.io/pkg/brook/limits"
 )
 
 // Relay is relay server.
@@ -31,7 +32,7 @@ type Relay struct {
 	RemoteUDPAddr *net.UDPAddr
 	TCPListen     *net.TCPListener
 	UDPConn       *net.UDPConn
-	UDPExchanges  *cache.Cache
+	Cache         *cache.Cache
 	TCPDeadline   int
 	TCPTimeout    int
 	UDPDeadline   int
@@ -56,12 +57,15 @@ func NewRelay(addr, remote string, tcpTimeout, tcpDeadline, udpDeadline int) (*R
 		return nil, err
 	}
 	cs := cache.New(cache.NoExpiration, cache.NoExpiration)
+	if err := limits.Raise(); err != nil {
+		log.Println("Try to raise system limits, got", err)
+	}
 	s := &Relay{
 		TCPAddr:       taddr,
 		UDPAddr:       uaddr,
 		RemoteTCPAddr: rtaddr,
 		RemoteUDPAddr: ruaddr,
-		UDPExchanges:  cs,
+		Cache:         cs,
 		TCPTimeout:    tcpTimeout,
 		TCPDeadline:   tcpDeadline,
 		UDPDeadline:   udpDeadline,
@@ -220,7 +224,7 @@ func (s *Relay) UDPHandle(addr *net.UDPAddr, b []byte) error {
 	}
 
 	var ue *socks5.UDPExchange
-	iue, ok := s.UDPExchanges.Get(addr.String())
+	iue, ok := s.Cache.Get(addr.String())
 	if ok {
 		ue = iue.(*socks5.UDPExchange)
 		return send(ue, b)
@@ -239,10 +243,10 @@ func (s *Relay) UDPHandle(addr *net.UDPAddr, b []byte) error {
 		ue.RemoteConn.Close()
 		return err
 	}
-	s.UDPExchanges.Set(ue.ClientAddr.String(), ue, cache.DefaultExpiration)
+	s.Cache.Set(ue.ClientAddr.String(), ue, cache.DefaultExpiration)
 	go func(ue *socks5.UDPExchange) {
 		defer func() {
-			s.UDPExchanges.Delete(ue.ClientAddr.String())
+			s.Cache.Delete(ue.ClientAddr.String())
 			ue.RemoteConn.Close()
 		}()
 		var b [65536]byte

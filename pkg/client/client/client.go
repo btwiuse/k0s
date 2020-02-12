@@ -16,12 +16,12 @@ import (
 	"text/tabwriter"
 
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
-	"github.com/containerd/console"
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io/k0s/pkg"
 	types "k0s.io/k0s/pkg/client"
 	"k0s.io/k0s/pkg/client/socksdialer"
 	"k0s.io/k0s/pkg/client/wsdialer"
+	"k0s.io/k0s/pkg/console"
 	"k0s.io/k0s/pkg/fzf"
 	"k0s.io/k0s/pkg/hub"
 	"k0s.io/k0s/pkg/hub/agent/info"

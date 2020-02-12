@@ -1,5 +1,3 @@
-// +build freebsd netbsd openbsd
-
 // Copyright (c) 2016-present Cloud <cloud@txthinking.com>
 //
 // This program is free software; you can redistribute it and/or
@@ -14,32 +12,31 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package sysproxy
+// +build !windows
 
-// GetNetworkInterface returns default interface dev name.
-func GetNetworkInterface() (string, error) {
-	return "", nil
-}
+package limits
 
-// GetDefaultGateway returns default gateway.
-func GetDefaultGateway() (string, error) {
-	return "", nil
-}
+import (
+	"runtime"
+	"syscall"
+)
 
-// GetDNSServers used to get DNS servers.
-func GetDNSServers() ([]string, error) {
-	return nil, nil
-}
-
-// SetDNSServers used to set system DNS servers.
-func SetDNSServers(servers []string) error {
-	return nil
-}
-
-func TurnOnSystemProxy(pac string) error {
-	return nil
-}
-
-func TurnOffSystemProxy() error {
+func Raise() error {
+	var l syscall.Rlimit
+	if err := syscall.Getrlimit(syscall.RLIMIT_NOFILE, &l); err != nil {
+		return err
+	}
+	if runtime.GOOS == "darwin" && l.Cur < 10240 {
+		l.Cur = 10240
+	}
+	if runtime.GOOS != "darwin" && l.Cur < 65535 {
+		if l.Max < 65535 {
+			l.Max = 65535 // with CAP_SYS_RESOURCE capability
+		}
+		l.Cur = l.Max
+	}
+	if err := syscall.Setrlimit(syscall.RLIMIT_NOFILE, &l); err != nil {
+		return err
+	}
 	return nil
 }

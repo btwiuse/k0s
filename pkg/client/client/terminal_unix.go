@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/btwiuse/asciitransport"
-	"github.com/containerd/console"
+	"k0s.io/k0s/pkg/console"
 	"k0s.io/k0s/pkg/uuid"
 )
 

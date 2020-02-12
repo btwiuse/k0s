@@ -1,5 +1,3 @@
-// +build freebsd openbsd netbsd
-
 // Copyright (c) 2016-present Cloud <cloud@txthinking.com>
 //
 // This program is free software; you can redistribute it and/or
@@ -20,16 +18,16 @@ import (
 	"errors"
 	"os/exec"
 
-	"github.com/txthinking/brook/sysproxy"
+	"k0s.io/pkg/brook/sysproxy"
 )
 
 // AddRoutes adds routes.
 func (v *VPN) AddRoutes() error {
-	c := exec.Command("ip", "route", "add", "0.0.0.0/1", "via", v.TunGateway)
+	c := exec.Command("route", "add", "-net", "0.0.0.0", v.TunGateway, "-netmask", "128.0.0.0")
 	if out, err := c.CombinedOutput(); err != nil {
 		return errors.New(string(out) + err.Error())
 	}
-	c = exec.Command("ip", "route", "add", "128.0.0.0/1", "via", v.TunGateway)
+	c = exec.Command("route", "add", "-net", "128.0.0.0", v.TunGateway, "-netmask", "128.0.0.0")
 	if out, err := c.CombinedOutput(); err != nil {
 		return errors.New(string(out) + err.Error())
 	}
@@ -37,7 +35,7 @@ func (v *VPN) AddRoutes() error {
 	if err != nil {
 		return err
 	}
-	c = exec.Command("ip", "route", "add", v.ServerIP, "via", gw)
+	c = exec.Command("route", "add", "-host", v.ServerIP, gw, "-netmask", "255.255.255.255")
 	if out, err := c.CombinedOutput(); err != nil {
 		return errors.New(string(out) + err.Error())
 	}
@@ -46,11 +44,11 @@ func (v *VPN) AddRoutes() error {
 
 // DeleteRoutes deletes routes.
 func (v *VPN) DeleteRoutes() error {
-	c := exec.Command("ip", "route", "del", "0.0.0.0/1", "via", v.TunGateway)
+	c := exec.Command("route", "delete", "-net", "0.0.0.0", v.TunGateway, "-netmask", "128.0.0.0")
 	if out, err := c.CombinedOutput(); err != nil {
 		return errors.New(string(out) + err.Error())
 	}
-	c = exec.Command("ip", "route", "del", "128.0.0.0/1", "via", v.TunGateway)
+	c = exec.Command("route", "delete", "-net", "128.0.0.0", v.TunGateway, "-netmask", "128.0.0.0")
 	if out, err := c.CombinedOutput(); err != nil {
 		return errors.New(string(out) + err.Error())
 	}
@@ -58,7 +56,7 @@ func (v *VPN) DeleteRoutes() error {
 	if err != nil {
 		return err
 	}
-	c = exec.Command("ip", "route", "del", v.ServerIP, "via", gw)
+	c = exec.Command("route", "delete", "-host", v.ServerIP, gw, "-netmask", "255.255.255.255")
 	if out, err := c.CombinedOutput(); err != nil {
 		return errors.New(string(out) + err.Error())
 	}

@@ -15,6 +15,7 @@
 package brook
 
 import (
+	"encoding/binary"
 	"io"
 	"log"
 	"net"
@@ -22,19 +23,22 @@ import (
 
 	cache "github.com/patrickmn/go-cache"
 	"github.com/txthinking/socks5"
+	"k0s.io/pkg/brook/limits"
+	"k0s.io/pkg/brook/plugin"
 )
 
 // Server.
 type Server struct {
-	Password     []byte
-	TCPAddr      *net.TCPAddr
-	UDPAddr      *net.UDPAddr
-	TCPListen    *net.TCPListener
-	UDPConn      *net.UDPConn
-	UDPExchanges *cache.Cache
-	TCPDeadline  int
-	TCPTimeout   int
-	UDPDeadline  int
+	Password      []byte
+	TCPAddr       *net.TCPAddr
+	UDPAddr       *net.UDPAddr
+	TCPListen     *net.TCPListener
+	UDPConn       *net.UDPConn
+	Cache         *cache.Cache
+	TCPDeadline   int
+	TCPTimeout    int
+	UDPDeadline   int
+	ServerAuthman plugin.ServerAuthman
 }
 
 // NewServer.
@@ -48,16 +52,24 @@ func NewServer(addr, password string, tcpTimeout, tcpDeadline, udpDeadline int) 
 		return nil, err
 	}
 	cs := cache.New(cache.NoExpiration, cache.NoExpiration)
+	if err := limits.Raise(); err != nil {
+		log.Println("Try to raise system limits, got", err)
+	}
 	s := &Server{
-		Password:     []byte(password),
-		TCPAddr:      taddr,
-		UDPAddr:      uaddr,
-		UDPExchanges: cs,
-		TCPTimeout:   tcpTimeout,
-		TCPDeadline:  tcpDeadline,
-		UDPDeadline:  udpDeadline,
+		Password:    []byte(password),
+		TCPAddr:     taddr,
+		UDPAddr:     uaddr,
+		Cache:       cs,
+		TCPTimeout:  tcpTimeout,
+		TCPDeadline: tcpDeadline,
+		UDPDeadline: udpDeadline,
 	}
 	return s, nil
+}
+
+// SetServerAuthman sets authman plugin.
+func (s *Server) SetServerAuthman(m plugin.ServerAuthman) {
+	s.ServerAuthman = m
 }
 
 // Run server.
@@ -147,6 +159,20 @@ func (s *Server) TCPHandle(c *net.TCPConn) error {
 		return err
 	}
 	address := socks5.ToAddress(b[0], b[1:len(b)-2], b[len(b)-2:])
+
+	var ai plugin.Internet
+	if s.ServerAuthman != nil {
+		b, cn, err = ReadFrom(c, ck, cn, false)
+		if err != nil {
+			return err
+		}
+		ai, err = s.ServerAuthman.VerifyToken(b, "tcp", address)
+		if err != nil {
+			return err
+		}
+		defer ai.Close()
+	}
+
 	if Debug {
 		log.Println("Dial TCP", address)
 	}
@@ -173,8 +199,15 @@ func (s *Server) TCPHandle(c *net.TCPConn) error {
 			log.Println(err)
 			return
 		}
-		if _, err := c.Write(n); err != nil {
+		i, err := c.Write(n)
+		if err != nil {
 			return
+		}
+		if ai != nil {
+			if err := ai.TCPEgress(i); err != nil {
+				log.Println(err)
+				return
+			}
 		}
 		var b [1024 * 2]byte
 		for {
@@ -187,9 +220,15 @@ func (s *Server) TCPHandle(c *net.TCPConn) error {
 			if err != nil {
 				return
 			}
-			n, err = WriteTo(c, b[0:i], k, n, false)
+			n, i, err = WriteTo(c, b[0:i], k, n, false)
 			if err != nil {
 				return
+			}
+			if ai != nil {
+				if err := ai.TCPEgress(i); err != nil {
+					log.Println(err)
+					return
+				}
 			}
 		}
 	}()
@@ -204,11 +243,23 @@ func (s *Server) TCPHandle(c *net.TCPConn) error {
 		if err != nil {
 			return nil
 		}
-		if _, err := rc.Write(b); err != nil {
+		i, err := rc.Write(b)
+		if err != nil {
 			return nil
+		}
+		if ai != nil {
+			if err := ai.TCPEgress(i); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
+}
+
+type ServerUDPExchange struct {
+	ClientAddr *net.UDPAddr
+	RemoteConn *net.UDPConn
+	Internet   plugin.Internet
 }
 
 // UDPHandle handles packet.
@@ -217,43 +268,63 @@ func (s *Server) UDPHandle(addr *net.UDPAddr, b []byte) error {
 	if err != nil {
 		return err
 	}
-	send := func(ue *socks5.UDPExchange, data []byte) error {
-		_, err := ue.RemoteConn.Write(data)
+	send := func(ue *ServerUDPExchange, data []byte) error {
+		if s.ServerAuthman != nil {
+			l := int(binary.BigEndian.Uint16(data[len(data)-2:]))
+			data = data[0 : len(data)-l-2]
+		}
+		i, err := ue.RemoteConn.Write(data)
 		if err != nil {
 			return err
+		}
+		if ue.Internet != nil {
+			if err := ue.Internet.UDPEgress(i); err != nil {
+				return err
+			}
 		}
 		return nil
 	}
 
-	var ue *socks5.UDPExchange
-	iue, ok := s.UDPExchanges.Get(addr.String())
+	var ue *ServerUDPExchange
+	iue, ok := s.Cache.Get(addr.String())
 	if ok {
-		ue = iue.(*socks5.UDPExchange)
+		ue = iue.(*ServerUDPExchange)
 		return send(ue, data)
 	}
+
 	address := socks5.ToAddress(a, h, p)
+	var ai plugin.Internet
+	if s.ServerAuthman != nil {
+		l := int(binary.BigEndian.Uint16(data[len(data)-2:]))
+		ai, err = s.ServerAuthman.VerifyToken(data[len(data)-l-2:len(data)-2], "udp", address)
+		if err != nil {
+			return err
+		}
+	}
 	if Debug {
 		log.Println("Dial UDP", address)
 	}
-
 	c, err := Dial.Dial("udp", address)
 	if err != nil {
 		return err
 	}
 	rc := c.(*net.UDPConn)
-	ue = &socks5.UDPExchange{
+	ue = &ServerUDPExchange{
 		ClientAddr: addr,
 		RemoteConn: rc,
+		Internet:   ai,
 	}
 	if err := send(ue, data); err != nil {
 		ue.RemoteConn.Close()
+		ue.Internet.Close()
 		return err
 	}
-	s.UDPExchanges.Set(ue.ClientAddr.String(), ue, cache.DefaultExpiration)
-	go func(ue *socks5.UDPExchange) {
+	s.Cache.Set(ue.ClientAddr.String(), ue, cache.DefaultExpiration)
+	go func(ue *ServerUDPExchange) {
 		defer func() {
-			s.UDPExchanges.Delete(ue.ClientAddr.String())
+			s.Cache.Delete(ue.ClientAddr.String())
 			ue.RemoteConn.Close()
+			ue.Internet.Close()
 		}()
 		var b [65536]byte
 		for {
@@ -281,8 +352,15 @@ func (s *Server) UDPHandle(addr *net.UDPAddr, b []byte) error {
 				log.Println(err)
 				break
 			}
-			if _, err := s.UDPConn.WriteToUDP(cd, ue.ClientAddr); err != nil {
+			i, err := s.UDPConn.WriteToUDP(cd, ue.ClientAddr)
+			if err != nil {
 				break
+			}
+			if ue.Internet != nil {
+				if err := ue.Internet.UDPEgress(i); err != nil {
+					log.Println(err)
+					break
+				}
 			}
 		}
 	}(ue)
