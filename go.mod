@@ -60,7 +60,7 @@ require (
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4
 	golang.org/x/text v0.3.2 // indirect
-	golang.org/x/tools v0.0.0-20200211205636-11eff242d136 // indirect
+	golang.org/x/tools v0.0.0-20200212150539-ea181f53ac56 // indirect
 	google.golang.org/genproto v0.0.0-20200212121238-0849286c0f0e // indirect
 	google.golang.org/grpc v1.27.1
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
