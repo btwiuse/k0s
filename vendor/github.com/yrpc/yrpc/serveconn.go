@@ -16,11 +16,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	// DefaultMaxFrameSize is the max size for each request frame
-	DefaultMaxFrameSize = 10 * 1024 * 1024
-)
-
 // A serveconn represents the server side of an qrpc connection.
 // all fields (except untrack) are immutable, mutables are in ConnectionInfo
 type serveconn struct {
@@ -67,22 +62,7 @@ type ConnectionInfo struct {
 	id          string
 	closeNotify []func()
 	SC          *serveconn
-	anything    interface{}
 	respes      map[uint64]*response
-}
-
-// GetAnything returns anything
-func (ci *ConnectionInfo) GetAnything() interface{} {
-	ci.l.Lock()
-	defer ci.l.Unlock()
-	return ci.anything
-}
-
-// SetAnything sets anything
-func (ci *ConnectionInfo) SetAnything(anything interface{}) {
-	ci.l.Lock()
-	ci.anything = anything
-	ci.l.Unlock()
 }
 
 // GetID returns the ID
@@ -106,16 +86,6 @@ func (ci *ConnectionInfo) SetID(id string) (bool, uint64) {
 	ci.l.Unlock()
 
 	return ci.SC.server.bindID(ci.SC, id)
-}
-
-// ReaderConfig for change reader timeout
-type ReaderConfig interface {
-	SetReadTimeout(timeout int)
-}
-
-// ReaderConfig for change reader config
-func (ci *ConnectionInfo) ReaderConfig() ReaderConfig {
-	return ci.SC.reader
 }
 
 // RemoteAddr returns the remote network address.
@@ -162,14 +132,8 @@ func (sc *serveconn) serve() {
 	}()
 
 	conf := sc.server.conf
-	var maxFrameSize int
-	if conf.MaxFrameSize > 0 {
-		maxFrameSize = conf.MaxFrameSize
-	} else {
-		maxFrameSize = DefaultMaxFrameSize
-	}
 	ctx := sc.ctx
-	sc.reader = newFrameReaderWithMFS(ctx, sc.rwc, conf.DefaultReadTimeout, maxFrameSize)
+	sc.reader = newFrameReader(ctx, sc.rwc)
 	sc.writer = newFrameWriter(sc) // only used by blocking mode
 
 	sc.inflight = 1
@@ -314,10 +278,8 @@ func (sc *serveconn) readFrames() (err error) {
 		if conf.CounterMetric != nil {
 			errStr := fmt.Sprintf("%v", err)
 			if err != nil {
-				if conf.OverlayNetwork != nil {
-					l.Error("readFrames", zap.Any("type", reflect.TypeOf(err)), zap.Error(err))
-					errStr = errStrReadFramesForOverlayNetwork
-				}
+				l.Error("readFrames", zap.Any("type", reflect.TypeOf(err)), zap.Error(err))
+				errStr = errStrReadFramesForOverlayNetwork
 			}
 
 			countlvs := []string{"method", "readFrames", "error", errStr}
@@ -437,9 +399,7 @@ func (sc *serveconn) writeFrameBytes(dfw *defaultFrameWriter) (err error) {
 			if err != nil {
 				if conf.CounterMetric != nil {
 					errStr := fmt.Sprintf("%v", err)
-					if conf.OverlayNetwork != nil {
-						errStr = errStrWriteFramesForOverlayNetwork
-					}
+					errStr = errStrWriteFramesForOverlayNetwork
 					countlvs := []string{"method", "writeFrames", "error", errStr}
 					conf.CounterMetric.With(countlvs...).Add(1)
 				}

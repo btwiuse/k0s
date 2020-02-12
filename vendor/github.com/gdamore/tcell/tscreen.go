@@ -1,4 +1,4 @@
-// Copyright 2016 The TCell Authors
+// Copyright 2019 The TCell Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use file except in compliance with the License.
@@ -20,9 +20,15 @@ import (
 	"os"
 	"strconv"
 	"sync"
+	"time"
 	"unicode/utf8"
 
 	"golang.org/x/text/transform"
+
+	"github.com/gdamore/tcell/terminfo"
+
+	// import the stock terminals
+	_ "github.com/gdamore/tcell/terminfo/base"
 )
 
 // NewTerminfoScreen returns a Screen that uses the stock TTY interface
@@ -34,9 +40,13 @@ import (
 // $COLUMNS environment variables can be set to the actual window size,
 // otherwise defaults taken from the terminal database are used.
 func NewTerminfoScreen() (Screen, error) {
-	ti, e := LookupTerminfo(os.Getenv("TERM"))
+	ti, e := terminfo.LookupTerminfo(os.Getenv("TERM"))
 	if e != nil {
-		return nil, e
+		ti, e = loadDynamicTerminfo(os.Getenv("TERM"))
+		if e != nil {
+			return nil, e
+		}
+		terminfo.AddTerminfo(ti)
 	}
 	t := &tScreen{ti: ti}
 
@@ -64,13 +74,15 @@ type tKeyCode struct {
 
 // tScreen represents a screen backed by a terminfo implementation.
 type tScreen struct {
-	ti        *Terminfo
+	ti        *terminfo.Terminfo
 	h         int
 	w         int
 	fini      bool
 	cells     CellBuffer
 	in        *os.File
 	out       *os.File
+	buffering bool // true if we are collecting writes to buf instead of sending directly to out
+	buf       bytes.Buffer
 	curstyle  Style
 	style     Style
 	evch      chan Event
@@ -79,6 +91,9 @@ type tScreen struct {
 	indoneq   chan struct{}
 	keyexist  map[Key]bool
 	keycodes  map[string]*tKeyCode
+	keychan   chan []byte
+	keytimer  *time.Timer
+	keyexpire time.Time
 	cx        int
 	cy        int
 	mouse     []byte
@@ -86,7 +101,6 @@ type tScreen struct {
 	cursorx   int
 	cursory   int
 	tiosp     *termiosPrivate
-	baud      int
 	wasbtn    bool
 	acs       map[rune]string
 	charset   string
@@ -105,6 +119,8 @@ type tScreen struct {
 func (t *tScreen) Init() error {
 	t.evch = make(chan Event, 10)
 	t.indoneq = make(chan struct{})
+	t.keychan = make(chan []byte, 10)
+	t.keytimer = time.NewTimer(time.Millisecond * 50)
 	t.charset = "UTF-8"
 
 	t.charset = getCharset()
@@ -164,6 +180,7 @@ func (t *tScreen) Init() error {
 	t.resize()
 	t.Unlock()
 
+	go t.mainLoop()
 	go t.inputLoop()
 
 	return nil
@@ -374,8 +391,10 @@ outer:
 }
 
 func (t *tScreen) Fini() {
-	ti := t.ti
 	t.Lock()
+	defer t.Unlock()
+
+	ti := t.ti
 	t.cells.Resize(0, 0)
 	t.TPuts(ti.ShowCursor)
 	t.TPuts(ti.AttrOff)
@@ -386,11 +405,15 @@ func (t *tScreen) Fini() {
 	t.curstyle = Style(-1)
 	t.clear = false
 	t.fini = true
-	t.Unlock()
 
-	if t.quit != nil {
+	select {
+	case <-t.quit:
+		// do nothing, already closed
+
+	default:
 		close(t.quit)
 	}
+
 	t.termioFini()
 }
 
@@ -599,7 +622,7 @@ func (t *tScreen) drawCell(x, y int) int {
 		width = 1
 		str = " "
 	}
-	io.WriteString(t.out, str)
+	t.writeString(str)
 	t.cx += width
 	t.cells.SetDirty(x, y, false)
 	if width > 1 {
@@ -634,8 +657,26 @@ func (t *tScreen) showCursor() {
 	t.cy = y
 }
 
+// writeString sends a string to the terminal. The string is sent as-is and
+// this function does not expand inline padding indications (of the form
+// $<[delay]> where [delay] is msec). In order to have these expanded, use
+// TPuts. If the screen is "buffering", the string is collected in a buffer,
+// with the intention that the entire buffer be sent to the terminal in one
+// write operation at some point later.
+func (t *tScreen) writeString(s string) {
+	if t.buffering {
+		io.WriteString(&t.buf, s)
+	} else {
+		io.WriteString(t.out, s)
+	}
+}
+
 func (t *tScreen) TPuts(s string) {
-	t.ti.TPuts(t.out, s, t.baud)
+	if t.buffering {
+		t.ti.TPuts(&t.buf, s)
+	} else {
+		t.ti.TPuts(t.out, s)
+	}
 }
 
 func (t *tScreen) Show() {
@@ -671,6 +712,12 @@ func (t *tScreen) draw() {
 	t.cx = -1
 	t.cy = -1
 
+	t.buf.Reset()
+	t.buffering = true
+	defer func() {
+		t.buffering = false
+	}()
+
 	// hide the cursor while we move stuff around
 	t.hideCursor()
 
@@ -695,6 +742,8 @@ func (t *tScreen) draw() {
 
 	// restore the cursor
 	t.showCursor()
+
+	t.buf.WriteTo(t.out)
 }
 
 func (t *tScreen) EnableMouse() {
@@ -843,7 +892,10 @@ func (t *tScreen) clip(x, y int) (int, int) {
 	return x, y
 }
 
-func (t *tScreen) postMouseEvent(x, y, btn int) {
+// buildMouseEvent returns an event based on the supplied coordinates and button
+// state. Note that the screen's mouse button state is updated based on the
+// input to this function (i.e. it mutates the receiver).
+func (t *tScreen) buildMouseEvent(x, y, btn int) *EventMouse {
 
 	// XTerm mouse events only report at most one button at a time,
 	// which may include a wheel button.  Wheel motion events are
@@ -899,8 +951,7 @@ func (t *tScreen) postMouseEvent(x, y, btn int) {
 	// to the screen in that case.
 	x, y = t.clip(x, y)
 
-	ev := NewEventMouse(x, y, button, mod)
-	t.PostEvent(ev)
+	return NewEventMouse(x, y, button, mod)
 }
 
 // parseSgrMouse attempts to locate an SGR mouse record at the start of the
@@ -908,7 +959,7 @@ func (t *tScreen) postMouseEvent(x, y, btn int) {
 // be removed from the buffer.  It returns true, false if the buffer might
 // contain such an event, but more bytes are necessary (partial match), and
 // false, false if the content is definitely *not* an SGR mouse record.
-func (t *tScreen) parseSgrMouse(buf *bytes.Buffer) (bool, bool) {
+func (t *tScreen) parseSgrMouse(buf *bytes.Buffer, evs *[]Event) (bool, bool) {
 
 	b := buf.Bytes()
 
@@ -1016,7 +1067,7 @@ func (t *tScreen) parseSgrMouse(buf *bytes.Buffer) (bool, bool) {
 				buf.ReadByte()
 				i--
 			}
-			t.postMouseEvent(x, y, btn)
+			*evs = append(*evs, t.buildMouseEvent(x, y, btn))
 			return true, true
 		}
 	}
@@ -1027,7 +1078,7 @@ func (t *tScreen) parseSgrMouse(buf *bytes.Buffer) (bool, bool) {
 
 // parseXtermMouse is like parseSgrMouse, but it parses a legacy
 // X11 mouse record.
-func (t *tScreen) parseXtermMouse(buf *bytes.Buffer) (bool, bool) {
+func (t *tScreen) parseXtermMouse(buf *bytes.Buffer, evs *[]Event) (bool, bool) {
 
 	b := buf.Bytes()
 
@@ -1069,14 +1120,14 @@ func (t *tScreen) parseXtermMouse(buf *bytes.Buffer) (bool, bool) {
 				buf.ReadByte()
 				i--
 			}
-			t.postMouseEvent(x, y, btn)
+			*evs = append(*evs, t.buildMouseEvent(x, y, btn))
 			return true, true
 		}
 	}
 	return true, false
 }
 
-func (t *tScreen) parseFunctionKey(buf *bytes.Buffer) (bool, bool) {
+func (t *tScreen) parseFunctionKey(buf *bytes.Buffer, evs *[]Event) (bool, bool) {
 	b := buf.Bytes()
 	partial := false
 	for e, k := range t.keycodes {
@@ -1095,8 +1146,7 @@ func (t *tScreen) parseFunctionKey(buf *bytes.Buffer) (bool, bool) {
 				mod |= ModAlt
 				t.escaped = false
 			}
-			ev := NewEventKey(k.key, r, mod)
-			t.PostEvent(ev)
+			*evs = append(*evs, NewEventKey(k.key, r, mod))
 			for i := 0; i < len(esc); i++ {
 				buf.ReadByte()
 			}
@@ -1109,7 +1159,7 @@ func (t *tScreen) parseFunctionKey(buf *bytes.Buffer) (bool, bool) {
 	return partial, false
 }
 
-func (t *tScreen) parseRune(buf *bytes.Buffer) (bool, bool) {
+func (t *tScreen) parseRune(buf *bytes.Buffer, evs *[]Event) (bool, bool) {
 	b := buf.Bytes()
 	if b[0] >= ' ' && b[0] <= 0x7F {
 		// printable ASCII easy to deal with -- no encodings
@@ -1118,8 +1168,7 @@ func (t *tScreen) parseRune(buf *bytes.Buffer) (bool, bool) {
 			mod = ModAlt
 			t.escaped = false
 		}
-		ev := NewEventKey(KeyRune, rune(b[0]), mod)
-		t.PostEvent(ev)
+		*evs = append(*evs, NewEventKey(KeyRune, rune(b[0]), mod))
 		buf.ReadByte()
 		return true, true
 	}
@@ -1144,8 +1193,7 @@ func (t *tScreen) parseRune(buf *bytes.Buffer) (bool, bool) {
 					mod = ModAlt
 					t.escaped = false
 				}
-				ev := NewEventKey(KeyRune, r, mod)
-				t.PostEvent(ev)
+				*evs = append(*evs, NewEventKey(KeyRune, r, mod))
 			}
 			for nin > 0 {
 				buf.ReadByte()
@@ -1159,6 +1207,19 @@ func (t *tScreen) parseRune(buf *bytes.Buffer) (bool, bool) {
 }
 
 func (t *tScreen) scanInput(buf *bytes.Buffer, expire bool) {
+	evs := t.collectEventsFromInput(buf, expire)
+
+	for _, ev := range evs {
+		t.PostEventWait(ev)
+	}
+}
+
+// Return an array of Events extracted from the supplied buffer. This is done
+// while holding the screen's lock - the events can then be queued for
+// application processing with the lock released.
+func (t *tScreen) collectEventsFromInput(buf *bytes.Buffer, expire bool) []Event {
+
+	res := make([]Event, 0, 20)
 
 	t.Lock()
 	defer t.Unlock()
@@ -1167,18 +1228,18 @@ func (t *tScreen) scanInput(buf *bytes.Buffer, expire bool) {
 		b := buf.Bytes()
 		if len(b) == 0 {
 			buf.Reset()
-			return
+			return res
 		}
 
 		partials := 0
 
-		if part, comp := t.parseRune(buf); comp {
+		if part, comp := t.parseRune(buf, &res); comp {
 			continue
 		} else if part {
 			partials++
 		}
 
-		if part, comp := t.parseFunctionKey(buf); comp {
+		if part, comp := t.parseFunctionKey(buf, &res); comp {
 			continue
 		} else if part {
 			partials++
@@ -1188,13 +1249,13 @@ func (t *tScreen) scanInput(buf *bytes.Buffer, expire bool) {
 		// mouse support
 
 		if t.ti.Mouse != "" {
-			if part, comp := t.parseXtermMouse(buf); comp {
+			if part, comp := t.parseXtermMouse(buf, &res); comp {
 				continue
 			} else if part {
 				partials++
 			}
 
-			if part, comp := t.parseSgrMouse(buf); comp {
+			if part, comp := t.parseSgrMouse(buf, &res); comp {
 				continue
 			} else if part {
 				partials++
@@ -1204,8 +1265,7 @@ func (t *tScreen) scanInput(buf *bytes.Buffer, expire bool) {
 		if partials == 0 || expire {
 			if b[0] == '\x1b' {
 				if len(b) == 1 {
-					ev := NewEventKey(KeyEsc, 0, ModNone)
-					t.PostEvent(ev)
+					res = append(res, NewEventKey(KeyEsc, 0, ModNone))
 					t.escaped = false
 				} else {
 					t.escaped = true
@@ -1223,8 +1283,7 @@ func (t *tScreen) scanInput(buf *bytes.Buffer, expire bool) {
 				t.escaped = false
 				mod = ModAlt
 			}
-			ev := NewEventKey(KeyRune, rune(by), mod)
-			t.PostEvent(ev)
+			res = append(res, NewEventKey(KeyRune, rune(by), mod))
 			continue
 		}
 
@@ -1232,12 +1291,12 @@ func (t *tScreen) scanInput(buf *bytes.Buffer, expire bool) {
 		// some more
 		break
 	}
+
+	return res
 }
 
-func (t *tScreen) inputLoop() {
+func (t *tScreen) mainLoop() {
 	buf := &bytes.Buffer{}
-
-	chunk := make([]byte, 128)
 	for {
 		select {
 		case <-t.quit:
@@ -1252,26 +1311,56 @@ func (t *tScreen) inputLoop() {
 			t.draw()
 			t.Unlock()
 			continue
-		default:
+		case <-t.keytimer.C:
+			// If the timer fired, and the current time
+			// is after the expiration of the escape sequence,
+			// then we assume the escape sequence reached it's
+			// conclusion, and process the chunk independently.
+			// This lets us detect conflicts such as a lone ESC.
+			if buf.Len() > 0 {
+				if time.Now().After(t.keyexpire) {
+					t.scanInput(buf, true)
+				}
+			}
+			if buf.Len() > 0 {
+				if !t.keytimer.Stop() {
+					select {
+					case <-t.keytimer.C:
+					default:
+					}
+				}
+				t.keytimer.Reset(time.Millisecond * 50)
+			}
+		case chunk := <-t.keychan:
+			buf.Write(chunk)
+			t.keyexpire = time.Now().Add(time.Millisecond * 50)
+			t.scanInput(buf, false)
+			if !t.keytimer.Stop() {
+				select {
+				case <-t.keytimer.C:
+				default:
+				}
+			}
+			if buf.Len() > 0 {
+				t.keytimer.Reset(time.Millisecond * 50)
+			}
 		}
+	}
+}
+
+func (t *tScreen) inputLoop() {
+
+	for {
+		chunk := make([]byte, 128)
 		n, e := t.in.Read(chunk)
 		switch e {
 		case io.EOF:
-			// If we timeout waiting for more bytes, then it's
-			// time to give up on it.  Even at 300 baud it takes
-			// less than 0.5 ms to transmit a whole byte.
-			if buf.Len() > 0 {
-				t.scanInput(buf, true)
-			}
-			continue
 		case nil:
 		default:
-			close(t.indoneq)
+			t.PostEvent(NewEventError(e))
 			return
 		}
-		buf.Write(chunk[:n])
-		// Now we need to parse the input buffer for events
-		t.scanInput(buf, false)
+		t.keychan <- chunk[:n]
 	}
 }
 

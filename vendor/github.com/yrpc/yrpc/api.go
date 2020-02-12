@@ -48,7 +48,7 @@ func NewAPI(endpoints []string, conf ClientConfig, weights []int) API {
 
 	for idx, endpoint := range endpoints {
 		idxMap[endpoint] = idx
-		conn, err := NewConnection(endpoint, conf, nil)
+		conn, err := NewConnection(conf, nil)
 		if err != nil {
 			l.Error("NewConnection fail", zap.String("endpoint", endpoint), zap.Error(err))
 			continue
@@ -205,7 +205,7 @@ func (api *defaultAPI) reconnectIdx(idx int) (*Connection, error) {
 	if atomic.LoadInt32(&api.closed) != 0 {
 		return nil, ErrClosed
 	}
-	conn, err := NewConnection(api.endpoints[idx], api.conf, nil)
+	conn, err := NewConnection(api.conf, nil)
 	if err != nil {
 		l.Error("NewConnection fail", zap.Error(err))
 		return nil, err

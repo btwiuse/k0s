@@ -10,6 +10,11 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	// DefaultMaxFrameSize is the max size for each request frame
+	DefaultMaxFrameSize = 10 * 1024 * 1024
+)
+
 var (
 	// ErrInvalidFrameSize when invalid size
 	ErrInvalidFrameSize = errors.New("invalid frame size")
@@ -27,12 +32,12 @@ type defaultFrameReader struct {
 }
 
 // newFrameReader creates a FrameWriter instance to read frames
-func newFrameReader(ctx context.Context, rwc net.Conn, timeout int) *defaultFrameReader {
-	return newFrameReaderWithMFS(ctx, rwc, timeout, 0)
-}
-
-func newFrameReaderWithMFS(ctx context.Context, rwc net.Conn, timeout int, maxFrameSize int) *defaultFrameReader {
-	return &defaultFrameReader{Reader: NewReaderWithTimeout(ctx, rwc, timeout), ctx: ctx, maxFrameSize: maxFrameSize}
+func newFrameReader(ctx context.Context, rwc net.Conn) *defaultFrameReader {
+	return &defaultFrameReader{
+		Reader:       NewReader(ctx, rwc),
+		ctx:          ctx,
+		maxFrameSize: DefaultMaxFrameSize,
+	}
 }
 
 // ReadFrame will only return the first frame in stream

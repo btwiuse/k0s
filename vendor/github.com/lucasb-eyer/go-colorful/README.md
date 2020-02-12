@@ -2,6 +2,9 @@ go-colorful
 ===========
 A library for playing with colors in go (golang).
 
+[![Build Status](https://travis-ci.org/lucasb-eyer/go-colorful.svg?branch=master)](https://travis-ci.org/lucasb-eyer/go-colorful)
+[![Coverage Status](https://coveralls.io/repos/github/lucasb-eyer/go-colorful/badge.svg?branch=master)](https://coveralls.io/github/lucasb-eyer/go-colorful?branch=master)
+
 Why?
 ====
 I love games. I make games. I love detail and I get lost in detail.
@@ -11,7 +14,7 @@ two players got very similar colors, which bugged me. The very same evening,
 [I want hue](http://tools.medialab.sciences-po.fr/iwanthue/) was the top post
 on HackerNews' frontpage and showed me how to Do It Right™. Last but not
 least, there was no library for handling color spaces available in go. Colorful
-does just that and implements Go's color.Color interface.
+does just that and implements Go's `color.Color` interface.
 
 What?
 =====
@@ -52,7 +55,6 @@ There are a few features which are currently missing and might be useful.
 I just haven't implemented them yet because I didn't have the need for it.
 Pull requests welcome.
 
-- Functions for computing distances in various spaces. Note that this seems to be [a whole science on its own](http://mmir.doc.ic.ac.uk/mmir2005/CameraReadyMissaoui.pdf).
 - Sorting colors (potentially using above mentioned distances)
 
 So which colorspace should I use?
@@ -89,7 +91,7 @@ Create a beautiful blue color using different source space:
 // Any of the following should be the same
 c := colorful.Color{0.313725, 0.478431, 0.721569}
 c, err := colorful.Hex("#517AB8")
-if err != nil{
+if err != nil {
     log.Fatal(err)
 }
 c = colorful.Hsv(216.0, 0.56, 0.722)
@@ -117,6 +119,22 @@ Note that, because of Go's unfortunate choice of requiring an initial uppercase,
 the name of the functions relating to the xyY space are just off. If you have
 any good suggestion, please open an issue. (I don't consider XyY good.)
 
+### The `color.Color` interface
+Because a `colorful.Color` implements Go's `color.Color` interface (found in the
+`image/color` package), it can be used anywhere that expects a `color.Color`.
+
+Furthermore, you can convert anything that implements the `color.Color` interface
+into a `colorful.Color` using the `MakeColor` function:
+
+```go
+c, ok := colorful.MakeColor(color.Gray16{12345})
+```
+
+**Caveat:** Be aware that this latter conversion (using `MakeColor`) hits a
+corner-case when alpha is exactly zero. Because `color.Color` uses pre-multiplied
+alpha colors, this means the RGB values are lost (set to 0) and it's impossible
+to recover them. In such a case `MakeColor` will return `false` as its second value.
+
 ### Comparing colors
 In the RGB color space, the Euclidian distance between colors *doesn't* correspond
 to visual/perceptual distance. This means that two pairs of colors which have the
@@ -139,16 +157,17 @@ import "fmt"
 import "github.com/lucasb-eyer/go-colorful"
 
 func main() {
-    c1a := colorful.Color{150.0/255.0, 10.0/255.0, 150.0/255.0}
-    c1b := colorful.Color{ 53.0/255.0, 10.0/255.0, 150.0/255.0}
-    c2a := colorful.Color{10.0/255.0, 150.0/255.0, 50.0/255.0}
-    c2b := colorful.Color{99.9/255.0, 150.0/255.0, 10.0/255.0}
+	c1a := colorful.Color{150.0 / 255.0, 10.0 / 255.0, 150.0 / 255.0}
+	c1b := colorful.Color{53.0 / 255.0, 10.0 / 255.0, 150.0 / 255.0}
+	c2a := colorful.Color{10.0 / 255.0, 150.0 / 255.0, 50.0 / 255.0}
+	c2b := colorful.Color{99.9 / 255.0, 150.0 / 255.0, 10.0 / 255.0}
 
-    fmt.Printf("DistanceRgb:   c1: %v\tand c2: %v\n", c1a.DistanceRgb(c1b), c2a.DistanceRgb(c2b))
-    fmt.Printf("DistanceLab:   c1: %v\tand c2: %v\n", c1a.DistanceLab(c1b), c2a.DistanceLab(c2b))
-    fmt.Printf("DistanceLuv:   c1: %v\tand c2: %v\n", c1a.DistanceLuv(c1b), c2a.DistanceLuv(c2b))
-    fmt.Printf("DistanceCIE76: c1: %v\tand c2: %v\n", c1a.DistanceCIE76(c1b), c2a.DistanceCIE76(c2b))
-    fmt.Printf("DistanceCIE94: c1: %v\tand c2: %v\n", c1a.DistanceCIE94(c1b), c2a.DistanceCIE94(c2b))
+	fmt.Printf("DistanceRgb:       c1: %v\tand c2: %v\n", c1a.DistanceRgb(c1b), c2a.DistanceRgb(c2b))
+	fmt.Printf("DistanceLab:       c1: %v\tand c2: %v\n", c1a.DistanceLab(c1b), c2a.DistanceLab(c2b))
+	fmt.Printf("DistanceLuv:       c1: %v\tand c2: %v\n", c1a.DistanceLuv(c1b), c2a.DistanceLuv(c2b))
+	fmt.Printf("DistanceCIE76:     c1: %v\tand c2: %v\n", c1a.DistanceCIE76(c1b), c2a.DistanceCIE76(c2b))
+	fmt.Printf("DistanceCIE94:     c1: %v\tand c2: %v\n", c1a.DistanceCIE94(c1b), c2a.DistanceCIE94(c2b))
+	fmt.Printf("DistanceCIEDE2000: c1: %v\tand c2: %v\n", c1a.DistanceCIEDE2000(c1b), c2a.DistanceCIEDE2000(c2b))
 }
 ```
 
@@ -156,16 +175,17 @@ Running the above program shows that you should always prefer any of the CIE dis
 
 ```bash
 $ go run colordist.go
-DistanceRgb:   c1: 0.3803921568627451   and c2: 0.3858713931171159
-DistanceLab:   c1: 0.3204845831279805   and c2: 0.2439715175856528
-DistanceLuv:   c1: 0.5134369614199698   and c2: 0.25686928398606323
-DistanceCIE76: c1: 0.3204845831279805   and c2: 0.2439715175856528
-DistanceCIE94: c1: 0.31730280878910067  and c2: 0.24150613806134172
+DistanceRgb:       c1: 0.3803921568627451	and c2: 0.3858713931171159
+DistanceLab:       c1: 0.32048458312798056	and c2: 0.24397151758565272
+DistanceLuv:       c1: 0.5134369614199698	and c2: 0.2568692839860636
+DistanceCIE76:     c1: 0.32048458312798056	and c2: 0.24397151758565272
+DistanceCIE94:     c1: 0.19799168128511324	and c2: 0.12207136371167401
+DistanceCIEDE2000: c1: 0.17274551120971166	and c2: 0.10665210031428465
 ```
 
 It also shows that `DistanceLab` is more formally known as `DistanceCIE76` and
 has been superseded by the slightly more accurate, but much more expensive
-`DistanceCIE94`.
+`DistanceCIE94` and `DistanceCIEDE2000`.
 
 Note that `AlmostEqualRgb` is provided mainly for (unit-)testing purposes. Use
 it only if you really know what you're doing. It will eat your cat.
@@ -289,7 +309,7 @@ second is the fast one.
 ![Warm, fast warm, happy and fast happy random colors, respectively.](doc/colorgens/colorgens.png)
 
 Don't forget to initialize the random seed! You can see the code used for
-generating this picture in `doc/colorgens/golorgens.go`.
+generating this picture in `doc/colorgens/colorgens.go`.
 
 ### Getting random palettes
 As soon as you need to generate more than one random color, you probably want
@@ -346,6 +366,8 @@ from top to bottom: `Warm`, `FastWarm`, `Happy`, `FastHappy`, `Soft`,
 
 ![All example palettes](doc/palettegens/palettegens.png)
 
+Again, the code used for generating the above image is available as [doc/palettegens/palettegens.go](https://github.com/lucasb-eyer/go-colorful/blob/master/doc/palettegens/palettegens.go).
+
 ### Sorting colors
 TODO: Sort using dist fn.
 
@@ -366,6 +388,21 @@ c := colorful.LabWhiteRef(0.507850, 0.040585,-0.370945, colorful.D50)
 l, a, b := c.LabWhiteRef(colorful.D50)
 ```
 
+### Reading and writing colors from databases
+
+The type `HexColor` makes it easy to store colors as strings in a database. It
+implements the [https://godoc.org/database/sql#Scanner](database/sql.Scanner)
+and [database/sql/driver.Value](https://godoc.org/database/sql/driver.Value)
+interfaces which provide automatic type conversion.
+
+Example:
+
+```go
+var hc HexColor
+_, err := db.QueryRow("SELECT '#ff0000';").Scan(&hc)
+// hc == HexColor{R: 1, G: 0, B: 0}; err == nil
+```
+
 FAQ
 ===
 
@@ -373,11 +410,75 @@ FAQ
 A: You probably provided values in the wrong range. For example, RGB values are
 expected to reside between 0 and 1, *not* between 0 and 255. Normalize your colors.
 
+### Q: Lab/Luv/HCl seem broken! Your library sucks!
+They look like this:
+
+<img height="150" src="https://user-images.githubusercontent.com/3779568/28646900-6548040c-7264-11e7-8f12-81097a97c260.png">
+
+A: You're likely trying to generate and display colors that can't be represented by RGB,
+and thus monitors. When you're trying to convert, say, `HCL(190.0, 1.0, 1.0).RGB255()`,
+you're asking for RGB values of `(-2105.254  300.680  286.185)`, which clearly don't exist,
+and the `RGB255` function just casts these numbers to `uint8`, creating wrap-around and
+what looks like a completely broken gradient. What you want to do, is either use more
+reasonable values of colors which actually exist in RGB, or just `Clamp()` the resulting
+color to its nearest existing one, living with the consequences:
+`HCL(190.0, 1.0, 1.0).Clamp().RGB255()`. It will look something like this:
+
+<img height="150" src="https://user-images.githubusercontent.com/1476029/29596343-9a8c62c6-8771-11e7-9026-b8eb8852cc4a.png">
+
+[Here's an issue going in-depth about this](https://github.com/lucasb-eyer/go-colorful/issues/14),
+as well as [my answer](https://github.com/lucasb-eyer/go-colorful/issues/14#issuecomment-324205385),
+both with code and pretty pictures. Also note that this was somewhat covered above in the
+["Blending colors" section](https://github.com/lucasb-eyer/go-colorful#blending-colors).
+
+### Q: In a tight loop, conversion to Lab/Luv/HCl/... are slooooow!
+A: Yes, they are.
+This library aims for correctness, readability, and modularity; it wasn't written with speed in mind.
+A large part of the slowness comes from these conversions going through `LinearRgb` which uses powers.
+I implemented a fast approximation to `LinearRgb` called `FastLinearRgb` by using Taylor approximations.
+The approximation is roughly 5x faster and precise up to roughly 0.5%,
+the major caveat being that if the input values are outside the range 0-1, accuracy drops dramatically.
+You can use these in your conversions as follows:
+
+```go
+col := // Get your color somehow
+l, a, b := XyzToLab(LinearRgbToXyz(col.LinearRgb()))
+```
+
+If you need faster versions of `Distance*` and `Blend*` that make use of this fast approximation,
+feel free to implement them and open a pull-request, I'll happily accept.
+
+The derivation of these functions can be followed in [this Jupyter notebook](doc/LinearRGB Approximations.ipynb).
+Here's the main figure showing the approximation quality:
+
+![approximation quality](doc/approx-quality.png)
+
+More speed could be gained by using SIMD instructions in many places.
+You can also get more speed for specific conversions by approximating the full conversion function,
+but that is outside the scope of this library.
+Thanks to [@ZirconiumX](https://github.com/ZirconiumX) for starting this investigation,
+see [issue #18](https://github.com/lucasb-eyer/go-colorful/issues/18) for details.
+
+### Q: Why would `MakeColor` ever fail!?
+A: `MakeColor` fails when the alpha channel is zero. In that case, the
+conversion is undefined. See [issue 21](https://github.com/lucasb-eyer/go-colorful/issues/21)
+as well as the short caveat note in the ["The `color.Color` interface"](README.md#the-colorcolor-interface)
+section above.
+
 Who?
 ====
 
 This library has been developed by Lucas Beyer with contributions from
-Bastien Dejean (@baskerville) and Phil Kulak (@pkulak).
+Bastien Dejean (@baskerville), Phil Kulak (@pkulak) and Christian Muehlhaeuser (@muesli).
+
+Release Notes
+=============
+
+### Version 1.0
+- API Breaking change in `MakeColor`: instead of `panic`ing when alpha is zero, it now returns a secondary, boolean return value indicating success. See [the color.Color interface](https://github.com/lucasb-eyer/go-colorful#the-colorcolor-interface) section and [this FAQ entry](https://github.com/lucasb-eyer/go-colorful#q-why-would-makecolor-ever-fail) for details.
+
+### Version 0.9
+- Initial version number after having ignored versioning for a long time :)
 
 License: MIT
 ============

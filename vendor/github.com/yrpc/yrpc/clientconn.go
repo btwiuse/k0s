@@ -3,7 +3,6 @@ package yrpc
 import (
 	"context"
 	"errors"
-	mathrand "math/rand"
 	"net"
 	"runtime"
 	"sync"
@@ -22,14 +21,11 @@ const (
 // it is thread safe
 type Connection struct {
 	// immutable
-	addrs      []string
 	reconnect  bool
 	conf       ClientConfig
 	subscriber SubFunc // there can be only one subscriber because of streamed frames
 
 	writeFrameCh chan *writeFrameRequest // it's never closed so won't panic
-
-	idx int // modified in connect
 
 	// cancelCtx cancels the connection-level context.
 	cancelCtx context.CancelFunc
@@ -95,62 +91,17 @@ func (r *response) Close() {
 }
 
 // NewConnection constructs a *Connection without reconnect ability
-func NewConnection(addr string, conf ClientConfig, f SubFunc) (conn *Connection, err error) {
+func NewConnection(conf ClientConfig, f SubFunc) (conn *Connection, err error) {
 	var rwc net.Conn
-	if conf.OverlayNetwork != nil {
-		rwc, err = conf.OverlayNetwork(addr,
-			DialConfig{
-				DialTimeout: conf.DialTimeout,
-			})
-	} else {
-		rwc, err = dialTCP(addr,
-			DialConfig{
-				DialTimeout: conf.DialTimeout,
-			})
-	}
+	rwc, err = conf.Dialer()
 
 	if err != nil {
 		l.Error("NewConnection Dial", zap.Error(err))
 		return
 	}
 
-	conn = newConnection(rwc, []string{addr}, conf, f, false)
+	conn = newConnection(rwc, conf, f)
 	return
-}
-
-func dialTCP(addr string, dialConfig DialConfig) (rwc net.Conn, err error) {
-	rwc, err = net.DialTimeout("tcp", addr, dialConfig.DialTimeout)
-	if err != nil {
-		l.Error("dialTCP addr", zap.String("addr", addr), zap.Error(err))
-		return
-	}
-	return
-}
-
-// NewConnectionWithReconnect constructs a *Connection with reconnect ability
-func NewConnectionWithReconnect(addrs []string, conf ClientConfig, f SubFunc) *Connection {
-	var copy []string
-	for _, addr := range addrs {
-		copy = append(copy, addr)
-	}
-	mathrand.Shuffle(len(copy), func(i, j int) {
-		copy[i], copy[j] = copy[j], copy[i]
-	})
-
-	var (
-		rwc net.Conn
-		err error
-	)
-	if conf.OverlayNetwork != nil {
-		rwc, err = conf.OverlayNetwork(copy[len(copy)-1], DialConfig{DialTimeout: conf.DialTimeout})
-	} else {
-		rwc, err = dialTCP(copy[len(copy)-1], DialConfig{DialTimeout: conf.DialTimeout})
-	}
-	if err != nil {
-		l.Error("initconnect DialTimeout", zap.Error(err))
-		rwc = nil
-	}
-	return newConnection(rwc, copy, conf, f, true)
 }
 
 // ClientConnectionInfoKey is context key for ClientConnectionInfo
@@ -162,16 +113,21 @@ type ClientConnectionInfo struct {
 	CC *Connection
 }
 
-func newConnection(rwc net.Conn, addr []string, conf ClientConfig, f SubFunc, reconnect bool) *Connection {
+func newConnection(rwc net.Conn, conf ClientConfig, f SubFunc) *Connection {
 	ctx, cancelCtx := context.WithCancel(context.Background())
 
 	c := &Connection{
-		rwc: rwc, addrs: addr, conf: conf, subscriber: f,
-		writeFrameCh: make(chan *writeFrameRequest, conf.WriteFrameChSize), respes: make(map[uint64]*response),
+		rwc:            rwc,
+		conf:           conf,
+		subscriber:     f,
+		writeFrameCh:   make(chan *writeFrameRequest, conf.WriteFrameChSize),
+		respes:         make(map[uint64]*response),
 		cachedRequests: make([]*writeFrameRequest, 0, conf.WriteFrameChSize),
 		cachedBuffs:    make(net.Buffers, 0, conf.WriteFrameChSize),
-		cs:             &ConnStreams{}, ctx: ctx, cancelCtx: cancelCtx,
-		reconnect: reconnect}
+		cs:             &ConnStreams{},
+		ctx:            ctx,
+		cancelCtx:      cancelCtx,
+	}
 
 	if conf.Handler != nil {
 		c.ctx = context.WithValue(c.ctx, ClientConnectionInfoKey, &ClientConnectionInfo{CC: c})
@@ -182,39 +138,34 @@ func newConnection(rwc net.Conn, addr []string, conf ClientConfig, f SubFunc, re
 		loopCtx, loopCancelCtx := context.WithCancel(ctx)
 		c.loopCancelCtx = loopCancelCtx
 		atomic.StorePointer((*unsafe.Pointer)((unsafe.Pointer)(&c.loopCtx)), unsafe.Pointer(&loopCtx))
-		c.loopBytesWriter = NewWriterWithTimeout(loopCtx, rwc, conf.WriteTimeout)
+		c.loopBytesWriter = NewWriter(loopCtx, rwc)
 	}
 	GoFunc(&c.wg, c.loop)
 	return c
 }
 
 func (conn *Connection) loop() {
-	for {
-		if err := conn.connect(); err != nil {
-			// connx.Close() was called
-			return
-		}
-
-		conn.loopWG = &sync.WaitGroup{}
-		GoFunc(conn.loopWG, func() {
-			conn.readFrames()
-		})
-
-		GoFunc(conn.loopWG, func() {
-			conn.writeFrames()
-		})
-
-		<-(*conn.loopCtx).Done()
-		conn.closeRWC()
-		conn.loopWG.Wait()
-		conn.endLoop()
-
-		// close & quit if not reconnect; otherwise automatically reconnect
-		if !conn.reconnect {
-			conn.Close()
-			return
-		}
+	if err := conn.connect(); err != nil {
+		// connx.Close() was called
+		return
 	}
+
+	conn.loopWG = &sync.WaitGroup{}
+	GoFunc(conn.loopWG, func() {
+		conn.readFrames()
+	})
+
+	GoFunc(conn.loopWG, func() {
+		conn.writeFrames()
+	})
+
+	<-(*conn.loopCtx).Done()
+	conn.closeRWC()
+	conn.loopWG.Wait()
+	conn.endLoop()
+
+	// close & quit if not reconnect; otherwise automatically reconnect
+	conn.Close()
 }
 
 func (conn *Connection) atomicLoopCtx() context.Context {
@@ -227,46 +178,31 @@ func (conn *Connection) connect() error {
 		return nil
 	}
 
-	count := 0
-	for {
-		addr := conn.addrs[conn.idx%len(conn.addrs)]
-		conn.idx++
-		count++
+	var (
+		rwc net.Conn
+		err error
+	)
+	rwc, err = conn.conf.Dialer()
 
-		var (
-			rwc net.Conn
-			err error
-		)
-		if conn.conf.OverlayNetwork != nil {
-			rwc, err = conn.conf.OverlayNetwork(addr, DialConfig{DialTimeout: conn.conf.DialTimeout})
-		} else {
-			rwc, err = dialTCP(addr, DialConfig{DialTimeout: conn.conf.DialTimeout})
-		}
-
-		if err != nil {
-			l.Error("connect DialTimeout", zap.Error(err))
-		} else {
-			ctx, cancelCtx := context.WithCancel(conn.ctx)
-			conn.mu.Lock()
-			conn.rwc = rwc
-			atomic.StorePointer((*unsafe.Pointer)((unsafe.Pointer)(&conn.loopCtx)), unsafe.Pointer(&ctx))
-			conn.loopCancelCtx = cancelCtx
-			conn.loopBytesWriter = NewWriterWithTimeout(ctx, rwc, conn.conf.WriteTimeout)
-			conn.mu.Unlock()
-			return nil
-		}
-
-		if count >= len(conn.addrs) {
-			time.Sleep(reconnectIntervalAfter1stRound)
-		}
-
-		select {
-		case <-conn.ctx.Done():
-			return conn.ctx.Err()
-		default:
-		}
+	if err != nil {
+		l.Error("connect DialTimeout", zap.Error(err))
+	} else {
+		ctx, cancelCtx := context.WithCancel(conn.ctx)
+		conn.mu.Lock()
+		conn.rwc = rwc
+		atomic.StorePointer((*unsafe.Pointer)((unsafe.Pointer)(&conn.loopCtx)), unsafe.Pointer(&ctx))
+		conn.loopCancelCtx = cancelCtx
+		conn.loopBytesWriter = NewWriter(ctx, rwc)
+		conn.mu.Unlock()
+		return nil
 	}
 
+	select {
+	case <-conn.ctx.Done():
+		return conn.ctx.Err()
+	default:
+	}
+	return nil
 }
 
 // Wait block until closed
@@ -421,7 +357,7 @@ func (conn *Connection) readFrames() {
 	if conn.rwc == nil {
 		return
 	}
-	reader := newFrameReader(*conn.loopCtx, conn.rwc, conn.conf.ReadTimeout)
+	reader := newFrameReader(*conn.loopCtx, conn.rwc)
 	defer reader.Finalize()
 
 	for {

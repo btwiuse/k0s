@@ -1,6 +1,6 @@
 // +build windows
 
-// Copyright 2016 The TCell Authors
+// Copyright 2019 The TCell Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use file except in compliance with the License.
@@ -17,25 +17,25 @@
 package tcell
 
 import (
+	"errors"
 	"sync"
 	"syscall"
 	"unicode/utf16"
 	"unsafe"
-	"errors"
 )
 
 type cScreen struct {
-	in    syscall.Handle
-	out   syscall.Handle
+	in         syscall.Handle
+	out        syscall.Handle
 	cancelflag syscall.Handle
-	scandone chan struct{}
-	evch  chan Event
-	quit  chan struct{}
-	curx  int
-	cury  int
-	style Style
-	clear bool
-	fini  bool
+	scandone   chan struct{}
+	evch       chan Event
+	quit       chan struct{}
+	curx       int
+	cury       int
+	style      Style
+	clear      bool
+	fini       bool
 
 	w int
 	h int
@@ -117,7 +117,7 @@ var (
 )
 
 const (
-	w32Infinite = ^uintptr(0)
+	w32Infinite    = ^uintptr(0)
 	w32WaitObject0 = uintptr(0)
 )
 
@@ -183,7 +183,7 @@ func (s *cScreen) CharacterSet() string {
 }
 
 func (s *cScreen) EnableMouse() {
-	s.setInMode(modeResizeEn | modeMouseEn)
+	s.setInMode(modeResizeEn | modeMouseEn | modeExtndFlg)
 }
 
 func (s *cScreen) DisableMouse() {
@@ -283,7 +283,6 @@ func (s *cScreen) doCursor() {
 	x, y := s.curx, s.cury
 
 	if x < 0 || y < 0 || x >= s.w || y >= s.h {
-		s.setCursorPos(0, 0)
 		s.hideCursor()
 	} else {
 		s.setCursorPos(x, y)
@@ -530,7 +529,7 @@ func (s *cScreen) getConsoleInput() error {
 		uintptr(pWaitObjects),
 		uintptr(0),
 		w32Infinite)
-	// WaitForMultipleObjects returns WAIT_OBJECT_0 + the index. 
+	// WaitForMultipleObjects returns WAIT_OBJECT_0 + the index.
 	switch rv {
 	case w32WaitObject0: // s.cancelFlag
 		return errors.New("cancelled")
@@ -565,8 +564,14 @@ func (s *cScreen) getConsoleInput() error {
 			if krec.ch != 0 {
 				// synthesized key code
 				for krec.repeat > 0 {
-					s.PostEvent(NewEventKey(KeyRune, rune(krec.ch),
-						mod2mask(krec.mod)))
+					// convert shift+tab to backtab
+					if mod2mask(krec.mod) == ModShift && krec.ch == vkTab {
+						s.PostEvent(NewEventKey(KeyBacktab, 0,
+							ModNone))
+					} else {
+						s.PostEvent(NewEventKey(KeyRune, rune(krec.ch),
+							mod2mask(krec.mod)))
+					}
 					krec.repeat--
 				}
 				return nil
@@ -781,7 +786,9 @@ func (s *cScreen) draw() {
 			if len(combc) != 0 {
 				wcs = append(wcs, utf16.Encode(combc)...)
 			}
-			s.cells.SetDirty(x, y, false)
+			for dx := 0; dx < width; dx++ {
+				s.cells.SetDirty(x+dx, y, false)
+			}
 			x += width - 1
 		}
 		s.writeString(lx, ly, lstyle, wcs)
@@ -874,13 +881,13 @@ func (s *cScreen) resize() {
 	s.w = w
 	s.h = h
 
+	s.setBufferSize(w, h)
+
 	r := rect{0, 0, int16(w - 1), int16(h - 1)}
 	procSetConsoleWindowInfo.Call(
 		uintptr(s.out),
 		uintptr(1),
 		uintptr(unsafe.Pointer(&r)))
-
-	s.setBufferSize(w, h)
 
 	s.PostEvent(NewEventResize(w, h))
 }
@@ -920,6 +927,7 @@ func (s *cScreen) clearScreen(style Style) {
 }
 
 const (
+	modeExtndFlg uint32 = 0x0080
 	modeMouseEn  uint32 = 0x0010
 	modeResizeEn uint32 = 0x0008
 	modeWrapEOL  uint32 = 0x0002

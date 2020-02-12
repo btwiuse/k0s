@@ -145,32 +145,7 @@ func NewServer(conf ServerConfig) *Server {
 
 // ListenAndServe starts listening on all conf
 func (srv *Server) ListenAndServe() (err error) {
-	var (
-		rawln net.Listener
-		yln   net.Listener
-	)
-
-	if srv.conf.ListenFunc != nil {
-		rawln, err = srv.conf.ListenFunc("tcp", srv.conf.Addr)
-	} else {
-		rawln, err = net.Listen("tcp", srv.conf.Addr)
-	}
-	if err != nil {
-		return err
-	}
-
-	if srv.conf.OverlayNetwork != nil {
-		yln = srv.conf.OverlayNetwork(rawln)
-	} else {
-		yln = rawln
-	}
-
-	return srv.Serve(yln)
-}
-
-// BindingConfig for retrieve ServerConfig
-func (srv *Server) BindingConfig() ServerConfig {
-	return srv.conf
+	return srv.Serve(srv.conf.Listener)
 }
 
 var (
@@ -182,8 +157,6 @@ var (
 	ErrListenerAcceptReturnType = errors.New("qrpc: Listener.Accept doesn't return TCPConn")
 	// ErrAcceptTimedout when accept timed out
 	ErrAcceptTimedout = errors.New("qrpc: accept timed out")
-
-	defaultAcceptTimeout = 5 * time.Second
 )
 
 // Serve accepts incoming connections on the Listener qrpcListener, creating a
@@ -257,7 +230,7 @@ func (srv *Server) newConn(ctx context.Context, rwc net.Conn) (sc *serveconn) {
 
 	sc.cancelCtx = cancelCtx
 	sc.ctx = ctx
-	sc.bytesWriter = NewWriterWithTimeout(ctx, rwc, srv.conf.DefaultWriteTimeout)
+	sc.bytesWriter = NewWriter(ctx, rwc)
 
 	srv.activeConn.Store(sc, struct{}{})
 
