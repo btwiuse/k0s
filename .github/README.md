@@ -1,3 +1,7 @@
 [![k0s](cover.png)](https://k0s.io)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white)](https://pkg.go.dev/k0s.io/k0s?tab=doc)
 [![Build status](https://badge.buildkite.com/f3f7346665b5f0ed5f49503300bddc4ca02bb5b88ba081ed46.svg)](https://buildkite.com/conntroll/conntroll)
+[![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/btwiuse/k0s/?ref=repository-badge)
+[![Go Report Card](https://goreportcard.com/badge/github.com/btwiuse/k0s)](https://goreportcard.com/report/github.com/btwiuse/k0s)
+[![codecov](https://codecov.io/gh/btwiuse/k0s/branch/master/graph/badge.svg)](https://codecov.io/gh/btwiuse/k0s)
 [![License](https://img.shields.io/github/license/btwiuse/k0s?color=%23000&style=flat-round)](https://github.com/btwiuse/k0s/blob/master/LICENSE)
