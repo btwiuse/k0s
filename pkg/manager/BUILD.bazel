@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["manager.go"],
+    importpath = "k0s.io/k0s/pkg/manager",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg:go_default_library",
+        "//vendor/github.com/btwiuse/gods/maps/linkedhashmap:go_default_library",
+    ],
+)

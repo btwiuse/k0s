@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "agent.go",
+        "fileserver.go",
+        "grpcserver.go",
+        "lys.go",
+        "metricsserver.go",
+        "middleware.go",
+        "rpc.go",
+        "socks5server.go",
+        "terminalserver.go",
+    ],
+    importpath = "k0s.io/k0s/pkg/agent/agent",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/agent:go_default_library",
+        "//pkg/agent/dialer:go_default_library",
+        "//pkg/agent/tty:go_default_library",
+        "//pkg/api:go_default_library",
+        "//pkg/api/grpcimpl:go_default_library",
+        "//pkg/exporter:go_default_library",
+        "//vendor/github.com/btwiuse/asciitransport:go_default_library",
+        "//vendor/github.com/btwiuse/pretty:go_default_library",
+        "//vendor/github.com/gorilla/handlers:go_default_library",
+        "//vendor/github.com/riobard/go-shadowsocks2/socks:go_default_library",
+        "//vendor/golang.org/x/sync/errgroup:go_default_library",
+        "@org_golang_google_grpc//:go_default_library",
+    ],
+)

@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "stop.go",
+        "tun_darwin.go",
+        "tun_linux.go",
+        "tun_windows.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/txthinking/gotun2socks/tun",
+    importpath = "github.com/txthinking/gotun2socks/tun",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//vendor/golang.org/x/sys/windows:go_default_library",
+            "//vendor/golang.org/x/sys/windows/registry:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

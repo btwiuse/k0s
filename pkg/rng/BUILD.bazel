@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["name.go"],
+    importpath = "k0s.io/k0s/pkg/rng",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/docker/docker/pkg/namesgenerator:go_default_library"],
+)

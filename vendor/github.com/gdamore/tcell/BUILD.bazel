@@ -1,0 +1,82 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "attr.go",
+        "cell.go",
+        "charset_stub.go",
+        "charset_unix.go",
+        "charset_windows.go",
+        "color.go",
+        "colorfit.go",
+        "console_stub.go",
+        "console_win.go",
+        "doc.go",
+        "encoding.go",
+        "errors.go",
+        "event.go",
+        "interrupt.go",
+        "key.go",
+        "mouse.go",
+        "resize.go",
+        "runes.go",
+        "screen.go",
+        "simulation.go",
+        "style.go",
+        "terms_default.go",
+        "terms_dynamic.go",
+        "terms_static.go",
+        "tscreen.go",
+        "tscreen_bsd.go",
+        "tscreen_darwin.go",
+        "tscreen_linux.go",
+        "tscreen_solaris.go",
+        "tscreen_stub.go",
+        "tscreen_windows.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/gdamore/tcell",
+    importpath = "github.com/gdamore/tcell",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gdamore/encoding:go_default_library",
+        "//vendor/github.com/gdamore/tcell/terminfo:go_default_library",
+        "//vendor/github.com/gdamore/tcell/terminfo/base:go_default_library",
+        "//vendor/github.com/gdamore/tcell/terminfo/extended:go_default_library",
+        "//vendor/github.com/lucasb-eyer/go-colorful:go_default_library",
+        "//vendor/github.com/mattn/go-runewidth:go_default_library",
+        "//vendor/golang.org/x/text/encoding:go_default_library",
+        "//vendor/golang.org/x/text/transform:go_default_library",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "//vendor/golang.org/x/sys/unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "//vendor/github.com/gdamore/tcell/terminfo/dynamic:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "//vendor/github.com/gdamore/tcell/terminfo/dynamic:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "//vendor/github.com/gdamore/tcell/terminfo/dynamic:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "//vendor/github.com/gdamore/tcell/terminfo/dynamic:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//vendor/github.com/gdamore/tcell/terminfo/dynamic:go_default_library",
+            "//vendor/golang.org/x/sys/unix:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "//vendor/github.com/gdamore/tcell/terminfo/dynamic:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "//vendor/github.com/gdamore/tcell/terminfo/dynamic:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//vendor/github.com/gdamore/tcell/terminfo/dynamic:go_default_library",
+            "//vendor/golang.org/x/sys/unix:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

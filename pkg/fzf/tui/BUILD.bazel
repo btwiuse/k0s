@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "dummy.go",
+        "light.go",
+        "tcell.go",
+        "ttyname_unix.go",
+        "ttyname_windows.go",
+        "tui.go",
+    ],
+    importpath = "k0s.io/k0s/pkg/fzf/tui",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/fzf/util:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh/terminal:go_default_library",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//vendor/github.com/gdamore/tcell:go_default_library",
+            "//vendor/github.com/gdamore/tcell/encoding:go_default_library",
+            "//vendor/github.com/mattn/go-runewidth:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

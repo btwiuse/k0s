@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "agent.go",
+        "manager.go",
+    ],
+    importpath = "k0s.io/k0s/pkg/hub/agent",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg:go_default_library",
+        "//pkg/hub:go_default_library",
+        "//pkg/hub/session:go_default_library",
+        "//pkg/manager:go_default_library",
+        "//vendor/github.com/abbot/go-http-auth:go_default_library",
+        "//vendor/github.com/btwiuse/pretty:go_default_library",
+    ],
+)

@@ -17,11 +17,9 @@ func main() {
 	ag := agent.NewAgent(c)
 
 	for range time.Tick(time.Second) {
-		ag.Go(ag.ConnectAndServe)
-
-		err := ag.Wait()
+		err := ag.ConnectAndServe()
 		if err != nil {
-			log.Println()
+			log.Println(err)
 		}
 	}
 }

@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "algo.go",
+        "normalize.go",
+    ],
+    importpath = "k0s.io/k0s/pkg/fzf/algo",
+    visibility = ["//visibility:public"],
+    deps = ["//pkg/fzf/util:go_default_library"],
+)

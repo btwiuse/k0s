@@ -16,6 +16,9 @@ fonts:
 	@ assets -d fonts/ -package fonts -o ./pkg/fonts/standard.go -map Fonts
 	@ rm -r fonts/
 
+bazel-build:          ## Build binary for current platform using bazel
+	@ bazel build //:k0s # //cmd/{hub,client,agent}
+
 build:          ## Build binary for current platform
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"
 

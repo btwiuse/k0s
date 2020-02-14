@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "core.go",
+        "event.go",
+        "io.go",
+        "logger.go",
+        "server.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/btwiuse/asciitransport",
+    importpath = "github.com/btwiuse/asciitransport",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/btwiuse/pretty:go_default_library",
+        "//vendor/github.com/cirocosta/asciinema-edit/cast:go_default_library",
+    ],
+)

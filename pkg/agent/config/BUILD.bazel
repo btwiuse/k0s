@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "config_getcmd_unix.go",
+        "config_getcmd_windows.go",
+    ],
+    importpath = "k0s.io/k0s/pkg/agent/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg:go_default_library",
+        "//pkg/agent:go_default_library",
+        "//pkg/agent/info:go_default_library",
+        "//pkg/rng:go_default_library",
+        "//pkg/uuid:go_default_library",
+        "//pkg/version:go_default_library",
+        "//vendor/github.com/btwiuse/pretty:go_default_library",
+        "//vendor/github.com/denisbrodbeck/machineid:go_default_library",
+        "//vendor/gopkg.in/yaml.v2:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["config_test.go"],
+    embed = [":go_default_library"],
+)

@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["socks.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/riobard/go-shadowsocks2/socks",
+    importpath = "github.com/riobard/go-shadowsocks2/socks",
+    visibility = ["//visibility:public"],
+)

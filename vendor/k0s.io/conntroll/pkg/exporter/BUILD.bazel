@@ -1,0 +1,85 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "exporter.go",
+        "exporter_darwin.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/k0s.io/conntroll/pkg/exporter",
+    importpath = "k0s.io/conntroll/pkg/exporter",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+            "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+            "//vendor/github.com/prometheus/common/version:go_default_library",
+            "//vendor/github.com/prometheus/node_exporter/collector:go_default_library",
+            "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+            "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+            "//vendor/github.com/prometheus/common/version:go_default_library",
+            "//vendor/github.com/prometheus/node_exporter/collector:go_default_library",
+            "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+            "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+            "//vendor/github.com/prometheus/common/version:go_default_library",
+            "//vendor/github.com/prometheus/node_exporter/collector:go_default_library",
+            "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+            "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+            "//vendor/github.com/prometheus/common/version:go_default_library",
+            "//vendor/github.com/prometheus/node_exporter/collector:go_default_library",
+            "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:nacl": [
+            "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+            "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+            "//vendor/github.com/prometheus/common/version:go_default_library",
+            "//vendor/github.com/prometheus/node_exporter/collector:go_default_library",
+            "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+            "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+            "//vendor/github.com/prometheus/common/version:go_default_library",
+            "//vendor/github.com/prometheus/node_exporter/collector:go_default_library",
+            "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+            "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+            "//vendor/github.com/prometheus/common/version:go_default_library",
+            "//vendor/github.com/prometheus/node_exporter/collector:go_default_library",
+            "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:plan9": [
+            "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+            "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+            "//vendor/github.com/prometheus/common/version:go_default_library",
+            "//vendor/github.com/prometheus/node_exporter/collector:go_default_library",
+            "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+            "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+            "//vendor/github.com/prometheus/common/version:go_default_library",
+            "//vendor/github.com/prometheus/node_exporter/collector:go_default_library",
+            "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+            "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+            "//vendor/github.com/prometheus/common/version:go_default_library",
+            "//vendor/github.com/prometheus/node_exporter/collector:go_default_library",
+            "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

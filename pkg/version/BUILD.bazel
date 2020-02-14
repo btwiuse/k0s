@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["version.go"],
+    importpath = "k0s.io/k0s/pkg/version",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg:go_default_library",
+        "//vendor/github.com/btwiuse/pretty:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["version_test.go"],
+    embed = [":go_default_library"],
+    deps = ["//pkg:go_default_library"],
+)
