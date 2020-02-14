@@ -3,6 +3,7 @@
 gen(){
 	bkyml steps
 	bkyml command --command "make test-build" --label 'test-build'
+	bkyml command --agents bazel     true --command "make bazel-build"     --artifact-paths 'bazel-bin/linux_amd64_stripped/k0s' --label 'bazel'
 	bkyml command --agents linux     true --command "make build-linux"     --artifact-paths 'bin/*/*/*' --label 'linux'
 	bkyml command --agents linux-arm true --command "make build-linux-arm" --artifact-paths 'bin/*/*/*' --label 'linux-arm'
 	bkyml command --agents bsd       true --command "make build-bsd"       --artifact-paths 'bin/*/*/*' --label 'bsd'

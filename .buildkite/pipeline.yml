@@ -1,6 +1,11 @@
 steps:
   - label: test-build
     command: make test-build
+  - label: bazel
+    command: make bazel-build
+    agents:
+      bazel: 'true'
+    artifact_paths: bazel-bin/linux_amd64_stripped/k0s
   - label: linux
     command: make build-linux
     agents:
