@@ -9,13 +9,13 @@ go_library(
         "frame.go",
         "frame_stringer.go",
         "handshake.go",
-        # "websocket_js.go",
+        "websocket_js.go",
     ],
     importmap = "k0s.io/k0s/vendor/nhooyr.io/websocket",
     importpath = "nhooyr.io/websocket",
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/nhooyr.io/websocket/internal/bpool:go_default_library",
-        # "@io_nhooyr_websocket//internal/wsjs:go_default_library",
+        "//vendor/nhooyr.io/websocket/internal/wsjs:go_default_library",
     ],
 )

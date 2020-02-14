@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["wsjs_js.go"],
+    importmap = "k0s.io/k0s/vendor/nhooyr.io/websocket/internal/wsjs",
+    importpath = "nhooyr.io/websocket/internal/wsjs",
+    visibility = ["//vendor/nhooyr.io/websocket:__subpackages__"],
+)

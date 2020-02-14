@@ -108,9 +108,9 @@ go_library(
             "",
         ],
         "@io_bazel_rules_go//go/platform:dragonfly": [
-            "",
             "-ldevstat",
             "-lkvm",
+            "",
         ],
         "@io_bazel_rules_go//go/platform:freebsd": [
             "-ldevstat -lkvm -lelf",
