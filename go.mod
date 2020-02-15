@@ -64,7 +64,6 @@ require (
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v2 v2.2.8
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71 // indirect
-	k0s.io/conntroll v0.0.2-0.19700101000000-522c57413895
 	modernc.org/httpfs v1.0.0
 	nhooyr.io/websocket v1.7.4
 )

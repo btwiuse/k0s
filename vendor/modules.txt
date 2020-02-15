@@ -1,39 +1,30 @@
 # github.com/BurntSushi/toml v0.3.1
 github.com/BurntSushi/toml
 # github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf
-## explicit
 github.com/MaxRis/w32
 # github.com/VojtechVitek/yaml-cli v0.0.5
-## explicit
 github.com/VojtechVitek/yaml-cli
 github.com/VojtechVitek/yaml-cli/pkg/cli
 # github.com/abbot/go-http-auth v0.4.0
-## explicit
 github.com/abbot/go-http-auth
 # github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 github.com/alecthomas/template
 github.com/alecthomas/template/parse
 # github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d
-## explicit
 github.com/alecthomas/units
 # github.com/alexpantyukhin/go-pattern-match v0.0.0-20200207085858-033d90da7458
-## explicit
 github.com/alexpantyukhin/go-pattern-match
 # github.com/beevik/ntp v0.2.0
 github.com/beevik/ntp
 # github.com/beorn7/perks v1.0.1
 github.com/beorn7/perks/quantile
 # github.com/btwiuse/asciitransport v0.0.0-20200126193701-92ad33490cec
-## explicit
 github.com/btwiuse/asciitransport
 # github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
-## explicit
 github.com/btwiuse/gods/maps/linkedhashmap
 # github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
-## explicit
 github.com/btwiuse/pretty
 # github.com/btwiuse/wetty v0.0.28
-## explicit
 github.com/btwiuse/wetty/pkg/assets
 github.com/btwiuse/wetty/pkg/localcmd
 # github.com/cespare/xxhash/v2 v2.1.1
@@ -41,15 +32,12 @@ github.com/cespare/xxhash/v2
 # github.com/cirocosta/asciinema-edit v0.0.0-20190130154215-1c0971ae232a
 github.com/cirocosta/asciinema-edit/cast
 # github.com/coreos/go-systemd v0.0.0-20190719114852-fd7a80b32e1f
-## explicit
 github.com/coreos/go-systemd/dbus
 # github.com/creack/pty v1.1.9
 github.com/creack/pty
 # github.com/denisbrodbeck/machineid v1.0.1
-## explicit
 github.com/denisbrodbeck/machineid
 # github.com/docker/docker v1.13.1
-## explicit
 github.com/docker/docker/pkg/namesgenerator
 github.com/docker/docker/pkg/random
 # github.com/ema/qdisc v0.0.0-20190904071900-b82c76788043
@@ -63,7 +51,6 @@ github.com/emirpasic/gods/utils
 # github.com/gdamore/encoding v1.0.0
 github.com/gdamore/encoding
 # github.com/gdamore/tcell v1.3.0
-## explicit
 github.com/gdamore/tcell
 github.com/gdamore/tcell/encoding
 github.com/gdamore/tcell/terminfo
@@ -122,97 +109,75 @@ github.com/go-kit/kit/log
 github.com/go-kit/kit/log/level
 github.com/go-kit/kit/metrics
 # github.com/go-logfmt/logfmt v0.5.0
-## explicit
 github.com/go-logfmt/logfmt
 # github.com/godbus/dbus v0.0.0-20190402143921-271e53dc4968
 github.com/godbus/dbus
 # github.com/golang/protobuf v1.3.3
-## explicit
 github.com/golang/protobuf/proto
 github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/google/uuid v1.1.1
-## explicit
 github.com/google/uuid
 # github.com/gorilla/handlers v1.4.2
-## explicit
 github.com/gorilla/handlers
 # github.com/gorilla/mux v1.7.4
-## explicit
 github.com/gorilla/mux
 # github.com/gorilla/websocket v1.4.1
-## explicit
 github.com/gorilla/websocket
 # github.com/hodgesds/perf-utils v0.0.8
-## explicit
 github.com/hodgesds/perf-utils
 # github.com/kr/pty v1.1.8
 github.com/kr/pty
 # github.com/liamg/aminal v0.9.0
-## explicit
 github.com/liamg/aminal/platform
 # github.com/lucasb-eyer/go-colorful v1.0.3
-## explicit
 github.com/lucasb-eyer/go-colorful
 # github.com/lufia/iostat v0.0.0-20170605150913-9f7362b77ad3
 github.com/lufia/iostat
 # github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
-## explicit
 github.com/lukesampson/figlet/figletlib
 # github.com/mattn/go-isatty v0.0.12
-## explicit
 github.com/mattn/go-isatty
 # github.com/mattn/go-runewidth v0.0.8
-## explicit
 github.com/mattn/go-runewidth
 # github.com/mattn/go-shellwords v1.0.10
-## explicit
 github.com/mattn/go-shellwords
 # github.com/mattn/go-xmlrpc v0.0.3
 github.com/mattn/go-xmlrpc
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea
-## explicit
 github.com/mbndr/figlet4go
 # github.com/mdlayher/genetlink v1.0.0
-## explicit
 github.com/mdlayher/genetlink
 # github.com/mdlayher/netlink v1.1.0
-## explicit
 github.com/mdlayher/netlink
 github.com/mdlayher/netlink/nlenc
 # github.com/mdlayher/wifi v0.0.0-20190303161829-b1436901ddee
 github.com/mdlayher/wifi
 github.com/mdlayher/wifi/internal/nl80211
 # github.com/mdp/qrterminal v1.0.1
-## explicit
 github.com/mdp/qrterminal
 # github.com/miekg/dns v1.1.27
 github.com/miekg/dns
 # github.com/patrickmn/go-cache v2.1.0+incompatible
-## explicit
 github.com/patrickmn/go-cache
 # github.com/pkg/errors v0.9.1
-## explicit
 github.com/pkg/errors
 # github.com/prometheus/client_golang v1.4.1
-## explicit
 github.com/prometheus/client_golang/prometheus
 github.com/prometheus/client_golang/prometheus/internal
 github.com/prometheus/client_golang/prometheus/promhttp
 # github.com/prometheus/client_model v0.2.0
 github.com/prometheus/client_model/go
 # github.com/prometheus/common v0.9.1
-## explicit
 github.com/prometheus/common/expfmt
 github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg
 github.com/prometheus/common/model
 github.com/prometheus/common/version
 # github.com/prometheus/node_exporter v0.18.1-0.20200101121053-3ddc82c2d8d1
-## explicit
 github.com/prometheus/node_exporter/collector
 # github.com/prometheus/procfs v0.0.8
 github.com/prometheus/procfs
@@ -223,14 +188,11 @@ github.com/prometheus/procfs/nfs
 github.com/prometheus/procfs/sysfs
 github.com/prometheus/procfs/xfs
 # github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4
-## explicit
 github.com/pupapaik/sysinfo
 github.com/pupapaik/sysinfo/cpuid
 # github.com/riobard/go-shadowsocks2 v0.1.0
-## explicit
 github.com/riobard/go-shadowsocks2/socks
 # github.com/rs/cors v1.7.0
-## explicit
 github.com/rs/cors
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
@@ -239,33 +201,25 @@ github.com/siebenmann/go-kstat
 # github.com/soundcloud/go-runit v0.0.0-20150630195641-06ad41a06c4a
 github.com/soundcloud/go-runit/runit
 # github.com/spf13/pflag v1.0.5
-## explicit
 github.com/spf13/pflag
 # github.com/txthinking/gotun2socks v0.0.0-20180829122610-35016fdae05e
-## explicit
 github.com/txthinking/gotun2socks
 github.com/txthinking/gotun2socks/gosocks
 github.com/txthinking/gotun2socks/internal/packet
 github.com/txthinking/gotun2socks/tun
 # github.com/txthinking/socks5 v0.0.0-20190404052647-254e122c4eaf
-## explicit
 github.com/txthinking/socks5
 # github.com/txthinking/x v0.0.0-20190708114625-99b19c1440b6
-## explicit
 github.com/txthinking/x
 # github.com/urfave/negroni v1.0.0
-## explicit
 github.com/urfave/negroni
 # github.com/yrpc/util v0.0.0-20191229105456-04e44c1bb858
 github.com/yrpc/util/logger
 # github.com/yrpc/yrpc v0.0.0-20191231114812-451503bf48c2
-## explicit
 github.com/yrpc/yrpc
 # go.uber.org/atomic v1.5.1
-## explicit
 go.uber.org/atomic
 # go.uber.org/multierr v1.4.0
-## explicit
 go.uber.org/multierr
 # go.uber.org/ratelimit v0.1.0
 go.uber.org/ratelimit
@@ -280,7 +234,6 @@ go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
 # golang.org/x/crypto v0.0.0-20200210222208-86ce3cb69678
-## explicit
 golang.org/x/crypto/acme
 golang.org/x/crypto/acme/autocert
 golang.org/x/crypto/bcrypt
@@ -290,11 +243,9 @@ golang.org/x/crypto/ed25519/internal/edwards25519
 golang.org/x/crypto/hkdf
 golang.org/x/crypto/ssh/terminal
 # golang.org/x/lint v0.0.0-20200130185559-910be7a94367
-## explicit
 golang.org/x/lint
 golang.org/x/lint/golint
 # golang.org/x/net v0.0.0-20200202094626-16171245cfb2
-## explicit
 golang.org/x/net/bpf
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
@@ -310,15 +261,12 @@ golang.org/x/net/ipv6
 golang.org/x/net/proxy
 golang.org/x/net/trace
 # golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
-## explicit
 golang.org/x/sync/errgroup
 # golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4
-## explicit
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
 # golang.org/x/text v0.3.2
-## explicit
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/internal
@@ -332,7 +280,6 @@ golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 # golang.org/x/tools v0.0.0-20200212150539-ea181f53ac56
-## explicit
 golang.org/x/tools/go/analysis
 golang.org/x/tools/go/analysis/passes/inspect
 golang.org/x/tools/go/ast/astutil
@@ -346,10 +293,8 @@ golang.org/x/tools/go/types/objectpath
 golang.org/x/tools/go/types/typeutil
 golang.org/x/tools/internal/packagesinternal
 # google.golang.org/genproto v0.0.0-20200212121238-0849286c0f0e
-## explicit
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.27.1
-## explicit
 google.golang.org/grpc
 google.golang.org/grpc/attributes
 google.golang.org/grpc/backoff
@@ -387,15 +332,12 @@ google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
 # gopkg.in/alecthomas/kingpin.v2 v2.2.6
-## explicit
 gopkg.in/alecthomas/kingpin.v2
 # gopkg.in/russross/blackfriday.v2 v2.0.0
 gopkg.in/russross/blackfriday.v2
 # gopkg.in/yaml.v2 v2.2.8
-## explicit
 gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71
-## explicit
 gopkg.in/yaml.v3
 # honnef.co/go/tools v0.0.1-2019.2.3
 honnef.co/go/tools/arg
@@ -423,14 +365,9 @@ honnef.co/go/tools/staticcheck/vrp
 honnef.co/go/tools/stylecheck
 honnef.co/go/tools/unused
 honnef.co/go/tools/version
-# k0s.io/conntroll v0.0.2-0.19700101000000-522c57413895
-## explicit
-k0s.io/conntroll/pkg/exporter
 # modernc.org/httpfs v1.0.0
-## explicit
 modernc.org/httpfs
 # nhooyr.io/websocket v1.7.4
-## explicit
 nhooyr.io/websocket
 nhooyr.io/websocket/internal/bpool
 nhooyr.io/websocket/internal/wsjs

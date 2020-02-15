@@ -667,24 +667,10 @@ go_repository(
 )
 
 go_repository(
-    name = "com_github_opencontainers_go_digest",
-    importpath = "github.com/opencontainers/go-digest",
-    sum = "h1:WzifXhOVOEOuFYOJAW6aQqW0TooG2iki3E3Ii+WN7gQ=",
-    version = "v1.0.0-rc1",
-)
-
-go_repository(
     name = "com_github_patrickmn_go_cache",
     importpath = "github.com/patrickmn/go-cache",
     sum = "h1:HRMgzkcYKYpi3C8ajMPV8OFXaaRUnok+kx1WdO15EQc=",
     version = "v2.1.0+incompatible",
-)
-
-go_repository(
-    name = "com_github_philpearl_scratchbuild",
-    importpath = "github.com/philpearl/scratchbuild",
-    sum = "h1:ronqv3AH27bUJchFQnejM4AvgmGPZRkcX6bLbNYX6xw=",
-    version = "v0.0.0-20180910124120-809ccab2cc6e",
 )
 
 go_repository(
@@ -958,13 +944,6 @@ go_repository(
     importpath = "gopkg.in/yaml.v3",
     sum = "h1:Xe2gvTZUJpsvOWUnvmL/tmhVBZUmHSvLbMjRj6NUUKo=",
     version = "v3.0.0-20200121175148-a6ecf24a6d71",
-)
-
-go_repository(
-    name = "io_k0s_conntroll",
-    importpath = "k0s.io/conntroll",
-    sum = "h1:mBI2qYIwSthiCaebcutTjkDow6KzDRJ39wGV+pGtiVg=",
-    version = "v0.0.2-0.19700101000000-522c57413895",
 )
 
 go_repository(
