@@ -4,6 +4,7 @@ go 1.14
 
 // replace github.com/btwiuse/wetty => /home/aaron/wetty
 // replace github.com/yrpc/yrpc => /home/aaron/yrpc/yrpc
+replace nhooyr.io/websocket => github.com/btwiuse/websocket v1.7.5-0.20200215101310-b4b58f88e17f
 
 require (
 	github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
@@ -14,7 +15,7 @@ require (
 	github.com/btwiuse/asciitransport v0.0.0-20200126193701-92ad33490cec
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
-	github.com/btwiuse/wetty v0.0.28
+	github.com/btwiuse/wetty v0.0.29
 	github.com/coreos/go-systemd v0.0.0-20190719114852-fd7a80b32e1f // indirect
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/docker/docker v1.13.1
@@ -42,7 +43,7 @@ require (
 	github.com/prometheus/common v0.9.1
 	github.com/prometheus/node_exporter v0.18.1-0.20200101121053-3ddc82c2d8d1
 	github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4
-	github.com/riobard/go-shadowsocks2 v0.1.0
+	github.com/riobard/go-shadowsocks2 v0.2.1
 	github.com/rs/cors v1.7.0
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/txthinking/gotun2socks v0.0.0-20180829122610-35016fdae05e
@@ -65,5 +66,5 @@ require (
 	gopkg.in/yaml.v2 v2.2.8
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71 // indirect
 	modernc.org/httpfs v1.0.0
-	nhooyr.io/websocket v1.7.4
+	nhooyr.io/websocket v1.7.5-0.20200215101310-b4b58f88e17f
 )

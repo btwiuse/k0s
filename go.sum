@@ -32,10 +32,12 @@ github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0 h1:RamJoBgLnq2tsdeXwK
 github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0/go.mod h1:HemNeMkO+h/A3mRCi9Sr2x3aEzE1sc0nUUl3Eg539hU=
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882 h1:bO0cdWOtgJk7rlRCOObS/TqtbvAisBWSoWpmdJEOius=
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882/go.mod h1:ylRP8/cdGCVHKukmdQkTjIkbVPykEIC8iGT54pOh/KA=
+github.com/btwiuse/websocket v1.7.5-0.20200215101310-b4b58f88e17f h1:Vo1VlCSBkVJyj/1VyJm3qUxMzX/NEPBnWiKyKpSp/p4=
+github.com/btwiuse/websocket v1.7.5-0.20200215101310-b4b58f88e17f/go.mod h1:PxYxCwFdFYQ0yRvtQz3s/dC+VEm7CSuC/4b9t8MQQxw=
 github.com/btwiuse/wetty v0.0.24 h1:EuZ5helRZGxijDr4OWfR1pkB47acYQl8FYlpZ3hdCb8=
 github.com/btwiuse/wetty v0.0.24/go.mod h1:7h4o2m8AR0GrOegVOnDxc//8cLO2f0p4UrYfFwSy1x4=
-github.com/btwiuse/wetty v0.0.28 h1:OUpouTbT5H0yXns1/SXbU2GBbpm0LtjLKPVZ9Ar0re8=
-github.com/btwiuse/wetty v0.0.28/go.mod h1:dSBTkHcBF+JAQxWnhsnlBRfxxJSpky9LRNps48sXQdI=
+github.com/btwiuse/wetty v0.0.29 h1:phU9DZoQzyfm1L7Hy/+SVnv4XhQEzklUoauxhMeiUcw=
+github.com/btwiuse/wetty v0.0.29/go.mod h1:dSBTkHcBF+JAQxWnhsnlBRfxxJSpky9LRNps48sXQdI=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash/v2 v2.1.0 h1:yTUvW7Vhb89inJ+8irsUqiWjh8iT6sQPZiQzI6ReGkA=
 github.com/cespare/xxhash/v2 v2.1.0/go.mod h1:dgIUBU3pDso/gPgZ1osOZ0iQf77oPR28Tjxl5dIMyVM=
@@ -249,6 +251,8 @@ github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4 h1:sfRZ+ctR2rYU/C
 github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4/go.mod h1:VRp8LLudTBKSMdPquAQBG/Oh7LBS7pRCA7IMsgp/jKY=
 github.com/riobard/go-shadowsocks2 v0.1.0 h1:Wr7QWdS4ddtYlrDJEb1Fn5Wje+3xxsHxQpUb4lhVf5o=
 github.com/riobard/go-shadowsocks2 v0.1.0/go.mod h1:JlY/22I2QJplH9gAE+Ych+YXM9aUWQaD4WAYcOQUZHU=
+github.com/riobard/go-shadowsocks2 v0.2.1 h1:nplpXf7LiL7JCovIXiOExF84ZtVZbZuRyc14UXUZblw=
+github.com/riobard/go-shadowsocks2 v0.2.1/go.mod h1:HgaojVe8VaLkrBIxbxOnGpn0wCV1M4wo9OcAWK27NTM=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/rs/cors v1.7.0 h1:+88SsELBHx5r+hZ8TCkggzSstaWNbDvThkVK8H6f9ik=
 github.com/rs/cors v1.7.0/go.mod h1:gFx+x8UowdsKA9AchylcLynDq+nNFfI8FkUZdN/jGCU=
@@ -309,6 +313,7 @@ golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529 h1:iMGN4xG0cnqj3t+zOM8wUB
 golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550 h1:ObdrDkeb4kJdCP557AjRjq69pTHfNouLtWZG7j9rPN8=
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
+golang.org/x/crypto v0.0.0-20200128174031-69ecbb4d6d5d/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/crypto v0.0.0-20200210222208-86ce3cb69678 h1:wCWoJcFExDgyYx2m2hpHgwz8W3+FPdfldvIgzqDIhyg=
 golang.org/x/crypto v0.0.0-20200210222208-86ce3cb69678/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
@@ -443,11 +448,8 @@ honnef.co/go/tools v0.0.0-20190102054323-c2f93a96b099/go.mod h1:rf3lG4BRIbNafJWh
 honnef.co/go/tools v0.0.0-20190523083050-ea95bdfd59fc/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=
 honnef.co/go/tools v0.0.1-2019.2.3 h1:3JgtbtFHMiCmsznwGVTUWbgGov+pVqnlf1dEJTNAXeM=
 honnef.co/go/tools v0.0.1-2019.2.3/go.mod h1:a3bituU0lyd329TUQxRnasdCoJDkEUEAqEt0JzvZhAg=
-k0s.io/conntroll v0.0.2-0.19700101000000-522c57413895 h1:mBI2qYIwSthiCaebcutTjkDow6KzDRJ39wGV+pGtiVg=
 k0s.io/conntroll v0.0.2-0.19700101000000-522c57413895/go.mod h1:Tirm5Cs4gdWR25nqot7qip0Of1W3xKqEF0jXS/iGhTA=
 modernc.org/httpfs v1.0.0 h1:LtuKNg6JMiaBKVQHKd6Phhvk+2GFp+pUcmDQgRjrds0=
 modernc.org/httpfs v1.0.0/go.mod h1:BSkfoMUcahSijQD5J/Vu4UMOxzmEf5SNRwyXC4PJBEw=
-nhooyr.io/websocket v1.7.4 h1:w/LGB2sZT0RV8lZYR7nfyaYz4PUbYZ5oF7NBon2M0NY=
-nhooyr.io/websocket v1.7.4/go.mod h1:PxYxCwFdFYQ0yRvtQz3s/dC+VEm7CSuC/4b9t8MQQxw=
 rsc.io/qr v0.2.0 h1:6vBLea5/NRMVTz8V66gipeLycZMl/+UlFmk8DvqQ6WY=
 rsc.io/qr v0.2.0/go.mod h1:IF+uZjkb9fqyeF/4tlBoynqmQxUoPfWEKh921coOuXs=

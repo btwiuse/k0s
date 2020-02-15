@@ -116,8 +116,8 @@ go_repository(
 go_repository(
     name = "com_github_btwiuse_wetty",
     importpath = "github.com/btwiuse/wetty",
-    sum = "h1:OUpouTbT5H0yXns1/SXbU2GBbpm0LtjLKPVZ9Ar0re8=",
-    version = "v0.0.28",
+    sum = "h1:phU9DZoQzyfm1L7Hy/+SVnv4XhQEzklUoauxhMeiUcw=",
+    version = "v0.0.29",
 )
 
 go_repository(
@@ -732,8 +732,8 @@ go_repository(
 go_repository(
     name = "com_github_riobard_go_shadowsocks2",
     importpath = "github.com/riobard/go-shadowsocks2",
-    sum = "h1:Wr7QWdS4ddtYlrDJEb1Fn5Wje+3xxsHxQpUb4lhVf5o=",
-    version = "v0.1.0",
+    sum = "h1:nplpXf7LiL7JCovIXiOExF84ZtVZbZuRyc14UXUZblw=",
+    version = "v0.2.1",
 )
 
 go_repository(
@@ -949,8 +949,9 @@ go_repository(
 go_repository(
     name = "io_nhooyr_websocket",
     importpath = "nhooyr.io/websocket",
-    sum = "h1:w/LGB2sZT0RV8lZYR7nfyaYz4PUbYZ5oF7NBon2M0NY=",
-    version = "v1.7.4",
+    replace = "github.com/btwiuse/websocket",
+    sum = "h1:Vo1VlCSBkVJyj/1VyJm3qUxMzX/NEPBnWiKyKpSp/p4=",
+    version = "v1.7.5-0.20200215101310-b4b58f88e17f",
 )
 
 go_repository(
