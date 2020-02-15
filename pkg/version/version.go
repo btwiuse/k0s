@@ -2,6 +2,7 @@ package version
 
 import (
 	"encoding/json"
+	"runtime"
 
 	"github.com/btwiuse/pretty"
 	"k0s.io/k0s/pkg"
@@ -24,6 +25,7 @@ func GetVersion() pkg.Version {
 		GitSummary: GitSummaryString,
 		BuildDate:  BuildDateString,
 		Version:    VersionString,
+		GoVersion:  runtime.Version(),
 	}
 }
 
@@ -36,6 +38,7 @@ type version struct {
 	GitSummary string
 	BuildDate  string
 	Version    string
+	GoVersion  string
 }
 
 func (v *version) GetGitCommit() string  { return v.GitCommit }
@@ -44,6 +47,7 @@ func (v *version) GetGitBranch() string  { return v.GitBranch }
 func (v *version) GetGitSummary() string { return v.GitSummary }
 func (v *version) GetBuildDate() string  { return v.BuildDate }
 func (v *version) GetVersion() string    { return v.Version }
+func (v *version) GetGoVersion() string  { return v.GoVersion }
 func (v *version) YAMLString() string    { return pretty.YAMLString(v) }
 func (v *version) JsonString() string    { return pretty.JsonString(v) }
 
