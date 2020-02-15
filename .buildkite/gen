@@ -3,7 +3,7 @@
 gen(){
 	bkyml steps
 	bkyml command --command "make test-build" --label 'test-build'
-	bkyml command --agents bazel     true --command "make bazel-build"     --artifact-paths 'bazel-bin/linux_amd64_stripped/k0s' --label 'bazel'
+
 	bkyml command --agents linux     true --command "make build-linux"     --artifact-paths 'bin/*/*/*' --label 'linux'
 	bkyml command --agents linux-arm true --command "make build-linux-arm" --artifact-paths 'bin/*/*/*' --label 'linux-arm'
 	bkyml command --agents bsd       true --command "make build-bsd"       --artifact-paths 'bin/*/*/*' --label 'bsd'
@@ -11,6 +11,15 @@ gen(){
 	bkyml command --agents darwin    true --command "make build-darwin"    --artifact-paths 'bin/*/*/*' --label 'darwin'
 	bkyml command --agents windows   true --command "make build-windows"   --artifact-paths 'bin/*/*/*' --label 'windows'
 	bkyml command --agents android   true --command "make build-android"   --artifact-paths 'bin/*/*/*' --label 'android'
+
+	# bkyml command --agents bazel     true --command "make bazel-build"     --artifact-paths 'bazel-bin/linux_*_stripped/k0s' --label 'bazel'
+	bkyml command --agents bazel     true --command "make bazel-build-linux"      --artifact-paths 'bazel-bin/linux_*_stripped/k0s' --label 'bazel-linux'
+	bkyml command --agents bazel     true --command "make bazel-build-linux-arm"  --artifact-paths 'bazel-bin/linux_*_stripped/k0s' --label 'bazel-linux-arm'
+	bkyml command --agents bazel     true --command "make bazel-build-bsd"        --artifact-paths 'bazel-bin/*bsd_*_stripped/k0s' --label 'bazel-bsd'
+	bkyml command --agents bazel     true --command "make bazel-build-bsd-arm"    --artifact-paths 'bazel-bin/*bsd_*_stripped/k0s' --label 'bazel-bsd-arm'
+	bkyml command --agents bazel     true --command "make bazel-build-darwin"     --artifact-paths 'bazel-bin/darwin_*_stripped/k0s' --label 'bazel-darwin'
+	bkyml command --agents bazel     true --command "make bazel-build-windows"    --artifact-paths 'bazel-bin/windows_*_stripped/k0s' --label 'bazel-windows'
+	bkyml command --agents bazel     true --command "make bazel-build-android"    --artifact-paths 'bazel-bin/android_*_stripped/k0s' --label 'bazel-android'
 }
 
 main(){

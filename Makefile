@@ -25,6 +25,47 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 	# @ git checkout vendor/nhooyr.io/websocket
 	@ git status vendor/
 
+bazel-build-android:            ## Build android binaries using bazel
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:android_amd64  //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:android_386    //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:android_arm    //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:android_arm64  //:k0s
+
+bazel-build-windows:            ## Build windows binaries using bazel
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64  //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:windows_386    //:k0s
+
+bazel-build-darwin:            ## Build darwin binaries using bazel
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64  //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_386    //:k0s
+
+bazel-build-bsd:            ## Build bsd binaries using bazel
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:freebsd_amd64  //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:freebsd_386    //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:openbsd_amd64  //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:openbsd_386    //:k0s
+
+bazel-build-bsd-arm:            ## Build bsd arm binaries using bazel
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:freebsd_arm    //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:openbsd_arm    //:k0s
+
+bazel-build-linux-arm:          ## Build linux arm binaries using bazel
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm64    //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm      //:k0s
+
+bazel-build-linux:          ## Build linux binaries using bazel
+	@ bazel build //:k0s # //cmd/{hub,client,agent}
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64    //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm64    //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_386      //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips     //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips64   //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_mipsle   //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips64le //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64    //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64le  //:k0s
+	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_s390x    //:k0s
+
 bazel-build:          ## Build binary for current platform using bazel
 	@ bazel build //:k0s # //cmd/{hub,client,agent}
 
@@ -33,8 +74,9 @@ build:          ## Build binary for current platform
 
 dry:      ## Build binary for every supported platform
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" -dry \
+	  linux/{{mips{,64},ppc64}{,le},s390x} \
 		{linux,android}/{armv6,armv7,arm64,amd64,386} {darwin,windows}/{386,amd64} \
-	  linux/{{mips{,64},ppc64}{,le},s390x}
+		freebsd/{armv7,armv6} {freebsd,openbsd}/{386,amd64}
 
 build-all:      ## Build binary for every supported platform
 	@ make build-android
@@ -53,7 +95,7 @@ build-linux-arm: ## Build linux arm binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
 		linux/{armv6,armv7,arm64}
 
-build-bsd-arm:  	## Build bsd binaries
+build-bsd-arm:  	## Build bsd arm binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
 	  freebsd/{armv7,armv6} # ,arm64
 
