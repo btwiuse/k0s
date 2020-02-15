@@ -45,7 +45,7 @@ var data2 string = `{
   "htpasswd": null,
   "meta": {
     "os": "linux",
-    "pwd": "/home/aaron/go/src/github.com/btwiuse/conntroll",
+    "pwd": "/home/aaron/go/src/github.com/btwiuse/k0s",
     "arch": "amd64",
     "distro": "arch",
     "username": "aaron",

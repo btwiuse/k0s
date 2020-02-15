@@ -111,8 +111,13 @@ func (f *Family) parseAttributes(b []byte) error {
 
 			f.Version = uint8(v)
 		case unix.CTRL_ATTR_MCAST_GROUPS:
-			ad.Nested(func(nad *netlink.AttributeDecoder) error {
-				f.Groups = parseMulticastGroups(nad)
+			ad.Do(func(b []byte) error {
+				groups, err := parseMulticastGroups(b)
+				if err != nil {
+					return err
+				}
+
+				f.Groups = groups
 				return nil
 			})
 		}
@@ -123,18 +128,32 @@ func (f *Family) parseAttributes(b []byte) error {
 
 // parseMulticastGroups parses an array of multicast group nested attributes
 // into a slice of MulticastGroups.
-func parseMulticastGroups(ad *netlink.AttributeDecoder) []MulticastGroup {
-	groups := make([]MulticastGroup, 0, ad.Len())
+func parseMulticastGroups(b []byte) ([]MulticastGroup, error) {
+	ad, err := netlink.NewAttributeDecoder(b)
+	if err != nil {
+		return nil, err
+	}
+
+	var groups []MulticastGroup
 	for ad.Next() {
-		ad.Nested(func(nad *netlink.AttributeDecoder) error {
+		ad.Do(func(b []byte) error {
+			adi, err := netlink.NewAttributeDecoder(b)
+			if err != nil {
+				return err
+			}
+
 			var g MulticastGroup
-			for nad.Next() {
-				switch nad.Type() {
+			for adi.Next() {
+				switch adi.Type() {
 				case unix.CTRL_ATTR_MCAST_GRP_NAME:
-					g.Name = nad.String()
+					g.Name = adi.String()
 				case unix.CTRL_ATTR_MCAST_GRP_ID:
-					g.ID = nad.Uint32()
+					g.ID = adi.Uint32()
 				}
+			}
+
+			if err := ad.Err(); err != nil {
+				return err
 			}
 
 			groups = append(groups, g)
@@ -142,5 +161,9 @@ func parseMulticastGroups(ad *netlink.AttributeDecoder) []MulticastGroup {
 		})
 	}
 
-	return groups
+	if err := ad.Err(); err != nil {
+		return nil, err
+	}
+
+	return groups, nil
 }

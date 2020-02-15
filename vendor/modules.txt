@@ -23,23 +23,22 @@ github.com/alexpantyukhin/go-pattern-match
 github.com/beevik/ntp
 # github.com/beorn7/perks v1.0.1
 github.com/beorn7/perks/quantile
-# github.com/btwiuse/asciitransport v0.0.0-20200126193701-92ad33490cec
+# github.com/btwiuse/asciitransport v0.0.2
 ## explicit
 github.com/btwiuse/asciitransport
+github.com/btwiuse/asciitransport/cast
 # github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 ## explicit
 github.com/btwiuse/gods/maps/linkedhashmap
 # github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 ## explicit
 github.com/btwiuse/pretty
-# github.com/btwiuse/wetty v0.0.28
+# github.com/btwiuse/wetty v0.0.33
 ## explicit
 github.com/btwiuse/wetty/pkg/assets
 github.com/btwiuse/wetty/pkg/localcmd
 # github.com/cespare/xxhash/v2 v2.1.1
 github.com/cespare/xxhash/v2
-# github.com/cirocosta/asciinema-edit v0.0.0-20190130154215-1c0971ae232a
-github.com/cirocosta/asciinema-edit/cast
 # github.com/coreos/go-systemd v0.0.0-20190719114852-fd7a80b32e1f
 ## explicit
 github.com/coreos/go-systemd/dbus
@@ -48,13 +47,13 @@ github.com/creack/pty
 # github.com/denisbrodbeck/machineid v1.0.1
 ## explicit
 github.com/denisbrodbeck/machineid
-# github.com/docker/docker v1.13.1
+# github.com/docker/docker v1.4.2-0.20200214221943-d8772509d1a2
 ## explicit
 github.com/docker/docker/pkg/namesgenerator
-github.com/docker/docker/pkg/random
 # github.com/ema/qdisc v0.0.0-20190904071900-b82c76788043
 github.com/ema/qdisc
 # github.com/emirpasic/gods v1.12.0
+## explicit
 github.com/emirpasic/gods/containers
 github.com/emirpasic/gods/lists
 github.com/emirpasic/gods/lists/doublylinkedlist
@@ -149,6 +148,7 @@ github.com/gorilla/websocket
 ## explicit
 github.com/hodgesds/perf-utils
 # github.com/kr/pty v1.1.8
+## explicit
 github.com/kr/pty
 # github.com/liamg/aminal v0.9.0
 ## explicit
@@ -177,11 +177,9 @@ github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea
 ## explicit
 github.com/mbndr/figlet4go
-# github.com/mdlayher/genetlink v1.0.0
-## explicit
+# github.com/mdlayher/genetlink v0.0.0-20190828143517-e35f2bf499b9
 github.com/mdlayher/genetlink
-# github.com/mdlayher/netlink v1.1.0
-## explicit
+# github.com/mdlayher/netlink v0.0.0-20190828143259-340058475d09
 github.com/mdlayher/netlink
 github.com/mdlayher/netlink/nlenc
 # github.com/mdlayher/wifi v0.0.0-20190303161829-b1436901ddee
@@ -191,6 +189,7 @@ github.com/mdlayher/wifi/internal/nl80211
 ## explicit
 github.com/mdp/qrterminal
 # github.com/miekg/dns v1.1.27
+## explicit
 github.com/miekg/dns
 # github.com/patrickmn/go-cache v2.1.0+incompatible
 ## explicit
@@ -226,13 +225,14 @@ github.com/prometheus/procfs/xfs
 ## explicit
 github.com/pupapaik/sysinfo
 github.com/pupapaik/sysinfo/cpuid
-# github.com/riobard/go-shadowsocks2 v0.1.0
+# github.com/riobard/go-shadowsocks2 v0.2.1
 ## explicit
 github.com/riobard/go-shadowsocks2/socks
 # github.com/rs/cors v1.7.0
 ## explicit
 github.com/rs/cors
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
+## explicit
 github.com/shurcooL/sanitized_anchor_name
 # github.com/siebenmann/go-kstat v0.0.0-20160321171754-d34789b79745
 github.com/siebenmann/go-kstat
@@ -318,7 +318,6 @@ golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
 # golang.org/x/text v0.3.2
-## explicit
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/internal
@@ -390,6 +389,7 @@ google.golang.org/grpc/tap
 ## explicit
 gopkg.in/alecthomas/kingpin.v2
 # gopkg.in/russross/blackfriday.v2 v2.0.0
+## explicit
 gopkg.in/russross/blackfriday.v2
 # gopkg.in/yaml.v2 v2.2.8
 ## explicit
@@ -423,13 +423,10 @@ honnef.co/go/tools/staticcheck/vrp
 honnef.co/go/tools/stylecheck
 honnef.co/go/tools/unused
 honnef.co/go/tools/version
-# k0s.io/conntroll v0.0.2-0.19700101000000-522c57413895
-## explicit
-k0s.io/conntroll/pkg/exporter
 # modernc.org/httpfs v1.0.0
 ## explicit
 modernc.org/httpfs
-# nhooyr.io/websocket v1.7.4
+# nhooyr.io/websocket v1.7.5-0.20200215101310-b4b58f88e17f => github.com/btwiuse/websocket v1.7.5-0.20200215101310-b4b58f88e17f
 ## explicit
 nhooyr.io/websocket
 nhooyr.io/websocket/internal/bpool
@@ -438,3 +435,4 @@ nhooyr.io/websocket/internal/wsjs
 rsc.io/qr
 rsc.io/qr/coding
 rsc.io/qr/gf256
+# nhooyr.io/websocket => github.com/btwiuse/websocket v1.7.5-0.20200215101310-b4b58f88e17f

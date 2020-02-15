@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/btwiuse/asciitransport/cast"
 	"github.com/btwiuse/pretty"
-	"github.com/cirocosta/asciinema-edit/cast"
 )
 
 type ResizeEvent cast.Header
