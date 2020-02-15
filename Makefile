@@ -16,6 +16,15 @@ fonts:
 	@ assets -d fonts/ -package fonts -o ./pkg/fonts/standard.go -map Fonts
 	@ rm -r fonts/
 
+gazelle:             ## auto generate BUILD.bazel files from go.mod
+	@ go mod tidy
+	@ go mod vendor
+	@ bazel run //:gazelle -- update-repos --from_file=go.mod
+	@ bazel run //:gazelle
+	# @ gazelle -exclude=vendor
+	# @ git checkout vendor/nhooyr.io/websocket
+	@ git status vendor/
+
 bazel-build:          ## Build binary for current platform using bazel
 	@ bazel build //:k0s # //cmd/{hub,client,agent}
 

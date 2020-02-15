@@ -3,8 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["cast.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/cirocosta/asciinema-edit/cast",
-    importpath = "github.com/cirocosta/asciinema-edit/cast",
+    importmap = "k0s.io/k0s/vendor/github.com/btwiuse/asciitransport/cast",
+    importpath = "github.com/btwiuse/asciitransport/cast",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/pkg/errors:go_default_library"],
 )

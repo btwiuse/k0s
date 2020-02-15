@@ -14,7 +14,7 @@ go_library(
     importpath = "github.com/btwiuse/asciitransport",
     visibility = ["//visibility:public"],
     deps = [
+        "//vendor/github.com/btwiuse/asciitransport/cast:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
-        "//vendor/github.com/cirocosta/asciinema-edit/cast:go_default_library",
     ],
 )
