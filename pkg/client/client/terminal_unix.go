@@ -13,7 +13,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/btwiuse/asciitransport"
+	"k0s.io/k0s/pkg/asciitransport"
 	"k0s.io/k0s/pkg/console"
 	"k0s.io/k0s/pkg/uuid"
 )

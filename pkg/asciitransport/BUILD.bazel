@@ -10,11 +10,10 @@ go_library(
         "logger.go",
         "server.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/btwiuse/asciitransport",
-    importpath = "github.com/btwiuse/asciitransport",
+    importpath = "k0s.io/k0s/pkg/asciitransport",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/btwiuse/asciitransport/cast:go_default_library",
+        "//pkg/asciitransport/cast:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
     ],
 )

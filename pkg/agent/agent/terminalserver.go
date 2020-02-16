@@ -4,9 +4,9 @@ import (
 	"log"
 	"net"
 
-	"github.com/btwiuse/asciitransport"
 	types "k0s.io/k0s/pkg/agent"
 	"k0s.io/k0s/pkg/agent/tty"
+	"k0s.io/k0s/pkg/asciitransport"
 )
 
 func StartTerminalServer(c types.Config) types.TerminalServer {

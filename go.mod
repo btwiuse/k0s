@@ -12,11 +12,11 @@ require (
 	github.com/abbot/go-http-auth v0.4.0
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200207085858-033d90da7458
-	github.com/btwiuse/asciitransport v0.0.2
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.33
 	github.com/coreos/go-systemd v0.0.0-20190719114852-fd7a80b32e1f // indirect
+	github.com/creack/pty v1.1.9
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/docker/docker v1.4.2-0.20200214221943-d8772509d1a2
 	github.com/emirpasic/gods v1.12.0 // indirect

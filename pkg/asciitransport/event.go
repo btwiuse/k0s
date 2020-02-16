@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/btwiuse/asciitransport/cast"
 	"github.com/btwiuse/pretty"
+
+	"k0s.io/k0s/pkg/asciitransport/cast"
 )
 
 type ResizeEvent cast.Header

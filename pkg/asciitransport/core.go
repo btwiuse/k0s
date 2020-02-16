@@ -32,7 +32,7 @@ func (c *AsciiTransport) OutputEvent() <-chan *OutputEvent { return c.oech }
 func (s *AsciiTransport) InputEvent() <-chan *InputEvent   { return s.iech }
 func (s *AsciiTransport) ResizeEvent() <-chan *ResizeEvent { return s.rech }
 
-func (c *AsciiTransport) Close() {
+func (c *AsciiTransport) Close() error {
 	c.closeonce.Do(func() {
 		close(c.quit)
 		c.conn.Close()
@@ -40,6 +40,7 @@ func (c *AsciiTransport) Close() {
 			c.logger.Close()
 		}
 	})
+	return nil
 }
 
 func (c *AsciiTransport) Done() <-chan struct{} {
