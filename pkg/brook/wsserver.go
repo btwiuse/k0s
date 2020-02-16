@@ -80,7 +80,6 @@ func (s *WSServer) ListenAndServe() error {
 	r := mux.NewRouter()
 	r.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(404)
-		return
 	})
 	r.Methods("GET").Path("/ws").Handler(s)
 

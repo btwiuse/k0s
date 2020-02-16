@@ -19,21 +19,6 @@ import (
 	"k0s.io/k0s/pkg/version"
 )
 
-type arrayFlags []string
-
-func (i *arrayFlags) String() string {
-	return strings.Join(*i, ",")
-}
-
-func (i *arrayFlags) Set(value string) error {
-	if value == "" {
-		return nil
-	}
-	tags := strings.Split(value, ",")
-	*i = append(*i, tags...)
-	return nil
-}
-
 type config struct {
 	Redir            string                     `json:"-" yaml:"redir"`
 	Socks            string                     `json:"-" yaml:"socks"`

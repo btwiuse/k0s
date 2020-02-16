@@ -31,9 +31,6 @@ type hub struct {
 	*http.Server
 
 	c              types.Config
-	ba             bool
-	user           string
-	pass           string
 	handleRPC      http.Handler // http.Handler|net.Listener
 	MetricsHandler http.Handler
 }
@@ -144,12 +141,14 @@ func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 	}
 	conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageText)
 
-	for range time.Tick(time.Second) {
+	watchInterval := time.Second
+	for {
 		_, err := conn.Write([]byte(pretty.JSONString(h.GetAgents())))
 		if err != nil {
 			log.Println("agents watch:", err)
 			break
 		}
+		time.Sleep(watchInterval)
 	}
 }
 

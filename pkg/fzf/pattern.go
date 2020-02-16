@@ -331,7 +331,7 @@ func (p *Pattern) MatchItem(item *Item, withPos bool, slab *util.Slab) (*Result,
 func (p *Pattern) basicMatch(item *Item, withPos bool, slab *util.Slab) (Offset, int, *[]int) {
 	var input []Token
 	if len(p.nth) == 0 {
-		input = []Token{Token{text: &item.text, prefixLength: 0}}
+		input = []Token{{text: &item.text, prefixLength: 0}}
 	} else {
 		input = p.transformInput(item)
 	}
@@ -344,7 +344,7 @@ func (p *Pattern) basicMatch(item *Item, withPos bool, slab *util.Slab) (Offset,
 func (p *Pattern) extendedMatch(item *Item, withPos bool, slab *util.Slab) ([]Offset, int, *[]int) {
 	var input []Token
 	if len(p.nth) == 0 {
-		input = []Token{Token{text: &item.text, prefixLength: 0}}
+		input = []Token{{text: &item.text, prefixLength: 0}}
 	} else {
 		input = p.transformInput(item)
 	}

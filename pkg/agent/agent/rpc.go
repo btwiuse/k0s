@@ -147,7 +147,6 @@ func (rpc *YS) plumbing() {
 			cmd = "UNKNOWN_CMD: " + cmd
 			log.Println(cmd)
 			// TODO: investigate 'Error: duplicate id'
-			break
 		}
 	}
 }

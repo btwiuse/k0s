@@ -18,7 +18,7 @@ func TestDecode(t *testing.T) {
 		`{"GitCommit":"deadbeef","GitState":"dirty","GitBranch":"master","GitSummary":"summary","BuildDate":"now","Version":"0.0.1"}`,
 	}
 	expects := [][]func(v pkg.Version) bool{
-		[]func(v pkg.Version) bool{
+		{
 			func(v pkg.Version) bool { return check(t, "GitCommit", v.GetGitCommit(), "deadbeef") },
 			func(v pkg.Version) bool { return check(t, "GitBranch", v.GetGitBranch(), "master") },
 			func(v pkg.Version) bool { return check(t, "GitState", v.GetGitState(), "dirty") },
