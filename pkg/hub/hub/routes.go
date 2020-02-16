@@ -31,9 +31,6 @@ type hub struct {
 	*http.Server
 
 	c              types.Config
-	ba             bool
-	user           string
-	pass           string
 	handleRPC      http.Handler // http.Handler|net.Listener
 	MetricsHandler http.Handler
 }

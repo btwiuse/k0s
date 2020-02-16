@@ -59,7 +59,6 @@ type agent struct {
 	htpasswd map[string]string
 
 	grpcCounter int
-	rpcCounter  int
 }
 
 func (ag *agent) NewSocks5() net.Conn {
