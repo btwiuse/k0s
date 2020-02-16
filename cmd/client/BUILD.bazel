@@ -5,10 +5,7 @@ go_library(
     srcs = ["main.go"],
     importpath = "k0s.io/k0s/cmd/client",
     visibility = ["//visibility:private"],
-    deps = [
-        "//pkg/client/client:go_default_library",
-        "//pkg/client/config:go_default_library",
-    ],
+    deps = ["//pkg/cli/client:go_default_library"],
 )
 
 go_binary(

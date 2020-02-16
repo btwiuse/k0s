@@ -11,21 +11,13 @@ gazelle(
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "cmd_agent.go",
-        "cmd_client.go",
-        "cmd_hub.go",
-        "main.go",
-    ],
+    srcs = ["main.go"],
     importpath = "k0s.io/k0s",
     visibility = ["//visibility:private"],
     deps = [
-        "//pkg/agent/agent:go_default_library",
-        "//pkg/agent/config:go_default_library",
-        "//pkg/client/client:go_default_library",
-        "//pkg/client/config:go_default_library",
-        "//pkg/hub/config:go_default_library",
-        "//pkg/hub/hub:go_default_library",
+        "//pkg/cli/agent:go_default_library",
+        "//pkg/cli/client:go_default_library",
+        "//pkg/cli/hub:go_default_library",
         "//vendor/github.com/alexpantyukhin/go-pattern-match:go_default_library",
     ],
 )

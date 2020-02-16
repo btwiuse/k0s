@@ -4,21 +4,11 @@ import (
 	"log"
 	"os"
 
-	"k0s.io/k0s/pkg/client/client"
-	"k0s.io/k0s/pkg/client/config"
+	"k0s.io/k0s/pkg/cli/client"
 )
 
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	c := config.Parse(os.Args[1:])
-
-	cl := client.NewClient(c)
-
-	for {
-		err := cl.Run()
-		if err != nil {
-			log.Println(err)
-		}
-	}
+	client.Run(os.Args[1:])
 }
