@@ -74,7 +74,7 @@ func (cl *client) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 	// send
 	// r
 	go func() {
-		sig := make(chan os.Signal)
+		sig := make(chan os.Signal, 1)
 		signal.Notify(sig, syscall.SIGWINCH)
 
 		for {
