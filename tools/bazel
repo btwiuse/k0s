@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+set -e
+
+# The whole point of this wrapper script is to specify a default build target for bazel
+# So you don't need to type `bazel build //:k0s` or `bazel build k0s`.
+# You can simply type `bazel build`, which saves you several key strokes.
+
+# You don't need to invoke this script manually, bazel will load it for you automatically from $WORKSPACE/tools/bazel
+
+# inspired by
+# https://stackoverflow.com/questions/49559048/how-to-specify-default-target-labels-when-running-bazel-test
+# (If you have a better way to do this please consider post your answer the question above on StackOverflow.)
+
+is_one(){
+  [[ "$1" -eq 1 ]]
+}
+
+is_build(){
+  [[ "$1" == build ]]
+}
+
+bazel(){
+  "${BAZEL_REAL:-$(which bazel)}" "$@"
+}
+
+info(){
+  if type figlet &>/dev/null; then
+    figlet "${target}"
+  fi
+  printf 'INFO: Building target %s\n' "${target}"
+}
+
+main(){
+  declare -a DEFAULT_TARGETS
+  DEFAULT_TARGETS=(
+    //:k0s
+    //cmd/hub
+    //cmd/agent
+    //cmd/client
+  )
+  if $(is_one "${#}") && $(is_build "${1}"); then
+    # bazel build "${DEFAULT_TARGETS[@]}"
+    for target in "${DEFAULT_TARGETS[@]}"; do
+      # bazel build --build_event_text_file=bazel-build-events.txt "${target}"
+      info "${target}"
+      bazel build "${target}"
+    done
+  else
+    bazel "${@}"
+  fi
+}
+
+main "$@"
