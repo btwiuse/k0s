@@ -334,8 +334,7 @@ func Parse(args []string) agent.Config {
 		opts = append(opts, SetHub(fset.Args()[0]))
 	}
 
-	opts = append(opts, SetURI())
-	opts = append(opts, SetInfo(info.CollectInfo()))
+	opts = append(opts, SetURI(), SetInfo(info.CollectInfo()))
 
 	baseConfig := loadConfigFile(*c)
 

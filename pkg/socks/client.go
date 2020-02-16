@@ -85,11 +85,9 @@ func (d *Dialer) connect(ctx context.Context, c net.Conn, address string) (_ net
 	b = append(b, Version5, byte(d.cmd), 0)
 	if ip := net.ParseIP(host); ip != nil {
 		if ip4 := ip.To4(); ip4 != nil {
-			b = append(b, AddrTypeIPv4)
-			b = append(b, ip4...)
+			b = append(append(b, AddrTypeIPv4), ip4...)
 		} else if ip6 := ip.To16(); ip6 != nil {
-			b = append(b, AddrTypeIPv6)
-			b = append(b, ip6...)
+			b = append(append(b, AddrTypeIPv6), ip6...)
 		} else {
 			return nil, errors.New("unknown address type")
 		}
@@ -97,9 +95,7 @@ func (d *Dialer) connect(ctx context.Context, c net.Conn, address string) (_ net
 		if len(host) > 255 {
 			return nil, errors.New("FQDN too long")
 		}
-		b = append(b, AddrTypeFQDN)
-		b = append(b, byte(len(host)))
-		b = append(b, host...)
+		b = append(append(b, AddrTypeFQDN, byte(len(host))), host...)
 	}
 	b = append(b, byte(port>>8), byte(port))
 	if _, ctxErr = c.Write(b); ctxErr != nil {
