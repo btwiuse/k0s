@@ -51,7 +51,6 @@ func NewHandler() http.Handler {
 // ServeHTTP implements http.Handler.
 func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.innerHandler.ServeHTTP(w, r)
-	return
 }
 
 // innerHandler is used to create both the one unfiltered http.Handler to be
