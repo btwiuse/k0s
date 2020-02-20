@@ -12,7 +12,7 @@ type AsciiTransportServer interface {
 	Output([]byte)
 	OutputFrom(io.Reader) error
 	Done() <-chan struct{}
-	Close()
+	Close() error
 }
 
 func Server(conn io.ReadWriteCloser, opts ...Opt) AsciiTransportServer {

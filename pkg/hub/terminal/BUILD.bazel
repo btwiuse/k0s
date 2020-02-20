@@ -6,8 +6,8 @@ go_library(
     importpath = "k0s.io/k0s/pkg/hub/terminal",
     visibility = ["//visibility:public"],
     deps = [
+        "//pkg/asciitransport:go_default_library",
         "//pkg/hub:go_default_library",
         "//pkg/uuid:go_default_library",
-        "//vendor/github.com/btwiuse/asciitransport:go_default_library",
     ],
 )

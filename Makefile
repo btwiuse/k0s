@@ -67,7 +67,7 @@ bazel-build-linux:          ## Build linux binaries using bazel
 	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:linux_s390x    //:k0s
 
 bazel-build:          ## Build binary for current platform using bazel
-	@ bazel build //:k0s # //cmd/{hub,client,agent}
+	@ bazel build # //:k0s # //cmd/{hub,client,agent}
 
 build:          ## Build binary for current platform
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"

@@ -95,8 +95,8 @@ go_repository(
 go_repository(
     name = "com_github_btwiuse_asciitransport",
     importpath = "github.com/btwiuse/asciitransport",
-    sum = "h1:BD3Oaa0PBHG1vh/HtEYjUZnHbq+VwJq901JIhs5uP4E=",
-    version = "v0.0.2",
+    sum = "h1:LmuQIwBS5Lkqaw4uxHR57caequKBx/+LfDhu1JyzN2U=",
+    version = "v0.0.1",
 )
 
 go_repository(

@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "handlers.go",
+        "server.go",
+    ],
+    importpath = "k0s.io/k0s/pkg/wetty",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/asciitransport:go_default_library",
+        "//pkg/localcmd:go_default_library",
+        "//pkg/utils:go_default_library",
+        "//pkg/wetty/wetty:go_default_library",
+        "//vendor/github.com/btwiuse/wetty/pkg/assets:go_default_library",
+        "//vendor/github.com/gorilla/handlers:go_default_library",
+        "//vendor/modernc.org/httpfs:go_default_library",
+    ],
+)

@@ -12,7 +12,7 @@ type AsciiTransportClient interface {
 	InputFrom(io.Reader) error
 	Resize(uint, uint)
 	Done() <-chan struct{}
-	Close()
+	Close() error
 }
 
 func Client(conn io.ReadWriteCloser, opts ...Opt) AsciiTransportClient {

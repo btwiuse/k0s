@@ -1,4 +1,4 @@
-package main
+package hub
 
 import (
 	"log"
@@ -7,7 +7,7 @@ import (
 	"k0s.io/k0s/pkg/hub/hub"
 )
 
-func hubCmd(args []string) {
+func Run(args []string) (err error) {
 	c := config.Parse(args)
 
 	log.Println("server is listening on", c.Port())
@@ -15,8 +15,10 @@ func hubCmd(args []string) {
 	h := hub.NewHub(c)
 
 	if c.UseTLS() {
-		log.Fatalln(h.ListenAndServeTLS(c.Cert(), c.Key()))
+		err = h.ListenAndServeTLS(c.Cert(), c.Key())
+	} else {
+		err = h.ListenAndServe()
 	}
 
-	log.Fatalln(h.ListenAndServe())
+	return
 }

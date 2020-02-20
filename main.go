@@ -8,6 +8,10 @@ import (
 	"strings"
 
 	"github.com/alexpantyukhin/go-pattern-match"
+
+	"k0s.io/k0s/pkg/cli/agent"
+	"k0s.io/k0s/pkg/cli/client"
+	"k0s.io/k0s/pkg/cli/hub"
 )
 
 func main() {
@@ -26,13 +30,13 @@ func main() {
 		// agent -> agent
 		// client -> client
 		When([]interface{}{"client", match.ANY}, func() {
-			clientCmd(osargs[1:])
+			client.Run(osargs[1:])
 		}).
 		When([]interface{}{"hub", match.ANY}, func() {
-			hubCmd(osargs[1:])
+			hub.Run(osargs[1:])
 		}).
 		When([]interface{}{"agent", match.ANY}, func() {
-			agentCmd(osargs[1:])
+			agent.Run(osargs[1:])
 		}).
 
 		// conntroll hub -> hub
@@ -45,20 +49,20 @@ func main() {
 		// * agent -> agent
 		// * client -> client
 		When([]interface{}{match.ANY, "client", match.ANY}, func() {
-			clientCmd(osargs[2:])
+			client.Run(osargs[2:])
 		}).
 		When([]interface{}{match.ANY, "hub", match.ANY}, func() {
-			hubCmd(osargs[2:])
+			hub.Run(osargs[2:])
 		}).
 		When([]interface{}{match.ANY, "agent", match.ANY}, func() {
-			agentCmd(osargs[2:])
+			agent.Run(osargs[2:])
 		}).
 
 		// k0s -> client
 		// k0s hub -> hub
 		// k0s agent -> agent
 		When([]interface{}{"k0s", match.ANY}, func() {
-			clientCmd(osargs[1:])
+			client.Run(osargs[1:])
 		}).
 
 		// conntroll -> usage

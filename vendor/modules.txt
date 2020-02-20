@@ -23,10 +23,6 @@ github.com/alexpantyukhin/go-pattern-match
 github.com/beevik/ntp
 # github.com/beorn7/perks v1.0.1
 github.com/beorn7/perks/quantile
-# github.com/btwiuse/asciitransport v0.0.2
-## explicit
-github.com/btwiuse/asciitransport
-github.com/btwiuse/asciitransport/cast
 # github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 ## explicit
 github.com/btwiuse/gods/maps/linkedhashmap
@@ -43,6 +39,7 @@ github.com/cespare/xxhash/v2
 ## explicit
 github.com/coreos/go-systemd/dbus
 # github.com/creack/pty v1.1.9
+## explicit
 github.com/creack/pty
 # github.com/denisbrodbeck/machineid v1.0.1
 ## explicit
