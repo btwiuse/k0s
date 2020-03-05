@@ -15,7 +15,7 @@ load("@io_bazel_rules_go//go:deps.bzl", "go_rules_dependencies", "go_register_to
 
 go_rules_dependencies()
 
-go_register_toolchains()
+go_register_toolchains(nogo="@//:nogo") # nogo is in the top-level BUILD file of this workspace
 
 http_archive(
     name = "bazel_gazelle",

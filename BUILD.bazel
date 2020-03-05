@@ -27,3 +27,14 @@ go_binary(
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
 )
+
+load("@io_bazel_rules_go//go:def.bzl", "nogo")
+
+nogo(
+    name = "nogo",
+    deps = [
+        # analyzer from a remote repository
+        "@org_golang_x_tools//go/analysis/passes/printf:go_tool_library",
+    ],
+    visibility = ["//visibility:public"], # must have public visibility
+)
