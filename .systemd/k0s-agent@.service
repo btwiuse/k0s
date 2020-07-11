@@ -1,0 +1,19 @@
+[Unit]
+Description=k0s agent service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/home/%i
+ExecStart=/usr/bin/env k0s agent -tags systemd
+Restart=on-failure
+RestartSec=3
+MemoryAccounting=yes
+MemoryCurrent=65536000
+MemoryLimit=65536000
+
+[Install]
+WantedBy=multi-user.target
+

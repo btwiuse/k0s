@@ -131,15 +131,29 @@ release:        ## Build and upload binaries for all supported platforms
 
 install:        ## install binary to system paths
 	install -Dvm755 bin/$(NAME) /usr/bin/$(NAME)
-	install -Dvm644 .systemd/agent@.service /usr/lib/systemd/system/agent@.service
+	install -Dvm644 .systemd/k0s-agent@.service /etc/systemd/system/k0s-agent@.service
+	install -Dvm644 .systemd/k0s-hub.service /etc/systemd/system/k0s-hub.service
 	make systemd
 
 systemd:        ## Show systemd post install actions
-	@ echo 'Run this manually to initialize/restart the agent systemd service'
+	@ echo
+	@ echo '# Reload systemd unit files'
 	@ echo 'sudo systemctl daemon-reload'
-	@ echo 'sudo systemctl enable agent@$$USER'
-	@ echo 'sudo systemctl start agent@$$USER'
-	@ echo 'sudo systemctl restart agent@$$USER'
+	@ echo
+	@ echo '# Run this manually to initialize/restart the agent service'
+	@ echo 'sudo systemctl enable k0s-agent@$$USER'
+	@ echo 'sudo systemctl start k0s-agent@$$USER'
+	@ echo 'sudo systemctl restart k0s-agent@$$USER'
+	@ echo
+	@ echo '# Run this manually to initialize/restart the hub service'
+	@ echo 'sudo systemctl enable k0s-hub'
+	@ echo 'sudo systemctl start k0s-hub'
+	@ echo 'sudo systemctl restart k0s-hub'
+	@ echo
+	@ echo '# To stop those services，do the following:'
+	@ echo 'sudo systemctl list-units | grep k0s'
+	@ echo 'sudo systemctl stop k0s-agent@$$USER'
+	@ echo 'sudo systemctl stop k0s-hub'
 
 clean:          ## Clean build artifacts
 	rm -r bin

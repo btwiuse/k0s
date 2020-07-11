@@ -1,13 +1,11 @@
 [Unit]
-Description=k0s agent service
+Description=k0s hub service
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-User=%i
-WorkingDirectory=/home/%i
-ExecStart=/usr/bin/env k0s agent -tags systemd
+ExecStart=/usr/bin/env k0s hub -port :31337
 Restart=on-failure
 RestartSec=3
 
