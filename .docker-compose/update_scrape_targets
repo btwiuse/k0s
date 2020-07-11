@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
+HUB="${1:-hub.k0s.io}"
+
 get_hub(){
-  echo '{"targets": ["hub.k0s.io"], "labels": {"job": "__hub__", "__metrics_path__": "/api/metrics"}}'
+  printf '{"targets": ["%s"], "labels": {"job": "__hub__", "__metrics_path__": "/api/metrics"}}' "${HUB}"
+}
+
+jq_filter(){
+  printf '.[]|{"targets": ["%s"], "labels": {"job": "\(.name)", "__metrics_path__": "/api/agent/\(.id)/metrics"}}' "${HUB}"
 }
 
 get_agents(){
-  curl -s https://hub.k0s.io/api/agents/list \
-  | jq -c '.[]|{"targets": ["hub.k0s.io"], "labels": {"job": "\(.name)", "__metrics_path__": "/api/agent/\(.id)/metrics"}}'
+  curl -s https://${HUB}/api/agents/list | jq -c "$(jq_filter)"
 }
 
 update_targets(){

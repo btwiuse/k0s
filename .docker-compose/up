@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+HUB="${1:-hub.k0s.io}"
+
 assert_exists(){
   cmds="$@"
   quit=""
@@ -22,7 +24,7 @@ main(){
   targets_file="prometheus_scrape_targets.json"
   cd $(dirname "$0")
   init
-  ./update_scrape_targets &
+  ./update_scrape_targets "${HUB}" &
   docker-compose up
 }
 

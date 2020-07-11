@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
+HUB="${1:-hub.k0s.io}"
+GRA="grafana-6.6.1"
+PRO="prometheus-2.19.2.linux-amd64"
+
 start(){
   cat <<EOF | grep -v '^[[:space:]]*#' | grep . | xpanes -te
-  env "GF_PATHS_DATA=$PWD/grafana" ./grafana-6.6.1/bin/grafana-server -homepath=grafana-6.6.1 --config="$PWD/grafana.ini"
+  env "GF_PATHS_DATA=$PWD/grafana" ./${GRA}/bin/grafana-server -homepath=${GRA} --config="$PWD/grafana.ini"
 
-  ./update_scrape_targets
+  ./update_scrape_targets "${HUB}"
 
-  prometheus --storage.tsdb.path=prometheus --config.file=prometheus.yml --web.listen-address=0.0.0.0:9090 --web.external-url=https://k0s.io/prometheus --web.route-prefix=/prometheus
+  ${PRO}/prometheus --storage.tsdb.path=prometheus --config.file=prometheus.yml --web.listen-address=0.0.0.0:9090 --web.external-url=https://${HUB}/prometheus --web.route-prefix=/prometheus
 EOF
 }
 
