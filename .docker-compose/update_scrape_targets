@@ -6,6 +6,7 @@ get_header(){
 cat <<EOF
 - labels:
     job: all
+    group: mebox
   targets:
 EOF
 }
