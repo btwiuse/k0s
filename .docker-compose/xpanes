@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 HUB="${1:-hub.k0s.io}"
-GRA="grafana-6.6.1"
+GRA="grafana-7.0.6"
 PRO="prometheus-2.19.2.linux-amd64"
 
 start(){

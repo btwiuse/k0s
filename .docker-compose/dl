@@ -10,4 +10,4 @@ tar -zxvf grafana-7.0.6.linux-amd64.tar.gz
 if ! [[ -f prometheus-2.19.2.linux-amd64.tar.gz ]]; then
   wget https://github.com/prometheus/prometheus/releases/download/v2.19.2/prometheus-2.19.2.linux-amd64.tar.gz
 fi
-tar -zxvf grafana-7.0.6.linux-amd64.tar.gz
+tar -zxvf prometheus-2.19.2.linux-amd64.tar.gz
