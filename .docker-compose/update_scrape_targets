@@ -2,30 +2,58 @@
 
 HUB="${1:-hub.k0s.io}"
 
+get_header(){
+cat <<EOF
+- labels:
+    job: all
+  targets:
+EOF
+}
+
+get_kube_state_metrics(){
+cat <<EOF
+  - k0s.op.milvzn.com/metrics#kube-state-metrics
+EOF
+}
+
 get_hub(){
-  printf '{"targets": ["%s"], "labels": {"job": "__hub__", "__metrics_path__": "/api/metrics"}}' "${HUB}"
+cat <<EOF
+  - ${HUB}/api/metrics#__hub__
+EOF
 }
 
 jq_filter(){
-  printf '.[]|{"targets": ["%s"], "labels": {"job": "\(.name)", "__metrics_path__": "/api/agent/\(.id)/metrics"}}' "${HUB}"
+  printf '.[]|"  - %s/api/agent/\(.id)/metrics#\(.name)"' "${HUB}"
 }
 
 get_agents(){
-  curl -s https://${HUB}/api/agents/list | jq -c "$(jq_filter)"
+  curl -s https://${HUB}/api/agents/list | jq -rc "$(jq_filter)"
+}
+
+get_all(){
+  get_header
+  get_hub && get_agents && get_kube_state_metrics
 }
 
 update_targets(){
   src=/tmp/${targets_file}
   dst=./${targets_file}
-  (get_hub && get_agents) | jq -s . >$src;
-  if ! diff ${src} ${dst} &>/dev/null; then
+
+  get_all | yj | jq . >$src;
+
+  if [[ -z ${FIRST_RUN} ]] || ! diff ${src} ${dst} &>/dev/null; then
     cp -v ${src} ${dst}
-    cat ${dst} | jq -c .[]
+    dump | ts
   fi
+  FIRST_RUN=1
 }
 
 update_targets_loop(){
   while :; do update_targets; sleep 2; done
+}
+
+dump(){
+  cat "${targets_file}" | jq -r '(.[].targets)[]' | tr '#' ' ' | while read a b; do echo $b $(echo $a | grep -o -E '^[^/]+') $(echo $a | grep -o -E '/.*$'); done | column -t | nl
 }
 
 main(){

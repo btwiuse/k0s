@@ -7,6 +7,19 @@ scrape_configs:
   file_sd_configs:
   - files:
     - 'prometheus_scrape_targets.json'
+  relabel_configs:
+# https://stackoverflow.com/questions/49896956/relabel-instance-to-hostname-in-prometheus
+    - source_labels: [__address__]
+      regex:         '[^#]+#(.*)'
+      target_label:  instance
+# https://stackoverflow.com/questions/44927130/different-prometheus-scrape-url-for-every-target
+# https://stackoverflow.com/questions/59866342/prometheus-dynamic-metrics-path
+    - source_labels: [__address__]
+      regex:  '[^/]+(/.*)#.*'         # capture '/...' part
+      target_label: __metrics_path__  # change metrics path
+    - source_labels: [__address__]
+      regex:  '([^/]+)/.*'            # capture host:port
+      target_label: __address__       # change target
 
 # Settings related to the remote write feature.
 remote_write:
