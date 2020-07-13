@@ -40,7 +40,7 @@ func (rpc *YS) plumbing() {
 				if err != nil {
 					return
 				}
-				rpc.pingChan <- time.Now()
+				// rpc.pingChan <- time.Now()
 			}
 		case "ACCEPT":
 			cmd = "ACCEPT"
