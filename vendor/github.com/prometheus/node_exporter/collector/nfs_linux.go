@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build !nonfs
+
 package collector
 
 import (
@@ -97,7 +99,7 @@ func (c *nfsCollector) Update(ch chan<- prometheus.Metric) error {
 	if err != nil {
 		if os.IsNotExist(err) {
 			level.Debug(c.logger).Log("msg", "Not collecting NFS metrics", "err", err)
-			return nil
+			return ErrNoData
 		}
 		return fmt.Errorf("failed to retrieve nfs stats: %w", err)
 	}

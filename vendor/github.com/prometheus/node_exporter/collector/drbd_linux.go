@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build !nodrbd
+
 package collector
 
 import (
@@ -188,7 +190,7 @@ func (c *drbdCollector) Update(ch chan<- prometheus.Metric) error {
 	if err != nil {
 		if os.IsNotExist(err) {
 			level.Debug(c.logger).Log("msg", "stats file does not exist, skipping", "file", statsFile, "err", err)
-			return nil
+			return ErrNoData
 		}
 
 		return err

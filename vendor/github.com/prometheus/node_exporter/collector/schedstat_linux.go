@@ -11,12 +11,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build !noshedstat
+
 package collector
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/procfs"
 )
@@ -68,6 +72,10 @@ func init() {
 func (c *schedstatCollector) Update(ch chan<- prometheus.Metric) error {
 	stats, err := c.fs.Schedstat()
 	if err != nil {
+		if os.IsNotExist(err) {
+			level.Debug(c.logger).Log("msg", "schedstat file does not exist")
+			return ErrNoData
+		}
 		return err
 	}
 

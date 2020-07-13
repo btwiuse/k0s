@@ -11,6 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// +build !nonfsd
+
 package collector
 
 import (
@@ -63,7 +65,7 @@ func (c *nfsdCollector) Update(ch chan<- prometheus.Metric) error {
 	if err != nil {
 		if os.IsNotExist(err) {
 			level.Debug(c.logger).Log("msg", "Not collecting NFSd metrics", "err", err)
-			return nil
+			return ErrNoData
 		}
 		return fmt.Errorf("failed to retrieve nfsd stats: %w", err)
 	}

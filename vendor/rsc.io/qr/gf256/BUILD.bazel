@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["gf256.go"],
-    importmap = "k0s.io/k0s/vendor/rsc.io/qr/gf256",
-    importpath = "rsc.io/qr/gf256",
-    visibility = ["//visibility:public"],
-)
