@@ -11,3 +11,9 @@ if ! [[ -f prometheus-2.19.2.linux-amd64.tar.gz ]]; then
   wget https://github.com/prometheus/prometheus/releases/download/v2.19.2/prometheus-2.19.2.linux-amd64.tar.gz
 fi
 tar -zxvf prometheus-2.19.2.linux-amd64.tar.gz
+
+# https://prometheus.io/download/#alertmanager
+if ! [[ -f alertmanager-0.21.0.linux-amd64.tar.gz ]]; then
+  wget https://github.com/prometheus/alertmanager/releases/download/v0.21.0/alertmanager-0.21.0.linux-amd64.tar.gz
+fi
+tar -zxvf alertmanager-0.21.0.linux-amd64.tar.gz
