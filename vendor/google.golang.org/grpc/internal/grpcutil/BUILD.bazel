@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "method.go",
+        "target.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/google.golang.org/grpc/internal/grpcutil",
+    importpath = "google.golang.org/grpc/internal/grpcutil",
+    visibility = ["//vendor/google.golang.org/grpc:__subpackages__"],
+    deps = ["//vendor/google.golang.org/grpc/resolver:go_default_library"],
+)

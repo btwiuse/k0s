@@ -32,6 +32,7 @@ go_library(
         "//vendor/google.golang.org/grpc/keepalive:go_default_library",
         "//vendor/google.golang.org/grpc/metadata:go_default_library",
         "//vendor/google.golang.org/grpc/peer:go_default_library",
+        "//vendor/google.golang.org/grpc/resolver:go_default_library",
         "//vendor/google.golang.org/grpc/stats:go_default_library",
         "//vendor/google.golang.org/grpc/status:go_default_library",
         "//vendor/google.golang.org/grpc/tap:go_default_library",

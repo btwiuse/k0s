@@ -237,8 +237,8 @@ go_repository(
 go_repository(
     name = "com_github_envoyproxy_go_control_plane",
     importpath = "github.com/envoyproxy/go-control-plane",
-    sum = "h1:4cmBvAEBNJaGARUEs3/suWRyfyBfhf7I60WBZq+bv2w=",
-    version = "v0.9.1-0.20191026205805-5f8ba28d4473",
+    sum = "h1:rEvIZUSZ3fx39WIi3JkQqQBitGwpELBIYWeBVh6wn+E=",
+    version = "v0.9.4",
 )
 
 go_repository(
@@ -917,8 +917,8 @@ go_repository(
 go_repository(
     name = "org_golang_google_grpc",
     importpath = "google.golang.org/grpc",
-    sum = "h1:zvIju4sqAGvwKspUQOhwnpcqSbzi7/H6QomNNjTL4sk=",
-    version = "v1.27.1",
+    sum = "h1:M5a8xTlYTxwMn5ZFkwhRabsygDY5G8TYLyQDBxJNAxE=",
+    version = "v1.30.0",
 )
 
 go_repository(
@@ -1927,4 +1927,11 @@ go_repository(
     importpath = "google.golang.org/protobuf",
     sum = "h1:cJv5/xdbk1NnMPR1VP9+HU6gupuG9MLBoH1r6RHZ2MY=",
     version = "v1.22.0",
+)
+
+go_repository(
+    name = "com_github_cncf_udpa_go",
+    importpath = "github.com/cncf/udpa/go",
+    sum = "h1:WBZRG4aNOuI15bLRrCgN8fCq8E5Xuty6jGbmSNEvSsU=",
+    version = "v0.0.0-20191209042840-269d4d468f6f",
 )
