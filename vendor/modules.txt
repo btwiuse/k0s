@@ -12,7 +12,6 @@ github.com/abbot/go-http-auth
 github.com/alecthomas/template
 github.com/alecthomas/template/parse
 # github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d
-## explicit
 github.com/alecthomas/units
 # github.com/alexpantyukhin/go-pattern-match v0.0.0-20200207085858-033d90da7458
 ## explicit
@@ -115,7 +114,6 @@ github.com/go-kit/kit/log
 github.com/go-kit/kit/log/level
 github.com/go-kit/kit/metrics
 # github.com/go-logfmt/logfmt v0.5.0
-## explicit
 github.com/go-logfmt/logfmt
 # github.com/godbus/dbus v0.0.0-20190402143921-271e53dc4968
 github.com/godbus/dbus
@@ -139,7 +137,6 @@ github.com/gorilla/mux
 ## explicit
 github.com/gorilla/websocket
 # github.com/hodgesds/perf-utils v0.0.8
-## explicit
 github.com/hodgesds/perf-utils
 # github.com/kr/pty v1.1.8
 ## explicit
@@ -168,8 +165,6 @@ github.com/mattn/go-shellwords
 github.com/mattn/go-xmlrpc
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
 github.com/matttproud/golang_protobuf_extensions/pbutil
-# github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea
-## explicit
 # github.com/mdlayher/genetlink v1.0.0
 github.com/mdlayher/genetlink
 # github.com/mdlayher/netlink v1.1.0
@@ -226,7 +221,6 @@ github.com/riobard/go-shadowsocks2/socks
 ## explicit
 github.com/rs/cors
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
-## explicit
 github.com/shurcooL/sanitized_anchor_name
 # github.com/siebenmann/go-kstat v0.0.0-20200303194639-4e8294f9e9d5
 github.com/siebenmann/go-kstat
