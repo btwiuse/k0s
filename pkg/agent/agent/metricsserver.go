@@ -10,7 +10,7 @@ import (
 func StartMetricsServer(c types.Config) types.MetricsServer {
 	var (
 		metricsListener = NewLys()
-		handler         = GoroutineMiddleware(LoggingMiddleware(GzipMiddleware(exporter.NewHandler())))
+		handler         = LoggingMiddleware(GzipMiddleware(exporter.NewHandler()))
 		metricsServer   = &http.Server{Handler: handler}
 	)
 	go metricsServer.Serve(metricsListener)
