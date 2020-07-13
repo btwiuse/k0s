@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "api.go",
+        "clientconn.go",
+        "config.go",
+        "frame.go",
+        "framereader.go",
+        "framewriter.go",
+        "goroutine.go",
+        "logger.go",
+        "reader.go",
+        "serveconn.go",
+        "server.go",
+        "stream.go",
+        "writer.go",
+        "yrpc.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/yrpc/yrpc",
+    importpath = "github.com/yrpc/yrpc",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/go-kit/kit/metrics:go_default_library",
+        "//vendor/github.com/yrpc/util/logger:go_default_library",
+        "//vendor/go.uber.org/ratelimit:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

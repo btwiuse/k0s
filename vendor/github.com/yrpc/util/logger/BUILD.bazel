@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "dev.go",
+        "instance.go",
+        "prod.go",
+        "zap.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/yrpc/util/logger",
+    importpath = "github.com/yrpc/util/logger",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/go.uber.org/zap/zapcore:go_default_library",
+    ],
+)

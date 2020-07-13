@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["term.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/gdamore/tcell/terminfo/s/simpleterm",
+    importpath = "github.com/gdamore/tcell/terminfo/s/simpleterm",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/gdamore/tcell/terminfo:go_default_library"],
+)

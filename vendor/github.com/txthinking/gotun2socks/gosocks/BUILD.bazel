@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "basic.go",
+        "client.go",
+        "server.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/txthinking/gotun2socks/gosocks",
+    importpath = "github.com/txthinking/gotun2socks/gosocks",
+    visibility = ["//visibility:public"],
+)

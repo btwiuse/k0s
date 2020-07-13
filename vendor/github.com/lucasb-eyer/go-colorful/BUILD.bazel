@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "colorgens.go",
+        "colors.go",
+        "happy_palettegen.go",
+        "hexcolor.go",
+        "soft_palettegen.go",
+        "warm_palettegen.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/lucasb-eyer/go-colorful",
+    importpath = "github.com/lucasb-eyer/go-colorful",
+    visibility = ["//visibility:public"],
+)
