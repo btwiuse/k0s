@@ -23,7 +23,7 @@ go_library(
         "trace.go",
         "version.go",
     ],
-    importmap = "k0s.io/k0s/vendor/google.golang.org/grpc",
+    importmap = "google.golang.org/grpc",
     importpath = "google.golang.org/grpc",
     visibility = ["//visibility:public"],
     deps = [

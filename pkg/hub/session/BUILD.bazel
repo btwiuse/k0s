@@ -9,6 +9,6 @@ go_library(
         "//pkg/api:go_default_library",
         "//pkg/hub:go_default_library",
         "//pkg/uuid:go_default_library",
-        "@org_golang_google_grpc//:go_default_library",
+        "//vendor/google.golang.org/grpc:go_default_library",
     ],
 )
