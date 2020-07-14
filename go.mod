@@ -4,7 +4,7 @@ go 1.14
 
 // replace github.com/btwiuse/wetty => /home/aaron/wetty
 // replace github.com/yrpc/yrpc => /home/aaron/yrpc/yrpc
-replace nhooyr.io/websocket => github.com/btwiuse/websocket v1.7.5-0.20200215101310-b4b58f88e17f
+replace nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
 
 require (
 	github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
@@ -58,5 +58,5 @@ require (
 	gopkg.in/yaml.v2 v2.3.0
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71 // indirect
 	modernc.org/httpfs v1.0.0
-	nhooyr.io/websocket v1.7.5-0.20200215101310-b4b58f88e17f
+	nhooyr.io/websocket v1.8.6
 )
