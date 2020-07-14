@@ -889,8 +889,8 @@ go_repository(
     name = "io_nhooyr_websocket",
     importpath = "nhooyr.io/websocket",
     replace = "github.com/btwiuse/websocket",
-    sum = "h1:Vo1VlCSBkVJyj/1VyJm3qUxMzX/NEPBnWiKyKpSp/p4=",
-    version = "v1.7.5-0.20200215101310-b4b58f88e17f",
+    sum = "h1:Vhtco9ZzTOgUTj3R+YMbUBERszZssZOoxRYldrUDWwc=",
+    version = "v1.8.6",
 )
 
 go_repository(
@@ -1934,4 +1934,74 @@ go_repository(
     importpath = "github.com/cncf/udpa/go",
     sum = "h1:WBZRG4aNOuI15bLRrCgN8fCq8E5Xuty6jGbmSNEvSsU=",
     version = "v0.0.0-20191209042840-269d4d468f6f",
+)
+
+go_repository(
+    name = "com_github_gin_contrib_sse",
+    importpath = "github.com/gin-contrib/sse",
+    sum = "h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=",
+    version = "v0.1.0",
+)
+
+go_repository(
+    name = "com_github_gin_gonic_gin",
+    importpath = "github.com/gin-gonic/gin",
+    sum = "h1:ahKqKTFpO5KTPHxWZjEdPScmYaGtLo8Y4DMHoEsnp14=",
+    version = "v1.6.3",
+)
+
+go_repository(
+    name = "com_github_go_playground_assert_v2",
+    importpath = "github.com/go-playground/assert/v2",
+    sum = "h1:MsBgLAaY856+nPRTKrp3/OZK38U/wa0CcBYNjji3q3A=",
+    version = "v2.0.1",
+)
+
+go_repository(
+    name = "com_github_go_playground_locales",
+    importpath = "github.com/go-playground/locales",
+    sum = "h1:HyWk6mgj5qFqCT5fjGBuRArbVDfE4hi8+e8ceBS/t7Q=",
+    version = "v0.13.0",
+)
+
+go_repository(
+    name = "com_github_go_playground_universal_translator",
+    importpath = "github.com/go-playground/universal-translator",
+    sum = "h1:icxd5fm+REJzpZx7ZfpaD876Lmtgy7VtROAbHHXk8no=",
+    version = "v0.17.0",
+)
+
+go_repository(
+    name = "com_github_go_playground_validator_v10",
+    importpath = "github.com/go-playground/validator/v10",
+    sum = "h1:KgJ0snyC2R9VXYN2rneOtQcw5aHQB1Vv0sFl1UcHBOY=",
+    version = "v10.2.0",
+)
+
+go_repository(
+    name = "com_github_klauspost_compress",
+    importpath = "github.com/klauspost/compress",
+    sum = "h1:OP96hzwJVBIHYU52pVTI6CczrxPvrGfgqF9N5eTO0Q8=",
+    version = "v1.10.3",
+)
+
+go_repository(
+    name = "com_github_leodido_go_urn",
+    importpath = "github.com/leodido/go-urn",
+    sum = "h1:hpXL4XnriNwQ/ABnpepYM/1vCLWNDfUNts8dX3xTG6Y=",
+    version = "v1.2.0",
+)
+
+go_repository(
+    name = "com_github_ugorji_go",
+    importpath = "github.com/ugorji/go",
+    sum = "h1:/68gy2h+1mWMrwZFeD1kQialdSzAb432dtpeJ42ovdo=",
+    version = "v1.1.7",
+)
+
+go_repository(
+    name = "com_github_ugorji_go_codec",
+    importpath = "github.com/ugorji/go/codec",
+    sum = "h1:2SvQaVZ1ouYrrKKwoSk2pzd4A9evlKJb9oTL+OaLUSs=",
+    version = "v1.1.7",
 )

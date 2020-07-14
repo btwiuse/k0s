@@ -138,6 +138,8 @@ github.com/gorilla/mux
 github.com/gorilla/websocket
 # github.com/hodgesds/perf-utils v0.0.8
 github.com/hodgesds/perf-utils
+# github.com/klauspost/compress v1.10.3
+github.com/klauspost/compress/flate
 # github.com/kr/pty v1.1.8
 ## explicit
 github.com/kr/pty
@@ -409,13 +411,15 @@ gopkg.in/yaml.v3
 # modernc.org/httpfs v1.0.0
 ## explicit
 modernc.org/httpfs
-# nhooyr.io/websocket v1.7.5-0.20200215101310-b4b58f88e17f => github.com/btwiuse/websocket v1.7.5-0.20200215101310-b4b58f88e17f
+# nhooyr.io/websocket v1.8.6 => github.com/btwiuse/websocket v1.8.6
 ## explicit
 nhooyr.io/websocket
 nhooyr.io/websocket/internal/bpool
+nhooyr.io/websocket/internal/errd
 nhooyr.io/websocket/internal/wsjs
+nhooyr.io/websocket/internal/xsync
 # rsc.io/qr v0.2.0
 rsc.io/qr
 rsc.io/qr/coding
 rsc.io/qr/gf256
-# nhooyr.io/websocket => github.com/btwiuse/websocket v1.7.5-0.20200215101310-b4b58f88e17f
+# nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
