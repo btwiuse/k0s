@@ -21,3 +21,4 @@
 
 # bazel
 /bazel-*
+/k0s*
