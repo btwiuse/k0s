@@ -280,7 +280,7 @@ func (cl *client) RunSocks() error {
 			},
 		}
 		client := http.Client{Transport: tr}
-		resp, err := client.Get("https://ip.sb")
+		resp, err := client.Get("http://echo.jpillora.com/")
 		if err != nil {
 			log.Println(err)
 			return
