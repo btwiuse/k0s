@@ -191,6 +191,7 @@ func (c *AsciiTransport) goWriteConn(w io.Writer) {
 		}
 	} else {
 		go c.serverOutput2Client(w)
+		go c.serverOutputPing2Client(w)
 
 		if c.reader != nil {
 			go c.serverOutputFromReader()
@@ -297,6 +298,24 @@ func (c *AsciiTransport) serverOutput2Client(w io.Writer) {
 		}
 		oe.Time = time.Since(c.start).Seconds()
 		c.log(oe)
+	}
+	c.Close()
+}
+
+func (c *AsciiTransport) serverOutputPing2Client(w io.Writer) {
+	for {
+		var (
+			pe  = (*PingEvent)(&Event{Time: 0, Type: "o", Data: ""})
+			str = pe.String()
+		)
+		_, err := io.Copy(w, strings.NewReader(str))
+		if err != nil {
+			log.Println(err)
+			break
+		}
+		pe.Time = time.Since(c.start).Seconds()
+		c.log(pe)
+		time.Sleep(5 * time.Second)
 	}
 	c.Close()
 }

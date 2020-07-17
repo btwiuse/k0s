@@ -11,6 +11,7 @@ import (
 
 type ResizeEvent cast.Header
 type OutputEvent Event
+type PingEvent Event
 type InputEvent Event
 type Event cast.Event
 
@@ -31,5 +32,8 @@ func (e *InputEvent) String() string {
 	return pretty.JsonString([]interface{}{&e.Time, &e.Type, &e.Data})
 }
 func (e *OutputEvent) String() string {
+	return pretty.JsonString([]interface{}{&e.Time, &e.Type, &e.Data})
+}
+func (e *PingEvent) String() string {
 	return pretty.JsonString([]interface{}{&e.Time, &e.Type, &e.Data})
 }
