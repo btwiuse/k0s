@@ -28,6 +28,10 @@ type AsciiTransport struct {
 	resizer   Resizer
 }
 
+type Resizer interface {
+	Resize(height, width uint16)
+}
+
 func (c *AsciiTransport) OutputEvent() <-chan *OutputEvent { return c.oech }
 func (s *AsciiTransport) InputEvent() <-chan *InputEvent   { return s.iech }
 func (s *AsciiTransport) ResizeEvent() <-chan *ResizeEvent { return s.rech }
@@ -174,112 +178,125 @@ func (c *AsciiTransport) goReadConn(r io.Reader) {
 }
 
 func (c *AsciiTransport) goWriteConn(w io.Writer) {
-	var (
-		clientInput2Server = func() {
-			for {
-				var (
-					ie  = <-c.iech
-					str = ie.String()
-				)
-				_, err := io.Copy(w, strings.NewReader(str))
-				if err != nil {
-					log.Println(err)
-					break
-				}
-				ie.Time = time.Since(c.start).Seconds()
-				c.log(ie)
-			}
-			c.Close()
-		}
-		clientResize2Server = func() {
-			for {
-				var (
-					re  = <-c.rech
-					str = re.String()
-				)
-				_, err := io.Copy(w, strings.NewReader(str))
-				if err != nil {
-					log.Println(err)
-					break
-				}
-				re.Timestamp = uint(time.Now().Unix())
-				c.log(re)
-			}
-			c.Close()
-		}
-		serverOutput2Client = func() {
-			for {
-				var (
-					oe  = <-c.oech
-					str = oe.String()
-				)
-				_, err := io.Copy(w, strings.NewReader(str))
-				if err != nil {
-					log.Println(err)
-					break
-				}
-				oe.Time = time.Since(c.start).Seconds()
-				c.log(oe)
-			}
-			c.Close()
-		}
-	)
 	if c.isClient {
-		go clientInput2Server()
-		go clientResize2Server()
+		go c.clientInput2Server(w)
+		go c.clientResize2Server(w)
+
 		if c.reader != nil {
-			go func() {
-				for buf := make([]byte, 4096); ; {
-					n, err := c.reader.Read(buf)
-					if err != nil {
-						log.Println(err)
-						break
-					}
-					c.Input(buf[:n])
-				}
-				c.Close()
-			}()
+			go c.clientInputFromReader()
 		}
+
 		if c.writer != nil {
-			go func() {
-				for {
-					oe := <-c.OutputEvent()
-					_, err := io.Copy(c.writer, strings.NewReader(oe.Data))
-					if err != nil {
-						log.Println(err)
-						break
-					}
-				}
-				c.Close()
-			}()
+			go c.clientOutputToWriter()
 		}
 	} else {
-		go serverOutput2Client()
+		go c.serverOutput2Client(w)
+
 		if c.reader != nil {
-			go func() {
-				for buf := make([]byte, 4096); ; {
-					n, err := c.reader.Read(buf)
-					if err != nil {
-						log.Println(err)
-						break
-					}
-					c.Output(buf[:n])
-				}
-				c.Close()
-			}()
+			go c.serverOutputFromReader()
 		}
+
 		if c.writer != nil {
-			go func() {
-				for {
-					ie := <-c.InputEvent()
-					_, err := io.Copy(c.writer, strings.NewReader(ie.Data))
-					if err != nil {
-						log.Println(err)
-						break
-					}
-				}
-				c.Close()
-			}()
+			go c.serverInputToWriter()
 		}
 	}
+}
+
+func (c *AsciiTransport) clientInputFromReader() {
+	for buf := make([]byte, 4096); ; {
+		n, err := c.reader.Read(buf)
+		if err != nil {
+			log.Println(err)
+			break
+		}
+		c.Input(buf[:n])
+	}
+	c.Close()
+}
+
+func (c *AsciiTransport) clientOutputToWriter() {
+	for {
+		oe := <-c.OutputEvent()
+		_, err := io.Copy(c.writer, strings.NewReader(oe.Data))
+		if err != nil {
+			log.Println(err)
+			break
+		}
+	}
+	c.Close()
+}
+
+func (c *AsciiTransport) serverOutputFromReader() {
+	for buf := make([]byte, 4096); ; {
+		n, err := c.reader.Read(buf)
+		if err != nil {
+			log.Println(err)
+			break
+		}
+		c.Output(buf[:n])
+	}
+	c.Close()
+}
+
+func (c *AsciiTransport) serverInputToWriter() {
+	for {
+		ie := <-c.InputEvent()
+		_, err := io.Copy(c.writer, strings.NewReader(ie.Data))
+		if err != nil {
+			log.Println(err)
+			break
+		}
+	}
+	c.Close()
+}
+
+func (c *AsciiTransport) clientInput2Server(w io.Writer) {
+	for {
+		var (
+			ie  = <-c.iech
+			str = ie.String()
+		)
+		_, err := io.Copy(w, strings.NewReader(str))
+		if err != nil {
+			log.Println(err)
+			break
+		}
+		ie.Time = time.Since(c.start).Seconds()
+		c.log(ie)
+	}
+	c.Close()
+}
+
+func (c *AsciiTransport) clientResize2Server(w io.Writer) {
+	for {
+		var (
+			re  = <-c.rech
+			str = re.String()
+		)
+		_, err := io.Copy(w, strings.NewReader(str))
+		if err != nil {
+			log.Println(err)
+			break
+		}
+		re.Timestamp = uint(time.Now().Unix())
+		c.log(re)
+	}
+	c.Close()
+}
+
+func (c *AsciiTransport) serverOutput2Client(w io.Writer) {
+	for {
+		var (
+			oe  = <-c.oech
+			str = oe.String()
+		)
+		_, err := io.Copy(w, strings.NewReader(str))
+		if err != nil {
+			log.Println(err)
+			break
+		}
+		oe.Time = time.Since(c.start).Seconds()
+		c.log(oe)
+	}
+	c.Close()
 }
