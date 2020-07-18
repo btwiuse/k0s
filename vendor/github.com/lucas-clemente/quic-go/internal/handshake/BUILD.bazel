@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cookie_generator.go",
+        "cookie_protector.go",
+        "crypto_setup_client.go",
+        "crypto_setup_server.go",
+        "crypto_setup_tls.go",
+        "crypto_stream_conn.go",
+        "ephermal_cache.go",
+        "handshake_message.go",
+        "interface.go",
+        "mockgen.go",
+        "server_config.go",
+        "server_config_client.go",
+        "tags.go",
+        "tls_extension.go",
+        "tls_extension_handler_client.go",
+        "tls_extension_handler_server.go",
+        "transport_parameters.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/handshake",
+    importpath = "github.com/lucas-clemente/quic-go/internal/handshake",
+    visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
+    deps = [
+        "//vendor/github.com/bifurcation/mint:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/crypto:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/protocol:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/utils:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/qerr:go_default_library",
+        "//vendor/golang.org/x/crypto/hkdf:go_default_library",
+    ],
+)

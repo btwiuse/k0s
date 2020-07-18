@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "goasm.go",
+        "printer.go",
+        "stubs.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/printer",
+    importpath = "github.com/mmcloughlin/avo/printer",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/mmcloughlin/avo/internal/prnt:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/internal/stack:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/ir:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/operand:go_default_library",
+    ],
+)

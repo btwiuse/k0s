@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "blocks.go",
+        "blocks_amd64.s",
+        "blocks_arm.s",
+        "blocks_asm.go",
+        "hash.go",
+        "hash128.go",
+        "hash128_amd64.s",
+        "hash_amd64.s",
+        "hash_arm.go",
+        "hash_asm.go",
+        "siphash.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/dchest/siphash",
+    importpath = "github.com/dchest/siphash",
+    visibility = ["//visibility:public"],
+)

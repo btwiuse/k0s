@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bridge_linux.go",
+        "doc.go",
+        "helpers_linux.go",
+        "link_linux.go",
+        "macvlan_linux.go",
+        "macvtap_linux.go",
+        "network.go",
+        "veth_linux.go",
+        "vlan_linux.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/milosgajdos83/tenus",
+    importpath = "github.com/milosgajdos83/tenus",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/docker/libcontainer/netlink:go_default_library",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "//vendor/github.com/docker/libcontainer/system:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//vendor/github.com/docker/libcontainer/system:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

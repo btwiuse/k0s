@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "doc.go",
+        "ir.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/ir",
+    importpath = "github.com/mmcloughlin/avo/ir",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/mmcloughlin/avo/attr:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/buildtags:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/gotypes:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/operand:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/reg:go_default_library",
+    ],
+)

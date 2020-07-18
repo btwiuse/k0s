@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "doc.go",
+        "ethertypes.go",
+        "ip_protocols.go",
+        "tap.go",
+        "tun.go",
+        "tun_ipv4.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/songgao/water/waterutil",
+    importpath = "github.com/songgao/water/waterutil",
+    visibility = ["//visibility:public"],
+)

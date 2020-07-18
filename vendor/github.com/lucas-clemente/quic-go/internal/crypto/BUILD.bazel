@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "AEAD.go",
+        "aesgcm12_aead.go",
+        "aesgcm_aead.go",
+        "cert_cache.go",
+        "cert_chain.go",
+        "cert_compression.go",
+        "cert_dict.go",
+        "cert_manager.go",
+        "cert_sets.go",
+        "curve_25519.go",
+        "key_derivation.go",
+        "key_derivation_quic_crypto.go",
+        "key_exchange.go",
+        "null_aead.go",
+        "null_aead_aesgcm.go",
+        "null_aead_fnv128a.go",
+        "server_proof.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/crypto",
+    importpath = "github.com/lucas-clemente/quic-go/internal/crypto",
+    visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
+    deps = [
+        "//vendor/github.com/bifurcation/mint:go_default_library",
+        "//vendor/github.com/hashicorp/golang-lru:go_default_library",
+        "//vendor/github.com/lucas-clemente/aes12:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go-certificates:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/protocol:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/utils:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/qerr:go_default_library",
+        "//vendor/golang.org/x/crypto/curve25519:go_default_library",
+        "//vendor/golang.org/x/crypto/hkdf:go_default_library",
+    ],
+)

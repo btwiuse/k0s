@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "doc.go",
+        "generic.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/cheekybits/genny/generic",
+    importpath = "github.com/cheekybits/genny/generic",
+    visibility = ["//visibility:public"],
+)

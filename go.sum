@@ -344,8 +344,8 @@ github.com/mdp/qrterminal v1.0.1/go.mod h1:Z33WhxQe9B6CdW37HaVqcRKzP+kByF3q/qLxO
 github.com/miekg/dns v1.0.14/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=
 github.com/miekg/dns v1.1.27 h1:aEH/kqUzUxGJ/UHcEKdJY+ugH6WEzsEBBSPa8zuy1aM=
 github.com/miekg/dns v1.1.27/go.mod h1:KNUDUusw/aVsxyTYZM1oqvCicbwhgbNgztCETuNZ7xM=
-github.com/milosgajdos83/tenus v0.0.0-20190415114537-1f3ed00ae7d8 h1:4WFQEfEJ7zaHYViIVM2Cd6tnQOOhiEHbmQtlcV7aOpc=
-github.com/milosgajdos83/tenus v0.0.0-20190415114537-1f3ed00ae7d8/go.mod h1:G95Wwn625/q6JCCytI4VR/a5VtPwrtI0B+Q1Gi38QLA=
+github.com/milosgajdos/tenus v0.0.0-20200407174313-f075bef9ab28 h1:B3hqdePt//hmfP0ztIe0MxTs4dOAK9lr0mdo6nFABsE=
+github.com/milosgajdos/tenus v0.0.0-20200407174313-f075bef9ab28/go.mod h1:eIjx29vNeDOYWJuCnaHY2r4fq5egetV26ry3on7p8qY=
 github.com/mitchellh/cli v1.0.0/go.mod h1:hNIlj7HEI86fIcpObd7a0FcrxTWetlwJDGcceTlRvqc=
 github.com/mitchellh/go-homedir v1.0.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
 github.com/mitchellh/go-testing-interface v1.0.0/go.mod h1:kRemZodwjscx+RGhAo8eIhFbs2+BFgRtFPeD/KE+zxI=

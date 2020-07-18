@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "attr.go",
+        "cli.go",
+        "context.go",
+        "doc.go",
+        "error.go",
+        "global.go",
+        "pseudo.go",
+        "zinstructions.go",
+        "zmov.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/build",
+    importpath = "github.com/mmcloughlin/avo/build",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/mmcloughlin/avo/attr:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/buildtags:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/gotypes:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/internal/stack:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/ir:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/operand:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/pass:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/printer:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/reg:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/src:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/x86:go_default_library",
+        "//vendor/golang.org/x/tools/go/packages:go_default_library",
+    ],
+)

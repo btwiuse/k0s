@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "error_codes.go",
+        "errorcode_string.go",
+        "quic_error.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/qerr",
+    importpath = "github.com/lucas-clemente/quic-go/qerr",
+    visibility = ["//visibility:public"],
+)

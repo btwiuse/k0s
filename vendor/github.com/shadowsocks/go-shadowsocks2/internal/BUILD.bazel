@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bloomring.go",
+        "saltfilter.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/shadowsocks/go-shadowsocks2/internal",
+    importpath = "github.com/shadowsocks/go-shadowsocks2/internal",
+    visibility = ["//vendor/github.com/shadowsocks/go-shadowsocks2:__subpackages__"],
+    deps = ["//vendor/github.com/riobard/go-bloom:go_default_library"],
+)

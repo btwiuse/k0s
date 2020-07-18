@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "conn.go",
+        "encrypt.go",
+        "leakybuf.go",
+        "log.go",
+        "mergesort.go",
+        "pipe.go",
+        "proxy.go",
+        "udp.go",
+        "udprelay.go",
+        "util.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/shadowsocks/shadowsocks-go/shadowsocks",
+    importpath = "github.com/shadowsocks/shadowsocks-go/shadowsocks",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Yawning/chacha20:go_default_library",
+        "//vendor/golang.org/x/crypto/blowfish:go_default_library",
+        "//vendor/golang.org/x/crypto/cast5:go_default_library",
+        "//vendor/golang.org/x/crypto/salsa20/salsa:go_default_library",
+    ],
+)

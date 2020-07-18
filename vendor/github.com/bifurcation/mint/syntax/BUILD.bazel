@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "decode.go",
+        "encode.go",
+        "tags.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/bifurcation/mint/syntax",
+    importpath = "github.com/bifurcation/mint/syntax",
+    visibility = ["//visibility:public"],
+)

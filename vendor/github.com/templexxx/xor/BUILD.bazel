@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "avx2_amd64.s",
+        "nosimd.go",
+        "sse2_amd64.s",
+        "xor.go",
+        "xor_amd64.go",
+        "xor_other.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/templexxx/xor",
+    importpath = "github.com/templexxx/xor",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:amd64": [
+            "//vendor/github.com/templexxx/cpufeat:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

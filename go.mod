@@ -6,6 +6,8 @@ go 1.14
 // replace github.com/yrpc/yrpc => /home/aaron/yrpc/yrpc
 replace nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
 
+replace github.com/milosgajdos83/tenus => github.com/milosgajdos/tenus v0.0.0-20200407174313-f075bef9ab28
+
 require (
 	github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5
@@ -35,6 +37,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.8
 	github.com/mattn/go-shellwords v1.0.10
 	github.com/mdp/qrterminal v1.0.1
+	github.com/milosgajdos83/tenus v0.0.0-20200407174313-f075bef9ab28 // indirect
 	github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.9.1

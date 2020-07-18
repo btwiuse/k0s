@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "aes_gcm.go",
+        "asm_amd64.s",
+        "block.go",
+        "cipher.go",
+        "cipher_2.go",
+        "cipher_amd64.go",
+        "cipher_generic.go",
+        "const.go",
+        "gcm.go",
+        "gcm_amd64.s",
+        "xor.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/aes12",
+    importpath = "github.com/lucas-clemente/aes12",
+    visibility = ["//visibility:public"],
+)
