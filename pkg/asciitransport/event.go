@@ -1,7 +1,6 @@
 package asciitransport
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/btwiuse/pretty"

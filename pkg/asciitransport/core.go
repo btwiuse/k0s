@@ -2,7 +2,6 @@ package asciitransport
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
 	"io"
 	"log"
