@@ -127,11 +127,8 @@ func (c *AsciiTransport) goReadConn(r io.Reader) {
 				continue
 			}
 			if line[0] == '[' {
-				var (
-					e   = new(Event)
-					err = json.Unmarshal(buf, e)
-				)
-				if err != nil {
+				e := &Event{}
+				if err := e.UnmarshalJSON(buf); err != nil {
 					log.Println(err)
 					continue
 				}
@@ -155,7 +152,11 @@ func (c *AsciiTransport) goReadConn(r io.Reader) {
 					oe.Time = time.Since(c.start).Seconds()
 					c.log(oe)
 				default:
-					log.Println("unknown message:", e)
+					log.Println(
+						fmt.Sprintf("unknown type: %v", e.Type, e.Type == "i"),
+						fmt.Sprintf("unknown message: %v", e),
+						fmt.Sprintf("unknown line: %v", line),
+					)
 				}
 			}
 			if line[0] == '{' {

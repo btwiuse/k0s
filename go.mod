@@ -28,6 +28,7 @@ require (
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/websocket v1.4.1
+	github.com/json-iterator/go v1.1.9
 	github.com/klauspost/reedsolomon v1.9.9 // indirect
 	github.com/kr/pty v1.1.8 // indirect
 	github.com/liamg/aminal v0.9.0
