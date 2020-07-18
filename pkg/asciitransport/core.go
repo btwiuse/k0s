@@ -152,7 +152,7 @@ func (c *AsciiTransport) goReadConn(r io.Reader) {
 					c.log(oe)
 				default:
 					log.Println(
-						fmt.Sprintf("unknown type: %v", e.Type, e.Type == "i"),
+						fmt.Sprintf("unknown type: %v", e.Type),
 						fmt.Sprintf("unknown message: %v", e),
 						fmt.Sprintf("unknown line: %v", line),
 					)

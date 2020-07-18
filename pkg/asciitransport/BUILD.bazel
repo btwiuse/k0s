@@ -7,6 +7,7 @@ go_library(
         "core.go",
         "event.go",
         "io.go",
+        "json.go",
         "logger.go",
         "server.go",
     ],
@@ -15,5 +16,6 @@ go_library(
     deps = [
         "//pkg/asciitransport/cast:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
+        "//vendor/github.com/json-iterator/go:go_default_library",
     ],
 )
