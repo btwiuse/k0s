@@ -19,11 +19,14 @@ require (
 	github.com/docker/docker v1.4.2-0.20200214221943-d8772509d1a2
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/gdamore/tcell v1.3.0
+	github.com/ginuerzh/gost v0.0.0-20200523132633-2707a8f0a90e
+	github.com/go-log/log v0.2.0 // indirect
 	github.com/golang/protobuf v1.4.1
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/websocket v1.4.1
+	github.com/klauspost/reedsolomon v1.9.9 // indirect
 	github.com/kr/pty v1.1.8 // indirect
 	github.com/liamg/aminal v0.9.0
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
@@ -32,15 +35,15 @@ require (
 	github.com/mattn/go-runewidth v0.0.8
 	github.com/mattn/go-shellwords v1.0.10
 	github.com/mdp/qrterminal v1.0.1
-	github.com/miekg/dns v1.1.27 // indirect
+	github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.6.0
 	github.com/prometheus/common v0.10.0
 	github.com/prometheus/node_exporter v1.0.1
 	github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4
-	github.com/riobard/go-shadowsocks2 v0.2.1
 	github.com/rs/cors v1.7.0
+	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/txthinking/gotun2socks v0.0.0-20180829122610-35016fdae05e
 	github.com/txthinking/socks5 v0.0.0-20190404052647-254e122c4eaf
@@ -55,6 +58,7 @@ require (
 	google.golang.org/grpc v1.30.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/russross/blackfriday.v2 v2.0.0 // indirect
+	gopkg.in/xtaci/smux.v1 v1.4.2 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71 // indirect
 	modernc.org/httpfs v1.0.0

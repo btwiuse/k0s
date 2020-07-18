@@ -15,9 +15,9 @@ var (
 		return handlers.LoggingHandler(os.Stderr, next)
 	}
 	GoroutineMiddleware = func(next http.Handler) http.Handler {
-		return http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
-		    log.Println("You've got", runtime.NumGoroutine(), "goroutines running")
-            next.ServeHTTP(w, r)
-        }))
+		return http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Println("You've got", runtime.NumGoroutine(), "goroutines running")
+			next.ServeHTTP(w, r)
+		}))
 	}
 )
