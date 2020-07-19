@@ -9,6 +9,7 @@ go_library(
         "lys.go",
         "metricsserver.go",
         "middleware.go",
+        "redirectserver.go",
         "rpc.go",
         "socks5server.go",
         "terminalserver.go",

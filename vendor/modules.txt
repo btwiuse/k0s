@@ -260,9 +260,6 @@ github.com/mdlayher/netlink/nlenc
 # github.com/mdlayher/wifi v0.0.0-20190303161829-b1436901ddee
 github.com/mdlayher/wifi
 github.com/mdlayher/wifi/internal/nl80211
-# github.com/mdp/qrterminal v1.0.1
-## explicit
-github.com/mdp/qrterminal
 # github.com/miekg/dns v1.1.27
 github.com/miekg/dns
 # github.com/milosgajdos83/tenus v0.0.0-20200407174313-f075bef9ab28 => github.com/milosgajdos/tenus v0.0.0-20200407174313-f075bef9ab28
@@ -287,9 +284,6 @@ github.com/mmcloughlin/avo/x86
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
-# github.com/patrickmn/go-cache v2.1.0+incompatible
-## explicit
-github.com/patrickmn/go-cache
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
@@ -336,8 +330,6 @@ github.com/shadowsocks/go-shadowsocks2/internal
 github.com/shadowsocks/go-shadowsocks2/shadowaead
 # github.com/shadowsocks/shadowsocks-go v0.0.0-20170121203516-97a5c71f80ba
 github.com/shadowsocks/shadowsocks-go/shadowsocks
-# github.com/shurcooL/sanitized_anchor_name v1.0.0
-github.com/shurcooL/sanitized_anchor_name
 # github.com/siebenmann/go-kstat v0.0.0-20200303194639-4e8294f9e9d5
 github.com/siebenmann/go-kstat
 # github.com/songgao/water v0.0.0-20190725173103-fd331bda3f4b
@@ -354,21 +346,6 @@ github.com/templexxx/cpufeat
 github.com/templexxx/xor
 # github.com/tjfoc/gmsm v1.0.1
 github.com/tjfoc/gmsm/sm4
-# github.com/txthinking/gotun2socks v0.0.0-20180829122610-35016fdae05e
-## explicit
-github.com/txthinking/gotun2socks
-github.com/txthinking/gotun2socks/gosocks
-github.com/txthinking/gotun2socks/internal/packet
-github.com/txthinking/gotun2socks/tun
-# github.com/txthinking/socks5 v0.0.0-20190404052647-254e122c4eaf
-## explicit
-github.com/txthinking/socks5
-# github.com/txthinking/x v0.0.0-20190708114625-99b19c1440b6
-## explicit
-github.com/txthinking/x
-# github.com/urfave/negroni v1.0.0
-## explicit
-github.com/urfave/negroni
 # github.com/xtaci/tcpraw v1.2.25
 github.com/xtaci/tcpraw
 # github.com/yrpc/util v0.0.0-20191229105456-04e44c1bb858
@@ -392,8 +369,6 @@ go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
 # golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
 ## explicit
-golang.org/x/crypto/acme
-golang.org/x/crypto/acme/autocert
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
@@ -419,7 +394,6 @@ golang.org/x/crypto/xtea
 golang.org/x/lint
 golang.org/x/lint/golint
 # golang.org/x/net v0.0.0-20200513185701-a91f0712d120
-## explicit
 golang.org/x/net/bpf
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
@@ -428,11 +402,9 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/iana
 golang.org/x/net/internal/socket
-golang.org/x/net/internal/socks
 golang.org/x/net/internal/timeseries
 golang.org/x/net/ipv4
 golang.org/x/net/ipv6
-golang.org/x/net/proxy
 golang.org/x/net/trace
 # golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 ## explicit
@@ -553,9 +525,6 @@ google.golang.org/protobuf/types/known/timestamppb
 gopkg.in/alecthomas/kingpin.v2
 # gopkg.in/gorilla/websocket.v1 v1.4.0
 gopkg.in/gorilla/websocket.v1
-# gopkg.in/russross/blackfriday.v2 v2.0.0
-## explicit
-gopkg.in/russross/blackfriday.v2
 # gopkg.in/xtaci/kcp-go.v4 v4.3.2
 gopkg.in/xtaci/kcp-go.v4
 # gopkg.in/xtaci/smux.v1 v1.4.2
@@ -577,9 +546,5 @@ nhooyr.io/websocket/internal/bpool
 nhooyr.io/websocket/internal/errd
 nhooyr.io/websocket/internal/wsjs
 nhooyr.io/websocket/internal/xsync
-# rsc.io/qr v0.2.0
-rsc.io/qr
-rsc.io/qr/coding
-rsc.io/qr/gf256
 # nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
 # github.com/milosgajdos83/tenus => github.com/milosgajdos/tenus v0.0.0-20200407174313-f075bef9ab28
