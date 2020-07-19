@@ -69,6 +69,7 @@ type Agent interface {
 	AcceptFS() (net.Conn, error)
 	AcceptGrpc() (net.Conn, error)
 	AcceptSocks5() (net.Conn, error)
+	AcceptRedirect() (net.Conn, error)
 	AcceptMetrics() (net.Conn, error)
 	AcceptTerminal() (net.Conn, error)
 
@@ -78,6 +79,7 @@ type Agent interface {
 	FSChanConn() chan<- net.Conn
 	GrpcChanConn() chan<- net.Conn
 	Socks5ChanConn() chan<- net.Conn
+	RedirectChanConn() chan<- net.Conn
 	MetricsChanConn() chan<- net.Conn
 	TerminalChanConn() chan<- net.Conn
 	// RPC
@@ -94,6 +96,10 @@ type FileServer interface {
 }
 
 type Socks5Server interface {
+	ChanConn() chan<- net.Conn
+}
+
+type RedirectServer interface {
 	ChanConn() chan<- net.Conn
 }
 

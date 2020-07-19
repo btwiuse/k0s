@@ -27,6 +27,7 @@ type agent struct {
 	types.FileServer
 	types.GrpcServer // deprecated in favor of types.TerminalServer
 	types.Socks5Server
+	types.RedirectServer
 	types.MetricsServer
 	types.TerminalServer
 	// grpcln chan<- net.Conn
@@ -44,6 +45,7 @@ func NewAgent(c types.Config) types.Agent {
 		fileServer     = StartFileServer(c)
 		grpcServer     = StartGrpcServer(c)
 		socks5Server   = StartSocks5Server(c)
+		redirectServer   = StartRedirectServer(c)
 		metricsServer  = StartMetricsServer(c)
 		terminalServer = StartTerminalServer(c)
 	)
@@ -60,6 +62,7 @@ func NewAgent(c types.Config) types.Agent {
 		FileServer:     fileServer,
 		GrpcServer:     grpcServer,
 		Socks5Server:   socks5Server,
+		RedirectServer:   redirectServer,
 		MetricsServer:  metricsServer,
 		TerminalServer: terminalServer,
 		id:             id,
@@ -77,6 +80,10 @@ func (ag *agent) GrpcChanConn() chan<- net.Conn {
 
 func (ag *agent) Socks5ChanConn() chan<- net.Conn {
 	return ag.Socks5Server.ChanConn()
+}
+
+func (ag *agent) RedirectChanConn() chan<- net.Conn {
+	return ag.RedirectServer.ChanConn()
 }
 
 func (ag *agent) MetricsChanConn() chan<- net.Conn {
@@ -108,6 +115,22 @@ func (ag *agent) AcceptSocks5() (net.Conn, error) {
 		conn  net.Conn
 		err   error
 		path  = "/api/socks5"
+		query = "id=" + ag.GetID()
+	)
+
+	conn, err = ag.Dial(path, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
+}
+
+func (ag *agent) AcceptRedirect() (net.Conn, error) {
+	var (
+		conn  net.Conn
+		err   error
+		path  = "/api/redirect"
 		query = "id=" + ag.GetID()
 	)
 

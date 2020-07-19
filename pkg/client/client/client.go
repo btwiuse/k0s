@@ -242,7 +242,41 @@ func (cl *client) Run() error {
 }
 
 func (cl *client) RunRedir() error {
-	log.Println("redir", cl.GetRedir())
+	var (
+		c = cl.Config
+	)
+	wsd := wsdialer.New(c)
+
+	ep := fmt.Sprintf("/api/agent/%s/redir", idd)
+	log.Println("dial", ep)
+
+	addr := pkg.REDIR_PROXY_PORT
+	if cl.GetRedir() != "" {
+		addr = cl.GetRedir()
+	}
+	log.Println("redir listening on", addr)
+	ln, err := net.Listen("tcp", addr)
+	if err != nil {
+		log.Fatalln(err)
+		return err
+	}
+
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		go func() {
+			wsconn, err := wsd.Dial(ep, cl.userinfo)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			go io.Copy(wsconn, conn)
+			io.Copy(conn, wsconn)
+		}()
+	}
 	return nil
 }
 
@@ -266,9 +300,6 @@ func (cl *client) RunSocks() error {
 		return err
 	}
 
-	// test socksdialer functionality
-	// currently broken
-	// need further investigation
 	go func() {
 		di := socksdialer.New(c, ep)
 		tr := &http.Transport{
