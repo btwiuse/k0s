@@ -233,11 +233,8 @@ func (cl *client) Run() error {
 	if len(cl.GetRedir()) > 0 {
 		go cl.RunRedir()
 	}
-	if len(cl.GetSocks()) > 0 || len(cl.GetSocks5ToHTTP()) > 0 {
+	if len(cl.GetSocks()) > 0 {
 		go cl.RunSocks()
-	}
-	if len(cl.GetSocks5ToHTTP()) > 0 {
-		go cl.RunSocks5ToHTTP()
 	}
 
 	cl.terminalConnect(fmt.Sprintf("/api/agent/%s/terminal", idd), cl.userinfo)
@@ -305,8 +302,4 @@ func (cl *client) RunSocks() error {
 		}()
 	}
 	return nil
-}
-
-func (cl *client) RunSocks5ToHTTP() error {
-	return cl.runSocks5ToHTTP()
 }

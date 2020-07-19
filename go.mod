@@ -37,10 +37,8 @@ require (
 	github.com/mattn/go-isatty v0.0.12
 	github.com/mattn/go-runewidth v0.0.8
 	github.com/mattn/go-shellwords v1.0.10
-	github.com/mdp/qrterminal v1.0.1
 	github.com/milosgajdos83/tenus v0.0.0-20200407174313-f075bef9ab28 // indirect
 	github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061 // indirect
-	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.6.0
 	github.com/prometheus/common v0.10.0
@@ -49,19 +47,13 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/txthinking/gotun2socks v0.0.0-20180829122610-35016fdae05e
-	github.com/txthinking/socks5 v0.0.0-20190404052647-254e122c4eaf
-	github.com/txthinking/x v0.0.0-20190708114625-99b19c1440b6
-	github.com/urfave/negroni v1.0.0
 	github.com/yrpc/yrpc v0.0.0-20191231114812-451503bf48c2
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
-	golang.org/x/net v0.0.0-20200513185701-a91f0712d120
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	golang.org/x/sys v0.0.0-20200602225109-6fdc65e7d980
 	google.golang.org/genproto v0.0.0-20200212121238-0849286c0f0e // indirect
 	google.golang.org/grpc v1.30.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
-	gopkg.in/russross/blackfriday.v2 v2.0.0 // indirect
 	gopkg.in/xtaci/smux.v1 v1.4.2 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71 // indirect
