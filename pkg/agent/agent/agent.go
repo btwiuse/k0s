@@ -45,7 +45,7 @@ func NewAgent(c types.Config) types.Agent {
 		fileServer     = StartFileServer(c)
 		grpcServer     = StartGrpcServer(c)
 		socks5Server   = StartSocks5Server(c)
-		redirectServer   = StartRedirectServer(c)
+		redirectServer = StartRedirectServer(c)
 		metricsServer  = StartMetricsServer(c)
 		terminalServer = StartTerminalServer(c)
 	)
@@ -62,7 +62,7 @@ func NewAgent(c types.Config) types.Agent {
 		FileServer:     fileServer,
 		GrpcServer:     grpcServer,
 		Socks5Server:   socks5Server,
-		RedirectServer:   redirectServer,
+		RedirectServer: redirectServer,
 		MetricsServer:  metricsServer,
 		TerminalServer: terminalServer,
 		id:             id,

@@ -63,12 +63,14 @@ type Agent interface {
 	AddSessionConn(net.Conn) // deprecated in favor of AddTerminalConn
 	AddMetricsConn(net.Conn)
 	AddSocks5Conn(net.Conn)
+	AddRedirConn(net.Conn)
 	AddFSConn(net.Conn)
 
 	NewTerminal() net.Conn
 	NewSession() Session
 	NewMetrics() net.Conn
 	NewSocks5() net.Conn
+	NewRedir() net.Conn
 	NewFS() net.Conn
 
 	BasicAuth(http.Handler) http.Handler
@@ -114,6 +116,7 @@ type RPC interface {
 	NewSession()  // Session
 	NewMetrics()
 	NewSocks5()
+	NewRedir()
 	NewFS()
 
 	Ping()

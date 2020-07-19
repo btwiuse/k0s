@@ -105,6 +105,25 @@ func (rpc *YS) plumbing() {
 				// send conn to socks5 server
 				ag.Socks5ChanConn() <- conn
 			}
+		case "REDIR":
+			cmd = "REDIR"
+			rpc.actions <- func(ag types.Agent) {
+				var (
+					conn net.Conn
+					err  error
+				)
+				for i := 0; ; i++ {
+					conn, err = ag.AcceptRedirect()
+					if err != nil {
+						log.Println(i, err)
+						time.After(time.Duration(1<<i) * time.Millisecond)
+						continue
+					}
+					break
+				}
+				// send conn to redir server
+				ag.RedirectChanConn() <- conn
+			}
 		case "FS":
 			cmd = "FS"
 			rpc.actions <- func(ag types.Agent) {

@@ -12,9 +12,9 @@ import (
 
 func New(c client.Config, ep string) client.Dialer {
 	wsd := wsdialer.New(c)
-    sd := socks.NewDialer("tcp", ep)
-    sd.ProxyDial = func(ctx context.Context, network, addr string) (net.Conn, error) { return wsd.Dial(ep, nil) }
-	d := &socksdialer{ sd: sd }
+	sd := socks.NewDialer("tcp", ep)
+	sd.ProxyDial = func(ctx context.Context, network, addr string) (net.Conn, error) { return wsd.Dial(ep, nil) }
+	d := &socksdialer{sd: sd}
 	return d
 }
 

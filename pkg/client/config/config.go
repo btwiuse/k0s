@@ -239,13 +239,13 @@ func Parse(args []string) client.Config {
 
 		opts = []Opt{}
 
-		hubapi       *string = fset.String("hub", pkg.DEFAULT_HUB_ADDRESS, "Hub address.")
-		redir        *string = fset.String("redir", pkg.REDIR_PROXY_PORT, "Redir port.")
-		socks        *string = fset.String("socks", pkg.SOCKS5_PROXY_PORT, "Socks port.")
-		verbose      *bool   = fset.Bool("verbose", false, "Verbose log.")
-		version      *bool   = fset.Bool("version", false, "Show agent/hub version info.")
-		insecure     *bool   = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
-		record       *bool   = fset.Bool("record", false, "Record terminal events to a log file.")
+		hubapi   *string = fset.String("hub", pkg.DEFAULT_HUB_ADDRESS, "Hub address.")
+		redir    *string = fset.String("redir", pkg.REDIR_PROXY_PORT, "Redir port.")
+		socks    *string = fset.String("socks", pkg.SOCKS5_PROXY_PORT, "Socks port.")
+		verbose  *bool   = fset.Bool("verbose", false, "Verbose log.")
+		version  *bool   = fset.Bool("version", false, "Show agent/hub version info.")
+		insecure *bool   = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
+		record   *bool   = fset.Bool("record", false, "Record terminal events to a log file.")
 		// cc           *bool   = fset.Bool("cc", false, "Cache credentials.")
 		c *string = fset.String("c", probeConfigFile(), "Config file location.")
 	)

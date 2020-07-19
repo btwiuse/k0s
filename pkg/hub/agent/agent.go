@@ -25,6 +25,7 @@ func NewAgent(rpc hub.RPC, info hub.AgentInfo) hub.Agent {
 		termch:    make(chan net.Conn),
 		sch:       make(chan hub.Session),
 		socks5ch:  make(chan net.Conn),
+		redirch:   make(chan net.Conn),
 		fsch:      make(chan net.Conn),
 		metricsch: make(chan net.Conn),
 	}
@@ -51,6 +52,7 @@ type agent struct {
 	rpc       hub.RPC
 	sch       chan hub.Session
 	socks5ch  chan net.Conn
+	redirch   chan net.Conn
 	fsch      chan net.Conn
 	termch    chan net.Conn
 	metricsch chan net.Conn
@@ -64,6 +66,11 @@ type agent struct {
 func (ag *agent) NewSocks5() net.Conn {
 	ag.rpc.NewSocks5()
 	return <-ag.socks5ch
+}
+
+func (ag *agent) NewRedir() net.Conn {
+	ag.rpc.NewSocks5()
+	return <-ag.redirch
 }
 
 func (ag *agent) NewFS() net.Conn {
@@ -126,6 +133,11 @@ func (ag *agent) AddFSConn(conn net.Conn) {
 // blocks until agent.NewSocks5 reads the channel
 func (ag *agent) AddSocks5Conn(conn net.Conn) {
 	ag.socks5ch <- conn
+}
+
+// blocks until agent.NewRedir reads the channel
+func (ag *agent) AddRedirConn(conn net.Conn) {
+	ag.redirch <- conn
 }
 
 // blocks until agent.NewMetrics reads the channel

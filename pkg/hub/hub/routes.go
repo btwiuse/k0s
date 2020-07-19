@@ -103,6 +103,7 @@ func (h *hub) initServer(addr string) {
 	r.HandleFunc("/api/fs", h.handleFS).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/socks5", h.handleSocks5).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/redir", h.handleRedir).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/metrics", h.handleMetrics).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/terminal", h.handleTerminal).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/version", h.handleVersion).Methods("GET")
@@ -192,6 +193,26 @@ func (h *hub) handleSocks5(w http.ResponseWriter, r *http.Request) {
 	h.GetAgent(id).AddSocks5Conn(conn)
 }
 
+func (h *hub) handleRedir(w http.ResponseWriter, r *http.Request) {
+	var (
+		vars = mux.Vars(r)
+		id   = vars["id"]
+	)
+
+	if !h.Has(id) {
+		log.Println("no such id", id)
+		return
+	}
+
+	conn, err := wrconn(w, r)
+	if err != nil {
+		log.Println("error accepting redir:", err)
+		return
+	}
+
+	h.GetAgent(id).AddRedirConn(conn)
+}
+
 func (h *hub) handleMetrics(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars = mux.Vars(r)
@@ -278,6 +299,8 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case strings.HasPrefix(subpath, "/rootfs"):
 		ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
+	case strings.HasPrefix(subpath, "/redir"):
+		ag.BasicAuth(http.HandlerFunc(redirRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/socks5"):
 		ag.BasicAuth(http.HandlerFunc(socks5Relay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):

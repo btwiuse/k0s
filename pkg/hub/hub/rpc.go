@@ -137,6 +137,13 @@ func (ys *YS) NewSocks5() {
 	}
 }
 
+func (ys *YS) NewRedir() {
+	_, err := io.WriteString(ys.Conn, fmt.Sprintln("REDIR"))
+	if err != nil {
+		ys.Close()
+	}
+}
+
 func (ys *YS) NewFS() {
 	_, err := io.WriteString(ys.Conn, fmt.Sprintln("FS"))
 	if err != nil {
