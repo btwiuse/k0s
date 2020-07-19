@@ -130,7 +130,7 @@ func (ag *agent) AcceptRedirect() (net.Conn, error) {
 	var (
 		conn  net.Conn
 		err   error
-		path  = "/api/redirect"
+		path  = "/api/redir"
 		query = "id=" + ag.GetID()
 	)
 

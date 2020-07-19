@@ -69,7 +69,7 @@ func (ag *agent) NewSocks5() net.Conn {
 }
 
 func (ag *agent) NewRedir() net.Conn {
-	ag.rpc.NewSocks5()
+	ag.rpc.NewRedir()
 	return <-ag.redirch
 }
 
