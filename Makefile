@@ -38,7 +38,6 @@ bazel-build-windows:            ## Build windows binaries using bazel
 
 bazel-build-darwin:            ## Build darwin binaries using bazel
 	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64  //:k0s
-	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:darwin_386    //:k0s
 
 bazel-build-bsd:            ## Build bsd binaries using bazel
 	@ bazel build --platforms=@io_bazel_rules_go//go/toolchain:freebsd_amd64  //:k0s
@@ -114,7 +113,7 @@ build-windows:  ## Build windows binaries
 
 build-darwin:   ## Build darwin binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-		darwin/{386,amd64}
+		darwin/amd64
 
 scratch-build:  ## Build without using existing build cache
 	@ go run bin.go -d releases/latest -ldflags="${LDFLAGS}" -- -a
