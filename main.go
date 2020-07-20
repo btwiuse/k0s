@@ -12,6 +12,7 @@ import (
 	"k0s.io/k0s/pkg/cli/agent"
 	"k0s.io/k0s/pkg/cli/client"
 	"k0s.io/k0s/pkg/cli/hub"
+	"k0s.io/k0s/pkg/cli/gost"
 )
 
 func main() {
@@ -38,6 +39,9 @@ func main() {
 		When([]interface{}{"agent", match.ANY}, func() {
 			agent.Run(osargs[1:])
 		}).
+		When([]interface{}{"gost", match.ANY}, func() {
+			gost.Main(osargs[1:])
+		}).
 
 		// conntroll hub -> hub
 		// conntroll agent -> agent
@@ -56,6 +60,9 @@ func main() {
 		}).
 		When([]interface{}{match.ANY, "agent", match.ANY}, func() {
 			agent.Run(osargs[2:])
+		}).
+		When([]interface{}{match.ANY, "gost", match.ANY}, func() {
+			gost.Main(osargs[2:])
 		}).
 
 		// k0s -> client
