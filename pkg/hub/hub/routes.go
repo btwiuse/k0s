@@ -109,10 +109,6 @@ func (h *hub) initServer(addr string) {
 	r.HandleFunc("/api/version", h.handleVersion).Methods("GET")
 	r.Handle("/api/metrics", h.MetricsHandler).Methods("GET")
 
-	// kept for backward compatibility. will remove in next stable release
-	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
-	r.HandleFunc("/version", h.handleVersion).Methods("GET")
-
 	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
 	h.Server = &http.Server{
 		Addr:         addr,
