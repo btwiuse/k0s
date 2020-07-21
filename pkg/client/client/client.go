@@ -19,7 +19,6 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io/k0s/pkg"
 	types "k0s.io/k0s/pkg/client"
-	"k0s.io/k0s/pkg/client/socksdialer"
 	"k0s.io/k0s/pkg/client/wsdialer"
 	"k0s.io/k0s/pkg/console"
 	"k0s.io/k0s/pkg/fzf"
@@ -299,22 +298,6 @@ func (cl *client) RunSocks() error {
 		log.Fatalln(err)
 		return err
 	}
-
-	go func() {
-		di := socksdialer.New(c, ep)
-		tr := &http.Transport{
-			Dial: func(network, addr string) (net.Conn, error) {
-				return di.Dial(addr, cl.userinfo)
-			},
-		}
-		client := http.Client{Transport: tr}
-		resp, err := client.Get("http://echo.jpillora.com/")
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		io.Copy(os.Stderr, resp.Body)
-	}()
 
 	for {
 		conn, err := ln.Accept()
