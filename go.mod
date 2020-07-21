@@ -22,7 +22,7 @@ require (
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/gdamore/tcell v1.3.0
 	github.com/ginuerzh/gost v0.0.0-20200523132633-2707a8f0a90e
-	github.com/go-log/log v0.2.0 // indirect
+	github.com/go-log/log v0.2.0
 	github.com/golang/protobuf v1.4.1
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/handlers v1.4.2
@@ -47,7 +47,6 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/yrpc/yrpc v0.0.0-20191231114812-451503bf48c2
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	golang.org/x/sys v0.0.0-20200602225109-6fdc65e7d980
@@ -55,8 +54,7 @@ require (
 	google.golang.org/grpc v1.30.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/xtaci/smux.v1 v1.4.2 // indirect
-	gopkg.in/yaml.v2 v2.3.0
-	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71
 	modernc.org/httpfs v1.0.0
 	nhooyr.io/websocket v1.8.6
 )
