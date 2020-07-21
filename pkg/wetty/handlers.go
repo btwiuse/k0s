@@ -36,7 +36,7 @@ func (server *Server) terminalHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("New client connected: %s, connections: %d/%d", r.RemoteAddr, 0, 0)
 
 	if r.Method != "GET" {
-		http.Error(w, "Method not allowed", 405)
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed /*405*/)
 		return
 	}
 
