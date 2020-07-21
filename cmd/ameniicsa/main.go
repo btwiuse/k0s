@@ -86,7 +86,7 @@ func main() {
 	// send
 	// r
 	go func() {
-		sig := make(chan os.Signal)
+		sig := make(chan os.Signal, 1)
 		signal.Notify(sig, syscall.SIGWINCH)
 
 		for {
