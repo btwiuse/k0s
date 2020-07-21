@@ -7,11 +7,13 @@ import (
 	"log"
 	"net"
 	"os/exec"
+	"strings"
 
 	"github.com/btwiuse/pretty"
 	"golang.org/x/sync/errgroup"
 	types "k0s.io/k0s/pkg/agent"
 	"k0s.io/k0s/pkg/agent/dialer"
+	"k0s.io/k0s/pkg/api"
 )
 
 var (
@@ -22,15 +24,9 @@ type agent struct {
 	*errgroup.Group
 	types.Config
 	types.Dialer
+	Tunnels map[api.Tunnel]chan net.Conn
 	// types.RPC
 
-	types.FileServer
-	types.GrpcServer // deprecated in favor of types.TerminalServer
-	types.Socks5Server
-	types.RedirectServer
-	types.MetricsServer
-	types.TerminalServer
-	// grpcln chan<- net.Conn
 	id   string
 	name string
 }
@@ -41,144 +37,40 @@ func NewAgent(c types.Config) types.Agent {
 		id    = c.GetID()
 		name  = c.GetName()
 		shell = "bash"
-
-		fileServer     = StartFileServer(c)
-		grpcServer     = StartGrpcServer(c)
-		socks5Server   = StartSocks5Server(c)
-		redirectServer = StartRedirectServer(c)
-		metricsServer  = StartMetricsServer(c)
-		terminalServer = StartTerminalServer(c)
 	)
 
-	log.Println("connected as", name)
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
 	}
 
+	log.Println("connected as", name)
+
 	return &agent{
-		Group:          eg,
-		Config:         c,
-		Dialer:         dialer.New(c),
-		FileServer:     fileServer,
-		GrpcServer:     grpcServer,
-		Socks5Server:   socks5Server,
-		RedirectServer: redirectServer,
-		MetricsServer:  metricsServer,
-		TerminalServer: terminalServer,
-		id:             id,
-		name:           name,
+		Group:  eg,
+		Config: c,
+		Dialer: dialer.New(c),
+		Tunnels: map[api.Tunnel]chan net.Conn{
+			api.FS:       StartFileServer(c),
+			api.Socks5:   StartSocks5Server(c),
+			api.Redir:    StartRedirectServer(c),
+			api.Metrics:  StartMetricsServer(c),
+			api.Terminal: StartTerminalServer(c),
+			api.Ping:     StartPingServer(c),
+		},
+		id:   id,
+		name: name,
 	}
 }
 
-func (ag *agent) FSChanConn() chan<- net.Conn {
-	return ag.FileServer.ChanConn()
+func (ag *agent) TunnelChan(tun api.Tunnel) chan net.Conn {
+	return ag.Tunnels[tun]
 }
 
-func (ag *agent) GrpcChanConn() chan<- net.Conn {
-	return ag.GrpcServer.ChanConn()
-}
-
-func (ag *agent) Socks5ChanConn() chan<- net.Conn {
-	return ag.Socks5Server.ChanConn()
-}
-
-func (ag *agent) RedirectChanConn() chan<- net.Conn {
-	return ag.RedirectServer.ChanConn()
-}
-
-func (ag *agent) MetricsChanConn() chan<- net.Conn {
-	return ag.MetricsServer.ChanConn()
-}
-
-func (ag *agent) TerminalChanConn() chan<- net.Conn {
-	return ag.TerminalServer.ChanConn()
-}
-
-func (ag *agent) AcceptFS() (net.Conn, error) {
+func (ag *agent) Accept(tun api.Tunnel) (net.Conn, error) {
 	var (
 		conn  net.Conn
 		err   error
-		path  = "/api/fs"
-		query = "id=" + ag.GetID()
-	)
-
-	conn, err = ag.Dial(path, query)
-	if err != nil {
-		return nil, err
-	}
-
-	return conn, nil
-}
-
-func (ag *agent) AcceptSocks5() (net.Conn, error) {
-	var (
-		conn  net.Conn
-		err   error
-		path  = "/api/socks5"
-		query = "id=" + ag.GetID()
-	)
-
-	conn, err = ag.Dial(path, query)
-	if err != nil {
-		return nil, err
-	}
-
-	return conn, nil
-}
-
-func (ag *agent) AcceptRedirect() (net.Conn, error) {
-	var (
-		conn  net.Conn
-		err   error
-		path  = "/api/redir"
-		query = "id=" + ag.GetID()
-	)
-
-	conn, err = ag.Dial(path, query)
-	if err != nil {
-		return nil, err
-	}
-
-	return conn, nil
-}
-
-func (ag *agent) AcceptGrpc() (net.Conn, error) {
-	var (
-		conn  net.Conn
-		err   error
-		path  = "/api/grpc"
-		query = "id=" + ag.GetID()
-	)
-
-	conn, err = ag.Dial(path, query)
-	if err != nil {
-		return nil, err
-	}
-
-	return conn, nil
-}
-
-func (ag *agent) AcceptMetrics() (net.Conn, error) {
-	var (
-		conn  net.Conn
-		err   error
-		path  = "/api/metrics"
-		query = "id=" + ag.GetID()
-	)
-
-	conn, err = ag.Dial(path, query)
-	if err != nil {
-		return nil, err
-	}
-
-	return conn, nil
-}
-
-func (ag *agent) AcceptTerminal() (net.Conn, error) {
-	var (
-		conn  net.Conn
-		err   error
-		path  = "/api/terminal"
+		path  = "/api/" + strings.ToLower(tun.String())
 		query = "id=" + ag.GetID()
 	)
 

@@ -2,26 +2,15 @@ package agent
 
 import (
 	"net"
-
-	types "k0s.io/k0s/pkg/agent"
-)
-
-var (
-	_ types.GrpcServer   = (*lys)(nil)
-	_ types.Socks5Server = (*lys)(nil)
 )
 
 // lys implements net.Listener
 type lys struct {
-	conns chan net.Conn
-}
-
-func (l *lys) ChanConn() chan<- net.Conn {
-	return l.conns
+	Conns chan net.Conn
 }
 
 func (l *lys) Accept() (net.Conn, error) {
-	return <-l.conns, nil
+	return <-l.Conns, nil
 }
 
 func (l *lys) Close() error {
@@ -42,6 +31,6 @@ func (l *lys) String() string {
 
 func NewLys() *lys {
 	return &lys{
-		conns: make(chan net.Conn),
+		Conns: make(chan net.Conn),
 	}
 }

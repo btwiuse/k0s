@@ -5,6 +5,7 @@ import (
 	"net"
 
 	"k0s.io/k0s/pkg"
+	"k0s.io/k0s/pkg/api"
 )
 
 type Info interface {
@@ -64,51 +65,20 @@ type RPC interface {
 type Agent interface {
 	Config
 	Dialer
+	TunnelListener
+	TunnelChan(api.Tunnel) chan net.Conn
 	AgentRegister(net.Conn) (RPC, error)
-
-	AcceptFS() (net.Conn, error)
-	AcceptGrpc() (net.Conn, error)
-	AcceptSocks5() (net.Conn, error)
-	AcceptRedirect() (net.Conn, error)
-	AcceptMetrics() (net.Conn, error)
-	AcceptTerminal() (net.Conn, error)
 
 	ConnectAndServe() error
 	Serve(RPC) error
 
-	FSChanConn() chan<- net.Conn
-	GrpcChanConn() chan<- net.Conn
-	Socks5ChanConn() chan<- net.Conn
-	RedirectChanConn() chan<- net.Conn
-	MetricsChanConn() chan<- net.Conn
-	TerminalChanConn() chan<- net.Conn
 	// RPC
 	// ServeGRPC() error
 	// Connect() (RPC, error)
 }
 
-type MetricsServer interface {
-	ChanConn() chan<- net.Conn
-}
-
-type FileServer interface {
-	ChanConn() chan<- net.Conn
-}
-
-type Socks5Server interface {
-	ChanConn() chan<- net.Conn
-}
-
-type RedirectServer interface {
-	ChanConn() chan<- net.Conn
-}
-
-type GrpcServer interface {
-	ChanConn() chan<- net.Conn
-}
-
-type TerminalServer interface {
-	ChanConn() chan<- net.Conn
+type TunnelListener interface {
+	Accept(api.Tunnel) (net.Conn, error)
 }
 
 type TtyFactory interface {

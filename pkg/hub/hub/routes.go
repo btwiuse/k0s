@@ -15,6 +15,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"k0s.io/k0s/pkg/api"
 	"k0s.io/k0s/pkg/exporter"
 	types "k0s.io/k0s/pkg/hub"
 	"modernc.org/httpfs"
@@ -31,18 +32,19 @@ type hub struct {
 	*http.Server
 
 	c              types.Config
-	handleRPC      http.Handler // http.Handler|net.Listener
 	MetricsHandler http.Handler
 }
 
 func NewHub(c types.Config) types.Hub {
-	h := &hub{
-		c:              c,
-		AgentManager:   NewAgentManager(),
-		MetricsHandler: exporter.NewHandler(),
-	}
-	h.startRPCServer()
-	h.initServer(c.Port())
+	var (
+		listhand = NewHandleHijackListener()
+		h        = &hub{
+			c:              c,
+			AgentManager:   NewAgentManager(),
+			MetricsHandler: exporter.NewHandler(),
+		}
+	)
+	go h.serve(listhand, listhand)
 	return h
 }
 
@@ -50,7 +52,16 @@ func (h *hub) GetConfig() types.Config {
 	return h.c
 }
 
-func (h *hub) serveRPC(ln net.Listener) {
+// this function is modeled after http.Serve(net.Listener, http.Handler)
+// but unlike conventional servers, in which connections are extablished
+// on the listener side and then passed on to handler,
+// this one doesn't require listening on a port, and the direction in which
+// connection goes is exactly opposite: the net.Conn's are created on the
+// handler side and then sent through a (chan net.Conn) to the listener side
+func (h *hub) serve(ln net.Listener, hl http.Handler) {
+	h.initServer(h.c.Port(), hl)
+	// ln <- net.Conn <- hl
+	// ln: conventionally a producer of net.Conn, but it's role here is consumer
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
@@ -65,21 +76,31 @@ func (h *hub) serveRPC(ln net.Listener) {
 func (h *hub) register(conn net.Conn) {
 	var rpc = ToRPC(conn)
 
-	defer rpc.Unregister(h)
+	// unregister
+	defer h.Del(rpc.ID())
 
 	for {
 		select {
 		case f := <-rpc.Actions():
 			go f(h)
-		case <-rpc.Done():
-			return
 		case <-time.After(3 * time.Second):
 			go rpc.Ping()
+		case <-rpc.Done():
+			return
 		}
 	}
 }
 
-func (h *hub) initServer(addr string) {
+func (h *hub) initServer(addr string, hl http.Handler) {
+	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
+	h.Server = &http.Server{
+		Addr:         addr,
+		Handler:      h.initHandler(hl),
+		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
+	}
+}
+
+func (h *hub) initHandler(hl http.Handler) http.Handler {
 	r := mux.NewRouter()
 
 	// list active agents
@@ -95,26 +116,24 @@ func (h *hub) initServer(addr string) {
 	// agent hijack => yrpc -> hub.RPC -> hub.Agent
 	// alternative websocket implementation:
 	// http upgrade => websocket conn => net.Conn => hub.RPC -> hub.Agent
-	r.Handle("/api/rpc", h.handleRPC).Methods("GET")
+
+	// hl -> net.Conn -> ln
+	// hl: conventionally a consumer of net.Conn, but it's role here is producer
+	r.Handle("/api/rpc", hl).Methods("GET")
 
 	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
 	// alternative websocket implementation:
 	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
-	r.HandleFunc("/api/fs", h.handleFS).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/api/grpc", h.handleGRPC).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/api/socks5", h.handleSocks5).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/api/redir", h.handleRedir).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/api/metrics", h.handleMetrics).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/api/terminal", h.handleTerminal).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/fs", h.handleTunnel(api.FS)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/socks5", h.handleTunnel(api.Socks5)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/redir", h.handleTunnel(api.Redir)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/metrics", h.handleTunnel(api.Metrics)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/terminal", h.handleTunnel(api.Terminal)).Methods("GET").Queries("id", "{id}")
+
+	// hub specific function
 	r.HandleFunc("/api/version", h.handleVersion).Methods("GET")
 	r.Handle("/api/metrics", h.MetricsHandler).Methods("GET")
-
-	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
-	h.Server = &http.Server{
-		Addr:         addr,
-		Handler:      handlers.LoggingHandler(os.Stderr, cors.AllowAll().Handler(r)),
-		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
-	}
+	return handlers.LoggingHandler(os.Stderr, cors.AllowAll().Handler(r))
 }
 
 func (h *hub) handleVersion(w http.ResponseWriter, r *http.Request) {
@@ -149,124 +168,26 @@ func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *hub) handleGRPC(w http.ResponseWriter, r *http.Request) {
-	var (
-		vars = mux.Vars(r)
-		id   = vars["id"]
-	)
+func (h *hub) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var (
+			vars = mux.Vars(r)
+			id   = vars["id"]
+		)
 
-	if !h.Has(id) {
-		log.Println("no such id", id)
-		return
+		if !h.Has(id) {
+			log.Println("no such id", id)
+			return
+		}
+
+		conn, err := wrconn(w, r)
+		if err != nil {
+			log.Printf("error accepting %s: %s\n", tun, err)
+			return
+		}
+
+		h.GetAgent(id).AddTunnel(tun, conn)
 	}
-
-	conn, err := wrconn(w, r)
-	if err != nil {
-		log.Println("error accepting grpc:", err)
-		return
-	}
-
-	h.GetAgent(id).AddSessionConn(conn)
-}
-
-func (h *hub) handleSocks5(w http.ResponseWriter, r *http.Request) {
-	var (
-		vars = mux.Vars(r)
-		id   = vars["id"]
-	)
-
-	if !h.Has(id) {
-		log.Println("no such id", id)
-		return
-	}
-
-	conn, err := wrconn(w, r)
-	if err != nil {
-		log.Println("error accepting socks5:", err)
-		return
-	}
-
-	h.GetAgent(id).AddSocks5Conn(conn)
-}
-
-func (h *hub) handleRedir(w http.ResponseWriter, r *http.Request) {
-	var (
-		vars = mux.Vars(r)
-		id   = vars["id"]
-	)
-
-	if !h.Has(id) {
-		log.Println("no such id", id)
-		return
-	}
-
-	conn, err := wrconn(w, r)
-	if err != nil {
-		log.Println("error accepting redir:", err)
-		return
-	}
-
-	h.GetAgent(id).AddRedirConn(conn)
-}
-
-func (h *hub) handleMetrics(w http.ResponseWriter, r *http.Request) {
-	var (
-		vars = mux.Vars(r)
-		id   = vars["id"]
-	)
-
-	if !h.Has(id) {
-		log.Println("no such id", id)
-		return
-	}
-
-	conn, err := wrconn(w, r)
-	if err != nil {
-		log.Println("error accepting metrics:", err)
-		return
-	}
-
-	h.GetAgent(id).AddMetricsConn(conn)
-}
-
-func (h *hub) handleTerminal(w http.ResponseWriter, r *http.Request) {
-	var (
-		vars = mux.Vars(r)
-		id   = vars["id"]
-	)
-
-	if !h.Has(id) {
-		log.Println("no such id", id)
-		return
-	}
-
-	conn, err := wrconn(w, r)
-	if err != nil {
-		log.Println("error accepting terminal:", err)
-		return
-	}
-
-	h.GetAgent(id).AddTerminalConn(conn)
-}
-
-func (h *hub) handleFS(w http.ResponseWriter, r *http.Request) {
-	var (
-		vars = mux.Vars(r)
-		id   = vars["id"]
-	)
-
-	if !h.Has(id) {
-		log.Println("no such id", id)
-		return
-	}
-
-	conn, err := wrconn(w, r)
-	if err != nil {
-		log.Println("error accepting ws:", err)
-		return
-	}
-
-	h.GetAgent(id).AddFSConn(conn)
 }
 
 func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
@@ -306,14 +227,4 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 	default:
 		ag.BasicAuth(staticFileHandler).ServeHTTP(w, r)
 	}
-}
-
-func (h *hub) startRPCServer() {
-	var (
-		listhand              = NewHandleHijackListener()
-		handler  http.Handler = listhand
-		listener net.Listener = listhand
-	)
-	h.handleRPC = handler
-	go h.serveRPC(listener)
 }

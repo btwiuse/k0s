@@ -8,7 +8,6 @@ import (
 
 	"k0s.io/k0s/pkg"
 	"k0s.io/k0s/pkg/api"
-	"k0s.io/k0s/pkg/asciitransport"
 )
 
 type AgentInfo interface {
@@ -56,54 +55,10 @@ type AgentManager interface {
 type Agent interface {
 	AgentInfo
 	pkg.Tider
-	SessionManager
 
-	// AddRPCConn(net.Conn)
-	AddTerminalConn(net.Conn)
-	AddSessionConn(net.Conn) // deprecated in favor of AddTerminalConn
-	AddMetricsConn(net.Conn)
-	AddSocks5Conn(net.Conn)
-	AddRedirConn(net.Conn)
-	AddFSConn(net.Conn)
-
-	NewTerminal() net.Conn
-	NewSession() Session
-	NewMetrics() net.Conn
-	NewSocks5() net.Conn
-	NewRedir() net.Conn
-	NewFS() net.Conn
-
+	AddTunnel(api.Tunnel, net.Conn)
+	NewTunnel(api.Tunnel) net.Conn
 	BasicAuth(http.Handler) http.Handler
-}
-
-type SessionManager interface {
-	pkg.Manager
-
-	AddSession(Session)
-	GetSession(string) Session
-}
-
-type TerminalManager interface {
-	pkg.Manager
-
-	AddTerminal(Terminal)
-	GetTerminal(string) Terminal
-}
-
-type Terminal interface {
-	pkg.Tider
-	asciitransport.AsciiTransportClient
-}
-
-type Session interface {
-	pkg.Tider
-	api.SessionClient
-
-	// TTY() io.ReaderFrom // | io.WriterTo
-	// FS(api.ChunkRequest) io.ReaderFrom
-
-	// close the underlying *grpc.ClientConn to release memory
-	Close() error
 }
 
 type RPC interface {
@@ -112,22 +67,9 @@ type RPC interface {
 	Close()
 	Done() <-chan struct{}
 
-	NewTerminal() // Terminal
-	NewSession()  // Session
-	NewMetrics()
-	NewSocks5()
-	NewRedir()
-	NewFS()
+	NewTunnel(api.Tunnel)
 
 	Ping()
 	RemoteIP() string
 	Actions() <-chan func(Hub)
-	Unregister(Hub)
-}
-
-type RPCManager interface {
-	pkg.Manager
-
-	AddRPC(RPC)
-	Last() RPC
 }

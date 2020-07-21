@@ -27,7 +27,7 @@ func Main(args []string) {
 
 	var (
 		printVersion bool
-        flagset = flag.NewFlagSet("gost", flag.ContinueOnError)
+		flagset      = flag.NewFlagSet("gost", flag.ContinueOnError)
 	)
 
 	flagset.Var(&baseCfg.route.ChainNodes, "F", "forward address, can make a forward chain")
@@ -112,7 +112,7 @@ func start() error {
 		return errors.New("invalid config")
 	}
 	for i := range routers {
-        fmt.Println(routers[i])
+		fmt.Println(routers[i])
 		go routers[i].Serve()
 	}
 

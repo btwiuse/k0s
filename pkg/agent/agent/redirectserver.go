@@ -7,10 +7,10 @@ import (
 	types "k0s.io/k0s/pkg/agent"
 )
 
-func StartRedirectServer(c types.Config) types.RedirectServer {
+func StartRedirectServer(c types.Config) chan net.Conn {
 	redirectListener := NewLys()
 	go redirectServe(redirectListener)
-	return redirectListener
+	return redirectListener.Conns
 }
 
 var redirectHandler = gost.TCPRedirectHandler()

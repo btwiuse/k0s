@@ -2,12 +2,12 @@ package agent
 
 import (
 	"bufio"
-	"io"
 	"log"
 	"net"
 	"time"
 
 	types "k0s.io/k0s/pkg/agent"
+	"k0s.io/k0s/pkg/api"
 )
 
 var (
@@ -16,13 +16,11 @@ var (
 
 func NewRPC(conn net.Conn) types.RPC {
 	scanner := bufio.NewScanner(conn)
-	pingChan := make(chan time.Time)
 	ys := &YS{
-		Conn:     conn,
-		Scanner:  scanner,
-		pingChan: pingChan,
-		actions:  make(chan func(types.Agent)),
-		done:     make(chan struct{}),
+		Conn:    conn,
+		Scanner: scanner,
+		actions: make(chan func(types.Agent)),
+		done:    make(chan struct{}),
 	}
 	go ys.plumbing()
 	return ys
@@ -32,156 +30,41 @@ func (rpc *YS) plumbing() {
 	defer rpc.Close()
 	for rpc.Scan() {
 		cmd := rpc.Text()
-		switch cmd {
-		case "PING":
-			cmd = "PING"
-			rpc.actions <- func(ag types.Agent) {
-				err := rpc.Pong()
+		tun, err := api.FromString(cmd)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		if tun == api.Ping {
+			continue
+		}
+		rpc.actions <- func(ag types.Agent) {
+			var (
+				conn net.Conn
+				err  error
+			)
+			// make sure conn is not nil
+			for i := 0; ; i++ {
+				conn, err = ag.Accept(tun)
 				if err != nil {
-					return
+					log.Println(i, err)
+					// retry on exponential interval
+					time.After(time.Duration(1<<i) * time.Millisecond)
+					continue
 				}
-				// rpc.pingChan <- time.Now()
+				break
 			}
-		case "ACCEPT":
-			cmd = "ACCEPT"
-			rpc.actions <- func(ag types.Agent) {
-				var (
-					conn net.Conn
-					err  error
-				)
-				// make sure conn is not nil
-				for i := 0; ; i++ {
-					conn, err = ag.AcceptGrpc()
-					if err != nil {
-						log.Println(i, err)
-						// retry on exponential interval
-						time.After(time.Duration(1<<i) * time.Millisecond)
-						continue
-					}
-					break
-				}
-				// send conn to grpc server
-				ag.GrpcChanConn() <- conn
-			}
-			// log.Println(cmd)
-		case "TERMINAL":
-			cmd = "TERMINAL"
-			rpc.actions <- func(ag types.Agent) {
-				var (
-					conn net.Conn
-					err  error
-				)
-				// make sure conn is not nil
-				for i := 0; ; i++ {
-					conn, err = ag.AcceptTerminal()
-					if err != nil {
-						log.Println(i, err)
-						// retry on exponential interval
-						time.After(time.Duration(1<<i) * time.Millisecond)
-						continue
-					}
-					break
-				}
-				// send conn to grpc server
-				ag.TerminalChanConn() <- conn
-			}
-			// log.Println(cmd)
-		case "SOCKS5":
-			cmd = "SOCKS5"
-			rpc.actions <- func(ag types.Agent) {
-				var (
-					conn net.Conn
-					err  error
-				)
-				for i := 0; ; i++ {
-					conn, err = ag.AcceptSocks5()
-					if err != nil {
-						log.Println(i, err)
-						time.After(time.Duration(1<<i) * time.Millisecond)
-						continue
-					}
-					break
-				}
-				// send conn to socks5 server
-				ag.Socks5ChanConn() <- conn
-			}
-		case "REDIR":
-			cmd = "REDIR"
-			rpc.actions <- func(ag types.Agent) {
-				var (
-					conn net.Conn
-					err  error
-				)
-				for i := 0; ; i++ {
-					conn, err = ag.AcceptRedirect()
-					if err != nil {
-						log.Println(i, err)
-						time.After(time.Duration(1<<i) * time.Millisecond)
-						continue
-					}
-					break
-				}
-				// send conn to redir server
-				ag.RedirectChanConn() <- conn
-			}
-		case "FS":
-			cmd = "FS"
-			rpc.actions <- func(ag types.Agent) {
-				var (
-					conn net.Conn
-					err  error
-				)
-				for i := 0; ; i++ {
-					conn, err = ag.AcceptFS()
-					if err != nil {
-						log.Println(i, err)
-						time.After(time.Duration(1<<i) * time.Millisecond)
-						continue
-					}
-					break
-				}
-				// send conn to socks5 server
-				ag.FSChanConn() <- conn
-			}
-		case "METRICS":
-			cmd = "METRICS"
-			rpc.actions <- func(ag types.Agent) {
-				var (
-					conn net.Conn
-					err  error
-				)
-				for i := 0; ; i++ {
-					conn, err = ag.AcceptMetrics()
-					if err != nil {
-						log.Println(i, err)
-						time.After(time.Duration(1<<i) * time.Millisecond)
-						continue
-					}
-					break
-				}
-				// send conn to socks5 server
-				ag.MetricsChanConn() <- conn
-			}
-		default:
-			cmd = "UNKNOWN_CMD: " + cmd
-			log.Println(cmd)
-			// TODO: investigate 'Error: duplicate id'
+			ag.TunnelChan(tun) <- conn
 		}
 	}
-}
-
-func (ys *YS) Pong() error {
-	_, err := io.WriteString(ys.Conn, "PONG\n")
-	return err
 }
 
 type YS struct {
 	net.Conn
 	*bufio.Scanner
 	// cmdc chan Cmd
-	actions  chan func(types.Agent)
-	done     chan struct{}
-	pingChan chan time.Time
+	actions chan func(types.Agent)
+	done    chan struct{}
 }
 
 func (ys *YS) Actions() <-chan func(types.Agent) {

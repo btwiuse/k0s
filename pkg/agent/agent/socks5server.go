@@ -7,10 +7,10 @@ import (
 	types "k0s.io/k0s/pkg/agent"
 )
 
-func StartSocks5Server(c types.Config) types.Socks5Server {
+func StartSocks5Server(c types.Config) chan net.Conn {
 	socks5Listener := NewLys()
 	go autoServe(socks5Listener)
-	return socks5Listener
+	return socks5Listener.Conns
 }
 
 var autoHandler = gost.AutoHandler()

@@ -9,7 +9,7 @@ import (
 	"k0s.io/k0s/pkg/asciitransport"
 )
 
-func StartTerminalServer(c types.Config) types.TerminalServer {
+func StartTerminalServer(c types.Config) chan net.Conn {
 	var (
 		cmd              []string = c.GetCmd()
 		ro               bool     = c.GetReadOnly()
@@ -18,7 +18,7 @@ func StartTerminalServer(c types.Config) types.TerminalServer {
 	)
 	_ = ro
 	go serveTerminal(terminalListener, fac)
-	return terminalListener
+	return terminalListener.Conns
 }
 
 func serveTerminal(ln net.Listener, fac types.TtyFactory) {

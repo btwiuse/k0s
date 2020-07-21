@@ -13,7 +13,8 @@ import (
 	"strings"
 
 	"github.com/btwiuse/pretty"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
+
 	"k0s.io/k0s/pkg"
 	"k0s.io/k0s/pkg/client"
 	"k0s.io/k0s/pkg/version"

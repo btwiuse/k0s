@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"k0s.io/k0s/pkg/api"
 	types "k0s.io/k0s/pkg/hub"
 	"k0s.io/k0s/pkg/wrap"
 	"nhooyr.io/websocket"
@@ -28,7 +29,7 @@ func terminalRelay(ag types.Agent) http.HandlerFunc {
 		wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
 		defer wsconn.Close()
 
-		conn := ag.NewTerminal()
+		conn := ag.NewTunnel(api.Terminal)
 		defer conn.Close()
 
 		go io.Copy(conn, wsconn)
@@ -58,7 +59,7 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 		}
 		defer conn.Close()
 
-		fsConn := ag.NewFS()
+		fsConn := ag.NewTunnel(api.FS)
 		defer fsConn.Close()
 
 		go func() {
@@ -90,7 +91,7 @@ func metricsRelay(ag types.Agent) http.HandlerFunc {
 		}
 		defer conn.Close()
 
-		metricsConn := ag.NewMetrics()
+		metricsConn := ag.NewTunnel(api.Metrics)
 		defer metricsConn.Close()
 
 		go func() {
@@ -111,7 +112,7 @@ func socks5Relay(ag types.Agent) http.HandlerFunc {
 		}
 		conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
 
-		socks5Conn := ag.NewSocks5()
+		socks5Conn := ag.NewTunnel(api.Socks5)
 		defer socks5Conn.Close()
 
 		go func() {
@@ -141,7 +142,7 @@ func redirRelay(ag types.Agent) http.HandlerFunc {
 		}
 		conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
 
-		redirConn := ag.NewRedir()
+		redirConn := ag.NewTunnel(api.Redir)
 		defer redirConn.Close()
 
 		go func() {

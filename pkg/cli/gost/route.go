@@ -36,7 +36,7 @@ func (r *route) parseChain() (*gost.Chain, error) {
 	gid := 1 // group ID
 
 	for _, ns := range r.ChainNodes {
-        fmt.Println("ChainNode", ns)
+		fmt.Println("ChainNode", ns)
 		ngroup := gost.NewNodeGroup()
 		ngroup.ID = gid
 		gid++
@@ -312,12 +312,12 @@ func (r *route) GenRouters() ([]router, error) {
 		return nil, err
 	}
 
-    fmt.Println("chain", chain)
+	fmt.Println("chain", chain)
 
 	var rts []router
 
 	for _, ns := range r.ServeNodes {
-        fmt.Println("ServeNode", ns)
+		fmt.Println("ServeNode", ns)
 		node, err := gost.ParseNode(ns)
 		if err != nil {
 			return nil, err
@@ -635,7 +635,7 @@ func (r *route) GenRouters() ([]router, error) {
 			resolver: resolver,
 			hosts:    hosts,
 		}
-        fmt.Println("router", rt)
+		fmt.Println("router", rt)
 		rts = append(rts, rt)
 	}
 

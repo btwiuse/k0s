@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"k0s.io/k0s/pkg/api"
 	types "k0s.io/k0s/pkg/hub"
 	"k0s.io/k0s/pkg/hub/agent"
 	"k0s.io/k0s/pkg/hub/agent/info"
@@ -85,11 +86,6 @@ func (ys *YS) Actions() <-chan func(types.Hub) {
 	return ys.actions
 }
 
-func (ys *YS) Unregister(h types.Hub) {
-	log.Println("Disconnected:", ys.agentId, ys.agentName)
-	h.Del(ys.agentId)
-}
-
 func (ys *YS) Close() {
 	ys.closeOnceDone.Do(func() {
 		close(ys.done)
@@ -130,43 +126,9 @@ type YS struct {
 	closeOnceDone *sync.Once
 }
 
-func (ys *YS) NewSocks5() {
-	_, err := io.WriteString(ys.Conn, fmt.Sprintln("SOCKS5"))
-	if err != nil {
-		ys.Close()
-	}
-}
-
-func (ys *YS) NewRedir() {
-	_, err := io.WriteString(ys.Conn, fmt.Sprintln("REDIR"))
-	if err != nil {
-		ys.Close()
-	}
-}
-
-func (ys *YS) NewFS() {
-	_, err := io.WriteString(ys.Conn, fmt.Sprintln("FS"))
-	if err != nil {
-		ys.Close()
-	}
-}
-
-func (ys *YS) NewMetrics() {
-	_, err := io.WriteString(ys.Conn, fmt.Sprintln("METRICS"))
-	if err != nil {
-		ys.Close()
-	}
-}
-
-func (ys *YS) NewTerminal() {
-	_, err := io.WriteString(ys.Conn, fmt.Sprintln("TERMINAL"))
-	if err != nil {
-		ys.Close()
-	}
-}
-
-func (ys *YS) NewSession() {
-	_, err := io.WriteString(ys.Conn, fmt.Sprintln("ACCEPT"))
+func (ys *YS) NewTunnel(tun api.Tunnel) {
+	cmd := tun.String()
+	_, err := io.WriteString(ys.Conn, fmt.Sprintln(cmd))
 	if err != nil {
 		ys.Close()
 	}

@@ -15,7 +15,8 @@ import (
 
 	"github.com/btwiuse/pretty"
 	"github.com/denisbrodbeck/machineid"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
+
 	"k0s.io/k0s/pkg"
 	"k0s.io/k0s/pkg/agent"
 	"k0s.io/k0s/pkg/agent/info"
