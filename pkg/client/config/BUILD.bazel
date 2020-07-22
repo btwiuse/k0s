@@ -10,7 +10,7 @@ go_library(
         "//pkg/client:go_default_library",
         "//pkg/version:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
-        "//vendor/gopkg.in/yaml.v2:go_default_library",
+        "//vendor/gopkg.in/yaml.v3:go_default_library",
     ],
 )
 

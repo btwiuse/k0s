@@ -18,9 +18,8 @@ go_proto_library(
 
 go_library(
     name = "go_default_library",
-    srcs = ["yrpc.go"],
+    srcs = ["tunnel.go"],
     embed = [":api_go_proto"],
     importpath = "k0s.io/k0s/pkg/api",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/yrpc/yrpc:go_default_library"],
 )
