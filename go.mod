@@ -1,6 +1,6 @@
 module k0s.io/k0s
 
-go 1.14
+go 1.15
 
 // replace github.com/btwiuse/wetty => /home/aaron/wetty
 // replace github.com/yrpc/yrpc => /home/aaron/yrpc/yrpc
