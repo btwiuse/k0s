@@ -12,7 +12,7 @@ require (
 	github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abbot/go-http-auth v0.4.0
-	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200207085858-033d90da7458
+	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.33
