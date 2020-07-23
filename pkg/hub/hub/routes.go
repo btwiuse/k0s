@@ -44,6 +44,8 @@ func NewHub(c types.Config) types.Hub {
 			MetricsHandler: exporter.NewHandler(),
 		}
 	)
+	// ensure core fields of h is not empty before return
+	h.initServer(h.c.Port(), listhand)
 	go h.serve(listhand, listhand)
 	return h
 }
@@ -58,8 +60,7 @@ func (h *hub) GetConfig() types.Config {
 // this one doesn't require listening on a port, and the direction in which
 // connection goes is exactly opposite: the net.Conn's are created on the
 // handler side and then sent through a (chan net.Conn) to the listener side
-func (h *hub) serve(ln net.Listener, hl http.Handler) {
-	h.initServer(h.c.Port(), hl)
+func (h *hub) serve(ln net.Listener, _ http.Handler) {
 	// ln <- net.Conn <- hl
 	// ln: conventionally a producer of net.Conn, but it's role here is consumer
 	for {
