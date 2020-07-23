@@ -31,7 +31,7 @@ github.com/alecthomas/template
 github.com/alecthomas/template/parse
 # github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d
 github.com/alecthomas/units
-# github.com/alexpantyukhin/go-pattern-match v0.0.0-20200207085858-033d90da7458
+# github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 ## explicit
 github.com/alexpantyukhin/go-pattern-match
 # github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496

@@ -97,8 +97,8 @@ go_repository(
 go_repository(
     name = "com_github_alexpantyukhin_go_pattern_match",
     importpath = "github.com/alexpantyukhin/go-pattern-match",
-    sum = "h1:t0v8VSnPA/bRTqC/qiEd5Va4TADGQWpwUUXvJ7XY0w8=",
-    version = "v0.0.0-20200207085858-033d90da7458",
+    sum = "h1:Bq65TLHVwjKAnS+kaPOi3lyOpw0rnNmKcw7EsY4WzuM=",
+    version = "v0.0.0-20200628201436-c57d5ad3f2c5",
 )
 
 go_repository(

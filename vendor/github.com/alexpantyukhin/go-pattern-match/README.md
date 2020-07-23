@@ -7,14 +7,14 @@
 [![GoDoc](https://godoc.org/alexpantyukhin/go-pattern-match?status.svg)](https://godoc.org/github.com/alexpantyukhin/go-pattern-match)
 [![LICENSE](https://img.shields.io/github/license/alexpantyukhin/go-pattern-match.svg)](https://github.com/alexpantyukhin/go-pattern-match/blob/master/LICENSE)
 
-It's just another approach for using pattern matching in Go. I have been inspired by [python pattern matching](https://github.com/santinic/pampy) that's why I wanted to make an attempt to rewrite something similar in Go :)
+It's just another implementation of pattern matching in Go. I have been inspired by [Python pattern matching](https://github.com/santinic/pampy), that's why I wanted to try writing something similar in Go :)
 For now the following matching are implemented :
    - [x] Simple types (like int, int64, float, float64, bool..).
    - [x] Struct type.
    - [x] Slices (with HEAD, TAIL, OneOf patterns).
    - [x] Dictionary (with ANY, OneOf pattern).
    - [x] Regexp.
-   - [x] Adding custom matching (ability to add special matching for some structs for example)
+   - [x] Additional custom matching (ability to add special matching for some, structs for example).
    
 # Usages
 
@@ -42,12 +42,23 @@ isMatched, mr := match.Match(42).
 ```
 
 ## With Structs:
+- Simple check value by type
 ```go
 val := TestStruct{1}
 
 isMatched, _ := Match(val).
     When(func(TestStruct) {},  1).
     Result()
+```
+
+- Check value by type and condition
+```go
+val := TestStruct{1}
+
+isMatched, _ := Match(val).
+	When(func(ts TestStruct) bool { return ts.value == 42 }, 1).
+	When(func(ts AnotherStruct) bool { return ts.stringValue == "hello" }, 2).
+	Result()
 ```
 
 ## With Maps:
@@ -92,7 +103,7 @@ func main() {
 ```
 
 # Installation
-Just `go get` this repository with the following way:
+Just `go get` this repository in the following way:
 
 ```
 go get github.com/alexpantyukhin/go-pattern-match
