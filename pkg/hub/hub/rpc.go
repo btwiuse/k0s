@@ -39,6 +39,9 @@ func ToRPC(conn net.Conn) types.RPC {
 
 func (rpc *YS) plumbing() {
 	defer rpc.Close()
+	defer func(){
+        println("hub close")
+    }()
 	for rpc.Scan() {
 		cmd := rpc.Text()
 		switch {
