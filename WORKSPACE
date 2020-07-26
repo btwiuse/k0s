@@ -139,8 +139,8 @@ go_repository(
 go_repository(
     name = "com_github_btwiuse_wetty",
     importpath = "github.com/btwiuse/wetty",
-    sum = "h1:Z/eu9pNQp+nviUjcirpqRQ4VGYtqeGBS7N6JIGfjTtM=",
-    version = "v0.0.33",
+    sum = "h1:qDfYyHazoFJvBp24RjyPPpUnHL9YjI1QKc3nJZ9bNag=",
+    version = "v0.0.34",
 )
 
 go_repository(
@@ -615,15 +615,15 @@ go_repository(
 go_repository(
     name = "com_github_onsi_ginkgo",
     importpath = "github.com/onsi/ginkgo",
-    sum = "h1:Iw5WCbBcaAAd0fpRb1c9r5YCylv4XDoCSigm1zLevwU=",
-    version = "v1.12.0",
+    sum = "h1:WSHQ+IS43OoUrWtD1/bbclrwK8TTH5hzp+umCiuxHgs=",
+    version = "v1.7.0",
 )
 
 go_repository(
     name = "com_github_onsi_gomega",
     importpath = "github.com/onsi/gomega",
-    sum = "h1:R1uwffexN6Pr340GtYRIdZmAiN4J+iw6WG4wog1DUXg=",
-    version = "v1.9.0",
+    sum = "h1:RE1xgDvH7imwFD45h+u2SgIfERHlS2yNG4DObb5BSKU=",
+    version = "v1.4.3",
 )
 
 go_repository(

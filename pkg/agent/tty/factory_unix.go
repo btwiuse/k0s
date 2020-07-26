@@ -3,8 +3,8 @@
 package tty
 
 import (
-	"github.com/btwiuse/wetty/pkg/localcmd"
 	"k0s.io/k0s/pkg/agent"
+	"k0s.io/k0s/pkg/localcmd"
 )
 
 func NewFactory(args []string) agent.TtyFactory {

@@ -11,31 +11,31 @@ go_library(
     deps = select({
         "@io_bazel_rules_go//go/platform:android": [
             "//pkg/agent:go_default_library",
-            "//vendor/github.com/btwiuse/wetty/pkg/localcmd:go_default_library",
+            "//pkg/localcmd:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:darwin": [
             "//pkg/agent:go_default_library",
-            "//vendor/github.com/btwiuse/wetty/pkg/localcmd:go_default_library",
+            "//pkg/localcmd:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:freebsd": [
             "//pkg/agent:go_default_library",
-            "//vendor/github.com/btwiuse/wetty/pkg/localcmd:go_default_library",
+            "//pkg/localcmd:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:ios": [
             "//pkg/agent:go_default_library",
-            "//vendor/github.com/btwiuse/wetty/pkg/localcmd:go_default_library",
+            "//pkg/localcmd:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:linux": [
             "//pkg/agent:go_default_library",
-            "//vendor/github.com/btwiuse/wetty/pkg/localcmd:go_default_library",
+            "//pkg/localcmd:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:netbsd": [
             "//pkg/agent:go_default_library",
-            "//vendor/github.com/btwiuse/wetty/pkg/localcmd:go_default_library",
+            "//pkg/localcmd:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:openbsd": [
             "//pkg/agent:go_default_library",
-            "//vendor/github.com/btwiuse/wetty/pkg/localcmd:go_default_library",
+            "//pkg/localcmd:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:windows": [
             "//pkg/agent:go_default_library",

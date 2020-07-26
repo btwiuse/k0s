@@ -15,7 +15,7 @@ require (
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
-	github.com/btwiuse/wetty v0.0.33
+	github.com/btwiuse/wetty v0.0.34
 	github.com/creack/pty v1.1.11
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/docker/docker v1.4.2-0.20200214221943-d8772509d1a2
