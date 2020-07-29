@@ -28,7 +28,8 @@ builddate(){
 version(){
 # basedir=$(dirname $(realpath $0))
 # cd $basedir/../..
-  git describe --abbrev=0 --tags
+# git describe --abbrev=0 --tags
+  cat VERSION
 }
 
 ldflags(){
