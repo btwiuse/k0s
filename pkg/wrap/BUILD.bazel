@@ -3,8 +3,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "connaddr.go",
         "hijack.go",
         "netconn_nhooyr.go",
+        "wrconn.go",
+        "wrconn_nhooyr.go",
     ],
     importpath = "k0s.io/k0s/pkg/wrap",
     visibility = ["//visibility:public"],
