@@ -13,14 +13,13 @@ import (
 )
 
 func wscheme(u *url.URL) string {
-        switch u.Scheme {
-        case "https":
-                return "wss"
-        default:
-                return "ws"
-        }
+	switch u.Scheme {
+	case "https":
+		return "wss"
+	default:
+		return "ws"
+	}
 }
-
 
 func Dial(addr string, from string) (conn net.Conn, err error) {
 	_url, err := url.Parse(addr)
