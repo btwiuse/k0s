@@ -27,7 +27,7 @@ func New(args []string) *Server {
 // The cancelation of ctx will shutdown the server immediately with aborting
 // existing connections. Use WithGracefullContext() to support gracefull shutdown.
 func (server *Server) Run() error {
-	scheme, host, port, path := "http", "127.0.0.1", "8080", "/"
+	scheme, host, port, path := "http", "0.0.0.0", "45080", "/"
 	hostPort := host + ":" + port
 	url := scheme + "://" + hostPort + path
 

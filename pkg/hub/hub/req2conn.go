@@ -4,6 +4,8 @@ import (
 	"log"
 	"net"
 	"net/http"
+
+    "k0s.io/k0s/pkg/wrap"
 )
 
 var (
@@ -19,15 +21,15 @@ type lys struct {
 
 func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Header)
-	conn, err := wrconn(w, r)
+	conn, err := wrap.Wrconn(w, r)
 	if err != nil {
 		log.Println("error ws accept:", err)
 		return
 	}
 
 	if forward := r.Header.Get("X-Forwarded-For"); forward != "" {
-		addr := NewAddr(conn.RemoteAddr().Network(), forward)
-		conn = ConnWithAddr(conn, addr)
+		addr := wrap.NewAddr(conn.RemoteAddr().Network(), forward)
+		conn = wrap.ConnWithAddr(conn, addr)
 	}
 
 	l.conns <- conn

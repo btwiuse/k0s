@@ -2,14 +2,13 @@
 // +build !nhooyr
 // +build !raw
 
-package hub
+package wrap
 
 import (
 	"net"
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"k0s.io/k0s/pkg/wrap"
 )
 
 var up = &websocket.Upgrader{}
@@ -19,6 +18,6 @@ func wrconn(w http.ResponseWriter, r *http.Request) (net.Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	conn := wrap.NetConn(wsconn)
+	conn := NetConn(wsconn)
 	return conn, nil
 }

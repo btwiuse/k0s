@@ -1,13 +1,12 @@
 // +build !gorilla
 // +build !raw
 
-package hub
+package wrap
 
 import (
 	"net"
 	"net/http"
 
-	"k0s.io/k0s/pkg/wrap"
 	"nhooyr.io/websocket"
 )
 
@@ -18,7 +17,7 @@ func wrconn(w http.ResponseWriter, r *http.Request) (net.Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	conn := wrap.NetConn(wsconn)
+	conn := NetConn(wsconn)
 	addr := NewAddr("websocket", r.RemoteAddr)
 	conn = ConnWithAddr(conn, addr)
 	return conn, nil

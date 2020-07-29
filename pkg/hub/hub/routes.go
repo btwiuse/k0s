@@ -17,6 +17,7 @@ import (
 	"github.com/rs/cors"
 	"k0s.io/k0s/pkg/api"
 	"k0s.io/k0s/pkg/exporter"
+    "k0s.io/k0s/pkg/wrap"
 	types "k0s.io/k0s/pkg/hub"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
@@ -181,7 +182,7 @@ func (h *hub) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *http.R
 			return
 		}
 
-		conn, err := wrconn(w, r)
+		conn, err := wrap.Wrconn(w, r)
 		if err != nil {
 			log.Printf("error accepting %s: %s\n", tun, err)
 			return
