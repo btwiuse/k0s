@@ -16,7 +16,7 @@ var (
 )
 
 func newTunnels() map[api.Tunnel]chan net.Conn {
-    tuns := make(map[api.Tunnel]chan net.Conn)
+	tuns := make(map[api.Tunnel]chan net.Conn)
 	for i := 0; i < 256; i++ {
 		tuns[api.Tunnel(i)] = make(chan net.Conn)
 	}

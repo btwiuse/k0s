@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/http"
 
-    "k0s.io/k0s/pkg/wrap"
+	"k0s.io/k0s/pkg/wrap"
 )
 
 var (

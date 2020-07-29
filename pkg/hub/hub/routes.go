@@ -17,8 +17,8 @@ import (
 	"github.com/rs/cors"
 	"k0s.io/k0s/pkg/api"
 	"k0s.io/k0s/pkg/exporter"
-    "k0s.io/k0s/pkg/wrap"
 	types "k0s.io/k0s/pkg/hub"
+	"k0s.io/k0s/pkg/wrap"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
 )
@@ -131,6 +131,7 @@ func (h *hub) initHandler(hl http.Handler) http.Handler {
 	r.HandleFunc("/api/redir", h.handleTunnel(api.Redir)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/metrics", h.handleTunnel(api.Metrics)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/api/terminal", h.handleTunnel(api.Terminal)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/api/version", h.handleTunnel(api.Version)).Methods("GET").Queries("id", "{id}")
 
 	// hub specific function
 	r.HandleFunc("/api/version", h.handleVersion).Methods("GET")
@@ -222,6 +223,8 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		ag.BasicAuth(http.HandlerFunc(redirRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/socks5"):
 		ag.BasicAuth(http.HandlerFunc(socks5Relay(ag))).ServeHTTP(w, r)
+	case strings.HasPrefix(subpath, "/version"):
+		versionRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):
 		metricsRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/terminal"):

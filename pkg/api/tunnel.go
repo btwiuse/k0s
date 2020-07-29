@@ -14,6 +14,7 @@ const (
 	Redir
 	FS
 	Ping
+	Version
 )
 
 var tunnelNames = []string{
@@ -24,6 +25,7 @@ var tunnelNames = []string{
 	"REDIR",
 	"FS",
 	"PING",
+	"VERSION",
 }
 
 func (tun Tunnel) String() string {

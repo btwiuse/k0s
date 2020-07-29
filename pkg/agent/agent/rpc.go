@@ -28,9 +28,9 @@ func NewRPC(conn net.Conn) types.RPC {
 
 func (rpc *YS) plumbing() {
 	defer rpc.Close()
-	defer func(){
-        println("agent close")
-    }()
+	defer func() {
+		println("agent close")
+	}()
 	for rpc.Scan() {
 		cmd := rpc.Text()
 		tun, err := api.FromString(cmd)

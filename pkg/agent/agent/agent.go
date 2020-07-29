@@ -56,6 +56,7 @@ func NewAgent(c types.Config) types.Agent {
 			api.Metrics:  StartMetricsServer(c),
 			api.Terminal: StartTerminalServer(c),
 			api.Ping:     StartPingServer(c),
+			api.Version:  StartVersionServer(c),
 		},
 		id:   id,
 		name: name,
