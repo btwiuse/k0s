@@ -32,7 +32,7 @@ func Handler(prefix string) http.Handler {
 
 func paths() []string {
 	st := []string{}
-	for k, _ := range defaultTunnelMux.TunnelConns {
+	for k := range defaultTunnelMux.TunnelConns {
 		st = append(st, k)
 	}
 	return st
@@ -40,7 +40,7 @@ func paths() []string {
 
 func keys() []string {
 	st := []string{}
-	for k, _ := range defaultTunnelMux.Conns {
+	for k := range defaultTunnelMux.Conns {
 		st = append(st, k)
 	}
 	return st
