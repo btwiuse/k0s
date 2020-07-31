@@ -90,9 +90,25 @@ func (cl *client) ListAgents() (agis []hub.AgentInfo, err error) {
 
 func (cl *client) Run() error {
 	cl.sl.AddCmd(&ishell.Cmd{
+		Name: "kill",
+		Help: "kill background job by job id",
+		Func: func(c *ishell.Context) {
+		},
+	})
+	cl.sl.AddCmd(&ishell.Cmd{
+		Name: "jobs",
+		Help: "list background jobs TODO",
+		Func: func(c *ishell.Context) {
+		},
+	})
+	cl.sl.AddCmd(&ishell.Cmd{
 		Name: "login",
 		Help: "login to agent with id",
 		Func: func(c *ishell.Context) {
+			if len(c.RawArgs) < 2 {
+				log.Println("wrong number of args")
+				return
+			}
 			id := c.RawArgs[1]
 			if id == "" {
 				return
