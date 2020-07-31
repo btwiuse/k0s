@@ -12,14 +12,19 @@ require (
 	github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abbot/go-http-auth v0.4.0
+	github.com/abiosoft/ishell v2.0.0+incompatible
+	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.34
+	github.com/chzyer/logex v1.1.10 // indirect
+	github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1 // indirect
 	github.com/creack/pty v1.1.11
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/docker/docker v1.4.2-0.20200214221943-d8772509d1a2
 	github.com/emirpasic/gods v1.12.0 // indirect
+	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/gdamore/tcell v1.3.0
 	github.com/ginuerzh/gost v0.0.0-20200523132633-2707a8f0a90e
 	github.com/go-log/log v0.2.0

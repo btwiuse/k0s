@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "actions.go",
+        "command.go",
+        "completer.go",
+        "context.go",
+        "functions.go",
+        "ishell.go",
+        "progress.go",
+        "reader.go",
+        "utils_unix.go",
+        "utils_windows.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/abiosoft/ishell",
+    importpath = "github.com/abiosoft/ishell",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/abiosoft/readline:go_default_library",
+        "//vendor/github.com/fatih/color:go_default_library",
+        "//vendor/github.com/flynn-archive/go-shlex:go_default_library",
+    ],
+)

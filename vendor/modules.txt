@@ -23,6 +23,12 @@ github.com/Yawning/chacha20
 # github.com/abbot/go-http-auth v0.4.0
 ## explicit
 github.com/abbot/go-http-auth
+# github.com/abiosoft/ishell v2.0.0+incompatible
+## explicit
+github.com/abiosoft/ishell
+# github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db
+## explicit
+github.com/abiosoft/readline
 # github.com/agl/ed25519 v0.0.0-20170116200512-5312a6153412
 github.com/agl/ed25519/edwards25519
 github.com/agl/ed25519/extra25519
@@ -56,6 +62,10 @@ github.com/btwiuse/wetty/pkg/assets
 github.com/cespare/xxhash/v2
 # github.com/cheekybits/genny v1.0.0
 github.com/cheekybits/genny/generic
+# github.com/chzyer/logex v1.1.10
+## explicit
+# github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1
+## explicit
 # github.com/coreos/go-iptables v0.4.5
 github.com/coreos/go-iptables/iptables
 # github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
@@ -83,6 +93,11 @@ github.com/emirpasic/gods/lists
 github.com/emirpasic/gods/lists/doublylinkedlist
 github.com/emirpasic/gods/maps
 github.com/emirpasic/gods/utils
+# github.com/fatih/color v1.7.0
+github.com/fatih/color
+# github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568
+## explicit
+github.com/flynn-archive/go-shlex
 # github.com/gdamore/encoding v1.0.0
 github.com/gdamore/encoding
 # github.com/gdamore/tcell v1.3.0
@@ -237,6 +252,8 @@ github.com/lufia/iostat
 # github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
 ## explicit
 github.com/lukesampson/figlet/figletlib
+# github.com/mattn/go-colorable v0.0.9
+github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.12
 ## explicit
 github.com/mattn/go-isatty

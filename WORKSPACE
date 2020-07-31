@@ -2286,3 +2286,38 @@ go_repository(
     sum = "h1:c8h60PKrRxEB5debIHBmP7T+s/EUNXTklXqlmJfYiJQ=",
     version = "v0.0.0-20181103133120-08f4d470188e",
 )
+
+go_repository(
+    name = "com_github_abiosoft_ishell",
+    importpath = "github.com/abiosoft/ishell",
+    sum = "h1:zpwIuEHc37EzrsIYah3cpevrIc8Oma7oZPxr03tlmmw=",
+    version = "v2.0.0+incompatible",
+)
+
+go_repository(
+    name = "com_github_abiosoft_readline",
+    importpath = "github.com/abiosoft/readline",
+    sum = "h1:CjPUSXOiYptLbTdr1RceuZgSFDQ7U15ITERUGrUORx8=",
+    version = "v0.0.0-20180607040430-155bce2042db",
+)
+
+go_repository(
+    name = "com_github_chzyer_logex",
+    importpath = "github.com/chzyer/logex",
+    sum = "h1:Swpa1K6QvQznwJRcfTfQJmTE72DqScAa40E+fbHEXEE=",
+    version = "v1.1.10",
+)
+
+go_repository(
+    name = "com_github_chzyer_test",
+    importpath = "github.com/chzyer/test",
+    sum = "h1:q763qf9huN11kDQavWsoZXJNW3xEE4JJyHa5Q25/sd8=",
+    version = "v0.0.0-20180213035817-a1ea475d72b1",
+)
+
+go_repository(
+    name = "com_github_flynn_archive_go_shlex",
+    importpath = "github.com/flynn-archive/go-shlex",
+    sum = "h1:BMXYYRWTLOJKlh+lOBt6nUQgXAfB7oVIQt5cNreqSLI=",
+    version = "v0.0.0-20150515145356-3f9db97f8568",
+)

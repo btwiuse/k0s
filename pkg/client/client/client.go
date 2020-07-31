@@ -16,6 +16,7 @@ import (
 	"text/tabwriter"
 
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
+	"github.com/abiosoft/ishell"
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io/k0s/pkg"
 	types "k0s.io/k0s/pkg/client"
@@ -34,6 +35,7 @@ var (
 func NewClient(c types.Config) types.Client {
 	cl := &client{
 		Config: c,
+		sl: ishell.New(),
 	}
 	return cl
 }
@@ -41,6 +43,7 @@ func NewClient(c types.Config) types.Client {
 type client struct {
 	types.Config
 	userinfo *url.Userinfo
+	sl *ishell.Shell
 }
 
 func (cl *client) ListAgents() (agis []hub.AgentInfo, err error) {
@@ -86,30 +89,53 @@ func (cl *client) ListAgents() (agis []hub.AgentInfo, err error) {
 }
 
 func (cl *client) Run() error {
+	cl.sl.AddCmd(&ishell.Cmd{
+		Name: "fzf",
+		Help: "list currently connected agents and pipe to fzf",
+		Func: func(c *ishell.Context) {
+			cl.runFzf()
+		},
+	})
+	cl.sl.AddCmd(&ishell.Cmd{
+		Name: "ls",
+		Help: "list currently connected agents",
+		Func: func(c *ishell.Context) {
+			cl.printAgentTable(os.Stdout)
+		},
+	})
+	cl.sl.Run()
+	return nil
+}
+
+func (cl *client) printAgentTable(out io.Writer) error {
+	ags, err := cl.ListAgents()
+	if err != nil {
+		return err
+	}
+	w := new(tabwriter.Writer)
+	w.Init(out, 2, 0, 2, ' ', 0)
+	fmt.Fprintln(w, strings.ReplaceAll("agent username hostname os arch distro auth @", " ", "\t"))
+	for _, ag := range ags {
+		col := fmt.Sprintf(
+			strings.ReplaceAll("%s %s %s %s %s %s %t %s", " ", "\t"),
+			ag.GetName(), ag.GetUsername(), ag.GetHostname(), ag.GetOS(),
+			ag.GetArch(), ag.GetDistro(), ag.GetAuth(), "@"+ag.GetID(),
+		)
+		fmt.Fprintln(w, col)
+	}
+	w.Flush()
+	return nil
+}
+
+func (cl *client) runFzf() error {
 	var (
 		c        = cl.Config
 		id       = &strings.Builder{}
 		pr, pw   = io.Pipe()
-		ags, err = cl.ListAgents()
 	)
-	if err != nil {
-		return err
-	}
 
 	go func() {
-		w := new(tabwriter.Writer)
-		w.Init(pw, 2, 0, 2, ' ', 0)
-		fmt.Fprintln(w, strings.ReplaceAll("agent username hostname os arch distro auth @", " ", "\t"))
-		for _, ag := range ags {
-			col := fmt.Sprintf(
-				strings.ReplaceAll("%s %s %s %s %s %s %t %s", " ", "\t"),
-				ag.GetName(), ag.GetUsername(), ag.GetHostname(), ag.GetOS(),
-				ag.GetArch(), ag.GetDistro(), ag.GetAuth(), "@"+ag.GetID(),
-			)
-			// log.Println(col)
-			fmt.Fprintln(w, col)
-		}
-		w.Flush()
+		cl.printAgentTable(pw)
 		pw.Close()
 	}()
 
@@ -137,7 +163,8 @@ func (cl *client) Run() error {
 	fzf.Run(fzf.ParseOptions(args, opts...), "revision")
 
 	if strings.TrimSpace(id.String()) == "" {
-		log.Fatalln("fzf empty result", id, idd)
+		// log.Fatalln("fzf empty result", id, idd)
+		return nil
 	}
 
 	parts := strings.Split(id.String(), "@")
@@ -156,6 +183,10 @@ func (cl *client) Run() error {
 		pass string
 	)
 
+	ags, err := cl.ListAgents()
+	if err != nil {
+		return err
+	}
 	for _, ag := range ags {
 		if ag.GetID() == idd {
 			if ag.GetAuth() {
