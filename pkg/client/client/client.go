@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
 	"strings"
 	"text/tabwriter"
 
@@ -89,6 +90,22 @@ func (cl *client) ListAgents() (agis []hub.AgentInfo, err error) {
 }
 
 func (cl *client) Run() error {
+	cl.sl.AddCmd(&ishell.Cmd{
+		Name: "self",
+		Help: "run /proc/self/exe with args",
+		Func: func(c *ishell.Context) {
+			self, err := os.Executable()
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			cmd := exec.Command(self, c.RawArgs[1:]...)
+			cmd.Stdout = os.Stdout
+			cmd.Stdin = os.Stdin
+			cmd.Stderr = os.Stderr
+			cmd.Run()
+		},
+	})
 	cl.sl.AddCmd(&ishell.Cmd{
 		Name: "kill",
 		Help: "kill background job by job id",
