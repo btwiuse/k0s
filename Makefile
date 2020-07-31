@@ -130,6 +130,15 @@ release:        ## Build and upload binaries for all supported platforms
 	@ pushd bin; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
 	@ .ci/release-latest.sh
 
+dist:           ## Build and make an dist image TODO: android builder image
+	@ make build
+	@ make build-linux-arm
+	@ make build-windows
+	@ make build-darwin
+	@ pushd bin; test -f index.html && rm index.html; tree -H '.' --noreport --charset utf-8 | sponge index.html; popd
+	@ cp VERSION bin/
+	@ ../../srvhubcli/bin/mnt https://mntcd.op.milvzn.com/btwiuse/k0s/v0.0.10/ ./bin/
+
 install:        ## install binary to system paths
 	install -Dvm755 bin/$(NAME) /usr/bin/$(NAME)
 	install -Dvm644 .systemd/k0s-agent@.service /etc/systemd/system/k0s-agent@.service
