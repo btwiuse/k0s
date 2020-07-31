@@ -35,7 +35,7 @@ var (
 func NewClient(c types.Config) types.Client {
 	cl := &client{
 		Config: c,
-		sl: ishell.New(),
+		sl:     ishell.New(),
 	}
 	return cl
 }
@@ -43,7 +43,7 @@ func NewClient(c types.Config) types.Client {
 type client struct {
 	types.Config
 	userinfo *url.Userinfo
-	sl *ishell.Shell
+	sl       *ishell.Shell
 }
 
 func (cl *client) ListAgents() (agis []hub.AgentInfo, err error) {
@@ -90,10 +90,25 @@ func (cl *client) ListAgents() (agis []hub.AgentInfo, err error) {
 
 func (cl *client) Run() error {
 	cl.sl.AddCmd(&ishell.Cmd{
+		Name: "login",
+		Help: "login to agent with id",
+		Func: func(c *ishell.Context) {
+			id := c.RawArgs[1]
+			if id == "" {
+				return
+			}
+			cl.runLogin(id)
+		},
+	})
+	cl.sl.AddCmd(&ishell.Cmd{
 		Name: "fzf",
 		Help: "list currently connected agents and pipe to fzf",
 		Func: func(c *ishell.Context) {
-			cl.runFzf()
+			id := cl.runFzf()
+			if id == "" {
+				return
+			}
+			cl.runLogin(id)
 		},
 	})
 	cl.sl.AddCmd(&ishell.Cmd{
@@ -127,11 +142,10 @@ func (cl *client) printAgentTable(out io.Writer) error {
 	return nil
 }
 
-func (cl *client) runFzf() error {
+func (cl *client) runFzf() string {
 	var (
-		c        = cl.Config
-		id       = &strings.Builder{}
-		pr, pw   = io.Pipe()
+		id     = &strings.Builder{}
+		pr, pw = io.Pipe()
 	)
 
 	go func() {
@@ -163,8 +177,8 @@ func (cl *client) runFzf() error {
 	fzf.Run(fzf.ParseOptions(args, opts...), "revision")
 
 	if strings.TrimSpace(id.String()) == "" {
-		// log.Fatalln("fzf empty result", id, idd)
-		return nil
+		log.Fatalln("fzf empty result", id, idd)
+		// return nil
 	}
 
 	parts := strings.Split(id.String(), "@")
@@ -177,8 +191,12 @@ func (cl *client) runFzf() error {
 	if idd == "" {
 		log.Fatalln("fzf bad result", id, idd)
 	}
+	return idd
+}
 
+func (cl *client) runLogin(idd string) error {
 	var (
+		c    = cl.Config
 		user string
 		pass string
 	)
