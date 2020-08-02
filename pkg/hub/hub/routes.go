@@ -46,7 +46,7 @@ func NewHub(c types.Config) types.Hub {
 		}
 	)
 	// ensure core fields of h is not empty before return
-	h.initServer(h.c.Port(), "/api", listhand)
+	h.initServer(h.c.Port(), "/", listhand)
 	go h.serve(listhand, listhand)
 	return h
 }

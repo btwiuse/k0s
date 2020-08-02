@@ -11,7 +11,7 @@ import (
 func Run2(args []string) (err error) {
 	c := config.Parse(args)
 
-	ln := listener.Listener(c.Port(), "/api/")
+	ln := listener.Listener(c.Port(), "/")
 
 	log.Println("server is listening on", c.Port())
 
