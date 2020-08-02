@@ -41,6 +41,7 @@ main(){
     //cmd/client
     //cmd/wetty
     //cmd/wetty-cli
+    //cmd/chassis
     //cmd/ameniicsa
   )
   if $(is_one "${#}") && $(is_build "${1}"); then
