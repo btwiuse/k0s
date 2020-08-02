@@ -21,14 +21,14 @@ type connAddr struct {
 func NewAddr(network, name string) net.Addr {
 	return &addr{
 		network: network,
-		name:  string,
+		name:    name,
 	}
 }
 
 // addr implements net.Addr
 type addr struct {
 	network string
-	name string
+	name    string
 }
 
 func (a *addr) Network() string {
