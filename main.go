@@ -36,6 +36,9 @@ func main() {
 		When([]interface{}{"hub", match.ANY}, func() {
 			hub.Run(osargs[1:])
 		}).
+		When([]interface{}{"hub2", match.ANY}, func() {
+			hub.Run2(osargs[1:])
+		}).
 		When([]interface{}{"agent", match.ANY}, func() {
 			agent.Run(osargs[1:])
 		}).
@@ -57,6 +60,9 @@ func main() {
 		}).
 		When([]interface{}{match.ANY, "hub", match.ANY}, func() {
 			hub.Run(osargs[2:])
+		}).
+		When([]interface{}{match.ANY, "hub2", match.ANY}, func() {
+			hub.Run2(osargs[2:])
 		}).
 		When([]interface{}{match.ANY, "agent", match.ANY}, func() {
 			agent.Run(osargs[2:])

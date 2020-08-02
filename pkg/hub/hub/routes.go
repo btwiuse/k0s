@@ -46,7 +46,7 @@ func NewHub(c types.Config) types.Hub {
 		}
 	)
 	// ensure core fields of h is not empty before return
-	h.initServer(h.c.Port(), listhand)
+	h.initServer(h.c.Port(), "/api", listhand)
 	go h.serve(listhand, listhand)
 	return h
 }
@@ -93,18 +93,17 @@ func (h *hub) register(conn net.Conn) {
 	}
 }
 
-func (h *hub) initServer(addr string, hl http.Handler) {
+func (h *hub) initServer(addr, apiPrefix string, hl http.Handler) {
 	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
 	h.Server = &http.Server{
 		Addr:         addr,
-		Handler:      h.initHandler(hl, "/api"),
+		Handler:      h.initHandler(apiPrefix, hl),
 		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
 }
 
-func (h *hub) initHandler(hl http.Handler, apiPrefix string) http.Handler {
-	_r := mux.NewRouter()
-	r := _r.PathPrefix(apiPrefix).Subrouter()
+func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
+	r := mux.NewRouter().PathPrefix(apiPrefix).Subrouter()
 
 	// list active agents
 	r.HandleFunc("/agents/list", http.HandlerFunc(h.handleAgentsList)).Methods("GET")

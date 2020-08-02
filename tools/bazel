@@ -36,6 +36,7 @@ main(){
   DEFAULT_TARGETS=(
     //:k0s
     //cmd/hub
+    //cmd/hub2
     //cmd/agent
     //cmd/client
     //cmd/wetty

@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importpath = "k0s.io/k0s/cmd/hub2",
+    visibility = ["//visibility:private"],
+    deps = ["//pkg/cli/hub:go_default_library"],
+)
+
+go_binary(
+    name = "hub2",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

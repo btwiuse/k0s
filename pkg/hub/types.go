@@ -42,6 +42,8 @@ type Hub interface {
 	GetConfig() Config
 	ListenAndServe() error
 	ListenAndServeTLS(certFile, keyFile string) error
+	Serve(ln net.Listener) error
+	ServeTLS(ln net.Listener, certFile, keyFile string) error
 }
 
 type AgentManager interface {
