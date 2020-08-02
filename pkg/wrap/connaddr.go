@@ -18,17 +18,17 @@ type connAddr struct {
 	net.Addr
 }
 
-func NewAddr(network, string string) net.Addr {
+func NewAddr(network, name string) net.Addr {
 	return &addr{
 		network: network,
-		string:  string,
+		name:  string,
 	}
 }
 
 // addr implements net.Addr
 type addr struct {
 	network string
-	string  string
+	name string
 }
 
 func (a *addr) Network() string {
@@ -36,5 +36,5 @@ func (a *addr) Network() string {
 }
 
 func (a *addr) String() string {
-	return a.string
+	return a.name
 }
