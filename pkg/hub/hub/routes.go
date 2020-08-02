@@ -97,21 +97,22 @@ func (h *hub) initServer(addr string, hl http.Handler) {
 	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
 	h.Server = &http.Server{
 		Addr:         addr,
-		Handler:      h.initHandler(hl),
+		Handler:      h.initHandler(hl, "/api"),
 		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
 }
 
-func (h *hub) initHandler(hl http.Handler) http.Handler {
-	r := mux.NewRouter()
+func (h *hub) initHandler(hl http.Handler, apiPrefix string) http.Handler {
+	_r := mux.NewRouter()
+	r := _r.PathPrefix(apiPrefix).Subrouter()
 
 	// list active agents
-	r.HandleFunc("/api/agents/list", http.HandlerFunc(h.handleAgentsList)).Methods("GET")
-	r.HandleFunc("/api/agents/watch", http.HandlerFunc(h.handleAgentsWatch)).Methods("GET")
+	r.HandleFunc("/agents/list", http.HandlerFunc(h.handleAgentsList)).Methods("GET")
+	r.HandleFunc("/agents/watch", http.HandlerFunc(h.handleAgentsWatch)).Methods("GET")
 
 	// client /api/agent/{id}/rootfs/{path} hijack => net.Conn <(copy) hijacked grpc fs conn
 	// client /api/agent/{id}/ws => ws <(pipe)> hijacked grpc ws conn
-	s := r.PathPrefix("/api/agent/{id}")
+	s := r.PathPrefix("/agent/{id}")
 	s.Handler(http.HandlerFunc(h.handleAgent)).Methods("GET")
 
 	// public api
@@ -121,21 +122,21 @@ func (h *hub) initHandler(hl http.Handler) http.Handler {
 
 	// hl -> net.Conn -> ln
 	// hl: conventionally a consumer of net.Conn, but it's role here is producer
-	r.Handle("/api/rpc", hl).Methods("GET")
+	r.Handle("/rpc", hl).Methods("GET")
 
 	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
 	// alternative websocket implementation:
 	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
-	r.HandleFunc("/api/fs", h.handleTunnel(api.FS)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/api/socks5", h.handleTunnel(api.Socks5)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/api/redir", h.handleTunnel(api.Redir)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/api/metrics", h.handleTunnel(api.Metrics)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/api/terminal", h.handleTunnel(api.Terminal)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/api/version", h.handleTunnel(api.Version)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/fs", h.handleTunnel(api.FS)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/socks5", h.handleTunnel(api.Socks5)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/redir", h.handleTunnel(api.Redir)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/metrics", h.handleTunnel(api.Metrics)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/terminal", h.handleTunnel(api.Terminal)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/version", h.handleTunnel(api.Version)).Methods("GET").Queries("id", "{id}")
 
 	// hub specific function
-	r.HandleFunc("/api/version", h.handleVersion).Methods("GET")
-	r.Handle("/api/metrics", h.MetricsHandler).Methods("GET")
+	r.HandleFunc("/version", h.handleVersion).Methods("GET")
+	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
 	return handlers.LoggingHandler(os.Stderr, cors.AllowAll().Handler(r))
 }
 
