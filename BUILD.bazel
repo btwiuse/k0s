@@ -1,6 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
 # load("@io_bazel_rules_go//go:def.bzl", "go_binary")
 
@@ -53,3 +54,13 @@ go_image(
     name = "k0s_image",
     binary = ":k0s_static",
 )
+
+container_push(
+   name = "k0s_image_push",
+   image = ":k0s_image",
+   format = "Docker",
+   registry = "index.docker.io",
+   repository = "btwiuse/k0s",
+   tag = "latest",
+)
+
