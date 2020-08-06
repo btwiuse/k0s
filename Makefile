@@ -190,5 +190,10 @@ cover:          ## Run test coverage suite
 img:            ## Build Docker Image
 	@docker build --rm -t ${IMAGE} .
 
+bazel-img:      ## Build Docker Image with bazel
+	@ ${BAZEL} build //:k0s_image
+	@ docker load -i bazel-bin/k0s_image.tar
+	@ docker tag bazel:k0s_image ${IMAGE}
+
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":[^:]*?## "}; {printf "\033[38;5;69m%-30s\033[38;5;38m %s\033[0m\n", $$1, $$2}'

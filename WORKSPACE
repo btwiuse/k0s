@@ -66,6 +66,48 @@ rules_proto_dependencies()
 
 rules_proto_toolchains()
 
+# https://github.com/bazelbuild/rules_docker#go_image
+git_repository(
+    name = "io_bazel_rules_docker",
+    branch = "master",
+    remote = "https://github.com/bazelbuild/rules_docker.git",
+)
+
+load(
+    "@io_bazel_rules_docker//repositories:repositories.bzl",
+    container_repositories = "repositories",
+)
+
+container_repositories()
+
+load(
+    "@io_bazel_rules_docker//go:image.bzl",
+    _go_image_repos = "repositories",
+)
+
+_go_image_repos()
+
+load(
+    "@io_bazel_rules_docker//repositories:repositories.bzl",
+    container_repositories = "repositories",
+)
+container_repositories()
+
+load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
+
+container_deps()
+
+load("@io_bazel_rules_docker//repositories:pip_repositories.bzl", "pip_deps")
+
+pip_deps()
+
+load(
+    "@io_bazel_rules_docker//container:container.bzl",
+    "container_pull",
+)
+
+# end go_image
+
 go_repository(
     name = "co_honnef_go_tools",
     importpath = "honnef.co/go/tools",
