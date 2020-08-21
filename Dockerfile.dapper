@@ -1,6 +1,11 @@
+FROM golang AS golang-builder
+
 FROM l.gcr.io/google/bazel
 
 ENV DAPPER_SOURCE /workspace
 ENV DAPPER_DOCKER_SOCKET true
+
+COPY --from=golang-builder /usr/local/go /usr/local/go
+RUN ln -s /usr/local/go/bin/go /bin/go
 
 WORKDIR ${DAPPER_SOURCE}
