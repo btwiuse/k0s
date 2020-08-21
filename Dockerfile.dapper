@@ -1,0 +1,6 @@
+FROM l.gcr.io/google/bazel
+
+ENV DAPPER_SOURCE /workspace
+ENV DAPPER_DOCKER_SOCKET true
+
+WORKDIR ${DAPPER_SOURCE}
