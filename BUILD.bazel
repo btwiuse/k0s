@@ -53,14 +53,16 @@ nogo(
 go_image(
     name = "k0s_image",
     binary = ":k0s_static",
+    base = "@base//image",
+    repository = "btwiuse",
 )
 
 container_push(
-   name = "k0s_image_push",
-   image = ":k0s_image",
-   format = "Docker",
-   registry = "index.docker.io",
-   repository = "btwiuse/k0s",
-   tag = "latest",
+    name = "k0s_image_push",
+    image = ":k0s_image",
+    format = "Docker",
+    registry = "index.docker.io",
+    repository = "btwiuse/k0s",
+    tag = "latest",
 )
 

@@ -122,6 +122,15 @@ docker_toolchain_configure(
   client_config="/tmp/dockerconfig",
 )
 
+container_pull(
+    name = "base",
+    registry = "docker.io",
+    repository = "library/alpine",
+    # 'tag' is also supported, but digest is encouraged for reproducibility.
+    # digest = "sha256:deadbeef",
+    tag = "latest",
+)
+
 # end go_image
 
 go_repository(
