@@ -65,4 +65,3 @@ container_push(
     repository = "btwiuse/k0s",
     tag = "latest",
 )
-

@@ -91,6 +91,7 @@ load(
     "@io_bazel_rules_docker//repositories:repositories.bzl",
     container_repositories = "repositories",
 )
+
 container_repositories()
 
 load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
@@ -107,19 +108,20 @@ load(
 )
 
 # Load the macro that allows you to customize the docker toolchain configuration.
-load("@io_bazel_rules_docker//toolchains/docker:toolchain.bzl",
-    docker_toolchain_configure="toolchain_configure"
+load(
+    "@io_bazel_rules_docker//toolchains/docker:toolchain.bzl",
+    docker_toolchain_configure = "toolchain_configure",
 )
 
 docker_toolchain_configure(
-  name = "docker_config",
-  # Replace this with an absolute path to a directory which has a custom docker
-  # client config.json. Note relative paths are not supported.
-  # Docker allows you to specify custom authentication credentials
-  # in the client configuration JSON file.
-  # See https://docs.docker.com/engine/reference/commandline/cli/#configuration-files
-  # for more details.
-  client_config="/tmp/dockerconfig",
+    name = "docker_config",
+    # Replace this with an absolute path to a directory which has a custom docker
+    # client config.json. Note relative paths are not supported.
+    # Docker allows you to specify custom authentication credentials
+    # in the client configuration JSON file.
+    # See https://docs.docker.com/engine/reference/commandline/cli/#configuration-files
+    # for more details.
+    client_config = "/tmp/dockerconfig",
 )
 
 container_pull(
@@ -206,8 +208,8 @@ go_repository(
 go_repository(
     name = "com_github_btwiuse_wetty",
     importpath = "github.com/btwiuse/wetty",
-    sum = "h1:qDfYyHazoFJvBp24RjyPPpUnHL9YjI1QKc3nJZ9bNag=",
-    version = "v0.0.34",
+    sum = "h1:vXQGN/TgmJhdxD1OIJAA1m1C4+mssnUn32mRin9oRq8=",
+    version = "v0.0.35",
 )
 
 go_repository(

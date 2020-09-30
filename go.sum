@@ -63,8 +63,8 @@ github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882 h1:bO0cdWOtgJk7rlRC
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882/go.mod h1:ylRP8/cdGCVHKukmdQkTjIkbVPykEIC8iGT54pOh/KA=
 github.com/btwiuse/websocket v1.8.6 h1:Vhtco9ZzTOgUTj3R+YMbUBERszZssZOoxRYldrUDWwc=
 github.com/btwiuse/websocket v1.8.6/go.mod h1:B70DZP8IakI65RVQ51MsWP/8jndNma26DVA/nFSCgW0=
-github.com/btwiuse/wetty v0.0.34 h1:qDfYyHazoFJvBp24RjyPPpUnHL9YjI1QKc3nJZ9bNag=
-github.com/btwiuse/wetty v0.0.34/go.mod h1:P/xStKESkT1gJ/iCwfb+U7ValgeE1ltCU85wxzYxTDE=
+github.com/btwiuse/wetty v0.0.35 h1:vXQGN/TgmJhdxD1OIJAA1m1C4+mssnUn32mRin9oRq8=
+github.com/btwiuse/wetty v0.0.35/go.mod h1:P/xStKESkT1gJ/iCwfb+U7ValgeE1ltCU85wxzYxTDE=
 github.com/casbin/casbin/v2 v2.1.2/go.mod h1:YcPU1XXisHhLzuxH9coDNf2FbKpjGlbCg3n9yuLkIJQ=
 github.com/cenkalti/backoff v2.2.1+incompatible/go.mod h1:90ReRw6GdpyfrHakVjL/QHaoyV4aDUVVkXQJJJ3NXXM=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
