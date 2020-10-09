@@ -2,6 +2,7 @@ package client
 
 import (
 	"log"
+	"time"
 
 	"k0s.io/k0s/pkg/client/client"
 	"k0s.io/k0s/pkg/client/config"
@@ -17,6 +18,7 @@ func Run(args []string) (err error) {
 		if err != nil {
 			log.Println(err)
 		}
+		time.Sleep(time.Second)
 	}
 	return nil
 }
