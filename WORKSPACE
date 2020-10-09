@@ -7,7 +7,7 @@ git_repository(
     # commit = "2a0e3a07e9ed9aa9b7afd1a222638ba52166e52d",
     branch = "master",
     remote = "https://github.com/bazelbuild/rules_go.git",
-    # tag = "v0.22.1",
+    # tag = "v0.24.3",
 )
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
@@ -19,8 +19,8 @@ go_register_toolchains(nogo = "@//:nogo")  # nogo is in the top-level BUILD file
 git_repository(
     name = "bazel_gazelle",
     # commit = "8c270274e8b64ed9c38e3b8025e7760ded83ebcf",
-    tag = "v0.21.1",
-    # branch = "master",
+    # tag = "v0.22.2",
+    branch = "master",
     remote = "https://github.com/bazelbuild/bazel-gazelle.git",
 )
 
@@ -208,8 +208,8 @@ go_repository(
 go_repository(
     name = "com_github_btwiuse_wetty",
     importpath = "github.com/btwiuse/wetty",
-    sum = "h1:vXQGN/TgmJhdxD1OIJAA1m1C4+mssnUn32mRin9oRq8=",
-    version = "v0.0.35",
+    sum = "h1:MSMG+C1wR+bgG5xB2TRZK+5yxYiOmGwe44c/3gpaGT0=",
+    version = "v0.0.36",
 )
 
 go_repository(
