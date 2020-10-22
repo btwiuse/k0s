@@ -2,6 +2,7 @@ package asciitransport
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"log"
@@ -53,7 +54,7 @@ func (c *AsciiTransport) Done() <-chan struct{} {
 func (c *AsciiTransport) Input(buf []byte) {
 	var (
 		str = string(buf)
-		e   = &Event{Time: 0, Type: "i", Data: str}
+		e   = &Event{Time: 0, Type: "i", Data: buf}
 		ie  = (*InputEvent)(e)
 	)
 
@@ -91,8 +92,7 @@ func (c *AsciiTransport) OutputFrom(r io.Reader) error {
 
 func (c *AsciiTransport) Output(buf []byte) {
 	var (
-		str = string(buf)
-		e   = &Event{Time: 0, Type: "o", Data: str}
+		e   = &Event{Time: 0, Type: "o", Data: buf}
 		oe  = (*OutputEvent)(e)
 	)
 
@@ -218,7 +218,7 @@ func (c *AsciiTransport) clientInputFromReader() {
 func (c *AsciiTransport) clientOutputToWriter() {
 	for {
 		oe := <-c.OutputEvent()
-		_, err := io.Copy(c.writer, strings.NewReader(oe.Data))
+		_, err := io.Copy(c.writer, bytes.NewReader(oe.Data))
 		if err != nil {
 			log.Println(err)
 			break
@@ -242,7 +242,7 @@ func (c *AsciiTransport) serverOutputFromReader() {
 func (c *AsciiTransport) serverInputToWriter() {
 	for {
 		ie := <-c.InputEvent()
-		_, err := io.Copy(c.writer, strings.NewReader(ie.Data))
+		_, err := io.Copy(c.writer, bytes.NewReader(ie.Data))
 		if err != nil {
 			log.Println(err)
 			break
@@ -305,7 +305,7 @@ func (c *AsciiTransport) serverOutput2Client(w io.Writer) {
 func (c *AsciiTransport) serverOutputPing2Client(w io.Writer) {
 	for {
 		var (
-			pe  = (*PingEvent)(&Event{Time: 0, Type: "o", Data: ""})
+			pe  = (*PingEvent)(&Event{Time: 0, Type: "o", Data: []byte{}})
 			str = pe.String()
 		)
 		_, err := io.Copy(w, strings.NewReader(str))

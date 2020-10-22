@@ -94,7 +94,7 @@ type Event struct {
 	Type string
 
 	// Data represents the data recorded from the terminal.
-	Data string
+	Data json.RawMessage
 }
 
 // Cast represents the whole asciinema session.
@@ -141,8 +141,8 @@ func ValidateEvent(event *Event) (isValid bool, err error) {
 		return
 	}
 
-	if event.Type != "i" && event.Type != "o" {
-		err = errors.Errorf("type must either be `o` or `i`")
+	if event.Type != "i" && event.Type != "o" && event.Type != "r" {
+		err = errors.Errorf("type must either be `o` or `i` or `r`")
 		return
 	}
 
@@ -271,7 +271,7 @@ func Decode(reader io.Reader) (cast *Cast, err error) {
 		var (
 			ev     = new([3]interface{})
 			time   float64
-			data   string
+			data   []byte
 			evType string
 			ok     bool
 		)
@@ -300,7 +300,7 @@ func Decode(reader io.Reader) (cast *Cast, err error) {
 			return
 		}
 
-		data, ok = ev[2].(string)
+		data, ok = ev[2].([]byte)
 		if !ok {
 			err = errors.Errorf("third element of event is not a string")
 			return
