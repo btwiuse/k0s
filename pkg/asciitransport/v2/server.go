@@ -7,8 +7,8 @@ import (
 )
 
 type AsciiTransportServer interface {
-	ResizeEvent() <-chan *ResizeEvent
-	InputEvent() <-chan *InputEvent
+	ResizeEvent() <-chan *Frame_R
+	InputEvent() <-chan *Frame_I
 	Output([]byte)
 	OutputFrom(io.Reader) error
 	Done() <-chan struct{}
@@ -21,9 +21,9 @@ func Server(conn io.ReadWriteCloser, opts ...Opt) AsciiTransportServer {
 		quit:      make(chan struct{}),
 		closeonce: &sync.Once{},
 		start:     time.Now(),
-		iech:      make(chan *InputEvent),
-		oech:      make(chan *OutputEvent),
-		rech:      make(chan *ResizeEvent),
+		iech:      make(chan *Frame_I),
+		oech:      make(chan *Frame_O),
+		rech:      make(chan *Frame_R),
 		isClient:  false,
 	}
 	for _, opt := range opts {

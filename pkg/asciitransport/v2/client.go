@@ -7,7 +7,7 @@ import (
 )
 
 type AsciiTransportClient interface {
-	OutputEvent() <-chan *OutputEvent
+	OutputEvent() <-chan *Frame_O
 	Input([]byte)
 	InputFrom(io.Reader) error
 	Resize(uint, uint)
@@ -21,9 +21,9 @@ func Client(conn io.ReadWriteCloser, opts ...Opt) AsciiTransportClient {
 		quit:      make(chan struct{}),
 		closeonce: &sync.Once{},
 		start:     time.Now(),
-		iech:      make(chan *InputEvent),
-		oech:      make(chan *OutputEvent),
-		rech:      make(chan *ResizeEvent),
+		iech:      make(chan *Frame_I),
+		oech:      make(chan *Frame_O),
+		rech:      make(chan *Frame_R),
 		isClient:  true,
 	}
 	for _, opt := range opts {
