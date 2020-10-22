@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package main;
+
+option go_package = ".;asciitransport";
+
+message Frame {
+  oneof Event {
+    bytes o = 1;
+    bytes i = 2;
+    uint32 r = 3;
+  }
+}
