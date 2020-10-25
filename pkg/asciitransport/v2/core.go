@@ -8,8 +8,6 @@ import (
 	proto "github.com/golang/protobuf/proto"
 )
 
-type Opt func(at *AsciiTransport)
-
 // modeled after io.ReadWriteCloser
 /*
 interface AsciiTransport {
@@ -23,20 +21,21 @@ interface AsciiTransport {
 // Read
 // Unmarshal
 func (at *AsciiTransport) Read() (*Frame, error) {
-	buf := make([]byte, 65536)
+	buf := make([]byte, 5536)
 	n, err := at.conn.Read(buf)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	e := &Frame{}
+	f := &Frame{}
 	b := buf[:n]
-	err = proto.Unmarshal(b, e)
+	err = proto.Unmarshal(b, f)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	return e, err
+	at.log(f)
+	return f, err
 }
 
 // Write
@@ -47,6 +46,7 @@ func (at *AsciiTransport) Write(f *Frame) error {
 	if err != nil {
 		return err
 	}
+	at.log(f)
 	return nil
 }
 
@@ -54,6 +54,7 @@ type AsciiTransport struct {
 	conn       io.ReadWriteCloser
 	quit       chan struct{}
 	closeonce  *sync.Once
+	logger     Logger
 	isClient   bool
 	src        io.Reader
 	dst        io.Writer
@@ -70,4 +71,10 @@ func (c *AsciiTransport) Close() error {
 
 func (c *AsciiTransport) Done() <-chan struct{} {
 	return c.quit
+}
+
+func (c *AsciiTransport) log(f *Frame) {
+	if c.logger != nil {
+		c.logger.Log(f)
+	}
 }

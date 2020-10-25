@@ -3,16 +3,12 @@ package asciitransport
 import (
 	"io"
 	"log"
+
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
-func WithLogger(w io.WriteCloser) Opt {
-	return func(at *AsciiTransport) {
-		at.logger = NewLogger(w)
-	}
-}
-
 type Logger interface {
-	Print(v interface{})
+	Log(*Frame)
 	Close() error
 }
 
@@ -29,8 +25,9 @@ type logger struct {
 	w io.WriteCloser
 }
 
-func (l *logger) Print(v interface{}) {
-	l.l.Print(v)
+func (l *logger) Log(f *Frame) {
+	b, _ := protojson.Marshal(f)
+	l.l.Println(string(b))
 }
 
 func (l *logger) Close() error {
