@@ -26,6 +26,7 @@ func (c *AsciiTransportServer) Output(buf []byte) {
 }
 
 func (c *AsciiTransportServer) OutputFrom(r io.Reader) error {
+	defer c.Close()
 	// make([]byte, 0, 4096) causes 0 return
 	for buf := make([]byte, 4096); ; {
 		n, err := r.Read(buf)
@@ -38,6 +39,7 @@ func (c *AsciiTransportServer) OutputFrom(r io.Reader) error {
 }
 
 func (c *AsciiTransportServer) ReadLoop() {
+	defer c.Close()
 	for {
 		frame, err := c.Read()
 		if err != nil {
@@ -82,9 +84,9 @@ func Server(conn io.ReadWriteCloser, opts ...Opt) *AsciiTransportServer {
 }
 
 func (c *AsciiTransportServer) serverPing() {
+	defer c.Close()
 	for {
 		c.Write(O([]byte{}))
 		time.Sleep(5 * time.Second)
 	}
-	c.Close()
 }

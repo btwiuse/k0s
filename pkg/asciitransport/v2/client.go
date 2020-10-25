@@ -31,6 +31,7 @@ func (c *AsciiTransportClient) Input(buf []byte) {
 }
 
 func (c *AsciiTransportClient) InputFrom(r io.Reader) error {
+	defer c.Close()
 	// make([]byte, 0, 4096) causes 0 return
 	for buf := make([]byte, 4096); ; {
 		n, err := r.Read(buf)
@@ -47,6 +48,7 @@ func (c *AsciiTransportClient) Resize(height, width uint16) {
 }
 
 func (c *AsciiTransportClient) ReadLoop() {
+	defer c.Close()
 	for {
 		frame, err := c.Read()
 		if err != nil {
