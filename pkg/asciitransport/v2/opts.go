@@ -13,3 +13,9 @@ func WithWriter(w io.Writer) Opt {
 		at.dst = w
 	}
 }
+
+func WithResizeHook(rh func(_, _ uint16)) Opt {
+	return func(at *AsciiTransport) {
+		at.resizehook = rh
+	}
+}

@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+/*
 type AsciiTransportServer interface {
 	//ResizeEvent() <-chan *Frame_R
 	//InputEvent() <-chan *Frame_I
@@ -14,8 +15,9 @@ type AsciiTransportServer interface {
 	//Done() <-chan struct{}
 	//Close() error
 }
+*/
 
-type AsciiTransportServer struct{
+type AsciiTransportServer struct {
 	*AsciiTransport
 }
 
@@ -35,100 +37,54 @@ func (c *AsciiTransportServer) OutputFrom(r io.Reader) error {
 	return nil
 }
 
-func Server(conn io.ReadWriteCloser, opts ...Opt) AsciiTransportServer {
-	at := &AsciiTransport{
-		conn:      conn,
-		quit:      make(chan struct{}),
-		closeonce: &sync.Once{},
-		start:     time.Now(),
-		//iech:      make(chan *Frame_I),
-		//oech:      make(chan *Frame_O),
-		//rech:      make(chan *Frame_R),
-		isClient:  false,
+func (c *AsciiTransportServer) ReadLoop() {
+	for {
+		frame, err := c.Read()
+		if err != nil {
+			break
+		}
+		switch e := frame.Event.(type) {
+		case *Frame_I:
+			buf := e.I
+			if len(buf) == 0 || c.dst == nil {
+				continue
+			}
+			c.dst.Write(buf)
+		case *Frame_R:
+			if c.resizehook == nil {
+				continue
+			}
+			u := e.R
+			w, h := Uw(u), Uh(u)
+			c.resizehook(w, h)
+		}
+	}
+}
+
+func Server(conn io.ReadWriteCloser, opts ...Opt) *AsciiTransportServer {
+	ats := &AsciiTransportServer{
+		AsciiTransport: &AsciiTransport{
+			conn:      conn,
+			quit:      make(chan struct{}),
+			closeonce: &sync.Once{},
+			isClient:  false,
+		},
 	}
 	for _, opt := range opts {
-		opt(at)
+		opt(ats.AsciiTransport)
 	}
-	pr, pw := io.Pipe()
-	go func() {
-		io.Copy(pw, conn)
-		at.Close()
-	}()
-	at.goReadConn(pr)
-	at.goWriteConn(conn)
-	return at
+	if ats.AsciiTransport.src != nil {
+		go ats.OutputFrom(ats.AsciiTransport.src)
+	}
+	go ats.ReadLoop()
+	go ats.serverPing()
+	return ats
 }
 
-func (c *AsciiTransport) goWriteConn(w io.Writer) {
-	go c.serverOutput2Client(w)
-	go c.serverOutputPing2Client(w)
-
-	if c.reader != nil {
-		go c.serverOutputFromReader()
-	}
-
-	if c.writer != nil {
-		go c.serverInputToWriter()
-	}
-}
-
-
-func (c *AsciiTransport) serverOutput2Client(w io.Writer) {
+func (c *AsciiTransportServer) serverPing() {
 	for {
-		var (
-			oe  = <-c.oech
-			str = oe.String()
-		)
-		_, err := io.Copy(w, strings.NewReader(str))
-		if err != nil {
-			log.Println(err)
-			break
-		}
-		oe.Time = time.Since(c.start).Seconds()
-		c.log(oe)
-	}
-	c.Close()
-}
-
-func (c *AsciiTransport) serverOutputPing2Client(w io.Writer) {
-	for {
-		var (
-			pe  = (*PingEvent)(&Event{Time: 0, Type: "o", Data: ""})
-			str = pe.String()
-		)
-		_, err := io.Copy(w, strings.NewReader(str))
-		if err != nil {
-			log.Println(err)
-			break
-		}
-		pe.Time = time.Since(c.start).Seconds()
-		c.log(pe)
+		c.Write(O([]byte{}))
 		time.Sleep(5 * time.Second)
 	}
 	c.Close()
 }
-
-func (c *AsciiTransport) serverOutputFromReader() {
-	for buf := make([]byte, 4096); ; {
-		n, err := c.reader.Read(buf)
-		if err != nil {
-			log.Println(err)
-			break
-		}
-		c.Output(buf[:n])
-	}
-	c.Close()
-}
-
-func (c *AsciiTransport) serverInputToWriter() {
-	for {
-		ie := <-c.InputEvent()
-		_, err := io.Copy(c.writer, strings.NewReader(ie.Data))
-		if err != nil {
-			log.Println(err)
-			break
-		}
-	}
-	c.Close()
-}
-
