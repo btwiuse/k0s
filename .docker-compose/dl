@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 
+. .env
+
 # https://grafana.com/grafana/download
-if ! [[ -f grafana-7.0.6.linux-amd64.tar.gz ]]; then
-  wget https://dl.grafana.com/oss/release/grafana-7.0.6.linux-amd64.tar.gz
+if ! [[ -f grafana-${GRAFANA_VERSION}.linux-amd64.tar.gz ]]; then
+  wget https://dl.grafana.com/oss/release/grafana-${GRAFANA_VERSION}.linux-amd64.tar.gz
 fi
-tar -zxvf grafana-7.0.6.linux-amd64.tar.gz
+tar -zxvf grafana-${GRAFANA_VERSION}.linux-amd64.tar.gz
 
 # https://prometheus.io/download/
-if ! [[ -f prometheus-2.19.2.linux-amd64.tar.gz ]]; then
-  wget https://github.com/prometheus/prometheus/releases/download/v2.19.2/prometheus-2.19.2.linux-amd64.tar.gz
+if ! [[ -f prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz ]]; then
+  wget https://github.com/prometheus/prometheus/releases/download/v${PROMETHEUS_VERSION}/prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz
 fi
-tar -zxvf prometheus-2.19.2.linux-amd64.tar.gz
+tar -zxvf prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz
 
 # https://prometheus.io/download/#alertmanager
-if ! [[ -f alertmanager-0.21.0.linux-amd64.tar.gz ]]; then
-  wget https://github.com/prometheus/alertmanager/releases/download/v0.21.0/alertmanager-0.21.0.linux-amd64.tar.gz
+if ! [[ -f alertmanager-${ALERTMANAGER_VERSION}.linux-amd64.tar.gz ]]; then
+  wget https://github.com/prometheus/alertmanager/releases/download/v${ALERTMANAGER_VERSION}/alertmanager-${ALERTMANAGER_VERSION}.linux-amd64.tar.gz
 fi
-tar -zxvf alertmanager-0.21.0.linux-amd64.tar.gz
+tar -zxvf alertmanager-${ALERTMANAGER_VERSION}.linux-amd64.tar.gz
