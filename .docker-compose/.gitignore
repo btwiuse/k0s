@@ -5,3 +5,4 @@ agents.json
 prometheus_scrape_targets.json
 grafana-*
 prometheus-*
+alertmanager-*
