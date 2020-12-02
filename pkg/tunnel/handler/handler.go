@@ -15,6 +15,7 @@ import (
 	"runtime"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	portless "k0s.io/k0s/pkg/tunnel"
@@ -32,17 +33,21 @@ func Handler(prefix string) http.Handler {
 
 func paths() []string {
 	st := []string{}
+	defaultTunnelMux.mu.RLock()
 	for k := range defaultTunnelMux.TunnelConns {
 		st = append(st, k)
 	}
+	defaultTunnelMux.mu.RUnlock()
 	return st
 }
 
 func keys() []string {
 	st := []string{}
+	defaultTunnelMux.mu.RLock()
 	for k := range defaultTunnelMux.Conns {
 		st = append(st, k)
 	}
+	defaultTunnelMux.mu.RUnlock()
 	return st
 }
 
@@ -57,9 +62,17 @@ func manageHub(next http.Handler) http.Handler {
 			// TODO: use html template to render the page
 			io.WriteString(w, "<h1>Management Console</h1>\n")
 			io.WriteString(w, "<h2>Registered Mounts</h2>\n")
+			defaultTunnelMux.mu.RLock()
+            entries := []string{}
 			for p, e := range defaultTunnelMux.m {
-				io.WriteString(w, fmt.Sprintf("<p><a href=\"%s\">%s</a> => %s</p>\n", p, p, e.from))
+                entries = append(entries, fmt.Sprintf("<p><a href=\"%s\">%s</a> => %s</p>\n", p, p, e.from))
 			}
+            // TODO: sort entries instead of templated strings
+            sort.Strings(entries)
+            for _, entry := range entries {
+				io.WriteString(w, entry)
+            }
+			defaultTunnelMux.mu.RUnlock()
 			io.WriteString(w, "<h2>Debug Info</h2>\n")
 			io.WriteString(w, fmt.Sprintf("<p><a href=\"%s\">%s</a></p>\n", "/_/", "/_/"))
 		}))
@@ -111,6 +124,7 @@ func gc(id string, pattern string, conn net.Conn) {
 }
 
 var defaultTunnelMux = &tunnelMux{
+	mu: &sync.RWMutex{},
 	m: make(map[string]muxEntry),
 
 	Conns:       make(map[string]net.Conn),
@@ -120,6 +134,7 @@ var defaultTunnelMux = &tunnelMux{
 
 // modeled after http.ServeMux
 type tunnelMux struct {
+	mu *sync.RWMutex
 	m  map[string]muxEntry
 	es []muxEntry // slice of entries sorted from longest to shortest
 
@@ -131,6 +146,8 @@ type tunnelMux struct {
 // Find a handler on a handler map given a path string.
 // Most-specific (longest) pattern wins.
 func (mux *tunnelMux) match(path string) *muxEntry {
+	mux.mu.RLock()
+	defer mux.mu.RUnlock()
 	// Check for exact match first.
 	v, ok := mux.m[path]
 	if ok {
@@ -206,22 +223,27 @@ type muxEntry struct {
 // Handle registers the handler for the given pattern.
 // If a handler already exists for pattern, Handle panics.
 func (mux *tunnelMux) Handle(pattern, from string, tunnel *portless.Tunnel) {
-	e := muxEntry{tunnel: tunnel, pattern: pattern, from: from}
-	mux.m[pattern] = e
+	mux.mu.Lock()
+	mux.m[pattern] = muxEntry{tunnel: tunnel, pattern: pattern, from: from}
+	mux.mu.Unlock()
 	if pattern[len(pattern)-1] == '/' {
 		mux.updateEntries()
 	}
 }
 
 func (mux *tunnelMux) Delete(id, pattern string) {
+	mux.mu.Lock()
 	delete(mux.Conns, id)
 	delete(mux.Tunnels, id)
 	delete(mux.TunnelConns, pattern)
 	delete(mux.m, pattern)
+	mux.mu.Unlock()
 	mux.updateEntries()
 }
 
 func (mux *tunnelMux) updateEntries() {
+	mux.mu.Lock()
+	defer mux.mu.Unlock()
 	es := []muxEntry{}
 	for pattern, e := range mux.m {
 		if pattern[len(pattern)-1] == '/' {

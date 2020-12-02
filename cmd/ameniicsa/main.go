@@ -7,14 +7,14 @@ import (
 	"os/signal"
 	"syscall"
 
-	"k0s.io/k0s/pkg/asciitransport"
+	asciitransport "k0s.io/k0s/pkg/asciitransport/v2"
 	"k0s.io/k0s/pkg/console"
 	"k0s.io/k0s/pkg/localcmd"
 	"k0s.io/k0s/pkg/uuid"
 )
 
 var (
-	A, B = net.Pipe()
+	Client, Server = net.Pipe()
 )
 
 func server() {
@@ -24,25 +24,15 @@ func server() {
 		opts    = []asciitransport.Opt{
 			asciitransport.WithReader(term),
 			asciitransport.WithWriter(term),
+			asciitransport.WithResizeHook(func(w, h uint16){
+				err := term.Resize(int(w), int(h))
+				if err != nil {
+					log.Println(err)
+				}
+			}),
 		}
-		server = asciitransport.Server(B, opts...)
+		server = asciitransport.Server(Server, opts...)
 	)
-
-	go func() {
-		for {
-			var (
-				re = <-server.ResizeEvent()
-				w  = int(re.Width)
-				h  = int(re.Height)
-			)
-			err := term.Resize(w, h)
-			if err != nil {
-				log.Println(err)
-				break
-			}
-		}
-		server.Close()
-	}()
 
 	<-server.Done()
 	log.Println("detached", term.Close())
@@ -54,7 +44,6 @@ func main() {
 	go server()
 
 	var (
-		conn net.Conn = A
 		err  error
 	)
 
@@ -76,12 +65,13 @@ func main() {
 	defer func() {
 		log.Println("log written to", logname)
 	}()
+
 	opts := []asciitransport.Opt{
 		asciitransport.WithLogger(logfile),
 		asciitransport.WithReader(os.Stdin),
 		asciitransport.WithWriter(os.Stdout),
 	}
-	client := asciitransport.Client(conn, opts...)
+	client := asciitransport.Client(Client, opts...)
 
 	// send
 	// r
@@ -98,8 +88,8 @@ func main() {
 
 			// log.Println(currentSize)
 			client.Resize(
-				uint(currentSize.Width),
-				uint(currentSize.Height),
+				uint16(currentSize.Width)-1,
+				uint16(currentSize.Height)-1,
 			)
 
 			switch <-sig {

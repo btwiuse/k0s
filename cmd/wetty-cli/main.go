@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"k0s.io/k0s/pkg/asciitransport"
+	asciitransport "k0s.io/k0s/pkg/asciitransport/v2"
 	"k0s.io/k0s/pkg/console"
 	"k0s.io/k0s/pkg/utils"
 	"k0s.io/k0s/pkg/uuid"
@@ -28,13 +28,20 @@ func dial(p string) (conn net.Conn, err error) {
 func main() {
 	log.Println("Press ESC twice to exit.")
 
+	addr := "ws://127.0.0.1:45080/terminal"
+	if len(os.Args) > 1 {
+		addr = os.Args[1]
+	}
+
+	log.Println(`addr = os.Args[1] || "ws://127.0.0.1:45080/terminal"`)
+
 	var (
 		conn net.Conn
 		err  error
 	)
 	for {
-		// conn, err = net.Dial("tcp", ":12345")
-		conn, err = dial("ws://127.0.0.1:8080/terminal")
+		log.Println("Connecting to", addr)
+		conn, err = dial(addr)
 		if err != nil {
 			log.Println(err)
 			time.Sleep(time.Second)
@@ -83,8 +90,8 @@ func main() {
 
 			// log.Println(currentSize)
 			client.Resize(
-				uint(currentSize.Height),
-				uint(currentSize.Width),
+				uint16(currentSize.Height),
+				uint16(currentSize.Width),
 			)
 
 			switch <-sig {

@@ -10,9 +10,10 @@ import (
 	"modernc.org/httpfs"
 
 	"github.com/btwiuse/wetty/pkg/assets"
-	"k0s.io/k0s/pkg/asciitransport"
+	asciitransport "k0s.io/k0s/pkg/asciitransport/v2"
 	"k0s.io/k0s/pkg/utils"
 	"k0s.io/k0s/pkg/wetty/wetty"
+    "k0s.io/k0s/pkg/localcmd"
 )
 
 func (server *Server) setupHandlers(pathPrefix string) http.Handler {
@@ -22,6 +23,8 @@ func (server *Server) setupHandlers(pathPrefix string) http.Handler {
 	mux.HandleFunc(pathPrefix+"terminal", server.terminalHandler)
 	return handlers.LoggingHandler(os.Stderr, mux)
 }
+
+var term0 *localcmd.Lc
 
 func (server *Server) terminalHandler(w http.ResponseWriter, r *http.Request) {
 	closeReason := "unknown reason"
@@ -48,31 +51,27 @@ func (server *Server) terminalHandler(w http.ResponseWriter, r *http.Request) {
 	defer conn.Close()
 	wsconn := utils.NetConn(conn)
 
+	var	term *localcmd.Lc
+    if term0 == nil {
+        term0, _ = server.factory.New()
+    }
+    term = term0
 	var (
-		term, _ = server.factory.New()
 		opts    = []asciitransport.Opt{
 			asciitransport.WithReader(term),
 			asciitransport.WithWriter(term),
+			asciitransport.WithResizeHook(func(w, h uint16){
+				// cols, rows
+				err := term.Resize(int(h), int(w))
+				if err != nil {
+					log.Println(err)
+				}
+			}),
 		}
 		aserver = asciitransport.Server(wsconn, opts...)
 	)
 
-	go func() {
-		for {
-			var (
-				re   = <-aserver.ResizeEvent()
-				rows = int(re.Height)
-				cols = int(re.Width)
-			)
-			err := term.Resize(rows, cols)
-			if err != nil {
-				log.Println(err)
-				break
-			}
-		}
-		aserver.Close()
-	}()
-
 	<-aserver.Done()
-	log.Println("detached", term.Close())
+	log.Println("detached")
+	//log.Println("detached", term.Close())
 }

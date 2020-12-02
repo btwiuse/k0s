@@ -1,7 +1,5 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@bazel_gazelle//:def.bzl", "gazelle")
-load("@io_bazel_rules_docker//go:image.bzl", "go_image")
-load("@io_bazel_rules_docker//container:container.bzl", "container_push")
 
 # load("@io_bazel_rules_go//go:def.bzl", "go_binary")
 
@@ -48,20 +46,4 @@ nogo(
         # analyzer from a remote repository
         "@org_golang_x_tools//go/analysis/passes/printf:go_tool_library",
     ],
-)
-
-go_image(
-    name = "k0s_image",
-    base = "@base//image",
-    binary = ":k0s_static",
-    repository = "btwiuse",
-)
-
-container_push(
-    name = "k0s_image_push",
-    format = "Docker",
-    image = ":k0s_image",
-    registry = "index.docker.io",
-    repository = "btwiuse/k0s",
-    tag = "latest",
 )
