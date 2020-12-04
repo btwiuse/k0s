@@ -1,3 +1,5 @@
+.PHONY: build
+
 NAME     := k0s
 PACKAGE  := github.com/btwiuse/$(NAME)
 GIT      := $(shell git rev-parse --short HEAD)
