@@ -50,6 +50,16 @@ func (m *manager) Add(idr pkg.Tider) {
 	m.Map.Put(idr.ID(), idr)
 }
 
+func (m *manager) Keys() (ret []string) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	keys := m.Map.Keys()
+	for _, v := range keys {
+		ret = append(ret, v.(string))
+	}
+	return ret
+}
+
 func (m *manager) Values() (ret []pkg.Tider) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()

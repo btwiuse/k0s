@@ -27,6 +27,7 @@ type Manager interface {
 	Del(string)
 	Has(string) bool
 	Get(string) Tider
+	Keys() []string
 	Values() []Tider
 	Size() int
 }
