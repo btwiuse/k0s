@@ -6,12 +6,13 @@ import (
 
 	"github.com/btwiuse/pretty"
 	types "k0s.io/k0s/pkg/agent"
+	"k0s.io/k0s/pkg/middleware"
 )
 
 func StartVersionServer(c types.Config) chan net.Conn {
 	var (
 		versionListener = NewLys()
-		handler         = LoggingMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler         = middleware.LoggingMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			w.Write([]byte(pretty.JSONString(c.GetVersion())))
 		}))

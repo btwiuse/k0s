@@ -17,6 +17,7 @@ import (
 	"github.com/rs/cors"
 	"k0s.io/k0s/pkg/api"
 	"k0s.io/k0s/pkg/exporter"
+	"k0s.io/k0s/pkg/middleware"
 	types "k0s.io/k0s/pkg/hub"
 	"k0s.io/k0s/pkg/wrap"
 	"modernc.org/httpfs"
@@ -42,7 +43,7 @@ func NewHub(c types.Config) types.Hub {
 		h        = &hub{
 			c:              c,
 			AgentManager:   NewAgentManager(),
-			MetricsHandler: exporter.NewHandler(),
+			MetricsHandler: middleware.GzipMiddleware(exporter.NewHandler()),
 		}
 	)
 	// ensure core fields of h is not empty before return
