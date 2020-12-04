@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"net"
-	"strings"
 	"sync"
 	"time"
 
@@ -15,7 +14,6 @@ import (
 	"k0s.io/k0s/pkg/hub/agent"
 	"k0s.io/k0s/pkg/hub/agent/info"
 	"k0s.io/k0s/pkg/rng"
-	"k0s.io/k0s/pkg/uuid"
 )
 
 var (
@@ -23,61 +21,68 @@ var (
 )
 
 func ToRPC(conn net.Conn) types.RPC {
+
 	rpc := &YS{
-		id:            uuid.New(),
+		id:            "00000000-0000-0000-0000-000000000000",
 		name:          rng.New(),
-		actions:       make(chan func(types.Hub)),
+		actions:       make(chan func(types.Hub), 1),
 		created:       time.Now(),
 		Conn:          conn,
 		done:          make(chan struct{}),
 		closeOnceDone: &sync.Once{},
 		Scanner:       bufio.NewScanner(conn),
 	}
+
+	rpc.register()
+
 	go rpc.plumbing()
+
 	return rpc
 }
 
+func (rpc *YS) register() {
+	rpc.Scan()
+	cmd := rpc.Text()
+	log.Println(cmd)
+
+	ifo, err := info.Decode([]byte(cmd))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	var (
+		id   = ifo.GetID()
+		name = ifo.GetName()
+	)
+
+	rpc.id = id
+	rpc.name = name
+
+	rpc.actions <- func(h types.Hub) {
+		// clobber previous connection, if any
+		if h.Has(id) {
+			h.Del(id)
+		}
+
+		ag := agent.NewAgent(rpc, ifo)
+
+		h.Add(ag)
+	}
+}
+
 func (rpc *YS) plumbing() {
-	defer rpc.Close()
 	defer func() {
+		rpc.Close()
 		println("hub close")
 	}()
 	for rpc.Scan() {
 		cmd := rpc.Text()
+		log.Println(cmd)
 		switch {
 		case cmd == "PONG":
 			// infinite ping/pong loop
 			// rpc.Ping()
-		// Register Agent
-		case strings.HasPrefix(cmd, "{"):
-			rpc.actions <- func(h types.Hub) {
-				ifo, err := info.Decode([]byte(cmd))
-				if err != nil {
-					log.Println(err)
-					return
-				}
-
-				var (
-					id   = ifo.GetID()
-					name = ifo.GetName()
-				)
-
-				// clobber previous connection
-				if h.Has(id) {
-					h.Del(id)
-				}
-
-				// only set the values after we make sure !h.Has(id)
-				// otherwise Unregister(h) will remove existing one
-				// see func Unregister()
-
-				rpc.agentId = id
-				rpc.agentName = name
-
-				ag := agent.NewAgent(rpc, ifo)
-
-				h.Add(ag)
-			}
 		default:
 			cmd = "UNKNOWN_CMD: " + cmd
 			log.Println(cmd)
@@ -117,12 +122,10 @@ func (ys *YS) RemoteIP() string {
 }
 
 type YS struct {
-	agentId   string
-	agentName string
-	id        string
-	name      string
-	created   time.Time
-	actions   chan func(types.Hub)
+	id      string
+	name    string
+	created time.Time
+	actions chan func(types.Hub)
 	net.Conn
 	*bufio.Scanner
 	done          chan struct{}

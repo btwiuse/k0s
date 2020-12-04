@@ -57,6 +57,7 @@ require (
 	golang.org/x/sys v0.0.0-20200602225109-6fdc65e7d980
 	google.golang.org/genproto v0.0.0-20200212121238-0849286c0f0e // indirect
 	google.golang.org/grpc v1.30.0
+	google.golang.org/protobuf v1.22.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/xtaci/smux.v1 v1.4.2 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71
