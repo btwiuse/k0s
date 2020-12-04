@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"log"
+	// "log"
 	"net"
 	"sync"
 	"time"
@@ -43,11 +43,12 @@ func ToRPC(conn net.Conn) types.RPC {
 func (rpc *YS) register() {
 	rpc.Scan()
 	cmd := rpc.Text()
-	log.Println(cmd)
+	// log.Println(cmd)
 
 	ifo, err := info.Decode([]byte(cmd))
 	if err != nil {
-		log.Println(err)
+        // TODO: notify client
+		// log.Println(err)
 		return
 	}
 
@@ -74,18 +75,18 @@ func (rpc *YS) register() {
 func (rpc *YS) plumbing() {
 	defer func() {
 		rpc.Close()
-		println("hub close")
+		// println("hub close")
 	}()
 	for rpc.Scan() {
 		cmd := rpc.Text()
-		log.Println(cmd)
+		// log.Println(cmd)
 		switch {
 		case cmd == "PONG":
 			// infinite ping/pong loop
 			// rpc.Ping()
 		default:
-			cmd = "UNKNOWN_CMD: " + cmd
-			log.Println(cmd)
+			// cmd = "UNKNOWN_CMD: " + cmd
+			// log.Println(cmd)
 		}
 	}
 }

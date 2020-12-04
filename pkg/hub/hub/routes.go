@@ -6,15 +6,12 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/rs/cors"
 	"k0s.io/k0s/pkg/api"
 	"k0s.io/k0s/pkg/exporter"
 	"k0s.io/k0s/pkg/middleware"
@@ -137,7 +134,8 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	// hub specific function
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
 	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
-	return handlers.LoggingHandler(os.Stderr, cors.AllowAll().Handler(r))
+	// return middleware.LoggingMiddleware(middleware.AllowAllCorsMiddleware(r))
+	return middleware.AllowAllCorsMiddleware(r)
 }
 
 func (h *hub) handleVersion(w http.ResponseWriter, r *http.Request) {
