@@ -7,7 +7,7 @@ type Tunnel uint8
 //go:generate stringer -type=Tunnel
 
 const (
-	Terminal Tunnel = iota
+	Terminal Tunnel = iota // starts at 0
 	Session
 	Metrics
 	Socks5
@@ -15,6 +15,8 @@ const (
 	FS
 	Ping
 	Version
+
+	MaxTunnel // number of tunnels
 )
 
 var tunnelNames = []string{
