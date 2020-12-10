@@ -203,11 +203,12 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("handleAgent", id, subpath)
 
+    // TODO: lookup agent by name
 	if !h.Has(id) {
-		log.Println("hub has no such id", id)
-		for i, ider := range h.Values() {
-			log.Println(i, ider.ID())
-		}
+	//  log.Println("hub has no such id", id)
+	//  for i, ider := range h.Values() {
+	//  	log.Println(i, ider.ID())
+	//  }
 		http.Redirect(w, r, "/", http.StatusFound /*302*/)
 		return
 	}
