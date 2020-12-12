@@ -17,6 +17,7 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//pkg/cli/agent:go_default_library",
+        "//pkg/cli/chassis:go_default_library",
         "//pkg/cli/client:go_default_library",
         "//pkg/cli/gost:go_default_library",
         "//pkg/cli/hub:go_default_library",

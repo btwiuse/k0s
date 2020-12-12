@@ -10,6 +10,7 @@ import (
 	"github.com/alexpantyukhin/go-pattern-match"
 
 	"k0s.io/k0s/pkg/cli/agent"
+	"k0s.io/k0s/pkg/cli/chassis"
 	"k0s.io/k0s/pkg/cli/client"
 	"k0s.io/k0s/pkg/cli/hub"
 	"k0s.io/k0s/pkg/cli/gost"
@@ -30,6 +31,9 @@ func main() {
 		// hub -> hub
 		// agent -> agent
 		// client -> client
+		When([]interface{}{"chassis", match.ANY}, func() {
+			chassis.Run(osargs[1:])
+		}).
 		When([]interface{}{"client", match.ANY}, func() {
 			client.Run(osargs[1:])
 		}).
@@ -55,6 +59,9 @@ func main() {
 		// * hub -> hub
 		// * agent -> agent
 		// * client -> client
+		When([]interface{}{match.ANY, "chassis", match.ANY}, func() {
+			chassis.Run(osargs[2:])
+		}).
 		When([]interface{}{match.ANY, "client", match.ANY}, func() {
 			client.Run(osargs[2:])
 		}).

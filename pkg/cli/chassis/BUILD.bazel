@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["chassis.go"],
+    importpath = "k0s.io/k0s/pkg/cli/chassis",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/simple/listener:go_default_library",
+        "//pkg/tunnel/handler:go_default_library",
+    ],
+)
