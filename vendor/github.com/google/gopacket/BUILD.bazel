@@ -8,6 +8,7 @@ go_library(
         "doc.go",
         "flows.go",
         "layerclass.go",
+        "layers_decoder.go",
         "layertype.go",
         "packet.go",
         "parser.go",

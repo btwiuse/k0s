@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "batchconn.go",
+        "crypt.go",
+        "entropy.go",
+        "fec.go",
+        "kcp.go",
+        "readloop.go",
+        "readloop_generic.go",
+        "readloop_linux.go",
+        "sess.go",
+        "snmp.go",
+        "tx.go",
+        "tx_generic.go",
+        "tx_linux.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/xtaci/kcp-go",
+    importpath = "github.com/xtaci/kcp-go",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/klauspost/reedsolomon:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/templexxx/xor:go_default_library",
+        "//vendor/github.com/tjfoc/gmsm/sm4:go_default_library",
+        "//vendor/golang.org/x/crypto/blowfish:go_default_library",
+        "//vendor/golang.org/x/crypto/cast5:go_default_library",
+        "//vendor/golang.org/x/crypto/pbkdf2:go_default_library",
+        "//vendor/golang.org/x/crypto/salsa20:go_default_library",
+        "//vendor/golang.org/x/crypto/tea:go_default_library",
+        "//vendor/golang.org/x/crypto/twofish:go_default_library",
+        "//vendor/golang.org/x/crypto/xtea:go_default_library",
+        "//vendor/golang.org/x/net/ipv4:go_default_library",
+        "//vendor/golang.org/x/net/ipv6:go_default_library",
+    ],
+)

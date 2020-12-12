@@ -40,7 +40,7 @@ github.com/alecthomas/units
 # github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 ## explicit
 github.com/alexpantyukhin/go-pattern-match
-# github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496
+# github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef
 github.com/asaskevich/govalidator
 # github.com/beevik/ntp v0.3.0
 github.com/beevik/ntp
@@ -74,6 +74,7 @@ github.com/coreos/go-systemd/dbus
 ## explicit
 github.com/creack/pty
 # github.com/dchest/siphash v1.2.1
+## explicit
 github.com/dchest/siphash
 # github.com/denisbrodbeck/machineid v1.0.1
 ## explicit
@@ -159,7 +160,7 @@ github.com/ghodss/yaml
 github.com/ginuerzh/gosocks4
 # github.com/ginuerzh/gosocks5 v0.2.0
 github.com/ginuerzh/gosocks5
-# github.com/ginuerzh/gost v0.0.0-20200523132633-2707a8f0a90e
+# github.com/ginuerzh/gost v0.0.0-20201206234231-1a56a878ac44
 ## explicit
 github.com/ginuerzh/gost
 # github.com/ginuerzh/tls-dissector v0.0.2-0.20200224064855-24ab2b3a3796
@@ -185,6 +186,8 @@ github.com/gobwas/glob/util/runes
 github.com/gobwas/glob/util/strings
 # github.com/godbus/dbus v0.0.0-20190402143921-271e53dc4968
 github.com/godbus/dbus
+# github.com/golang/mock v1.2.0
+## explicit
 # github.com/golang/protobuf v1.4.1
 ## explicit
 github.com/golang/protobuf/proto
@@ -192,7 +195,7 @@ github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
-# github.com/google/gopacket v1.1.17
+# github.com/google/gopacket v1.1.19
 github.com/google/gopacket
 github.com/google/gopacket/layers
 # github.com/google/uuid v1.1.1
@@ -204,10 +207,10 @@ github.com/gorilla/handlers
 # github.com/gorilla/mux v1.7.4
 ## explicit
 github.com/gorilla/mux
-# github.com/gorilla/websocket v1.4.1
+# github.com/gorilla/websocket v1.4.2
 ## explicit
 github.com/gorilla/websocket
-# github.com/hashicorp/golang-lru v0.5.1
+# github.com/hashicorp/golang-lru v0.5.4
 github.com/hashicorp/golang-lru
 github.com/hashicorp/golang-lru/simplelru
 # github.com/hodgesds/perf-utils v0.0.8
@@ -215,13 +218,12 @@ github.com/hodgesds/perf-utils
 # github.com/json-iterator/go v1.1.9
 ## explicit
 github.com/json-iterator/go
-# github.com/klauspost/compress v1.10.3
+# github.com/klauspost/compress v1.11.3
 github.com/klauspost/compress/flate
 github.com/klauspost/compress/snappy
 # github.com/klauspost/cpuid v1.2.4
 github.com/klauspost/cpuid
 # github.com/klauspost/reedsolomon v1.9.9
-## explicit
 github.com/klauspost/reedsolomon
 # github.com/kr/pty v1.1.8
 ## explicit
@@ -275,7 +277,7 @@ github.com/mdlayher/netlink/nlenc
 # github.com/mdlayher/wifi v0.0.0-20190303161829-b1436901ddee
 github.com/mdlayher/wifi
 github.com/mdlayher/wifi/internal/nl80211
-# github.com/miekg/dns v1.1.27
+# github.com/miekg/dns v1.1.35
 github.com/miekg/dns
 # github.com/milosgajdos83/tenus v0.0.0-20200407174313-f075bef9ab28 => github.com/milosgajdos/tenus v0.0.0-20200407174313-f075bef9ab28
 ## explicit
@@ -337,9 +339,8 @@ github.com/riobard/go-bloom
 ## explicit
 github.com/rs/cors
 # github.com/ryanuber/go-glob v1.0.0
-## explicit
 github.com/ryanuber/go-glob
-# github.com/shadowsocks/go-shadowsocks2 v0.1.1-0.20200220141918-07b789296fe6
+# github.com/shadowsocks/go-shadowsocks2 v0.1.3
 github.com/shadowsocks/go-shadowsocks2/core
 github.com/shadowsocks/go-shadowsocks2/internal
 github.com/shadowsocks/go-shadowsocks2/shadowaead
@@ -347,7 +348,7 @@ github.com/shadowsocks/go-shadowsocks2/shadowaead
 github.com/shadowsocks/shadowsocks-go/shadowsocks
 # github.com/siebenmann/go-kstat v0.0.0-20200303194639-4e8294f9e9d5
 github.com/siebenmann/go-kstat
-# github.com/songgao/water v0.0.0-20190725173103-fd331bda3f4b
+# github.com/songgao/water v0.0.0-20200317203138-2b4b6d7c09d8
 github.com/songgao/water
 github.com/songgao/water/waterutil
 # github.com/soundcloud/go-runit v0.0.0-20150630195641-06ad41a06c4a
@@ -356,11 +357,18 @@ github.com/soundcloud/go-runit/runit
 ## explicit
 github.com/spf13/pflag
 # github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161
+## explicit
 github.com/templexxx/cpufeat
-# github.com/templexxx/xor v0.0.0-20181023030647-4e92f724b73b
+# github.com/templexxx/xor v0.0.0-20191217153810-f85b25db303b
 github.com/templexxx/xor
-# github.com/tjfoc/gmsm v1.0.1
+# github.com/tjfoc/gmsm v1.3.2
 github.com/tjfoc/gmsm/sm4
+# github.com/xtaci/kcp-go v5.4.20+incompatible
+github.com/xtaci/kcp-go
+# github.com/xtaci/lossyconn v0.0.0-20200209145036-adba10fffc37
+## explicit
+# github.com/xtaci/smux v1.5.15
+github.com/xtaci/smux
 # github.com/xtaci/tcpraw v1.2.25
 github.com/xtaci/tcpraw
 # go.uber.org/atomic v1.6.0
@@ -413,7 +421,7 @@ golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
-# golang.org/x/text v0.3.2
+# golang.org/x/text v0.3.4
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/internal
@@ -523,13 +531,6 @@ google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/alecthomas/kingpin.v2 v2.2.6
 ## explicit
 gopkg.in/alecthomas/kingpin.v2
-# gopkg.in/gorilla/websocket.v1 v1.4.0
-gopkg.in/gorilla/websocket.v1
-# gopkg.in/xtaci/kcp-go.v4 v4.3.2
-gopkg.in/xtaci/kcp-go.v4
-# gopkg.in/xtaci/smux.v1 v1.4.2
-## explicit
-gopkg.in/xtaci/smux.v1
 # gopkg.in/yaml.v2 v2.3.0
 gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71
