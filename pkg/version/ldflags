@@ -33,7 +33,8 @@ version(){
 }
 
 ldflags(){
-  ldflags=""
+  ldflags="${GO_LDFLAGS}
+"
   ldflags+="-X 'k0s.io/k0s/pkg/version.GitCommitString=$(commit)'
 "
   ldflags+="-X 'k0s.io/k0s/pkg/version.GitStateString=$(state)'

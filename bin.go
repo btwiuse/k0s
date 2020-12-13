@@ -272,8 +272,12 @@ func main() {
 			log.Println(fmt.Sprintf("[%02d] = %q", i, arg))
 		}
 
+		gocmd, ok := os.LookupEnv("GO")
+		if !ok {
+			gocmd = "go"
+		}
 		var (
-			build = exec.Command("go", buildArgs...)
+			build = exec.Command(gocmd, buildArgs...)
 			strip = exec.Command(
 				"strip",
 				filepath.Join(Path, c.ReleaseName()),
