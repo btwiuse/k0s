@@ -29,7 +29,7 @@ func NewRPC(conn net.Conn) types.RPC {
 func (rpc *YS) plumbing() {
 	defer rpc.Close()
 	defer func() {
-		println("agent close")
+		println("Error: agent: connection to hub closed")
 	}()
 	for rpc.Scan() {
 		cmd := rpc.Text()
