@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	args := os.Args[1:]
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-	log.Fatalln(wetty.Run(args))
+
+	log.Fatalln(wetty.Run(os.Args[1:]))
 }

@@ -10,5 +10,5 @@ import (
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	client.Run(os.Args[1:])
+	log.Fatalln(client.Run(os.Args[1:]))
 }

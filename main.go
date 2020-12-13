@@ -32,19 +32,19 @@ func main() {
 		// agent -> agent
 		// client -> client
 		When([]interface{}{"chassis", match.ANY}, func() {
-			chassis.Run(osargs[1:])
+			log.Fatalln(chassis.Run(osargs[1:]))
 		}).
 		When([]interface{}{"client", match.ANY}, func() {
-			client.Run(osargs[1:])
+			log.Fatalln(client.Run(osargs[1:]))
 		}).
 		When([]interface{}{"hub", match.ANY}, func() {
-			hub.Run(osargs[1:])
+			log.Fatalln(hub.Run(osargs[1:]))
 		}).
 		When([]interface{}{"hub2", match.ANY}, func() {
-			hub.Run2(osargs[1:])
+			log.Fatalln(hub.Run2(osargs[1:]))
 		}).
 		When([]interface{}{"agent", match.ANY}, func() {
-			agent.Run(osargs[1:])
+			log.Fatalln(agent.Run(osargs[1:]))
 		}).
 		When([]interface{}{"gost", match.ANY}, func() {
 			gost.Main(osargs[1:])
@@ -60,19 +60,19 @@ func main() {
 		// * agent -> agent
 		// * client -> client
 		When([]interface{}{match.ANY, "chassis", match.ANY}, func() {
-			chassis.Run(osargs[2:])
+			log.Fatalln(chassis.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "client", match.ANY}, func() {
-			client.Run(osargs[2:])
+			log.Fatalln(client.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "hub", match.ANY}, func() {
-			hub.Run(osargs[2:])
+			log.Fatalln(hub.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "hub2", match.ANY}, func() {
-			hub.Run2(osargs[2:])
+			log.Fatalln(hub.Run2(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "agent", match.ANY}, func() {
-			agent.Run(osargs[2:])
+			log.Fatalln(agent.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "gost", match.ANY}, func() {
 			gost.Main(osargs[2:])
@@ -82,7 +82,7 @@ func main() {
 		// k0s hub -> hub
 		// k0s agent -> agent
 		When([]interface{}{"k0s", match.ANY}, func() {
-			client.Run(osargs[1:])
+			log.Fatalln(client.Run(osargs[1:]))
 		}).
 
 		// conntroll -> usage

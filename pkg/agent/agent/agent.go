@@ -43,8 +43,6 @@ func NewAgent(c types.Config) types.Agent {
 		shell = "sh"
 	}
 
-	log.Println("connected as", name)
-
 	return &agent{
 		Group:  eg,
 		Config: c,
@@ -106,7 +104,7 @@ func (ag *agent) Serve(rpc types.RPC) error {
 		}
 	}
 exit:
-	return errors.New("rpc connection closed")
+	return errors.New("agent: connection to hub closed")
 }
 
 func (ag *agent) ConnectAndServe() error {
@@ -133,5 +131,5 @@ func (ag *agent) ConnectAndServe() error {
 		return err
 	}
 
-	return nil
+	return errors.New("agent: serve failed")
 }
