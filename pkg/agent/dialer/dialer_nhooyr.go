@@ -25,6 +25,7 @@ func (d *dialr) Dial(p string, q string) (conn net.Conn, err error) {
 		u = ub.String()
 		t = &http.Client{
 			Transport: &http.Transport{
+				Proxy: http.ProxyFromEnvironment,
 				TLSClientConfig: &tls.Config{
 					InsecureSkipVerify: c.GetInsecure(),
 				},

@@ -7,6 +7,7 @@ package dialer
 import (
 	"crypto/tls"
 	"net"
+	"net/http"
 	"net/url"
 
 	"github.com/gorilla/websocket"
@@ -28,6 +29,7 @@ func (d *dialr) Dial(p string, q string) (conn net.Conn, err error) {
 
 	if c.GetInsecure() {
 		wd = &websocket.Dialer{
+			Proxy: http.ProxyFromEnvironment,
 			TLSClientConfig: &tls.Config{
 				RootCAs:            nil,
 				InsecureSkipVerify: true,
