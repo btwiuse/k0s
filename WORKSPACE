@@ -83,6 +83,13 @@ go_repository(
     version = "v1.5.15",
 )
 
+go_repository(
+    name = "com_github_felixge_httpsnoop",
+    importpath = "github.com/felixge/httpsnoop",
+    sum = "h1:lvB5Jl89CsZtGIWuTcDM1E/vkVs49/Ml7JJe07l8SPQ=",
+    version = "v1.0.1",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -408,15 +415,15 @@ go_repository(
 go_repository(
     name = "com_github_gorilla_handlers",
     importpath = "github.com/gorilla/handlers",
-    sum = "h1:0QniY0USkHQ1RGCLfKxeNHK9bkDHGRYGNDFBCS+YARg=",
-    version = "v1.4.2",
+    sum = "h1:9lRY6j8DEeeBT10CvO9hGW0gmky0BprnvDI5vfhUHH4=",
+    version = "v1.5.1",
 )
 
 go_repository(
     name = "com_github_gorilla_mux",
     importpath = "github.com/gorilla/mux",
-    sum = "h1:VuZ8uybHlWmqV03+zRzdwKL4tUnIp1MAQtp1mIFE1bc=",
-    version = "v1.7.4",
+    sum = "h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=",
+    version = "v1.8.0",
 )
 
 go_repository(

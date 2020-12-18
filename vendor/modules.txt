@@ -96,6 +96,8 @@ github.com/emirpasic/gods/maps
 github.com/emirpasic/gods/utils
 # github.com/fatih/color v1.7.0
 github.com/fatih/color
+# github.com/felixge/httpsnoop v1.0.1
+github.com/felixge/httpsnoop
 # github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568
 ## explicit
 github.com/flynn-archive/go-shlex
@@ -201,10 +203,10 @@ github.com/google/gopacket/layers
 # github.com/google/uuid v1.1.1
 ## explicit
 github.com/google/uuid
-# github.com/gorilla/handlers v1.4.2
+# github.com/gorilla/handlers v1.5.1
 ## explicit
 github.com/gorilla/handlers
-# github.com/gorilla/mux v1.7.4
+# github.com/gorilla/mux v1.8.0
 ## explicit
 github.com/gorilla/mux
 # github.com/gorilla/websocket v1.4.2

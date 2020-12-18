@@ -8,8 +8,6 @@ go_library(
         "cors.go",
         "doc.go",
         "handlers.go",
-        "handlers_go18.go",
-        "handlers_pre18.go",
         "logging.go",
         "proxy_headers.go",
         "recovery.go",
@@ -17,4 +15,5 @@ go_library(
     importmap = "k0s.io/k0s/vendor/github.com/gorilla/handlers",
     importpath = "github.com/gorilla/handlers",
     visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/felixge/httpsnoop:go_default_library"],
 )

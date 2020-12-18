@@ -1,4 +1,3 @@
-// +build gorilla
 // +build !nhooyr
 // +build !raw
 
