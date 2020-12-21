@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"os/exec"
 )
 
@@ -31,7 +30,6 @@ func uploadPackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	stdin.Write(reqBody)
-    os.Stderr.Write(reqBody)
 
 	contentType := "application/x-git-upload-pack-result"
 	SetHeader(w, contentType)

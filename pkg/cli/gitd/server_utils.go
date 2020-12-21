@@ -2,7 +2,6 @@ package gitd
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"io"
 	"log"
 	"net/http"
@@ -10,6 +9,8 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 func GetParamValues(r *http.Request) (string, string, string) {
