@@ -2,18 +2,11 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "main.go",
-        "receive_pack.go",
-        "server_utils.go",
-        "service.go",
-        "upload_pack.go",
-    ],
+    srcs = ["main.go"],
     importpath = "k0s.io/k0s/pkg/cli/gitd",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/middleware:go_default_library",
+        "//pkg/gitd:go_default_library",
         "//pkg/tunnel/listener:go_default_library",
-        "//vendor/github.com/gorilla/mux:go_default_library",
     ],
 )
