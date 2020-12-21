@@ -14,7 +14,7 @@ import (
 var (
 //  serviceHandler = dumpHandler
 //  uploadPackHandler = dumpHandler
-    receivePackHandler = dumpHandler
+//  receivePackHandler = dumpHandler
 )
 
 func Run(args []string) (err error) {
