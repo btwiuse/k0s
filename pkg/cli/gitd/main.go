@@ -1,20 +1,12 @@
 package gitd
 
 import (
-	"io"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
 	"k0s.io/k0s/pkg/middleware"
 	"k0s.io/k0s/pkg/tunnel/listener"
-)
-
-var (
-//  serviceHandler = dumpHandler
-//  uploadPackHandler = dumpHandler
-//  receivePackHandler = dumpHandler
 )
 
 func Run(args []string) (err error) {
@@ -27,11 +19,6 @@ func Run(args []string) (err error) {
 	log.Println("server is listening on", port)
 
 	return http.Serve(ln, middleware.LoggingMiddleware(gitMux))
-}
-
-func dumpHandler(w http.ResponseWriter, r *http.Request){
-    log.Println(r.Method, r.RequestURI)
-    io.Copy(os.Stderr, r.Body)
 }
 
 func newGitMux() http.Handler {

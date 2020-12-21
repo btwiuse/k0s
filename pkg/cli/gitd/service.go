@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"os/exec"
 )
 
@@ -33,10 +32,9 @@ func serviceHandler(w http.ResponseWriter, r *http.Request) {
 	contentType := fmt.Sprintf("application/x-git-%s-advertisement", service)
 	SetHeader(w, contentType)
 
-    mw := io.MultiWriter(os.Stderr, w)
-	mw.Write([]byte(CreateFirstPKTLine(service)))
-	go io.Copy(mw, stdout)
-	go io.Copy(mw, stderr)
+	w.Write([]byte(CreateFirstPKTLine(service)))
+	go io.Copy(w, stdout)
+	go io.Copy(w, stderr)
 	if err := cmd.Wait(); err != nil {
 		log.Println("Error while waiting:", err)
 		return
