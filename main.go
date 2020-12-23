@@ -14,6 +14,7 @@ import (
 	"k0s.io/k0s/pkg/cli/client"
 	"k0s.io/k0s/pkg/cli/hub"
 	"k0s.io/k0s/pkg/cli/gost"
+	"k0s.io/k0s/pkg/cli/mnt"
 )
 
 func main() {
@@ -31,6 +32,9 @@ func main() {
 		// hub -> hub
 		// agent -> agent
 		// client -> client
+		When([]interface{}{"mnt", match.ANY}, func() {
+			log.Fatalln(mnt.Run(osargs[1:]))
+		}).
 		When([]interface{}{"chassis", match.ANY}, func() {
 			log.Fatalln(chassis.Run(osargs[1:]))
 		}).
@@ -59,6 +63,9 @@ func main() {
 		// * hub -> hub
 		// * agent -> agent
 		// * client -> client
+		When([]interface{}{match.ANY, "mnt", match.ANY}, func() {
+			log.Fatalln(mnt.Run(osargs[2:]))
+		}).
 		When([]interface{}{match.ANY, "chassis", match.ANY}, func() {
 			log.Fatalln(chassis.Run(osargs[2:]))
 		}).
