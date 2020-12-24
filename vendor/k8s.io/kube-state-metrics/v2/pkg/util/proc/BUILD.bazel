@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "reaper.go",
+        "reaper_unsupported.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/k8s.io/kube-state-metrics/v2/pkg/util/proc",
+    importpath = "k8s.io/kube-state-metrics/v2/pkg/util/proc",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "//vendor/k8s.io/klog/v2:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//vendor/k8s.io/klog/v2:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)
