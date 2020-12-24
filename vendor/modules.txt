@@ -281,8 +281,7 @@ github.com/mdlayher/wifi
 github.com/mdlayher/wifi/internal/nl80211
 # github.com/miekg/dns v1.1.35
 github.com/miekg/dns
-# github.com/milosgajdos83/tenus v0.0.0-20200407174313-f075bef9ab28 => github.com/milosgajdos/tenus v0.0.0-20200407174313-f075bef9ab28
-## explicit
+# github.com/milosgajdos83/tenus v0.0.0-20190415114537-1f3ed00ae7d8
 github.com/milosgajdos83/tenus
 # github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061
 ## explicit
@@ -549,4 +548,3 @@ nhooyr.io/websocket/internal/errd
 nhooyr.io/websocket/internal/wsjs
 nhooyr.io/websocket/internal/xsync
 # nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
-# github.com/milosgajdos83/tenus => github.com/milosgajdos/tenus v0.0.0-20200407174313-f075bef9ab28
