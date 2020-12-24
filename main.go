@@ -13,6 +13,7 @@ import (
 	"k0s.io/k0s/pkg/cli/chassis"
 	"k0s.io/k0s/pkg/cli/client"
 	"k0s.io/k0s/pkg/cli/hub"
+	"k0s.io/k0s/pkg/cli/gitd"
 	"k0s.io/k0s/pkg/cli/gost"
 	"k0s.io/k0s/pkg/cli/mnt"
 )
@@ -50,6 +51,9 @@ func main() {
 		When([]interface{}{"agent", match.ANY}, func() {
 			log.Fatalln(agent.Run(osargs[1:]))
 		}).
+		When([]interface{}{"gitd", match.ANY}, func() {
+			log.Fatalln(gitd.Run(osargs[1:]))
+		}).
 		When([]interface{}{"gost", match.ANY}, func() {
 			gost.Main(osargs[1:])
 		}).
@@ -80,6 +84,9 @@ func main() {
 		}).
 		When([]interface{}{match.ANY, "agent", match.ANY}, func() {
 			log.Fatalln(agent.Run(osargs[2:]))
+		}).
+		When([]interface{}{match.ANY, "gitd", match.ANY}, func() {
+			log.Fatalln(gitd.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "gost", match.ANY}, func() {
 			gost.Main(osargs[2:])
