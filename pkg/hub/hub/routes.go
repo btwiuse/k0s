@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/http/pprof"
 	"strings"
 	"time"
 
@@ -103,9 +104,15 @@ func (h *hub) initServer(addr, apiPrefix string, hl http.Handler) {
 func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	r := mux.NewRouter().PathPrefix(apiPrefix).Subrouter()
 
+	r.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index)).Methods("GET")
+	r.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline)).Methods("GET")
+	r.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile)).Methods("GET")
+	r.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol)).Methods("GET")
+	r.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace)).Methods("GET")
+
 	// list active agents
-	r.HandleFunc("/agents/list", http.HandlerFunc(h.handleAgentsList)).Methods("GET")
-	r.HandleFunc("/agents/watch", http.HandlerFunc(h.handleAgentsWatch)).Methods("GET")
+	r.Handle("/agents/list", http.HandlerFunc(h.handleAgentsList)).Methods("GET")
+	r.Handle("/agents/watch", http.HandlerFunc(h.handleAgentsWatch)).Methods("GET")
 
 	// client /api/agent/{id}/rootfs/{path} hijack => net.Conn <(copy) hijacked grpc fs conn
 	// client /api/agent/{id}/ws => ws <(pipe)> hijacked grpc ws conn

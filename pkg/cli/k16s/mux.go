@@ -18,7 +18,6 @@ package k16s
 
 import (
 	"net/http"
-	"net/http/pprof"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -42,13 +41,6 @@ func (pl promLogger) Println(v ...interface{}) {
 
 func buildMetricsServer(registry prometheus.Gatherer, m *metricshandler.MetricsHandler, durationObserver prometheus.ObserverVec) *http.ServeMux {
 	mux := http.NewServeMux()
-
-	// TODO: This doesn't belong into serveMetrics
-	mux.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
-	mux.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
-	mux.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
-	mux.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
-	mux.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
 
 	mux.Handle(metricsPath, promhttp.InstrumentHandlerDuration(durationObserver, m))
 
