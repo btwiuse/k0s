@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "kube.go",
+        "mux.go",
+        "run.go",
+    ],
+    importpath = "k0s.io/k0s/pkg/cli/k16s",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/oklog/run:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus/promauto:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+        "//vendor/k8s.io/autoscaler/vertical-pod-autoscaler/pkg/client/clientset/versioned:go_default_library",
+        "//vendor/k8s.io/client-go/kubernetes:go_default_library",
+        "//vendor/k8s.io/client-go/plugin/pkg/client/auth:go_default_library",
+        "//vendor/k8s.io/client-go/tools/clientcmd:go_default_library",
+        "//vendor/k8s.io/klog/v2:go_default_library",
+        "//vendor/k8s.io/kube-state-metrics/v2/external/store:go_default_library",
+        "//vendor/k8s.io/kube-state-metrics/v2/pkg/allowdenylist:go_default_library",
+        "//vendor/k8s.io/kube-state-metrics/v2/pkg/metricshandler:go_default_library",
+        "//vendor/k8s.io/kube-state-metrics/v2/pkg/options:go_default_library",
+        "//vendor/k8s.io/kube-state-metrics/v2/pkg/util/proc:go_default_library",
+        "//vendor/k8s.io/kube-state-metrics/v2/pkg/version:go_default_library",
+    ],
+)

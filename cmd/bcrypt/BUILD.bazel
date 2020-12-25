@@ -3,13 +3,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["main.go"],
-    importpath = "k0s.io/k0s/cmd/k16s",
+    importpath = "k0s.io/k0s/cmd/bcrypt",
     visibility = ["//visibility:private"],
-    deps = ["//pkg/cli/k16s:go_default_library"],
+    deps = ["//vendor/github.com/btwiuse/bcrypt/pkg/bcrypt:go_default_library"],
 )
 
 go_binary(
-    name = "k16s",
+    name = "bcrypt",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
 )

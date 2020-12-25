@@ -62,6 +62,9 @@ github.com/beorn7/perks/quantile
 # github.com/bifurcation/mint v0.0.0-20181105071958-a14404e9a861
 github.com/bifurcation/mint
 github.com/bifurcation/mint/syntax
+# github.com/btwiuse/bcrypt v1.0.2
+## explicit
+github.com/btwiuse/bcrypt/pkg/bcrypt
 # github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 ## explicit
 github.com/btwiuse/gods/maps/linkedhashmap
@@ -340,6 +343,8 @@ github.com/oklog/run
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
 # github.com/prometheus/client_golang v1.7.1
 ## explicit
 github.com/prometheus/client_golang/prometheus
@@ -394,6 +399,10 @@ github.com/songgao/water/waterutil
 github.com/soundcloud/go-runit/runit
 # github.com/spf13/pflag v1.0.5
 github.com/spf13/pflag
+# github.com/stretchr/testify v1.4.0
+## explicit
+github.com/stretchr/testify/assert
+github.com/stretchr/testify/require
 # github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161
 ## explicit
 github.com/templexxx/cpufeat

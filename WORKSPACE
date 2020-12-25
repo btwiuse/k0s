@@ -14,7 +14,10 @@ load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_depe
 
 go_rules_dependencies()
 
-go_register_toolchains(nogo = "@//:nogo")  # nogo is in the top-level BUILD file of this workspace
+go_register_toolchains(
+    nogo = "@//:nogo",
+    version = "1.15.6",
+)  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
     name = "bazel_gazelle",
@@ -572,6 +575,13 @@ go_repository(
     importpath = "golang.org/x/mobile",
     sum = "h1:4+4C/Iv2U4fMZBiMCc98MG1In4gJY5YRhtpDNeDeHWs=",
     version = "v0.0.0-20190719004257-d2bd2a29d028",
+)
+
+go_repository(
+    name = "com_github_btwiuse_bcrypt",
+    importpath = "github.com/btwiuse/bcrypt",
+    sum = "h1:je6QGuEHitc4zAnAL/2w25WyHcSu+Iz/e5t4TRlvG1s=",
+    version = "v1.0.2",
 )
 
 rules_proto_dependencies()

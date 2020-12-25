@@ -63,10 +63,6 @@ go_library(
             "//vendor/github.com/klauspost/compress/flate:go_default_library",
             "//vendor/nhooyr.io/websocket/internal/xsync:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:nacl": [
-            "//vendor/github.com/klauspost/compress/flate:go_default_library",
-            "//vendor/nhooyr.io/websocket/internal/xsync:go_default_library",
-        ],
         "@io_bazel_rules_go//go/platform:netbsd": [
             "//vendor/github.com/klauspost/compress/flate:go_default_library",
             "//vendor/nhooyr.io/websocket/internal/xsync:go_default_library",

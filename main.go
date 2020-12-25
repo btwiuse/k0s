@@ -10,6 +10,7 @@ import (
 	match "github.com/alexpantyukhin/go-pattern-match"
 
 	"k0s.io/k0s/pkg/cli/agent"
+	"k0s.io/k0s/pkg/cli/bcrypt"
 	"k0s.io/k0s/pkg/cli/chassis"
 	"k0s.io/k0s/pkg/cli/client"
 	"k0s.io/k0s/pkg/cli/gitd"
@@ -34,6 +35,9 @@ func main() {
 		// hub -> hub
 		// agent -> agent
 		// client -> client
+		When([]interface{}{"bcrypt", match.ANY}, func() {
+			log.Fatalln(bcrypt.Run(osargs[1:]))
+		}).
 		When([]interface{}{"k16s", match.ANY}, func() {
 			log.Fatalln(k16s.Run(osargs[1:]))
 		}).
@@ -71,6 +75,9 @@ func main() {
 		// * hub -> hub
 		// * agent -> agent
 		// * client -> client
+		When([]interface{}{match.ANY, "bcrypt", match.ANY}, func() {
+			run(bcrypt.Run(osargs[2:]))
+		}).
 		When([]interface{}{match.ANY, "k16s", match.ANY}, func() {
 			log.Fatalln(k16s.Run(osargs[2:]))
 		}).
@@ -109,6 +116,12 @@ func main() {
 		// conntroll -> usage
 		When(match.ANY, usage).
 		Result()
+}
+
+func run(err error) {
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
 
 func usage() {

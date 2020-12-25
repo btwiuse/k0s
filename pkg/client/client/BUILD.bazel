@@ -60,10 +60,6 @@ go_library(
             "//pkg/asciitransport:go_default_library",
             "//pkg/uuid:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:nacl": [
-            "//pkg/asciitransport:go_default_library",
-            "//pkg/uuid:go_default_library",
-        ],
         "@io_bazel_rules_go//go/platform:netbsd": [
             "//pkg/asciitransport:go_default_library",
             "//pkg/uuid:go_default_library",
