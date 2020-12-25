@@ -22,14 +22,15 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"k8s.io/klog/v2"
 
 	"k8s.io/kube-state-metrics/v2/pkg/metricshandler"
+	"k8s.io/klog/v2"
 )
 
 const (
-	metricsPath = "/metrics"
-	healthzPath = "/healthz"
+	metricsPath     = "/metrics"
+	healthzPath     = "/healthz"
+	k16sMetricsPath = "/k16s/metrics"
 )
 
 // promLogger implements promhttp.Logger
@@ -39,27 +40,7 @@ func (pl promLogger) Println(v ...interface{}) {
 	klog.Error(v...)
 }
 
-func buildTelemetryServer(registry prometheus.Gatherer) *http.ServeMux {
-	mux := http.NewServeMux()
-
-	// Add metricsPath
-	mux.Handle(metricsPath, promhttp.HandlerFor(registry, promhttp.HandlerOpts{ErrorLog: promLogger{}}))
-	// Add index
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`<html>
-             <head><title>Kube-State-Metrics Metrics Server</title></head>
-             <body>
-             <h1>Kube-State-Metrics Metrics</h1>
-			 <ul>
-             <li><a href='` + metricsPath + `'>metrics</a></li>
-			 </ul>
-             </body>
-             </html>`))
-	})
-	return mux
-}
-
-func buildMetricsServer(m *metricshandler.MetricsHandler, durationObserver prometheus.ObserverVec) *http.ServeMux {
+func buildMetricsServer(registry prometheus.Gatherer, m *metricshandler.MetricsHandler, durationObserver prometheus.ObserverVec) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// TODO: This doesn't belong into serveMetrics
@@ -76,6 +57,10 @@ func buildMetricsServer(m *metricshandler.MetricsHandler, durationObserver prome
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(http.StatusText(http.StatusOK)))
 	})
+
+	// Add k16sMetricsPath
+	mux.Handle(k16sMetricsPath, promhttp.HandlerFor(registry, promhttp.HandlerOpts{ErrorLog: promLogger{}}))
+
 	// Add index
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`<html>
@@ -83,8 +68,12 @@ func buildMetricsServer(m *metricshandler.MetricsHandler, durationObserver prome
              <body>
              <h1>Kube Metrics</h1>
 			 <ul>
-             <li><a href='` + metricsPath + `'>metrics</a></li>
-             <li><a href='` + healthzPath + `'>healthz</a></li>
+             <li><a href='.` + metricsPath + `'>metrics</a></li>
+             <li><a href='.` + healthzPath + `'>healthz</a></li>
+			 </ul>
+             <h1>Kube-State-Metrics Metrics</h1>
+			 <ul>
+             <li><a href='.` + k16sMetricsPath + `'>k16s metrics</a></li>
 			 </ul>
              </body>
              </html>`))

@@ -28,8 +28,8 @@ import (
 	"github.com/oklog/run"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"k8s.io/klog/v2"
 
+	"k8s.io/klog/v2"
 	"k8s.io/kube-state-metrics/v2/external/store"
 	"k8s.io/kube-state-metrics/v2/pkg/allowdenylist"
 	"k8s.io/kube-state-metrics/v2/pkg/metricshandler"
@@ -147,14 +147,7 @@ func Run(args []string) error {
 		})
 	}
 
-	telemetryMux := buildTelemetryServer(ksmMetricsRegistry)
-	telemetryServer := http.Server{Handler: telemetryMux}
-	telemetryListenAddress := net.JoinHostPort(opts.TelemetryHost, strconv.Itoa(opts.TelemetryPort))
-	telemetryLn, err := net.Listen("tcp", telemetryListenAddress)
-	if err != nil {
-		klog.Fatalf("Failed to create Telemetry Listener: %v", err)
-	}
-	metricsMux := buildMetricsServer(m, durationVec)
+	metricsMux := buildMetricsServer(ksmMetricsRegistry, m, durationVec)
 	metricsServer := http.Server{Handler: metricsMux}
 	metricsServerListenAddress := net.JoinHostPort(opts.Host, strconv.Itoa(opts.Port))
 	metricsServerLn, err := net.Listen("tcp", metricsServerListenAddress)
@@ -162,17 +155,6 @@ func Run(args []string) error {
 		klog.Fatalf("Failed to create MetricsServer Listener: %v", err)
 	}
 
-	// Run Telemetry server
-	{
-		g.Add(func() error {
-			klog.Infof("Starting kube-state-metrics self metrics server: %s", telemetryListenAddress)
-			return telemetryServer.Serve(telemetryLn)
-		}, func(error) {
-			ctxShutDown, cancel := context.WithTimeout(ctx, 3*time.Second)
-			defer cancel()
-			telemetryServer.Shutdown(ctxShutDown)
-		})
-	}
 	// Run Metrics server
 	{
 		g.Add(func() error {
