@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package k16s
 
 import (
 	"github.com/pkg/errors"

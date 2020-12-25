@@ -19,9 +19,9 @@ package main
 import (
 	"os"
 
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
+	"k0s.io/k0s/pkg/cli/k16s"
 )
 
 func main() {
-	Run(os.Args)
+	k16s.Run(os.Args)
 }

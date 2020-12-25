@@ -7,14 +7,15 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/alexpantyukhin/go-pattern-match"
+	match "github.com/alexpantyukhin/go-pattern-match"
 
 	"k0s.io/k0s/pkg/cli/agent"
 	"k0s.io/k0s/pkg/cli/chassis"
 	"k0s.io/k0s/pkg/cli/client"
-	"k0s.io/k0s/pkg/cli/hub"
 	"k0s.io/k0s/pkg/cli/gitd"
 	"k0s.io/k0s/pkg/cli/gost"
+	"k0s.io/k0s/pkg/cli/hub"
+	"k0s.io/k0s/pkg/cli/k16s"
 	"k0s.io/k0s/pkg/cli/mnt"
 )
 
@@ -33,6 +34,9 @@ func main() {
 		// hub -> hub
 		// agent -> agent
 		// client -> client
+		When([]interface{}{"k16s", match.ANY}, func() {
+			log.Fatalln(k16s.Run(osargs[1:]))
+		}).
 		When([]interface{}{"mnt", match.ANY}, func() {
 			log.Fatalln(mnt.Run(osargs[1:]))
 		}).
@@ -67,6 +71,9 @@ func main() {
 		// * hub -> hub
 		// * agent -> agent
 		// * client -> client
+		When([]interface{}{match.ANY, "k16s", match.ANY}, func() {
+			log.Fatalln(k16s.Run(osargs[2:]))
+		}).
 		When([]interface{}{match.ANY, "mnt", match.ANY}, func() {
 			log.Fatalln(mnt.Run(osargs[2:]))
 		}).
