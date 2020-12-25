@@ -23,5 +23,5 @@ import (
 )
 
 func main() {
-	k16s.Run(os.Args)
+	k16s.Run(os.Args[1:])
 }

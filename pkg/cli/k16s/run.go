@@ -28,7 +28,6 @@ import (
 	"github.com/oklog/run"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	"k8s.io/klog/v2"
 
 	"k8s.io/kube-state-metrics/v2/external/store"
