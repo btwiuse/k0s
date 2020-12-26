@@ -37,13 +37,14 @@ import (
 func Run(args []string) error {
 	ctx := context.Background()
 
-	opts := &options.Options{
-		Apiserver       : "",
-		Kubeconfig      : os.Getenv("KUBECONFIG"),
-		Port            : 8165,
-		Host            : "0.0.0.0",
-		EnableGZIPEncoding : true,
-	}
+	os.Args = append([]string{"k16s"}, args...)
+        opts := options.NewOptions()
+        opts.AddFlags()
+        opts.Parse()
+
+	opts.Kubeconfig      = os.Getenv("KUBECONFIG")
+	opts.Port            = 8165
+	opts.EnableGZIPEncoding = true
 
 	storeBuilder := store.NewBuilder()
 
