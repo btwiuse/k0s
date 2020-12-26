@@ -18,7 +18,6 @@ package k16s
 
 import (
 	"context"
-	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -34,31 +33,19 @@ import (
 	"k8s.io/kube-state-metrics/v2/pkg/allowdenylist"
 	"k8s.io/kube-state-metrics/v2/pkg/metricshandler"
 	"k8s.io/kube-state-metrics/v2/pkg/options"
-	"k8s.io/kube-state-metrics/v2/pkg/util/proc"
-	"k8s.io/kube-state-metrics/v2/pkg/version"
 )
 
 func Run(args []string) error {
-	os.Args = append([]string{"k16s"}, args...)
-	opts := options.NewOptions()
-	opts.AddFlags()
-
 	ctx := context.Background()
 
-	err := opts.Parse()
-	if err != nil {
-		klog.Fatalf("Error: %s", err)
+	opts := &options.Options{
+		Apiserver       : "",
+		Kubeconfig      : os.Getenv("KUBECONFIG"),
+		Port            : 8165,
+		Host            : "0.0.0.0",
+		EnableGZIPEncoding : true,
 	}
 
-	if opts.Version {
-		fmt.Printf("%#v\n", version.GetVersion())
-		os.Exit(0)
-	}
-
-	if opts.Help {
-		opts.Usage()
-		os.Exit(0)
-	}
 	storeBuilder := store.NewBuilder()
 
 	ksmMetricsRegistry := prometheus.NewRegistry()
@@ -72,48 +59,15 @@ func Run(args []string) error {
 	)
 	storeBuilder.WithMetrics(ksmMetricsRegistry)
 
-	var resources []string
-	if len(opts.Resources) == 0 {
-		klog.Info("Using default resources")
-		resources = options.DefaultResources.AsSlice()
-	} else {
-		klog.Infof("Using resources %s", opts.Resources.String())
-		resources = opts.Resources.AsSlice()
-	}
+	var resources []string = options.DefaultResources.AsSlice()
 
 	if err := storeBuilder.WithEnabledResources(resources); err != nil {
 		klog.Fatalf("Failed to set up resources: %v", err)
 	}
 
-	if len(opts.Namespaces) == 0 {
-		klog.Info("Using all namespace")
-		storeBuilder.WithNamespaces(options.DefaultNamespaces)
-	} else {
-		if opts.Namespaces.IsAllNamespaces() {
-			klog.Info("Using all namespace")
-		} else {
-			klog.Infof("Using %s namespaces", opts.Namespaces)
-		}
-		storeBuilder.WithNamespaces(opts.Namespaces)
-	}
-
-	allowDenyList, err := allowdenylist.New(opts.MetricAllowlist, opts.MetricDenylist)
-	if err != nil {
-		klog.Fatal(err)
-	}
-
-	err = allowDenyList.Parse()
-	if err != nil {
-		klog.Fatalf("error initializing the allowdeny list : %v", err)
-	}
-
-	klog.Infof("metric allow-denylisting: %v", allowDenyList.Status())
-
-	storeBuilder.WithAllowDenyList(allowDenyList)
-
+	storeBuilder.WithNamespaces(options.DefaultNamespaces)
+	storeBuilder.WithAllowDenyList(&allowdenylist.AllowDenyList{})
 	storeBuilder.WithGenerateStoreFunc(storeBuilder.DefaultGenerateStoreFunc())
-
-	proc.StartReaper()
 
 	kubeClient, vpaClient, err := createKubeClient(opts.Apiserver, opts.Kubeconfig)
 	if err != nil {
