@@ -147,7 +147,7 @@ func Run(args []string) error {
 		})
 	}
 
-	metricsMux := buildMetricsServer(ksmMetricsRegistry, m, durationVec)
+	metricsMux := buildMetricsServer(m, durationVec, ksmMetricsRegistry)
 	metricsServer := http.Server{Handler: metricsMux}
 	metricsServerListenAddress := net.JoinHostPort(opts.Host, strconv.Itoa(opts.Port))
 	metricsServerLn, err := net.Listen("tcp", metricsServerListenAddress)

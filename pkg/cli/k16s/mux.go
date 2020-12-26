@@ -39,7 +39,7 @@ func (pl promLogger) Println(v ...interface{}) {
 	klog.Error(v...)
 }
 
-func buildMetricsServer(registry prometheus.Gatherer, m *metricshandler.MetricsHandler, durationObserver prometheus.ObserverVec) *http.ServeMux {
+func buildMetricsServer(m *metricshandler.MetricsHandler, durationObserver prometheus.ObserverVec, registry prometheus.Gatherer) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	mux.Handle(metricsPath, promhttp.InstrumentHandlerDuration(durationObserver, m))
