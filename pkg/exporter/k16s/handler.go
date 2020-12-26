@@ -76,7 +76,8 @@ func NewHandler() http.Handler {
 
 	kubeClient, vpaClient, err := createKubeClient(opts.Apiserver, opts.Kubeconfig)
 	if err != nil {
-		klog.Fatalf("Failed to create client: %v", err)
+		klog.Errorf("Failed to create client: %v", err)
+		return http.NotFoundHandler()
 	}
 
 	storeBuilder := buildStore(opts, kubeClient, vpaClient)
