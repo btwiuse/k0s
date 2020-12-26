@@ -26,7 +26,6 @@ import (
 
 	"github.com/oklog/run"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"k8s.io/klog/v2"
 	"k8s.io/kube-state-metrics/v2/external/store"
@@ -48,16 +47,8 @@ func Run(args []string) error {
 
 	storeBuilder := store.NewBuilder()
 
-	ksmMetricsRegistry := prometheus.NewRegistry()
-	durationVec := promauto.With(ksmMetricsRegistry).NewHistogramVec(
-		prometheus.HistogramOpts{
-			Name:        "http_request_duration_seconds",
-			Help:        "A histogram of requests for kube-state-metrics metrics handler.",
-			Buckets:     prometheus.DefBuckets,
-			ConstLabels: prometheus.Labels{"handler": "metrics"},
-		}, []string{"method"},
-	)
-	storeBuilder.WithMetrics(ksmMetricsRegistry)
+        ksmMetricsRegistry := prometheus.NewRegistry()
+        storeBuilder.WithMetrics(ksmMetricsRegistry)
 
 	var resources []string = options.DefaultResources.AsSlice()
 
@@ -78,11 +69,6 @@ func Run(args []string) error {
 	storeBuilder.WithSharding(opts.Shard, opts.TotalShards)
 	storeBuilder.WithAllowLabels(opts.LabelsAllowList)
 
-	ksmMetricsRegistry.MustRegister(
-		prometheus.NewProcessCollector(prometheus.ProcessCollectorOpts{}),
-		prometheus.NewGoCollector(),
-	)
-
 	var g run.Group
 
 	m := metricshandler.New(
@@ -101,8 +87,7 @@ func Run(args []string) error {
 		})
 	}
 
-	metricsMux := buildMetricsServer(m, durationVec, ksmMetricsRegistry)
-	metricsServer := http.Server{Handler: metricsMux}
+	metricsServer := http.Server{Handler: m}
 	metricsServerListenAddress := net.JoinHostPort(opts.Host, strconv.Itoa(opts.Port))
 	metricsServerLn, err := net.Listen("tcp", metricsServerListenAddress)
 	if err != nil {
