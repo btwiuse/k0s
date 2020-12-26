@@ -337,9 +337,6 @@ github.com/mmcloughlin/avo/x86
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
-# github.com/oklog/run v1.1.0
-## explicit
-github.com/oklog/run
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
@@ -793,7 +790,6 @@ k8s.io/kube-state-metrics/v2/pkg/metrics_store
 k8s.io/kube-state-metrics/v2/pkg/metricshandler
 k8s.io/kube-state-metrics/v2/pkg/options
 k8s.io/kube-state-metrics/v2/pkg/sharding
-k8s.io/kube-state-metrics/v2/pkg/util/proc
 k8s.io/kube-state-metrics/v2/pkg/version
 k8s.io/kube-state-metrics/v2/pkg/watch
 # k8s.io/utils v0.0.0-20200729134348-d5654de09c73
