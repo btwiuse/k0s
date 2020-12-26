@@ -135,6 +135,7 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	r.HandleFunc("/socks5", h.handleTunnel(api.Socks5)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/redir", h.handleTunnel(api.Redir)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/metrics", h.handleTunnel(api.Metrics)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/k16s", h.handleTunnel(api.K16s)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/terminal", h.handleTunnel(api.Terminal)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/version", h.handleTunnel(api.Version)).Methods("GET").Queries("id", "{id}")
 
@@ -232,6 +233,8 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		ag.BasicAuth(http.HandlerFunc(socks5Relay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/version"):
 		versionRelay(ag)(w, r)
+	case strings.HasPrefix(subpath, "/k16s"):
+		k16sRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):
 		metricsRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/terminal"):

@@ -15,6 +15,7 @@ const (
 	FS
 	Ping
 	Version
+	K16s
 
 	MaxTunnel // number of tunnels
 )
@@ -28,6 +29,7 @@ var tunnelNames = []string{
 	"FS",
 	"PING",
 	"VERSION",
+	"K16S",
 }
 
 func (tun Tunnel) String() string {

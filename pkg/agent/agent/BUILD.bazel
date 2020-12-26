@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "agent.go",
         "fileserver.go",
+        "k16sserver.go",
         "lys.go",
         "metricsserver.go",
         "pingserver.go",
@@ -23,6 +24,7 @@ go_library(
         "//pkg/api:go_default_library",
         "//pkg/asciitransport:go_default_library",
         "//pkg/exporter:go_default_library",
+        "//pkg/exporter/k16s:go_default_library",
         "//pkg/middleware:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
         "//vendor/github.com/ginuerzh/gost:go_default_library",
