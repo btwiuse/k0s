@@ -151,9 +151,45 @@ func (h *hub) handleVersion(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(pretty.JSONString(h.GetConfig().GetVersion())))
 }
 
+func contains(set []string, e string) bool {
+	for _, s := range set {
+		if s == e {
+			return true
+		}
+	}
+	return false
+}
+
+func containsAll(set []string, subset []string) bool {
+	for _, se := range subset {
+		if !contains(set, se) {
+			return false
+		}
+	}
+	return true
+}
+
 func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
+	var (
+		// vars = mux.Vars(r)
+		// tags = vars["tags"]
+		vars = r.URL.Query()
+		vtags = vars.Get("tags")
+		tags = strings.Split(vtags, ",")
+		allAgents = h.GetAgents()
+		agents = []types.Agent{}
+	)
+	if vtags == "" {
+		agents = allAgents
+	} else {
+		for _, a := range allAgents {
+			if containsAll(a.GetTags(), tags) {
+				agents = append(agents, a)
+			}
+		}
+	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(pretty.JSONString(h.GetAgents())))
+	w.Write([]byte(pretty.JSONString(agents)))
 }
 
 func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
