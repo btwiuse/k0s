@@ -12,7 +12,7 @@ import (
 func StartK16sServer(c types.Config) chan net.Conn {
 	var (
 		k16sListener = NewLys()
-		handler      = middleware.LoggingMiddleware(k16s.NewHandler())
+		handler      = middleware.LoggingMiddleware(middleware.GzipMiddleware(k16s.NewHandler()))
 		k16sServer   = &http.Server{Handler: handler}
 	)
 	go k16sServer.Serve(k16sListener)

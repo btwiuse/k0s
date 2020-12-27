@@ -40,7 +40,6 @@ func opt(args []string) *options.Options{
         opts.Parse()
 
         opts.Kubeconfig      = os.Getenv("KUBECONFIG")
-        opts.EnableGZIPEncoding = true
 
         os.Args = osargs
         return opts
