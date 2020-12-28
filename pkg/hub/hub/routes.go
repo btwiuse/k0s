@@ -174,19 +174,27 @@ func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 		// vars = mux.Vars(r)
 		// tags = vars["tags"]
 		vars = r.URL.Query()
+		_, untagged = vars["untagged"]
 		vtags = vars.Get("tags")
 		tags = strings.Split(vtags, ",")
 		allAgents = h.GetAgents()
 		agents = []types.Agent{}
 	)
-	if vtags == "" {
-		agents = allAgents
-	} else {
+	switch {
+	case untagged:
+		for _, a := range allAgents {
+			if len(a.GetTags()) == 0 {
+				agents = append(agents, a)
+			}
+		}
+	case vtags != "":
 		for _, a := range allAgents {
 			if containsAll(a.GetTags(), tags) {
 				agents = append(agents, a)
 			}
 		}
+	default:
+		agents = allAgents
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(pretty.JSONString(agents)))
