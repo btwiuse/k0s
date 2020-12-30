@@ -280,7 +280,15 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 	case strings.HasPrefix(subpath, "/k16s"):
 		k16sRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):
-		metricsRelay(ag)(w, r)
+		var (
+			vars = r.URL.Query()
+			_, k16s = vars["k16s"]
+		)
+		if k16s {
+			k16sRelay(ag)(w, r)
+		} else {
+			metricsRelay(ag)(w, r)
+		}
 	case strings.HasPrefix(subpath, "/terminal"):
 		ag.BasicAuth(http.HandlerFunc(terminalRelay(ag))).ServeHTTP(w, r)
 	default:
