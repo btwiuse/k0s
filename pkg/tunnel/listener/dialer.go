@@ -36,6 +36,7 @@ func Dial(addr string, from string) (conn net.Conn, err error) {
 		}
 		u = ub.String()
 		t = &http.Client{
+			Proxy: http.ProxyFromEnvironment,
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{
 					InsecureSkipVerify: true,
