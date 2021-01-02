@@ -20,6 +20,7 @@ go_library(
         "//pkg/cli/bcrypt:go_default_library",
         "//pkg/cli/chassis:go_default_library",
         "//pkg/cli/client:go_default_library",
+        "//pkg/cli/dohserver:go_default_library",
         "//pkg/cli/gitd:go_default_library",
         "//pkg/cli/gost:go_default_library",
         "//pkg/cli/hub:go_default_library",

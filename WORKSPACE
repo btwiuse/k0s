@@ -584,6 +584,13 @@ go_repository(
     version = "v1.0.2",
 )
 
+go_repository(
+    name = "com_github_infobloxopen_go_trees",
+    importpath = "github.com/infobloxopen/go-trees",
+    sum = "h1:w66aaP3c6SIQ0pi3QH1Tb4AMO3aWoEPxd1CNvLphbkA=",
+    version = "v0.0.0-20200715205103-96a057b8dfb9",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
