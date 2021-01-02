@@ -9,6 +9,7 @@ replace nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
 replace k8s.io/kube-state-metrics/v2 => github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9
 
 require (
+	github.com/BurntSushi/toml v0.3.1
 	github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abbot/go-http-auth v0.4.0
@@ -33,6 +34,7 @@ require (
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
+	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
 	github.com/json-iterator/go v1.1.10
 	github.com/kr/pty v1.1.8 // indirect
 	github.com/liamg/aminal v0.9.0
@@ -41,6 +43,7 @@ require (
 	github.com/mattn/go-isatty v0.0.12
 	github.com/mattn/go-runewidth v0.0.8
 	github.com/mattn/go-shellwords v1.0.10
+	github.com/miekg/dns v1.1.35
 	github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.7.1
@@ -52,6 +55,7 @@ require (
 	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
 	github.com/xtaci/lossyconn v0.0.0-20200209145036-adba10fffc37 // indirect
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+	golang.org/x/net v0.0.0-20200707034311-ab3426394381
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	golang.org/x/sys v0.0.0-20200915084602-288bc346aa39
 	google.golang.org/grpc v1.30.0

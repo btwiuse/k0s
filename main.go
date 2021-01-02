@@ -13,6 +13,7 @@ import (
 	"k0s.io/k0s/pkg/cli/bcrypt"
 	"k0s.io/k0s/pkg/cli/chassis"
 	"k0s.io/k0s/pkg/cli/client"
+	"k0s.io/k0s/pkg/cli/dohserver"
 	"k0s.io/k0s/pkg/cli/gitd"
 	"k0s.io/k0s/pkg/cli/gost"
 	"k0s.io/k0s/pkg/cli/hub"
@@ -35,8 +36,11 @@ func main() {
 		// hub -> hub
 		// agent -> agent
 		// client -> client
+		When([]interface{}{"dohserver", match.ANY}, func() {
+			run(dohserver.Run(osargs[1:]))
+		}).
 		When([]interface{}{"bcrypt", match.ANY}, func() {
-			log.Fatalln(bcrypt.Run(osargs[1:]))
+			run(bcrypt.Run(osargs[1:]))
 		}).
 		When([]interface{}{"k16s", match.ANY}, func() {
 			log.Fatalln(k16s.Run(osargs[1:]))
@@ -75,6 +79,9 @@ func main() {
 		// * hub -> hub
 		// * agent -> agent
 		// * client -> client
+		When([]interface{}{match.ANY, "dohserver", match.ANY}, func() {
+			run(dohserver.Run(osargs[2:]))
+		}).
 		When([]interface{}{match.ANY, "bcrypt", match.ANY}, func() {
 			run(bcrypt.Run(osargs[2:]))
 		}).
