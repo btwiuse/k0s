@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "agent.go",
+        "dohserver.go",
         "fileserver.go",
         "k16sserver.go",
         "lys.go",
@@ -23,6 +24,7 @@ go_library(
         "//pkg/agent/tty:go_default_library",
         "//pkg/api:go_default_library",
         "//pkg/asciitransport:go_default_library",
+        "//pkg/dohserver:go_default_library",
         "//pkg/exporter:go_default_library",
         "//pkg/exporter/k16s:go_default_library",
         "//pkg/middleware:go_default_library",

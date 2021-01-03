@@ -101,6 +101,38 @@ func versionRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
+func dohRelay(ag types.Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var (
+			vars = mux.Vars(r)
+			id   = vars["id"]
+			path = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id)
+		)
+		r.RequestURI = path
+
+		reqbuf, err := httputil.DumpRequest(r, true)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		conn, err := wrap.Hijack(w)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		defer conn.Close()
+
+		metricsConn := ag.NewTunnel(api.Doh)
+		defer metricsConn.Close()
+
+		go func() {
+			io.Copy(metricsConn, bytes.NewBuffer(reqbuf))
+		}()
+		io.Copy(conn, metricsConn)
+	}
+}
+
 func k16sRelay(ag types.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
