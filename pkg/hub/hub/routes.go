@@ -104,11 +104,11 @@ func (h *hub) initServer(addr, apiPrefix string, hl http.Handler) {
 func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	r := mux.NewRouter().PathPrefix(apiPrefix).Subrouter()
 
-	r.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index)).Methods("GET")
-	r.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline)).Methods("GET")
-	r.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile)).Methods("GET")
-	r.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol)).Methods("GET")
-	r.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace)).Methods("GET")
+	r.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
+	r.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
+	r.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
+	r.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
+	r.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
 
 	// list active agents
 	r.Handle("/agents/list", http.HandlerFunc(h.handleAgentsList)).Methods("GET")
@@ -117,7 +117,7 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	// client /api/agent/{id}/rootfs/{path} hijack => net.Conn <(copy) hijacked grpc fs conn
 	// client /api/agent/{id}/ws => ws <(pipe)> hijacked grpc ws conn
 	s := r.PathPrefix("/agent/{id}")
-	s.Handler(http.HandlerFunc(h.handleAgent)).Methods("GET")
+	s.Handler(http.HandlerFunc(h.handleAgent)) // allow all methods
 
 	// public api
 	// agent hijack => yrpc -> hub.RPC -> hub.Agent
@@ -136,7 +136,7 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	r.HandleFunc("/redir", h.handleTunnel(api.Redir)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/metrics", h.handleTunnel(api.Metrics)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/k16s", h.handleTunnel(api.K16s)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/doh", h.handleTunnel(api.K16s)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/doh", h.handleTunnel(api.Doh)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/terminal", h.handleTunnel(api.Terminal)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/version", h.handleTunnel(api.Version)).Methods("GET").Queries("id", "{id}")
 

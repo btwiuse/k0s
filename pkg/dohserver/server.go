@@ -75,7 +75,7 @@ func NewServer(conf *Config) (*Server, error) {
 		},
 		servemux: http.NewServeMux(),
 	}
-	s.servemux.HandleFunc(conf.Path, s.handlerFunc)
+	s.servemux.HandleFunc("/", s.handlerFunc)
 	return s, nil
 }
 
