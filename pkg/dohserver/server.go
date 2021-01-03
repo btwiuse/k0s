@@ -39,7 +39,7 @@ import (
 )
 
 type Server struct {
-	conf         *config
+	conf         *Config
 	udpClient    *dns.Client
 	tcpClient    *dns.Client
 	tcpClientTLS *dns.Client
@@ -56,7 +56,7 @@ type DNSRequest struct {
 	errtext         string
 }
 
-func NewServer(conf *config) (*Server, error) {
+func NewServer(conf *Config) (*Server, error) {
 	timeout := time.Duration(conf.Timeout) * time.Second
 	s := &Server{
 		conf: conf,

@@ -30,24 +30,7 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-const exampleConfig = `
-remote_addr = "https://chassis.com/dns-query"
-path = "/dns-query"
-upstream = [
-    "udp:1.1.1.1:53",
-    "udp:1.0.0.1:53",
-    "udp:8.8.8.8:53",
-    "udp:8.8.4.4:53",
-]
-timeout = 10
-tries = 3
-verbose = true
-log_guessed_client_ip = true
-ecs_allow_non_global_ip = false
-ecs_use_precise_ip = false
-`
-
-type config struct {
+type Config struct {
 	RemoteAddr       string   `toml:"remote_addr"`
 	Path             string   `toml:"path"`
 	Upstream         []string `toml:"upstream"`
@@ -60,8 +43,8 @@ type config struct {
 	ECSFullSubnet    bool     `toml:"ecs_use_precise_ip"`
 }
 
-func loadConfig(path string) (*config, error) {
-	conf := &config{}
+func LoadConfig(path string) (*Config, error) {
+	conf := &Config{}
 	metaData, err := toml.DecodeFile(path, conf)
 	if err != nil {
 		return nil, err
