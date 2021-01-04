@@ -4,6 +4,8 @@ go 1.15
 
 // replace github.com/btwiuse/wetty => /home/aaron/wetty
 // replace github.com/yrpc/yrpc => /home/aaron/yrpc/yrpc
+replace github.com/milosgajdos83/tenus => github.com/milosgajdos/tenus v0.0.3
+
 replace nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
 
 replace k8s.io/kube-state-metrics/v2 => github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9
@@ -44,6 +46,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.8
 	github.com/mattn/go-shellwords v1.0.10
 	github.com/miekg/dns v1.1.35
+	github.com/milosgajdos83/tenus v0.0.3 // indirect
 	github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.7.1

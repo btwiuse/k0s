@@ -472,8 +472,8 @@ github.com/mdlayher/wifi v0.0.0-20190303161829-b1436901ddee/go.mod h1:Evt/EIne46
 github.com/miekg/dns v1.0.14/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=
 github.com/miekg/dns v1.1.35 h1:oTfOaDH+mZkdcgdIjH6yBajRGtIwcwcaR+rt23ZSrJs=
 github.com/miekg/dns v1.1.35/go.mod h1:KNUDUusw/aVsxyTYZM1oqvCicbwhgbNgztCETuNZ7xM=
-github.com/milosgajdos83/tenus v0.0.0-20190415114537-1f3ed00ae7d8 h1:4WFQEfEJ7zaHYViIVM2Cd6tnQOOhiEHbmQtlcV7aOpc=
-github.com/milosgajdos83/tenus v0.0.0-20190415114537-1f3ed00ae7d8/go.mod h1:G95Wwn625/q6JCCytI4VR/a5VtPwrtI0B+Q1Gi38QLA=
+github.com/milosgajdos/tenus v0.0.3 h1:jmaJzwaY1DUyYVD0lM4U+uvP2kkEg1VahDqRFxIkVBE=
+github.com/milosgajdos/tenus v0.0.3/go.mod h1:eIjx29vNeDOYWJuCnaHY2r4fq5egetV26ry3on7p8qY=
 github.com/mitchellh/cli v1.0.0/go.mod h1:hNIlj7HEI86fIcpObd7a0FcrxTWetlwJDGcceTlRvqc=
 github.com/mitchellh/go-homedir v1.0.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
 github.com/mitchellh/go-testing-interface v1.0.0/go.mod h1:kRemZodwjscx+RGhAo8eIhFbs2+BFgRtFPeD/KE+zxI=

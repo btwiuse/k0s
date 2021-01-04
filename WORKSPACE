@@ -2688,8 +2688,9 @@ go_repository(
 go_repository(
     name = "com_github_milosgajdos83_tenus",
     importpath = "github.com/milosgajdos83/tenus",
-    sum = "h1:4WFQEfEJ7zaHYViIVM2Cd6tnQOOhiEHbmQtlcV7aOpc=",
-    version = "v0.0.0-20190415114537-1f3ed00ae7d8",
+    replace = "github.com/milosgajdos/tenus",
+    sum = "h1:jmaJzwaY1DUyYVD0lM4U+uvP2kkEg1VahDqRFxIkVBE=",
+    version = "v0.0.3",
 )
 
 go_repository(
