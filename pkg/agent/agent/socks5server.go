@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"log"
 	"net"
 
 	"github.com/ginuerzh/gost"
@@ -23,8 +24,13 @@ func autoServe(l net.Listener) {
 		}
 
 		go func() {
-			defer c.Close()
+			defer func(){
+				if r := recover(); r != nil {
+					log.Println("socks5server: recovered from panic:", r, c)
+				}
+			}()
 			autoHandler.Handle(c)
+			c.Close()
 		}()
 	}
 }

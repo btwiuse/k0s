@@ -2784,13 +2784,6 @@ go_repository(
 )
 
 go_repository(
-    name = "in_gopkg_xtaci_smux_v1",
-    importpath = "gopkg.in/xtaci/smux.v1",
-    sum = "h1:45om6fFNkTaoB4vRe0/CfJ/hsEt3+SZE3M8pwo7a/ME=",
-    version = "v1.4.2",
-)
-
-go_repository(
     name = "io_rsc_pdf",
     importpath = "rsc.io/pdf",
     sum = "h1:k1MczvYDUvJBe93bYd7wrZLLUEcLZAuF824/I4e5Xr4=",
