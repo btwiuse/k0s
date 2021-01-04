@@ -13,8 +13,8 @@ go_library(
         "veth_linux.go",
         "vlan_linux.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/milosgajdos83/tenus",
-    importpath = "github.com/milosgajdos83/tenus",
+    importmap = "k0s.io/k0s/vendor/github.com/milosgajdos/tenus",
+    importpath = "github.com/milosgajdos/tenus",
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/github.com/docker/libcontainer/netlink:go_default_library",

@@ -100,6 +100,8 @@ github.com/btwiuse/bcrypt v1.0.2 h1:je6QGuEHitc4zAnAL/2w25WyHcSu+Iz/e5t4TRlvG1s=
 github.com/btwiuse/bcrypt v1.0.2/go.mod h1:hWXluBefqh6dRz9cjDMT8gASVAlOqPHhiv7raw+7BTY=
 github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0 h1:RamJoBgLnq2tsdeXwKc/+ytJ30rftG+MBDreHGFWpSw=
 github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0/go.mod h1:HemNeMkO+h/A3mRCi9Sr2x3aEzE1sc0nUUl3Eg539hU=
+github.com/btwiuse/gost v0.0.0-20210104121727-5d69ecf20392 h1:wkvaCEKrod9YA5kYxVWfHOBwnmgMJRcNjVDZVWHFfjU=
+github.com/btwiuse/gost v0.0.0-20210104121727-5d69ecf20392/go.mod h1:loGLa7ajbXydvGoQXYCAxFt1Euo1wIXZXFRZk1t1veA=
 github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9 h1:gOLR+C34lEfYf3VaQoeX+ekL+gv70qi4O/4Au/YznNE=
 github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9/go.mod h1:d/lnnBGtvhkTmu4SATYV8nMDbobeZ81s/puSxGwufcA=
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882 h1:bO0cdWOtgJk7rlRCOObS/TqtbvAisBWSoWpmdJEOius=
@@ -203,8 +205,6 @@ github.com/ginuerzh/gosocks4 v0.0.1 h1:ojDKUyz+uaEeRm2usY1cyQiXTqJqrKxfeE6SVBXq4
 github.com/ginuerzh/gosocks4 v0.0.1/go.mod h1:8SdwBMKjfJ9+BfP2vDJM1jcrgWUbWV6qxBPHHVrwptY=
 github.com/ginuerzh/gosocks5 v0.2.0 h1:K0Ua23U9LU3BZrf3XpGDcs0mP8DiEpa6PJE4TA/MU3s=
 github.com/ginuerzh/gosocks5 v0.2.0/go.mod h1:qp22mr6tH/prEoaN0pFukq76LlScIE+F2rP2ZP5ZHno=
-github.com/ginuerzh/gost v0.0.0-20201206234231-1a56a878ac44 h1:HLAPG9VWwsXEFKLWwlSAT4q5X0pQbGmp9863ZIoz9qU=
-github.com/ginuerzh/gost v0.0.0-20201206234231-1a56a878ac44/go.mod h1:/YBXQpKwl+22I2NUo4mAPe+q9NSXTIPDO+ZJvMiWLE0=
 github.com/ginuerzh/tls-dissector v0.0.2-0.20200224064855-24ab2b3a3796 h1:VPXbYRvZUzTemsI7u0FzOnEuHeHwQuMTPXApAu8aeX4=
 github.com/ginuerzh/tls-dissector v0.0.2-0.20200224064855-24ab2b3a3796/go.mod h1:YyzP8PQrGwDH/XsfHJXwqdHLwWvBYxu77YVKm0+68f0=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20191125211704-12ad95a8df72/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=

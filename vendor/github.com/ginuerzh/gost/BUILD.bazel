@@ -81,12 +81,12 @@ go_library(
         "@io_bazel_rules_go//go/platform:android": [
             "//vendor/github.com/LiamHaworth/go-tproxy:go_default_library",
             "//vendor/github.com/docker/libcontainer/netlink:go_default_library",
-            "//vendor/github.com/milosgajdos83/tenus:go_default_library",
+            "//vendor/github.com/milosgajdos/tenus:go_default_library",
         ],
         "@io_bazel_rules_go//go/platform:linux": [
             "//vendor/github.com/LiamHaworth/go-tproxy:go_default_library",
             "//vendor/github.com/docker/libcontainer/netlink:go_default_library",
-            "//vendor/github.com/milosgajdos83/tenus:go_default_library",
+            "//vendor/github.com/milosgajdos/tenus:go_default_library",
         ],
         "//conditions:default": [],
     }),

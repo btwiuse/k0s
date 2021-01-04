@@ -183,7 +183,7 @@ github.com/ghodss/yaml
 github.com/ginuerzh/gosocks4
 # github.com/ginuerzh/gosocks5 v0.2.0
 github.com/ginuerzh/gosocks5
-# github.com/ginuerzh/gost v0.0.0-20201206234231-1a56a878ac44
+# github.com/ginuerzh/gost v0.0.0-20201206234231-1a56a878ac44 => github.com/btwiuse/gost v0.0.0-20210104121727-5d69ecf20392
 ## explicit
 github.com/ginuerzh/gost
 # github.com/ginuerzh/tls-dissector v0.0.2-0.20200224064855-24ab2b3a3796
@@ -324,9 +324,8 @@ github.com/mdlayher/wifi/internal/nl80211
 # github.com/miekg/dns v1.1.35
 ## explicit
 github.com/miekg/dns
-# github.com/milosgajdos83/tenus v0.0.3 => github.com/milosgajdos/tenus v0.0.3
-## explicit
-github.com/milosgajdos83/tenus
+# github.com/milosgajdos/tenus v0.0.3
+github.com/milosgajdos/tenus
 # github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061
 ## explicit
 github.com/mmcloughlin/avo/attr
@@ -820,6 +819,6 @@ nhooyr.io/websocket/internal/xsync
 sigs.k8s.io/structured-merge-diff/v4/value
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
-# github.com/milosgajdos83/tenus => github.com/milosgajdos/tenus v0.0.3
+# github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20210104121727-5d69ecf20392
 # nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
 # k8s.io/kube-state-metrics/v2 => github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9

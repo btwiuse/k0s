@@ -591,6 +591,13 @@ go_repository(
     version = "v0.0.0-20200715205103-96a057b8dfb9",
 )
 
+go_repository(
+    name = "com_github_milosgajdos_tenus",
+    importpath = "github.com/milosgajdos/tenus",
+    sum = "h1:jmaJzwaY1DUyYVD0lM4U+uvP2kkEg1VahDqRFxIkVBE=",
+    version = "v0.0.3",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -2604,8 +2611,9 @@ go_repository(
 go_repository(
     name = "com_github_ginuerzh_gost",
     importpath = "github.com/ginuerzh/gost",
-    sum = "h1:HLAPG9VWwsXEFKLWwlSAT4q5X0pQbGmp9863ZIoz9qU=",
-    version = "v0.0.0-20201206234231-1a56a878ac44",
+    replace = "github.com/btwiuse/gost",
+    sum = "h1:wkvaCEKrod9YA5kYxVWfHOBwnmgMJRcNjVDZVWHFfjU=",
+    version = "v0.0.0-20210104121727-5d69ecf20392",
 )
 
 go_repository(
