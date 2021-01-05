@@ -13,6 +13,7 @@ type Client interface {
 
 	RunRedir() error
 	RunSocks() error
+	RunDoh() error
 	Run() error
 	ListAgents() ([]hub.AgentInfo, error)
 }
@@ -26,6 +27,7 @@ type Config interface {
 
 	GetRedir() string
 	GetSocks() string
+	GetDoh() string
 	GetCacheCredentials() bool
 	GetCredentials() map[string]KeyStore
 	GetConfigLocation() string

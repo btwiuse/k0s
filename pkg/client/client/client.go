@@ -317,6 +317,9 @@ func (cl *client) runLogin(idd string) error {
 	if len(cl.GetSocks()) > 0 {
 		go cl.RunSocks()
 	}
+	if len(cl.GetDoh()) > 0 {
+		go cl.RunDoh()
+	}
 
 	cl.terminalConnect(fmt.Sprintf("/api/agent/%s/terminal", idd), cl.userinfo)
 	return nil
@@ -376,6 +379,45 @@ func (cl *client) RunSocks() error {
 	}
 	log.Println("socks5 listening on", addr)
 	ln, err := net.Listen("tcp", addr)
+	if err != nil {
+		log.Fatalln(err)
+		return err
+	}
+
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		go func() {
+			wsconn, err := wsd.Dial(ep, cl.userinfo)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			go io.Copy(wsconn, conn)
+			io.Copy(conn, wsconn)
+		}()
+	}
+	return nil
+}
+
+func (cl *client) RunDoh() error {
+	var (
+		c = cl.Config
+	)
+	wsd := wsdialer.New(c)
+
+	ep := fmt.Sprintf("/api/agent/%s/doh", idd)
+	log.Println("dial", ep)
+
+	addr := pkg.DOH_PROXY_PORT
+	if cl.GetDoh() != "" {
+		addr = cl.GetDoh()
+	}
+	log.Println("doh listening on", addr)
+	ln, err := net.Listen("udp", addr)
 	if err != nil {
 		log.Fatalln(err)
 		return err

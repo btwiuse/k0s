@@ -23,6 +23,7 @@ import (
 type config struct {
 	Redir            string                     `json:"-" yaml:"redir"`
 	Socks            string                     `json:"-" yaml:"socks"`
+	Doh              string                     `json:"-" yaml:"doh"`
 	Verbose          bool                       `json:"-" yaml:"verbose"`
 	Insecure         bool                       `json:"-" yaml:"insecure"`
 	Record           bool                       `json:"-" yaml:"record"`
@@ -58,6 +59,10 @@ func (c *config) GetSocks() string {
 
 func (c *config) GetRedir() string {
 	return c.Redir
+}
+
+func (c *config) GetDoh() string {
+	return c.Doh
 }
 
 func (c *config) GetVersion() pkg.Version {
@@ -140,6 +145,12 @@ func SetRedir(h string) Opt {
 func SetSocks(h string) Opt {
 	return func(c *config) {
 		c.Socks = h
+	}
+}
+
+func SetDoh(h string) Opt {
+	return func(c *config) {
+		c.Doh = h
 	}
 }
 
@@ -243,6 +254,7 @@ func Parse(args []string) client.Config {
 		hubapi   *string = fset.String("hub", pkg.DEFAULT_HUB_ADDRESS, "Hub address.")
 		redir    *string = fset.String("redir", pkg.REDIR_PROXY_PORT, "Redir port.")
 		socks    *string = fset.String("socks", pkg.SOCKS5_PROXY_PORT, "Socks port.")
+		doh      *string = fset.String("doh", pkg.DOH_PROXY_PORT, "Doh port.")
 		verbose  *bool   = fset.Bool("verbose", false, "Verbose log.")
 		version  *bool   = fset.Bool("version", false, "Show agent/hub version info.")
 		insecure *bool   = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
@@ -270,6 +282,9 @@ func Parse(args []string) client.Config {
 		}
 		if f.Name == "socks" {
 			opts = append(opts, SetSocks(*socks))
+		}
+		if f.Name == "doh" {
+			opts = append(opts, SetDoh(*doh))
 		}
 		if f.Name == "verbose" {
 			opts = append(opts, SetVerbose(*verbose))
