@@ -22,7 +22,7 @@ go_register_toolchains(
 git_repository(
     name = "bazel_gazelle",
     # commit = "8c270274e8b64ed9c38e3b8025e7760ded83ebcf",
-    # tag = "v0.22.2",
+    # tag = "v0.22.3",
     branch = "master",
     remote = "https://github.com/bazelbuild/bazel-gazelle.git",
 )
@@ -895,8 +895,8 @@ go_repository(
 go_repository(
     name = "com_github_google_go_cmp",
     importpath = "github.com/google/go-cmp",
-    sum = "h1:xsAVV57WRhGj6kEIi8ReJzQlHHqcBYCElAvkovg3B/4=",
-    version = "v0.4.0",
+    sum = "h1:/QaMHBdZ26BB3SSst0Iwl10Epc+xhTquomWX0oZEB6w=",
+    version = "v0.5.0",
 )
 
 go_repository(
@@ -2464,8 +2464,8 @@ go_repository(
 go_repository(
     name = "org_golang_google_protobuf",
     importpath = "google.golang.org/protobuf",
-    sum = "h1:UhZDfRO8JRQru4/+LlLE0BRKGF8L+PICnvYZmx/fEGA=",
-    version = "v1.24.0",
+    sum = "h1:Ejskq+SyPohKW+1uil0JJMtmHCgJPJ/qWTxr8qp+R4c=",
+    version = "v1.25.0",
 )
 
 go_repository(
