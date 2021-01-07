@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-protoc --go_out=. --proto_path=. asciitransport.proto
-goimports -w .
-# rename *.pb.go to *_pb.go for them to be recognized by gazelle
-ls -1 *.pb.go | sed s,.pb.go,,g | while read name; do
-  mv ${name}.pb.go -v ${name}_pb.go
-done

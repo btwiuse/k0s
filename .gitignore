@@ -22,3 +22,6 @@
 # bazel
 /bazel-*
 /k0s*
+
+*.log
+*.swp

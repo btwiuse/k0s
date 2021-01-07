@@ -4,12 +4,14 @@ import (
 	"io"
 	"sync"
 	"time"
+
+	"k0s.io/k0s/pkg/asciiproto"
 )
 
 /*
 type AsciiTransportServer interface {
-	//ResizeEvent() <-chan *Frame_R
-	//InputEvent() <-chan *Frame_I
+	//ResizeEvent() <-chan *asciiproto.Frame_R
+	//InputEvent() <-chan *asciiproto.Frame_I
 	Output([]byte)
 	OutputFrom(io.Reader) error
 	//Done() <-chan struct{}
@@ -46,13 +48,13 @@ func (c *AsciiTransportServer) ReadLoop() {
 			break
 		}
 		switch e := frame.Event.(type) {
-		case *Frame_I:
+		case *asciiproto.Frame_I:
 			buf := e.I
 			if len(buf) == 0 || c.dst == nil {
 				continue
 			}
 			c.dst.Write(buf)
-		case *Frame_R:
+		case *asciiproto.Frame_R:
 			if c.resizehook == nil {
 				continue
 			}

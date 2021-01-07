@@ -5,10 +5,12 @@ import (
 	"log"
 
 	"google.golang.org/protobuf/encoding/protojson"
+
+	"k0s.io/k0s/pkg/asciiproto"
 )
 
 type Logger interface {
-	Log(*Frame)
+	Log(*asciiproto.Frame)
 	Close() error
 }
 
@@ -25,7 +27,7 @@ type logger struct {
 	w io.WriteCloser
 }
 
-func (l *logger) Log(f *Frame) {
+func (l *logger) Log(f *asciiproto.Frame) {
 	b, _ := protojson.Marshal(f)
 	l.l.Println(string(b))
 }

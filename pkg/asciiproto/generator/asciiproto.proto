@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package main;
 
-option go_package = ".;asciitransport";
+option go_package = ".;asciiproto";
 
 message Frame {
   oneof Event {

@@ -3,11 +3,13 @@ package asciitransport
 import (
 	"io"
 	"sync"
+
+	"k0s.io/k0s/pkg/asciiproto"
 )
 
 /*
 type AsciiTransportClient interface {
-	//OutputEvent() <-chan *Frame_O
+	//OutputEvent() <-chan *asciiproto.Frame_O
 	Input([]byte)
 	InputFrom(io.Reader) error
 	Resize(uint, uint)
@@ -54,7 +56,7 @@ func (c *AsciiTransportClient) ReadLoop() {
 		if err != nil {
 			break
 		}
-		buf := frame.Event.(*Frame_O).O
+		buf := frame.Event.(*asciiproto.Frame_O).O
 		if len(buf) == 0 || c.dst == nil {
 			continue
 		}
@@ -69,9 +71,9 @@ func Client(conn io.ReadWriteCloser, opts ...Opt) *AsciiTransportClient {
 			quit:      make(chan struct{}),
 			closeonce: &sync.Once{},
 			//start:     time.Now(),
-			//iech:      make(chan *Frame_I),
-			//oech:      make(chan *Frame_O),
-			//rech:      make(chan *Frame_R),
+			//iech:      make(chan *asciiproto.Frame_I),
+			//oech:      make(chan *asciiproto.Frame_O),
+			//rech:      make(chan *asciiproto.Frame_R),
 			isClient: true,
 		},
 	}

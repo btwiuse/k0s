@@ -6,13 +6,15 @@ import (
 	"sync"
 
 	proto "github.com/golang/protobuf/proto"
+
+	"k0s.io/k0s/pkg/asciiproto"
 )
 
 // modeled after io.ReadWriteCloser
 /*
 interface AsciiTransport {
-	Read() (*Frame, error)
-	Write(*Frame) error
+	Read() (*asciiproto.Frame, error)
+	Write(*asciiproto.Frame) error
 	Close() error
 	Done() <-chan struct{}
 }
@@ -20,14 +22,14 @@ interface AsciiTransport {
 
 // Read
 // Unmarshal
-func (at *AsciiTransport) Read() (*Frame, error) {
+func (at *AsciiTransport) Read() (*asciiproto.Frame, error) {
 	buf := make([]byte, 5536)
 	n, err := at.conn.Read(buf)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	f := &Frame{}
+	f := &asciiproto.Frame{}
 	b := buf[:n]
 	err = proto.Unmarshal(b, f)
 	if err != nil {
@@ -40,7 +42,7 @@ func (at *AsciiTransport) Read() (*Frame, error) {
 
 // Write
 // Marshal
-func (at *AsciiTransport) Write(f *Frame) error {
+func (at *AsciiTransport) Write(f *asciiproto.Frame) error {
 	b, _ := proto.Marshal(f)
 	_, err := at.conn.Write(b)
 	if err != nil {
@@ -73,7 +75,7 @@ func (c *AsciiTransport) Done() <-chan struct{} {
 	return c.quit
 }
 
-func (c *AsciiTransport) log(f *Frame) {
+func (c *AsciiTransport) log(f *asciiproto.Frame) {
 	if c.logger != nil {
 		c.logger.Log(f)
 	}
