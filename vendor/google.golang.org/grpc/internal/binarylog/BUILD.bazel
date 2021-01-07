@@ -9,7 +9,7 @@ go_library(
         "method_logger.go",
         "sink.go",
     ],
-    importmap = "google.golang.org/grpc/internal/binarylog",
+    importmap = "k0s.io/k0s/vendor/google.golang.org/grpc/internal/binarylog",
     importpath = "google.golang.org/grpc/internal/binarylog",
     visibility = ["//vendor/google.golang.org/grpc:__subpackages__"],
     deps = [

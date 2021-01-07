@@ -32,7 +32,8 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ $(BAZEL) run //:gazelle
 	# @ gazelle -exclude=vendor
 	# @ git checkout vendor/nhooyr.io/websocket
-	@ cd vendor/google.golang.org/grpc && git grep -e 'importmap = "' | cut -d : -f -1 | sort -u | xargs -L1 -I@ sed -i @ -e 's,importmap = "k0s.io/k0s/vendor/,importmap = ",g'
+	# @ cd vendor/google.golang.org/grpc && git grep -e 'importmap = "' | cut -d : -f -1 | sort -u | xargs -L1 -I@ sed -i @ -e 's,importmap = "k0s.io/k0s/vendor/,importmap = ",g'
+	# @ cd vendor/google.golang.org/protobuf && git grep -e 'importmap = "' | cut -d : -f -1 | sort -u | xargs -L1 -I@ sed -i @ -e 's,importmap = "k0s.io/k0s/vendor/,importmap = ",g'
 	@ git status vendor/
 
 bazel-build-android:            ## Build android binaries using bazel

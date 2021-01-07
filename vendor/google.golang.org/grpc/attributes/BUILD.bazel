@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["attributes.go"],
-    importmap = "google.golang.org/grpc/attributes",
+    importmap = "k0s.io/k0s/vendor/google.golang.org/grpc/attributes",
     importpath = "google.golang.org/grpc/attributes",
     visibility = ["//visibility:public"],
 )
