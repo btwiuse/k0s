@@ -41,6 +41,9 @@ cargo_build_script(
     build_script_env = {
     },
     crate_features = [
+        "default",
+        "derive",
+        "serde_derive",
         "std",
     ],
     crate_root = "build.rs",
@@ -63,12 +66,18 @@ rust_library(
     name = "serde",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "default",
+        "derive",
+        "serde_derive",
         "std",
     ],
     crate_root = "src/lib.rs",
     crate_type = "lib",
     data = [],
     edition = "2015",
+    proc_macro_deps = [
+        "//cargo/vendor/serde_derive-1.0.118:serde_derive",
+    ],
     rustc_flags = [
         "--cap-lints=allow",
     ],

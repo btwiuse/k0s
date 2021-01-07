@@ -60,6 +60,7 @@ rust_binary(
     srcs = ["src/main.rs"],
     deps = [
         "//cargo:rand",
+        "//cargo:serde",
         "//cargo:serde_json",
     ],
     visibility = ["//visibility:public"],
