@@ -18,6 +18,7 @@ go_proto_library(
 go_library(
     name = "go_default_library",
     srcs = [
+        "asciitransport_pb.go",
         "client.go",
         "core.go",
         "gen.go",
@@ -32,5 +33,7 @@ go_library(
     deps = [
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/google.golang.org/protobuf/encoding/protojson:go_default_library",
+        "//vendor/google.golang.org/protobuf/reflect/protoreflect:go_default_library",
+        "//vendor/google.golang.org/protobuf/runtime/protoimpl:go_default_library",
     ],
 )

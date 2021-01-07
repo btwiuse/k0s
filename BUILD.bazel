@@ -55,13 +55,14 @@ nogo(
 )
 
 load("@io_bazel_rules_rust//rust:rust.bzl", "rust_binary")
+
 rust_binary(
     name = "k0s_rs",
     srcs = ["src/main.rs"],
+    visibility = ["//visibility:public"],
     deps = [
         "//cargo:rand",
         "//cargo:serde",
         "//cargo:serde_json",
     ],
-    visibility = ["//visibility:public"],
 )
