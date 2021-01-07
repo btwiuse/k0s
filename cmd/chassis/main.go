@@ -1,4 +1,4 @@
-package chassis
+package main
 
 import (
 	"log"

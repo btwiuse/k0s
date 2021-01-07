@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_library(
     name = "go_default_library",
@@ -6,4 +6,10 @@ go_library(
     importpath = "k0s.io/k0s/cmd/chassis",
     visibility = ["//visibility:private"],
     deps = ["//pkg/cli/chassis:go_default_library"],
+)
+
+go_binary(
+    name = "chassis",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
 )
