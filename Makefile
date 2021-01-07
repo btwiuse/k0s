@@ -19,6 +19,12 @@ fonts:
 	@ assets -d fonts/ -package fonts -o ./pkg/fonts/standard.go -map Fonts
 	@ rm -r fonts/
 
+raze:             ## auto generate BUILD.bazel files from Cargo.toml
+	@ cargo vendor --versioned-dirs cargo/vendor
+	@ which cargo-raze || echo please cargo install cargo-raze | grep --color . 1>&2 && false
+	@ cargo raze
+	@ git status cargo
+
 gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ go mod tidy
 	@ go mod vendor

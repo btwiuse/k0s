@@ -57,6 +57,11 @@ load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
 
 rust_repositories()
 
+# https://docs.rs/crate/cargo-raze/0.0.19
+load("//cargo:crates.bzl", "raze_fetch_remote_crates")
+
+raze_fetch_remote_crates()
+
 git_repository(
     name = "rules_proto",
     branch = "master",

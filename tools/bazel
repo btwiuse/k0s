@@ -35,6 +35,7 @@ main(){
   declare -a DEFAULT_TARGETS
   DEFAULT_TARGETS=(
     //:k0s
+    //:k0s_rs
     //cmd/hub
     //cmd/hub2
     //cmd/agent
@@ -49,7 +50,7 @@ main(){
     for target in "${DEFAULT_TARGETS[@]}"; do
       # bazel build --build_event_text_file=bazel-build-events.txt "${target}"
       info "${target}"
-      bazel build "${target}"
+      bazel build "${target}" || sleep 1 && echo && continue
     done
   else
     bazel "${@}"

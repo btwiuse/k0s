@@ -53,3 +53,13 @@ nogo(
         "@org_golang_x_tools//go/analysis/passes/printf:go_tool_library",
     ],
 )
+
+load("@io_bazel_rules_rust//rust:rust.bzl", "rust_binary")
+rust_binary(
+    name = "k0s_rs",
+    srcs = ["src/main.rs"],
+    deps = [
+        "//cargo:rand",
+    ],
+    visibility = ["//visibility:public"],
+)

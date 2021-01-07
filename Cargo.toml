@@ -5,9 +5,11 @@ authors = ["navigaid <navigaid@gmail.com>"]
 license = "MIT"
 description = "aggregate your personal infrastructure"
 repository = "https://github.com/btwiuse/k0s"
+edition = "2018"
 
 include = [
     "src/*.rs",
+    "cargo/**/*",
     "Cargo.toml",
 ]
 
@@ -15,4 +17,29 @@ include = [
 panic = "abort"
 lto = true
 
+[[bin]]
+name = "k0s"
+path = "src/main.rs"
+
 [dependencies]
+rand = "0.8"
+
+[package.metadata.raze]
+# The path relative path to the Bazel workspace root (location of
+# WORKSPACE.bazel/WORKSPACE file). If no workspace file is found,
+# the current working directory is used.
+workspace_path = "//cargo"
+
+package_aliases_dir = "cargo"
+
+# The set of targets to generate BUILD rules for.
+targets = [
+    "x86_64-apple-darwin",
+    "x86_64-pc-windows-msvc",
+    "x86_64-unknown-linux-gnu",
+]
+
+# The two acceptable options are "Remote" and "Vendored" which
+# is used to idnicate whether the user is using a non-vendored or
+# vendored set of dependencies.
+genmode = "Vendored"
