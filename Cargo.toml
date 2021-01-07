@@ -25,6 +25,9 @@ path = "src/main.rs"
 rand = "0.8"
 
 [package.metadata.raze]
+default_gen_buildrs = true
+rust_rules_workspace_name = "io_bazel_rules_rust"
+
 # The path relative path to the Bazel workspace root (location of
 # WORKSPACE.bazel/WORKSPACE file). If no workspace file is found,
 # the current working directory is used.

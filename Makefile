@@ -20,8 +20,8 @@ fonts:
 	@ rm -r fonts/
 
 raze:             ## auto generate BUILD.bazel files from Cargo.toml
-	@ cargo vendor --versioned-dirs cargo/vendor
-	@ which cargo-raze || echo please cargo install cargo-raze | grep --color . 1>&2 && false
+	@ which cargo-raze || (echo please cargo install cargo-raze | grep --color . 1>&2 && false)
+	@ cargo vendor --versioned-dirs cargo/vendor &>/dev/null
 	@ cargo raze
 	@ git status cargo
 
