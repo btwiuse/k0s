@@ -13,8 +13,53 @@ licenses([
 
 # Aliased targets
 alias(
+    name = "futures",
+    actual = "//cargo/vendor/futures-0.3.9:futures",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "k8s_openapi",
+    actual = "//cargo/vendor/k8s-openapi-0.10.0:k8s_openapi",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "kube",
+    actual = "//cargo/vendor/kube-0.47.0:kube",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "kube_runtime",
+    actual = "//cargo/vendor/kube-runtime-0.47.0:kube_runtime",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "rand",
     actual = "//cargo/vendor/rand-0.8.1:rand",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "schemars",
+    actual = "//cargo/vendor/schemars-0.8.0:schemars",
     tags = [
         "cargo-raze",
         "manual",
@@ -33,6 +78,15 @@ alias(
 alias(
     name = "serde_json",
     actual = "//cargo/vendor/serde_json-1.0.61:serde_json",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "tokio",
+    actual = "//cargo/vendor/tokio-0.2.24:tokio",
     tags = [
         "cargo-raze",
         "manual",

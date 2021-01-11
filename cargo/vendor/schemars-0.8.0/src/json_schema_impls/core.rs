@@ -1,0 +1,226 @@
+use crate::gen::SchemaGenerator;
+use crate::schema::*;
+use crate::JsonSchema;
+use serde_json::json;
+use std::ops::{Bound, Range, RangeInclusive};
+
+impl<T: JsonSchema> JsonSchema for Option<T> {
+    no_ref_schema!();
+
+    fn schema_name() -> String {
+        format!("Nullable_{}", T::schema_name())
+    }
+
+    fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        let mut schema = gen.subschema_for::<T>();
+        if gen.settings().option_add_null_type {
+            schema = match schema {
+                Schema::Bool(true) => Schema::Bool(true),
+                Schema::Bool(false) => <()>::json_schema(gen),
+                Schema::Object(SchemaObject {
+                    instance_type: Some(ref mut instance_type),
+                    ..
+                }) => {
+                    add_null_type(instance_type);
+                    schema
+                }
+                schema => SchemaObject {
+                    subschemas: Some(Box::new(SubschemaValidation {
+                        any_of: Some(vec![schema, <()>::json_schema(gen)]),
+                        ..Default::default()
+                    })),
+                    ..Default::default()
+                }
+                .into(),
+            }
+        }
+        if gen.settings().option_nullable {
+            let mut schema_obj = schema.into_object();
+            schema_obj
+                .extensions
+                .insert("nullable".to_owned(), json!(true));
+            schema = Schema::Object(schema_obj);
+        };
+        schema
+    }
+
+    fn json_schema_for_flatten(gen: &mut SchemaGenerator) -> Schema {
+        let mut schema = T::json_schema_for_flatten(gen);
+        if let Schema::Object(SchemaObject {
+            object: Some(ref mut object_validation),
+            ..
+        }) = schema
+        {
+            object_validation.required.clear();
+        }
+        schema
+    }
+
+    fn add_schema_as_property(
+        gen: &mut SchemaGenerator,
+        parent: &mut SchemaObject,
+        name: String,
+        metadata: Option<Metadata>,
+        _required: bool,
+    ) {
+        let mut schema = gen.subschema_for::<Self>();
+        schema = gen.apply_metadata(schema, metadata);
+
+        let object = parent.object();
+        object.properties.insert(name, schema);
+    }
+}
+
+fn add_null_type(instance_type: &mut SingleOrVec<InstanceType>) {
+    match instance_type {
+        SingleOrVec::Single(ty) if **ty != InstanceType::Null => {
+            *instance_type = vec![**ty, InstanceType::Null].into()
+        }
+        SingleOrVec::Vec(ty) if !ty.contains(&InstanceType::Null) => ty.push(InstanceType::Null),
+        _ => {}
+    };
+}
+
+impl<T: JsonSchema, E: JsonSchema> JsonSchema for Result<T, E> {
+    fn schema_name() -> String {
+        format!("Result_of_{}_or_{}", T::schema_name(), E::schema_name())
+    }
+
+    fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        let mut ok_schema = SchemaObject::default();
+        ok_schema.instance_type = Some(InstanceType::Object.into());
+        let obj = ok_schema.object();
+        obj.required.insert("Ok".to_owned());
+        obj.properties
+            .insert("Ok".to_owned(), gen.subschema_for::<T>());
+
+        let mut err_schema = SchemaObject::default();
+        err_schema.instance_type = Some(InstanceType::Object.into());
+        let obj = err_schema.object();
+        obj.required.insert("Err".to_owned());
+        obj.properties
+            .insert("Err".to_owned(), gen.subschema_for::<E>());
+
+        let mut schema = SchemaObject::default();
+        schema.subschemas().one_of = Some(vec![ok_schema.into(), err_schema.into()]);
+        schema.into()
+    }
+}
+
+impl<T: JsonSchema> JsonSchema for Bound<T> {
+    fn schema_name() -> String {
+        format!("Bound_of_{}", T::schema_name())
+    }
+
+    fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        let mut included_schema = SchemaObject::default();
+        included_schema.instance_type = Some(InstanceType::Object.into());
+        included_schema
+            .object()
+            .required
+            .insert("Included".to_owned());
+        included_schema
+            .object()
+            .properties
+            .insert("Included".to_owned(), gen.subschema_for::<T>());
+
+        let mut excluded_schema = SchemaObject::default();
+        excluded_schema.instance_type = Some(InstanceType::Object.into());
+        excluded_schema
+            .object()
+            .required
+            .insert("Excluded".to_owned());
+        excluded_schema
+            .object()
+            .properties
+            .insert("Excluded".to_owned(), gen.subschema_for::<T>());
+
+        let mut unbounded_schema = SchemaObject::default();
+        unbounded_schema.instance_type = Some(InstanceType::String.into());
+        unbounded_schema.const_value = Some(json!("Unbounded"));
+
+        let mut schema = SchemaObject::default();
+        schema.subschemas().one_of = Some(vec![
+            included_schema.into(),
+            excluded_schema.into(),
+            unbounded_schema.into(),
+        ]);
+        schema.into()
+    }
+}
+
+impl<T: JsonSchema> JsonSchema for Range<T> {
+    fn schema_name() -> String {
+        format!("Range_of_{}", T::schema_name())
+    }
+
+    fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        let mut schema = SchemaObject::default();
+        schema.instance_type = Some(InstanceType::Object.into());
+        let obj = schema.object();
+        obj.required.insert("start".to_owned());
+        obj.required.insert("end".to_owned());
+        obj.properties
+            .insert("start".to_owned(), gen.subschema_for::<T>());
+        obj.properties
+            .insert("end".to_owned(), gen.subschema_for::<T>());
+        schema.into()
+    }
+}
+
+forward_impl!((<T: JsonSchema> JsonSchema for RangeInclusive<T>) => Range<T>);
+
+forward_impl!((<T: ?Sized> JsonSchema for std::marker::PhantomData<T>) => ());
+
+forward_impl!((<'a> JsonSchema for std::fmt::Arguments<'a>) => String);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::tests::{schema_for, schema_object_for};
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn schema_for_option() {
+        let schema = schema_object_for::<Option<i32>>();
+        assert_eq!(
+            schema.instance_type,
+            Some(vec![InstanceType::Integer, InstanceType::Null].into())
+        );
+        assert_eq!(schema.extensions.get("nullable"), None);
+        assert_eq!(schema.subschemas.is_none(), true);
+    }
+
+    #[test]
+    fn schema_for_option_with_ref() {
+        use crate as schemars;
+        #[derive(JsonSchema)]
+        struct Foo;
+
+        let schema = schema_object_for::<Option<Foo>>();
+        assert_eq!(schema.instance_type, None);
+        assert_eq!(schema.extensions.get("nullable"), None);
+        assert_eq!(schema.subschemas.is_some(), true);
+        let any_of = schema.subschemas.unwrap().any_of.unwrap();
+        assert_eq!(any_of.len(), 2);
+        assert_eq!(any_of[0], Schema::new_ref("#/definitions/Foo".to_string()));
+        assert_eq!(any_of[1], schema_for::<()>());
+    }
+
+    #[test]
+    fn schema_for_result() {
+        let schema = schema_object_for::<Result<bool, String>>();
+        let one_of = schema.subschemas.unwrap().one_of.unwrap();
+        assert_eq!(one_of.len(), 2);
+
+        let ok_schema: SchemaObject = one_of[0].clone().into();
+        let obj = ok_schema.object.unwrap();
+        assert!(obj.required.contains("Ok"));
+        assert_eq!(obj.properties["Ok"], schema_for::<bool>());
+
+        let err_schema: SchemaObject = one_of[1].clone().into();
+        let obj = err_schema.object.unwrap();
+        assert!(obj.required.contains("Err"));
+        assert_eq!(obj.properties["Err"], schema_for::<String>());
+    }
+}

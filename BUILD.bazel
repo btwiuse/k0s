@@ -66,3 +66,20 @@ rust_binary(
         "//cargo:serde_json",
     ],
 )
+
+rust_binary(
+    name = "k8s-controller",
+    srcs = ["src/k8s-controller.rs"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cargo:serde",
+        "//cargo:serde_json",
+    #   "//cargo:serde_derive",
+        "//cargo:kube",
+        "//cargo:kube_runtime",
+    #   "//cargo:kube-derive",
+        "//cargo:schemars",
+        "//cargo:tokio",
+        "//cargo:futures",
+    ],
+)

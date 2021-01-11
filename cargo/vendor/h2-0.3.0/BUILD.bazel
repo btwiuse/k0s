@@ -1,0 +1,71 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load(
+    "@io_bazel_rules_rust//rust:rust.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_test",
+)
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT"
+])
+
+# Generated Targets
+
+# Unsupported target "akamai" with type "example" omitted
+
+# Unsupported target "client" with type "example" omitted
+
+# Unsupported target "server" with type "example" omitted
+
+rust_library(
+    name = "h2",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+    ],
+    crate_root = "src/lib.rs",
+    crate_type = "lib",
+    data = [],
+    edition = "2018",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+    version = "0.3.0",
+    # buildifier: leave-alone
+    deps = [
+        "//cargo/vendor/bytes-1.0.0:bytes",
+        "//cargo/vendor/fnv-1.0.7:fnv",
+        "//cargo/vendor/futures-core-0.3.9:futures_core",
+        "//cargo/vendor/futures-sink-0.3.9:futures_sink",
+        "//cargo/vendor/futures-util-0.3.9:futures_util",
+        "//cargo/vendor/http-0.2.2:http",
+        "//cargo/vendor/indexmap-1.6.1:indexmap",
+        "//cargo/vendor/slab-0.4.2:slab",
+        "//cargo/vendor/tokio-1.0.1:tokio",
+        "//cargo/vendor/tokio-util-0.6.0:tokio_util",
+        "//cargo/vendor/tracing-0.1.22:tracing",
+        "//cargo/vendor/tracing-futures-0.2.4:tracing_futures",
+    ],
+)

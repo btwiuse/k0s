@@ -1,0 +1,82 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load(
+    "@io_bazel_rules_rust//rust:rust.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_test",
+)
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT"
+])
+
+# Generated Targets
+
+# Unsupported target "jsonpath_lib" with type "cdylib" omitted
+
+rust_library(
+    name = "jsonpath_lib",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+    ],
+    crate_root = "src/lib.rs",
+    crate_type = "rlib",
+    data = [],
+    edition = "2015",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+    version = "0.2.6",
+    # buildifier: leave-alone
+    deps = [
+        "//cargo/vendor/array_tool-1.0.3:array_tool",
+        "//cargo/vendor/env_logger-0.7.1:env_logger",
+        "//cargo/vendor/log-0.4.11:log",
+        "//cargo/vendor/serde-1.0.118:serde",
+        "//cargo/vendor/serde_json-1.0.61:serde_json",
+    ],
+)
+
+# Unsupported target "array_filter" with type "test" omitted
+
+# Unsupported target "common" with type "test" omitted
+
+# Unsupported target "filter" with type "test" omitted
+
+# Unsupported target "jsonpath_examples" with type "test" omitted
+
+# Unsupported target "lib" with type "test" omitted
+
+# Unsupported target "op" with type "test" omitted
+
+# Unsupported target "paths" with type "test" omitted
+
+# Unsupported target "precompile" with type "test" omitted
+
+# Unsupported target "readme" with type "test" omitted
+
+# Unsupported target "return_type" with type "test" omitted
+
+# Unsupported target "selector" with type "test" omitted
