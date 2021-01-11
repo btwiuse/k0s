@@ -38,7 +38,7 @@ rust_library(
     name = "async_compression",
     srcs = glob(["**/*.rs"]),
     aliases = {
-        "//cargo/vendor/tokio-1.0.1:tokio": "tokio_03",
+        "//cargo/vendor/tokio-1.0.1:tokio": "tokio",
     },
     crate_features = [
         "flate2",

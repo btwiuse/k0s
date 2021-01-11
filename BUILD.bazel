@@ -78,6 +78,7 @@ rust_binary(
         "//cargo:kube",
         "//cargo:kube_runtime",
     #   "//cargo:kube-derive",
+        "//cargo:k8s_openapi",
         "//cargo:schemars",
         "//cargo:tokio",
         "//cargo:futures",

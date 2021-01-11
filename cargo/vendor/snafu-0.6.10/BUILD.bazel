@@ -65,6 +65,14 @@ rust_library(
         "//cargo/vendor/futures-core-0.3.9:futures_core",
         "//cargo/vendor/pin-project-0.4.27:pin_project",
     ],
+    compile_data = [
+        ":md",
+    ],
+)
+
+filegroup(
+    name = "md",
+    srcs = glob(["**/*.md"]),
 )
 
 # Unsupported target "backtrace" with type "test" omitted
