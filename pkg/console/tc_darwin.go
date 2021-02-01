@@ -29,18 +29,11 @@ const (
 	cmdTcSet = unix.TIOCSETA
 )
 
-func ioctl(fd, flag, data uintptr) error {
-	if _, _, err := unix.Syscall(unix.SYS_IOCTL, fd, flag, data); err != 0 {
-		return err
-	}
-	return nil
-}
-
 // unlockpt unlocks the slave pseudoterminal device corresponding to the master pseudoterminal referred to by f.
 // unlockpt should be called before opening the slave side of a pty.
 func unlockpt(f *os.File) error {
 	var u int32
-	return ioctl(f.Fd(), unix.TIOCPTYUNLK, uintptr(unsafe.Pointer(&u)))
+	return unix.IoctlSetInt(int(f.Fd()), unix.TIOCPTYUNLK, int(uintptr(unsafe.Pointer(&u))))
 }
 
 // ptsname retrieves the name of the first available pts for the given master.
