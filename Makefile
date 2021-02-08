@@ -147,7 +147,7 @@ dist:           ## Build and make an dist image TODO: android builder image
 	@ make build-darwin
 	@ pushd bin; test -f index.html && rm index.html; tree -H '.' --noreport --charset utf-8 | sponge index.html; popd
 	@ cp VERSION bin/
-	@ ../../srvhubcli/bin/mnt https://mntcd.op.milvzn.com/btwiuse/k0s/v0.0.10/ ./bin/
+	@ ./bin/k0s mnt https://chassis.k0s.io/btwiuse/k0s/v0.0.11/ ./bin/
 
 install:        ## install binary to system paths
 	install -Dvm755 bin/$(NAME) /usr/bin/$(NAME)

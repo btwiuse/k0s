@@ -13,7 +13,7 @@ EOF
 
 get_kube_state_metrics(){
 cat <<EOF
-  - k0s.op.milvzn.com/metrics#kube-state-metrics
+  - ${HUB}/metrics#kube-state-metrics
 EOF
 }
 
