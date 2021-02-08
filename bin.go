@@ -83,19 +83,6 @@ func (c Combo) Env() []string {
 		envs = append(envs, fmt.Sprintf("GOARCH=%s", c.ARCH))
 	}
 	switch c {
-	//      _                     _
-	//   __| | __ _ _ ____      _(_)_ __
-	//  / _` |/ _` | '__\ \ /\ / / | '_ \
-	// | (_| | (_| | |   \ V  V /| | | | |
-	//  \__,_|\__,_|_|    \_/\_/ |_|_| |_|
-	//
-	// currently I haven't figured out how to properly setup the toolchain for darwin/arm*
-	case
-		Combo{OS: "darwin", ARCH: "arm64"},
-		Combo{OS: "darwin", ARCH: "armv6"},
-		Combo{OS: "darwin", ARCH: "armv7"}:
-		envs = append(envs, "CGO_ENABLED=1")
-
 	//                  _           _     _
 	//   __ _ _ __   __| |_ __ ___ (_) __| |
 	//  / _` | '_ \ / _` | '__/ _ \| |/ _` |
