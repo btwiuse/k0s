@@ -108,8 +108,8 @@ func (c Combo) Env() []string {
 			break
 		}
 		envs = append(envs,
-			"CC=armv7a-linux-androideabi29-clang",
-			"CXX=armv7a-linux-androideabi29-clang++",
+			"CC=armv7a-linux-androideabi30-clang",
+			"CXX=armv7a-linux-androideabi30-clang++",
 		)
 	case Combo{OS: "android", ARCH: "armv7"}:
 		envs = append(envs, "CGO_ENABLED=1")
@@ -117,8 +117,8 @@ func (c Combo) Env() []string {
 			break
 		}
 		envs = append(envs,
-			"CC=armv7a-linux-androideabi29-clang",
-			"CXX=armv7a-linux-androideabi29-clang++",
+			"CC=armv7a-linux-androideabi30-clang",
+			"CXX=armv7a-linux-androideabi30-clang++",
 		)
 	case Combo{OS: "android", ARCH: "arm64"}:
 		envs = append(envs, "CGO_ENABLED=1")
@@ -126,8 +126,8 @@ func (c Combo) Env() []string {
 			break
 		}
 		envs = append(envs,
-			"CC=aarch64-linux-android29-clang",
-			"CXX=aarch64-linux-android29-clang++",
+			"CC=aarch64-linux-android30-clang",
+			"CXX=aarch64-linux-android30-clang++",
 		)
 	case Combo{OS: "android", ARCH: "386"}:
 		envs = append(envs, "CGO_ENABLED=1")
@@ -135,8 +135,8 @@ func (c Combo) Env() []string {
 			break
 		}
 		envs = append(envs,
-			"CC=i686-linux-android29-clang",
-			"CXX=i686-linux-android29-clang++",
+			"CC=i686-linux-android30-clang",
+			"CXX=i686-linux-android30-clang++",
 		)
 	case Combo{OS: "android", ARCH: "amd64"}:
 		envs = append(envs, "CGO_ENABLED=1")
@@ -144,8 +144,8 @@ func (c Combo) Env() []string {
 			break
 		}
 		envs = append(envs,
-			"CC=x86_64-linux-android29-clang",
-			"CXX=x86_64-linux-android29-clang++",
+			"CC=x86_64-linux-android30-clang",
+			"CXX=x86_64-linux-android30-clang++",
 		)
 
 	//           _           _
