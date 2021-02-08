@@ -16,7 +16,8 @@ go_rules_dependencies()
 
 go_register_toolchains(
     nogo = "@//:nogo",
-    version = "1.15.6",
+    version = "1.16rc1",
+   #version = "1.15.8",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
@@ -47,13 +48,13 @@ load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 protobuf_deps()
 
 git_repository(
-    name = "io_bazel_rules_rust",
+    name = "rules_rust",
     # commit = "f32695dcd02d9a19e42b9eb7f29a24a8ceb2b858",
-    branch = "master",
+    branch = "main",
     remote = "https://github.com/bazelbuild/rules_rust.git",
 )
 
-load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
+load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 
 # https://bazelbuild.github.io/rules_rust/
 rust_repositories(version = "1.49.0", edition="2018", rustfmt_version = "1.49.0")
