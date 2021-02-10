@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+commit(){
+  # git rev-parse --short HEAD
+  git rev-parse HEAD
+}
+
+branch(){
+  git symbolic-ref -q --short HEAD
+}
+
+state(){
+  [[ -n $(git status --porcelain) ]] && echo dirty || echo clean
+}
+
+summary(){
+  git describe --tags --dirty --always
+}
+
+# date in rfc3339 format
+# https://unix.stackexchange.com/questions/120484/what-is-a-standard-command-for-printing-a-date-in-rfc-3339-format
+# equivalent go code:
+# https://github.com/ahmetb/govvv/blob/master/values.go#L62
+builddate(){
+  date -u +"%Y-%m-%dT%H:%M:%SZ"
+}
+
+version(){
+# basedir=$(dirname $(realpath $0))
+# cd $basedir/../..
+# git describe --abbrev=0 --tags
+  cat VERSION
+}
+
+kvs(){
+  {
+    echo GitCommitString  $(commit)
+    echo GitStateString   $(state)
+    echo GitBranchString  $(branch)
+    echo GitSummaryString $(summary)
+    echo BuildDateString  $(builddate)
+    echo VersionString    $(version)
+  } | sed s,^,STABLE_,g
+}
+
+kvs

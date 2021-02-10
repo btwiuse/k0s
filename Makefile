@@ -201,7 +201,7 @@ img:            ## Build Docker Image
 	@docker build --rm -t ${IMAGE} .
 
 bazel-img:      ## Build Docker Image with bazel
-	@ ${BAZEL} build //:k0s_image.tar
+	@ ${BAZEL} build --stamp --workspace_status_command=./pkg/version/ldflags_bazel //:k0s_image.tar
 	@ docker load -i bazel-bin/k0s_image.tar
 	@ docker tag bazel:k0s_image ${IMAGE}
 
