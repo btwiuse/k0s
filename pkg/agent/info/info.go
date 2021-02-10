@@ -47,9 +47,12 @@ func EmptyInfo() agent.Info {
 }
 
 func CollectInfo() agent.Info {
+	_user, err := user.Current()
+	if err != nil {
+		_user = &user.User{Username: "N/A"}
+	}
 	var (
 		pwd, _      = os.Getwd()
-		_user, _    = user.Current()
 		username    = _user.Username
 		hostname, _ = os.Hostname()
 		goos        = runtime.GOOS
