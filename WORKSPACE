@@ -17,7 +17,6 @@ go_rules_dependencies()
 go_register_toolchains(
     nogo = "@//:nogo",
     version = "1.16rc1",
-   #version = "1.15.8",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
@@ -57,7 +56,11 @@ git_repository(
 load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 
 # https://bazelbuild.github.io/rules_rust/
-rust_repositories(version = "1.49.0", edition="2018", rustfmt_version = "1.49.0")
+rust_repositories(
+    edition = "2018",
+    rustfmt_version = "1.49.0",
+    version = "1.49.0",
+)
 # rust_repositories(version = "nightly", iso_date = "2021-01-08", edition="2018")
 
 # https://docs.rs/crate/cargo-raze/0.0.19
@@ -611,7 +614,38 @@ rules_proto_dependencies()
 rules_proto_toolchains()
 
 # https://github.com/bazelbuild/rules_docker#go_image
+git_repository(
+    name = "io_bazel_rules_docker",
+    branch = "master",
+    remote = "https://github.com/bazelbuild/rules_docker.git",
+)
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+load(
+    "@io_bazel_rules_docker//repositories:repositories.bzl",
+    container_repositories = "repositories",
+)
+
+container_repositories()
+
+load(
+    "@io_bazel_rules_docker//go:image.bzl",
+    _go_image_repos = "repositories",
+)
+
+_go_image_repos()
 # end go_image
+
+load("@io_bazel_rules_docker//container:container.bzl", "container_pull")
+container_pull(
+    name = "base",
+    registry = "docker.io",
+    repository = "library/alpine",
+    # 'tag' is also supported, but digest is encouraged for reproducibility.
+    # digest = "sha256:deadbeef",
+    tag = "latest",
+)
 
 go_repository(
     name = "co_honnef_go_tools",
