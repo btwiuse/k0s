@@ -15,8 +15,8 @@ import (
 	"github.com/gorilla/mux"
 	"k0s.io/k0s/pkg/api"
 	"k0s.io/k0s/pkg/exporter"
-	"k0s.io/k0s/pkg/middleware"
 	types "k0s.io/k0s/pkg/hub"
+	"k0s.io/k0s/pkg/middleware"
 	"k0s.io/k0s/pkg/wrap"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
@@ -174,12 +174,12 @@ func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	var (
 		// vars = mux.Vars(r)
 		// tags = vars["tags"]
-		vars = r.URL.Query()
+		vars        = r.URL.Query()
 		_, untagged = vars["untagged"]
-		vtags = vars.Get("tags")
-		tags = strings.Split(vtags, ",")
-		allAgents = h.GetAgents()
-		agents = []types.Agent{}
+		vtags       = vars.Get("tags")
+		tags        = strings.Split(vtags, ",")
+		allAgents   = h.GetAgents()
+		agents      = []types.Agent{}
 	)
 	switch {
 	case untagged:
@@ -256,12 +256,12 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("handleAgent", id, subpath)
 
-    // TODO: lookup agent by name
+	// TODO: lookup agent by name
 	if !h.Has(id) {
-	//  log.Println("hub has no such id", id)
-	//  for i, ider := range h.Values() {
-	//  	log.Println(i, ider.ID())
-	//  }
+		//  log.Println("hub has no such id", id)
+		//  for i, ider := range h.Values() {
+		//  	log.Println(i, ider.ID())
+		//  }
 		http.Redirect(w, r, "/", http.StatusFound /*302*/)
 		return
 	}
@@ -284,7 +284,7 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		dohRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):
 		var (
-			vars = r.URL.Query()
+			vars    = r.URL.Query()
 			_, k16s = vars["k16s"]
 		)
 		if k16s {

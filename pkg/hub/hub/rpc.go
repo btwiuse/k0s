@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+
 	// "log"
 	"net"
 	"sync"
@@ -47,7 +48,7 @@ func (rpc *YS) register() {
 
 	ifo, err := info.Decode([]byte(cmd))
 	if err != nil {
-        // TODO: notify client
+		// TODO: notify client
 		// log.Println(err)
 		return
 	}

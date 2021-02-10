@@ -23,6 +23,8 @@ type AgentInfo interface {
 	GetDistro() string
 	GetHostname() string
 	GetUsername() string
+	GetVersion() string
+	GetGitSummary() string
 
 	SetIP(string)
 }

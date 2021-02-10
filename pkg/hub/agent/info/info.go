@@ -42,12 +42,14 @@ type Info struct {
 	Connected int64    `json:"connected"`
 	IP        string   `json:"ip"`
 
-	OS       string `json:"os"`
-	Pwd      string `json:"pwd"`
-	Arch     string `json:"arch"`
-	Distro   string `json:"distro,omitempty"`
-	Username string `json:"username"`
-	Hostname string `json:"hostname"`
+	OS         string `json:"os"`
+	Pwd        string `json:"pwd"`
+	Arch       string `json:"arch"`
+	Distro     string `json:"distro,omitempty"`
+	Username   string `json:"username"`
+	Hostname   string `json:"hostname"`
+	Version    string `json:"version"`
+	GitSummary string `json:"git_summary"`
 
 	*privateInfo `json:"-"`
 }
@@ -79,6 +81,8 @@ func (info *Info) populatePublicInfo() {
 	info.Distro = pi.Distro
 	info.Username = pi.Username
 	info.Hostname = pi.Hostname
+	info.Version = pi.Version.Version
+	info.GitSummary = pi.Version.GitSummary
 
 	if len(pi.Htpasswd) != 0 {
 		*info.Auth = true
@@ -111,6 +115,14 @@ func (info *Info) GetUsername() string {
 
 func (info *Info) GetHostname() string {
 	return info.Hostname
+}
+
+func (info *Info) GetGitSummary() string {
+	return info.GitSummary
+}
+
+func (info *Info) GetVersion() string {
+	return info.Version
 }
 
 func (info *Info) GetID() string {
