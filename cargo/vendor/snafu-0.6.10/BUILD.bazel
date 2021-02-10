@@ -36,6 +36,9 @@ rust_library(
     aliases = {
         "//cargo/vendor/futures-core-0.3.9:futures_core": "futures_core_crate",
     },
+    compile_data = [
+        ":md",
+    ],
     crate_features = [
         "default",
         "futures",
@@ -64,9 +67,6 @@ rust_library(
         "//cargo/vendor/doc-comment-0.3.3:doc_comment",
         "//cargo/vendor/futures-core-0.3.9:futures_core",
         "//cargo/vendor/pin-project-0.4.27:pin_project",
-    ],
-    compile_data = [
-        ":md",
     ],
 )
 

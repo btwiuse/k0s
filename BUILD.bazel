@@ -35,30 +35,30 @@ go_library(
 go_binary(
     name = "k0s",
     embed = [":go_default_library"],
-    x_defs = {
-        "k0s.io/k0s/pkg/version.GitCommitString" : "{STABLE_GitCommitString}",
-        "k0s.io/k0s/pkg/version.GitStateString" : "{STABLE_GitStateString}",
-        "k0s.io/k0s/pkg/version.GitBranchString" : "{STABLE_GitBranchString}",
-        "k0s.io/k0s/pkg/version.GitSummaryString" : "{STABLE_GitSummaryString}",
-        "k0s.io/k0s/pkg/version.BuildDateString" : "{STABLE_BuildDateString}",
-        "k0s.io/k0s/pkg/version.VersionString" : "{STABLE_VersionString}",
-    },
     visibility = ["//visibility:public"],
+    x_defs = {
+        "k0s.io/k0s/pkg/version.GitCommitString": "{STABLE_GitCommitString}",
+        "k0s.io/k0s/pkg/version.GitStateString": "{STABLE_GitStateString}",
+        "k0s.io/k0s/pkg/version.GitBranchString": "{STABLE_GitBranchString}",
+        "k0s.io/k0s/pkg/version.GitSummaryString": "{STABLE_GitSummaryString}",
+        "k0s.io/k0s/pkg/version.BuildDateString": "{STABLE_BuildDateString}",
+        "k0s.io/k0s/pkg/version.VersionString": "{STABLE_VersionString}",
+    },
 )
 
 go_binary(
     name = "k0s_static",
     embed = [":go_default_library"],
     static = "on",
-    x_defs = {
-        "k0s.io/k0s/pkg/version.GitCommitString" : "{STABLE_GitCommitString}",
-        "k0s.io/k0s/pkg/version.GitStateString" : "{STABLE_GitStateString}",
-        "k0s.io/k0s/pkg/version.GitBranchString" : "{STABLE_GitBranchString}",
-        "k0s.io/k0s/pkg/version.GitSummaryString" : "{STABLE_GitSummaryString}",
-        "k0s.io/k0s/pkg/version.BuildDateString" : "{STABLE_BuildDateString}",
-        "k0s.io/k0s/pkg/version.VersionString" : "{STABLE_VersionString}",
-    },
     visibility = ["//visibility:public"],
+    x_defs = {
+        "k0s.io/k0s/pkg/version.GitCommitString": "{STABLE_GitCommitString}",
+        "k0s.io/k0s/pkg/version.GitStateString": "{STABLE_GitStateString}",
+        "k0s.io/k0s/pkg/version.GitBranchString": "{STABLE_GitBranchString}",
+        "k0s.io/k0s/pkg/version.GitSummaryString": "{STABLE_GitSummaryString}",
+        "k0s.io/k0s/pkg/version.BuildDateString": "{STABLE_BuildDateString}",
+        "k0s.io/k0s/pkg/version.VersionString": "{STABLE_VersionString}",
+    },
 )
 
 load("@io_bazel_rules_go//go:def.bzl", "nogo")
@@ -108,10 +108,10 @@ rust_binary(
     deps = [
         "//cargo:serde",
         "//cargo:serde_json",
-    #   "//cargo:serde_derive",
+        # "//cargo:serde_derive",
         "//cargo:kube",
         "//cargo:kube_runtime",
-    #   "//cargo:kube-derive",
+        # "//cargo:kube-derive",
         "//cargo:k8s_openapi",
         "//cargo:schemars",
         "//cargo:tokio",
