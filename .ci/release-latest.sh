@@ -2,17 +2,16 @@
 
 ROOT_DIR=$(dirname $(dirname $(realpath -m ${0})))
 
-# unecessary
-refresh(){
-##git push --delete origin latest || true
-##git tag -d latest || true
-##git tag latest HEAD
-##git push origin latest
-  github release delete latest
-}
-
 github(){
   hub -C $ROOT_DIR ${@}
+}
+
+refresh(){
+  git push --delete origin latest || true
+  git tag -d latest || true
+  git tag latest HEAD
+  git push origin latest
+  github release delete latest
 }
 
 upload(){
