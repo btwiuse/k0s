@@ -6,17 +6,28 @@ github(){
   hub -C $ROOT_DIR ${@}
 }
 
+rel(){
+  ver="$(git tag -l --points-at HEAD | grep -v latest | head -n1)"
+  if [[ "${ver}" == "" ]]; then
+    echo latest
+  else
+    echo "${ver}"
+  fi
+}
+
 refresh(){
-  git push --delete origin latest || true
-  git tag -d latest || true
-  git tag latest HEAD
-  git push origin latest
-  github release delete latest
+  local latest="$(rel)"
+  git push --delete origin "$latest" || true
+  git tag -d "$latest" || true
+  git tag "$latest" HEAD
+  git push origin "$latest"
+  github release delete "$latest"
 }
 
 upload(){
-  github release | grep latest || github release create -m 'latest' latest
-  github release edit -m 'latest' latest -a "$1"
+  local latest="$(rel)"
+  github release | grep "$latest" || github release create -m "$latest" "$latest"
+  github release edit -m "$latest" "$latest" -a "$1"
 }
 
 loop_unix(){
