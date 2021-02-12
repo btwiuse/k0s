@@ -183,7 +183,7 @@ github.com/ghodss/yaml
 github.com/ginuerzh/gosocks4
 # github.com/ginuerzh/gosocks5 v0.2.0
 github.com/ginuerzh/gosocks5
-# github.com/ginuerzh/gost v0.0.0-20201206234231-1a56a878ac44 => github.com/btwiuse/gost v0.0.0-20210104121727-5d69ecf20392
+# github.com/ginuerzh/gost v0.0.0-20210206051340-8dd4d8d9a123
 ## explicit
 github.com/ginuerzh/gost
 # github.com/ginuerzh/tls-dissector v0.0.2-0.20200224064855-24ab2b3a3796
@@ -817,6 +817,5 @@ nhooyr.io/websocket/internal/xsync
 sigs.k8s.io/structured-merge-diff/v4/value
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
-# github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20210104121727-5d69ecf20392
 # k8s.io/kube-state-metrics/v2 => github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9
 # nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6

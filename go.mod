@@ -3,7 +3,6 @@ module k0s.io/k0s
 go 1.15
 
 replace (
-	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20210104121727-5d69ecf20392
 	k8s.io/kube-state-metrics/v2 => github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9
 	nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
 )
@@ -27,7 +26,7 @@ require (
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/gdamore/tcell v1.3.0
-	github.com/ginuerzh/gost v0.0.0-20201206234231-1a56a878ac44
+	github.com/ginuerzh/gost v0.0.0-20210206051340-8dd4d8d9a123
 	github.com/go-log/log v0.2.0
 	github.com/golang/protobuf v1.4.2
 	github.com/google/uuid v1.1.1

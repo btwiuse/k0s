@@ -62,9 +62,9 @@ load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 #     version = "1.50.0",
 # )
 rust_repositories(
-    edition="2018",
-    version = "nightly",
+    edition = "2018",
     iso_date = "2021-02-12",
+    version = "nightly",
 )
 
 # https://docs.rs/crate/cargo-raze/0.0.19
@@ -2657,9 +2657,8 @@ go_repository(
 go_repository(
     name = "com_github_ginuerzh_gost",
     importpath = "github.com/ginuerzh/gost",
-    replace = "github.com/btwiuse/gost",
-    sum = "h1:wkvaCEKrod9YA5kYxVWfHOBwnmgMJRcNjVDZVWHFfjU=",
-    version = "v0.0.0-20210104121727-5d69ecf20392",
+    sum = "h1:UUYWtO1H1s974W4DJBtP74mmz/rseXjLttj8dmZo9A4=",
+    version = "v0.0.0-20210206051340-8dd4d8d9a123",
 )
 
 go_repository(
