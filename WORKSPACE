@@ -64,7 +64,7 @@ load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 rust_repositories(
     edition="2018",
     version = "nightly",
-    iso_date = "2021-02-11",
+    iso_date = "2021-02-12",
 )
 
 # https://docs.rs/crate/cargo-raze/0.0.19
