@@ -15,8 +15,9 @@ rel(){
   fi
 }
 
+latest="$(rel)"
+
 refresh(){
-  local latest="$(rel)"
   git push --delete origin "$latest" || true
   git tag -d "$latest" || true
   git tag "$latest" HEAD
@@ -25,7 +26,6 @@ refresh(){
 }
 
 upload(){
-  local latest="$(rel)"
   github release | grep "$latest" || github release create -m "$latest" "$latest"
   github release edit -m "$latest" "$latest" -a "$1"
 }
