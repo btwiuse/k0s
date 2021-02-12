@@ -58,8 +58,8 @@ load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 # https://bazelbuild.github.io/rules_rust/
 rust_repositories(
     edition = "2018",
-    rustfmt_version = "1.49.0",
-    version = "1.49.0",
+    rustfmt_version = "1.50.0",
+    version = "1.50.0",
 )
 # rust_repositories(version = "nightly", iso_date = "2021-01-08", edition="2018")
 
