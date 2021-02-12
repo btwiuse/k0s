@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+pushd $(mktemp -d)
+go mod init tmp
+env GOPROXY=https://proxy.golang.org GO111MODULE=on go get -x k0s.io/k0s@$(<$OLDPWD/VERSION)
