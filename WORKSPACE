@@ -56,12 +56,16 @@ git_repository(
 load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 
 # https://bazelbuild.github.io/rules_rust/
+# rust_repositories(
+#     edition = "2018",
+#     rustfmt_version = "1.50.0",
+#     version = "1.50.0",
+# )
 rust_repositories(
-    edition = "2018",
-    rustfmt_version = "1.50.0",
-    version = "1.50.0",
+    edition="2018",
+    version = "nightly",
+    iso_date = "2021-02-11",
 )
-# rust_repositories(version = "nightly", iso_date = "2021-01-08", edition="2018")
 
 # https://docs.rs/crate/cargo-raze/0.0.19
 load("//cargo:crates.bzl", "raze_fetch_remote_crates")
