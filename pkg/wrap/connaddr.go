@@ -18,23 +18,13 @@ type connAddr struct {
 	net.Addr
 }
 
-func NewAddr(network, name string) net.Addr {
-	return &addr{
-		network: network,
-		name:    name,
-	}
+func NewAddr(network, hostport string) net.Addr {
+	return &addr{network, hostport}
 }
 
 // addr implements net.Addr
-type addr struct {
-	network string
-	name    string
-}
+type addr struct{ network, hostport string }
 
-func (a *addr) Network() string {
-	return a.network
-}
+func (a *addr) Network() string { return a.network }
 
-func (a *addr) String() string {
-	return a.name
-}
+func (a *addr) String() string { return a.hostport }

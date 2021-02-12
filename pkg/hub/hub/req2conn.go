@@ -27,8 +27,14 @@ func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if forward := r.Header.Get("X-Forwarded-For"); forward != "" {
-		addr := wrap.NewAddr(conn.RemoteAddr().Network(), forward)
+	if forwardIP := r.Header.Get("X-Forwarded-For"); forwardIP != "" {
+		forwardPort := r.Header.Get("X-Forwarded-Port")
+		if forwardPort == "" {
+			forwardPort = "0"
+		}
+		network := conn.RemoteAddr().Network()
+		hostport := forwardIP + ":" + forwardPort
+		addr := wrap.NewAddr(network, hostport)
 		conn = wrap.ConnWithAddr(conn, addr)
 	}
 

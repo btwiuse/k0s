@@ -4,9 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-
-	// "log"
 	"net"
+	"strings"
 	"sync"
 	"time"
 
@@ -119,7 +118,11 @@ func (ys *YS) ID() string {
 }
 
 func (ys *YS) RemoteIP() string {
-	ip, _, _ := net.SplitHostPort(ys.Conn.RemoteAddr().String())
+	remote_hostport := ys.Conn.RemoteAddr().String()
+	if !strings.Contains(remote_hostport, ":") {
+		return remote_hostport
+	}
+	ip, _, _ := net.SplitHostPort(remote_hostport)
 	return ip
 }
 
