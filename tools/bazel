@@ -50,7 +50,7 @@ main(){
     for target in "${DEFAULT_TARGETS[@]}"; do
       # bazel build --build_event_text_file=bazel-build-events.txt "${target}"
       info "${target}"
-      bazel build --stamp --workspace_status_command=./pkg/version/ldflags_bazel "${target}" || sleep 1 && echo && continue
+      bazel build "${target}" || sleep 1 && echo && continue
     done
   else
     bazel "${@}"

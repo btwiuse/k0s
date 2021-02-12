@@ -1,0 +1,2 @@
+build --stamp --workspace_status_command=./pkg/version/ldflags_bazel 
+run --stamp --workspace_status_command=./pkg/version/ldflags_bazel 
