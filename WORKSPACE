@@ -7,6 +7,7 @@ register_toolchains(
     "//toolchain:cc-toolchain-mingw",
     "//toolchain:cc-toolchain-mingw64",
     "//toolchain:cc-toolchain-android_amd64",
+    "//toolchain:cc-toolchain-android_386",
     "//toolchain:cc-toolchain-android_arm64",
 )
 

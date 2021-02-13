@@ -34,6 +34,7 @@ go_library(
 
 go_binary(
     name = "k0s",
+    linkmode = "pie", # https://github.com/bazelbuild/rules_go/issues/2371
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
     x_defs = {
@@ -141,4 +142,12 @@ platform(
         ":android_amd64",
     ],
     parents = ["@io_bazel_rules_go//go/toolchain:android_amd64_cgo"],
+)
+
+platform(
+    name = "android_386_cgo",
+    constraint_values = [
+        ":android_386",
+    ],
+    parents = ["@io_bazel_rules_go//go/toolchain:android_386_cgo"],
 )
