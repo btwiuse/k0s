@@ -118,3 +118,11 @@ rust_binary(
         "//cargo:futures",
     ],
 )
+
+platform(
+    name = "windows_386_cgo",
+    constraint_values = [
+        ":mingw",
+    ],
+    parents = ["@io_bazel_rules_go//go/toolchain:windows_386_cgo"],
+)

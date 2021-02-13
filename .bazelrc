@@ -1,2 +1,11 @@
 build --stamp --workspace_status_command=./pkg/version/ldflags_bazel 
 run --stamp --workspace_status_command=./pkg/version/ldflags_bazel 
+
+# https://github.com/bazelbuild/rules_go/issues/1642
+build:go_win32 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+build:go_win32 --host_platform=@local_config_platform//:host
+build:go_win32 --crosstool_top=//toolchain:mingw_suite
+build:go_win32 --cpu=x86_32
+build:go_win32 --compiler=mingw
+#build:go_win32 --platforms=:windows_386_cgo
+build:go_win32 --platforms=@io_bazel_rules_go//go/toolchain:windows_386_cgo
