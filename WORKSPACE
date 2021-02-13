@@ -1,5 +1,8 @@
 workspace(name = "k0s")
 
+load("//toolchain:android_ndk.bzl", "android_ndk")
+android_ndk(name = "android_ndk")
+
 android_sdk_repository(name = "androidsdk")
 android_ndk_repository(name = "androidndk")
 
