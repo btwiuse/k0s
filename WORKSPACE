@@ -1,8 +1,12 @@
 workspace(name = "k0s")
 
+android_sdk_repository(name = "androidsdk")
+android_ndk_repository(name = "androidndk")
+
 register_toolchains(
     "//toolchain:cc-toolchain-mingw",
     "//toolchain:cc-toolchain-mingw64",
+    "//toolchain:cc-toolchain-android_amd64",
 )
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")

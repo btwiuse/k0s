@@ -37,14 +37,16 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ git status vendor/
 
 bazel-build-android:            ## Build android binaries using bazel
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_amd64  //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_386    //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_arm    //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_arm64  //:k0s
+	# @ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_amd64  //:k0s
+	# @ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_386    //:k0s
+	# @ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_arm    //:k0s
+	# @ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_arm64  //:k0s
+	@ $(BAZEL) build //:k0s --config=go_android_amd64
+	@ $(BAZEL) build //:k0s --config=go_android_386
+	@ $(BAZEL) build //:k0s --config=go_android_arm
+	@ $(BAZEL) build //:k0s --config=go_android_arm64
 
 bazel-build-windows:            ## Build windows binaries using bazel
-	# @ $(BAZEL) build --cpu=x64_windows --compiler=mingw-gcc --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64_cgo --incompatible_use_cc_configure_from_rules_cc --incompatible_enable_cc_toolchain_resolution  //:k0s
-	# @ $(BAZEL) build --compiler=mingw-gcc --platforms=@io_bazel_rules_go//go/toolchain:windows_386_cgo   --incompatible_use_cc_configure_from_rules_cc --incompatible_enable_cc_toolchain_resolution  //:k0s
 	@ $(BAZEL) build //:k0s --config=go_win32
 	@ $(BAZEL) build //:k0s --config=go_win64
 

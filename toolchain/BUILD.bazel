@@ -1,6 +1,14 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_toolchain_suite(
+    name = "android_suite",
+    toolchains = {
+        "x86_64": ":android_amd64_toolchain",
+        "x86_64|android_amd64": ":android_amd64_toolchain",
+    },
+)
+
+cc_toolchain_suite(
     name = "mingw_suite",
     toolchains = {
         "x86_32": ":mingw_toolchain_32",
@@ -11,6 +19,19 @@ cc_toolchain_suite(
 )
 
 filegroup(name = "empty")
+
+cc_toolchain(
+    name = "android_amd64_toolchain",
+    all_files = ":empty",
+    compiler_files = ":empty",
+    dwp_files = ":empty",
+    linker_files = ":empty",
+    objcopy_files = ":empty",
+    strip_files = ":empty",
+    supports_param_files = 0,
+    toolchain_config = ":android_amd64_toolchain_config",
+    toolchain_identifier = "android_amd64_toolchain",
+)
 
 cc_toolchain(
     name = "mingw_toolchain_32",
@@ -47,6 +68,13 @@ load(
 cc_toolchain_config_32(name = "mingw_toolchain_config_32")
 cc_toolchain_config_64(name = "mingw_toolchain_config_64")
 
+load(
+    ":cc_toolchain_config_android_amd64.bzl",
+    "cc_toolchain_config_android_amd64",
+)
+
+cc_toolchain_config_android_amd64(name = "android_amd64_toolchain_config")
+
 toolchain(
     name = "cc-toolchain-mingw",
     exec_compatible_with = [
@@ -72,5 +100,19 @@ toolchain(
         "@platforms//os:windows",
     ],
     toolchain = ":mingw_toolchain_64",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)
+
+toolchain(
+    name = "cc-toolchain-android_amd64",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:android",
+    ],
+    toolchain = ":android_amd64_toolchain",
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )

@@ -16,3 +16,10 @@ build:go_win64 --crosstool_top=//toolchain:mingw_suite
 build:go_win64 --cpu=x86_64
 build:go_win64 --compiler=mingw64
 build:go_win64 --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64_cgo
+
+build:go_android_amd64 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+build:go_android_amd64 --host_platform=@local_config_platform//:host
+build:go_android_amd64 --crosstool_top=//toolchain:android_suite
+build:go_android_amd64 --cpu=x86_64
+build:go_android_amd64 --compiler=android_amd64
+build:go_android_amd64 --platforms=@io_bazel_rules_go//go/toolchain:android_amd64_cgo

@@ -134,3 +134,11 @@ platform(
     ],
     parents = ["@io_bazel_rules_go//go/toolchain:windows_amd64_cgo"],
 )
+
+platform(
+    name = "android_amd64_cgo",
+    constraint_values = [
+        ":android_amd64",
+    ],
+    parents = ["@io_bazel_rules_go//go/toolchain:android_amd64_cgo"],
+)
