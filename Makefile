@@ -46,6 +46,7 @@ bazel-build-windows:            ## Build windows binaries using bazel
 	# @ $(BAZEL) build --cpu=x64_windows --compiler=mingw-gcc --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64_cgo --incompatible_use_cc_configure_from_rules_cc --incompatible_enable_cc_toolchain_resolution  //:k0s
 	# @ $(BAZEL) build --compiler=mingw-gcc --platforms=@io_bazel_rules_go//go/toolchain:windows_386_cgo   --incompatible_use_cc_configure_from_rules_cc --incompatible_enable_cc_toolchain_resolution  //:k0s
 	@ $(BAZEL) build //:k0s --config=go_win32
+	@ $(BAZEL) build //:k0s --config=go_win64
 
 bazel-build-darwin:            ## Build darwin binaries using bazel
 	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64  //:k0s

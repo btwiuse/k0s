@@ -5,6 +5,8 @@ cc_toolchain_suite(
     toolchains = {
         "x86_32": ":mingw_toolchain_32",
         "x86_32|mingw": ":mingw_toolchain_32",
+        "x86_64": ":mingw_toolchain_64",
+        "x86_64|mingw64": ":mingw_toolchain_64",
     },
 )
 
@@ -23,12 +25,27 @@ cc_toolchain(
     toolchain_identifier = "mingw-toolchain-32",
 )
 
+cc_toolchain(
+    name = "mingw_toolchain_64",
+    all_files = ":empty",
+    compiler_files = ":empty",
+    dwp_files = ":empty",
+    linker_files = ":empty",
+    objcopy_files = ":empty",
+    strip_files = ":empty",
+    supports_param_files = 0,
+    toolchain_config = ":mingw_toolchain_config_64",
+    toolchain_identifier = "mingw-toolchain-64",
+)
+
 load(
     ":cc_toolchain_config.bzl",
     "cc_toolchain_config_32",
+    "cc_toolchain_config_64",
 )
 
 cc_toolchain_config_32(name = "mingw_toolchain_config_32")
+cc_toolchain_config_64(name = "mingw_toolchain_config_64")
 
 toolchain(
     name = "cc-toolchain-mingw",
@@ -41,5 +58,19 @@ toolchain(
         "@platforms//os:windows",
     ],
     toolchain = ":mingw_toolchain_32",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)
+
+toolchain(
+    name = "cc-toolchain-mingw64",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows",
+    ],
+    toolchain = ":mingw_toolchain_64",
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )

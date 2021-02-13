@@ -2,6 +2,7 @@ workspace(name = "k0s")
 
 register_toolchains(
     "//toolchain:cc-toolchain-mingw",
+    "//toolchain:cc-toolchain-mingw64",
 )
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")

@@ -126,3 +126,11 @@ platform(
     ],
     parents = ["@io_bazel_rules_go//go/toolchain:windows_386_cgo"],
 )
+
+platform(
+    name = "windows_amd64_cgo",
+    constraint_values = [
+        ":mingw64",
+    ],
+    parents = ["@io_bazel_rules_go//go/toolchain:windows_amd64_cgo"],
+)
