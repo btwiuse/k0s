@@ -9,6 +9,7 @@ register_toolchains(
     "//toolchain:cc-toolchain-android_amd64",
     "//toolchain:cc-toolchain-android_386",
     "//toolchain:cc-toolchain-android_arm64",
+    "//toolchain:cc-toolchain-android_armv7",
 )
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")

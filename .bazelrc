@@ -37,3 +37,10 @@ build:go_android_arm64 --crosstool_top=//toolchain:android_suite
 build:go_android_arm64 --cpu=aarch64
 build:go_android_arm64 --compiler=android_arm64
 build:go_android_arm64 --platforms=@io_bazel_rules_go//go/toolchain:android_arm64_cgo
+
+build:go_android_armv7 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+build:go_android_armv7 --host_platform=@local_config_platform//:host
+build:go_android_armv7 --crosstool_top=//toolchain:android_suite
+build:go_android_armv7 --cpu=armv7
+build:go_android_armv7 --compiler=android_armv7
+build:go_android_armv7 --platforms=@io_bazel_rules_go//go/toolchain:android_arm_cgo

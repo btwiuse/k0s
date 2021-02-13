@@ -9,6 +9,8 @@ cc_toolchain_suite(
         "x86_32|android_386": ":android_386_toolchain",
         "aarch64": ":android_arm64_toolchain",
         "aarch64|android_arm64": ":android_arm64_toolchain",
+        "armv7": ":android_armv7_toolchain",
+        "armv7|android_armv7": ":android_armv7_toolchain",
     },
 )
 
@@ -61,6 +63,19 @@ cc_toolchain(
     supports_param_files = 0,
     toolchain_config = ":android_arm64_toolchain_config",
     toolchain_identifier = "android_arm64_toolchain",
+)
+
+cc_toolchain(
+    name = "android_armv7_toolchain",
+    all_files = ":empty",
+    compiler_files = ":empty",
+    dwp_files = ":empty",
+    linker_files = ":empty",
+    objcopy_files = ":empty",
+    strip_files = ":empty",
+    supports_param_files = 0,
+    toolchain_config = ":android_armv7_toolchain_config",
+    toolchain_identifier = "android_armv7_toolchain",
 )
 
 cc_toolchain(
@@ -118,6 +133,13 @@ load(
 )
 
 cc_toolchain_config_android_arm64(name = "android_arm64_toolchain_config")
+
+load(
+    ":cc_toolchain_config_android_armv7.bzl",
+    "cc_toolchain_config_android_armv7",
+)
+
+cc_toolchain_config_android_armv7(name = "android_armv7_toolchain_config")
 
 toolchain(
     name = "cc-toolchain-mingw",
@@ -186,5 +208,19 @@ toolchain(
         "@platforms//os:android",
     ],
     toolchain = ":android_arm64_toolchain",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)
+
+toolchain(
+    name = "cc-toolchain-android_armv7",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:armv7",
+        "@platforms//os:android",
+    ],
+    toolchain = ":android_armv7_toolchain",
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
