@@ -43,7 +43,7 @@ bazel-build-android:            ## Build android binaries using bazel
 	# @ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_arm64  //:k0s
 	@ $(BAZEL) build //:k0s --config=go_android_amd64
 	@ $(BAZEL) build //:k0s --config=go_android_386
-	@ $(BAZEL) build //:k0s --config=go_android_arm
+	@ $(BAZEL) build //:k0s --config=go_android_armv7
 	@ $(BAZEL) build //:k0s --config=go_android_arm64
 
 bazel-build-windows:            ## Build windows binaries using bazel
