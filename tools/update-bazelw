@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+curl -sL https://github.com/bazelbuild/bazelisk/raw/master/bazelisk.py > bazelw; chmod +x bazelw
