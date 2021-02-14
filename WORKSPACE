@@ -78,7 +78,7 @@ load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 # )
 rust_repositories(
     edition = "2018",
-    iso_date = "2021-02-13",
+    iso_date = "2021-02-14",
     version = "nightly",
 )
 
