@@ -1,8 +1,15 @@
 def _android_ndk_impl(ctx):
-    if ("ANDROID_NDK_HOME") not in ctx.os.environ:
-        fail("Please specify the NDK path using ANDROID_NDK_HOME")
 
-    ctx.file("template.bzl", 'ANDROID_NDK = "{}"'.format(ctx.os.environ["ANDROID_NDK_HOME"]))
+    home = "ANDROID_NDK_HOME"
+
+    if ("ANDROID_NDK_HOME") not in ctx.os.environ:
+        print("Please specify the NDK path using ANDROID_NDK_HOME")
+    else:
+        home = ctx.os.environ["ANDROID_NDK_HOME"]
+
+    print('ANDROID_NDK_HOME = "{}"'.format(home))
+
+    ctx.file("template.bzl", 'ANDROID_NDK_HOME = "{}"'.format(home))
     ctx.template(
         "android_ndk.bzl",
         "template.bzl",
