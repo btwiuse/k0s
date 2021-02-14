@@ -65,21 +65,21 @@ bazel-build-bsd-arm:            ## Build bsd arm binaries using bazel
 	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:openbsd_arm    //:k0s
 
 bazel-build-linux-arm:          ## Build linux arm binaries using bazel
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm64    //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm      //:k0s
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm64    //:k0s_static
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm      //:k0s_static
 
 bazel-build-linux:          ## Build linux binaries using bazel
-	@ $(BAZEL) build //:k0s # //cmd/{hub,client,agent}
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64    //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm64    //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_386      //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips     //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips64   //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mipsle   //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips64le //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64    //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64le  //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_s390x    //:k0s
+	@ $(BAZEL) build //:k0s_static # //cmd/{hub,client,agent}
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64    //:k0s_static
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm64    //:k0s_static
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_386      //:k0s_static
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips     //:k0s_static
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips64   //:k0s_static
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mipsle   //:k0s_static
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips64le //:k0s_static
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64    //:k0s_static
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64le  //:k0s_static
+	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_s390x    //:k0s_static
 
 bazel-build:          ## Build binary for current platform using bazel
 	@ $(BAZEL) build # //:k0s # //cmd/{hub,client,agent}
