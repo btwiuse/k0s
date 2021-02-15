@@ -12,8 +12,7 @@ def _android_ndk_impl(ctx):
         ctx.download_and_extract(
             "https://dl.google.com/android/repository/android-ndk-r22-linux-x86_64.zip",
             stripPrefix = "android-ndk-r22",
-            sha256 = "d37fc69cd81e5660234a686e20adef39bc0244086e4d66525a40af771c020718",
-            integrity = "sha256-03/GnNgeVmAjSmhuIK3vObwCRAhuTWZSWkCvdxwCBxg="
+            sha256 = "d37fc69cd81e5660234a686e20adef39bc0244086e4d66525a40af771c020718"
         )
 
     ctx.file("template.bzl", 'ANDROID_NDK_HOME = "{}"'.format(path_ndk))
