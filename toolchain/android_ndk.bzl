@@ -9,7 +9,11 @@ def _android_ndk_impl(ctx):
     print('ANDROID_NDK_HOME =', path_ndk)
 
     if not host_ndk:
-        ctx.download_and_extract("https://dl.google.com/android/repository/android-ndk-r22-linux-x86_64.zip", stripPrefix = "android-ndk-r22")
+        ctx.download_and_extract(
+            "https://dl.google.com/android/repository/android-ndk-r22-linux-x86_64.zip",
+            stripPrefix = "android-ndk-r22",
+            sha256 = "d37fc69cd81e5660234a686e20adef39bc0244086e4d66525a40af771c020718"
+        )
 
     ctx.file("template.bzl", 'ANDROID_NDK_HOME = "{}"'.format(path_ndk))
     ctx.template(
