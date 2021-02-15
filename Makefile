@@ -10,7 +10,7 @@ IMAGE    := ${IMG_NAME}
 LDFLAGS  := $(shell ./pkg/version/ldflags)
 TAGS     := ""
 SHELL    := bash
-BAZEL    := ./bazelw
+BAZEL    := $(shell ./tools/which_bazel)
 
 default: help
 

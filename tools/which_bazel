@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+command -v bazel 2>/dev/null || echo ./bazelw
