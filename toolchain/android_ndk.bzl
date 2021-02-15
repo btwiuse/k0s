@@ -10,6 +10,7 @@ def _android_ndk_impl(ctx):
 
     print('ANDROID_NDK_HOME =', path_ndk)
     print('ANDROID_NDK_BAZEL =', bazel_ndk)
+    print('OS =', ctx.os.name) # linux / (TODO: darwin or mac?)
 
     if not host_ndk:
         if bazel_ndk:
