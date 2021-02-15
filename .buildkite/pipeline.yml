@@ -36,38 +36,38 @@ steps:
     agents:
       android: 'true'
     artifact_paths: bin/*/*/*
-  - label: linux
+  - label: bazel-linux
     command: make bazel-build-linux
     agents:
-      bazel: 'true'
+      linux: 'true'
     artifact_paths: bazel-bin/linux_*_stripped/k0s
-  - label: linux-arm
+  - label: bazel-linux-arm
     command: make bazel-build-linux-arm
     agents:
-      bazel: 'true'
+      linux-arm: 'true'
     artifact_paths: bazel-bin/linux_*_stripped/k0s
-  - label: bsd
+  - label: bazel-bsd
     command: make bazel-build-bsd
     agents:
-      bazel: 'true'
+      bsd: 'true'
     artifact_paths: bazel-bin/*bsd_*_stripped/k0s
-  - label: bsd-arm
+  - label: bazel-bsd-arm
     command: make bazel-build-bsd-arm
     agents:
-      bazel: 'true'
+      bsd-arm: 'true'
     artifact_paths: bazel-bin/*bsd_*_stripped/k0s
-  - label: darwin
+  - label: bazel-darwin
     command: make bazel-build-darwin
     agents:
-      bazel: 'true'
+      darwin: 'true'
     artifact_paths: bazel-bin/darwin_*_stripped/k0s
-  - label: windows
+  - label: bazel-windows
     command: make bazel-build-windows
     agents:
-      bazel: 'true'
+      windows: 'true'
     artifact_paths: bazel-bin/windows_*_stripped/k0s
-  - label: android
+  - label: bazel-android
     command: make bazel-build-android
     agents:
-      bazel: 'true'
+      android: 'true'
     artifact_paths: bazel-bin/android_*_stripped/k0s
