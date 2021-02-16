@@ -2,18 +2,18 @@ def _android_ndk_impl(ctx):
 
     ctx.file("README.md", '# Hello, Android!')
 
-    host_ndk = "ANDROID_NDK_HOME" in ctx.os.environ
+    is_host_ndk = "ANDROID_NDK_HOME" in ctx.os.environ
 
-    bazel_ndk = "ANDROID_NDK_BAZEL" in ctx.os.environ
+    is_bazel_ndk = "ANDROID_NDK_BAZEL" in ctx.os.environ
 
-    path_ndk = ctx.os.environ["ANDROID_NDK_HOME"] if host_ndk else ctx.path(".").realpath
+    path_ndk = ctx.os.environ["ANDROID_NDK_HOME"] if is_host_ndk else ctx.path(".").realpath
 
     print('ANDROID_NDK_HOME =', path_ndk)
-    print('ANDROID_NDK_BAZEL =', bazel_ndk)
+    print('ANDROID_NDK_BAZEL =', is_bazel_ndk)
     print('OS =', ctx.os.name) # linux / (TODO: darwin or mac?)
 
-    if not host_ndk:
-        if bazel_ndk:
+    if not is_host_ndk:
+        if is_bazel_ndk:
             ctx.download_and_extract(
                 "https://dl.google.com/android/repository/android-ndk-r22-linux-x86_64.zip",
                 stripPrefix = "android-ndk-r22",

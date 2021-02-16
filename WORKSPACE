@@ -2914,3 +2914,6 @@ go_repository(
     sum = "h1:BMXYYRWTLOJKlh+lOBt6nUQgXAfB7oVIQt5cNreqSLI=",
     version = "v0.0.0-20150515145356-3f9db97f8568",
 )
+
+load("//starlark:defs.bzl", "print_seq")
+print_seq()
