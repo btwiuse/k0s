@@ -668,6 +668,19 @@ rules_proto_dependencies()
 
 rules_proto_toolchains()
 
+# https://github.com/simuons/rules_clojure
+git_repository(
+    name = "rules_clojure",
+    branch = "master",
+    remote = "https://github.com/simuons/rules_clojure.git",
+)
+
+load("@rules_clojure//:repositories.bzl", "rules_clojure_dependencies", "rules_clojure_toolchains")
+
+rules_clojure_dependencies()
+
+rules_clojure_toolchains()
+
 # https://github.com/bazelbuild/rules_docker#go_image
 git_repository(
     name = "io_bazel_rules_docker",
@@ -676,6 +689,7 @@ git_repository(
 )
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 load(
     "@io_bazel_rules_docker//repositories:repositories.bzl",
     container_repositories = "repositories",

@@ -2,6 +2,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+load("@rules_clojure//:rules.bzl", "clojure_repl")
 
 # load("@io_bazel_rules_go//go:def.bzl", "go_binary")
 
@@ -152,3 +153,5 @@ platform(
     ],
     parents = ["@io_bazel_rules_go//go/toolchain:android_386_cgo"],
 )
+
+clojure_repl(name = "clj_repl")
