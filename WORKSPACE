@@ -668,6 +668,18 @@ rules_proto_dependencies()
 
 rules_proto_toolchains()
 
+# https://github.com/humphrej/rules_dhall
+git_repository(
+    name = "rules_dhall",
+    branch = "master",
+    remote = "https://github.com/humphrej/rules_dhall.git",
+)
+
+load("@rules_dhall//:deps.bzl", "load_dhall_dependencies", "load_dhall_k8s_dependencies")
+
+load_dhall_dependencies()
+load_dhall_k8s_dependencies()
+
 # https://github.com/simuons/rules_clojure
 git_repository(
     name = "rules_clojure",
