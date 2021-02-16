@@ -11,7 +11,7 @@ android_sdk_repository(name = "androidsdk")
 android_ndk_repository(
     name = "androidndk",
     api_level = 30,
-    path = ANDROID_NDK_HOME
+    path = ANDROID_NDK_HOME,
 )
 
 register_toolchains(
@@ -678,6 +678,7 @@ git_repository(
 load("@rules_dhall//:deps.bzl", "load_dhall_dependencies", "load_dhall_k8s_dependencies")
 
 load_dhall_dependencies()
+
 load_dhall_k8s_dependencies()
 
 # https://github.com/simuons/rules_clojure
@@ -701,7 +702,6 @@ git_repository(
 )
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
 load(
     "@io_bazel_rules_docker//repositories:repositories.bzl",
     container_repositories = "repositories",
