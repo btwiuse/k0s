@@ -1,9 +1,11 @@
 workspace(name = "k0s")
 
 load("//toolchain:android_ndk.bzl", "android_ndk")
+
 android_ndk(name = "android_ndk")
 
 android_sdk_repository(name = "androidsdk")
+
 android_ndk_repository(name = "androidndk")
 
 register_toolchains(
@@ -626,6 +628,34 @@ go_repository(
     importpath = "github.com/milosgajdos/tenus",
     sum = "h1:jmaJzwaY1DUyYVD0lM4U+uvP2kkEg1VahDqRFxIkVBE=",
     version = "v0.0.3",
+)
+
+go_repository(
+    name = "com_gitea_lunny_log",
+    importpath = "gitea.com/lunny/log",
+    sum = "h1:r1en/D7xJmcY24VkHkjkcJFa+7ZWubVWPBrvsHkmHxk=",
+    version = "v0.0.0-20190322053110-01b5df579c4e",
+)
+
+go_repository(
+    name = "com_github_lunny_tango",
+    importpath = "github.com/lunny/tango",
+    sum = "h1:QeUe+2ksZ3LScC+SKhDbS1wbS/ctuyRnZ3fAsL10J4M=",
+    version = "v0.5.6",
+)
+
+go_repository(
+    name = "com_github_mattn_go_sqlite3",
+    importpath = "github.com/mattn/go-sqlite3",
+    sum = "h1:jbhqpg7tQe4SupckyijYiy0mJJ/pRyHvXf7JdWK860o=",
+    version = "v1.10.0",
+)
+
+go_repository(
+    name = "com_github_tango_contrib_basicauth",
+    importpath = "github.com/tango-contrib/basicauth",
+    sum = "h1:tfB+xuTYq48HTLSXD5V99WAn+W+4nqM4KqZAv2ABmfY=",
+    version = "v0.0.0-20170526072948-7fbc19aece86",
 )
 
 rules_proto_dependencies()
@@ -2917,7 +2947,9 @@ go_repository(
 
 local_repository(
     name = "starlark",
-    path = "starlark"
+    path = "starlark",
 )
+
 load("@starlark//:defs.bzl", "print_seq")
+
 print_seq()

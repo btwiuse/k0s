@@ -1,8 +1,8 @@
 package agent
 
 import (
-    "fmt"
-    "log"
+	"fmt"
+	"log"
 
 	"k0s.io/k0s/pkg/agent/agent"
 	"k0s.io/k0s/pkg/agent/config"
@@ -17,5 +17,5 @@ func Run(args []string) error {
 
 	err := ag.ConnectAndServe()
 
-    return err
+	return err
 }

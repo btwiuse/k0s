@@ -24,6 +24,7 @@ go_library(
         "//pkg/cli/client:go_default_library",
         "//pkg/cli/dohserver:go_default_library",
         "//pkg/cli/gitd:go_default_library",
+        "//pkg/cli/gos:go_default_library",
         "//pkg/cli/gost:go_default_library",
         "//pkg/cli/hub:go_default_library",
         "//pkg/cli/k16s:go_default_library",
@@ -34,8 +35,8 @@ go_library(
 
 go_binary(
     name = "k0s",
-    linkmode = "pie", # https://github.com/bazelbuild/rules_go/issues/2371
     embed = [":go_default_library"],
+    linkmode = "pie",  # https://github.com/bazelbuild/rules_go/issues/2371
     visibility = ["//visibility:public"],
     x_defs = {
         "k0s.io/k0s/pkg/version.GitCommitString": "{STABLE_GitCommitString}",

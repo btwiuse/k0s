@@ -111,6 +111,7 @@ load(
 )
 
 cc_toolchain_config_32(name = "mingw_toolchain_config_32")
+
 cc_toolchain_config_64(name = "mingw_toolchain_config_64")
 
 load(

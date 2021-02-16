@@ -3,8 +3,8 @@ package gitd
 import (
 	"log"
 
-	"k0s.io/k0s/pkg/tunnel/listener"
 	"k0s.io/k0s/pkg/gitd"
+	"k0s.io/k0s/pkg/tunnel/listener"
 )
 
 func Run(args []string) (err error) {

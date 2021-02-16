@@ -39,6 +39,7 @@ require (
 	github.com/liamg/aminal v0.9.0
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
+	github.com/lunny/tango v0.5.6
 	github.com/mattn/go-isatty v0.0.12
 	github.com/mattn/go-runewidth v0.0.8
 	github.com/mattn/go-shellwords v1.0.10
@@ -51,6 +52,7 @@ require (
 	github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4
 	github.com/rs/cors v1.7.0
 	github.com/stretchr/testify v1.4.0
+	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
 	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
 	github.com/xtaci/lossyconn v0.0.0-20200209145036-adba10fffc37 // indirect
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9

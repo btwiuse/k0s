@@ -11,6 +11,8 @@ git.torproject.org/pluggable-transports/obfs4.git/common/replayfilter
 git.torproject.org/pluggable-transports/obfs4.git/transports/base
 git.torproject.org/pluggable-transports/obfs4.git/transports/obfs4
 git.torproject.org/pluggable-transports/obfs4.git/transports/obfs4/framing
+# gitea.com/lunny/log v0.0.0-20190322053110-01b5df579c4e
+gitea.com/lunny/log
 # github.com/Azure/go-autorest/autorest v0.10.0
 github.com/Azure/go-autorest/autorest
 github.com/Azure/go-autorest/autorest/azure
@@ -298,6 +300,9 @@ github.com/lufia/iostat
 # github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
 ## explicit
 github.com/lukesampson/figlet/figletlib
+# github.com/lunny/tango v0.5.6
+## explicit
+github.com/lunny/tango
 # github.com/mattn/go-colorable v0.1.7
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.12
@@ -408,6 +413,9 @@ github.com/spf13/pflag
 ## explicit
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
+# github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
+## explicit
+github.com/tango-contrib/basicauth
 # github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161
 ## explicit
 github.com/templexxx/cpufeat

@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-    "k0s.io/k0s/pkg/tunnel/listener"
-    "k0s.io/k0s/pkg/reverseproxy"
+	"k0s.io/k0s/pkg/reverseproxy"
+	"k0s.io/k0s/pkg/tunnel/listener"
 )
 
 func Run(args []string) error {
@@ -48,7 +48,7 @@ func Run(args []string) error {
 		log.Println(http.Serve(listener.Listener(addr, path), http.FileServer(http.Dir(dir))))
 	}
 
-    return nil
+	return nil
 }
 
 func isDir(name string) bool {
