@@ -4,9 +4,15 @@ load("//toolchain:android_ndk.bzl", "android_ndk")
 
 android_ndk(name = "android_ndk")
 
+load("@android_ndk//:android_ndk.bzl", "ANDROID_NDK_HOME")
+
 android_sdk_repository(name = "androidsdk")
 
-android_ndk_repository(name = "androidndk")
+android_ndk_repository(
+    name = "androidndk",
+    api_level = 30,
+    path = ANDROID_NDK_HOME
+)
 
 register_toolchains(
     "//toolchain:cc-toolchain-mingw",
