@@ -4,8 +4,8 @@ gen(){
 	bkyml steps
 
 	bkyml command --agents linux     true --command "make bazel-build-linux"      --artifact-paths 'bazel-bin/linux_*_stripped/k0s'   --label 'bazel-linux'
-	bkyml command --agents linux-arm true --command "make bazel-build-linux-arm"  --artifact-paths 'bazel-bin/linux_*_stripped/k0s'   --label 'bazel-linux-arm'
-	bkyml command --agents darwin    true --command "make bazel-build-darwin"     --artifact-paths 'bazel-bin/darwin_*_stripped/k0s'  --label 'bazel-darwin'
+	bkyml command --agents linux     true --command "make bazel-build-linux-arm"  --artifact-paths 'bazel-bin/linux_*_stripped/k0s'   --label 'bazel-linux-arm'
+	bkyml command --agents linux     true --command "make bazel-build-darwin"     --artifact-paths 'bazel-bin/darwin_*_stripped/k0s'  --label 'bazel-darwin'
 	bkyml command --agents windows   true --command "make bazel-build-windows"    --artifact-paths 'bazel-bin/windows_*_stripped/k0s' --label 'bazel-windows'
 	bkyml command --agents android   true --command "make bazel-build-android"    --artifact-paths 'bazel-bin/android_*_stripped/k0s' --label 'bazel-android'
 }

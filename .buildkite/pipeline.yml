@@ -7,12 +7,12 @@ steps:
   - label: bazel-linux-arm
     command: make bazel-build-linux-arm
     agents:
-      linux-arm: 'true'
+      linux: 'true'
     artifact_paths: bazel-bin/linux_*_stripped/k0s
   - label: bazel-darwin
     command: make bazel-build-darwin
     agents:
-      darwin: 'true'
+      linux: 'true'
     artifact_paths: bazel-bin/darwin_*_stripped/k0s
   - label: bazel-windows
     command: make bazel-build-windows
