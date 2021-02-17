@@ -20,6 +20,7 @@ import (
 	"k0s.io/k0s/pkg/cli/k16s"
 	"k0s.io/k0s/pkg/cli/mnt"
 	"k0s.io/k0s/pkg/cli/gos"
+	"k0s.io/k0s/pkg/cli/buildkite"
 )
 
 func main() {
@@ -51,6 +52,9 @@ func main() {
 		}).
 		When([]interface{}{"gos", match.ANY}, func() {
 			run(gos.Run(osargs[1:]))
+		}).
+		When([]interface{}{"buildkite", match.ANY}, func() {
+			run(buildkite.Run(osargs[1:]))
 		}).
 		When([]interface{}{"chassis", match.ANY}, func() {
 			log.Fatalln(chassis.Run(osargs[1:]))
@@ -97,6 +101,9 @@ func main() {
 		}).
 		When([]interface{}{match.ANY, "gos", match.ANY}, func() {
 			run(gos.Run(osargs[2:]))
+		}).
+		When([]interface{}{match.ANY, "buildkite", match.ANY}, func() {
+			run(buildkite.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "chassis", match.ANY}, func() {
 			log.Fatalln(chassis.Run(osargs[2:]))

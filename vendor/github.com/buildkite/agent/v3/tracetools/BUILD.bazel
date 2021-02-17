@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "propagate.go",
+        "span.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/tracetools",
+    importpath = "github.com/buildkite/agent/v3/tracetools",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/opentracing/opentracing-go:go_default_library",
+        "//vendor/github.com/opentracing/opentracing-go/ext:go_default_library",
+        "//vendor/github.com/opentracing/opentracing-go/log:go_default_library",
+        "//vendor/gopkg.in/DataDog/dd-trace-go.v1/ddtrace/ext:go_default_library",
+        "//vendor/gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer:go_default_library",
+    ],
+)

@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bootstrap.go",
+        "config.go",
+        "docker.go",
+        "git.go",
+        "knownhosts.go",
+        "redactor.go",
+        "ssh.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/bootstrap",
+    importpath = "github.com/buildkite/agent/v3/bootstrap",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/buildkite/agent/v3/agent:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/agent/plugin:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/bootstrap/shell:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/env:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/experiments:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/hook:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/process:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/retry:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/tracetools:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/utils:go_default_library",
+        "//vendor/github.com/buildkite/shellwords:go_default_library",
+        "//vendor/github.com/mitchellh/go-homedir:go_default_library",
+        "//vendor/github.com/opentracing/opentracing-go:go_default_library",
+        "//vendor/github.com/opentracing/opentracing-go/ext:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh/knownhosts:go_default_library",
+        "//vendor/gopkg.in/DataDog/dd-trace-go.v1/ddtrace/ext:go_default_library",
+        "//vendor/gopkg.in/DataDog/dd-trace-go.v1/ddtrace/opentracer:go_default_library",
+        "//vendor/gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer:go_default_library",
+    ],
+)

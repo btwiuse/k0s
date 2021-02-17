@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "batch.go",
+        "logger.go",
+        "lookpath.go",
+        "lookpath_windows.go",
+        "shell.go",
+        "signal.go",
+        "signal_windows.go",
+        "tempfile.go",
+        "test.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/bootstrap/shell",
+    importpath = "github.com/buildkite/agent/v3/bootstrap/shell",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/buildkite/agent/v3/env:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/logger:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/process:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/tracetools:go_default_library",
+        "//vendor/github.com/buildkite/shellwords:go_default_library",
+        "//vendor/github.com/nightlyone/lockfile:go_default_library",
+        "//vendor/github.com/opentracing/opentracing-go:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+    ],
+)

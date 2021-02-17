@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["version.go"],
+    importmap = "k0s.io/k0s/vendor/gopkg.in/DataDog/dd-trace-go.v1/internal/version",
+    importpath = "gopkg.in/DataDog/dd-trace-go.v1/internal/version",
+    visibility = ["//vendor/gopkg.in/DataDog/dd-trace-go.v1:__subpackages__"],
+)

@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["pool.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/pool",
+    importpath = "github.com/buildkite/agent/v3/pool",
+    visibility = ["//visibility:public"],
+)

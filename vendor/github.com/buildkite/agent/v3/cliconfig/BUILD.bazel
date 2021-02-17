@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "file.go",
+        "loader.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/cliconfig",
+    importpath = "github.com/buildkite/agent/v3/cliconfig",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/buildkite/agent/v3/logger:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/utils:go_default_library",
+        "//vendor/github.com/oleiade/reflections:go_default_library",
+        "//vendor/github.com/urfave/cli:go_default_library",
+    ],
+)
