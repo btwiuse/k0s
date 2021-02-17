@@ -117,8 +117,7 @@ var AuthRequest = func(req *http.Request) (any, sensitive bool) {
 	}
 }
 
-func init() {
-	return
+func nop() {
 	_, pat := http.DefaultServeMux.Handler(&http.Request{URL: &url.URL{Path: debugRequestsPath}})
 	if pat == debugRequestsPath {
 		panic("/debug/requests is already registered. You may have two independent copies of " +
