@@ -3147,3 +3147,18 @@ local_repository(
 load("@starlark//:defs.bzl", "print_seq")
 
 print_seq()
+
+# https://github.com/google/bazel_rules_install
+git_repository(
+    name = "com_github_google_rules_install",
+    branch = "main",
+    remote = "https://github.com/google/bazel_rules_install.git",
+)
+
+load("@com_github_google_rules_install//:deps.bzl", "install_rules_dependencies")
+
+install_rules_dependencies()
+
+load("@com_github_google_rules_install//:setup.bzl", "install_rules_setup")
+
+install_rules_setup()

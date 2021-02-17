@@ -156,3 +156,15 @@ platform(
 )
 
 clojure_repl(name = "clj_repl")
+
+load("@com_github_google_rules_install//installer:def.bzl", "installer")
+
+installer(
+    name = "install_k0s",
+    data = [":k0s"],
+)
+
+installer(
+    name = "install_k0s_static",
+    data = [":k0s_static"],
+)

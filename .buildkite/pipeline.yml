@@ -3,24 +3,19 @@ steps:
     command: make bazel-build-linux
     agents:
       linux: 'true'
-    artifact_paths: bazel-bin/linux_*_stripped/k0s
-  - label: bazel-linux-arm
-    command: make bazel-build-linux-arm
-    agents:
-      linux: 'true'
-    artifact_paths: bazel-bin/linux_*_stripped/k0s
+    artifact_paths: bin/*/*/k0s
   - label: bazel-darwin
     command: make bazel-build-darwin
     agents:
       linux: 'true'
-    artifact_paths: bazel-bin/darwin_*_stripped/k0s
+    artifact_paths: bin/*/*/k0s
   - label: bazel-windows
     command: make bazel-build-windows
     agents:
       windows: 'true'
-    artifact_paths: bazel-bin/windows_*_stripped/k0s
+    artifact_paths: bin/*/*/k0s.exe
   - label: bazel-android
     command: make bazel-build-android
     agents:
       android: 'true'
-    artifact_paths: bazel-bin/android_*_stripped/k0s
+    artifact_paths: bin/*/*/k0s
