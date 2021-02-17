@@ -29,7 +29,7 @@ require (
 	github.com/ginuerzh/gost v0.0.0-20210206051340-8dd4d8d9a123
 	github.com/go-log/log v0.2.0
 	github.com/golang/protobuf v1.4.2
-	github.com/google/uuid v1.1.1
+	github.com/google/uuid v1.1.2
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
@@ -51,7 +51,7 @@ require (
 	github.com/prometheus/node_exporter v1.0.1
 	github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4
 	github.com/rs/cors v1.7.0
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.5.1
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
 	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
 	github.com/xtaci/lossyconn v0.0.0-20200209145036-adba10fffc37 // indirect
@@ -59,7 +59,7 @@ require (
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	golang.org/x/sys v0.0.0-20200915084602-288bc346aa39
-	google.golang.org/grpc v1.30.0
+	google.golang.org/grpc v1.35.0
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71
