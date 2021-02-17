@@ -11,16 +11,16 @@ import (
 
 	"k0s.io/k0s/pkg/cli/agent"
 	"k0s.io/k0s/pkg/cli/bcrypt"
+	"k0s.io/k0s/pkg/cli/buildkite"
 	"k0s.io/k0s/pkg/cli/chassis"
 	"k0s.io/k0s/pkg/cli/client"
 	"k0s.io/k0s/pkg/cli/dohserver"
 	"k0s.io/k0s/pkg/cli/gitd"
+	"k0s.io/k0s/pkg/cli/gos"
 	"k0s.io/k0s/pkg/cli/gost"
 	"k0s.io/k0s/pkg/cli/hub"
 	"k0s.io/k0s/pkg/cli/k16s"
 	"k0s.io/k0s/pkg/cli/mnt"
-	"k0s.io/k0s/pkg/cli/gos"
-	"k0s.io/k0s/pkg/cli/buildkite"
 )
 
 func main() {
@@ -53,7 +53,7 @@ func main() {
 		When([]interface{}{"gos", match.ANY}, func() {
 			run(gos.Run(osargs[1:]))
 		}).
-		When([]interface{}{"buildkite", match.ANY}, func() {
+		When([]interface{}{"buildkite-agent", match.ANY}, func() {
 			run(buildkite.Run(osargs[1:]))
 		}).
 		When([]interface{}{"chassis", match.ANY}, func() {
@@ -102,7 +102,7 @@ func main() {
 		When([]interface{}{match.ANY, "gos", match.ANY}, func() {
 			run(gos.Run(osargs[2:]))
 		}).
-		When([]interface{}{match.ANY, "buildkite", match.ANY}, func() {
+		When([]interface{}{match.ANY, "buildkite-agent", match.ANY}, func() {
 			run(buildkite.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "chassis", match.ANY}, func() {
