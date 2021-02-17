@@ -19,6 +19,7 @@ latest="$(rel)"
 
 refresh(){
   git push --delete origin "$latest" || true
+  git tag -d "latest" || true
   git tag -d "$latest" || true
   git tag "$latest" HEAD
   git push origin "$latest"
