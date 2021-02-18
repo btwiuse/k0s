@@ -1,9 +1,10 @@
-FROM btwiuse/bazel AS builder
-COPY . /src
-WORKDIR /src
-RUN make bazel-build
+# https://cirrus-ci.com/github/btwiuse/k0s
 
-FROM alpine:latest
+FROM btwiuse/bazel AS builder
+COPY . /src/k0s.io/k0s
+RUN make -C /src/k0s.io/k0s bazel-build
+
+FROM alpine
 RUN apk add curl
-COPY --from=builder /src/bin/k0s_static /usr/bin/k0s
+COPY --from=builder /src/k0s.io/k0s/bin/k0s_static /usr/bin/k0s
 ENTRYPOINT ["/usr/bin/k0s"]
