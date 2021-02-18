@@ -3145,6 +3145,13 @@ go_repository(
     version = "v0.1.0",
 )
 
+go_repository(
+    name = "com_github_traefik_yaegi",
+    importpath = "github.com/traefik/yaegi",
+    sum = "h1:Dg6hYcDtxWY3L9jP2OjoK+LSX59wF0sckJXT/cYNqA4=",
+    version = "v0.9.14",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()

@@ -911,6 +911,14 @@ github.com/templexxx/xor
 github.com/tinylib/msgp/msgp
 # github.com/tjfoc/gmsm v1.3.2
 github.com/tjfoc/gmsm/sm4
+# github.com/traefik/yaegi v0.9.14
+## explicit
+github.com/traefik/yaegi/extract
+github.com/traefik/yaegi/interp
+github.com/traefik/yaegi/stdlib
+github.com/traefik/yaegi/stdlib/syscall
+github.com/traefik/yaegi/stdlib/unrestricted
+github.com/traefik/yaegi/stdlib/unsafe
 # github.com/urfave/cli v1.22.4
 ## explicit
 github.com/urfave/cli
