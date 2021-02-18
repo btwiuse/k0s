@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "adapter.go",
+        "adapter_filtered.go",
+        "adapter_mock.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/casbin/casbin/persist/file-adapter",
+    importpath = "github.com/casbin/casbin/persist/file-adapter",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/casbin/casbin/model:go_default_library",
+        "//vendor/github.com/casbin/casbin/persist:go_default_library",
+        "//vendor/github.com/casbin/casbin/util:go_default_library",
+    ],
+)

@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "crypto.go",
+        "handshake.go",
+        "selfsigned.go",
+        "setup.go",
+        "tls.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/caddytls",
+    importpath = "github.com/caddyserver/caddy/caddytls",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/telemetry:go_default_library",
+        "//vendor/github.com/go-acme/lego/v3/certcrypto:go_default_library",
+        "//vendor/github.com/go-acme/lego/v3/challenge:go_default_library",
+        "//vendor/github.com/go-acme/lego/v3/challenge/tlsalpn01:go_default_library",
+        "//vendor/github.com/klauspost/cpuid:go_default_library",
+        "//vendor/github.com/mholt/certmagic:go_default_library",
+    ],
+)

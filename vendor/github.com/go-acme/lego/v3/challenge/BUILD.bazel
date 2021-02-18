@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "challenges.go",
+        "provider.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/go-acme/lego/v3/challenge",
+    importpath = "github.com/go-acme/lego/v3/challenge",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/go-acme/lego/v3/acme:go_default_library"],
+)

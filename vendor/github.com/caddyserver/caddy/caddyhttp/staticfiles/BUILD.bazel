@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["fileserver.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/caddyhttp/staticfiles",
+    importpath = "github.com/caddyserver/caddy/caddyhttp/staticfiles",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/caddyserver/caddy:go_default_library"],
+)

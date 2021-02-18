@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["rbac_errors.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/casbin/casbin/errors",
+    importpath = "github.com/casbin/casbin/errors",
+    visibility = ["//visibility:public"],
+)

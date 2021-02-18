@@ -3047,6 +3047,76 @@ go_repository(
     version = "v0.6.0",
 )
 
+go_repository(
+    name = "com_github_caddyserver_caddy",
+    importpath = "github.com/caddyserver/caddy",
+    sum = "h1:5B1Hs0UF2x2tggr2X9jL2qOZtDXbIWQb9YLbmlxHSuM=",
+    version = "v1.0.5",
+)
+
+go_repository(
+    name = "com_github_casbin_caddy_authz",
+    importpath = "github.com/casbin/caddy-authz",
+    sum = "h1:8gr0V4XIKWAkrGz/QEuDGD0uGSVh2GeV+6s2AWhSS28=",
+    version = "v1.0.2",
+)
+
+go_repository(
+    name = "com_github_casbin_casbin",
+    importpath = "github.com/casbin/casbin",
+    sum = "h1:ucjbS5zTrmSLtH4XogqOG920Poe6QatdXtz1FEbApeM=",
+    version = "v1.9.1",
+)
+
+go_repository(
+    name = "com_github_cenkalti_backoff_v3",
+    importpath = "github.com/cenkalti/backoff/v3",
+    sum = "h1:ske+9nBpD9qZsTBoF41nW5L+AIuFBKMeze18XQ3eG1c=",
+    version = "v3.0.0",
+)
+
+go_repository(
+    name = "com_github_decker502_dnspod_go",
+    importpath = "github.com/decker502/dnspod-go",
+    sum = "h1:6dwhUFCYbC5bgpebLKn7PrI43e/5mn9tpUL9YcYCdTU=",
+    version = "v0.2.0",
+)
+
+go_repository(
+    name = "com_github_jimstudt_http_authentication",
+    importpath = "github.com/jimstudt/http-authentication",
+    sum = "h1:BcF8coBl0QFVhe8vAMMlD+CV8EISiu9MGKLoj6ZEyJA=",
+    version = "v0.0.0-20140401203705-3eca13d6893a",
+)
+
+go_repository(
+    name = "com_github_marten_seemann_chacha20",
+    importpath = "github.com/marten-seemann/chacha20",
+    sum = "h1:f40vqzzx+3GdOmzQoItkLX5WLvHgPgyYqFFIO5Gh4hQ=",
+    version = "v0.2.0",
+)
+
+go_repository(
+    name = "com_github_mholt_certmagic",
+    importpath = "github.com/mholt/certmagic",
+    sum = "h1:JOUiX9IAZbbgyjNP2GY6v/6lorH+9GkZsc7ktMpGCSo=",
+    version = "v0.8.3",
+)
+
+go_repository(
+    name = "in_gopkg_mcuadros_go_syslog_v2",
+    importpath = "gopkg.in/mcuadros/go-syslog.v2",
+    sum = "h1:60g8zx1BijSVSgLTzLCW9UC4/+i1Ih9jJ1DR5Tgp9vE=",
+    version = "v2.2.1",
+)
+
+go_repository(
+    name = "com_github_hairyhenderson_caddy_teapot_module",
+    importpath = "github.com/hairyhenderson/caddy-teapot-module",
+    sum = "h1:POfr7XzYFIUEzAR5/f1+LZ9sN33GqG7XyscWljyFu5Y=",
+    version = "v0.0.2",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()

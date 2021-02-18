@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "commons.go",
+        "errors.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/go-acme/lego/v3/acme",
+    importpath = "github.com/go-acme/lego/v3/acme",
+    visibility = ["//visibility:public"],
+)

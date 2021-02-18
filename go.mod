@@ -24,9 +24,12 @@ require (
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.36
 	github.com/buildkite/agent/v3 v3.27.0
+	github.com/caddyserver/caddy v1.0.5 // indirect
 	github.com/caddyserver/caddy/v2 v2.3.0
 	github.com/caddyserver/forwardproxy v0.0.0-00010101000000-000000000000
 	github.com/caddyserver/nginx-adapter v0.0.3
+	github.com/casbin/caddy-authz v1.0.2
+	github.com/casbin/casbin v1.9.1 // indirect
 	github.com/creack/pty v1.1.11
 	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1
@@ -45,6 +48,7 @@ require (
 	github.com/greenpau/caddy-auth-jwt v1.2.6
 	github.com/greenpau/caddy-auth-portal v0.0.0-00010101000000-000000000000
 	github.com/greenpau/caddy-trace v1.1.5
+	github.com/hairyhenderson/caddy-teapot-module v0.0.2
 	github.com/iamd3vil/caddy_yaml_adapter v0.0.0-20200503183711-d479c29b475a
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
 	github.com/json-iterator/go v1.1.10
