@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "app.go",
+        "app_spec.go",
+        "loop.go",
+        "tty.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/cli",
+    importpath = "src.elv.sh/pkg/cli",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/src.elv.sh/pkg/cli/term:go_default_library",
+        "//vendor/src.elv.sh/pkg/cli/tk:go_default_library",
+        "//vendor/src.elv.sh/pkg/sys:go_default_library",
+        "//vendor/src.elv.sh/pkg/ui:go_default_library",
+    ],
+)

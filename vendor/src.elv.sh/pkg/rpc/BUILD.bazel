@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "debug.go",
+        "server.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/rpc",
+    importpath = "src.elv.sh/pkg/rpc",
+    visibility = ["//visibility:public"],
+)

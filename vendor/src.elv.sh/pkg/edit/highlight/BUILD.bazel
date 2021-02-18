@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "highlight.go",
+        "highlighter.go",
+        "regions.go",
+        "theme.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/edit/highlight",
+    importpath = "src.elv.sh/pkg/edit/highlight",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/src.elv.sh/pkg/diag:go_default_library",
+        "//vendor/src.elv.sh/pkg/eval:go_default_library",
+        "//vendor/src.elv.sh/pkg/parse:go_default_library",
+        "//vendor/src.elv.sh/pkg/ui:go_default_library",
+    ],
+)

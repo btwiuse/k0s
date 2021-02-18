@@ -85,4 +85,5 @@ require (
 	k8s.io/kube-state-metrics/v2 v2.0.0-beta
 	modernc.org/httpfs v1.0.0
 	nhooyr.io/websocket v1.8.6
+	src.elv.sh v0.14.1-0.20210218105754-53593c3ab79f
 )

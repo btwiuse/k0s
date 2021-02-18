@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["wcwidth.go"],
+    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/wcwidth",
+    importpath = "src.elv.sh/pkg/wcwidth",
+    visibility = ["//visibility:public"],
+)

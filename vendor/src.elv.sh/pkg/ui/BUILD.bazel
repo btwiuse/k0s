@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "color.go",
+        "key.go",
+        "parse_sgr.go",
+        "style.go",
+        "styling.go",
+        "text.go",
+        "text_segment.go",
+        "text_util.go",
+        "ui.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/ui",
+    importpath = "src.elv.sh/pkg/ui",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/xiaq/persistent/hash:go_default_library",
+        "//vendor/src.elv.sh/pkg/eval/vals:go_default_library",
+        "//vendor/src.elv.sh/pkg/parse:go_default_library",
+        "//vendor/src.elv.sh/pkg/wcwidth:go_default_library",
+    ],
+)

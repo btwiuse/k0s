@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "must.go",
+        "scaled_ms.go",
+        "temp_env.go",
+        "testdir.go",
+        "testutil.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/testutil",
+    importpath = "src.elv.sh/pkg/testutil",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/src.elv.sh/pkg/env:go_default_library"],
+)

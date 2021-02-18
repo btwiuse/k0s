@@ -3124,6 +3124,20 @@ go_repository(
     version = "v0.0.0-20210212215732-ebe61bd709bf",
 )
 
+go_repository(
+    name = "com_github_xiaq_persistent",
+    importpath = "github.com/xiaq/persistent",
+    sum = "h1:HxX+USVm4XyGwvWS0eJy+GMttkfSRdFcrZ46WtAs5RQ=",
+    version = "v0.0.0-20200820214153-3175cfb92e14",
+)
+
+go_repository(
+    name = "sh_elv_src",
+    importpath = "src.elv.sh",
+    sum = "h1:stqxghJ8lnlVknA37nlryttw+uizKuVJpZdp0hljNaw=",
+    version = "v0.14.1-0.20210218105754-53593c3ab79f",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -5012,8 +5026,8 @@ go_repository(
 go_repository(
     name = "io_etcd_go_bbolt",
     importpath = "go.etcd.io/bbolt",
-    sum = "h1:MUGmc65QhB3pIlaQ5bB4LwqSj6GIonVJXpZiaKNyaKk=",
-    version = "v1.3.3",
+    sum = "h1:XAzx9gjCb0Rxj7EoqcClPD1d5ZBxZJk0jbuoPHenBt0=",
+    version = "v1.3.5",
 )
 
 go_repository(
