@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "gas.go",
+        "gdscript.go",
+        "genshi.go",
+        "gherkin.go",
+        "glsl.go",
+        "gnuplot.go",
+        "go.go",
+        "graphql.go",
+        "groovy.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/g",
+    importpath = "github.com/alecthomas/chroma/lexers/g",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/alecthomas/chroma:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/h:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/internal:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/p:go_default_library",
+    ],
+)

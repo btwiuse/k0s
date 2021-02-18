@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "acl.go",
+        "caddyfile.go",
+        "forwardproxy.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/forwardproxy",
+    importpath = "github.com/caddyserver/forwardproxy",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp:go_default_library",
+        "//vendor/github.com/caddyserver/forwardproxy/httpclient:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/golang.org/x/net/proxy:go_default_library",
+    ],
+)

@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "canonicalize.go",
+        "namespace.go",
+        "sort.go",
+        "unmarshal.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/russellhaering/goxmldsig/etreeutils",
+    importpath = "github.com/russellhaering/goxmldsig/etreeutils",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/beevik/etree:go_default_library"],
+)

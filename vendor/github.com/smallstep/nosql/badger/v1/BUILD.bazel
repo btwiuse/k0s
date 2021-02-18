@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["badger.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/smallstep/nosql/badger/v1",
+    importpath = "github.com/smallstep/nosql/badger/v1",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/dgraph-io/badger:go_default_library",
+        "//vendor/github.com/dgraph-io/badger/options:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/smallstep/nosql/database:go_default_library",
+    ],
+)

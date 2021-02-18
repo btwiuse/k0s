@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "coalesce.go",
+        "colour.go",
+        "delegate.go",
+        "doc.go",
+        "formatter.go",
+        "iterator.go",
+        "lexer.go",
+        "mutators.go",
+        "regexp.go",
+        "remap.go",
+        "style.go",
+        "tokentype_string.go",
+        "types.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma",
+    importpath = "github.com/alecthomas/chroma",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/dlclark/regexp2:go_default_library"],
+)

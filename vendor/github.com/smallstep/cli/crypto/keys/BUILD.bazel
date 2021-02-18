@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "key.go",
+        "keyPair.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/smallstep/cli/crypto/keys",
+    importpath = "github.com/smallstep/cli/crypto/keys",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh:go_default_library",
+    ],
+)

@@ -10,32 +10,23 @@ import (
 	"github.com/lucas-clemente/quic-go/internal/utils"
 )
 
-// TODO: use the value sent in the transport parameters
-const ackDelayExponent = 3
+var errInvalidAckRanges = errors.New("AckFrame: ACK frame contains invalid ACK ranges")
 
 // An AckFrame is an ACK frame
 type AckFrame struct {
 	AckRanges []AckRange // has to be ordered. The highest ACK range goes first, the lowest ACK range goes last
 	DelayTime time.Duration
-}
 
-func parseAckFrame(r *bytes.Reader, version protocol.VersionNumber) (*AckFrame, error) {
-	return parseAckOrAckEcnFrame(r, false, version)
-}
-
-func parseAckEcnFrame(r *bytes.Reader, version protocol.VersionNumber) (*AckFrame, error) {
-	return parseAckOrAckEcnFrame(r, true, version)
+	ECT0, ECT1, ECNCE uint64
 }
 
 // parseAckFrame reads an ACK frame
-func parseAckOrAckEcnFrame(r *bytes.Reader, ecn bool, version protocol.VersionNumber) (*AckFrame, error) {
-	if !version.UsesIETFFrameFormat() {
-		return parseAckFrameLegacy(r, version)
-	}
-
-	if _, err := r.ReadByte(); err != nil {
+func parseAckFrame(r *bytes.Reader, ackDelayExponent uint8, _ protocol.VersionNumber) (*AckFrame, error) {
+	typeByte, err := r.ReadByte()
+	if err != nil {
 		return nil, err
 	}
+	ecn := typeByte&0x1 > 0
 
 	frame := &AckFrame{}
 
@@ -48,15 +39,13 @@ func parseAckOrAckEcnFrame(r *bytes.Reader, ecn bool, version protocol.VersionNu
 	if err != nil {
 		return nil, err
 	}
-	frame.DelayTime = time.Duration(delay*1<<ackDelayExponent) * time.Microsecond
 
-	if ecn {
-		for i := 0; i < 3; i++ {
-			if _, err := utils.ReadVarInt(r); err != nil {
-				return nil, err
-			}
-		}
+	delayTime := time.Duration(delay*1<<ackDelayExponent) * time.Microsecond
+	if delayTime < 0 {
+		// If the delay time overflows, set it to the maximum encodable value.
+		delayTime = utils.InfDuration
 	}
+	frame.DelayTime = delayTime
 
 	numBlocks, err := utils.ReadVarInt(r)
 	if err != nil {
@@ -103,16 +92,27 @@ func parseAckOrAckEcnFrame(r *bytes.Reader, ecn bool, version protocol.VersionNu
 	if !frame.validateAckRanges() {
 		return nil, errInvalidAckRanges
 	}
+
+	// parse (and skip) the ECN section
+	if ecn {
+		for i := 0; i < 3; i++ {
+			if _, err := utils.ReadVarInt(r); err != nil {
+				return nil, err
+			}
+		}
+	}
+
 	return frame, nil
 }
 
 // Write writes an ACK frame.
-func (f *AckFrame) Write(b *bytes.Buffer, version protocol.VersionNumber) error {
-	if !version.UsesIETFFrameFormat() {
-		return f.writeLegacy(b, version)
+func (f *AckFrame) Write(b *bytes.Buffer, _ protocol.VersionNumber) error {
+	hasECN := f.ECT0 > 0 || f.ECT1 > 0 || f.ECNCE > 0
+	if hasECN {
+		b.WriteByte(0x3)
+	} else {
+		b.WriteByte(0x2)
 	}
-
-	b.WriteByte(0x0d)
 	utils.WriteVarInt(b, uint64(f.LargestAcked()))
 	utils.WriteVarInt(b, encodeAckDelay(f.DelayTime))
 
@@ -129,15 +129,17 @@ func (f *AckFrame) Write(b *bytes.Buffer, version protocol.VersionNumber) error 
 		utils.WriteVarInt(b, gap)
 		utils.WriteVarInt(b, len)
 	}
+
+	if hasECN {
+		utils.WriteVarInt(b, f.ECT0)
+		utils.WriteVarInt(b, f.ECT1)
+		utils.WriteVarInt(b, f.ECNCE)
+	}
 	return nil
 }
 
 // Length of a written frame
 func (f *AckFrame) Length(version protocol.VersionNumber) protocol.ByteCount {
-	if !version.UsesIETFFrameFormat() {
-		return f.lengthLegacy(version)
-	}
-
 	largestAcked := f.AckRanges[0].Largest
 	numRanges := f.numEncodableAckRanges()
 
@@ -151,6 +153,11 @@ func (f *AckFrame) Length(version protocol.VersionNumber) protocol.ByteCount {
 		gap, len := f.encodeAckRange(i)
 		length += utils.VarIntLen(gap)
 		length += utils.VarIntLen(len)
+	}
+	if f.ECT0 > 0 || f.ECT1 > 0 || f.ECNCE > 0 {
+		length += utils.VarIntLen(f.ECT0)
+		length += utils.VarIntLen(f.ECT1)
+		length += utils.VarIntLen(f.ECNCE)
 	}
 	return length
 }
@@ -239,5 +246,5 @@ func (f *AckFrame) AcksPacket(p protocol.PacketNumber) bool {
 }
 
 func encodeAckDelay(delay time.Duration) uint64 {
-	return uint64(delay.Nanoseconds() / (1000 * (1 << ackDelayExponent)))
+	return uint64(delay.Nanoseconds() / (1000 * (1 << protocol.AckDelayExponent)))
 }

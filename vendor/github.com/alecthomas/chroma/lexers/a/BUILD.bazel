@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "abap.go",
+        "abnf.go",
+        "actionscript.go",
+        "actionscript3.go",
+        "ada.go",
+        "angular2.go",
+        "antlr.go",
+        "apache.go",
+        "apl.go",
+        "applescript.go",
+        "arduino.go",
+        "awk.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/a",
+    importpath = "github.com/alecthomas/chroma/lexers/a",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/alecthomas/chroma:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/internal:go_default_library",
+    ],
+)

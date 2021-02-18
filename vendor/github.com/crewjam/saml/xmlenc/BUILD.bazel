@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cbc.go",
+        "decrypt.go",
+        "digest.go",
+        "fuzz.go",
+        "pubkey.go",
+        "xmlenc.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/crewjam/saml/xmlenc",
+    importpath = "github.com/crewjam/saml/xmlenc",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/beevik/etree:go_default_library",
+        "//vendor/golang.org/x/crypto/ripemd160:go_default_library",
+    ],
+)

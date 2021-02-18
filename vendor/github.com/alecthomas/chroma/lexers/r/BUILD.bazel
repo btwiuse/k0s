@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "r.go",
+        "racket.go",
+        "ragel.go",
+        "reasonml.go",
+        "regedit.go",
+        "rexx.go",
+        "rst.go",
+        "ruby.go",
+        "rust.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/r",
+    importpath = "github.com/alecthomas/chroma/lexers/r",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/alecthomas/chroma:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/internal:go_default_library",
+    ],
+)

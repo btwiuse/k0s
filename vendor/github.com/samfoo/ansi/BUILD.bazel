@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "ansi.go",
+        "doc.go",
+        "print.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/samfoo/ansi",
+    importpath = "github.com/samfoo/ansi",
+    visibility = ["//visibility:public"],
+)

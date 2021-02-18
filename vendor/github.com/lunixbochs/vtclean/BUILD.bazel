@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "io.go",
+        "line.go",
+        "vtclean.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/lunixbochs/vtclean",
+    importpath = "github.com/lunixbochs/vtclean",
+    visibility = ["//visibility:public"],
+)

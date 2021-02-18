@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "basicauth.go",
+        "caddyauth.go",
+        "caddyfile.go",
+        "command.go",
+        "hashes.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth",
+    importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/cmd:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/golang.org/x/crypto/bcrypt:go_default_library",
+        "//vendor/golang.org/x/crypto/scrypt:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh/terminal:go_default_library",
+    ],
+)

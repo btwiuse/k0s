@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "encoders.go",
+        "filewriter.go",
+        "filterencoder.go",
+        "filters.go",
+        "netwriter.go",
+        "nopencoder.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/logging",
+    importpath = "github.com/caddyserver/caddy/v2/modules/logging",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile:go_default_library",
+        "//vendor/github.com/dustin/go-humanize:go_default_library",
+        "//vendor/github.com/jsternberg/zap-logfmt:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/go.uber.org/zap/buffer:go_default_library",
+        "//vendor/go.uber.org/zap/zapcore:go_default_library",
+        "//vendor/gopkg.in/natefinch/lumberjack.v2:go_default_library",
+    ],
+)

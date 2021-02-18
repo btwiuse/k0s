@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "caddyfile.go",
+        "handler.go",
+        "link.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/push",
+    importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/push",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/headers:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

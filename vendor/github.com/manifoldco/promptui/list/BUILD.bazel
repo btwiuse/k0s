@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["list.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/manifoldco/promptui/list",
+    importpath = "github.com/manifoldco/promptui/list",
+    visibility = ["//visibility:public"],
+)

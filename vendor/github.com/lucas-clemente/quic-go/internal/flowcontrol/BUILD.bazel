@@ -12,9 +12,8 @@ go_library(
     importpath = "github.com/lucas-clemente/quic-go/internal/flowcontrol",
     visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
     deps = [
-        "//vendor/github.com/lucas-clemente/quic-go/internal/congestion:go_default_library",
         "//vendor/github.com/lucas-clemente/quic-go/internal/protocol:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/qerr:go_default_library",
         "//vendor/github.com/lucas-clemente/quic-go/internal/utils:go_default_library",
-        "//vendor/github.com/lucas-clemente/quic-go/qerr:go_default_library",
     ],
 )

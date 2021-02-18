@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "adminmetrics.go",
+        "metrics.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/metrics",
+    importpath = "github.com/caddyserver/caddy/v2/modules/metrics",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus/promhttp:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

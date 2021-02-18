@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["html.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/yuin/goldmark/renderer/html",
+    importpath = "github.com/yuin/goldmark/renderer/html",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/yuin/goldmark/ast:go_default_library",
+        "//vendor/github.com/yuin/goldmark/renderer:go_default_library",
+        "//vendor/github.com/yuin/goldmark/util:go_default_library",
+    ],
+)

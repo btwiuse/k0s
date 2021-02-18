@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["frame.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/logutils",
+    importpath = "github.com/lucas-clemente/quic-go/internal/logutils",
+    visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
+    deps = [
+        "//vendor/github.com/lucas-clemente/quic-go/internal/protocol:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/wire:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/logging:go_default_library",
+    ],
+)

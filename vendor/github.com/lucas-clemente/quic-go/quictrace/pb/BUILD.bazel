@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["quic-trace.pb.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/quictrace/pb",
+    importpath = "github.com/lucas-clemente/quic-go/quictrace/pb",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/google.golang.org/protobuf/reflect/protoreflect:go_default_library",
+        "//vendor/google.golang.org/protobuf/runtime/protoimpl:go_default_library",
+    ],
+)

@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "definition_list.go",
+        "footnote.go",
+        "strikethrough.go",
+        "table.go",
+        "tasklist.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/yuin/goldmark/extension/ast",
+    importpath = "github.com/yuin/goldmark/extension/ast",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/yuin/goldmark/ast:go_default_library"],
+)

@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "account.go",
+        "authorization.go",
+        "certificate.go",
+        "challenge.go",
+        "client.go",
+        "http.go",
+        "jws.go",
+        "order.go",
+        "problem.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/mholt/acmez/acme",
+    importpath = "github.com/mholt/acmez/acme",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/go.uber.org/zap:go_default_library"],
+)

@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "backend.go",
+        "errors.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-portal/pkg/errors",
+    importpath = "github.com/greenpau/caddy-auth-portal/pkg/errors",
+    visibility = ["//visibility:public"],
+)

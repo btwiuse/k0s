@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "file.go",
+        "tag.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/greenpau/go-identity/internal/utils",
+    importpath = "github.com/greenpau/go-identity/internal/utils",
+    visibility = ["//vendor/github.com/greenpau/go-identity:__subpackages__"],
+    deps = ["//vendor/github.com/iancoleman/strcase:go_default_library"],
+)

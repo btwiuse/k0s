@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "decoder.go",
+        "encoder.go",
+        "header_field.go",
+        "static_table.go",
+        "varint.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/marten-seemann/qpack",
+    importpath = "github.com/marten-seemann/qpack",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/golang.org/x/net/http2/hpack:go_default_library"],
+)

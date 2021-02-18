@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bbloom.go",
+        "rtutil.go",
+        "rtutil.s",
+        "z.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/dgraph-io/ristretto/z",
+    importpath = "github.com/dgraph-io/ristretto/z",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/cespare/xxhash:go_default_library"],
+)

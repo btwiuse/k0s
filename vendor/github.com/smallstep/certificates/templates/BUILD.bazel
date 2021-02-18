@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "templates.go",
+        "values.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/smallstep/certificates/templates",
+    importpath = "github.com/smallstep/certificates/templates",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Masterminds/sprig/v3:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/smallstep/cli/config:go_default_library",
+        "//vendor/github.com/smallstep/cli/utils:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh:go_default_library",
+    ],
+)

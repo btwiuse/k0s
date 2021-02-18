@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "objectivec.go",
+        "ocaml.go",
+        "octave.go",
+        "openscad.go",
+        "org.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/o",
+    importpath = "github.com/alecthomas/chroma/lexers/o",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/alecthomas/chroma:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/internal:go_default_library",
+    ],
+)

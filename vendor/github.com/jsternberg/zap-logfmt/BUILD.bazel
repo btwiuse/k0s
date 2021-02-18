@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["encoder.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/jsternberg/zap-logfmt",
+    importpath = "github.com/jsternberg/zap-logfmt",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/go.uber.org/zap/buffer:go_default_library",
+        "//vendor/go.uber.org/zap/zapcore:go_default_library",
+    ],
+)

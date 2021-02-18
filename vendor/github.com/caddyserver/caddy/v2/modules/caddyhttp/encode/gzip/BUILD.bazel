@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["gzip.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/gzip",
+    importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/gzip",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode:go_default_library",
+        "//vendor/github.com/klauspost/compress/gzip:go_default_library",
+    ],
+)

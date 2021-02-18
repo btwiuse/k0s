@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "ber.go",
+        "content_int.go",
+        "header.go",
+        "identifier.go",
+        "length.go",
+        "util.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/go-asn1-ber/asn1-ber",
+    importpath = "github.com/go-asn1-ber/asn1-ber",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,37 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "account.go",
+        "acmeclient.go",
+        "acmemanager.go",
+        "async.go",
+        "cache.go",
+        "certificates.go",
+        "certmagic.go",
+        "config.go",
+        "crypto.go",
+        "dnsutil.go",
+        "filestorage.go",
+        "handshake.go",
+        "httphandler.go",
+        "maintain.go",
+        "ocsp.go",
+        "ratelimiter.go",
+        "solvers.go",
+        "storage.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/certmagic",
+    importpath = "github.com/caddyserver/certmagic",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/klauspost/cpuid:go_default_library",
+        "//vendor/github.com/libdns/libdns:go_default_library",
+        "//vendor/github.com/mholt/acmez:go_default_library",
+        "//vendor/github.com/mholt/acmez/acme:go_default_library",
+        "//vendor/github.com/miekg/dns:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/golang.org/x/crypto/ocsp:go_default_library",
+    ],
+)

@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "charset.go",
+        "crypto.go",
+        "keycode.go",
+        "logger.go",
+        "parser.go",
+        "random.go",
+        "redirect.go",
+        "request_id.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-portal/pkg/utils",
+    importpath = "github.com/greenpau/caddy-auth-portal/pkg/utils",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/go.uber.org/zap/zapcore:go_default_library",
+    ],
+)

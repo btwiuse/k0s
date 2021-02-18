@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "factor.go",
+        "fish.go",
+        "forth.go",
+        "fortran.go",
+        "fsharp.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/f",
+    importpath = "github.com/alecthomas/chroma/lexers/f",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/alecthomas/chroma:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/internal:go_default_library",
+    ],
+)

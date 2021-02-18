@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "algorithms.go",
+        "certificate.go",
+        "certificate_request.go",
+        "extensions.go",
+        "marshal_utils.go",
+        "name.go",
+        "options.go",
+        "templates.go",
+        "utils.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/go.step.sm/crypto/x509util",
+    importpath = "go.step.sm/crypto/x509util",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Masterminds/sprig/v3:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/go.step.sm/crypto/internal/step:go_default_library",
+    ],
+)

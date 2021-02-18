@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "go114.go",
+        "go115.go",
+        "qtls.go",
+        "structs_equal.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/qtls",
+    importpath = "github.com/lucas-clemente/quic-go/internal/qtls",
+    visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
+    deps = [
+        "//vendor/github.com/marten-seemann/qtls:go_default_library",
+        "//vendor/github.com/marten-seemann/qtls-go1-15:go_default_library",
+    ],
+)

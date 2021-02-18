@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["backend.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-jwt/pkg/backends",
+    importpath = "github.com/greenpau/caddy-auth-jwt/pkg/backends",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/dgrijalva/jwt-go:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-jwt/pkg/errors:go_default_library",
+    ],
+)

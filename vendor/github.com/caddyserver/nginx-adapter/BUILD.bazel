@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "if.go",
+        "lexer.go",
+        "location.go",
+        "nginxadapter.go",
+        "parse.go",
+        "processors.go",
+        "server.go",
+        "upstream.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/nginx-adapter",
+    importpath = "github.com/caddyserver/nginx-adapter",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/gzip:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/fileserver:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/headers:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy/fastcgi:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/rewrite:go_default_library",
+        "//vendor/github.com/caddyserver/ntlm-transport:go_default_library",
+    ],
+)

@@ -9,9 +9,7 @@ go_library(
         "cubic_sender.go",
         "hybrid_slow_start.go",
         "interface.go",
-        "prr_sender.go",
-        "rtt_stats.go",
-        "stats.go",
+        "pacer.go",
     ],
     importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/congestion",
     importpath = "github.com/lucas-clemente/quic-go/internal/congestion",
@@ -19,5 +17,6 @@ go_library(
     deps = [
         "//vendor/github.com/lucas-clemente/quic-go/internal/protocol:go_default_library",
         "//vendor/github.com/lucas-clemente/quic-go/internal/utils:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/logging:go_default_library",
     ],
 )

@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "backup.pb.go",
+        "manifest.pb.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/dgraph-io/badger/protos",
+    importpath = "github.com/dgraph-io/badger/protos",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/golang/protobuf/proto:go_default_library"],
+)

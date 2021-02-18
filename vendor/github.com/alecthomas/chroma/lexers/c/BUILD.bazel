@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "c.go",
+        "caddyfile.go",
+        "capnproto.go",
+        "ceylon.go",
+        "cfengine3.go",
+        "chaiscript.go",
+        "cheetah.go",
+        "cl.go",
+        "clojure.go",
+        "cmake.go",
+        "cobol.go",
+        "coffee.go",
+        "coldfusion.go",
+        "coq.go",
+        "cpp.go",
+        "cql.go",
+        "crystal.go",
+        "csharp.go",
+        "css.go",
+        "cython.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/c",
+    importpath = "github.com/alecthomas/chroma/lexers/c",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/alecthomas/chroma:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/internal:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/p:go_default_library",
+    ],
+)

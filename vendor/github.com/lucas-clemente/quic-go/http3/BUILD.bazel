@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "body.go",
+        "client.go",
+        "error_codes.go",
+        "frames.go",
+        "gzip_reader.go",
+        "request.go",
+        "request_writer.go",
+        "response_writer.go",
+        "roundtrip.go",
+        "server.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/http3",
+    importpath = "github.com/lucas-clemente/quic-go/http3",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/lucas-clemente/quic-go:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/handshake:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/protocol:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/qtls:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/utils:go_default_library",
+        "//vendor/github.com/marten-seemann/qpack:go_default_library",
+        "//vendor/golang.org/x/net/http/httpguts:go_default_library",
+        "//vendor/golang.org/x/net/http2/hpack:go_default_library",
+        "//vendor/golang.org/x/net/idna:go_default_library",
+    ],
+)

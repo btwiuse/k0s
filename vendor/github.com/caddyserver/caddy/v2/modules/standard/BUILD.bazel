@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["imports.go"],
+    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/standard",
+    importpath = "github.com/caddyserver/caddy/v2/modules/standard",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/standard:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddypki:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddypki/acmeserver:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddytls:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddytls/distributedstek:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddytls/standardstek:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/filestorage:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/logging:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/metrics:go_default_library",
+    ],
+)

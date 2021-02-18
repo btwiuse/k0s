@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "charclass.go",
+        "code.go",
+        "escape.go",
+        "parser.go",
+        "prefix.go",
+        "replacerdata.go",
+        "tree.go",
+        "writer.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/dlclark/regexp2/syntax",
+    importpath = "github.com/dlclark/regexp2/syntax",
+    visibility = ["//visibility:public"],
+)
