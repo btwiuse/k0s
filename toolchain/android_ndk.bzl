@@ -10,15 +10,23 @@ def _android_ndk_impl(ctx):
 
     print('ANDROID_NDK_HOME =', path_ndk)
     print('ANDROID_NDK_BAZEL =', is_bazel_ndk)
-    print('OS =', ctx.os.name) # linux / (TODO: darwin or mac?) # https://github.com/bazelbuild/platforms/blob/master/os/BUILD#L61
+    print('OS =', ctx.os.name)
 
     if not is_host_ndk:
         if is_bazel_ndk:
-            ctx.download_and_extract(
-                "https://dl.google.com/android/repository/android-ndk-r22-linux-x86_64.zip",
-                stripPrefix = "android-ndk-r22",
-                sha256 = "d37fc69cd81e5660234a686e20adef39bc0244086e4d66525a40af771c020718"
-            )
+            print('downloading android ndk for', ctx.os.name)
+            if ctx.os.name == "mac os x":
+                ctx.download_and_extract(
+                    "https://dl.google.com/android/repository/android-ndk-r22-darwin-x86_64.zip",
+                    stripPrefix = "android-ndk-r22",
+                    sha256 = "14fce4dea7fb3facbc0e3d20270007bffec3ba383aec02e8b0e0dad8d8782892"
+                )
+            if ctx.os.name == "linux":
+                ctx.download_and_extract(
+                    "https://dl.google.com/android/repository/android-ndk-r22-linux-x86_64.zip",
+                    stripPrefix = "android-ndk-r22",
+                    sha256 = "d37fc69cd81e5660234a686e20adef39bc0244086e4d66525a40af771c020718"
+                )
 
     ctx.file("template.bzl", 'ANDROID_NDK_HOME = "{}"'.format(path_ndk))
     ctx.template(
