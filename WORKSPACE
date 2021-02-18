@@ -3138,6 +3138,13 @@ go_repository(
     version = "v0.14.1-0.20210218105754-53593c3ab79f",
 )
 
+go_repository(
+    name = "io_robpike_ivy",
+    importpath = "robpike.io/ivy",
+    sum = "h1:oCFPKLI9pk0tRme8d9GXdXFUat+Mb5TzvJ5M2LCfc8Q=",
+    version = "v0.1.0",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()

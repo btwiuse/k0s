@@ -1432,6 +1432,14 @@ nhooyr.io/websocket/internal/bpool
 nhooyr.io/websocket/internal/errd
 nhooyr.io/websocket/internal/wsjs
 nhooyr.io/websocket/internal/xsync
+# robpike.io/ivy v0.1.0
+## explicit
+robpike.io/ivy/config
+robpike.io/ivy/exec
+robpike.io/ivy/parse
+robpike.io/ivy/run
+robpike.io/ivy/scan
+robpike.io/ivy/value
 # sigs.k8s.io/structured-merge-diff/v4 v4.0.1
 sigs.k8s.io/structured-merge-diff/v4/value
 # sigs.k8s.io/yaml v1.2.0
