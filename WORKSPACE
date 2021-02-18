@@ -3117,6 +3117,13 @@ go_repository(
     version = "v0.0.2",
 )
 
+go_repository(
+    name = "net_starlark_go",
+    importpath = "go.starlark.net",
+    sum = "h1:8b1dxl/E/KcBT0eST8oMb6H06zAtsUCfNNoNVkP7Z2U=",
+    version = "v0.0.0-20210212215732-ebe61bd709bf",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()

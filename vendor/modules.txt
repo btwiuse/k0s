@@ -951,6 +951,16 @@ go.opencensus.io/trace
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/propagation
 go.opencensus.io/trace/tracestate
+# go.starlark.net v0.0.0-20210212215732-ebe61bd709bf
+## explicit
+go.starlark.net/internal/compile
+go.starlark.net/internal/spell
+go.starlark.net/repl
+go.starlark.net/resolve
+go.starlark.net/starlark
+go.starlark.net/starlarkjson
+go.starlark.net/starlarkstruct
+go.starlark.net/syntax
 # go.step.sm/crypto v0.6.0
 go.step.sm/crypto/internal/bcrypt_pbkdf
 go.step.sm/crypto/internal/step

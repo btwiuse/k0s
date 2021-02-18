@@ -70,6 +70,7 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
 	github.com/urfave/cli v1.22.4
+	go.starlark.net v0.0.0-20210212215732-ebe61bd709bf
 	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
 	golang.org/x/net v0.0.0-20201209123823-ac852fbbde11
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a
