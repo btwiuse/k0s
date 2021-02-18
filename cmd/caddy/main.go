@@ -1,20 +1,14 @@
 package main
 
 import (
-        caddycmd "github.com/caddyserver/caddy/v2/cmd"
+        "log"
+        "os"
 
-        // plug in Caddy modules here
-        _ "github.com/caddyserver/caddy/v2/modules/standard"
-        _ "github.com/greenpau/caddy-auth-portal"
-        _ "github.com/greenpau/caddy-auth-jwt"
-        _ "github.com/greenpau/caddy-trace"
-        _ "github.com/caddyserver/forwardproxy"
-        _ "github.com/caddyserver/nginx-adapter"
-        _ "github.com/iamd3vil/caddy_yaml_adapter"
-        _ "github.com/freman/caddy2-reauth"
-        _ "github.com/mholt/caddy-webdav"
+	"k0s.io/k0s/pkg/cli/caddy"
 )
 
 func main() {
-        caddycmd.Main()
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
+	log.Fatalln(caddy.Run(os.Args[1:]))
 }

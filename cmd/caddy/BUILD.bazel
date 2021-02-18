@@ -5,18 +5,7 @@ go_library(
     srcs = ["main.go"],
     importpath = "k0s.io/k0s/cmd/caddy",
     visibility = ["//visibility:private"],
-    deps = [
-        "//vendor/github.com/caddyserver/caddy/v2/cmd:go_default_library",
-        "//vendor/github.com/caddyserver/caddy/v2/modules/standard:go_default_library",
-        "//vendor/github.com/caddyserver/forwardproxy:go_default_library",
-        "//vendor/github.com/caddyserver/nginx-adapter:go_default_library",
-        "//vendor/github.com/freman/caddy2-reauth:go_default_library",
-        "//vendor/github.com/greenpau/caddy-auth-jwt:go_default_library",
-        "//vendor/github.com/greenpau/caddy-auth-portal:go_default_library",
-        "//vendor/github.com/greenpau/caddy-trace:go_default_library",
-        "//vendor/github.com/iamd3vil/caddy_yaml_adapter:go_default_library",
-        "//vendor/github.com/mholt/caddy-webdav:go_default_library",
-    ],
+    deps = ["//pkg/cli/caddy:go_default_library"],
 )
 
 go_binary(

@@ -12,6 +12,7 @@ import (
 	"k0s.io/k0s/pkg/cli/agent"
 	"k0s.io/k0s/pkg/cli/bcrypt"
 	"k0s.io/k0s/pkg/cli/buildkite"
+	"k0s.io/k0s/pkg/cli/caddy"
 	"k0s.io/k0s/pkg/cli/chassis"
 	"k0s.io/k0s/pkg/cli/client"
 	"k0s.io/k0s/pkg/cli/dohserver"
@@ -55,6 +56,9 @@ func main() {
 		}).
 		When([]interface{}{"buildkite-agent", match.ANY}, func() {
 			run(buildkite.Run(osargs[1:]))
+		}).
+		When([]interface{}{"caddy", match.ANY}, func() {
+			run(caddy.Run(osargs[1:]))
 		}).
 		When([]interface{}{"chassis", match.ANY}, func() {
 			log.Fatalln(chassis.Run(osargs[1:]))
@@ -104,6 +108,9 @@ func main() {
 		}).
 		When([]interface{}{match.ANY, "buildkite-agent", match.ANY}, func() {
 			run(buildkite.Run(osargs[2:]))
+		}).
+		When([]interface{}{match.ANY, "caddy", match.ANY}, func() {
+			run(caddy.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "chassis", match.ANY}, func() {
 			log.Fatalln(chassis.Run(osargs[2:]))
