@@ -4452,8 +4452,8 @@ go_repository(
 go_repository(
     name = "com_github_hashicorp_golang_lru",
     importpath = "github.com/hashicorp/golang-lru",
-    sum = "h1:YDjusn29QI/Das2iO9M0BHnIbxPeyuCHsjMW+lJfyTc=",
-    version = "v0.5.4",
+    sum = "h1:YPkqC67at8FYaadspW/6uE0COsBxS2656RLEr8Bppgk=",
+    version = "v0.5.3",
 )
 
 go_repository(
@@ -5117,8 +5117,9 @@ go_repository(
 go_repository(
     name = "com_github_ginuerzh_gost",
     importpath = "github.com/ginuerzh/gost",
-    sum = "h1:UUYWtO1H1s974W4DJBtP74mmz/rseXjLttj8dmZo9A4=",
-    version = "v0.0.0-20210206051340-8dd4d8d9a123",
+    replace = "github.com/btwiuse/gost",
+    sum = "h1:06t8Fpg0CH1vu8OuOaGi4K5oDJl7DKqga4uPBUmKgWQ=",
+    version = "v0.0.0-20210218034515-4e5ef1691e9f",
 )
 
 go_repository(
@@ -5209,8 +5210,8 @@ go_repository(
 go_repository(
     name = "com_github_mmcloughlin_avo",
     importpath = "github.com/mmcloughlin/avo",
-    sum = "h1:UCU8+cLbbvyxi0sQ9fSeoEhZgvrrD9HKMtX6Gmc1vk8=",
-    version = "v0.0.0-20200523190732-4439b6b2c061",
+    sum = "h1:ExoghBBFY7A3RzgkAOq0XbHs9zaT/bHq7xysgyp3z3Q=",
+    version = "v0.0.0-20210104032911-599bdd1269f4",
 )
 
 go_repository(
@@ -5307,8 +5308,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_arch",
     importpath = "golang.org/x/arch",
-    sum = "h1:YcaRWbSY2VfP0/k25uHKKrk3Vs3C7mo03vq103Ire8E=",
-    version = "v0.0.0-20190909030613-46d78d1859ac",
+    sum = "h1:XmKBi9R6duxOB3lfc72wyrwiOY7X2Jl1wuI+RFOyMDE=",
+    version = "v0.0.0-20201008161808-52c3e6f60cff",
 )
 
 go_repository(

@@ -5,6 +5,7 @@ go 1.16
 replace (
 	github.com/buildkite/agent/v3 => github.com/btwiuse/agent/v3 v3.27.1-0.20210217080418-ae42a28eefa7
 	github.com/caddyserver/forwardproxy => github.com/klzgrad/forwardproxy v0.0.0-20210120121422-9b4a5a242bd6
+	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20210218034515-4e5ef1691e9f
 	github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
 	k8s.io/kube-state-metrics/v2 => github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9
 	nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
@@ -56,7 +57,6 @@ require (
 	github.com/mattn/go-shellwords v1.0.10
 	github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
 	github.com/miekg/dns v1.1.35
-	github.com/mmcloughlin/avo v0.0.0-20200523190732-4439b6b2c061 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.9.0
 	github.com/prometheus/common v0.15.0
@@ -65,9 +65,7 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/stretchr/testify v1.6.1
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
-	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
 	github.com/urfave/cli v1.22.4
-	github.com/xtaci/lossyconn v0.0.0-20200209145036-adba10fffc37 // indirect
 	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
 	golang.org/x/net v0.0.0-20201209123823-ac852fbbde11
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a
