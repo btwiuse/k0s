@@ -813,6 +813,9 @@ github.com/pupapaik/sysinfo/cpuid
 github.com/qri-io/jsonpointer
 # github.com/qri-io/jsonschema v0.0.0-20180607150648-d0d3b10ec792
 github.com/qri-io/jsonschema
+# github.com/rancher/dapper v0.5.5
+## explicit
+github.com/rancher/dapper/file
 # github.com/riobard/go-bloom v0.0.0-20200213042214-218e1707c495
 github.com/riobard/go-bloom
 # github.com/robfig/cron/v3 v3.0.0
@@ -847,6 +850,7 @@ github.com/shurcooL/sanitized_anchor_name
 # github.com/siebenmann/go-kstat v0.0.0-20200303194639-4e8294f9e9d5
 github.com/siebenmann/go-kstat
 # github.com/sirupsen/logrus v1.6.0
+## explicit
 github.com/sirupsen/logrus
 # github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 github.com/skip2/go-qrcode

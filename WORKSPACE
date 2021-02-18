@@ -3152,6 +3152,13 @@ go_repository(
     version = "v0.9.14",
 )
 
+go_repository(
+    name = "com_github_rancher_dapper",
+    importpath = "github.com/rancher/dapper",
+    sum = "h1:HtlWLY7MIbBsr+1ei4m4eixIV0+TXS7Kwx+c8Y7T+mE=",
+    version = "v0.5.5",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()

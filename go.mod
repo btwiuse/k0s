@@ -66,7 +66,9 @@ require (
 	github.com/prometheus/common v0.15.0
 	github.com/prometheus/node_exporter v1.0.1
 	github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4
+	github.com/rancher/dapper v0.5.5
 	github.com/rs/cors v1.7.0
+	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.6.1
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
 	github.com/traefik/yaegi v0.9.14
