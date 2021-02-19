@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "robustio.go",
+        "robustio_other.go",
+        "robustio_windows.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/goproxyio/goproxy/v2/robustio",
+    importpath = "github.com/goproxyio/goproxy/v2/robustio",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//vendor/github.com/goproxyio/windows:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

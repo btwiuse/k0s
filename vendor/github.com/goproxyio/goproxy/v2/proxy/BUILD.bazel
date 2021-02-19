@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "router.go",
+        "server.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/goproxyio/goproxy/v2/proxy",
+    importpath = "github.com/goproxyio/goproxy/v2/proxy",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/goproxyio/goproxy/v2/renameio:go_default_library",
+        "//vendor/github.com/goproxyio/goproxy/v2/sumdb:go_default_library",
+        "//vendor/golang.org/x/mod/module:go_default_library",
+    ],
+)

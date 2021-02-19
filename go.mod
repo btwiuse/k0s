@@ -40,7 +40,7 @@ require (
 	github.com/go-log/log v0.2.0
 	github.com/golang/protobuf v1.4.3
 	github.com/google/uuid v1.2.0
-	github.com/goproxy/goproxy v0.3.0
+	github.com/goproxyio/goproxy/v2 v2.0.5
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
@@ -51,6 +51,8 @@ require (
 	github.com/iamd3vil/caddy_yaml_adapter v0.0.0-20200503183711-d479c29b475a
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
 	github.com/json-iterator/go v1.1.10
+	github.com/klauspost/cpuid v1.3.1 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.3 // indirect
 	github.com/liamg/aminal v0.9.0
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
@@ -74,9 +76,11 @@ require (
 	github.com/urfave/cli v1.22.4
 	go.starlark.net v0.0.0-20210212215732-ebe61bd709bf
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
+	golang.org/x/mod v0.4.1
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a
 	golang.org/x/sys v0.0.0-20210218085108-9555bcde0c6a
+	golang.org/x/text v0.3.5 // indirect
 	google.golang.org/grpc v1.35.0
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6

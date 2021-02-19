@@ -517,9 +517,15 @@ github.com/googleapis/gax-go/v2
 github.com/googleapis/gnostic/compiler
 github.com/googleapis/gnostic/extensions
 github.com/googleapis/gnostic/openapiv2
-# github.com/goproxy/goproxy v0.3.0
+# github.com/goproxyio/goproxy/v2 v2.0.5
 ## explicit
-github.com/goproxy/goproxy
+github.com/goproxyio/goproxy/v2/proxy
+github.com/goproxyio/goproxy/v2/renameio
+github.com/goproxyio/goproxy/v2/robustio
+github.com/goproxyio/goproxy/v2/sumdb
+# github.com/goproxyio/windows v0.0.0-20191126033816-f4a809841617
+github.com/goproxyio/windows
+github.com/goproxyio/windows/sysdll
 # github.com/gorilla/handlers v1.5.1
 ## explicit
 github.com/gorilla/handlers
@@ -610,8 +616,10 @@ github.com/klauspost/compress/snappy
 github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
 # github.com/klauspost/cpuid v1.3.1
+## explicit
 github.com/klauspost/cpuid
 # github.com/klauspost/cpuid/v2 v2.0.3
+## explicit
 github.com/klauspost/cpuid/v2
 # github.com/klauspost/reedsolomon v1.9.9
 github.com/klauspost/reedsolomon
@@ -995,13 +1003,9 @@ golang.org/x/crypto/tea
 golang.org/x/crypto/twofish
 golang.org/x/crypto/xtea
 # golang.org/x/mod v0.4.1
-golang.org/x/mod/internal/lazyregexp
+## explicit
 golang.org/x/mod/module
 golang.org/x/mod/semver
-golang.org/x/mod/sumdb
-golang.org/x/mod/sumdb/dirhash
-golang.org/x/mod/sumdb/note
-golang.org/x/mod/sumdb/tlog
 # golang.org/x/net v0.0.0-20210119194325-5f4716e94777
 ## explicit
 golang.org/x/net/bpf
@@ -1044,6 +1048,7 @@ golang.org/x/sys/windows/registry
 # golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1
 golang.org/x/term
 # golang.org/x/text v0.3.5
+## explicit
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
 golang.org/x/text/encoding/internal

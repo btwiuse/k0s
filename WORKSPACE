@@ -2945,8 +2945,8 @@ go_repository(
 go_repository(
     name = "in_gopkg_ini_v1",
     importpath = "gopkg.in/ini.v1",
-    sum = "h1:duBzk771uxoUuOlyRLkHsygud9+5lrlGjdFBb4mSKDU=",
-    version = "v1.62.0",
+    sum = "h1:GyboHr4UqMiLUybYjd22ZjQIKEJEpgtLXtuGbR21Oho=",
+    version = "v1.51.1",
 )
 
 go_repository(
@@ -3192,6 +3192,20 @@ go_repository(
     importpath = "github.com/minio/sha256-simd",
     sum = "h1:5QHSlgo3nt5yKOJrC7W8w7X+NFl8cMPZm96iu8kKUJU=",
     version = "v0.1.1",
+)
+
+go_repository(
+    name = "com_github_goproxyio_goproxy_v2",
+    importpath = "github.com/goproxyio/goproxy/v2",
+    sum = "h1:GXJVqfe8nwaIUYuMwUIoCJXU1a+Hq8MjhMWGjsWLbYI=",
+    version = "v2.0.5",
+)
+
+go_repository(
+    name = "com_github_goproxyio_windows",
+    importpath = "github.com/goproxyio/windows",
+    sum = "h1:geXWJzWrEzC5S4MjTi8N+fhzuSYgdf4FwcYb4OI/YGU=",
+    version = "v0.0.0-20191126033816-f4a809841617",
 )
 
 rules_proto_dependencies()

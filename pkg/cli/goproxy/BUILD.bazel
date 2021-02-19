@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/cli/goproxy",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/simple/listener:go_default_library",
-        "//vendor/github.com/goproxy/goproxy:go_default_library",
+        "//vendor/github.com/goproxyio/goproxy/v2/proxy:go_default_library",
+        "//vendor/golang.org/x/mod/module:go_default_library",
     ],
 )
