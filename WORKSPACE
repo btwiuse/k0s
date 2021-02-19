@@ -1243,8 +1243,8 @@ go_repository(
 go_repository(
     name = "com_github_dnsimple_dnsimple_go",
     importpath = "github.com/dnsimple/dnsimple-go",
-    sum = "h1:IBIrn9jMKRMwporIRwdFyKdnHXVmwy6obnguB+ZMDIY=",
-    version = "v0.30.0",
+    sum = "h1:N+q+ML1CZGf+5r4udu9Opy7WJNtOaFT9aM86Af9gLhk=",
+    version = "v0.60.0",
 )
 
 go_repository(
@@ -1306,8 +1306,8 @@ go_repository(
 go_repository(
     name = "com_github_go_acme_lego_v3",
     importpath = "github.com/go-acme/lego/v3",
-    sum = "h1:Rv0MrX3DpVp9Xg77yR7x+PCksLLph3Ut/69/9Kim8ac=",
-    version = "v3.6.0",
+    sum = "h1:qC5/8/CbltyAE8fGLE6bGlqucj7pXc/vBxiLwLOsmAQ=",
+    version = "v3.7.0",
 )
 
 go_repository(
@@ -2994,8 +2994,8 @@ go_repository(
 go_repository(
     name = "net_howett_plist",
     importpath = "howett.net/plist",
-    sum = "h1:HiEs/6jQFMHpFqsdPBAk3ieVcsSS8IV+D93f43UuDPo=",
-    version = "v0.0.0-20200225050739-77e249a2e2ba",
+    sum = "h1:AQkaJpH+/FmqRjmXZPELom5zIERYZfwTjnHpfoVMQEc=",
+    version = "v0.0.0-20200419221736-3b63eb3a43b5",
 )
 
 go_repository(
@@ -3157,6 +3157,13 @@ go_repository(
     importpath = "github.com/rancher/dapper",
     sum = "h1:HtlWLY7MIbBsr+1ei4m4eixIV0+TXS7Kwx+c8Y7T+mE=",
     version = "v0.5.5",
+)
+
+go_repository(
+    name = "com_github_casbin_caddy_authz_v2",
+    importpath = "github.com/casbin/caddy-authz/v2",
+    sum = "h1:vUUoBIbTa8k02/zF17Qk0EjJIsu3HSU0ee2lX1nKo54=",
+    version = "v2.0.0",
 )
 
 rules_proto_dependencies()
@@ -4284,8 +4291,8 @@ go_repository(
 go_repository(
     name = "com_github_casbin_casbin_v2",
     importpath = "github.com/casbin/casbin/v2",
-    sum = "h1:bTwon/ECRx9dwBy2ewRVr5OiqjeXSGiTUY74sDPQi/g=",
-    version = "v2.1.2",
+    sum = "h1:JApbUmymvG33xIIYJ4G4ijj20tlZ9b8LY4ByTe+Oz+M=",
+    version = "v2.8.6",
 )
 
 go_repository(
@@ -5272,8 +5279,8 @@ go_repository(
 go_repository(
     name = "com_github_klauspost_cpuid",
     importpath = "github.com/klauspost/cpuid",
-    sum = "h1:VBd9MyVIiJHzzgnrLQG5Bcv75H4YaWrlKqWHjurxCGo=",
-    version = "v1.2.5",
+    sum = "h1:2JqaNE1hGdABW2YbA3TenkO7RiPFRvSWnEnGqWh9sHE=",
+    version = "v1.3.0",
 )
 
 go_repository(

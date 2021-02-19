@@ -1,4 +1,0 @@
-http://localhost:80 {
-    authz "authz_model.conf" "authz_policy.csv"
-    root "/my-website.net"
-}

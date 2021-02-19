@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "enforcer.go",
+        "enforcer_cached.go",
+        "enforcer_interface.go",
+        "enforcer_synced.go",
+        "internal_api.go",
+        "management_api.go",
+        "rbac_api.go",
+        "rbac_api_synced.go",
+        "rbac_api_with_domains.go",
+        "rbac_api_with_domains_synced.go",
+    ],
+    importmap = "k0s.io/k0s/vendor/github.com/casbin/casbin/v2",
+    importpath = "github.com/casbin/casbin/v2",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Knetic/govaluate:go_default_library",
+        "//vendor/github.com/casbin/casbin/v2/effect:go_default_library",
+        "//vendor/github.com/casbin/casbin/v2/log:go_default_library",
+        "//vendor/github.com/casbin/casbin/v2/model:go_default_library",
+        "//vendor/github.com/casbin/casbin/v2/persist:go_default_library",
+        "//vendor/github.com/casbin/casbin/v2/persist/file-adapter:go_default_library",
+        "//vendor/github.com/casbin/casbin/v2/rbac:go_default_library",
+        "//vendor/github.com/casbin/casbin/v2/rbac/default-role-manager:go_default_library",
+        "//vendor/github.com/casbin/casbin/v2/util:go_default_library",
+    ],
+)

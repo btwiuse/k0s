@@ -10,7 +10,7 @@ go_library(
         "//vendor/github.com/caddyserver/caddy/v2/modules/standard:go_default_library",
         "//vendor/github.com/caddyserver/forwardproxy:go_default_library",
         "//vendor/github.com/caddyserver/nginx-adapter:go_default_library",
-        "//vendor/github.com/casbin/caddy-authz:go_default_library",
+        "//vendor/github.com/casbin/caddy-authz/v2:go_default_library",
         "//vendor/github.com/freman/caddy2-reauth:go_default_library",
         "//vendor/github.com/greenpau/caddy-auth-jwt:go_default_library",
         "//vendor/github.com/greenpau/caddy-auth-portal:go_default_library",

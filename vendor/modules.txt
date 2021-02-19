@@ -203,14 +203,6 @@ github.com/buildkite/interpolate
 github.com/buildkite/shellwords
 # github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3
 github.com/buildkite/yaml
-# github.com/caddyserver/caddy v1.0.5
-## explicit
-github.com/caddyserver/caddy
-github.com/caddyserver/caddy/caddyfile
-github.com/caddyserver/caddy/caddyhttp/httpserver
-github.com/caddyserver/caddy/caddyhttp/staticfiles
-github.com/caddyserver/caddy/caddytls
-github.com/caddyserver/caddy/telemetry
 # github.com/caddyserver/caddy/v2 v2.3.0
 ## explicit
 github.com/caddyserver/caddy/v2
@@ -253,24 +245,21 @@ github.com/caddyserver/forwardproxy/httpclient
 github.com/caddyserver/nginx-adapter
 # github.com/caddyserver/ntlm-transport v0.1.1-0.20200409193839-5d99ab17e974
 github.com/caddyserver/ntlm-transport
-# github.com/casbin/caddy-authz v1.0.2
+# github.com/casbin/caddy-authz/v2 v2.0.0
 ## explicit
-github.com/casbin/caddy-authz
-# github.com/casbin/casbin v1.9.1
-## explicit
-github.com/casbin/casbin
-github.com/casbin/casbin/config
-github.com/casbin/casbin/effect
-github.com/casbin/casbin/errors
-github.com/casbin/casbin/log
-github.com/casbin/casbin/model
-github.com/casbin/casbin/persist
-github.com/casbin/casbin/persist/file-adapter
-github.com/casbin/casbin/rbac
-github.com/casbin/casbin/rbac/default-role-manager
-github.com/casbin/casbin/util
-# github.com/cenkalti/backoff/v4 v4.0.2
-github.com/cenkalti/backoff/v4
+github.com/casbin/caddy-authz/v2
+# github.com/casbin/casbin/v2 v2.8.6
+github.com/casbin/casbin/v2
+github.com/casbin/casbin/v2/config
+github.com/casbin/casbin/v2/effect
+github.com/casbin/casbin/v2/errors
+github.com/casbin/casbin/v2/log
+github.com/casbin/casbin/v2/model
+github.com/casbin/casbin/v2/persist
+github.com/casbin/casbin/v2/persist/file-adapter
+github.com/casbin/casbin/v2/rbac
+github.com/casbin/casbin/v2/rbac/default-role-manager
+github.com/casbin/casbin/v2/util
 # github.com/cespare/xxhash v1.1.0
 github.com/cespare/xxhash
 # github.com/cespare/xxhash/v2 v2.1.1
@@ -356,8 +345,6 @@ github.com/felixge/httpsnoop
 # github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568
 ## explicit
 github.com/flynn-archive/go-shlex
-# github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568
-github.com/flynn/go-shlex
 # github.com/freman/caddy2-reauth v0.0.0-20200518130136-6064aa96b1a8
 ## explicit
 github.com/freman/caddy2-reauth
@@ -437,23 +424,6 @@ github.com/ginuerzh/gosocks5
 github.com/ginuerzh/gost
 # github.com/ginuerzh/tls-dissector v0.0.2-0.20200224064855-24ab2b3a3796
 github.com/ginuerzh/tls-dissector
-# github.com/go-acme/lego/v3 v3.6.0
-github.com/go-acme/lego/v3/acme
-github.com/go-acme/lego/v3/acme/api
-github.com/go-acme/lego/v3/acme/api/internal/nonces
-github.com/go-acme/lego/v3/acme/api/internal/secure
-github.com/go-acme/lego/v3/acme/api/internal/sender
-github.com/go-acme/lego/v3/certcrypto
-github.com/go-acme/lego/v3/certificate
-github.com/go-acme/lego/v3/challenge
-github.com/go-acme/lego/v3/challenge/dns01
-github.com/go-acme/lego/v3/challenge/http01
-github.com/go-acme/lego/v3/challenge/resolver
-github.com/go-acme/lego/v3/challenge/tlsalpn01
-github.com/go-acme/lego/v3/lego
-github.com/go-acme/lego/v3/log
-github.com/go-acme/lego/v3/platform/wait
-github.com/go-acme/lego/v3/registration
 # github.com/go-asn1-ber/asn1-ber v1.3.1
 github.com/go-asn1-ber/asn1-ber
 # github.com/go-chi/chi v4.1.2+incompatible
@@ -598,8 +568,6 @@ github.com/greenpau/versioned
 # github.com/hairyhenderson/caddy-teapot-module v0.0.2
 ## explicit
 github.com/hairyhenderson/caddy-teapot-module
-# github.com/hashicorp/go-syslog v1.0.0
-github.com/hashicorp/go-syslog
 # github.com/hashicorp/golang-lru v0.5.3
 github.com/hashicorp/golang-lru
 github.com/hashicorp/golang-lru/simplelru
@@ -638,7 +606,7 @@ github.com/klauspost/compress/huff0
 github.com/klauspost/compress/snappy
 github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
-# github.com/klauspost/cpuid v1.2.5
+# github.com/klauspost/cpuid v1.3.0
 github.com/klauspost/cpuid
 # github.com/klauspost/cpuid/v2 v2.0.1
 github.com/klauspost/cpuid/v2
@@ -726,8 +694,6 @@ github.com/mholt/acmez/acme
 # github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
 ## explicit
 github.com/mholt/caddy-webdav
-# github.com/mholt/certmagic v0.8.3
-github.com/mholt/certmagic
 # github.com/miekg/dns v1.1.35
 ## explicit
 github.com/miekg/dns
@@ -829,8 +795,6 @@ github.com/rs/xid
 github.com/russellhaering/goxmldsig
 github.com/russellhaering/goxmldsig/etreeutils
 github.com/russellhaering/goxmldsig/types
-# github.com/russross/blackfriday v1.5.2
-github.com/russross/blackfriday
 # github.com/russross/blackfriday/v2 v2.0.1
 github.com/russross/blackfriday/v2
 # github.com/ryanuber/go-glob v1.0.0
@@ -1240,7 +1204,7 @@ gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 ## explicit
 gopkg.in/yaml.v3
-# howett.net/plist v0.0.0-20200225050739-77e249a2e2ba
+# howett.net/plist v0.0.0-20200419221736-3b63eb3a43b5
 howett.net/plist
 # k8s.io/api v0.19.3
 k8s.io/api/admissionregistration/v1

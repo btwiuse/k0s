@@ -8,7 +8,7 @@ import (
         _ "github.com/caddyserver/caddy/v2/modules/standard"
         _ "github.com/caddyserver/forwardproxy"
         _ "github.com/caddyserver/nginx-adapter"
-        _ "github.com/casbin/caddy-authz"
+        _ "github.com/casbin/caddy-authz/v2"
         _ "github.com/freman/caddy2-reauth"
         _ "github.com/greenpau/caddy-auth-portal"
         _ "github.com/greenpau/caddy-auth-jwt"

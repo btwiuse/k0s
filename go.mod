@@ -24,12 +24,10 @@ require (
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.36
 	github.com/buildkite/agent/v3 v3.27.0
-	github.com/caddyserver/caddy v1.0.5 // indirect
 	github.com/caddyserver/caddy/v2 v2.3.0
 	github.com/caddyserver/forwardproxy v0.0.0-00010101000000-000000000000
 	github.com/caddyserver/nginx-adapter v0.0.3
-	github.com/casbin/caddy-authz v1.0.2
-	github.com/casbin/casbin v1.9.1 // indirect
+	github.com/casbin/caddy-authz/v2 v2.0.0
 	github.com/creack/pty v1.1.11
 	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1
