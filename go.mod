@@ -50,6 +50,8 @@ require (
 	github.com/hairyhenderson/caddy-teapot-module v0.0.2
 	github.com/iamd3vil/caddy_yaml_adapter v0.0.0-20200503183711-d479c29b475a
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
+	github.com/jpillora/opts v1.2.0
+	github.com/jpillora/webproc v0.4.0
 	github.com/json-iterator/go v1.1.10
 	github.com/klauspost/cpuid v1.3.1 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.3 // indirect

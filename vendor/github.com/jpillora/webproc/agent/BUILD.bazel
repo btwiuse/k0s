@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "agent.go",
+        "agent_http.go",
+        "agent_proc.go",
+        "ansi.go",
+        "config.go",
+        "msg.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/jpillora/webproc/agent",
+    importpath = "github.com/jpillora/webproc/agent",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/NYTimes/gziphandler:go_default_library",
+        "//vendor/github.com/fsnotify/fsnotify:go_default_library",
+        "//vendor/github.com/jpillora/backoff:go_default_library",
+        "//vendor/github.com/jpillora/cookieauth:go_default_library",
+        "//vendor/github.com/jpillora/ipfilter:go_default_library",
+        "//vendor/github.com/jpillora/requestlog:go_default_library",
+        "//vendor/github.com/jpillora/velox:go_default_library",
+        "//vendor/github.com/jpillora/webproc/agent/statik:go_default_library",
+        "//vendor/github.com/naoina/toml:go_default_library",
+        "//vendor/github.com/rakyll/statik/fs:go_default_library",
+    ],
+)

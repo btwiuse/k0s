@@ -86,7 +86,7 @@ load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 # )
 rust_repositories(
     edition = "2018",
-    iso_date = "2021-02-16",
+    iso_date = "2021-02-20",
     version = "nightly",
 )
 
@@ -393,8 +393,8 @@ go_repository(
 go_repository(
     name = "com_github_nytimes_gziphandler",
     importpath = "github.com/NYTimes/gziphandler",
-    sum = "h1:lsxEuwrXEAokXB9qhlbKWPpo3KMLZQ5WB5WLQRW1uq0=",
-    version = "v0.0.0-20170623195520-56545f4a5d46",
+    sum = "h1:ZUDjpQae29j0ryrS0u/B8HZfJBtBQHjqw2rQ2cqUQ3I=",
+    version = "v1.1.1",
 )
 
 go_repository(
@@ -435,8 +435,8 @@ go_repository(
 go_repository(
     name = "com_github_sergi_go_diff",
     importpath = "github.com/sergi/go-diff",
-    sum = "h1:Kpca3qRNrduNnOQeazBd0ysaKrUJiIuISHxogkT9RPQ=",
-    version = "v1.0.0",
+    sum = "h1:we8PVUC3FE2uYfodKH/nBHMSetSfHDR6scGdBi+erh0=",
+    version = "v1.1.0",
 )
 
 go_repository(
@@ -2735,8 +2735,8 @@ go_repository(
 go_repository(
     name = "com_github_valyala_fasthttp",
     importpath = "github.com/valyala/fasthttp",
-    sum = "h1:dzZJf2IuMiclVjdw0kkT+f9u4YdrapbNyGAN47E/qnk=",
-    version = "v1.2.0",
+    sum = "h1:Z7kVhKP9NZz+tCSY7AVhCMPPAk7b+e5fq0l/BfdTlFc=",
+    version = "v1.13.1",
 )
 
 go_repository(
@@ -3206,6 +3206,188 @@ go_repository(
     importpath = "github.com/goproxyio/windows",
     sum = "h1:geXWJzWrEzC5S4MjTi8N+fhzuSYgdf4FwcYb4OI/YGU=",
     version = "v0.0.0-20191126033816-f4a809841617",
+)
+
+go_repository(
+    name = "com_github_ajg_form",
+    importpath = "github.com/ajg/form",
+    sum = "h1:t9c7v8JUKu/XxOGBU0yjNpaMloxGEJhUkqFRq0ibGeU=",
+    version = "v1.5.1",
+)
+
+go_repository(
+    name = "com_github_andrew_d_go_termutil",
+    importpath = "github.com/andrew-d/go-termutil",
+    sum = "h1:axBiC50cNZOs7ygH5BgQp4N+aYrZ2DNpWZ1KG3VOSOM=",
+    version = "v0.0.0-20150726205930-009166a695a2",
+)
+
+go_repository(
+    name = "com_github_andybalholm_brotli",
+    importpath = "github.com/andybalholm/brotli",
+    sum = "h1:7UCwP93aiSfvWpapti8g88vVVGp2qqtGyePsSuDafo4=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_elithrar_simple_scrypt",
+    importpath = "github.com/elithrar/simple-scrypt",
+    sum = "h1:KIlOlxdoQf9JWKl5lMAJ28SY2URB0XTRDn2TckyzAZg=",
+    version = "v1.3.0",
+)
+
+go_repository(
+    name = "com_github_fasthttp_contrib_websocket",
+    importpath = "github.com/fasthttp-contrib/websocket",
+    sum = "h1:DddqAaWDpywytcG8w/qoQ5sAN8X12d3Z3koB0C3Rxsc=",
+    version = "v0.0.0-20160511215533-1f3b11f56072",
+)
+
+go_repository(
+    name = "com_github_gavv_httpexpect",
+    importpath = "github.com/gavv/httpexpect",
+    sum = "h1:1X9kcRshkSKEjNJJxX9Y9mQ5BRfbxU5kORdjhlA1yX8=",
+    version = "v2.0.0+incompatible",
+)
+
+go_repository(
+    name = "com_github_imkira_go_interpol",
+    importpath = "github.com/imkira/go-interpol",
+    sum = "h1:KIiKr0VSG2CUW1hl1jpiyuzuJeKUUpC8iM1AIE7N1Vk=",
+    version = "v1.1.0",
+)
+
+go_repository(
+    name = "com_github_jpillora_ansi",
+    importpath = "github.com/jpillora/ansi",
+    sum = "h1:+Ei5HCAH0xsrQRCT2PDr4mq9r4Gm4tg+arNdXRkB22s=",
+    version = "v1.0.2",
+)
+
+go_repository(
+    name = "com_github_jpillora_cookieauth",
+    importpath = "github.com/jpillora/cookieauth",
+    sum = "h1:1BYnSG4c+/5kutOsY+7/Ba+rRhUfYv61Jrf605CxfRw=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_jpillora_eventsource",
+    importpath = "github.com/jpillora/eventsource",
+    sum = "h1:iMFSHw9uUmQyNWKHylAS9HoK9R9ps2NWqsjzKniCFus=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_jpillora_ipfilter",
+    importpath = "github.com/jpillora/ipfilter",
+    sum = "h1:K5zGPjyjgf2MPB+iTULZ7Hl4zXPWOb4JwgxMdogKq20=",
+    version = "v1.2.1",
+)
+
+go_repository(
+    name = "com_github_jpillora_opts",
+    importpath = "github.com/jpillora/opts",
+    sum = "h1:H8vWooV3P9nsqmCcPgxNZyIa7GPOWA1KQFsfAzIkCtE=",
+    version = "v1.2.0",
+)
+
+go_repository(
+    name = "com_github_jpillora_requestlog",
+    importpath = "github.com/jpillora/requestlog",
+    sum = "h1:bg++eJ74T7DYL3DlIpiwknrtfdUA9oP/M4fL+PpqnyA=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_jpillora_sizestr",
+    importpath = "github.com/jpillora/sizestr",
+    sum = "h1:4tr0FLxs1Mtq3TnsLDV+GYUWG7Q26a6s+tV5Zfw2ygw=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_jpillora_velox",
+    importpath = "github.com/jpillora/velox",
+    sum = "h1:96BPWo+zw2ywf4T/3C9kEKhzGABsjJ4vWSOkf93el/g=",
+    version = "v0.4.0",
+)
+
+go_repository(
+    name = "com_github_jpillora_webproc",
+    importpath = "github.com/jpillora/webproc",
+    sum = "h1:0BmX+F+HDs0uTYzjy3CSU/7oM8yTTuPkqsJim+b5Ndg=",
+    version = "v0.4.0",
+)
+
+go_repository(
+    name = "com_github_k0kubun_colorstring",
+    importpath = "github.com/k0kubun/colorstring",
+    sum = "h1:uC1QfSlInpQF+M0ao65imhwqKnz3Q2z/d8PWZRMQvDM=",
+    version = "v0.0.0-20150214042306-9440f1994b88",
+)
+
+go_repository(
+    name = "com_github_moul_http2curl",
+    importpath = "github.com/moul/http2curl",
+    sum = "h1:dRMWoAtb+ePxMlLkrCbAqh4TlPHXvoGUSQ323/9Zahs=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_phuslu_geoip",
+    importpath = "github.com/phuslu/geoip",
+    sum = "h1:pap5n0dO6f2HUOXKGW0OrG0Y9OlxN0uC+XKMvziUm6g=",
+    version = "v1.0.20200217",
+)
+
+go_repository(
+    name = "com_github_rakyll_statik",
+    importpath = "github.com/rakyll/statik",
+    sum = "h1:OF3QCZUuyPxuGEP7B4ypUa7sB/iHtqOTDYZXGM8KOdQ=",
+    version = "v0.1.7",
+)
+
+go_repository(
+    name = "com_github_yalp_jsonpath",
+    importpath = "github.com/yalp/jsonpath",
+    sum = "h1:6fRhSjgLCkTD3JnJxvaJ4Sj+TYblw757bqYgZaOq5ZY=",
+    version = "v0.0.0-20180802001716-5cc68e5049a0",
+)
+
+go_repository(
+    name = "com_github_yudai_gojsondiff",
+    importpath = "github.com/yudai/gojsondiff",
+    sum = "h1:27cbfqXLVEJ1o8I6v3y9lg8Ydm53EKqHXAOMxEGlCOA=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_yudai_golcs",
+    importpath = "github.com/yudai/golcs",
+    sum = "h1:BHyfKlQyqbsFN5p3IfnEUduWvb9is428/nNb5L3U01M=",
+    version = "v0.0.0-20170316035057-ecda9a501e82",
+)
+
+go_repository(
+    name = "com_github_yudai_pp",
+    importpath = "github.com/yudai/pp",
+    sum = "h1:Q4//iY4pNF6yPLZIigmvcl7k/bPgrcTPIFIcmawg5bI=",
+    version = "v2.0.1+incompatible",
+)
+
+go_repository(
+    name = "xyz_gomodules_jsonpatch_v3",
+    importpath = "gomodules.xyz/jsonpatch/v3",
+    sum = "h1:Te7hKxV52TKCbNYq3t84tzKav3xhThdvSsSp/W89IyI=",
+    version = "v3.0.1",
+)
+
+go_repository(
+    name = "xyz_gomodules_orderedmap",
+    importpath = "gomodules.xyz/orderedmap",
+    sum = "h1:fM/+TGh/O1KkqGR5xjTKg6bU8OKBkg7p0Y+x/J9m8Os=",
+    version = "v0.1.0",
 )
 
 rules_proto_dependencies()
@@ -4613,8 +4795,8 @@ go_repository(
 go_repository(
     name = "com_github_hashicorp_golang_lru",
     importpath = "github.com/hashicorp/golang-lru",
-    sum = "h1:YPkqC67at8FYaadspW/6uE0COsBxS2656RLEr8Bppgk=",
-    version = "v0.5.3",
+    sum = "h1:YDjusn29QI/Das2iO9M0BHnIbxPeyuCHsjMW+lJfyTc=",
+    version = "v0.5.4",
 )
 
 go_repository(
@@ -4921,8 +5103,8 @@ go_repository(
 go_repository(
     name = "com_github_posener_complete",
     importpath = "github.com/posener/complete",
-    sum = "h1:ccV59UEOTzVDnDUEFdT95ZzHVZ+5+158q8+SJb2QV5w=",
-    version = "v1.1.1",
+    sum = "h1:GqpA1/5oN1NgsxoSA4RH0YWTaqvUlQNeOpHXD/JRbOQ=",
+    version = "v1.2.2-0.20190308074557-af07aa5181b3",
 )
 
 go_repository(

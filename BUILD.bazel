@@ -33,6 +33,7 @@ go_library(
         "//pkg/cli/hub:go_default_library",
         "//pkg/cli/k16s:go_default_library",
         "//pkg/cli/mnt:go_default_library",
+        "//pkg/cli/webproc:go_default_library",
         "//vendor/github.com/alexpantyukhin/go-pattern-match:go_default_library",
     ],
 )

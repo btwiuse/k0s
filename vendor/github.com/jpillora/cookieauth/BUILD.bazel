@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["cookieauth.go"],
+    importmap = "k0s.io/vendor/github.com/jpillora/cookieauth",
+    importpath = "github.com/jpillora/cookieauth",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/elithrar/simple-scrypt:go_default_library",
+        "//vendor/github.com/hashicorp/golang-lru:go_default_library",
+    ],
+)

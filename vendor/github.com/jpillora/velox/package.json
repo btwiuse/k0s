@@ -1,0 +1,41 @@
+{
+  "name": "veloxjs",
+  "version": "0.3.3",
+  "description": "Real-time object synchronisation over SSE",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpillora/velox.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jpillora/velox/issues"
+  },
+  "homepage": "https://github.com/jpillora/velox#readme",
+  "scripts": {
+    "build": "./node_modules/.bin/webpack --config js/webpack.config.js && echo built && go generate ./go && echo embedded",
+    "build-dev": "./node_modules/.bin/webpack --config js/webpack.config.js --devtool source-map"
+  },
+  "dependencies": {
+    "backo": "^1.1.0",
+    "compression": "^1.7.4",
+    "event-source-polyfill": "0.0.9",
+    "eventsource": "^1.0.7",
+    "fast-json-patch": "^3.0.0-1",
+    "lodash": "^4.17.15",
+    "ssestream": "^1.0.1",
+    "url-parse": "^1.4.7",
+    "ws": "^6.2.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "uglifyjs-webpack-plugin": "^0.4.6",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  }
+}

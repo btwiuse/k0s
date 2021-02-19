@@ -23,6 +23,7 @@ import (
 	"k0s.io/pkg/cli/hub"
 	"k0s.io/pkg/cli/k16s"
 	"k0s.io/pkg/cli/mnt"
+	"k0s.io/pkg/cli/webproc"
 )
 
 func main() {
@@ -51,6 +52,9 @@ func main() {
 		}).
 		When([]interface{}{"mnt", match.ANY}, func() {
 			log.Fatalln(mnt.Run(osargs[1:]))
+		}).
+		When([]interface{}{"webproc", match.ANY}, func() {
+			log.Fatalln(webproc.Run(osargs[1:]))
 		}).
 		When([]interface{}{"goproxy", match.ANY}, func() {
 			run(goproxy.Run(osargs[1:]))
@@ -106,6 +110,9 @@ func main() {
 		}).
 		When([]interface{}{match.ANY, "mnt", match.ANY}, func() {
 			log.Fatalln(mnt.Run(osargs[2:]))
+		}).
+		When([]interface{}{match.ANY, "webproc", match.ANY}, func() {
+			log.Fatalln(webproc.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "goproxy", match.ANY}, func() {
 			run(goproxy.Run(osargs[2:]))

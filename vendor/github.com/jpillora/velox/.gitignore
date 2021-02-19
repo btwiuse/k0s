@@ -1,0 +1,4 @@
+node_modules/
+sample.txt
+bundle.js.map
+tmp/
