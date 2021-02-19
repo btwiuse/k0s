@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "note.go",
+        "tile.go",
+        "tlog.go",
+    ],
+    importmap = "k0s.io/vendor/golang.org/x/mod/sumdb/tlog",
+    importpath = "golang.org/x/mod/sumdb/tlog",
+    visibility = ["//visibility:public"],
+)

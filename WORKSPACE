@@ -1811,8 +1811,8 @@ go_repository(
 go_repository(
     name = "com_github_klauspost_cpuid_v2",
     importpath = "github.com/klauspost/cpuid/v2",
-    sum = "h1:lb04bBEJoAoV48eHs4Eq0UyhmJCkRSdIjQ3uS8WJRM4=",
-    version = "v2.0.1",
+    sum = "h1:DNljyrHyxlkk8139OXIAAauCwV8eQGDD6Z8YqnDXdZw=",
+    version = "v2.0.3",
 )
 
 go_repository(
@@ -2945,8 +2945,8 @@ go_repository(
 go_repository(
     name = "in_gopkg_ini_v1",
     importpath = "gopkg.in/ini.v1",
-    sum = "h1:GyboHr4UqMiLUybYjd22ZjQIKEJEpgtLXtuGbR21Oho=",
-    version = "v1.51.1",
+    sum = "h1:duBzk771uxoUuOlyRLkHsygud9+5lrlGjdFBb4mSKDU=",
+    version = "v1.62.0",
 )
 
 go_repository(
@@ -3164,6 +3164,34 @@ go_repository(
     importpath = "github.com/casbin/caddy-authz/v2",
     sum = "h1:vUUoBIbTa8k02/zF17Qk0EjJIsu3HSU0ee2lX1nKo54=",
     version = "v2.0.0",
+)
+
+go_repository(
+    name = "com_github_goproxy_goproxy",
+    importpath = "github.com/goproxy/goproxy",
+    sum = "h1:gqFFOnckEtcxMX65hjJnxsnbEvQVq1Ia1/1ON9ki5wc=",
+    version = "v0.3.0",
+)
+
+go_repository(
+    name = "com_github_minio_md5_simd",
+    importpath = "github.com/minio/md5-simd",
+    sum = "h1:Gdi1DZK69+ZVMoNHRXJyNcxrMA4dSxoYHZSQbirFg34=",
+    version = "v1.1.2",
+)
+
+go_repository(
+    name = "com_github_minio_minio_go_v7",
+    importpath = "github.com/minio/minio-go/v7",
+    sum = "h1:v+RS2/dpRq+XaarlZItHd3MVjjQcN2noRn4HxmVdmg4=",
+    version = "v7.0.9",
+)
+
+go_repository(
+    name = "com_github_minio_sha256_simd",
+    importpath = "github.com/minio/sha256-simd",
+    sum = "h1:5QHSlgo3nt5yKOJrC7W8w7X+NFl8cMPZm96iu8kKUJU=",
+    version = "v0.1.1",
 )
 
 rules_proto_dependencies()
@@ -3541,8 +3569,8 @@ go_repository(
 go_repository(
     name = "com_github_google_uuid",
     importpath = "github.com/google/uuid",
-    sum = "h1:EVhdT+1Kseyi1/pUmXKaFxYsDNy9RQYkMWRH68J/W7Y=",
-    version = "v1.1.2",
+    sum = "h1:qJYtXnJRWmpe7m/3XlyhrsLrEURqHRM2kxzoxXqyUDs=",
+    version = "v1.2.0",
 )
 
 go_repository(
@@ -3919,8 +3947,8 @@ go_repository(
 go_repository(
     name = "com_github_stretchr_testify",
     importpath = "github.com/stretchr/testify",
-    sum = "h1:hDPOHmpOpP40lSULcqw7IrRb/u7w6RpDC9399XyoNd0=",
-    version = "v1.6.1",
+    sum = "h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=",
+    version = "v1.7.0",
 )
 
 go_repository(
@@ -4045,8 +4073,8 @@ go_repository(
 go_repository(
     name = "in_gopkg_yaml_v3",
     importpath = "gopkg.in/yaml.v3",
-    sum = "h1:dUUwHk2QECo/6vqA44rthZ8ie2QXMNeKRTHCNY2nXvo=",
-    version = "v3.0.0-20200313102051-9f266ea9e77c",
+    sum = "h1:h8qDotaEPuJATrMmW04NCwg7v22aHH28wwpauUhK9Oo=",
+    version = "v3.0.0-20210107192922-496545a6307b",
 )
 
 go_repository(
@@ -4088,8 +4116,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_crypto",
     importpath = "golang.org/x/crypto",
-    sum = "h1:ikNHVSjEfnvz6sxdSPCaPt572qowuyMDMJLLm3Db3ig=",
-    version = "v0.0.0-20200728195943-123391ffb6de",
+    sum = "h1:DN0cp81fZ3njFcrLCytUHRSUkqBjfTo4Tx9RJTWs0EY=",
+    version = "v0.0.0-20201221181555-eec23a3978ad",
 )
 
 go_repository(
@@ -4109,15 +4137,15 @@ go_repository(
 go_repository(
     name = "org_golang_x_mod",
     importpath = "golang.org/x/mod",
-    sum = "h1:8pl+sMODzuvGJkmj2W4kZihvVb5mKm8pB/X44PIQHv8=",
-    version = "v0.4.0",
+    sum = "h1:Kvvh58BN8Y9/lBi7hTekvtMpm07eUZ0ck5pRHpsMWrY=",
+    version = "v0.4.1",
 )
 
 go_repository(
     name = "org_golang_x_net",
     importpath = "golang.org/x/net",
-    sum = "h1:lwlPPsmjDKK0J6eG6xDWd5XPehI0R024zxjDnw3esPA=",
-    version = "v0.0.0-20201209123823-ac852fbbde11",
+    sum = "h1:003p0dJM77cxMSyCPFphvZf/Y5/NXf5fzg6ufd1/Oew=",
+    version = "v0.0.0-20210119194325-5f4716e94777",
 )
 
 go_repository(
@@ -4137,15 +4165,15 @@ go_repository(
 go_repository(
     name = "org_golang_x_sys",
     importpath = "golang.org/x/sys",
-    sum = "h1:MCsdmFSdEd4UEa5TKS5JztCRHK/WtvNei1edOj5RSRo=",
-    version = "v0.0.0-20210104204734-6f8348627aad",
+    sum = "h1:+Kiu2GijIw0WaCBk1i7AcqqRx8Xg3HIYaheQazXOu8w=",
+    version = "v0.0.0-20210218085108-9555bcde0c6a",
 )
 
 go_repository(
     name = "org_golang_x_text",
     importpath = "golang.org/x/text",
-    sum = "h1:0YWbFKbhXG/wIiuHDSKpS0Iy7FSA+u45VtBMfQcFTTc=",
-    version = "v0.3.4",
+    sum = "h1:i6eZZ+zk0SOf0xgBpEpPD18qWcJda6q1sxt3S0kzyUQ=",
+    version = "v0.3.5",
 )
 
 go_repository(
@@ -5279,8 +5307,8 @@ go_repository(
 go_repository(
     name = "com_github_klauspost_cpuid",
     importpath = "github.com/klauspost/cpuid",
-    sum = "h1:2JqaNE1hGdABW2YbA3TenkO7RiPFRvSWnEnGqWh9sHE=",
-    version = "v1.3.0",
+    sum = "h1:5JNjFYYQrZeKRJ0734q51WCEEn2huer72Dc7K+R/b6s=",
+    version = "v1.3.1",
 )
 
 go_repository(

@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["note.go"],
+    importmap = "k0s.io/vendor/golang.org/x/mod/sumdb/note",
+    importpath = "golang.org/x/mod/sumdb/note",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/golang.org/x/crypto/ed25519:go_default_library"],
+)

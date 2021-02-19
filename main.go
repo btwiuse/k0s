@@ -17,6 +17,7 @@ import (
 	"k0s.io/pkg/cli/client"
 	"k0s.io/pkg/cli/dohserver"
 	"k0s.io/pkg/cli/gitd"
+	"k0s.io/pkg/cli/goproxy"
 	"k0s.io/pkg/cli/gos"
 	"k0s.io/pkg/cli/gost"
 	"k0s.io/pkg/cli/hub"
@@ -50,6 +51,9 @@ func main() {
 		}).
 		When([]interface{}{"mnt", match.ANY}, func() {
 			log.Fatalln(mnt.Run(osargs[1:]))
+		}).
+		When([]interface{}{"goproxy", match.ANY}, func() {
+			run(goproxy.Run(osargs[1:]))
 		}).
 		When([]interface{}{"gos", match.ANY}, func() {
 			run(gos.Run(osargs[1:]))
@@ -102,6 +106,9 @@ func main() {
 		}).
 		When([]interface{}{match.ANY, "mnt", match.ANY}, func() {
 			log.Fatalln(mnt.Run(osargs[2:]))
+		}).
+		When([]interface{}{match.ANY, "goproxy", match.ANY}, func() {
+			run(goproxy.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "gos", match.ANY}, func() {
 			run(gos.Run(osargs[2:]))

@@ -12,7 +12,9 @@ package cpuid
 
 import (
 	"flag"
+	"fmt"
 	"math"
+	"os"
 	"strings"
 )
 
@@ -37,6 +39,19 @@ const (
 	Hygon
 	SiS
 	RDC
+
+	Ampere
+	ARM
+	Broadcom
+	Cavium
+	DEC
+	Fujitsu
+	Infineon
+	Motorola
+	NVIDIA
+	AMCC
+	Qualcomm
+	Marvell
 
 	lastVendor
 )
@@ -85,7 +100,7 @@ const (
 	ENQCMD                              // Enqueue Command
 	ERMS                                // Enhanced REP MOVSB/STOSB
 	F16C                                // Half-precision floating-point conversion
-	FMA3                                // Intel FMA 3
+	FMA3                                // Intel FMA 3. Does not imply AVX.
 	FMA4                                // Bulldozer FMA4 functions
 	GFNI                                // Galois Field New Instructions
 	HLE                                 // Hardware Lock Elision
@@ -225,6 +240,11 @@ func Detect() {
 		safe = !*detectArmFlag
 	}
 	addInfo(&CPU, safe)
+	if displayFeats != nil && *displayFeats {
+		fmt.Println("cpu features:", strings.Join(CPU.FeatureSet(), ","))
+		// Exit with non-zero so tests will print value.
+		os.Exit(1)
+	}
 	if disableFlag != nil {
 		s := strings.Split(*disableFlag, ",")
 		for _, feat := range s {
@@ -246,6 +266,7 @@ func DetectARM() {
 }
 
 var detectArmFlag *bool
+var displayFeats *bool
 var disableFlag *string
 
 // Flags will enable flags.
@@ -255,6 +276,7 @@ var disableFlag *string
 // will not contain these flags.
 func Flags() {
 	disableFlag = flag.String("cpu.disable", "", "disable cpu features; comma separated list")
+	displayFeats = flag.Bool("cpu.features", false, "lists cpu features and exits")
 	detectArmFlag = flag.Bool("cpu.arm", false, "allow ARM features to be detected; can potentially crash")
 }
 
@@ -266,6 +288,12 @@ func (c CPUInfo) Supports(ids ...FeatureID) bool {
 		}
 	}
 	return true
+}
+
+// Has allows for checking a single feature.
+// Should be inlined by the compiler.
+func (c CPUInfo) Has(id FeatureID) bool {
+	return c.featureSet.inSet(id)
 }
 
 // Disable will disable one or several features.
@@ -831,13 +859,13 @@ func support() flagSet {
 	if vend == AMD && (d&(1<<28)) != 0 && mfi >= 4 {
 		fs.setIf(threadsPerCore() > 1, HTT)
 	}
-	// Check XGETBV, OXSAVE and AVX bits
-	if c&(1<<26) != 0 && c&(1<<27) != 0 && c&(1<<28) != 0 {
+	// Check XGETBV/XSAVE (26), OXSAVE (27) and AVX (28) bits
+	const avxCheck = 1<<26 | 1<<27 | 1<<28
+	if c&avxCheck == avxCheck {
 		// Check for OS support
 		eax, _ := xgetbv(0)
 		if (eax & 0x6) == 0x6 {
 			fs.set(AVX)
-			fs.setIf((c&0x00001000) != 0, FMA3)
 			switch vend {
 			case Intel:
 				// Older than Haswell.
@@ -848,6 +876,10 @@ func support() flagSet {
 			}
 		}
 	}
+	// FMA3 can be used with SSE registers, so no OS support is strictly needed.
+	// fma3 and OSXSAVE needed.
+	const fma3Check = 1<<12 | 1<<27
+	fs.setIf(c&fma3Check == fma3Check, FMA3)
 
 	// Check AVX2, AVX2 requires OS support, but BMI1/2 don't.
 	if mfi >= 7 {
