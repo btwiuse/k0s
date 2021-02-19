@@ -19,7 +19,7 @@ go_library(
         "uds.go",
         "worker.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/DataDog/datadog-go/statsd",
+    importmap = "k0s.io/vendor/github.com/DataDog/datadog-go/statsd",
     importpath = "github.com/DataDog/datadog-go/statsd",
     visibility = ["//visibility:public"],
 )

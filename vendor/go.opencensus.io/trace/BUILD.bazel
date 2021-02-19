@@ -17,7 +17,7 @@ go_library(
         "trace_go11.go",
         "trace_nongo11.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.opencensus.io/trace",
+    importmap = "k0s.io/vendor/go.opencensus.io/trace",
     importpath = "go.opencensus.io/trace",
     visibility = ["//visibility:public"],
     deps = [

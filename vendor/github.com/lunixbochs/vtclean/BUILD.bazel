@@ -7,7 +7,7 @@ go_library(
         "line.go",
         "vtclean.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lunixbochs/vtclean",
+    importmap = "k0s.io/vendor/github.com/lunixbochs/vtclean",
     importpath = "github.com/lunixbochs/vtclean",
     visibility = ["//visibility:public"],
 )

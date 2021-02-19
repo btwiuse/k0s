@@ -36,7 +36,7 @@ go_library(
         "verticalpodautoscaler.go",
         "volumeattachment.go",
     ],
-    importmap = "k0s.io/k0s/vendor/k8s.io/kube-state-metrics/v2/external/store",
+    importmap = "k0s.io/vendor/k8s.io/kube-state-metrics/v2/external/store",
     importpath = "k8s.io/kube-state-metrics/v2/external/store",
     visibility = ["//visibility:public"],
     deps = [

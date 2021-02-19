@@ -10,7 +10,7 @@ import (
 	"net/url"
 
 	"github.com/gorilla/websocket"
-	"k0s.io/k0s/pkg/wrap"
+	"k0s.io/pkg/wrap"
 )
 
 func (cl *client) dial(p string, h http.Header) (conn net.Conn, err error) {

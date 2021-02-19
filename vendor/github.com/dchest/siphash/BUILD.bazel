@@ -15,7 +15,7 @@ go_library(
         "hash_asm.go",
         "siphash.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/dchest/siphash",
+    importmap = "k0s.io/vendor/github.com/dchest/siphash",
     importpath = "github.com/dchest/siphash",
     visibility = ["//visibility:public"],
 )

@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["yaml.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/iamd3vil/caddy_yaml_adapter",
+    importmap = "k0s.io/vendor/github.com/iamd3vil/caddy_yaml_adapter",
     importpath = "github.com/iamd3vil/caddy_yaml_adapter",
     visibility = ["//visibility:public"],
     deps = [

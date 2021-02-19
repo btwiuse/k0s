@@ -6,7 +6,7 @@ go_library(
         "caddyfile.go",
         "plugin.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-jwt",
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-jwt",
     importpath = "github.com/greenpau/caddy-auth-jwt",
     visibility = ["//visibility:public"],
     deps = [

@@ -9,7 +9,7 @@ go_library(
         "pre_go17.go",
         "pre_go19.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/net/context",
+    importmap = "k0s.io/vendor/golang.org/x/net/context",
     importpath = "golang.org/x/net/context",
     visibility = ["//visibility:public"],
 )

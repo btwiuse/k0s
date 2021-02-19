@@ -19,7 +19,7 @@ go_library(
         "CEL.tokens",
         "CELLexer.tokens",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/parser/gen",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/parser/gen",
     importpath = "github.com/google/cel-go/parser/gen",
     deps = [
         "//vendor/github.com/antlr/antlr4/runtime/Go/antlr:go_default_library",

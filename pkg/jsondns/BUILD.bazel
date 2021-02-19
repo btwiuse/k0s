@@ -9,7 +9,7 @@ go_library(
         "response.go",
         "unmarshal.go",
     ],
-    importpath = "k0s.io/k0s/pkg/jsondns",
+    importpath = "k0s.io/pkg/jsondns",
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/github.com/infobloxopen/go-trees/iptree:go_default_library",

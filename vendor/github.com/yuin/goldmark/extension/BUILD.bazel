@@ -12,7 +12,7 @@ go_library(
         "tasklist.go",
         "typographer.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/yuin/goldmark/extension",
+    importmap = "k0s.io/vendor/github.com/yuin/goldmark/extension",
     importpath = "github.com/yuin/goldmark/extension",
     visibility = ["//visibility:public"],
     deps = [

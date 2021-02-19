@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"sync"
 
-	"k0s.io/k0s/pkg/wrap"
+	"k0s.io/pkg/wrap"
 )
 
 func NewTunnel() *Tunnel {

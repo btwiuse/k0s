@@ -7,10 +7,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	asciitransport "k0s.io/k0s/pkg/asciitransport/v2"
-	"k0s.io/k0s/pkg/console"
-	"k0s.io/k0s/pkg/localcmd"
-	"k0s.io/k0s/pkg/uuid"
+	asciitransport "k0s.io/pkg/asciitransport/v2"
+	"k0s.io/pkg/console"
+	"k0s.io/pkg/localcmd"
+	"k0s.io/pkg/uuid"
 )
 
 var (

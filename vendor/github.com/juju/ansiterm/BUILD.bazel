@@ -12,7 +12,7 @@ go_library(
         "terminal.go",
         "writer.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/juju/ansiterm",
+    importmap = "k0s.io/vendor/github.com/juju/ansiterm",
     importpath = "github.com/juju/ansiterm",
     visibility = ["//visibility:public"],
     deps = [

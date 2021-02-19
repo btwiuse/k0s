@@ -6,7 +6,7 @@ go_library(
         "caddyfile.go",
         "map.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/map",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/map",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/map",
     visibility = ["//visibility:public"],
     deps = [

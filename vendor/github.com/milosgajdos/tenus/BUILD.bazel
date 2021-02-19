@@ -13,7 +13,7 @@ go_library(
         "veth_linux.go",
         "vlan_linux.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/milosgajdos/tenus",
+    importmap = "k0s.io/vendor/github.com/milosgajdos/tenus",
     importpath = "github.com/milosgajdos/tenus",
     visibility = ["//visibility:public"],
     deps = [

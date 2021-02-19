@@ -8,7 +8,7 @@ go_library(
         "sql.go",
         "uuid.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/satori/go.uuid",
+    importmap = "k0s.io/vendor/github.com/satori/go.uuid",
     importpath = "github.com/satori/go.uuid",
     visibility = ["//visibility:public"],
 )

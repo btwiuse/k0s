@@ -12,7 +12,7 @@ go_library(
         "rootProfile.go",
         "types.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/cli/crypto/x509util",
+    importmap = "k0s.io/vendor/github.com/smallstep/cli/crypto/x509util",
     importpath = "github.com/smallstep/cli/crypto/x509util",
     visibility = ["//visibility:public"],
     deps = [

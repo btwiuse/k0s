@@ -8,7 +8,7 @@ go_library(
         "int.go",
         "string.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mdlayher/netlink/nlenc",
+    importmap = "k0s.io/vendor/github.com/mdlayher/netlink/nlenc",
     importpath = "github.com/mdlayher/netlink/nlenc",
     visibility = ["//visibility:public"],
 )

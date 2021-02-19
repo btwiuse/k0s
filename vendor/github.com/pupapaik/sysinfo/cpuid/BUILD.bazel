@@ -8,7 +8,7 @@ go_library(
         "cpuid_amd64.s",
         "cpuid_default.s",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/pupapaik/sysinfo/cpuid",
+    importmap = "k0s.io/vendor/github.com/pupapaik/sysinfo/cpuid",
     importpath = "github.com/pupapaik/sysinfo/cpuid",
     visibility = ["//visibility:public"],
 )

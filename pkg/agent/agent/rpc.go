@@ -6,8 +6,8 @@ import (
 	"net"
 	"time"
 
-	types "k0s.io/k0s/pkg/agent"
-	"k0s.io/k0s/pkg/api"
+	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/api"
 )
 
 var (

@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"k0s.io/k0s/pkg/simple/listener"
-	"k0s.io/k0s/pkg/tunnel/handler"
+	"k0s.io/pkg/simple/listener"
+	"k0s.io/pkg/tunnel/handler"
 )
 
 func Run(args []string) (err error) {

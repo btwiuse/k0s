@@ -6,7 +6,7 @@ go_library(
         "algo.go",
         "normalize.go",
     ],
-    importpath = "k0s.io/k0s/pkg/fzf/algo",
+    importpath = "k0s.io/pkg/fzf/algo",
     visibility = ["//visibility:public"],
     deps = ["//pkg/fzf/util:go_default_library"],
 )

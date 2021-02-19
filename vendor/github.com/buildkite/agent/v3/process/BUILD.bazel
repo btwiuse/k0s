@@ -14,7 +14,7 @@ go_library(
         "signal.go",
         "signal_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/process",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/process",
     importpath = "github.com/buildkite/agent/v3/process",
     visibility = ["//visibility:public"],
     deps = [

@@ -7,7 +7,7 @@ go_library(
         "creds.go",
         "settings.go",
     ],
-    importmap = "k0s.io/k0s/vendor/google.golang.org/api/internal",
+    importmap = "k0s.io/vendor/google.golang.org/api/internal",
     importpath = "google.golang.org/api/internal",
     visibility = ["//vendor/google.golang.org/api:__subpackages__"],
     deps = [

@@ -17,7 +17,7 @@ go_library(
         "term.go",
         "writer.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/cli/term",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/cli/term",
     importpath = "src.elv.sh/pkg/cli/term",
     visibility = ["//visibility:public"],
     deps = [

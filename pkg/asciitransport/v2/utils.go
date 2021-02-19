@@ -1,6 +1,6 @@
 package asciitransport
 
-import "k0s.io/k0s/pkg/asciiproto"
+import "k0s.io/pkg/asciiproto"
 
 func O(b []byte) *asciiproto.Frame {
 	return &asciiproto.Frame{Event: &asciiproto.Frame_O{O: b}}

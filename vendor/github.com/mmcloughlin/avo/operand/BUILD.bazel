@@ -9,7 +9,7 @@ go_library(
         "types.go",
         "zconst.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/operand",
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/operand",
     importpath = "github.com/mmcloughlin/avo/operand",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/mmcloughlin/avo/reg:go_default_library"],

@@ -7,7 +7,7 @@ go_library(
         "pt.go",
         "socks.go",
     ],
-    importmap = "k0s.io/k0s/vendor/git.torproject.org/pluggable-transports/goptlib.git",
+    importmap = "k0s.io/vendor/git.torproject.org/pluggable-transports/goptlib.git",
     importpath = "git.torproject.org/pluggable-transports/goptlib.git",
     visibility = ["//visibility:public"],
 )

@@ -81,7 +81,7 @@ go_library(
         "go1_16_syscall_windows_arm.go",
         "syscall.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/traefik/yaegi/stdlib/syscall",
+    importmap = "k0s.io/vendor/github.com/traefik/yaegi/stdlib/syscall",
     importpath = "github.com/traefik/yaegi/stdlib/syscall",
     visibility = ["//visibility:public"],
 )

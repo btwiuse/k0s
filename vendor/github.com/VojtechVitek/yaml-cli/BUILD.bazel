@@ -11,7 +11,7 @@ go_library(
         "transform.go",
         "yaml.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/VojtechVitek/yaml-cli",
+    importmap = "k0s.io/vendor/github.com/VojtechVitek/yaml-cli",
     importpath = "github.com/VojtechVitek/yaml-cli",
     visibility = ["//visibility:public"],
     deps = [

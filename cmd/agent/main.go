@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"k0s.io/k0s/pkg/cli/agent"
+	"k0s.io/pkg/cli/agent"
 )
 
 func main() {

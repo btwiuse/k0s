@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["vector.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/xiaq/persistent/vector",
+    importmap = "k0s.io/vendor/github.com/xiaq/persistent/vector",
     importpath = "github.com/xiaq/persistent/vector",
     visibility = ["//visibility:public"],
 )

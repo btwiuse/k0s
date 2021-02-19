@@ -77,7 +77,7 @@ go_library(
         "vrrp.go",
         "vxlan.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/gopacket/layers",
+    importmap = "k0s.io/vendor/github.com/google/gopacket/layers",
     importpath = "github.com/google/gopacket/layers",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/google/gopacket:go_default_library"],

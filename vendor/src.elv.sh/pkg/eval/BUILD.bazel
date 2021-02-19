@@ -45,7 +45,7 @@ go_library(
         "var_parse.go",
         "var_ref.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/eval",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/eval",
     importpath = "src.elv.sh/pkg/eval",
     visibility = ["//visibility:public"],
     deps = [

@@ -13,7 +13,7 @@ go_library(
         "graphql.go",
         "groovy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/g",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/g",
     importpath = "github.com/alecthomas/chroma/lexers/g",
     visibility = ["//visibility:public"],
     deps = [

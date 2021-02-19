@@ -7,7 +7,7 @@ go_library(
         "errorcode_string.go",
         "types.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/tools/internal/typesinternal",
+    importmap = "k0s.io/vendor/golang.org/x/tools/internal/typesinternal",
     importpath = "golang.org/x/tools/internal/typesinternal",
     visibility = ["//vendor/golang.org/x/tools:__subpackages__"],
 )

@@ -6,7 +6,7 @@ go_library(
         "klog.go",
         "klog_file.go",
     ],
-    importmap = "k0s.io/k0s/vendor/k8s.io/klog/v2",
+    importmap = "k0s.io/vendor/k8s.io/klog/v2",
     importpath = "k8s.io/klog/v2",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/go-logr/logr:go_default_library"],

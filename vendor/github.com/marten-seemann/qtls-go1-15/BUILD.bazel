@@ -20,7 +20,7 @@ go_library(
         "tls.go",
         "unsafe.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/marten-seemann/qtls-go1-15",
+    importmap = "k0s.io/vendor/github.com/marten-seemann/qtls-go1-15",
     importpath = "github.com/marten-seemann/qtls-go1-15",
     visibility = ["//visibility:public"],
     deps = [

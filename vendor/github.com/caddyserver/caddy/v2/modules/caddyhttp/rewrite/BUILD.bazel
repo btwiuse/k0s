@@ -6,7 +6,7 @@ go_library(
         "caddyfile.go",
         "rewrite.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/rewrite",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/rewrite",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/rewrite",
     visibility = ["//visibility:public"],
     deps = [

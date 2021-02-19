@@ -6,7 +6,7 @@ go_library(
         "hub.go",
         "hub2.go",
     ],
-    importpath = "k0s.io/k0s/pkg/cli/hub",
+    importpath = "k0s.io/pkg/cli/hub",
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/hub/config:go_default_library",

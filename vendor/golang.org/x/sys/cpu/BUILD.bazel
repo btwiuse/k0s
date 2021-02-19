@@ -37,7 +37,7 @@ go_library(
         "hwcap_linux.go",
         "syscall_aix_ppc64_gc.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/sys/cpu",
+    importmap = "k0s.io/vendor/golang.org/x/sys/cpu",
     importpath = "golang.org/x/sys/cpu",
     visibility = ["//visibility:public"],
 )

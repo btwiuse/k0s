@@ -13,9 +13,9 @@ import (
 	"syscall"
 	"time"
 
-	"k0s.io/k0s/pkg/asciitransport"
-	"k0s.io/k0s/pkg/console"
-	"k0s.io/k0s/pkg/uuid"
+	"k0s.io/pkg/asciitransport"
+	"k0s.io/pkg/console"
+	"k0s.io/pkg/uuid"
 )
 
 func (cl *client) terminalConnect(endpoint string, userinfo *url.Userinfo) {

@@ -9,7 +9,7 @@ go_library(
         "user.go",
         "validator.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-portal/pkg/backends/oauth2",
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-portal/pkg/backends/oauth2",
     importpath = "github.com/greenpau/caddy-auth-portal/pkg/backends/oauth2",
     visibility = ["//visibility:public"],
     deps = [

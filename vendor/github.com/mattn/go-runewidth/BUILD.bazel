@@ -9,7 +9,7 @@ go_library(
         "runewidth_table.go",
         "runewidth_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mattn/go-runewidth",
+    importmap = "k0s.io/vendor/github.com/mattn/go-runewidth",
     importpath = "github.com/mattn/go-runewidth",
     visibility = ["//visibility:public"],
 )

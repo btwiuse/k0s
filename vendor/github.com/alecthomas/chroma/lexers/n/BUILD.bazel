@@ -9,7 +9,7 @@ go_library(
         "nim.go",
         "nix.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/n",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/n",
     importpath = "github.com/alecthomas/chroma/lexers/n",
     visibility = ["//visibility:public"],
     deps = [

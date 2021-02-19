@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["teapot.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/hairyhenderson/caddy-teapot-module",
+    importmap = "k0s.io/vendor/github.com/hairyhenderson/caddy-teapot-module",
     importpath = "github.com/hairyhenderson/caddy-teapot-module",
     visibility = ["//visibility:public"],
     deps = [

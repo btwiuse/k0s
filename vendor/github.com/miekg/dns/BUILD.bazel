@@ -48,7 +48,7 @@ go_library(
         "zmsg.go",
         "ztypes.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/miekg/dns",
+    importmap = "k0s.io/vendor/github.com/miekg/dns",
     importpath = "github.com/miekg/dns",
     visibility = ["//visibility:public"],
     deps = [

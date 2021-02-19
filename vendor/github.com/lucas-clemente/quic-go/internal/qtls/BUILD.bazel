@@ -8,7 +8,7 @@ go_library(
         "qtls.go",
         "structs_equal.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/qtls",
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/internal/qtls",
     importpath = "github.com/lucas-clemente/quic-go/internal/qtls",
     visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
     deps = [

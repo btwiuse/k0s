@@ -12,7 +12,7 @@ go_library(
         "redirect.go",
         "request_id.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-portal/pkg/utils",
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-portal/pkg/utils",
     importpath = "github.com/greenpau/caddy-auth-portal/pkg/utils",
     visibility = ["//visibility:public"],
     deps = [

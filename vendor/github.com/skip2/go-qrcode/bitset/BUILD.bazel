@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["bitset.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/skip2/go-qrcode/bitset",
+    importmap = "k0s.io/vendor/github.com/skip2/go-qrcode/bitset",
     importpath = "github.com/skip2/go-qrcode/bitset",
     visibility = ["//visibility:public"],
 )

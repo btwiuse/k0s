@@ -15,7 +15,7 @@ go_library(
         "udprelay.go",
         "util.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/shadowsocks/shadowsocks-go/shadowsocks",
+    importmap = "k0s.io/vendor/github.com/shadowsocks/shadowsocks-go/shadowsocks",
     importpath = "github.com/shadowsocks/shadowsocks-go/shadowsocks",
     visibility = ["//visibility:public"],
     deps = [

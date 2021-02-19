@@ -6,7 +6,7 @@ go_library(
         "toc.go",
         "versioned.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/versioned",
+    importmap = "k0s.io/vendor/github.com/greenpau/versioned",
     importpath = "github.com/greenpau/versioned",
     visibility = ["//visibility:public"],
 )

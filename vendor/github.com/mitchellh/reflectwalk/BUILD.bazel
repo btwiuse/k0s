@@ -7,7 +7,7 @@ go_library(
         "location_string.go",
         "reflectwalk.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mitchellh/reflectwalk",
+    importmap = "k0s.io/vendor/github.com/mitchellh/reflectwalk",
     importpath = "github.com/mitchellh/reflectwalk",
     visibility = ["//visibility:public"],
 )

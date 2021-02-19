@@ -23,7 +23,7 @@ go_library(
         "stateless.go",
         "token.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/klauspost/compress/flate",
+    importmap = "k0s.io/vendor/github.com/klauspost/compress/flate",
     importpath = "github.com/klauspost/compress/flate",
     visibility = ["//visibility:public"],
 )

@@ -20,7 +20,7 @@ go_library(
         "util.go",
         "version.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/pupapaik/sysinfo",
+    importmap = "k0s.io/vendor/github.com/pupapaik/sysinfo",
     importpath = "github.com/pupapaik/sysinfo",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/pupapaik/sysinfo/cpuid:go_default_library"],

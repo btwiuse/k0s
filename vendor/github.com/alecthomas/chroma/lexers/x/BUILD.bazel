@@ -6,7 +6,7 @@ go_library(
         "xml.go",
         "xorg.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/x",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/x",
     importpath = "github.com/alecthomas/chroma/lexers/x",
     visibility = ["//visibility:public"],
     deps = [

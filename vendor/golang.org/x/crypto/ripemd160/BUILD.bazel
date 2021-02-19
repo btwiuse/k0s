@@ -6,7 +6,7 @@ go_library(
         "ripemd160.go",
         "ripemd160block.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/crypto/ripemd160",
+    importmap = "k0s.io/vendor/golang.org/x/crypto/ripemd160",
     importpath = "golang.org/x/crypto/ripemd160",
     visibility = ["//visibility:public"],
 )

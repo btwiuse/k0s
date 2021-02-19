@@ -9,7 +9,7 @@ go_library(
         "doc.go",
         "wifi.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mdlayher/wifi",
+    importmap = "k0s.io/vendor/github.com/mdlayher/wifi",
     importpath = "github.com/mdlayher/wifi",
     visibility = ["//visibility:public"],
     deps = select({

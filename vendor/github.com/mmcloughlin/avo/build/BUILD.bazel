@@ -13,7 +13,7 @@ go_library(
         "zinstructions.go",
         "zmov.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/build",
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/build",
     importpath = "github.com/mmcloughlin/avo/build",
     visibility = ["//visibility:public"],
     deps = [

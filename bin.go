@@ -17,8 +17,8 @@ import (
 
 	"github.com/lukesampson/figlet/figletlib"
 	isatty "github.com/mattn/go-isatty"
-	"k0s.io/k0s/pkg/console"
-	"k0s.io/k0s/pkg/fonts"
+	"k0s.io/pkg/console"
+	"k0s.io/pkg/fonts"
 )
 
 func figlet(str string) {

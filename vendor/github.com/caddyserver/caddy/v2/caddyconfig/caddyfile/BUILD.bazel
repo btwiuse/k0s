@@ -9,7 +9,7 @@ go_library(
         "lexer.go",
         "parse.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile",
     importpath = "github.com/caddyserver/caddy/v2/caddyconfig/caddyfile",
     visibility = ["//visibility:public"],
     deps = [

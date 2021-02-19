@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["globalconfig.go"],
-    importmap = "k0s.io/k0s/vendor/gopkg.in/DataDog/dd-trace-go.v1/internal/globalconfig",
+    importmap = "k0s.io/vendor/gopkg.in/DataDog/dd-trace-go.v1/internal/globalconfig",
     importpath = "gopkg.in/DataDog/dd-trace-go.v1/internal/globalconfig",
     visibility = ["//vendor/gopkg.in/DataDog/dd-trace-go.v1:__subpackages__"],
     deps = ["//vendor/github.com/google/uuid:go_default_library"],

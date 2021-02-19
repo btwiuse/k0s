@@ -22,7 +22,7 @@ go_library(
         "zstd_cgo.go",
         "zstd_nocgo.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/dgraph-io/badger/v2/y",
+    importmap = "k0s.io/vendor/github.com/dgraph-io/badger/v2/y",
     importpath = "github.com/dgraph-io/badger/v2/y",
     visibility = ["//visibility:public"],
     deps = [

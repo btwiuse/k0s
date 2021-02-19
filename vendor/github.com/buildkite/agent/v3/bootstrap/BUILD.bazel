@@ -11,7 +11,7 @@ go_library(
         "redactor.go",
         "ssh.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/bootstrap",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/bootstrap",
     importpath = "github.com/buildkite/agent/v3/bootstrap",
     visibility = ["//visibility:public"],
     deps = [

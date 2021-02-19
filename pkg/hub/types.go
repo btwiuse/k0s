@@ -6,8 +6,8 @@ import (
 
 	// "net/rpc"
 
-	"k0s.io/k0s/pkg"
-	"k0s.io/k0s/pkg/api"
+	"k0s.io/pkg"
+	"k0s.io/pkg/api"
 )
 
 type AgentInfo interface {

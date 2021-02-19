@@ -7,7 +7,7 @@ go_library(
         "client.go",
         "fastcgi.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy/fastcgi",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy/fastcgi",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy/fastcgi",
     visibility = ["//visibility:public"],
     deps = [

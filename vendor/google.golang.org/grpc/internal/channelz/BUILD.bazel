@@ -11,7 +11,7 @@ go_library(
         "util_linux.go",
         "util_nonlinux.go",
     ],
-    importmap = "k0s.io/k0s/vendor/google.golang.org/grpc/internal/channelz",
+    importmap = "k0s.io/vendor/google.golang.org/grpc/internal/channelz",
     importpath = "google.golang.org/grpc/internal/channelz",
     visibility = ["//vendor/google.golang.org/grpc:__subpackages__"],
     deps = [

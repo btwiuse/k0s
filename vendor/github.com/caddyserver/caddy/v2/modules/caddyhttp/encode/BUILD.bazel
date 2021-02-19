@@ -6,7 +6,7 @@ go_library(
         "caddyfile.go",
         "encode.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/encode",
     visibility = ["//visibility:public"],
     deps = [

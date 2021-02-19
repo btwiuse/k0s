@@ -6,7 +6,7 @@ go_library(
         "builtin_operators.go",
         "util.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/casbin/casbin/v2/util",
+    importmap = "k0s.io/vendor/github.com/casbin/casbin/v2/util",
     importpath = "github.com/casbin/casbin/v2/util",
     visibility = ["//visibility:public"],
     deps = [

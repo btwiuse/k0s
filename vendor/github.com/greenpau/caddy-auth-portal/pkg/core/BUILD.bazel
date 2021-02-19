@@ -6,7 +6,7 @@ go_library(
         "manager.go",
         "portal.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-portal/pkg/core",
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-portal/pkg/core",
     importpath = "github.com/greenpau/caddy-auth-portal/pkg/core",
     visibility = ["//visibility:public"],
     deps = [

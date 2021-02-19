@@ -7,7 +7,7 @@ go_library(
         "pkcs8.go",
         "ssh.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.step.sm/crypto/pemutil",
+    importmap = "k0s.io/vendor/go.step.sm/crypto/pemutil",
     importpath = "go.step.sm/crypto/pemutil",
     visibility = ["//visibility:public"],
     deps = [

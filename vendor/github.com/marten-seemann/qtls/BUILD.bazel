@@ -19,7 +19,7 @@ go_library(
         "ticket.go",
         "tls.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/marten-seemann/qtls",
+    importmap = "k0s.io/vendor/github.com/marten-seemann/qtls",
     importpath = "github.com/marten-seemann/qtls",
     visibility = ["//visibility:public"],
     deps = [

@@ -10,7 +10,7 @@ go_library(
         "shaper.go",
         "stream.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/xtaci/smux",
+    importmap = "k0s.io/vendor/github.com/xtaci/smux",
     importpath = "github.com/xtaci/smux",
     visibility = ["//visibility:public"],
 )

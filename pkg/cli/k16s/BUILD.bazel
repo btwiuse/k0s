@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["run.go"],
-    importpath = "k0s.io/k0s/pkg/cli/k16s",
+    importpath = "k0s.io/pkg/cli/k16s",
     visibility = ["//visibility:public"],
     deps = ["//pkg/exporter/k16s:go_default_library"],
 )

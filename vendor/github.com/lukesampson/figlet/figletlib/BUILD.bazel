@@ -9,7 +9,7 @@ go_library(
         "print.go",
         "text.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lukesampson/figlet/figletlib",
+    importmap = "k0s.io/vendor/github.com/lukesampson/figlet/figletlib",
     importpath = "github.com/lukesampson/figlet/figletlib",
     visibility = ["//visibility:public"],
 )

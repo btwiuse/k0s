@@ -15,7 +15,7 @@ go_library(
         "standard.go",
         "types.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/checker",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/checker",
     importpath = "github.com/google/cel-go/checker",
     visibility = ["//visibility:public"],
     deps = [

@@ -7,7 +7,7 @@ go_library(
         "regexp.go",
         "url.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/freman/caddy2-reauth/jsontypes",
+    importmap = "k0s.io/vendor/github.com/freman/caddy2-reauth/jsontypes",
     importpath = "github.com/freman/caddy2-reauth/jsontypes",
     visibility = ["//visibility:public"],
 )

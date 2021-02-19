@@ -6,7 +6,7 @@ go_library(
         "doc.go",
         "level.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/go-kit/kit/log/level",
+    importmap = "k0s.io/vendor/github.com/go-kit/kit/log/level",
     importpath = "github.com/go-kit/kit/log/level",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/go-kit/kit/log:go_default_library"],

@@ -21,7 +21,7 @@ go_library(
         "passwdmodify.go",
         "search.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/go-ldap/ldap",
+    importmap = "k0s.io/vendor/github.com/go-ldap/ldap",
     importpath = "github.com/go-ldap/ldap",
     visibility = ["//visibility:public"],
     deps = ["//vendor/gopkg.in/asn1-ber.v1:go_default_library"],

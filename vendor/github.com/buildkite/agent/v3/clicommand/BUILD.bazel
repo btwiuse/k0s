@@ -20,7 +20,7 @@ go_library(
         "step_get.go",
         "step_update.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/clicommand",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/clicommand",
     importpath = "github.com/buildkite/agent/v3/clicommand",
     visibility = ["//visibility:public"],
     deps = [

@@ -8,7 +8,7 @@ go_library(
         "model.go",
         "policy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/casbin/casbin/v2/model",
+    importmap = "k0s.io/vendor/github.com/casbin/casbin/v2/model",
     importpath = "github.com/casbin/casbin/v2/model",
     visibility = ["//visibility:public"],
     deps = [

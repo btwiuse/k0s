@@ -9,7 +9,7 @@ go_library(
         "vim.go",
         "vue.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/v",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/v",
     importpath = "github.com/alecthomas/chroma/lexers/v",
     visibility = ["//visibility:public"],
     deps = [

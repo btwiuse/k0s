@@ -7,7 +7,7 @@ go_library(
         "writer.go",
         "writer_unsafe.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/philhofer/fwd",
+    importmap = "k0s.io/vendor/github.com/philhofer/fwd",
     importpath = "github.com/philhofer/fwd",
     visibility = ["//visibility:public"],
 )

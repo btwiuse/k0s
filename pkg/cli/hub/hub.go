@@ -3,8 +3,8 @@ package hub
 import (
 	"log"
 
-	"k0s.io/k0s/pkg/hub/config"
-	"k0s.io/k0s/pkg/hub/hub"
+	"k0s.io/pkg/hub/config"
+	"k0s.io/pkg/hub/hub"
 )
 
 func Run(args []string) (err error) {

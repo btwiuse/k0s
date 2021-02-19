@@ -7,7 +7,7 @@ go_library(
         "block.go",
         "inline.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/yuin/goldmark/ast",
+    importmap = "k0s.io/vendor/github.com/yuin/goldmark/ast",
     importpath = "github.com/yuin/goldmark/ast",
     visibility = ["//visibility:public"],
     deps = [

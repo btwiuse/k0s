@@ -16,7 +16,7 @@ go_library(
         "cpu_x86.go",
         "cpu_x86.s",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/templexxx/cpufeat",
+    importmap = "k0s.io/vendor/github.com/templexxx/cpufeat",
     importpath = "github.com/templexxx/cpufeat",
     visibility = ["//visibility:public"],
 )

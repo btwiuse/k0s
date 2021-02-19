@@ -9,7 +9,7 @@ go_library(
         "util_safe.go",
         "util_unsafe.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/yuin/goldmark/util",
+    importmap = "k0s.io/vendor/github.com/yuin/goldmark/util",
     importpath = "github.com/yuin/goldmark/util",
     visibility = ["//visibility:public"],
 )

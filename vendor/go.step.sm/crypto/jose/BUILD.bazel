@@ -10,7 +10,7 @@ go_library(
         "types.go",
         "validate.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.step.sm/crypto/jose",
+    importmap = "k0s.io/vendor/go.step.sm/crypto/jose",
     importpath = "go.step.sm/crypto/jose",
     visibility = ["//visibility:public"],
     deps = [

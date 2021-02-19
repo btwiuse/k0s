@@ -22,7 +22,7 @@ go_library(
         "solvers.go",
         "storage.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/certmagic",
+    importmap = "k0s.io/vendor/github.com/caddyserver/certmagic",
     importpath = "github.com/caddyserver/certmagic",
     visibility = ["//visibility:public"],
     deps = [

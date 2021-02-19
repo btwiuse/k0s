@@ -8,7 +8,7 @@ go_library(
         "sort.go",
         "unmarshal.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/russellhaering/goxmldsig/etreeutils",
+    importmap = "k0s.io/vendor/github.com/russellhaering/goxmldsig/etreeutils",
     importpath = "github.com/russellhaering/goxmldsig/etreeutils",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/beevik/etree:go_default_library"],

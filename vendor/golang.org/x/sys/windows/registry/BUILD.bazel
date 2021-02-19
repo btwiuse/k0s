@@ -8,7 +8,7 @@ go_library(
         "value.go",
         "zsyscall_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/sys/windows/registry",
+    importmap = "k0s.io/vendor/golang.org/x/sys/windows/registry",
     importpath = "golang.org/x/sys/windows/registry",
     visibility = ["//visibility:public"],
     deps = select({

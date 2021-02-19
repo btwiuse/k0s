@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/url"
 
-	portless "k0s.io/k0s/pkg/tunnel"
+	portless "k0s.io/pkg/tunnel"
 
 	"nhooyr.io/websocket"
 )

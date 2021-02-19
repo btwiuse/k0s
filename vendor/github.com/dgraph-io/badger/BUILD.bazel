@@ -21,7 +21,7 @@ go_library(
         "util.go",
         "value.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/dgraph-io/badger",
+    importmap = "k0s.io/vendor/github.com/dgraph-io/badger",
     importpath = "github.com/dgraph-io/badger",
     visibility = ["//visibility:public"],
     deps = [

@@ -37,7 +37,7 @@ go_library(
         "validate.go",
         "weak.go",
     ],
-    importmap = "k0s.io/k0s/vendor/google.golang.org/protobuf/internal/impl",
+    importmap = "k0s.io/vendor/google.golang.org/protobuf/internal/impl",
     importpath = "google.golang.org/protobuf/internal/impl",
     visibility = ["//vendor/google.golang.org/protobuf:__subpackages__"],
     deps = [

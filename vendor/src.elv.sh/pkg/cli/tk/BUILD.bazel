@@ -16,7 +16,7 @@ go_library(
         "textview.go",
         "widget.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/cli/tk",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/cli/tk",
     importpath = "src.elv.sh/pkg/cli/tk",
     visibility = ["//visibility:public"],
     deps = [

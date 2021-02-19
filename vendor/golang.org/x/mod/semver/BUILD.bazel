@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["semver.go"],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/mod/semver",
+    importmap = "k0s.io/vendor/golang.org/x/mod/semver",
     importpath = "golang.org/x/mod/semver",
     visibility = ["//visibility:public"],
 )

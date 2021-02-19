@@ -6,7 +6,7 @@ go_library(
         "doc.go",
         "wait.go",
     ],
-    importmap = "k0s.io/k0s/vendor/k8s.io/apimachinery/pkg/util/wait",
+    importmap = "k0s.io/vendor/k8s.io/apimachinery/pkg/util/wait",
     importpath = "k8s.io/apimachinery/pkg/util/wait",
     visibility = ["//visibility:public"],
     deps = [

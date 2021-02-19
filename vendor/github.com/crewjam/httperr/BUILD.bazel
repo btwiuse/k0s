@@ -7,7 +7,7 @@ go_library(
         "request_err.go",
         "translate.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/crewjam/httperr",
+    importmap = "k0s.io/vendor/github.com/crewjam/httperr",
     importpath = "github.com/crewjam/httperr",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/pkg/errors:go_default_library"],

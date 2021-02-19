@@ -6,7 +6,7 @@ go_library(
         "btrfs.go",
         "get.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/prometheus/procfs/btrfs",
+    importmap = "k0s.io/vendor/github.com/prometheus/procfs/btrfs",
     importpath = "github.com/prometheus/procfs/btrfs",
     visibility = ["//visibility:public"],
     deps = [

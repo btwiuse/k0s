@@ -12,7 +12,7 @@ go_library(
         "server.go",
         "upstream.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/nginx-adapter",
+    importmap = "k0s.io/vendor/github.com/caddyserver/nginx-adapter",
     importpath = "github.com/caddyserver/nginx-adapter",
     visibility = ["//visibility:public"],
     deps = [

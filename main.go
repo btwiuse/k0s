@@ -9,19 +9,19 @@ import (
 
 	match "github.com/alexpantyukhin/go-pattern-match"
 
-	"k0s.io/k0s/pkg/cli/agent"
-	"k0s.io/k0s/pkg/cli/bcrypt"
-	"k0s.io/k0s/pkg/cli/buildkite"
-	"k0s.io/k0s/pkg/cli/caddy"
-	"k0s.io/k0s/pkg/cli/chassis"
-	"k0s.io/k0s/pkg/cli/client"
-	"k0s.io/k0s/pkg/cli/dohserver"
-	"k0s.io/k0s/pkg/cli/gitd"
-	"k0s.io/k0s/pkg/cli/gos"
-	"k0s.io/k0s/pkg/cli/gost"
-	"k0s.io/k0s/pkg/cli/hub"
-	"k0s.io/k0s/pkg/cli/k16s"
-	"k0s.io/k0s/pkg/cli/mnt"
+	"k0s.io/pkg/cli/agent"
+	"k0s.io/pkg/cli/bcrypt"
+	"k0s.io/pkg/cli/buildkite"
+	"k0s.io/pkg/cli/caddy"
+	"k0s.io/pkg/cli/chassis"
+	"k0s.io/pkg/cli/client"
+	"k0s.io/pkg/cli/dohserver"
+	"k0s.io/pkg/cli/gitd"
+	"k0s.io/pkg/cli/gos"
+	"k0s.io/pkg/cli/gost"
+	"k0s.io/pkg/cli/hub"
+	"k0s.io/pkg/cli/k16s"
+	"k0s.io/pkg/cli/mnt"
 )
 
 func main() {

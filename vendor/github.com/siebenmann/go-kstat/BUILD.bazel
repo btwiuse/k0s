@@ -15,7 +15,7 @@ go_library(
         ],
         "//conditions:default": [],
     }),
-    importmap = "k0s.io/k0s/vendor/github.com/siebenmann/go-kstat",
+    importmap = "k0s.io/vendor/github.com/siebenmann/go-kstat",
     importpath = "github.com/siebenmann/go-kstat",
     visibility = ["//visibility:public"],
 )

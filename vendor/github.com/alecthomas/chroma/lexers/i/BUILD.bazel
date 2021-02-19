@@ -8,7 +8,7 @@ go_library(
         "ini.go",
         "io.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/i",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/i",
     importpath = "github.com/alecthomas/chroma/lexers/i",
     visibility = ["//visibility:public"],
     deps = [

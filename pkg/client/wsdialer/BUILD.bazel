@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["wsdialer.go"],
-    importpath = "k0s.io/k0s/pkg/client/wsdialer",
+    importpath = "k0s.io/pkg/client/wsdialer",
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/client:go_default_library",

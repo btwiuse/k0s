@@ -4,7 +4,7 @@ package tty
 
 import (
 	"github.com/liamg/aminal/platform"
-	"k0s.io/k0s/pkg/agent"
+	"k0s.io/pkg/agent"
 )
 
 func NewFactory(args []string) agent.TtyFactory {

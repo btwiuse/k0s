@@ -8,7 +8,7 @@ go_library(
         "replace.go",
         "runner.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/dlclark/regexp2",
+    importmap = "k0s.io/vendor/github.com/dlclark/regexp2",
     importpath = "github.com/dlclark/regexp2",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/dlclark/regexp2/syntax:go_default_library"],

@@ -8,7 +8,7 @@ go_library(
         "ui.go",
         "validators.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/cli/ui",
+    importmap = "k0s.io/vendor/github.com/smallstep/cli/ui",
     importpath = "github.com/smallstep/cli/ui",
     visibility = ["//visibility:public"],
     deps = [

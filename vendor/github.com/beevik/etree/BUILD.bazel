@@ -7,7 +7,7 @@ go_library(
         "helpers.go",
         "path.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/beevik/etree",
+    importmap = "k0s.io/vendor/github.com/beevik/etree",
     importpath = "github.com/beevik/etree",
     visibility = ["//visibility:public"],
 )

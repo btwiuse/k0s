@@ -45,7 +45,7 @@ go_library(
         "udp.go",
         "ws.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/ginuerzh/gost",
+    importmap = "k0s.io/vendor/github.com/ginuerzh/gost",
     importpath = "github.com/ginuerzh/gost",
     visibility = ["//visibility:public"],
     deps = [

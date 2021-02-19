@@ -11,7 +11,7 @@ go_library(
         "matcher.go",
         "staticfiles.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/fileserver",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/fileserver",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/fileserver",
     visibility = ["//visibility:public"],
     deps = [

@@ -31,7 +31,7 @@ go_library(
         "sort.go",
         "template.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/urfave/cli",
+    importmap = "k0s.io/vendor/github.com/urfave/cli",
     importpath = "github.com/urfave/cli",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/cpuguy83/go-md2man/v2/md2man:go_default_library"],

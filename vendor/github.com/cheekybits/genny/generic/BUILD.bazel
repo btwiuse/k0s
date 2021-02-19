@@ -6,7 +6,7 @@ go_library(
         "doc.go",
         "generic.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/cheekybits/genny/generic",
+    importmap = "k0s.io/vendor/github.com/cheekybits/genny/generic",
     importpath = "github.com/cheekybits/genny/generic",
     visibility = ["//visibility:public"],
 )

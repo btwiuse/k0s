@@ -6,7 +6,7 @@ go_library(
         "caddyfile.go",
         "webdav.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mholt/caddy-webdav",
+    importmap = "k0s.io/vendor/github.com/mholt/caddy-webdav",
     importpath = "github.com/mholt/caddy-webdav",
     visibility = ["//visibility:public"],
     deps = [

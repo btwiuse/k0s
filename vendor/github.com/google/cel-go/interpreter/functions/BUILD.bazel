@@ -11,7 +11,7 @@ go_library(
         "functions.go",
         "standard.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/interpreter/functions",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/interpreter/functions",
     importpath = "github.com/google/cel-go/interpreter/functions",
     deps = [
         "//vendor/github.com/google/cel-go/common/operators:go_default_library",

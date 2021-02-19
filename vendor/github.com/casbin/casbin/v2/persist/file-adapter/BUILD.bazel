@@ -7,7 +7,7 @@ go_library(
         "adapter_filtered.go",
         "adapter_mock.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/casbin/casbin/v2/persist/file-adapter",
+    importmap = "k0s.io/vendor/github.com/casbin/casbin/v2/persist/file-adapter",
     importpath = "github.com/casbin/casbin/v2/persist/file-adapter",
     visibility = ["//visibility:public"],
     deps = [

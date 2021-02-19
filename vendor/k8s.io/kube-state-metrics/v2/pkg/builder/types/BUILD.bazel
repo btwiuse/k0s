@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["interfaces.go"],
-    importmap = "k0s.io/k0s/vendor/k8s.io/kube-state-metrics/v2/pkg/builder/types",
+    importmap = "k0s.io/vendor/k8s.io/kube-state-metrics/v2/pkg/builder/types",
     importpath = "k8s.io/kube-state-metrics/v2/pkg/builder/types",
     visibility = ["//visibility:public"],
     deps = [

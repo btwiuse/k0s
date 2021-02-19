@@ -6,7 +6,7 @@ go_library(
         "cli.go",
         "convert.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/VojtechVitek/yaml-cli/pkg/cli",
+    importmap = "k0s.io/vendor/github.com/VojtechVitek/yaml-cli/pkg/cli",
     importpath = "github.com/VojtechVitek/yaml-cli/pkg/cli",
     visibility = ["//visibility:public"],
     deps = [

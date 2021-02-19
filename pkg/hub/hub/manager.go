@@ -1,9 +1,9 @@
 package hub
 
 import (
-	"k0s.io/k0s/pkg"
-	types "k0s.io/k0s/pkg/hub"
-	"k0s.io/k0s/pkg/manager"
+	"k0s.io/pkg"
+	types "k0s.io/pkg/hub"
+	"k0s.io/pkg/manager"
 )
 
 var (

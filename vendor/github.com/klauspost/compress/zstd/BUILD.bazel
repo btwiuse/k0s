@@ -31,7 +31,7 @@ go_library(
         "snappy.go",
         "zstd.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/klauspost/compress/zstd",
+    importmap = "k0s.io/vendor/github.com/klauspost/compress/zstd",
     importpath = "github.com/klauspost/compress/zstd",
     visibility = ["//visibility:public"],
     deps = [

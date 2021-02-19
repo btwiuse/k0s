@@ -8,7 +8,7 @@ go_library(
         "doc.go",
         "version.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/Masterminds/semver/v3",
+    importmap = "k0s.io/vendor/github.com/Masterminds/semver/v3",
     importpath = "github.com/Masterminds/semver/v3",
     visibility = ["//visibility:public"],
 )

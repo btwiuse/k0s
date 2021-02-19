@@ -11,7 +11,7 @@ go_library(
         "provider.go",
         "reference.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/common/types/ref",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/common/types/ref",
     importpath = "github.com/google/cel-go/common/types/ref",
     deps = [
         "//vendor/github.com/golang/protobuf/proto:go_default_library",

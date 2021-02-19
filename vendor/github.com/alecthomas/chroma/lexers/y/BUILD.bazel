@@ -6,7 +6,7 @@ go_library(
         "yaml.go",
         "yang.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/y",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/y",
     importpath = "github.com/alecthomas/chroma/lexers/y",
     visibility = ["//visibility:public"],
     deps = [

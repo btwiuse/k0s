@@ -8,6 +8,6 @@ package(
 go_library(
     name = "go_default_library",
     srcs = ["operators.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/common/operators",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/common/operators",
     importpath = "github.com/google/cel-go/common/operators",
 )

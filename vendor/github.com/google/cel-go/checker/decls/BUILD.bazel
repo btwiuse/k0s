@@ -11,7 +11,7 @@ go_library(
         "decls.go",
         "scopes.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/checker/decls",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/checker/decls",
     importpath = "github.com/google/cel-go/checker/decls",
     deps = [
         "//vendor/github.com/golang/protobuf/ptypes/empty:go_default_library",

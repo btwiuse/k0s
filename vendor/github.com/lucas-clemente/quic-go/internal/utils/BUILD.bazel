@@ -21,7 +21,7 @@ go_library(
         "timer.go",
         "varint.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/utils",
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/internal/utils",
     importpath = "github.com/lucas-clemente/quic-go/internal/utils",
     visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
     deps = ["//vendor/github.com/lucas-clemente/quic-go/internal/protocol:go_default_library"],

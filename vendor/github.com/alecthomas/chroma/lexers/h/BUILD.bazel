@@ -12,7 +12,7 @@ go_library(
         "http.go",
         "hy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/h",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/h",
     importpath = "github.com/alecthomas/chroma/lexers/h",
     visibility = ["//visibility:public"],
     deps = [

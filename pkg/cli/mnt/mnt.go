@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"k0s.io/k0s/pkg/reverseproxy"
-	"k0s.io/k0s/pkg/tunnel/listener"
+	"k0s.io/pkg/reverseproxy"
+	"k0s.io/pkg/tunnel/listener"
 )
 
 func Run(args []string) error {

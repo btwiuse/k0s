@@ -13,7 +13,7 @@ go_library(
         "time.go",
         "util.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/crewjam/saml",
+    importmap = "k0s.io/vendor/github.com/crewjam/saml",
     importpath = "github.com/crewjam/saml",
     visibility = ["//visibility:public"],
     deps = [

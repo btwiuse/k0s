@@ -9,7 +9,7 @@ go_library(
         "command.go",
         "hashes.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth",
     visibility = ["//visibility:public"],
     deps = [

@@ -7,7 +7,7 @@ go_library(
         "cipher.go",
         "const.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/crypto/blowfish",
+    importmap = "k0s.io/vendor/golang.org/x/crypto/blowfish",
     importpath = "golang.org/x/crypto/blowfish",
     visibility = ["//visibility:public"],
 )

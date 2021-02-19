@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["errgroup.go"],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/sync/errgroup",
+    importmap = "k0s.io/vendor/golang.org/x/sync/errgroup",
     importpath = "golang.org/x/sync/errgroup",
     visibility = ["//visibility:public"],
 )

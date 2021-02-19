@@ -10,7 +10,7 @@ go_library(
         "pubkey.go",
         "xmlenc.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/crewjam/saml/xmlenc",
+    importmap = "k0s.io/vendor/github.com/crewjam/saml/xmlenc",
     importpath = "github.com/crewjam/saml/xmlenc",
     visibility = ["//visibility:public"],
     deps = [

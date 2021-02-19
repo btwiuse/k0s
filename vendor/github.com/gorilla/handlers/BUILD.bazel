@@ -12,7 +12,7 @@ go_library(
         "proxy_headers.go",
         "recovery.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/gorilla/handlers",
+    importmap = "k0s.io/vendor/github.com/gorilla/handlers",
     importpath = "github.com/gorilla/handlers",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/felixge/httpsnoop:go_default_library"],

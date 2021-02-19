@@ -10,7 +10,7 @@ go_library(
         "token.go",
         "version.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/Azure/go-autorest/autorest/adal",
+    importmap = "k0s.io/vendor/github.com/Azure/go-autorest/autorest/adal",
     importpath = "github.com/Azure/go-autorest/autorest/adal",
     visibility = ["//visibility:public"],
     deps = [

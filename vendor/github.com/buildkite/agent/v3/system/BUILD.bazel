@@ -6,7 +6,7 @@ go_library(
         "version_dump.go",
         "version_dump_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/system",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/system",
     importpath = "github.com/buildkite/agent/v3/system",
     visibility = ["//visibility:public"],
     deps = select({

@@ -35,7 +35,7 @@ go_library(
         "utils.go",
         "vars.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/MaxRis/w32",
+    importmap = "k0s.io/vendor/github.com/MaxRis/w32",
     importpath = "github.com/MaxRis/w32",
     visibility = ["//visibility:public"],
 )

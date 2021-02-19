@@ -18,7 +18,7 @@ go_library(
         "strings.go",
         "url.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/Masterminds/sprig/v3",
+    importmap = "k0s.io/vendor/github.com/Masterminds/sprig/v3",
     importpath = "github.com/Masterminds/sprig/v3",
     visibility = ["//visibility:public"],
     deps = [

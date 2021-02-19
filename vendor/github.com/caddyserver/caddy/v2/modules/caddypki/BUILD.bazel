@@ -10,7 +10,7 @@ go_library(
         "maintain.go",
         "pki.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddypki",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddypki",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddypki",
     visibility = ["//visibility:public"],
     deps = [

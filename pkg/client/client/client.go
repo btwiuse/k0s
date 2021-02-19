@@ -19,13 +19,13 @@ import (
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
 	"github.com/abiosoft/ishell"
 	"golang.org/x/crypto/ssh/terminal"
-	"k0s.io/k0s/pkg"
-	types "k0s.io/k0s/pkg/client"
-	"k0s.io/k0s/pkg/client/wsdialer"
-	"k0s.io/k0s/pkg/console"
-	"k0s.io/k0s/pkg/fzf"
-	"k0s.io/k0s/pkg/hub"
-	"k0s.io/k0s/pkg/hub/agent/info"
+	"k0s.io/pkg"
+	types "k0s.io/pkg/client"
+	"k0s.io/pkg/client/wsdialer"
+	"k0s.io/pkg/console"
+	"k0s.io/pkg/fzf"
+	"k0s.io/pkg/hub"
+	"k0s.io/pkg/hub/agent/info"
 )
 
 var (

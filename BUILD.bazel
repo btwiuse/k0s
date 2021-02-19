@@ -10,13 +10,13 @@ load("@rules_clojure//:rules.bzl", "clojure_repl")
 gazelle(
     name = "gazelle",
     command = "fix",
-    prefix = "k0s.io/k0s",
+    prefix = "k0s.io",
 )
 
 go_library(
     name = "go_default_library",
     srcs = ["main.go"],
-    importpath = "k0s.io/k0s",
+    importpath = "k0s.io",
     visibility = ["//visibility:private"],
     deps = [
         "//pkg/cli/agent:go_default_library",
@@ -42,12 +42,12 @@ go_binary(
     linkmode = "pie",  # https://github.com/bazelbuild/rules_go/issues/2371
     visibility = ["//visibility:public"],
     x_defs = {
-        "k0s.io/k0s/pkg/version.GitCommitString": "{STABLE_GitCommitString}",
-        "k0s.io/k0s/pkg/version.GitStateString": "{STABLE_GitStateString}",
-        "k0s.io/k0s/pkg/version.GitBranchString": "{STABLE_GitBranchString}",
-        "k0s.io/k0s/pkg/version.GitSummaryString": "{STABLE_GitSummaryString}",
-        "k0s.io/k0s/pkg/version.BuildDateString": "{STABLE_BuildDateString}",
-        "k0s.io/k0s/pkg/version.VersionString": "{STABLE_VersionString}",
+        "k0s.io/pkg/version.GitCommitString": "{STABLE_GitCommitString}",
+        "k0s.io/pkg/version.GitStateString": "{STABLE_GitStateString}",
+        "k0s.io/pkg/version.GitBranchString": "{STABLE_GitBranchString}",
+        "k0s.io/pkg/version.GitSummaryString": "{STABLE_GitSummaryString}",
+        "k0s.io/pkg/version.BuildDateString": "{STABLE_BuildDateString}",
+        "k0s.io/pkg/version.VersionString": "{STABLE_VersionString}",
     },
 )
 
@@ -57,12 +57,12 @@ go_binary(
     static = "on",
     visibility = ["//visibility:public"],
     x_defs = {
-        "k0s.io/k0s/pkg/version.GitCommitString": "{STABLE_GitCommitString}",
-        "k0s.io/k0s/pkg/version.GitStateString": "{STABLE_GitStateString}",
-        "k0s.io/k0s/pkg/version.GitBranchString": "{STABLE_GitBranchString}",
-        "k0s.io/k0s/pkg/version.GitSummaryString": "{STABLE_GitSummaryString}",
-        "k0s.io/k0s/pkg/version.BuildDateString": "{STABLE_BuildDateString}",
-        "k0s.io/k0s/pkg/version.VersionString": "{STABLE_VersionString}",
+        "k0s.io/pkg/version.GitCommitString": "{STABLE_GitCommitString}",
+        "k0s.io/pkg/version.GitStateString": "{STABLE_GitStateString}",
+        "k0s.io/pkg/version.GitBranchString": "{STABLE_GitBranchString}",
+        "k0s.io/pkg/version.GitSummaryString": "{STABLE_GitSummaryString}",
+        "k0s.io/pkg/version.BuildDateString": "{STABLE_BuildDateString}",
+        "k0s.io/pkg/version.VersionString": "{STABLE_VersionString}",
     },
 )
 

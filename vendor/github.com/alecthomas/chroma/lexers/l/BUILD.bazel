@@ -7,7 +7,7 @@ go_library(
         "llvm.go",
         "lua.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/l",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/l",
     importpath = "github.com/alecthomas/chroma/lexers/l",
     visibility = ["//visibility:public"],
     deps = [

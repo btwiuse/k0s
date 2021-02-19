@@ -19,7 +19,7 @@ go_library(
         "typecheck.go",
         "value.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/traefik/yaegi/interp",
+    importmap = "k0s.io/vendor/github.com/traefik/yaegi/interp",
     importpath = "github.com/traefik/yaegi/interp",
     visibility = ["//visibility:public"],
 )

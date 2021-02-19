@@ -6,7 +6,7 @@ go_library(
         "adminmetrics.go",
         "metrics.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/metrics",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/metrics",
     importpath = "github.com/caddyserver/caddy/v2/modules/metrics",
     visibility = ["//visibility:public"],
     deps = [

@@ -97,7 +97,7 @@ go_library(
         "zsys_solaris_amd64.go",
         "zsys_zos_s390x.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/net/internal/socket",
+    importmap = "k0s.io/vendor/golang.org/x/net/internal/socket",
     importpath = "golang.org/x/net/internal/socket",
     visibility = ["//vendor/golang.org/x/net:__subpackages__"],
     deps = select({

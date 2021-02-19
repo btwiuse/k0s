@@ -10,7 +10,7 @@ go_library(
         "id_linux.go",
         "id_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/denisbrodbeck/machineid",
+    importmap = "k0s.io/vendor/github.com/denisbrodbeck/machineid",
     importpath = "github.com/denisbrodbeck/machineid",
     visibility = ["//visibility:public"],
     deps = select({

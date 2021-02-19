@@ -6,7 +6,7 @@ go_library(
         "match.go",
         "re.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/eval/mods/re",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/eval/mods/re",
     importpath = "src.elv.sh/pkg/eval/mods/re",
     visibility = ["//visibility:public"],
     deps = [

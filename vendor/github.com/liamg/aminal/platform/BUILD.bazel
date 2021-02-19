@@ -14,7 +14,7 @@ go_library(
         "winpty.go",
     ],
     cgo = True,
-    importmap = "k0s.io/k0s/vendor/github.com/liamg/aminal/platform",
+    importmap = "k0s.io/vendor/github.com/liamg/aminal/platform",
     importpath = "github.com/liamg/aminal/platform",
     visibility = ["//visibility:public"],
     deps = select({

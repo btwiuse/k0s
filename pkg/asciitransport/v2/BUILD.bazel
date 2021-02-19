@@ -10,7 +10,7 @@ go_library(
         "server.go",
         "utils.go",
     ],
-    importpath = "k0s.io/k0s/pkg/asciitransport/v2",
+    importpath = "k0s.io/pkg/asciitransport/v2",
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/asciiproto:go_default_library",

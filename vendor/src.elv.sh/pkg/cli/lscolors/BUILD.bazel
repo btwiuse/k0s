@@ -10,7 +10,7 @@ go_library(
         "stat_unix.go",
         "stat_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/cli/lscolors",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/cli/lscolors",
     importpath = "src.elv.sh/pkg/cli/lscolors",
     visibility = ["//visibility:public"],
     deps = [

@@ -12,7 +12,7 @@ go_library(
         "fp_generic.go",
         "fp_stub.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/dgryski/go-farm",
+    importmap = "k0s.io/vendor/github.com/dgryski/go-farm",
     importpath = "github.com/dgryski/go-farm",
     visibility = ["//visibility:public"],
 )

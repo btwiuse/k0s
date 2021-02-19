@@ -22,7 +22,7 @@ go_library(
         "request.go",
         "search.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/go-ldap/ldap/v3",
+    importmap = "k0s.io/vendor/github.com/go-ldap/ldap/v3",
     importpath = "github.com/go-ldap/ldap/v3",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/go-asn1-ber/asn1-ber:go_default_library"],

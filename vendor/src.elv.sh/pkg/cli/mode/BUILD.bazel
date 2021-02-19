@@ -15,7 +15,7 @@ go_library(
         "navigation_fs.go",
         "stub.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/cli/mode",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/cli/mode",
     importpath = "src.elv.sh/pkg/cli/mode",
     visibility = ["//visibility:public"],
     deps = [

@@ -14,7 +14,7 @@ go_library(
         "render.go",
         "token.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/net/html",
+    importmap = "k0s.io/vendor/golang.org/x/net/html",
     importpath = "golang.org/x/net/html",
     visibility = ["//visibility:public"],
     deps = ["//vendor/golang.org/x/net/html/atom:go_default_library"],

@@ -31,7 +31,7 @@ go_library(
         "vim.go",
         "windows_api.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/abiosoft/readline",
+    importmap = "k0s.io/vendor/github.com/abiosoft/readline",
     importpath = "github.com/abiosoft/readline",
     visibility = ["//visibility:public"],
     deps = select({

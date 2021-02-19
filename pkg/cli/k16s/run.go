@@ -21,7 +21,7 @@ import (
 	"net"
 	"net/http"
 
-	"k0s.io/k0s/pkg/exporter/k16s"
+	"k0s.io/pkg/exporter/k16s"
 )
 
 func Run(args []string) error {

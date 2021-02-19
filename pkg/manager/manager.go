@@ -4,7 +4,7 @@ import (
 	"sync"
 
 	"github.com/btwiuse/gods/maps/linkedhashmap"
-	"k0s.io/k0s/pkg"
+	"k0s.io/pkg"
 )
 
 var (

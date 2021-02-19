@@ -14,7 +14,7 @@ go_library(
         "rbac_api_with_domains.go",
         "rbac_api_with_domains_synced.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/casbin/casbin/v2",
+    importmap = "k0s.io/vendor/github.com/casbin/casbin/v2",
     importpath = "github.com/casbin/casbin/v2",
     visibility = ["//visibility:public"],
     deps = [

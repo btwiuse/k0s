@@ -8,7 +8,7 @@ go_library(
         "encode.go",
         "jsonstring.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/go-logfmt/logfmt",
+    importmap = "k0s.io/vendor/github.com/go-logfmt/logfmt",
     importpath = "github.com/go-logfmt/logfmt",
     visibility = ["//visibility:public"],
 )

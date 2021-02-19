@@ -14,7 +14,7 @@ go_library(
         "xattrs_linux.go",
     ],
     cgo = True,
-    importmap = "k0s.io/k0s/vendor/github.com/docker/libcontainer/system",
+    importmap = "k0s.io/vendor/github.com/docker/libcontainer/system",
     importpath = "github.com/docker/libcontainer/system",
     visibility = ["//visibility:public"],
 )

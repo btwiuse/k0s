@@ -6,7 +6,7 @@ go_library(
         "node32.go",
         "node64.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/infobloxopen/go-trees/numtree",
+    importmap = "k0s.io/vendor/github.com/infobloxopen/go-trees/numtree",
     importpath = "github.com/infobloxopen/go-trees/numtree",
     visibility = ["//visibility:public"],
 )

@@ -7,7 +7,7 @@ go_library(
         "sanitize.go",
         "traceinternals.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.opencensus.io/internal",
+    importmap = "k0s.io/vendor/go.opencensus.io/internal",
     importpath = "go.opencensus.io/internal",
     visibility = ["//vendor/go.opencensus.io:__subpackages__"],
     deps = ["//vendor/go.opencensus.io:go_default_library"],

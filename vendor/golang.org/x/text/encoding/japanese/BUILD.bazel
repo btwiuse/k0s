@@ -9,7 +9,7 @@ go_library(
         "shiftjis.go",
         "tables.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/text/encoding/japanese",
+    importmap = "k0s.io/vendor/golang.org/x/text/encoding/japanese",
     importpath = "golang.org/x/text/encoding/japanese",
     visibility = ["//visibility:public"],
     deps = [

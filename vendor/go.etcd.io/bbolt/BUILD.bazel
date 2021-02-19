@@ -32,7 +32,7 @@ go_library(
         "tx.go",
         "unsafe.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.etcd.io/bbolt",
+    importmap = "k0s.io/vendor/go.etcd.io/bbolt",
     importpath = "go.etcd.io/bbolt",
     visibility = ["//visibility:public"],
     deps = select({

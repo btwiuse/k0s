@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["nosql.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/nosql",
+    importmap = "k0s.io/vendor/github.com/smallstep/nosql",
     importpath = "github.com/smallstep/nosql",
     visibility = ["//visibility:public"],
     deps = [

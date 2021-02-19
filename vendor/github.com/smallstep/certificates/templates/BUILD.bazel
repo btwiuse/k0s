@@ -6,7 +6,7 @@ go_library(
         "templates.go",
         "values.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/certificates/templates",
+    importmap = "k0s.io/vendor/github.com/smallstep/certificates/templates",
     importpath = "github.com/smallstep/certificates/templates",
     visibility = ["//visibility:public"],
     deps = [

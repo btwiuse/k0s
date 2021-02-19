@@ -19,7 +19,7 @@ go_library(
         "steps.go",
         "uuid.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/api",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/api",
     importpath = "github.com/buildkite/agent/v3/api",
     visibility = ["//visibility:public"],
     deps = [

@@ -6,7 +6,7 @@ go_library(
         "container.go",
         "env.go",
     ],
-    importmap = "k0s.io/k0s/vendor/gopkg.in/DataDog/dd-trace-go.v1/internal",
+    importmap = "k0s.io/vendor/gopkg.in/DataDog/dd-trace-go.v1/internal",
     importpath = "gopkg.in/DataDog/dd-trace-go.v1/internal",
     visibility = ["//vendor/gopkg.in/DataDog/dd-trace-go.v1:__subpackages__"],
 )

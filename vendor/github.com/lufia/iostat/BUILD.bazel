@@ -19,7 +19,7 @@ go_library(
         ],
         "//conditions:default": [],
     }),
-    importmap = "k0s.io/k0s/vendor/github.com/lufia/iostat",
+    importmap = "k0s.io/vendor/github.com/lufia/iostat",
     importpath = "github.com/lufia/iostat",
     visibility = ["//visibility:public"],
 )

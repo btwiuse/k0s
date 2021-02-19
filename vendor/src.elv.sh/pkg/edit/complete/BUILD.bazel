@@ -10,7 +10,7 @@ go_library(
         "node_utils.go",
         "raw_item.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/edit/complete",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/edit/complete",
     importpath = "src.elv.sh/pkg/edit/complete",
     visibility = ["//visibility:public"],
     deps = [

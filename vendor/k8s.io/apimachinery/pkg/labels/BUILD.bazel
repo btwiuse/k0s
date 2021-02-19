@@ -8,7 +8,7 @@ go_library(
         "selector.go",
         "zz_generated.deepcopy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/k8s.io/apimachinery/pkg/labels",
+    importmap = "k0s.io/vendor/k8s.io/apimachinery/pkg/labels",
     importpath = "k8s.io/apimachinery/pkg/labels",
     visibility = ["//visibility:public"],
     deps = [

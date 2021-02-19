@@ -15,7 +15,7 @@ go_library(
         "types.go",
         "version.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/certificates/authority",
+    importmap = "k0s.io/vendor/github.com/smallstep/certificates/authority",
     importpath = "github.com/smallstep/certificates/authority",
     visibility = ["//visibility:public"],
     deps = [

@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["str.go"],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/eval/mods/str",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/eval/mods/str",
     importpath = "src.elv.sh/pkg/eval/mods/str",
     visibility = ["//visibility:public"],
     deps = [

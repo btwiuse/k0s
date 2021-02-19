@@ -6,7 +6,7 @@ go_library(
         "hook.go",
         "scriptwrapper.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/hook",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/hook",
     importpath = "github.com/buildkite/agent/v3/hook",
     visibility = ["//visibility:public"],
     deps = [

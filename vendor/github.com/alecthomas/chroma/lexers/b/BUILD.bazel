@@ -11,7 +11,7 @@ go_library(
         "bnf.go",
         "brainfuck.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/b",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/b",
     importpath = "github.com/alecthomas/chroma/lexers/b",
     visibility = ["//visibility:public"],
     deps = [

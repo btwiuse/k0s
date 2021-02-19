@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["extract.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/traefik/yaegi/extract",
+    importmap = "k0s.io/vendor/github.com/traefik/yaegi/extract",
     importpath = "github.com/traefik/yaegi/extract",
     visibility = ["//visibility:public"],
 )

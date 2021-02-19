@@ -14,7 +14,7 @@ go_library(
         "signal_unix.go",
         "signal_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/shell",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/shell",
     importpath = "src.elv.sh/pkg/shell",
     visibility = ["//visibility:public"],
     deps = [

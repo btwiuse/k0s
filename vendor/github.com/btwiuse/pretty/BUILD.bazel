@@ -6,7 +6,7 @@ go_library(
         "json.go",
         "yaml.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/btwiuse/pretty",
+    importmap = "k0s.io/vendor/github.com/btwiuse/pretty",
     importpath = "github.com/btwiuse/pretty",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/ghodss/yaml:go_default_library"],

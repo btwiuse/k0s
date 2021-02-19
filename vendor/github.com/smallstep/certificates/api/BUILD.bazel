@@ -15,7 +15,7 @@ go_library(
         "sshRevoke.go",
         "utils.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/certificates/api",
+    importmap = "k0s.io/vendor/github.com/smallstep/certificates/api",
     importpath = "github.com/smallstep/certificates/api",
     visibility = ["//visibility:public"],
     deps = [

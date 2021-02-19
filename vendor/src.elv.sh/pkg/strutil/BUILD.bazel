@@ -9,7 +9,7 @@ go_library(
         "strutil.go",
         "subseq.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/strutil",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/strutil",
     importpath = "src.elv.sh/pkg/strutil",
     visibility = ["//visibility:public"],
 )

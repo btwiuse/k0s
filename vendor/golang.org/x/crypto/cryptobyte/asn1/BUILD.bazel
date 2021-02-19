@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["asn1.go"],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/crypto/cryptobyte/asn1",
+    importmap = "k0s.io/vendor/golang.org/x/crypto/cryptobyte/asn1",
     importpath = "golang.org/x/crypto/cryptobyte/asn1",
     visibility = ["//visibility:public"],
 )

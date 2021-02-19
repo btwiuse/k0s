@@ -6,7 +6,7 @@ go_library(
         "const.go",
         "tunnel.go",
     ],
-    importpath = "k0s.io/k0s/pkg/tunnel",
+    importpath = "k0s.io/pkg/tunnel",
     visibility = ["//visibility:public"],
     deps = ["//pkg/wrap:go_default_library"],
 )

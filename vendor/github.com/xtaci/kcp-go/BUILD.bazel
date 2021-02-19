@@ -17,7 +17,7 @@ go_library(
         "tx_generic.go",
         "tx_linux.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/xtaci/kcp-go",
+    importmap = "k0s.io/vendor/github.com/xtaci/kcp-go",
     importpath = "github.com/xtaci/kcp-go",
     visibility = ["//visibility:public"],
     deps = [

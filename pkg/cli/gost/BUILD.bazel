@@ -8,7 +8,7 @@ go_library(
         "peer.go",
         "route.go",
     ],
-    importpath = "k0s.io/k0s/pkg/cli/gost",
+    importpath = "k0s.io/pkg/cli/gost",
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/github.com/ginuerzh/gost:go_default_library",

@@ -6,7 +6,7 @@ go_library(
         "arena.go",
         "skl.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/dgraph-io/badger/v2/skl",
+    importmap = "k0s.io/vendor/github.com/dgraph-io/badger/v2/skl",
     importpath = "github.com/dgraph-io/badger/v2/skl",
     visibility = ["//visibility:public"],
     deps = [

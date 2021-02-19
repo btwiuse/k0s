@@ -15,7 +15,7 @@ go_library(
         "traversal.go",
         "validate.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/qri-io/jsonschema",
+    importmap = "k0s.io/vendor/github.com/qri-io/jsonschema",
     importpath = "github.com/qri-io/jsonschema",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/qri-io/jsonpointer:go_default_library"],

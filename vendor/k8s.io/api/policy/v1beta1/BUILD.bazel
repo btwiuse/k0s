@@ -11,7 +11,7 @@ go_library(
         "zz_generated.deepcopy.go",
         "zz_generated.prerelease-lifecycle.go",
     ],
-    importmap = "k0s.io/k0s/vendor/k8s.io/api/policy/v1beta1",
+    importmap = "k0s.io/vendor/k8s.io/api/policy/v1beta1",
     importpath = "k8s.io/api/policy/v1beta1",
     visibility = ["//visibility:public"],
     deps = [

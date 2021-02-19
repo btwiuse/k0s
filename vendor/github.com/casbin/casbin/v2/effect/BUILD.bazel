@@ -6,7 +6,7 @@ go_library(
         "default_effector.go",
         "effector.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/casbin/casbin/v2/effect",
+    importmap = "k0s.io/vendor/github.com/casbin/casbin/v2/effect",
     importpath = "github.com/casbin/casbin/v2/effect",
     visibility = ["//visibility:public"],
 )

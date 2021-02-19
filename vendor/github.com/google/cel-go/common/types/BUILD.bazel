@@ -32,7 +32,7 @@ go_library(
         "unknown.go",
         "util.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/common/types",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/common/types",
     importpath = "github.com/google/cel-go/common/types",
     deps = [
         "//vendor/github.com/golang/protobuf/jsonpb:go_default_library",

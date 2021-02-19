@@ -7,7 +7,7 @@ go_library(
         "interpolate.go",
         "parser.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/interpolate",
+    importmap = "k0s.io/vendor/github.com/buildkite/interpolate",
     importpath = "github.com/buildkite/interpolate",
     visibility = ["//visibility:public"],
 )

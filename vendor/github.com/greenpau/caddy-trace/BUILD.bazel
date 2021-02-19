@@ -6,7 +6,7 @@ go_library(
         "caddyfile.go",
         "plugin.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-trace",
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-trace",
     importpath = "github.com/greenpau/caddy-trace",
     visibility = ["//visibility:public"],
     deps = [

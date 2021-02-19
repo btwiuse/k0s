@@ -7,7 +7,7 @@ go_library(
         "epm.elv.go",
         "readline-binding.elv.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/eval/mods/bundled",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/eval/mods/bundled",
     importpath = "src.elv.sh/pkg/eval/mods/bundled",
     visibility = ["//visibility:public"],
 )

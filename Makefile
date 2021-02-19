@@ -32,8 +32,8 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ $(BAZEL) run //:gazelle -- -exclude=vendor/golang.org/x/net/trace
 	# @ gazelle -exclude=vendor
 	# @ git checkout vendor/nhooyr.io/websocket
-	# @ cd vendor/google.golang.org/grpc && git grep -e 'importmap = "' | cut -d : -f -1 | sort -u | xargs -L1 -I@ sed -i @ -e 's,importmap = "k0s.io/k0s/vendor/,importmap = ",g'
-	# @ cd vendor/google.golang.org/protobuf && git grep -e 'importmap = "' | cut -d : -f -1 | sort -u | xargs -L1 -I@ sed -i @ -e 's,importmap = "k0s.io/k0s/vendor/,importmap = ",g'
+	# @ cd vendor/google.golang.org/grpc && git grep -e 'importmap = "' | cut -d : -f -1 | sort -u | xargs -L1 -I@ sed -i @ -e 's,importmap = "k0s.io/vendor/,importmap = ",g'
+	# @ cd vendor/google.golang.org/protobuf && git grep -e 'importmap = "' | cut -d : -f -1 | sort -u | xargs -L1 -I@ sed -i @ -e 's,importmap = "k0s.io/vendor/,importmap = ",g'
 	# @ sed -i vendor/golang.org/x/net/trace/trace.go -e 's,func init(),func nop(),g'
 	@ sed -i vendor/github.com/google/cel-go/parser/gen/BUILD.bazel -e 's,//parser:__subpackages__,//visibility:public,g' # bazel visibility problem
 	@ sed -i vendor/github.com/antlr/antlr4/runtime/Go/antlr/dfa_state.go -e 's,%d:%s%s,%s:%s,g' # nogo format warning

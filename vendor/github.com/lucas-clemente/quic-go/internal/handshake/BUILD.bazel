@@ -17,7 +17,7 @@ go_library(
         "token_protector.go",
         "updatable_aead.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/handshake",
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/internal/handshake",
     importpath = "github.com/lucas-clemente/quic-go/internal/handshake",
     visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
     deps = [

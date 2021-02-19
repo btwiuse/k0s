@@ -7,7 +7,7 @@ go_library(
         "doc.go",
         "nl80211.h",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mdlayher/wifi/internal/nl80211",
+    importmap = "k0s.io/vendor/github.com/mdlayher/wifi/internal/nl80211",
     importpath = "github.com/mdlayher/wifi/internal/nl80211",
     visibility = ["//vendor/github.com/mdlayher/wifi:__subpackages__"],
 )

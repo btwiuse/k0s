@@ -6,7 +6,7 @@ go_library(
         "dialer.go",
         "dialer_gorilla.go",
     ],
-    importpath = "k0s.io/k0s/pkg/agent/dialer",
+    importpath = "k0s.io/pkg/agent/dialer",
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/agent:go_default_library",

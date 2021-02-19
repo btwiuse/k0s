@@ -11,7 +11,7 @@ go_library(
         "validate.go",
         "xml_constants.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/russellhaering/goxmldsig",
+    importmap = "k0s.io/vendor/github.com/russellhaering/goxmldsig",
     importpath = "github.com/russellhaering/goxmldsig",
     visibility = ["//visibility:public"],
     deps = [

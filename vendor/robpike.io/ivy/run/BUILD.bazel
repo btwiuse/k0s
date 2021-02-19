@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["run.go"],
-    importmap = "k0s.io/k0s/vendor/robpike.io/ivy/run",
+    importmap = "k0s.io/vendor/robpike.io/ivy/run",
     importpath = "robpike.io/ivy/run",
     visibility = ["//visibility:public"],
     deps = [

@@ -11,7 +11,7 @@ go_library(
         "system.go",
         "tags.go",
     ],
-    importmap = "k0s.io/k0s/vendor/gopkg.in/DataDog/dd-trace-go.v1/ddtrace/ext",
+    importmap = "k0s.io/vendor/gopkg.in/DataDog/dd-trace-go.v1/ddtrace/ext",
     importpath = "gopkg.in/DataDog/dd-trace-go.v1/ddtrace/ext",
     visibility = ["//visibility:public"],
 )

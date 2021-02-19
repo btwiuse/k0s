@@ -28,7 +28,7 @@ go_library(
         "store_api.go",
         "vars.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/edit",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/edit",
     importpath = "src.elv.sh/pkg/edit",
     visibility = ["//visibility:public"],
     deps = [

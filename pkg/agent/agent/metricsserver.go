@@ -4,9 +4,9 @@ import (
 	"net"
 	"net/http"
 
-	types "k0s.io/k0s/pkg/agent"
-	"k0s.io/k0s/pkg/exporter"
-	"k0s.io/k0s/pkg/middleware"
+	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/exporter"
+	"k0s.io/pkg/middleware"
 )
 
 func StartMetricsServer(c types.Config) chan net.Conn {

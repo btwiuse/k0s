@@ -6,7 +6,7 @@ go_library(
         "factory_unix.go",
         "factory_windows.go",
     ],
-    importpath = "k0s.io/k0s/pkg/agent/tty",
+    importpath = "k0s.io/pkg/agent/tty",
     visibility = ["//visibility:public"],
     deps = select({
         "@io_bazel_rules_go//go/platform:android": [

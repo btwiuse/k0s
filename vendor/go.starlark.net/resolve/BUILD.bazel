@@ -6,7 +6,7 @@ go_library(
         "binding.go",
         "resolve.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.starlark.net/resolve",
+    importmap = "k0s.io/vendor/go.starlark.net/resolve",
     importpath = "go.starlark.net/resolve",
     visibility = ["//visibility:public"],
     deps = [

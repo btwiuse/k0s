@@ -6,7 +6,7 @@ go_library(
         "cast.go",
         "caste.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/spf13/cast",
+    importmap = "k0s.io/vendor/github.com/spf13/cast",
     importpath = "github.com/spf13/cast",
     visibility = ["//visibility:public"],
 )

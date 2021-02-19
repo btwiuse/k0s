@@ -11,7 +11,7 @@ go_library(
         "guards.go",
         "strings.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/ext",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/ext",
     importpath = "github.com/google/cel-go/ext",
     visibility = ["//visibility:public"],
     deps = [

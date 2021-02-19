@@ -7,7 +7,7 @@ go_library(
         "msg.go",
         "record.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/ginuerzh/tls-dissector",
+    importmap = "k0s.io/vendor/github.com/ginuerzh/tls-dissector",
     importpath = "github.com/ginuerzh/tls-dissector",
     visibility = ["//visibility:public"],
 )

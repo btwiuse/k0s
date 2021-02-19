@@ -31,7 +31,7 @@ go_library(
         "vim.go",
         "windows_api.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/chzyer/readline",
+    importmap = "k0s.io/vendor/github.com/chzyer/readline",
     importpath = "github.com/chzyer/readline",
     visibility = ["//visibility:public"],
     deps = select({

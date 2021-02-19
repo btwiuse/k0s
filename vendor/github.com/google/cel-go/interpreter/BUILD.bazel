@@ -20,7 +20,7 @@ go_library(
         "planner.go",
         "prune.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/interpreter",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/interpreter",
     importpath = "github.com/google/cel-go/interpreter",
     deps = [
         "//vendor/github.com/golang/protobuf/ptypes/struct:go_default_library",

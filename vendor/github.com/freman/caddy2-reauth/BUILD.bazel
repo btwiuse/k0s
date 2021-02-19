@@ -7,7 +7,7 @@ go_library(
         "failure.go",
         "reauth.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/freman/caddy2-reauth",
+    importmap = "k0s.io/vendor/github.com/freman/caddy2-reauth",
     importpath = "github.com/freman/caddy2-reauth",
     visibility = ["//visibility:public"],
     deps = [

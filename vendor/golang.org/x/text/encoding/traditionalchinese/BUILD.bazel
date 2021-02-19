@@ -6,7 +6,7 @@ go_library(
         "big5.go",
         "tables.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/text/encoding/traditionalchinese",
+    importmap = "k0s.io/vendor/golang.org/x/text/encoding/traditionalchinese",
     importpath = "golang.org/x/text/encoding/traditionalchinese",
     visibility = ["//visibility:public"],
     deps = [

@@ -9,7 +9,7 @@ go_library(
         "types.go",
         "x86.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/reg",
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/reg",
     importpath = "github.com/mmcloughlin/avo/reg",
     visibility = ["//visibility:public"],
 )

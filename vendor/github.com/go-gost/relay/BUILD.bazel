@@ -6,7 +6,7 @@ go_library(
         "feature.go",
         "relay.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/go-gost/relay",
+    importmap = "k0s.io/vendor/github.com/go-gost/relay",
     importpath = "github.com/go-gost/relay",
     visibility = ["//visibility:public"],
 )

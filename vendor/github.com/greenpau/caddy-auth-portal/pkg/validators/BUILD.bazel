@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["user_input.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-portal/pkg/validators",
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-portal/pkg/validators",
     importpath = "github.com/greenpau/caddy-auth-portal/pkg/validators",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/greenpau/caddy-auth-portal/pkg/utils:go_default_library"],

@@ -6,7 +6,7 @@ go_library(
         "build.go",
         "unmarshal.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/aws/aws-sdk-go/private/protocol/json/jsonutil",
+    importmap = "k0s.io/vendor/github.com/aws/aws-sdk-go/private/protocol/json/jsonutil",
     importpath = "github.com/aws/aws-sdk-go/private/protocol/json/jsonutil",
     visibility = ["//visibility:public"],
     deps = [

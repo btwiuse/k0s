@@ -6,7 +6,7 @@ go_library(
         "interface.go",
         "null_tracer.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/quictrace",
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/quictrace",
     importpath = "github.com/lucas-clemente/quic-go/quictrace",
     visibility = ["//visibility:public"],
     deps = [

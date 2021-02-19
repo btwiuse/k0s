@@ -20,7 +20,7 @@ go_library(
         "write.go",
         "ws_js.go",
     ],
-    importmap = "k0s.io/k0s/vendor/nhooyr.io/websocket",
+    importmap = "k0s.io/vendor/nhooyr.io/websocket",
     importpath = "nhooyr.io/websocket",
     visibility = ["//visibility:public"],
     deps = [

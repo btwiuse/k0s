@@ -7,7 +7,7 @@ go_library(
         "registry.go",
         "requests.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/certificates/kms/apiv1",
+    importmap = "k0s.io/vendor/github.com/smallstep/certificates/kms/apiv1",
     importpath = "github.com/smallstep/certificates/kms/apiv1",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/pkg/errors:go_default_library"],

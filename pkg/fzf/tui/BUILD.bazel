@@ -10,7 +10,7 @@ go_library(
         "ttyname_windows.go",
         "tui.go",
     ],
-    importpath = "k0s.io/k0s/pkg/fzf/tui",
+    importpath = "k0s.io/pkg/fzf/tui",
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/fzf/util:go_default_library",

@@ -6,7 +6,7 @@ go_library(
         "getopt.go",
         "string.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/getopt",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/getopt",
     importpath = "src.elv.sh/pkg/getopt",
     visibility = ["//visibility:public"],
 )

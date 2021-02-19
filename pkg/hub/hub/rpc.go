@@ -9,11 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"k0s.io/k0s/pkg/api"
-	types "k0s.io/k0s/pkg/hub"
-	"k0s.io/k0s/pkg/hub/agent"
-	"k0s.io/k0s/pkg/hub/agent/info"
-	"k0s.io/k0s/pkg/rng"
+	"k0s.io/pkg/api"
+	types "k0s.io/pkg/hub"
+	"k0s.io/pkg/hub/agent"
+	"k0s.io/pkg/hub/agent/info"
+	"k0s.io/pkg/rng"
 )
 
 var (

@@ -13,7 +13,7 @@ go_library(
         "templates.go",
         "utils.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.step.sm/crypto/x509util",
+    importmap = "k0s.io/vendor/go.step.sm/crypto/x509util",
     importpath = "go.step.sm/crypto/x509util",
     visibility = ["//visibility:public"],
     deps = [

@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["errs.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/cli/errs",
+    importmap = "k0s.io/vendor/github.com/smallstep/cli/errs",
     importpath = "github.com/smallstep/cli/errs",
     visibility = ["//visibility:public"],
     deps = [

@@ -15,7 +15,7 @@ go_library(
         "os_linux_arm64.go",
         "os_other_arm64.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/klauspost/cpuid/v2",
+    importmap = "k0s.io/vendor/github.com/klauspost/cpuid/v2",
     importpath = "github.com/klauspost/cpuid/v2",
     visibility = ["//visibility:public"],
 )

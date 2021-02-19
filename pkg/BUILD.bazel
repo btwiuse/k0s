@@ -7,6 +7,6 @@ go_library(
         "gen.go",
         "types.go",
     ],
-    importpath = "k0s.io/k0s/pkg",
+    importpath = "k0s.io/pkg",
     visibility = ["//visibility:public"],
 )

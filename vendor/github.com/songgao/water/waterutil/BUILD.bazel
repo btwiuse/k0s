@@ -10,7 +10,7 @@ go_library(
         "tun.go",
         "tun_ipv4.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/songgao/water/waterutil",
+    importmap = "k0s.io/vendor/github.com/songgao/water/waterutil",
     importpath = "github.com/songgao/water/waterutil",
     visibility = ["//visibility:public"],
 )

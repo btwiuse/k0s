@@ -13,7 +13,7 @@ go_library(
         "encode_other.go",
         "snappy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/klauspost/compress/snappy",
+    importmap = "k0s.io/vendor/github.com/klauspost/compress/snappy",
     importpath = "github.com/klauspost/compress/snappy",
     visibility = ["//visibility:public"],
 )

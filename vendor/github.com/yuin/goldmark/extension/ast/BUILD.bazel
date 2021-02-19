@@ -9,7 +9,7 @@ go_library(
         "table.go",
         "tasklist.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/yuin/goldmark/extension/ast",
+    importmap = "k0s.io/vendor/github.com/yuin/goldmark/extension/ast",
     importpath = "github.com/yuin/goldmark/extension/ast",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/yuin/goldmark/ast:go_default_library"],

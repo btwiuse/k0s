@@ -11,7 +11,7 @@ go_library(
         "exporter_openbsd.go",
         "exporter_windows.go",
     ],
-    importpath = "k0s.io/k0s/pkg/exporter",
+    importpath = "k0s.io/pkg/exporter",
     visibility = ["//visibility:public"],
     deps = select({
         "@io_bazel_rules_go//go/platform:linux": [

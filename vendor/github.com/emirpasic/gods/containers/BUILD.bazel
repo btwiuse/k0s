@@ -8,7 +8,7 @@ go_library(
         "iterator.go",
         "serialization.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/emirpasic/gods/containers",
+    importmap = "k0s.io/vendor/github.com/emirpasic/gods/containers",
     importpath = "github.com/emirpasic/gods/containers",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/emirpasic/gods/utils:go_default_library"],

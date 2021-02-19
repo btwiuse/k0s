@@ -11,7 +11,7 @@ go_library(
         "latin5.go",
         "utf8.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/gdamore/encoding",
+    importmap = "k0s.io/vendor/github.com/gdamore/encoding",
     importpath = "github.com/gdamore/encoding",
     visibility = ["//visibility:public"],
     deps = [

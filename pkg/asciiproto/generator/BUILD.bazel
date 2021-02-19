@@ -10,7 +10,7 @@ proto_library(
 
 go_proto_library(
     name = "asciiproto_go_proto",
-    importpath = "k0s.io/k0s/pkg/asciiproto/generator",
+    importpath = "k0s.io/pkg/asciiproto/generator",
     proto = ":asciiproto_proto",
     visibility = ["//visibility:public"],
 )
@@ -19,6 +19,6 @@ go_library(
     name = "go_default_library",
     srcs = ["gen.go"],
     embed = [":asciiproto_go_proto"],
-    importpath = "k0s.io/k0s/pkg/asciiproto/generator",
+    importpath = "k0s.io/pkg/asciiproto/generator",
     visibility = ["//visibility:public"],
 )

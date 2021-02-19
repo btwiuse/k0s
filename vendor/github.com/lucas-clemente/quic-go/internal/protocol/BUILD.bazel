@@ -13,7 +13,7 @@ go_library(
         "stream.go",
         "version.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/protocol",
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/internal/protocol",
     importpath = "github.com/lucas-clemente/quic-go/internal/protocol",
     visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
 )

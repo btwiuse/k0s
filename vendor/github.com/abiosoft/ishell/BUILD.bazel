@@ -14,7 +14,7 @@ go_library(
         "utils_unix.go",
         "utils_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/abiosoft/ishell",
+    importmap = "k0s.io/vendor/github.com/abiosoft/ishell",
     importpath = "github.com/abiosoft/ishell",
     visibility = ["//visibility:public"],
     deps = [

@@ -34,7 +34,7 @@ go_library(
         "uploader.go",
         "version.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/agent",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/agent",
     importpath = "github.com/buildkite/agent/v3/agent",
     visibility = ["//visibility:public"],
     deps = [

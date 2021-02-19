@@ -7,7 +7,7 @@ import (
 
 	proto "github.com/golang/protobuf/proto"
 
-	"k0s.io/k0s/pkg/asciiproto"
+	"k0s.io/pkg/asciiproto"
 )
 
 // modeled after io.ReadWriteCloser

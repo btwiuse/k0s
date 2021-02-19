@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["signature.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/russellhaering/goxmldsig/types",
+    importmap = "k0s.io/vendor/github.com/russellhaering/goxmldsig/types",
     importpath = "github.com/russellhaering/goxmldsig/types",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/beevik/etree:go_default_library"],

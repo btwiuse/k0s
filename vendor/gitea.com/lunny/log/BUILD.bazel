@@ -7,7 +7,7 @@ go_library(
         "filewriter.go",
         "logext.go",
     ],
-    importmap = "k0s.io/k0s/vendor/gitea.com/lunny/log",
+    importmap = "k0s.io/vendor/gitea.com/lunny/log",
     importpath = "gitea.com/lunny/log",
     visibility = ["//visibility:public"],
 )

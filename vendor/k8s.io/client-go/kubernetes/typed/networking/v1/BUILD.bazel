@@ -10,7 +10,7 @@ go_library(
         "networking_client.go",
         "networkpolicy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/k8s.io/client-go/kubernetes/typed/networking/v1",
+    importmap = "k0s.io/vendor/k8s.io/client-go/kubernetes/typed/networking/v1",
     importpath = "k8s.io/client-go/kubernetes/typed/networking/v1",
     visibility = ["//visibility:public"],
     deps = [

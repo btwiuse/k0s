@@ -3,7 +3,7 @@ package agent
 import (
 	"net"
 
-	types "k0s.io/k0s/pkg/agent"
+	types "k0s.io/pkg/agent"
 )
 
 func StartPingServer(c types.Config) chan net.Conn {

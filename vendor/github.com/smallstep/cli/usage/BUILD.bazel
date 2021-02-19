@@ -11,7 +11,7 @@ go_library(
         "report.go",
         "usage.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/cli/usage",
+    importmap = "k0s.io/vendor/github.com/smallstep/cli/usage",
     importpath = "github.com/smallstep/cli/usage",
     visibility = ["//visibility:public"],
     deps = [

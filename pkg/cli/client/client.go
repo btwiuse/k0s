@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"k0s.io/k0s/pkg/client/client"
-	"k0s.io/k0s/pkg/client/config"
+	"k0s.io/pkg/client/client"
+	"k0s.io/pkg/client/config"
 )
 
 func Run(args []string) (err error) {

@@ -6,7 +6,7 @@ go_library(
         "floor.go",
         "floor_go1.9.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/aws/aws-sdk-go/internal/sdkmath",
+    importmap = "k0s.io/vendor/github.com/aws/aws-sdk-go/internal/sdkmath",
     importpath = "github.com/aws/aws-sdk-go/internal/sdkmath",
     visibility = ["//vendor/github.com/aws/aws-sdk-go:__subpackages__"],
 )

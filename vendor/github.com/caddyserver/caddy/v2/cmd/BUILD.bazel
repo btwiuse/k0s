@@ -7,7 +7,7 @@ go_library(
         "commands.go",
         "main.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/cmd",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/cmd",
     importpath = "github.com/caddyserver/caddy/v2/cmd",
     visibility = ["//visibility:public"],
     deps = [

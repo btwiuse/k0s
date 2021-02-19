@@ -14,7 +14,7 @@ go_library(
         "options.go",
         "program.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/cel",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/cel",
     importpath = "github.com/google/cel-go/cel",
     visibility = ["//visibility:public"],
     deps = [

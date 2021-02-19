@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/http"
 
-	"k0s.io/k0s/pkg/localcmd"
+	"k0s.io/pkg/localcmd"
 )
 
 // Server provides a wetty HTTP endpoint.

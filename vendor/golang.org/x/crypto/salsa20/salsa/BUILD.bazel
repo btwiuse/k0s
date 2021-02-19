@@ -10,7 +10,7 @@ go_library(
         "salsa20_noasm.go",
         "salsa20_ref.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/crypto/salsa20/salsa",
+    importmap = "k0s.io/vendor/golang.org/x/crypto/salsa20/salsa",
     importpath = "golang.org/x/crypto/salsa20/salsa",
     visibility = ["//visibility:public"],
 )

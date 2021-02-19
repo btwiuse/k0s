@@ -6,7 +6,7 @@ go_library(
         "tproxy_tcp.go",
         "tproxy_udp.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/LiamHaworth/go-tproxy",
+    importmap = "k0s.io/vendor/github.com/LiamHaworth/go-tproxy",
     importpath = "github.com/LiamHaworth/go-tproxy",
     visibility = ["//visibility:public"],
 )

@@ -286,7 +286,7 @@ go_library(
         "stdlib.go",
         "stdlib_go1.16.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/traefik/yaegi/stdlib",
+    importmap = "k0s.io/vendor/github.com/traefik/yaegi/stdlib",
     importpath = "github.com/traefik/yaegi/stdlib",
     visibility = ["//visibility:public"],
 )

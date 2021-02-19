@@ -10,7 +10,7 @@ go_library(
         "family_others.go",
         "message.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mdlayher/genetlink",
+    importmap = "k0s.io/vendor/github.com/mdlayher/genetlink",
     importpath = "github.com/mdlayher/genetlink",
     visibility = ["//visibility:public"],
     deps = [

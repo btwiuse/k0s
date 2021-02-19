@@ -6,7 +6,7 @@ go_library(
         "doc.go",
         "ir.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/ir",
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/ir",
     importpath = "github.com/mmcloughlin/avo/ir",
     visibility = ["//visibility:public"],
     deps = [

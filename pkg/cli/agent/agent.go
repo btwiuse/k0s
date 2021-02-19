@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"k0s.io/k0s/pkg/agent/agent"
-	"k0s.io/k0s/pkg/agent/config"
+	"k0s.io/pkg/agent/agent"
+	"k0s.io/pkg/agent/config"
 )
 
 func Run(args []string) error {

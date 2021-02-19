@@ -48,7 +48,7 @@ go_library(
         "trees.go",
         "utils.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/antlr/antlr4/runtime/Go/antlr",
+    importmap = "k0s.io/vendor/github.com/antlr/antlr4/runtime/Go/antlr",
     importpath = "github.com/antlr/antlr4/runtime/Go/antlr",
     visibility = ["//visibility:public"],
 )

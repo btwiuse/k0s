@@ -12,7 +12,7 @@ go_library(
         "textflag.go",
         "verify.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/pass",
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/pass",
     importpath = "github.com/mmcloughlin/avo/pass",
     visibility = ["//visibility:public"],
     deps = [

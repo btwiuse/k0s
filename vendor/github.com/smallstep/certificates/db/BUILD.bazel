@@ -6,7 +6,7 @@ go_library(
         "db.go",
         "simple.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/certificates/db",
+    importmap = "k0s.io/vendor/github.com/smallstep/certificates/db",
     importpath = "github.com/smallstep/certificates/db",
     visibility = ["//visibility:public"],
     deps = [

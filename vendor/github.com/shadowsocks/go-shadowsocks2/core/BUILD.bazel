@@ -8,7 +8,7 @@ go_library(
         "packet.go",
         "stream.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/shadowsocks/go-shadowsocks2/core",
+    importmap = "k0s.io/vendor/github.com/shadowsocks/go-shadowsocks2/core",
     importpath = "github.com/shadowsocks/go-shadowsocks2/core",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/shadowsocks/go-shadowsocks2/shadowaead:go_default_library"],

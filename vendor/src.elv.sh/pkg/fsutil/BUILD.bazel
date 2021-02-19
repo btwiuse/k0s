@@ -9,7 +9,7 @@ go_library(
         "getwd.go",
         "search.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/fsutil",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/fsutil",
     importpath = "src.elv.sh/pkg/fsutil",
     visibility = ["//visibility:public"],
     deps = ["//vendor/src.elv.sh/pkg/env:go_default_library"],

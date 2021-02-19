@@ -24,7 +24,7 @@ go_library(
         "reedsolomon.go",
         "streaming.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/klauspost/reedsolomon",
+    importmap = "k0s.io/vendor/github.com/klauspost/reedsolomon",
     importpath = "github.com/klauspost/reedsolomon",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/klauspost/cpuid:go_default_library"],

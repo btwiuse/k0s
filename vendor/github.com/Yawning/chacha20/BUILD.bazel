@@ -9,7 +9,7 @@ go_library(
         "chacha20_ref.go",
         "chacha20_ref_go19.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/Yawning/chacha20",
+    importmap = "k0s.io/vendor/github.com/Yawning/chacha20",
     importpath = "github.com/Yawning/chacha20",
     visibility = ["//visibility:public"],
 )

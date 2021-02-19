@@ -7,7 +7,7 @@ go_library(
         "doc.go",
         "signature.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/gotypes",
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/gotypes",
     importpath = "github.com/mmcloughlin/avo/gotypes",
     visibility = ["//visibility:public"],
     deps = [

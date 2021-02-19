@@ -15,9 +15,9 @@ import (
 	"github.com/btwiuse/pretty"
 	"gopkg.in/yaml.v3"
 
-	"k0s.io/k0s/pkg"
-	"k0s.io/k0s/pkg/client"
-	"k0s.io/k0s/pkg/version"
+	"k0s.io/pkg"
+	"k0s.io/pkg/client"
+	"k0s.io/pkg/version"
 )
 
 type config struct {

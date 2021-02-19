@@ -8,7 +8,7 @@ go_library(
         "loop.go",
         "tty.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/cli",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/cli",
     importpath = "src.elv.sh/pkg/cli",
     visibility = ["//visibility:public"],
     deps = [

@@ -6,7 +6,7 @@ go_library(
         "const.go",
         "edwards25519.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/agl/ed25519/edwards25519",
+    importmap = "k0s.io/vendor/github.com/agl/ed25519/edwards25519",
     importpath = "github.com/agl/ed25519/edwards25519",
     visibility = ["//visibility:public"],
 )

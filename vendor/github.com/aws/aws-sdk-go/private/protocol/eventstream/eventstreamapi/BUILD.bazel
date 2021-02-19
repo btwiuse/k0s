@@ -10,7 +10,7 @@ go_library(
         "stream_writer.go",
         "writer.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi",
+    importmap = "k0s.io/vendor/github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi",
     importpath = "github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi",
     visibility = ["//visibility:public"],
     deps = [

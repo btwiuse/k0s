@@ -9,7 +9,7 @@ go_library(
         "fortran.go",
         "fsharp.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/f",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/f",
     importpath = "github.com/alecthomas/chroma/lexers/f",
     visibility = ["//visibility:public"],
     deps = [

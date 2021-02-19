@@ -6,7 +6,7 @@ go_library(
         "tcp_linux.go",
         "tcp_stub.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/xtaci/tcpraw",
+    importmap = "k0s.io/vendor/github.com/xtaci/tcpraw",
     importpath = "github.com/xtaci/tcpraw",
     visibility = ["//visibility:public"],
     deps = select({

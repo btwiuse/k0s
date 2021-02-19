@@ -13,7 +13,7 @@ go_library(
         "watermark.go",
         "y.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/dgraph-io/badger/y",
+    importmap = "k0s.io/vendor/github.com/dgraph-io/badger/y",
     importpath = "github.com/dgraph-io/badger/y",
     visibility = ["//visibility:public"],
     deps = [

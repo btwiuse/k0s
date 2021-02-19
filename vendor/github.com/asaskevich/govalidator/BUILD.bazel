@@ -13,7 +13,7 @@ go_library(
         "utils.go",
         "validator.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/asaskevich/govalidator",
+    importmap = "k0s.io/vendor/github.com/asaskevich/govalidator",
     importpath = "github.com/asaskevich/govalidator",
     visibility = ["//visibility:public"],
 )

@@ -16,7 +16,7 @@ go_library(
         "unpack.go",
         "value.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.starlark.net/starlark",
+    importmap = "k0s.io/vendor/go.starlark.net/starlark",
     importpath = "go.starlark.net/starlark",
     visibility = ["//visibility:public"],
     deps = [

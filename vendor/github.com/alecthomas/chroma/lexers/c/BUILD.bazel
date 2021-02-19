@@ -24,7 +24,7 @@ go_library(
         "css.go",
         "cython.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/c",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/c",
     importpath = "github.com/alecthomas/chroma/lexers/c",
     visibility = ["//visibility:public"],
     deps = [

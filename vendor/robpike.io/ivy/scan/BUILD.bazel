@@ -6,7 +6,7 @@ go_library(
         "scan.go",
         "type_string.go",
     ],
-    importmap = "k0s.io/k0s/vendor/robpike.io/ivy/scan",
+    importmap = "k0s.io/vendor/robpike.io/ivy/scan",
     importpath = "robpike.io/ivy/scan",
     visibility = ["//visibility:public"],
     deps = [

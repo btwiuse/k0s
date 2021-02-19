@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["struct.pb.go"],
-    importmap = "k0s.io/k0s/vendor/google.golang.org/protobuf/types/known/structpb",
+    importmap = "k0s.io/vendor/google.golang.org/protobuf/types/known/structpb",
     importpath = "google.golang.org/protobuf/types/known/structpb",
     visibility = ["//visibility:public"],
     deps = [

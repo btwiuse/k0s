@@ -11,7 +11,7 @@ go_library(
         "xxhash_other.go",
         "xxhash_unsafe.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/cespare/xxhash",
+    importmap = "k0s.io/vendor/github.com/cespare/xxhash",
     importpath = "github.com/cespare/xxhash",
     visibility = ["//visibility:public"],
 )

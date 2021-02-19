@@ -6,7 +6,7 @@ go_library(
         "module.go",
         "struct.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.starlark.net/starlarkstruct",
+    importmap = "k0s.io/vendor/go.starlark.net/starlarkstruct",
     importpath = "go.starlark.net/starlarkstruct",
     visibility = ["//visibility:public"],
     deps = [

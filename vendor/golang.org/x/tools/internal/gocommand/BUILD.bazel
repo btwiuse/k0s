@@ -7,7 +7,7 @@ go_library(
         "vendor.go",
         "version.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/tools/internal/gocommand",
+    importmap = "k0s.io/vendor/golang.org/x/tools/internal/gocommand",
     importpath = "golang.org/x/tools/internal/gocommand",
     visibility = ["//vendor/golang.org/x/tools:__subpackages__"],
     deps = [

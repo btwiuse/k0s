@@ -30,7 +30,7 @@ go_library(
         "util.go",
         "writer.go",
     ],
-    importmap = "k0s.io/k0s/vendor/gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer",
+    importmap = "k0s.io/vendor/gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer",
     importpath = "gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer",
     visibility = ["//visibility:public"],
     deps = [

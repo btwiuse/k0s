@@ -7,7 +7,7 @@ go_library(
         "printer.go",
         "stubs.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/printer",
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/printer",
     importpath = "github.com/mmcloughlin/avo/printer",
     visibility = ["//visibility:public"],
     deps = [

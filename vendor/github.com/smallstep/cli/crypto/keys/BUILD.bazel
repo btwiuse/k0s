@@ -6,7 +6,7 @@ go_library(
         "key.go",
         "keyPair.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/cli/crypto/keys",
+    importmap = "k0s.io/vendor/github.com/smallstep/cli/crypto/keys",
     importpath = "github.com/smallstep/cli/crypto/keys",
     visibility = ["//visibility:public"],
     deps = [

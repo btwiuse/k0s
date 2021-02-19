@@ -18,7 +18,7 @@ go_library(
         "rawconn_gteq_1.12.go",
         "rawconn_lt_1.12.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mdlayher/netlink",
+    importmap = "k0s.io/vendor/github.com/mdlayher/netlink",
     importpath = "github.com/mdlayher/netlink",
     visibility = ["//visibility:public"],
     deps = [

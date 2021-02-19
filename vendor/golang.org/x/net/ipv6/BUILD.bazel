@@ -70,7 +70,7 @@ go_library(
         "zsys_solaris.go",
         "zsys_zos_s390x.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/net/ipv6",
+    importmap = "k0s.io/vendor/golang.org/x/net/ipv6",
     importpath = "golang.org/x/net/ipv6",
     visibility = ["//visibility:public"],
     deps = [

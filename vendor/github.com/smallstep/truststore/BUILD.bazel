@@ -12,7 +12,7 @@ go_library(
         "truststore_others.go",
         "truststore_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/truststore",
+    importmap = "k0s.io/vendor/github.com/smallstep/truststore",
     importpath = "github.com/smallstep/truststore",
     visibility = ["//visibility:public"],
     deps = select({

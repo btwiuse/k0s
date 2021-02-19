@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["wrappers.pb.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/golang/protobuf/ptypes/wrappers",
+    importmap = "k0s.io/vendor/github.com/golang/protobuf/ptypes/wrappers",
     importpath = "github.com/golang/protobuf/ptypes/wrappers",
     visibility = ["//visibility:public"],
     deps = [

@@ -9,7 +9,7 @@ go_library(
         "static_table.go",
         "varint.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/marten-seemann/qpack",
+    importmap = "k0s.io/vendor/github.com/marten-seemann/qpack",
     importpath = "github.com/marten-seemann/qpack",
     visibility = ["//visibility:public"],
     deps = ["//vendor/golang.org/x/net/http2/hpack:go_default_library"],

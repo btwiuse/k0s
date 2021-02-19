@@ -9,7 +9,7 @@ go_library(
         "logger.go",
         "responselogger.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/certificates/logging",
+    importmap = "k0s.io/vendor/github.com/smallstep/certificates/logging",
     importpath = "github.com/smallstep/certificates/logging",
     visibility = ["//visibility:public"],
     deps = [

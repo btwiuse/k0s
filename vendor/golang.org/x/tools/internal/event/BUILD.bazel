@@ -6,7 +6,7 @@ go_library(
         "doc.go",
         "event.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/tools/internal/event",
+    importmap = "k0s.io/vendor/golang.org/x/tools/internal/event",
     importpath = "golang.org/x/tools/internal/event",
     visibility = ["//vendor/golang.org/x/tools:__subpackages__"],
     deps = [

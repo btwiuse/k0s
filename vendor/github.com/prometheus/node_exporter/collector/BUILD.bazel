@@ -132,7 +132,7 @@ go_library(
         ],
         "//conditions:default": [],
     }),
-    importmap = "k0s.io/k0s/vendor/github.com/prometheus/node_exporter/collector",
+    importmap = "k0s.io/vendor/github.com/prometheus/node_exporter/collector",
     importpath = "github.com/prometheus/node_exporter/collector",
     visibility = ["//visibility:public"],
     deps = [

@@ -7,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	portless "k0s.io/k0s/pkg/tunnel"
+	portless "k0s.io/pkg/tunnel"
 )
 
 // 0. make sure hub is running and listening on ws://127.0.0.1:8345

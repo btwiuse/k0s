@@ -7,7 +7,7 @@ go_library(
         "solver.go",
         "tlsalpn01.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mholt/acmez",
+    importmap = "k0s.io/vendor/github.com/mholt/acmez",
     importpath = "github.com/mholt/acmez",
     visibility = ["//visibility:public"],
     deps = [

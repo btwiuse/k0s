@@ -8,7 +8,7 @@ go_library(
         "linkedhashmap.go",
         "serialization.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/btwiuse/gods/maps/linkedhashmap",
+    importmap = "k0s.io/vendor/github.com/btwiuse/gods/maps/linkedhashmap",
     importpath = "github.com/btwiuse/gods/maps/linkedhashmap",
     visibility = ["//visibility:public"],
     deps = [

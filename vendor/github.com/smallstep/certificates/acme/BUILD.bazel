@@ -14,7 +14,7 @@ go_library(
         "nonce.go",
         "order.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/certificates/acme",
+    importmap = "k0s.io/vendor/github.com/smallstep/certificates/acme",
     importpath = "github.com/smallstep/certificates/acme",
     visibility = ["//visibility:public"],
     deps = [

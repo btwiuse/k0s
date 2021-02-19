@@ -23,7 +23,7 @@ go_library(
         "xml_parser.go",
         "zerocopy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/howett.net/plist",
+    importmap = "k0s.io/vendor/howett.net/plist",
     importpath = "howett.net/plist",
     visibility = ["//visibility:public"],
 )

@@ -12,7 +12,7 @@ go_library(
         "suffix.go",
         "zz_generated.deepcopy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/k8s.io/apimachinery/pkg/api/resource",
+    importmap = "k0s.io/vendor/k8s.io/apimachinery/pkg/api/resource",
     importpath = "k8s.io/apimachinery/pkg/api/resource",
     visibility = ["//visibility:public"],
     deps = [

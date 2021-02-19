@@ -6,7 +6,7 @@ go_library(
         "ast.go",
         "parser.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/gobwas/glob/syntax/ast",
+    importmap = "k0s.io/vendor/github.com/gobwas/glob/syntax/ast",
     importpath = "github.com/gobwas/glob/syntax/ast",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/gobwas/glob/syntax/lexer:go_default_library"],

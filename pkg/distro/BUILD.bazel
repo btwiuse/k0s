@@ -6,7 +6,7 @@ go_library(
         "distro_unix.go",
         "distro_windows.go",
     ],
-    importpath = "k0s.io/k0s/pkg/distro",
+    importpath = "k0s.io/pkg/distro",
     visibility = ["//visibility:public"],
     deps = select({
         "@io_bazel_rules_go//go/platform:android": [

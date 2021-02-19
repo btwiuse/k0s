@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["trie.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/dgraph-io/badger/v2/trie",
+    importmap = "k0s.io/vendor/github.com/dgraph-io/badger/v2/trie",
     importpath = "github.com/dgraph-io/badger/v2/trie",
     visibility = ["//visibility:public"],
 )

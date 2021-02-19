@@ -13,7 +13,7 @@ go_library(
         "styles.go",
         "styles_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/manifoldco/promptui",
+    importmap = "k0s.io/vendor/github.com/manifoldco/promptui",
     importpath = "github.com/manifoldco/promptui",
     visibility = ["//visibility:public"],
     deps = [

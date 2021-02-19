@@ -6,7 +6,7 @@ go_library(
         "sequences.go",
         "sequences_dummy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/konsorten/go-windows-terminal-sequences",
+    importmap = "k0s.io/vendor/github.com/konsorten/go-windows-terminal-sequences",
     importpath = "github.com/konsorten/go-windows-terminal-sequences",
     visibility = ["//visibility:public"],
 )

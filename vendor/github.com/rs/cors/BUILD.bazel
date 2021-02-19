@@ -6,7 +6,7 @@ go_library(
         "cors.go",
         "utils.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/rs/cors",
+    importmap = "k0s.io/vendor/github.com/rs/cors",
     importpath = "github.com/rs/cors",
     visibility = ["//visibility:public"],
 )

@@ -6,7 +6,7 @@ go_library(
         "compile.go",
         "serial.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.starlark.net/internal/compile",
+    importmap = "k0s.io/vendor/go.starlark.net/internal/compile",
     importpath = "go.starlark.net/internal/compile",
     visibility = ["//vendor/go.starlark.net:__subpackages__"],
     deps = [

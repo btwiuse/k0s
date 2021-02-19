@@ -11,7 +11,7 @@ go_library(
         "save.go",
         "special.go",
     ],
-    importmap = "k0s.io/k0s/vendor/robpike.io/ivy/parse",
+    importmap = "k0s.io/vendor/robpike.io/ivy/parse",
     importpath = "robpike.io/ivy/parse",
     visibility = ["//visibility:public"],
     deps = [

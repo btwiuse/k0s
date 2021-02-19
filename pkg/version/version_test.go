@@ -3,7 +3,7 @@ package version
 import (
 	"testing"
 
-	"k0s.io/k0s/pkg"
+	"k0s.io/pkg"
 )
 
 func check(t *testing.T, name string, got string, expected string) bool {

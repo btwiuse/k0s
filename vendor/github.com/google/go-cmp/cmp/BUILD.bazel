@@ -15,7 +15,7 @@ go_library(
         "report_text.go",
         "report_value.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/go-cmp/cmp",
+    importmap = "k0s.io/vendor/github.com/google/go-cmp/cmp",
     importpath = "github.com/google/go-cmp/cmp",
     visibility = ["//visibility:public"],
     deps = [

@@ -10,7 +10,7 @@ go_library(
         "netwriter.go",
         "nopencoder.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/logging",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/logging",
     importpath = "github.com/caddyserver/caddy/v2/modules/logging",
     visibility = ["//visibility:public"],
     deps = [

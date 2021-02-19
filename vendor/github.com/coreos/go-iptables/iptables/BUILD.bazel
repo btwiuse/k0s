@@ -6,7 +6,7 @@ go_library(
         "iptables.go",
         "lock.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/coreos/go-iptables/iptables",
+    importmap = "k0s.io/vendor/github.com/coreos/go-iptables/iptables",
     importpath = "github.com/coreos/go-iptables/iptables",
     visibility = ["//visibility:public"],
 )

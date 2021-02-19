@@ -6,7 +6,7 @@ go_library(
         "definition.go",
         "plugin.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/agent/plugin",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/agent/plugin",
     importpath = "github.com/buildkite/agent/v3/agent/plugin",
     visibility = ["//visibility:public"],
     deps = [

@@ -35,7 +35,7 @@ go_library(
         "tscreen_stub.go",
         "tscreen_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/gdamore/tcell",
+    importmap = "k0s.io/vendor/github.com/gdamore/tcell",
     importpath = "github.com/gdamore/tcell",
     visibility = ["//visibility:public"],
     deps = [

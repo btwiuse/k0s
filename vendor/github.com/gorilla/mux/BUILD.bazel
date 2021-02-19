@@ -10,7 +10,7 @@ go_library(
         "route.go",
         "test_helpers.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/gorilla/mux",
+    importmap = "k0s.io/vendor/github.com/gorilla/mux",
     importpath = "github.com/gorilla/mux",
     visibility = ["//visibility:public"],
 )

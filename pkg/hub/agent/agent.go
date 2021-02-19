@@ -7,8 +7,8 @@ import (
 
 	auth "github.com/abbot/go-http-auth"
 	"github.com/btwiuse/pretty"
-	"k0s.io/k0s/pkg/api"
-	"k0s.io/k0s/pkg/hub"
+	"k0s.io/pkg/api"
+	"k0s.io/pkg/hub"
 )
 
 var (

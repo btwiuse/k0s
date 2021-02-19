@@ -6,7 +6,7 @@ go_library(
         "clockwork.go",
         "ticker.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/jonboulle/clockwork",
+    importmap = "k0s.io/vendor/github.com/jonboulle/clockwork",
     importpath = "github.com/jonboulle/clockwork",
     visibility = ["//visibility:public"],
 )

@@ -3,8 +3,8 @@ package grpcimpl
 import (
 
 	// "github.com/btwiuse/wetty/pkg/msg"
-	"k0s.io/k0s/pkg/agent"
-	"k0s.io/k0s/pkg/api"
+	"k0s.io/pkg/agent"
+	"k0s.io/pkg/api"
 )
 
 type Session struct {

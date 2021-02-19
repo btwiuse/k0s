@@ -10,7 +10,7 @@ go_library(
         "chacha20poly1305_noasm.go",
         "xchacha20poly1305.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/crypto/chacha20poly1305",
+    importmap = "k0s.io/vendor/golang.org/x/crypto/chacha20poly1305",
     importpath = "golang.org/x/crypto/chacha20poly1305",
     visibility = ["//visibility:public"],
     deps = [

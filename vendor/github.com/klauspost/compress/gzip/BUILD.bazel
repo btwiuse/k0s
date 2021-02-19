@@ -6,7 +6,7 @@ go_library(
         "gunzip.go",
         "gzip.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/klauspost/compress/gzip",
+    importmap = "k0s.io/vendor/github.com/klauspost/compress/gzip",
     importpath = "github.com/klauspost/compress/gzip",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/klauspost/compress/flate:go_default_library"],

@@ -6,7 +6,7 @@ go_library(
         "buildinfo.go",
         "json.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/buildinfo",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/buildinfo",
     importpath = "src.elv.sh/pkg/buildinfo",
     visibility = ["//visibility:public"],
     deps = ["//vendor/src.elv.sh/pkg/prog:go_default_library"],

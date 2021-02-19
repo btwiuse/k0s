@@ -6,7 +6,7 @@ go_library(
         "file.go",
         "loader.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/cliconfig",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/cliconfig",
     importpath = "github.com/buildkite/agent/v3/cliconfig",
     visibility = ["//visibility:public"],
     deps = [

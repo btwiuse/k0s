@@ -6,7 +6,7 @@ go_library(
         "charmap.go",
         "tables.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/text/encoding/charmap",
+    importmap = "k0s.io/vendor/golang.org/x/text/encoding/charmap",
     importpath = "golang.org/x/text/encoding/charmap",
     visibility = ["//visibility:public"],
     deps = [

@@ -14,7 +14,7 @@ go_library(
         "static.go",
         "whoami.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-portal/pkg/handlers",
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-portal/pkg/handlers",
     importpath = "github.com/greenpau/caddy-auth-portal/pkg/handlers",
     visibility = ["//visibility:public"],
     deps = [

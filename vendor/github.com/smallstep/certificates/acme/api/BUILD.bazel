@@ -8,7 +8,7 @@ go_library(
         "middleware.go",
         "order.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/certificates/acme/api",
+    importmap = "k0s.io/vendor/github.com/smallstep/certificates/acme/api",
     importpath = "github.com/smallstep/certificates/acme/api",
     visibility = ["//visibility:public"],
     deps = [

@@ -42,7 +42,7 @@ go_library(
         "vs.go",
         "xcode.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/styles",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/styles",
     importpath = "github.com/alecthomas/chroma/styles",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/alecthomas/chroma:go_default_library"],

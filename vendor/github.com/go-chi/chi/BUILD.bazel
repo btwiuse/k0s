@@ -9,7 +9,7 @@ go_library(
         "mux.go",
         "tree.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/go-chi/chi",
+    importmap = "k0s.io/vendor/github.com/go-chi/chi",
     importpath = "github.com/go-chi/chi",
     visibility = ["//visibility:public"],
 )

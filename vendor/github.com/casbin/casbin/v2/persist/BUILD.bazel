@@ -9,7 +9,7 @@ go_library(
         "watcher.go",
         "watcher_ex.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/casbin/casbin/v2/persist",
+    importmap = "k0s.io/vendor/github.com/casbin/casbin/v2/persist",
     importpath = "github.com/casbin/casbin/v2/persist",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/casbin/casbin/v2/model:go_default_library"],

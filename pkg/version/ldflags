@@ -35,17 +35,17 @@ version(){
 ldflags(){
   ldflags="${GO_LDFLAGS}
 "
-  ldflags+="-X 'k0s.io/k0s/pkg/version.GitCommitString=$(commit)'
+  ldflags+="-X 'k0s.io/pkg/version.GitCommitString=$(commit)'
 "
-  ldflags+="-X 'k0s.io/k0s/pkg/version.GitStateString=$(state)'
+  ldflags+="-X 'k0s.io/pkg/version.GitStateString=$(state)'
 "
-  ldflags+="-X 'k0s.io/k0s/pkg/version.GitBranchString=$(branch)'
+  ldflags+="-X 'k0s.io/pkg/version.GitBranchString=$(branch)'
 "
-  ldflags+="-X 'k0s.io/k0s/pkg/version.GitSummaryString=$(summary)'
+  ldflags+="-X 'k0s.io/pkg/version.GitSummaryString=$(summary)'
 "
-  ldflags+="-X 'k0s.io/k0s/pkg/version.BuildDateString=$(builddate)'
+  ldflags+="-X 'k0s.io/pkg/version.BuildDateString=$(builddate)'
 "
-  ldflags+="-X 'k0s.io/k0s/pkg/version.VersionString=$(version)'
+  ldflags+="-X 'k0s.io/pkg/version.VersionString=$(version)'
 "
   echo -n "$ldflags"
 }

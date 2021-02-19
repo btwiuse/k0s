@@ -22,7 +22,7 @@ go_library(
         "systemd.go",
         "systemverilog.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/s",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/s",
     importpath = "github.com/alecthomas/chroma/lexers/s",
     visibility = ["//visibility:public"],
     deps = [

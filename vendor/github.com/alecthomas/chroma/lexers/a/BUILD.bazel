@@ -16,7 +16,7 @@ go_library(
         "arduino.go",
         "awk.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/a",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/a",
     importpath = "github.com/alecthomas/chroma/lexers/a",
     visibility = ["//visibility:public"],
     deps = [

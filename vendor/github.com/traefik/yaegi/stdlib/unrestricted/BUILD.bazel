@@ -81,7 +81,7 @@ go_library(
         "go1_16_syscall_windows_arm.go",
         "unrestricted.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/traefik/yaegi/stdlib/unrestricted",
+    importmap = "k0s.io/vendor/github.com/traefik/yaegi/stdlib/unrestricted",
     importpath = "github.com/traefik/yaegi/stdlib/unrestricted",
     visibility = ["//visibility:public"],
 )

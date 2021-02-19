@@ -22,7 +22,7 @@ go_library(
         "values.go",
         "values_generated.go",
     ],
-    importmap = "k0s.io/k0s/vendor/gopkg.in/alecthomas/kingpin.v2",
+    importmap = "k0s.io/vendor/gopkg.in/alecthomas/kingpin.v2",
     importpath = "gopkg.in/alecthomas/kingpin.v2",
     visibility = ["//visibility:public"],
     deps = [

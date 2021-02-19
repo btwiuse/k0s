@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["weighted_dist.go"],
-    importmap = "k0s.io/k0s/vendor/git.torproject.org/pluggable-transports/obfs4.git/common/probdist",
+    importmap = "k0s.io/vendor/git.torproject.org/pluggable-transports/obfs4.git/common/probdist",
     importpath = "git.torproject.org/pluggable-transports/obfs4.git/common/probdist",
     visibility = ["//visibility:public"],
     deps = [

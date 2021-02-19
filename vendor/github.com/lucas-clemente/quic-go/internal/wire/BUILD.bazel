@@ -32,7 +32,7 @@ go_library(
         "transport_parameters.go",
         "version_negotiation.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/wire",
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/internal/wire",
     importpath = "github.com/lucas-clemente/quic-go/internal/wire",
     visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
     deps = [

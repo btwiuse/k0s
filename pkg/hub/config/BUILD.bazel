@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["config.go"],
-    importpath = "k0s.io/k0s/pkg/hub/config",
+    importpath = "k0s.io/pkg/hub/config",
     visibility = ["//visibility:public"],
     deps = [
         "//pkg:go_default_library",

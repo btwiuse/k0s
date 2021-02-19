@@ -13,7 +13,7 @@ go_library(
         "software_profiler.go",
         "utils.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/hodgesds/perf-utils",
+    importmap = "k0s.io/vendor/github.com/hodgesds/perf-utils",
     importpath = "github.com/hodgesds/perf-utils",
     visibility = ["//visibility:public"],
     deps = select({

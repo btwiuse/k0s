@@ -14,7 +14,7 @@ go_library(
         "unescape.go",
         "unparser.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/parser",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/parser",
     importpath = "github.com/google/cel-go/parser",
     visibility = ["//visibility:public"],
     deps = [

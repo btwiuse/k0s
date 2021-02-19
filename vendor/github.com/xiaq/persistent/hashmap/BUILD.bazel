@@ -6,7 +6,7 @@ go_library(
         "hashmap.go",
         "map.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/xiaq/persistent/hashmap",
+    importmap = "k0s.io/vendor/github.com/xiaq/persistent/hashmap",
     importpath = "github.com/xiaq/persistent/hashmap",
     visibility = ["//visibility:public"],
 )

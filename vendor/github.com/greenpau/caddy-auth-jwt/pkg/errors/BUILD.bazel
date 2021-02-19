@@ -7,7 +7,7 @@ go_library(
         "common.go",
         "errors.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-jwt/pkg/errors",
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-jwt/pkg/errors",
     importpath = "github.com/greenpau/caddy-auth-jwt/pkg/errors",
     visibility = ["//visibility:public"],
 )

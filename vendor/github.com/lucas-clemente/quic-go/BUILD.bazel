@@ -47,7 +47,7 @@ go_library(
         "window_update_queue.go",
         "zero_rtt_queue.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go",
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go",
     importpath = "github.com/lucas-clemente/quic-go",
     visibility = ["//visibility:public"],
     deps = [

@@ -15,7 +15,7 @@ go_library(
         "si.go",
         "times.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/dustin/go-humanize",
+    importmap = "k0s.io/vendor/github.com/dustin/go-humanize",
     importpath = "github.com/dustin/go-humanize",
     visibility = ["//visibility:public"],
 )

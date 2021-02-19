@@ -11,7 +11,7 @@ go_library(
         "detect_intel.go",
         "detect_ref.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/klauspost/cpuid",
+    importmap = "k0s.io/vendor/github.com/klauspost/cpuid",
     importpath = "github.com/klauspost/cpuid",
     visibility = ["//visibility:public"],
 )

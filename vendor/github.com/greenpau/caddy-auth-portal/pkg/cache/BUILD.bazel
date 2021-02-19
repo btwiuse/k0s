@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["cache.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-portal/pkg/cache",
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-portal/pkg/cache",
     importpath = "github.com/greenpau/caddy-auth-portal/pkg/cache",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/greenpau/caddy-auth-jwt/pkg/claims:go_default_library"],

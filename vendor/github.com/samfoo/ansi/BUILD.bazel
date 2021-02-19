@@ -7,7 +7,7 @@ go_library(
         "doc.go",
         "print.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/samfoo/ansi",
+    importmap = "k0s.io/vendor/github.com/samfoo/ansi",
     importpath = "github.com/samfoo/ansi",
     visibility = ["//visibility:public"],
 )

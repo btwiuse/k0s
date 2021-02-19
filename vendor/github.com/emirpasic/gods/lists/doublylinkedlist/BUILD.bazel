@@ -8,7 +8,7 @@ go_library(
         "iterator.go",
         "serialization.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/emirpasic/gods/lists/doublylinkedlist",
+    importmap = "k0s.io/vendor/github.com/emirpasic/gods/lists/doublylinkedlist",
     importpath = "github.com/emirpasic/gods/lists/doublylinkedlist",
     visibility = ["//visibility:public"],
     deps = [

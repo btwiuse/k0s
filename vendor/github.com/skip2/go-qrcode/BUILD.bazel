@@ -9,7 +9,7 @@ go_library(
         "symbol.go",
         "version.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/skip2/go-qrcode",
+    importmap = "k0s.io/vendor/github.com/skip2/go-qrcode",
     importpath = "github.com/skip2/go-qrcode",
     visibility = ["//visibility:public"],
     deps = [

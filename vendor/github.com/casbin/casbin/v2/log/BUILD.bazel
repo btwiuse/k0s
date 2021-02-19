@@ -7,7 +7,7 @@ go_library(
         "log_util.go",
         "logger.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/casbin/casbin/v2/log",
+    importmap = "k0s.io/vendor/github.com/casbin/casbin/v2/log",
     importpath = "github.com/casbin/casbin/v2/log",
     visibility = ["//visibility:public"],
 )

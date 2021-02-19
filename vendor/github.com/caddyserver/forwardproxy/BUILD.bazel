@@ -7,7 +7,7 @@ go_library(
         "caddyfile.go",
         "forwardproxy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/forwardproxy",
+    importmap = "k0s.io/vendor/github.com/caddyserver/forwardproxy",
     importpath = "github.com/caddyserver/forwardproxy",
     visibility = ["//visibility:public"],
     deps = [

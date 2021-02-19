@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["stack.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/internal/stack",
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/internal/stack",
     importpath = "github.com/mmcloughlin/avo/internal/stack",
     visibility = ["//vendor/github.com/mmcloughlin/avo:__subpackages__"],
 )

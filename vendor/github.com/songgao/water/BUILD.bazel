@@ -19,7 +19,7 @@ go_library(
         "syscalls_other.go",
         "syscalls_windows.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/songgao/water",
+    importmap = "k0s.io/vendor/github.com/songgao/water",
     importpath = "github.com/songgao/water",
     visibility = ["//visibility:public"],
     deps = select({

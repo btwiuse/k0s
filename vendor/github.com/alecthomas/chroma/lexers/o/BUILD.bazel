@@ -9,7 +9,7 @@ go_library(
         "openscad.go",
         "org.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/o",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/o",
     importpath = "github.com/alecthomas/chroma/lexers/o",
     visibility = ["//visibility:public"],
     deps = [

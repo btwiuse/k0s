@@ -12,7 +12,7 @@ go_library(
         "sync.go",
         "value.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/go-kit/kit/log",
+    importmap = "k0s.io/vendor/github.com/go-kit/kit/log",
     importpath = "github.com/go-kit/kit/log",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/go-logfmt/logfmt:go_default_library"],

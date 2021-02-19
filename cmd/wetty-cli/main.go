@@ -8,11 +8,11 @@ import (
 	"syscall"
 	"time"
 
-	asciitransport "k0s.io/k0s/pkg/asciitransport/v2"
-	"k0s.io/k0s/pkg/console"
-	"k0s.io/k0s/pkg/utils"
-	"k0s.io/k0s/pkg/uuid"
-	"k0s.io/k0s/pkg/wetty/wetty"
+	asciitransport "k0s.io/pkg/asciitransport/v2"
+	"k0s.io/pkg/console"
+	"k0s.io/pkg/utils"
+	"k0s.io/pkg/uuid"
+	"k0s.io/pkg/wetty/wetty"
 )
 
 func dial(p string) (conn net.Conn, err error) {

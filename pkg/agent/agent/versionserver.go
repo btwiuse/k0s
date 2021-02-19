@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/btwiuse/pretty"
-	types "k0s.io/k0s/pkg/agent"
-	"k0s.io/k0s/pkg/middleware"
+	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/middleware"
 )
 
 func StartVersionServer(c types.Config) chan net.Conn {

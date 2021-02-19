@@ -9,7 +9,7 @@ go_library(
         "netlink_linux_notarm.go",
         "netlink_unsupported.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/docker/libcontainer/netlink",
+    importmap = "k0s.io/vendor/github.com/docker/libcontainer/netlink",
     importpath = "github.com/docker/libcontainer/netlink",
     visibility = ["//visibility:public"],
 )

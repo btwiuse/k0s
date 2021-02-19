@@ -14,7 +14,7 @@ go_library(
         "send.go",
         "version.go",
     ],
-    importmap = "k0s.io/k0s/vendor/google.golang.org/api/internal/gensupport",
+    importmap = "k0s.io/vendor/google.golang.org/api/internal/gensupport",
     importpath = "google.golang.org/api/internal/gensupport",
     visibility = ["//vendor/google.golang.org/api:__subpackages__"],
     deps = [

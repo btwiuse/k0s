@@ -7,7 +7,7 @@ go_library(
         "lexers.go",
         "qml.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers",
     importpath = "github.com/alecthomas/chroma/lexers",
     visibility = ["//visibility:public"],
     deps = [

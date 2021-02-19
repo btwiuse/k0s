@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["state.go"],
-    importmap = "k0s.io/k0s/vendor/google.golang.org/grpc/balancer/grpclb/state",
+    importmap = "k0s.io/vendor/google.golang.org/grpc/balancer/grpclb/state",
     importpath = "google.golang.org/grpc/balancer/grpclb/state",
     visibility = ["//visibility:public"],
     deps = ["//vendor/google.golang.org/grpc/resolver:go_default_library"],

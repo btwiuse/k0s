@@ -9,7 +9,7 @@ go_library(
         "templates.go",
         "types.go",
     ],
-    importmap = "k0s.io/k0s/vendor/go.step.sm/crypto/sshutil",
+    importmap = "k0s.io/vendor/go.step.sm/crypto/sshutil",
     importpath = "go.step.sm/crypto/sshutil",
     visibility = ["//visibility:public"],
     deps = [

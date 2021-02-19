@@ -19,7 +19,7 @@ package main
 import (
 	"os"
 
-	"k0s.io/k0s/pkg/cli/k16s"
+	"k0s.io/pkg/cli/k16s"
 )
 
 func main() {

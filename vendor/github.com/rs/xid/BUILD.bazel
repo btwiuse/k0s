@@ -10,7 +10,7 @@ go_library(
         "hostid_windows.go",
         "id.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/rs/xid",
+    importmap = "k0s.io/vendor/github.com/rs/xid",
     importpath = "github.com/rs/xid",
     visibility = ["//visibility:public"],
 )

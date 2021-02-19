@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/denisbrodbeck/machineid"
-	"k0s.io/k0s/pkg/uuid"
+	"k0s.io/pkg/uuid"
 )
 
 func main() {

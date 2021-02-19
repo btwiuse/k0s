@@ -6,7 +6,7 @@ import (
 
 	"google.golang.org/protobuf/encoding/protojson"
 
-	"k0s.io/k0s/pkg/asciiproto"
+	"k0s.io/pkg/asciiproto"
 )
 
 type Logger interface {

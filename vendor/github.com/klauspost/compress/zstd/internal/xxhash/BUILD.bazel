@@ -9,7 +9,7 @@ go_library(
         "xxhash_other.go",
         "xxhash_safe.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/klauspost/compress/zstd/internal/xxhash",
+    importmap = "k0s.io/vendor/github.com/klauspost/compress/zstd/internal/xxhash",
     importpath = "github.com/klauspost/compress/zstd/internal/xxhash",
     visibility = ["//vendor/github.com/klauspost/compress/zstd:__subpackages__"],
 )

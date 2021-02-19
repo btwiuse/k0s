@@ -7,7 +7,7 @@ go_library(
         "methods.go",
         "validator.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/caddy-auth-jwt/pkg/config",
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-jwt/pkg/config",
     importpath = "github.com/greenpau/caddy-auth-jwt/pkg/config",
     visibility = ["//visibility:public"],
     deps = [

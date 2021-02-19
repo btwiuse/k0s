@@ -10,7 +10,7 @@ go_library(
         "text_create.go",
         "text_parse.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/prometheus/common/expfmt",
+    importmap = "k0s.io/vendor/github.com/prometheus/common/expfmt",
     importpath = "github.com/prometheus/common/expfmt",
     visibility = ["//visibility:public"],
     deps = [

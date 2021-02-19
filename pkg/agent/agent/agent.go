@@ -11,9 +11,9 @@ import (
 
 	"github.com/btwiuse/pretty"
 	"golang.org/x/sync/errgroup"
-	types "k0s.io/k0s/pkg/agent"
-	"k0s.io/k0s/pkg/agent/dialer"
-	"k0s.io/k0s/pkg/api"
+	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent/dialer"
+	"k0s.io/pkg/api"
 )
 
 var (

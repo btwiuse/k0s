@@ -15,7 +15,7 @@ go_library(
         "session_jwt.go",
         "util.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/crewjam/saml/samlsp",
+    importmap = "k0s.io/vendor/github.com/crewjam/saml/samlsp",
     importpath = "github.com/crewjam/saml/samlsp",
     visibility = ["//visibility:public"],
     deps = [

@@ -7,7 +7,7 @@ go_library(
         "default_transport_not_go113.go",
         "dial.go",
     ],
-    importmap = "k0s.io/k0s/vendor/google.golang.org/api/transport/http",
+    importmap = "k0s.io/vendor/google.golang.org/api/transport/http",
     importpath = "google.golang.org/api/transport/http",
     visibility = ["//visibility:public"],
     deps = [

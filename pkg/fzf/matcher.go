@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"k0s.io/k0s/pkg/fzf/util"
+	"k0s.io/pkg/fzf/util"
 )
 
 // MatchRequest represents a search request

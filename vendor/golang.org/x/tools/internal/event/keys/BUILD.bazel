@@ -6,7 +6,7 @@ go_library(
         "keys.go",
         "standard.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/tools/internal/event/keys",
+    importmap = "k0s.io/vendor/golang.org/x/tools/internal/event/keys",
     importpath = "golang.org/x/tools/internal/event/keys",
     visibility = ["//vendor/golang.org/x/tools:__subpackages__"],
     deps = ["//vendor/golang.org/x/tools/internal/event/label:go_default_library"],

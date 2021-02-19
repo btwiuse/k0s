@@ -5,7 +5,7 @@ import (
 	"net"
 
 	"github.com/ginuerzh/gost"
-	types "k0s.io/k0s/pkg/agent"
+	types "k0s.io/pkg/agent"
 )
 
 func StartSocks5Server(c types.Config) chan net.Conn {

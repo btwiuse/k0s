@@ -11,7 +11,7 @@ go_library(
         "packet_header.go",
         "types.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/logging",
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/logging",
     importpath = "github.com/lucas-clemente/quic-go/logging",
     visibility = ["//visibility:public"],
     deps = [

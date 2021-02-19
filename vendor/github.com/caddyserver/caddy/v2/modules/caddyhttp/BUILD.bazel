@@ -20,7 +20,7 @@ go_library(
         "subroute.go",
         "vars.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp",
     visibility = ["//visibility:public"],
     deps = [

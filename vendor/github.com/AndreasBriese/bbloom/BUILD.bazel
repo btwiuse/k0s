@@ -6,7 +6,7 @@ go_library(
         "bbloom.go",
         "sipHash.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/AndreasBriese/bbloom",
+    importmap = "k0s.io/vendor/github.com/AndreasBriese/bbloom",
     importpath = "github.com/AndreasBriese/bbloom",
     visibility = ["//visibility:public"],
 )

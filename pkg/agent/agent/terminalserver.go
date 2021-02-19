@@ -4,9 +4,9 @@ import (
 	"log"
 	"net"
 
-	types "k0s.io/k0s/pkg/agent"
-	"k0s.io/k0s/pkg/agent/tty"
-	"k0s.io/k0s/pkg/asciitransport"
+	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent/tty"
+	"k0s.io/pkg/asciitransport"
 )
 
 func StartTerminalServer(c types.Config) chan net.Conn {

@@ -7,7 +7,7 @@ go_library(
         "gen.go",
         "zctors.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mmcloughlin/avo/x86",
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/x86",
     importpath = "github.com/mmcloughlin/avo/x86",
     visibility = ["//visibility:public"],
     deps = [

@@ -17,7 +17,7 @@ go_library(
         "tokentype_string.go",
         "types.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma",
     importpath = "github.com/alecthomas/chroma",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/dlclark/regexp2:go_default_library"],

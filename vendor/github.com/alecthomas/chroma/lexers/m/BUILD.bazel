@@ -17,7 +17,7 @@ go_library(
         "myghty.go",
         "mysql.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/m",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/m",
     importpath = "github.com/alecthomas/chroma/lexers/m",
     visibility = ["//visibility:public"],
     deps = [

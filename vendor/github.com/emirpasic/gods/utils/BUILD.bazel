@@ -7,7 +7,7 @@ go_library(
         "sort.go",
         "utils.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/emirpasic/gods/utils",
+    importmap = "k0s.io/vendor/github.com/emirpasic/gods/utils",
     importpath = "github.com/emirpasic/gods/utils",
     visibility = ["//visibility:public"],
 )

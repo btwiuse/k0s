@@ -11,7 +11,7 @@ go_library(
         "interface.go",
         "pacer.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/internal/congestion",
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/internal/congestion",
     importpath = "github.com/lucas-clemente/quic-go/internal/congestion",
     visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
     deps = [

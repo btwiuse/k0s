@@ -7,7 +7,7 @@ go_library(
         "php.go",
         "phtml.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/circular",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/circular",
     importpath = "github.com/alecthomas/chroma/lexers/circular",
     visibility = ["//visibility:public"],
     deps = [

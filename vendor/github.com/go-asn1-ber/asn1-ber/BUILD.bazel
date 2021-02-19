@@ -10,7 +10,7 @@ go_library(
         "length.go",
         "util.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/go-asn1-ber/asn1-ber",
+    importmap = "k0s.io/vendor/github.com/go-asn1-ber/asn1-ber",
     importpath = "github.com/go-asn1-ber/asn1-ber",
     visibility = ["//visibility:public"],
 )

@@ -6,7 +6,7 @@ go_library(
         "caddyfile.go",
         "headers.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/headers",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/headers",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/headers",
     visibility = ["//visibility:public"],
     deps = [

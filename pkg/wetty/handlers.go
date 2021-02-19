@@ -10,10 +10,10 @@ import (
 	"modernc.org/httpfs"
 
 	"github.com/btwiuse/wetty/pkg/assets"
-	asciitransport "k0s.io/k0s/pkg/asciitransport/v2"
-	"k0s.io/k0s/pkg/utils"
-	"k0s.io/k0s/pkg/wetty/wetty"
-    "k0s.io/k0s/pkg/localcmd"
+	asciitransport "k0s.io/pkg/asciitransport/v2"
+	"k0s.io/pkg/utils"
+	"k0s.io/pkg/wetty/wetty"
+    "k0s.io/pkg/localcmd"
 )
 
 func (server *Server) setupHandlers(pathPrefix string) http.Handler {

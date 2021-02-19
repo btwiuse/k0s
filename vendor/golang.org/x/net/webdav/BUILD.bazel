@@ -10,7 +10,7 @@ go_library(
         "webdav.go",
         "xml.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/net/webdav",
+    importmap = "k0s.io/vendor/golang.org/x/net/webdav",
     importpath = "golang.org/x/net/webdav",
     visibility = ["//visibility:public"],
     deps = ["//vendor/golang.org/x/net/webdav/internal/xml:go_default_library"],

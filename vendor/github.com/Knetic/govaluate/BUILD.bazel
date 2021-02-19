@@ -19,7 +19,7 @@ go_library(
         "stagePlanner.go",
         "tokenStream.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/Knetic/govaluate",
+    importmap = "k0s.io/vendor/github.com/Knetic/govaluate",
     importpath = "github.com/Knetic/govaluate",
     visibility = ["//visibility:public"],
 )

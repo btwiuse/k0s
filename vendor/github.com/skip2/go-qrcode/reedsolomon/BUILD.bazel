@@ -7,7 +7,7 @@ go_library(
         "gf_poly.go",
         "reed_solomon.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/skip2/go-qrcode/reedsolomon",
+    importmap = "k0s.io/vendor/github.com/skip2/go-qrcode/reedsolomon",
     importpath = "github.com/skip2/go-qrcode/reedsolomon",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/skip2/go-qrcode/bitset:go_default_library"],

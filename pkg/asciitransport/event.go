@@ -5,7 +5,7 @@ import (
 
 	"github.com/btwiuse/pretty"
 
-	"k0s.io/k0s/pkg/asciitransport/cast"
+	"k0s.io/pkg/asciitransport/cast"
 )
 
 type ResizeEvent cast.Header

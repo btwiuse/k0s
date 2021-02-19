@@ -11,7 +11,7 @@ go_library(
         "span.go",
         "tracer.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/opentracing/opentracing-go",
+    importmap = "k0s.io/vendor/github.com/opentracing/opentracing-go",
     importpath = "github.com/opentracing/opentracing-go",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/opentracing/opentracing-go/log:go_default_library"],

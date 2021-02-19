@@ -33,7 +33,7 @@ go_library(
         "ztypes_riscvx.go",
         "ztypes_s390x.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/creack/pty",
+    importmap = "k0s.io/vendor/github.com/creack/pty",
     importpath = "github.com/creack/pty",
     visibility = ["//visibility:public"],
     deps = select({

@@ -22,7 +22,7 @@ go_library(
         "util.go",
         "x_net_proxy.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/gorilla/websocket",
+    importmap = "k0s.io/vendor/github.com/gorilla/websocket",
     importpath = "github.com/gorilla/websocket",
     visibility = ["//visibility:public"],
 )

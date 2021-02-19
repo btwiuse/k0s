@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	"k0s.io/k0s/pkg/api"
-	types "k0s.io/k0s/pkg/hub"
-	"k0s.io/k0s/pkg/wrap"
+	"k0s.io/pkg/api"
+	types "k0s.io/pkg/hub"
+	"k0s.io/pkg/wrap"
 	"nhooyr.io/websocket"
 )
 

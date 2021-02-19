@@ -81,7 +81,7 @@ go_library(
         "zstdmt_compress.h",
     ],
     cgo = True,
-    importmap = "k0s.io/k0s/vendor/github.com/DataDog/zstd",
+    importmap = "k0s.io/vendor/github.com/DataDog/zstd",
     importpath = "github.com/DataDog/zstd",
     visibility = ["//visibility:public"],
 )

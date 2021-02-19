@@ -9,7 +9,7 @@ go_library(
         "utils.go",
         "write.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/cli/utils",
+    importmap = "k0s.io/vendor/github.com/smallstep/cli/utils",
     importpath = "github.com/smallstep/cli/utils",
     visibility = ["//visibility:public"],
     deps = [

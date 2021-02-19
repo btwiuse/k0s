@@ -6,7 +6,7 @@ go_library(
         "configadapters.go",
         "load.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/caddyconfig",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/caddyconfig",
     importpath = "github.com/caddyserver/caddy/v2/caddyconfig",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/caddyserver/caddy/v2:go_default_library"],

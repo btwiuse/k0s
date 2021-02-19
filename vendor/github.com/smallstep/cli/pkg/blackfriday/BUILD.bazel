@@ -12,7 +12,7 @@ go_library(
         "node.go",
         "smartypants.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/smallstep/cli/pkg/blackfriday",
+    importmap = "k0s.io/vendor/github.com/smallstep/cli/pkg/blackfriday",
     importpath = "github.com/smallstep/cli/pkg/blackfriday",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/shurcooL/sanitized_anchor_name:go_default_library"],

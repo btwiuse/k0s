@@ -13,7 +13,7 @@ go_library(
         "tempfile.go",
         "test.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/bootstrap/shell",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/bootstrap/shell",
     importpath = "github.com/buildkite/agent/v3/bootstrap/shell",
     visibility = ["//visibility:public"],
     deps = [

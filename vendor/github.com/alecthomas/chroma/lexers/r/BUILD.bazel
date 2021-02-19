@@ -13,7 +13,7 @@ go_library(
         "ruby.go",
         "rust.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/r",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/r",
     importpath = "github.com/alecthomas/chroma/lexers/r",
     visibility = ["//visibility:public"],
     deps = [

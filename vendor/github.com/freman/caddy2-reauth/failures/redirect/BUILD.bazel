@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["failure.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/freman/caddy2-reauth/failures/redirect",
+    importmap = "k0s.io/vendor/github.com/freman/caddy2-reauth/failures/redirect",
     importpath = "github.com/freman/caddy2-reauth/failures/redirect",
     visibility = ["//visibility:public"],
     deps = [

@@ -271,7 +271,7 @@ go_library(
         "ztypes_solaris_amd64.go",
     ],
     cgo = True,
-    importmap = "k0s.io/k0s/vendor/golang.org/x/sys/unix",
+    importmap = "k0s.io/vendor/golang.org/x/sys/unix",
     importpath = "golang.org/x/sys/unix",
     visibility = ["//visibility:public"],
     deps = select({

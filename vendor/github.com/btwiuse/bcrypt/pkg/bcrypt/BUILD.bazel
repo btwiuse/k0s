@@ -6,7 +6,7 @@ go_library(
         "cmd.go",
         "run.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/btwiuse/bcrypt/pkg/bcrypt",
+    importmap = "k0s.io/vendor/github.com/btwiuse/bcrypt/pkg/bcrypt",
     importpath = "github.com/btwiuse/bcrypt/pkg/bcrypt",
     visibility = ["//visibility:public"],
     deps = ["//vendor/golang.org/x/crypto/bcrypt:go_default_library"],

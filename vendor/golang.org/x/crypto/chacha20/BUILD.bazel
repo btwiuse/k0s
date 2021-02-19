@@ -13,7 +13,7 @@ go_library(
         "chacha_s390x.s",
         "xor.go",
     ],
-    importmap = "k0s.io/k0s/vendor/golang.org/x/crypto/chacha20",
+    importmap = "k0s.io/vendor/golang.org/x/crypto/chacha20",
     importpath = "golang.org/x/crypto/chacha20",
     visibility = ["//visibility:public"],
     deps = [

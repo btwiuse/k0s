@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 
-	"k0s.io/k0s/pkg/agent/config"
+	"k0s.io/pkg/agent/config"
 )
 
 func main() {

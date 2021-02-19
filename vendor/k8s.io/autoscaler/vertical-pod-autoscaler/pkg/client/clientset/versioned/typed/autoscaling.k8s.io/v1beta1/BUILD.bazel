@@ -9,7 +9,7 @@ go_library(
         "verticalpodautoscaler.go",
         "verticalpodautoscalercheckpoint.go",
     ],
-    importmap = "k0s.io/k0s/vendor/k8s.io/autoscaler/vertical-pod-autoscaler/pkg/client/clientset/versioned/typed/autoscaling.k8s.io/v1beta1",
+    importmap = "k0s.io/vendor/k8s.io/autoscaler/vertical-pod-autoscaler/pkg/client/clientset/versioned/typed/autoscaling.k8s.io/v1beta1",
     importpath = "k8s.io/autoscaler/vertical-pod-autoscaler/pkg/client/clientset/versioned/typed/autoscaling.k8s.io/v1beta1",
     visibility = ["//visibility:public"],
     deps = [

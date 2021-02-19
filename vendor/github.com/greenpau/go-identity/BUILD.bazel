@@ -23,7 +23,7 @@ go_library(
         "user.go",
         "uuid.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/greenpau/go-identity",
+    importmap = "k0s.io/vendor/github.com/greenpau/go-identity",
     importpath = "github.com/greenpau/go-identity",
     visibility = ["//visibility:public"],
     deps = [

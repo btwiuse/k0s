@@ -6,7 +6,7 @@ go_library(
         "conn.go",
         "socks5.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/ginuerzh/gosocks5",
+    importmap = "k0s.io/vendor/github.com/ginuerzh/gosocks5",
     importpath = "github.com/ginuerzh/gosocks5",
     visibility = ["//visibility:public"],
 )

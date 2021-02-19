@@ -12,7 +12,7 @@ go_library(
         "selectionpolicies.go",
         "streaming.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy",
     visibility = ["//visibility:public"],
     deps = [

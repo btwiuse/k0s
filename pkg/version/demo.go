@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 
-	"k0s.io/k0s/pkg/version"
+	"k0s.io/pkg/version"
 )
 
 func main() {

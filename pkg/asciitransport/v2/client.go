@@ -4,7 +4,7 @@ import (
 	"io"
 	"sync"
 
-	"k0s.io/k0s/pkg/asciiproto"
+	"k0s.io/pkg/asciiproto"
 )
 
 /*

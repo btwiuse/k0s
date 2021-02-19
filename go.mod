@@ -1,4 +1,4 @@
-module k0s.io/k0s
+module k0s.io
 
 go 1.16
 

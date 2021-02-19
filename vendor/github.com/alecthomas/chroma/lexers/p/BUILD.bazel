@@ -21,7 +21,7 @@ go_library(
         "python.go",
         "python3.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/p",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/p",
     importpath = "github.com/alecthomas/chroma/lexers/p",
     visibility = ["//visibility:public"],
     deps = [

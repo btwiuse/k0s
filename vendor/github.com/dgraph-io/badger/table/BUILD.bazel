@@ -7,7 +7,7 @@ go_library(
         "iterator.go",
         "table.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/dgraph-io/badger/table",
+    importmap = "k0s.io/vendor/github.com/dgraph-io/badger/table",
     importpath = "github.com/dgraph-io/badger/table",
     visibility = ["//visibility:public"],
     deps = [

@@ -18,7 +18,7 @@ import (
 	"sync"
 	"time"
 
-	portless "k0s.io/k0s/pkg/tunnel"
+	portless "k0s.io/pkg/tunnel"
 	// "k0s.io/pkg/wrap"
 
 	"github.com/gorilla/handlers"

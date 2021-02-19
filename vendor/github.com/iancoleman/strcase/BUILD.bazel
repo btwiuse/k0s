@@ -9,7 +9,7 @@ go_library(
         "numbers.go",
         "snake.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/iancoleman/strcase",
+    importmap = "k0s.io/vendor/github.com/iancoleman/strcase",
     importpath = "github.com/iancoleman/strcase",
     visibility = ["//visibility:public"],
 )

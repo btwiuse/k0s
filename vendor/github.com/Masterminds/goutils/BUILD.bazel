@@ -8,7 +8,7 @@ go_library(
         "stringutils.go",
         "wordutils.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/Masterminds/goutils",
+    importmap = "k0s.io/vendor/github.com/Masterminds/goutils",
     importpath = "github.com/Masterminds/goutils",
     visibility = ["//visibility:public"],
 )

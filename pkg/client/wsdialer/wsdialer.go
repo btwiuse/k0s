@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"k0s.io/k0s/pkg/client"
+	"k0s.io/pkg/client"
 	"nhooyr.io/websocket"
 )
 

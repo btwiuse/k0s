@@ -12,7 +12,7 @@ go_library(
         "tree.go",
         "writer.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/dlclark/regexp2/syntax",
+    importmap = "k0s.io/vendor/github.com/dlclark/regexp2/syntax",
     importpath = "github.com/dlclark/regexp2/syntax",
     visibility = ["//visibility:public"],
 )

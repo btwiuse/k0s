@@ -35,7 +35,7 @@ import (
 
 	"github.com/miekg/dns"
 
-	"k0s.io/k0s/pkg/jsondns"
+	"k0s.io/pkg/jsondns"
 )
 
 type Server struct {

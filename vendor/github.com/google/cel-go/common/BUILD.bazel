@@ -14,7 +14,7 @@ go_library(
         "location.go",
         "source.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/common",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/common",
     importpath = "github.com/google/cel-go/common",
     deps = [
         "//vendor/golang.org/x/text/width:go_default_library",

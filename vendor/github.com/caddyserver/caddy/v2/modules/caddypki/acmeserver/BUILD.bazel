@@ -6,7 +6,7 @@ go_library(
         "acmeserver.go",
         "caddyfile.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddypki/acmeserver",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddypki/acmeserver",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddypki/acmeserver",
     visibility = ["//visibility:public"],
     deps = [

@@ -6,7 +6,7 @@ go_library(
         "field.go",
         "tags.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/opentracing/opentracing-go/ext",
+    importmap = "k0s.io/vendor/github.com/opentracing/opentracing-go/ext",
     importpath = "github.com/opentracing/opentracing-go/ext",
     visibility = ["//visibility:public"],
     deps = [

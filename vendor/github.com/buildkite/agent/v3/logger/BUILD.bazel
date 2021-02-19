@@ -9,7 +9,7 @@ go_library(
         "level.go",
         "log.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/buildkite/agent/v3/logger",
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/logger",
     importpath = "github.com/buildkite/agent/v3/logger",
     visibility = ["//visibility:public"],
     deps = [

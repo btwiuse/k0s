@@ -17,12 +17,12 @@ import (
 	"github.com/denisbrodbeck/machineid"
 	"gopkg.in/yaml.v3"
 
-	"k0s.io/k0s/pkg"
-	"k0s.io/k0s/pkg/agent"
-	"k0s.io/k0s/pkg/agent/info"
-	"k0s.io/k0s/pkg/rng"
-	"k0s.io/k0s/pkg/uuid"
-	"k0s.io/k0s/pkg/version"
+	"k0s.io/pkg"
+	"k0s.io/pkg/agent"
+	"k0s.io/pkg/agent/info"
+	"k0s.io/pkg/rng"
+	"k0s.io/pkg/uuid"
+	"k0s.io/pkg/version"
 )
 
 type arrayFlags []string

@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["basicauth.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/tango-contrib/basicauth",
+    importmap = "k0s.io/vendor/github.com/tango-contrib/basicauth",
     importpath = "github.com/tango-contrib/basicauth",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/lunny/tango:go_default_library"],

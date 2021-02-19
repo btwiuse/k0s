@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["prompt.go"],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/cli/prompt",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/cli/prompt",
     importpath = "src.elv.sh/pkg/cli/prompt",
     visibility = ["//visibility:public"],
     deps = ["//vendor/src.elv.sh/pkg/ui:go_default_library"],

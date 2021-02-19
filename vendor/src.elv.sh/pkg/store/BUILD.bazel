@@ -11,7 +11,7 @@ go_library(
         "store.go",
         "temp_store.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/store",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/store",
     importpath = "src.elv.sh/pkg/store",
     visibility = ["//visibility:public"],
     deps = [

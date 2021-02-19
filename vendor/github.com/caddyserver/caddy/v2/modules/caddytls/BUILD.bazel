@@ -17,7 +17,7 @@ go_library(
         "values.go",
         "zerosslissuer.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/caddytls",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddytls",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddytls",
     visibility = ["//visibility:public"],
     deps = [

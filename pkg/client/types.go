@@ -4,8 +4,8 @@ import (
 	"net"
 	"net/url"
 
-	"k0s.io/k0s/pkg"
-	"k0s.io/k0s/pkg/hub"
+	"k0s.io/pkg"
+	"k0s.io/pkg/hub"
 )
 
 type Client interface {

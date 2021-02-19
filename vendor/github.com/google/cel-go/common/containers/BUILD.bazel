@@ -8,7 +8,7 @@ package(
 go_library(
     name = "go_default_library",
     srcs = ["container.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/google/cel-go/common/containers",
+    importmap = "k0s.io/vendor/github.com/google/cel-go/common/containers",
     importpath = "github.com/google/cel-go/common/containers",
     deps = [
         "//vendor/google.golang.org/genproto/googleapis/api/expr/v1alpha1:go_default_library",

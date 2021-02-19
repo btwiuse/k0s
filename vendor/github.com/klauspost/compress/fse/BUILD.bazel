@@ -10,7 +10,7 @@ go_library(
         "decompress.go",
         "fse.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/klauspost/compress/fse",
+    importmap = "k0s.io/vendor/github.com/klauspost/compress/fse",
     importpath = "github.com/klauspost/compress/fse",
     visibility = ["//visibility:public"],
 )

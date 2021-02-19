@@ -14,7 +14,7 @@ go_library(
         "roundtrip.go",
         "server.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucas-clemente/quic-go/http3",
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/http3",
     importpath = "github.com/lucas-clemente/quic-go/http3",
     visibility = ["//visibility:public"],
     deps = [

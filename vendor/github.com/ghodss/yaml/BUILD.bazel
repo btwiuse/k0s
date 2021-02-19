@@ -7,7 +7,7 @@ go_library(
         "yaml.go",
         "yaml_go110.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/ghodss/yaml",
+    importmap = "k0s.io/vendor/github.com/ghodss/yaml",
     importpath = "github.com/ghodss/yaml",
     visibility = ["//visibility:public"],
     deps = ["//vendor/gopkg.in/yaml.v2:go_default_library"],

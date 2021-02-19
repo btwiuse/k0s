@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"k0s.io/k0s/pkg/cli/gitd"
+	"k0s.io/pkg/cli/gitd"
 )
 
 func main() {

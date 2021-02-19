@@ -12,7 +12,7 @@ go_library(
         "parser.go",
         "spec.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/robfig/cron/v3",
+    importmap = "k0s.io/vendor/github.com/robfig/cron/v3",
     importpath = "github.com/robfig/cron/v3",
     visibility = ["//visibility:public"],
 )

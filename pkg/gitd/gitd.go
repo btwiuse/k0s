@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"k0s.io/k0s/pkg/middleware"
+	"k0s.io/pkg/middleware"
 )
 
 func Serve(ln net.Listener) error {

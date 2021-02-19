@@ -9,7 +9,7 @@ go_library(
         "testdir.go",
         "testutil.go",
     ],
-    importmap = "k0s.io/k0s/vendor/src.elv.sh/pkg/testutil",
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/testutil",
     importpath = "src.elv.sh/pkg/testutil",
     visibility = ["//visibility:public"],
     deps = ["//vendor/src.elv.sh/pkg/env:go_default_library"],

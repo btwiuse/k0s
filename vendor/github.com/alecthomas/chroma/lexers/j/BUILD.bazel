@@ -11,7 +11,7 @@ go_library(
         "julia.go",
         "jungle.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/alecthomas/chroma/lexers/j",
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/j",
     importpath = "github.com/alecthomas/chroma/lexers/j",
     visibility = ["//visibility:public"],
     deps = [

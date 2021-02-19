@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["filestorage.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/caddyserver/caddy/v2/modules/filestorage",
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/filestorage",
     importpath = "github.com/caddyserver/caddy/v2/modules/filestorage",
     visibility = ["//visibility:public"],
     deps = [

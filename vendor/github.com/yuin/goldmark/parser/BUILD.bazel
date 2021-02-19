@@ -23,7 +23,7 @@ go_library(
         "setext_headings.go",
         "thematic_break.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/yuin/goldmark/parser",
+    importmap = "k0s.io/vendor/github.com/yuin/goldmark/parser",
     importpath = "github.com/yuin/goldmark/parser",
     visibility = ["//visibility:public"],
     deps = [

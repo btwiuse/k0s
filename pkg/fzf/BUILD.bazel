@@ -24,7 +24,7 @@ go_library(
         "terminal_windows.go",
         "tokenizer.go",
     ],
-    importpath = "k0s.io/k0s/pkg/fzf",
+    importpath = "k0s.io/pkg/fzf",
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/fzf/algo:go_default_library",

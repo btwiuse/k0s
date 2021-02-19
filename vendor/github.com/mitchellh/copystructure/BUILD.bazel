@@ -6,7 +6,7 @@ go_library(
         "copier_time.go",
         "copystructure.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/mitchellh/copystructure",
+    importmap = "k0s.io/vendor/github.com/mitchellh/copystructure",
     importpath = "github.com/mitchellh/copystructure",
     visibility = ["//visibility:public"],
     deps = ["//vendor/github.com/mitchellh/reflectwalk:go_default_library"],

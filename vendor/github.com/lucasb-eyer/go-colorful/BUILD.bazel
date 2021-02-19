@@ -10,7 +10,7 @@ go_library(
         "soft_palettegen.go",
         "warm_palettegen.go",
     ],
-    importmap = "k0s.io/k0s/vendor/github.com/lucasb-eyer/go-colorful",
+    importmap = "k0s.io/vendor/github.com/lucasb-eyer/go-colorful",
     importpath = "github.com/lucasb-eyer/go-colorful",
     visibility = ["//visibility:public"],
 )

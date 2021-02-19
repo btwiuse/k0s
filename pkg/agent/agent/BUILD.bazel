@@ -16,7 +16,7 @@ go_library(
         "terminalserver.go",
         "versionserver.go",
     ],
-    importpath = "k0s.io/k0s/pkg/agent/agent",
+    importpath = "k0s.io/pkg/agent/agent",
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/agent:go_default_library",

@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"k0s.io/k0s/pkg/dohserver"
-	"k0s.io/k0s/pkg/tunnel/listener"
+	"k0s.io/pkg/dohserver"
+	"k0s.io/pkg/tunnel/listener"
 )
 
 const exampleConfig = `

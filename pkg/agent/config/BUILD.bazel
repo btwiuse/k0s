@@ -7,7 +7,7 @@ go_library(
         "config_getcmd_unix.go",
         "config_getcmd_windows.go",
     ],
-    importpath = "k0s.io/k0s/pkg/agent/config",
+    importpath = "k0s.io/pkg/agent/config",
     visibility = ["//visibility:public"],
     deps = [
         "//pkg:go_default_library",

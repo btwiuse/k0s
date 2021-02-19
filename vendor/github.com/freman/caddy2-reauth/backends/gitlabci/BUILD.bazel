@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["auth.go"],
-    importmap = "k0s.io/k0s/vendor/github.com/freman/caddy2-reauth/backends/gitlabci",
+    importmap = "k0s.io/vendor/github.com/freman/caddy2-reauth/backends/gitlabci",
     importpath = "github.com/freman/caddy2-reauth/backends/gitlabci",
     visibility = ["//visibility:public"],
     deps = [
