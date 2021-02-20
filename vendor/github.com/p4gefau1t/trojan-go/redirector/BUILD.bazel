@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["redirector.go"],
+    importmap = "k0s.io/vendor/github.com/p4gefau1t/trojan-go/redirector",
+    importpath = "github.com/p4gefau1t/trojan-go/redirector",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/p4gefau1t/trojan-go/common:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/log:go_default_library",
+    ],
+)

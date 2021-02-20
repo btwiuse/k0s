@@ -24,6 +24,7 @@ import (
 	"k0s.io/pkg/cli/k16s"
 	"k0s.io/pkg/cli/mnt"
 	"k0s.io/pkg/cli/webproc"
+	"k0s.io/pkg/cli/trojan"
 )
 
 func main() {
@@ -55,6 +56,9 @@ func main() {
 		}).
 		When([]interface{}{"webproc", match.ANY}, func() {
 			log.Fatalln(webproc.Run(osargs[1:]))
+		}).
+		When([]interface{}{"trojan", match.ANY}, func() {
+			log.Fatalln(trojan.Run(osargs[1:]))
 		}).
 		When([]interface{}{"goproxy", match.ANY}, func() {
 			run(goproxy.Run(osargs[1:]))
@@ -113,6 +117,9 @@ func main() {
 		}).
 		When([]interface{}{match.ANY, "webproc", match.ANY}, func() {
 			log.Fatalln(webproc.Run(osargs[2:]))
+		}).
+		When([]interface{}{match.ANY, "trojan", match.ANY}, func() {
+			run(trojan.Run(osargs[2:]))
 		}).
 		When([]interface{}{match.ANY, "goproxy", match.ANY}, func() {
 			run(goproxy.Run(osargs[2:]))

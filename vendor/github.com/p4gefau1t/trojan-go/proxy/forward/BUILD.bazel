@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["forward.go"],
+    importmap = "k0s.io/vendor/github.com/p4gefau1t/trojan-go/proxy/forward",
+    importpath = "github.com/p4gefau1t/trojan-go/proxy/forward",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/p4gefau1t/trojan-go/config:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/proxy:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/proxy/client:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/tunnel:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/tunnel/dokodemo:go_default_library",
+    ],
+)

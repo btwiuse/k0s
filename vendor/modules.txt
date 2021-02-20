@@ -783,6 +783,51 @@ github.com/oleiade/reflections
 github.com/opentracing/opentracing-go
 github.com/opentracing/opentracing-go/ext
 github.com/opentracing/opentracing-go/log
+# github.com/p4gefau1t/trojan-go v0.8.2
+## explicit
+github.com/p4gefau1t/trojan-go/api
+github.com/p4gefau1t/trojan-go/api/control
+github.com/p4gefau1t/trojan-go/api/service
+github.com/p4gefau1t/trojan-go/common
+github.com/p4gefau1t/trojan-go/component
+github.com/p4gefau1t/trojan-go/config
+github.com/p4gefau1t/trojan-go/constant
+github.com/p4gefau1t/trojan-go/easy
+github.com/p4gefau1t/trojan-go/log
+github.com/p4gefau1t/trojan-go/log/golog
+github.com/p4gefau1t/trojan-go/log/golog/buffer
+github.com/p4gefau1t/trojan-go/log/golog/colorful
+github.com/p4gefau1t/trojan-go/option
+github.com/p4gefau1t/trojan-go/proxy
+github.com/p4gefau1t/trojan-go/proxy/client
+github.com/p4gefau1t/trojan-go/proxy/custom
+github.com/p4gefau1t/trojan-go/proxy/forward
+github.com/p4gefau1t/trojan-go/proxy/nat
+github.com/p4gefau1t/trojan-go/proxy/server
+github.com/p4gefau1t/trojan-go/redirector
+github.com/p4gefau1t/trojan-go/statistic
+github.com/p4gefau1t/trojan-go/statistic/memory
+github.com/p4gefau1t/trojan-go/statistic/mysql
+github.com/p4gefau1t/trojan-go/tunnel
+github.com/p4gefau1t/trojan-go/tunnel/adapter
+github.com/p4gefau1t/trojan-go/tunnel/dokodemo
+github.com/p4gefau1t/trojan-go/tunnel/freedom
+github.com/p4gefau1t/trojan-go/tunnel/http
+github.com/p4gefau1t/trojan-go/tunnel/mux
+github.com/p4gefau1t/trojan-go/tunnel/router
+github.com/p4gefau1t/trojan-go/tunnel/shadowsocks
+github.com/p4gefau1t/trojan-go/tunnel/simplesocks
+github.com/p4gefau1t/trojan-go/tunnel/socks
+github.com/p4gefau1t/trojan-go/tunnel/tls
+github.com/p4gefau1t/trojan-go/tunnel/tls/fingerprint
+github.com/p4gefau1t/trojan-go/tunnel/tproxy
+github.com/p4gefau1t/trojan-go/tunnel/transport
+github.com/p4gefau1t/trojan-go/tunnel/trojan
+github.com/p4gefau1t/trojan-go/tunnel/websocket
+github.com/p4gefau1t/trojan-go/url
+github.com/p4gefau1t/trojan-go/version
+# github.com/patrickmn/go-cache v2.1.0+incompatible
+github.com/patrickmn/go-cache
 # github.com/pborman/uuid v1.2.0
 github.com/pborman/uuid
 # github.com/philhofer/fwd v1.0.0
@@ -838,6 +883,9 @@ github.com/rakyll/statik/fs
 # github.com/rancher/dapper v0.5.5
 ## explicit
 github.com/rancher/dapper/file
+# github.com/refraction-networking/utls v0.0.0-20200601200209-ada0bb9b38a0
+github.com/refraction-networking/utls
+github.com/refraction-networking/utls/cpu
 # github.com/riobard/go-bloom v0.0.0-20200213042214-218e1707c495
 github.com/riobard/go-bloom
 # github.com/robfig/cron/v3 v3.0.0
@@ -945,6 +993,12 @@ github.com/traefik/yaegi/stdlib
 github.com/traefik/yaegi/stdlib/syscall
 github.com/traefik/yaegi/stdlib/unrestricted
 github.com/traefik/yaegi/stdlib/unsafe
+# github.com/txthinking/runnergroup v0.0.0-20200327135940-540a793bb997
+github.com/txthinking/runnergroup
+# github.com/txthinking/socks5 v0.0.0-20200531111549-252709fcb919
+github.com/txthinking/socks5
+# github.com/txthinking/x v0.0.0-20200330144832-5ad2416896a9
+github.com/txthinking/x
 # github.com/urfave/cli v1.22.4
 ## explicit
 github.com/urfave/cli
@@ -1042,6 +1096,7 @@ golang.org/x/crypto/ripemd160
 golang.org/x/crypto/salsa20
 golang.org/x/crypto/salsa20/salsa
 golang.org/x/crypto/scrypt
+golang.org/x/crypto/sha3
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 golang.org/x/crypto/ssh/knownhosts
@@ -1075,6 +1130,7 @@ golang.org/x/net/proxy
 golang.org/x/net/trace
 golang.org/x/net/webdav
 golang.org/x/net/webdav/internal/xml
+golang.org/x/net/websocket
 # golang.org/x/oauth2 v0.0.0-20201208152858-08078c50e5b5
 golang.org/x/oauth2
 golang.org/x/oauth2/google
@@ -1534,6 +1590,39 @@ src.elv.sh/pkg/testutil
 src.elv.sh/pkg/tt
 src.elv.sh/pkg/ui
 src.elv.sh/pkg/wcwidth
+# v2ray.com/core v4.19.1+incompatible
+v2ray.com/core
+v2ray.com/core/app/router
+v2ray.com/core/common
+v2ray.com/core/common/bitmask
+v2ray.com/core/common/buf
+v2ray.com/core/common/bytespool
+v2ray.com/core/common/dice
+v2ray.com/core/common/errors
+v2ray.com/core/common/log
+v2ray.com/core/common/net
+v2ray.com/core/common/platform
+v2ray.com/core/common/protocol
+v2ray.com/core/common/protocol/udp
+v2ray.com/core/common/serial
+v2ray.com/core/common/session
+v2ray.com/core/common/signal
+v2ray.com/core/common/signal/done
+v2ray.com/core/common/signal/semaphore
+v2ray.com/core/common/strmatcher
+v2ray.com/core/common/task
+v2ray.com/core/common/uuid
+v2ray.com/core/features
+v2ray.com/core/features/dns
+v2ray.com/core/features/dns/localdns
+v2ray.com/core/features/inbound
+v2ray.com/core/features/outbound
+v2ray.com/core/features/policy
+v2ray.com/core/features/routing
+v2ray.com/core/features/stats
+v2ray.com/core/transport
+v2ray.com/core/transport/internet
+v2ray.com/core/transport/internet/udp
 # github.com/buildkite/agent/v3 => github.com/btwiuse/agent/v3 v3.27.1-0.20210217080418-ae42a28eefa7
 # github.com/caddyserver/forwardproxy => github.com/klzgrad/forwardproxy v0.0.0-20210120121422-9b4a5a242bd6
 # github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20210218034515-4e5ef1691e9f

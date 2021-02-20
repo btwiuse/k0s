@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "config.pb.go",
+        "dialer.go",
+        "dispatcher.go",
+        "errors.generated.go",
+        "hub.go",
+        "hub_linux.go",
+        "hub_other.go",
+        "udp.go",
+    ],
+    importmap = "k0s.io/vendor/v2ray.com/core/transport/internet/udp",
+    importpath = "v2ray.com/core/transport/internet/udp",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/v2ray.com/core/common:go_default_library",
+        "//vendor/v2ray.com/core/common/buf:go_default_library",
+        "//vendor/v2ray.com/core/common/errors:go_default_library",
+        "//vendor/v2ray.com/core/common/net:go_default_library",
+        "//vendor/v2ray.com/core/common/protocol/udp:go_default_library",
+        "//vendor/v2ray.com/core/common/session:go_default_library",
+        "//vendor/v2ray.com/core/common/signal:go_default_library",
+        "//vendor/v2ray.com/core/common/signal/done:go_default_library",
+        "//vendor/v2ray.com/core/features/routing:go_default_library",
+        "//vendor/v2ray.com/core/transport:go_default_library",
+        "//vendor/v2ray.com/core/transport/internet:go_default_library",
+    ],
+)

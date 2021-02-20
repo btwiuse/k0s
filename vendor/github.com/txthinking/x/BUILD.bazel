@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "dial.go",
+        "geo.go",
+        "http.go",
+        "ip.go",
+        "is.go",
+        "random.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/txthinking/x",
+    importpath = "github.com/txthinking/x",
+    visibility = ["//visibility:public"],
+)

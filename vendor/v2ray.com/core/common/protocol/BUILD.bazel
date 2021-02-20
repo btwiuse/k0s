@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "account.go",
+        "address.go",
+        "context.go",
+        "errors.generated.go",
+        "headers.go",
+        "headers.pb.go",
+        "id.go",
+        "payload.go",
+        "protocol.go",
+        "server_picker.go",
+        "server_spec.go",
+        "server_spec.pb.go",
+        "time.go",
+        "user.go",
+        "user.pb.go",
+    ],
+    importmap = "k0s.io/vendor/v2ray.com/core/common/protocol",
+    importpath = "v2ray.com/core/common/protocol",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/v2ray.com/core/common:go_default_library",
+        "//vendor/v2ray.com/core/common/bitmask:go_default_library",
+        "//vendor/v2ray.com/core/common/buf:go_default_library",
+        "//vendor/v2ray.com/core/common/dice:go_default_library",
+        "//vendor/v2ray.com/core/common/errors:go_default_library",
+        "//vendor/v2ray.com/core/common/net:go_default_library",
+        "//vendor/v2ray.com/core/common/serial:go_default_library",
+        "//vendor/v2ray.com/core/common/uuid:go_default_library",
+    ],
+)

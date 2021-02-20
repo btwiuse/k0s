@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "config.go",
+        "server.go",
+        "tunnel.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/p4gefau1t/trojan-go/tunnel/tls",
+    importpath = "github.com/p4gefau1t/trojan-go/tunnel/tls",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/p4gefau1t/trojan-go/common:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/config:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/log:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/redirector:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/tunnel:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/tunnel/tls/fingerprint:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/tunnel/transport:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/tunnel/websocket:go_default_library",
+        "//vendor/github.com/refraction-networking/utls:go_default_library",
+    ],
+)

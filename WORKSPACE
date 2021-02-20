@@ -3390,6 +3390,48 @@ go_repository(
     version = "v0.1.0",
 )
 
+go_repository(
+    name = "com_github_aead_chacha20",
+    importpath = "github.com/aead/chacha20",
+    sum = "h1:KjTM2ks9d14ZYCvmHS9iAKVt9AyzRSqNU1qabPih5BY=",
+    version = "v0.0.0-20180709150244-8b13a72661da",
+)
+
+go_repository(
+    name = "com_github_p4gefau1t_trojan_go",
+    importpath = "github.com/p4gefau1t/trojan-go",
+    sum = "h1:KhXCKH7Rpd+1YYABK0qcN7s8146Kfatzk5SCy8nAFAI=",
+    version = "v0.8.2",
+)
+
+go_repository(
+    name = "com_github_refraction_networking_utls",
+    importpath = "github.com/refraction-networking/utls",
+    sum = "h1:vIkvetWOJZSADSKCF9MLTsQNW2httdBmYz47dQQteP8=",
+    version = "v0.0.0-20200601200209-ada0bb9b38a0",
+)
+
+go_repository(
+    name = "com_github_txthinking_runnergroup",
+    importpath = "github.com/txthinking/runnergroup",
+    sum = "h1:vlDgnShahmE2XLslpr0hnzxfAmSj3JLX2CYi8Xct7G4=",
+    version = "v0.0.0-20200327135940-540a793bb997",
+)
+
+go_repository(
+    name = "com_v2ray_core",
+    importpath = "v2ray.com/core",
+    sum = "h1:JWoYsYlCpFOJX5KcmSkAMHOqOjzux+wx/HtgMBkUvSg=",
+    version = "v4.19.1+incompatible",
+)
+
+go_repository(
+    name = "io_h12_socks",
+    importpath = "h12.io/socks",
+    sum = "h1:oiFI7YXv4h/0kBNcmAb5EkkoFJgYsOF88EQjMBxjitc=",
+    version = "v1.0.0",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -4157,15 +4199,15 @@ go_repository(
 go_repository(
     name = "com_github_txthinking_socks5",
     importpath = "github.com/txthinking/socks5",
-    sum = "h1:ZrsN4g6dBxtjk0emNLtovRstNJSxb23NykzOV40uDzQ=",
-    version = "v0.0.0-20190404052647-254e122c4eaf",
+    sum = "h1:yu9Bs+KssCJNxu/9fzRag6QgzOnxoH1Q6TvIiD4L6rQ=",
+    version = "v0.0.0-20200531111549-252709fcb919",
 )
 
 go_repository(
     name = "com_github_txthinking_x",
     importpath = "github.com/txthinking/x",
-    sum = "h1:83ZBGe0NTnQv23LTipNVs8KeNDXMQbUfF/8CPg2r7Tc=",
-    version = "v0.0.0-20190708114625-99b19c1440b6",
+    sum = "h1:ngJOce33YJJT1PFTfC9ao7S27AfrUh11Dr3Bc+ooBdM=",
+    version = "v0.0.0-20200330144832-5ad2416896a9",
 )
 
 go_repository(

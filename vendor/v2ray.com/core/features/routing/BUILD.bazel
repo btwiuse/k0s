@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "dispatcher.go",
+        "router.go",
+    ],
+    importmap = "k0s.io/vendor/v2ray.com/core/features/routing",
+    importpath = "v2ray.com/core/features/routing",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/v2ray.com/core/common:go_default_library",
+        "//vendor/v2ray.com/core/common/net:go_default_library",
+        "//vendor/v2ray.com/core/features:go_default_library",
+        "//vendor/v2ray.com/core/transport:go_default_library",
+    ],
+)

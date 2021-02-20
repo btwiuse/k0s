@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "common.go",
+        "error.go",
+        "io.go",
+        "net.go",
+        "sync.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/p4gefau1t/trojan-go/common",
+    importpath = "github.com/p4gefau1t/trojan-go/common",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/p4gefau1t/trojan-go/log:go_default_library"],
+)

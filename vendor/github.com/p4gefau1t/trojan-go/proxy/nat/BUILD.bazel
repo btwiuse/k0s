@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "nat.go",
+        "nat_stub.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/p4gefau1t/trojan-go/proxy/nat",
+    importpath = "github.com/p4gefau1t/trojan-go/proxy/nat",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "//vendor/github.com/p4gefau1t/trojan-go/common:go_default_library",
+            "//vendor/github.com/p4gefau1t/trojan-go/config:go_default_library",
+            "//vendor/github.com/p4gefau1t/trojan-go/proxy:go_default_library",
+            "//vendor/github.com/p4gefau1t/trojan-go/proxy/client:go_default_library",
+            "//vendor/github.com/p4gefau1t/trojan-go/tunnel:go_default_library",
+            "//vendor/github.com/p4gefau1t/trojan-go/tunnel/tproxy:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//vendor/github.com/p4gefau1t/trojan-go/common:go_default_library",
+            "//vendor/github.com/p4gefau1t/trojan-go/config:go_default_library",
+            "//vendor/github.com/p4gefau1t/trojan-go/proxy:go_default_library",
+            "//vendor/github.com/p4gefau1t/trojan-go/proxy/client:go_default_library",
+            "//vendor/github.com/p4gefau1t/trojan-go/tunnel:go_default_library",
+            "//vendor/github.com/p4gefau1t/trojan-go/tunnel/tproxy:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)
