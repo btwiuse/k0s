@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
@@ -7,13 +7,6 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//vendor/github.com/p4gefau1t/trojan-go/component:go_default_library",
-        "//vendor/github.com/p4gefau1t/trojan-go/log:go_default_library",
         "//vendor/github.com/p4gefau1t/trojan-go/option:go_default_library",
     ],
-)
-
-go_binary(
-    name = "trojan",
-    embed = [":go_default_library"],
-    visibility = ["//visibility:public"],
 )
