@@ -6,7 +6,7 @@ if ! [[ -d "${BUSYBOX}" ]]; then
   mkdir -p "${BUSYBOX}"
 fi
 
-curl -sL https://github.com/mjakob-gh/build-static-tmux/releases/download/v3.1d/tmux.linux-amd64.upx.gz > ${BUSYBOX}/tmux
+curl -sL https://github.com/mjakob-gh/build-static-tmux/releases/download/v3.1d/tmux.linux-amd64.upx.gz | gunzip > ${BUSYBOX}/tmux
 
 chmod +x ${BUSYBOX}/tmux
 
