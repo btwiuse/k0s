@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+export ASDF="${PWD}/.asdf"
+
+if ! [[ -d "${ASDF}" ]]; then
+  git clone https://github.com/asdf-vm/asdf.git "${ASDF}"
+fi
+
+. ${ASDF}/asdf.sh
+. ${ASDF}/completions/asdf.bash
+
+asdf plugin-add golang
+asdf install golang 1.16
+asdf global golang 1.16
+
+asdf plugin-add rust
+asdf install rust 1.50.0
+asdf global rust 1.50.0
+
+export PATH="${PATH}:${ASDF}/installs/rust/1.50.0/bin"
+source "${ASDF}/installs/rust/1.50.0/env"
+rustup toolchain install nightly
+rustup default nightly
