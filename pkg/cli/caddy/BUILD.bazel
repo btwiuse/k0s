@@ -6,6 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/cli/caddy",
     visibility = ["//visibility:public"],
     deps = [
+        "//vendor/github.com/abiosoft/caddy-json-schema:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/cmd:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/modules/standard:go_default_library",
         "//vendor/github.com/caddyserver/forwardproxy:go_default_library",

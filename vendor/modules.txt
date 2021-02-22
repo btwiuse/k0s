@@ -57,6 +57,9 @@ github.com/Yawning/chacha20
 # github.com/abbot/go-http-auth v0.4.0
 ## explicit
 github.com/abbot/go-http-auth
+# github.com/abiosoft/caddy-json-schema v0.0.0-20200527180432-2d0cb96ed8ea
+## explicit
+github.com/abiosoft/caddy-json-schema
 # github.com/abiosoft/ishell v2.0.0+incompatible
 ## explicit
 github.com/abiosoft/ishell

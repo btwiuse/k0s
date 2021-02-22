@@ -17,6 +17,7 @@ import (
         _ "github.com/iamd3vil/caddy_yaml_adapter"
         _ "github.com/mholt/caddy-webdav"
         _ "github.com/mholt/caddy-l4"
+	_ "github.com/abiosoft/caddy-json-schema"
 )
 
 func Run(args []string) error {

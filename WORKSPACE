@@ -3439,6 +3439,13 @@ go_repository(
     version = "v0.0.0-20210209073014-d1d54b015e34",
 )
 
+go_repository(
+    name = "com_github_abiosoft_caddy_json_schema",
+    importpath = "github.com/abiosoft/caddy-json-schema",
+    sum = "h1:8pK1q4nCIgA98a/vG7gu24rdc8NTrztVN0ZOih7Meg0=",
+    version = "v0.0.0-20200527180432-2d0cb96ed8ea",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
