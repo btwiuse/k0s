@@ -2,7 +2,7 @@
 
 export BUSYBOX="${PWD}/.bin"
 
-if ! [[ -d "${ASDF}" ]]; then
+if ! [[ -d "${BUSYBOX}" ]]; then
   mkdir -p "${BUSYBOX}"
 fi
 
