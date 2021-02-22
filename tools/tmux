@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+export BUSYBOX="${PWD}/.bin"
+
+if ! [[ -d "${BUSYBOX}" ]]; then
+  mkdir -p "${BUSYBOX}"
+fi
+
+curl -sL https://github.com/mjakob-gh/build-static-tmux/releases/download/v3.1d/tmux.linux-arm64.upx.gz > ${BUSYBOX}/tmux
+
+chmod +x ${BUSYBOX}/tmux
+
+export PATH="${PATH}:${BUSYBOX}"
