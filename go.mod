@@ -62,6 +62,7 @@ require (
 	github.com/mattn/go-isatty v0.0.12
 	github.com/mattn/go-runewidth v0.0.8
 	github.com/mattn/go-shellwords v1.0.10
+	github.com/mholt/caddy-l4 v0.0.0-20210209073014-d1d54b015e34
 	github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
 	github.com/miekg/dns v1.1.35
 	github.com/p4gefau1t/trojan-go v0.8.2

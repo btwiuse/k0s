@@ -16,6 +16,7 @@ import (
         _ "github.com/hairyhenderson/caddy-teapot-module"
         _ "github.com/iamd3vil/caddy_yaml_adapter"
         _ "github.com/mholt/caddy-webdav"
+        _ "github.com/mholt/caddy-l4"
 )
 
 func Run(args []string) error {

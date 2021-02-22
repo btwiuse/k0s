@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["tee.go"],
+    importmap = "k0s.io/vendor/github.com/mholt/caddy-l4/modules/l4tee",
+    importpath = "github.com/mholt/caddy-l4/modules/l4tee",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/mholt/caddy-l4/layer4:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

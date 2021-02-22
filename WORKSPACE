@@ -3432,6 +3432,13 @@ go_repository(
     version = "v1.0.0",
 )
 
+go_repository(
+    name = "com_github_mholt_caddy_l4",
+    importpath = "github.com/mholt/caddy-l4",
+    sum = "h1:M3Ss1Vq4NdnvTLY2xH6/lR8ixvgAd9Iy6gQzKwGhCdk=",
+    version = "v0.0.0-20210209073014-d1d54b015e34",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -4417,8 +4424,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_time",
     importpath = "golang.org/x/time",
-    sum = "h1:EHBhcS0mlXEAVwNyO2dLfjToGsyY4j24pTs2ScHnX7s=",
-    version = "v0.0.0-20200630173020-3af7569d3a1e",
+    sum = "h1:Hir2P/De0WpUhtrKGGjvSb2YxUgyZ7EFOSLIcSSpiwE=",
+    version = "v0.0.0-20201208040808-7e3f01d25324",
 )
 
 go_repository(

@@ -738,6 +738,17 @@ github.com/mdlayher/wifi/internal/nl80211
 # github.com/mholt/acmez v0.1.1
 github.com/mholt/acmez
 github.com/mholt/acmez/acme
+# github.com/mholt/caddy-l4 v0.0.0-20210209073014-d1d54b015e34
+## explicit
+github.com/mholt/caddy-l4
+github.com/mholt/caddy-l4/layer4
+github.com/mholt/caddy-l4/modules/l4echo
+github.com/mholt/caddy-l4/modules/l4http
+github.com/mholt/caddy-l4/modules/l4proxy
+github.com/mholt/caddy-l4/modules/l4ssh
+github.com/mholt/caddy-l4/modules/l4tee
+github.com/mholt/caddy-l4/modules/l4throttle
+github.com/mholt/caddy-l4/modules/l4tls
 # github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
 ## explicit
 github.com/mholt/caddy-webdav
@@ -1165,7 +1176,7 @@ golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
-# golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e
+# golang.org/x/time v0.0.0-20201208040808-7e3f01d25324
 golang.org/x/time/rate
 # golang.org/x/tools v0.0.0-20210105154028-b0ab187a4818
 golang.org/x/tools/go/gcexportdata

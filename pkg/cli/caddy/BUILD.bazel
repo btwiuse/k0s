@@ -17,6 +17,7 @@ go_library(
         "//vendor/github.com/greenpau/caddy-trace:go_default_library",
         "//vendor/github.com/hairyhenderson/caddy-teapot-module:go_default_library",
         "//vendor/github.com/iamd3vil/caddy_yaml_adapter:go_default_library",
+        "//vendor/github.com/mholt/caddy-l4:go_default_library",
         "//vendor/github.com/mholt/caddy-webdav:go_default_library",
     ],
 )
