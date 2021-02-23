@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cache.go",
+        "certificates.go",
+        "certmagic.go",
+        "client.go",
+        "config.go",
+        "crypto.go",
+        "filestorage.go",
+        "handshake.go",
+        "httphandler.go",
+        "maintain.go",
+        "ocsp.go",
+        "solvers.go",
+        "storage.go",
+        "user.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/mholt/certmagic",
+    importpath = "github.com/mholt/certmagic",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/go-acme/lego/acme:go_default_library",
+        "//vendor/github.com/go-acme/lego/certcrypto:go_default_library",
+        "//vendor/github.com/go-acme/lego/certificate:go_default_library",
+        "//vendor/github.com/go-acme/lego/challenge:go_default_library",
+        "//vendor/github.com/go-acme/lego/challenge/http01:go_default_library",
+        "//vendor/github.com/go-acme/lego/challenge/tlsalpn01:go_default_library",
+        "//vendor/github.com/go-acme/lego/lego:go_default_library",
+        "//vendor/github.com/go-acme/lego/registration:go_default_library",
+        "//vendor/github.com/klauspost/cpuid:go_default_library",
+        "//vendor/golang.org/x/crypto/ocsp:go_default_library",
+    ],
+)

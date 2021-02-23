@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "conditions.go",
+        "search.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/filebrowser/filebrowser/v2/search",
+    importpath = "github.com/filebrowser/filebrowser/v2/search",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/filebrowser/filebrowser/v2/rules:go_default_library",
+        "//vendor/github.com/spf13/afero:go_default_library",
+    ],
+)

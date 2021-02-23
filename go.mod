@@ -34,6 +34,7 @@ require (
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/docker/docker v1.4.2-0.20200214221943-d8772509d1a2
 	github.com/emirpasic/gods v1.12.0 // indirect
+	github.com/filebrowser/filebrowser/v2 v2.11.0
 	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/freman/caddy2-reauth v0.0.0-20200518130136-6064aa96b1a8
 	github.com/gdamore/tcell v1.3.0

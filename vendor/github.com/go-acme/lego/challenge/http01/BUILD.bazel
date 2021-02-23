@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "http_challenge.go",
+        "http_challenge_server.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/go-acme/lego/challenge/http01",
+    importpath = "github.com/go-acme/lego/challenge/http01",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/go-acme/lego/acme:go_default_library",
+        "//vendor/github.com/go-acme/lego/acme/api:go_default_library",
+        "//vendor/github.com/go-acme/lego/challenge:go_default_library",
+        "//vendor/github.com/go-acme/lego/log:go_default_library",
+    ],
+)

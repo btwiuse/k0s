@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "archiver.go",
+        "bz2.go",
+        "filecompressor.go",
+        "gz.go",
+        "lz4.go",
+        "rar.go",
+        "sz.go",
+        "tar.go",
+        "tarbz2.go",
+        "targz.go",
+        "tarlz4.go",
+        "tarsz.go",
+        "tarxz.go",
+        "xz.go",
+        "zip.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/mholt/archiver",
+    importpath = "github.com/mholt/archiver",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/dsnet/compress/bzip2:go_default_library",
+        "//vendor/github.com/golang/snappy:go_default_library",
+        "//vendor/github.com/nwaples/rardecode:go_default_library",
+        "//vendor/github.com/pierrec/lz4:go_default_library",
+        "//vendor/github.com/ulikunitz/xz:go_default_library",
+        "//vendor/github.com/xi2/xz:go_default_library",
+    ],
+)

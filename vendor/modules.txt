@@ -33,6 +33,9 @@ github.com/BurntSushi/toml
 github.com/DataDog/datadog-go/statsd
 # github.com/DataDog/zstd v1.4.1
 github.com/DataDog/zstd
+# github.com/GeertJohan/go.rice v1.0.0
+github.com/GeertJohan/go.rice
+github.com/GeertJohan/go.rice/embedded
 # github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible
 github.com/Knetic/govaluate
 # github.com/LiamHaworth/go-tproxy v0.0.0-20190726054950-ef7efd7f24ed
@@ -115,6 +118,13 @@ github.com/andrew-d/go-termutil
 github.com/antlr/antlr4/runtime/Go/antlr
 # github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef
 github.com/asaskevich/govalidator
+# github.com/asdine/storm v2.1.2+incompatible
+github.com/asdine/storm
+github.com/asdine/storm/codec
+github.com/asdine/storm/codec/json
+github.com/asdine/storm/index
+github.com/asdine/storm/internal
+github.com/asdine/storm/q
 # github.com/aws/aws-sdk-go v1.32.10
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/arn
@@ -210,6 +220,10 @@ github.com/buildkite/interpolate
 github.com/buildkite/shellwords
 # github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3
 github.com/buildkite/yaml
+# github.com/caddyserver/caddy v1.0.3
+github.com/caddyserver/caddy
+github.com/caddyserver/caddy/caddyfile
+github.com/caddyserver/caddy/telemetry
 # github.com/caddyserver/caddy/v2 v2.3.0
 ## explicit
 github.com/caddyserver/caddy/v2
@@ -267,6 +281,8 @@ github.com/casbin/casbin/v2/persist/file-adapter
 github.com/casbin/casbin/v2/rbac
 github.com/casbin/casbin/v2/rbac/default-role-manager
 github.com/casbin/casbin/v2/util
+# github.com/cenkalti/backoff v2.2.1+incompatible
+github.com/cenkalti/backoff
 # github.com/cespare/xxhash v1.1.0
 github.com/cespare/xxhash
 # github.com/cespare/xxhash/v2 v2.1.1
@@ -291,6 +307,8 @@ github.com/crewjam/saml
 github.com/crewjam/saml/logger
 github.com/crewjam/saml/samlsp
 github.com/crewjam/saml/xmlenc
+# github.com/daaku/go.zipexe v1.0.1
+github.com/daaku/go.zipexe
 # github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964
 github.com/danwakefield/fnmatch
 # github.com/davecgh/go-spew v1.1.1
@@ -321,10 +339,13 @@ github.com/dgraph-io/ristretto
 github.com/dgraph-io/ristretto/z
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
 github.com/dgrijalva/jwt-go
+github.com/dgrijalva/jwt-go/request
 # github.com/dgryski/go-farm v0.0.0-20190423205320-6a90982ecee2
 github.com/dgryski/go-farm
 # github.com/dgryski/go-jump v0.0.0-20170409065014-e1f439676b57
 github.com/dgryski/go-jump
+# github.com/disintegration/imaging v1.6.2
+github.com/disintegration/imaging
 # github.com/dlclark/regexp2 v1.2.0
 github.com/dlclark/regexp2
 github.com/dlclark/regexp2/syntax
@@ -334,6 +355,13 @@ github.com/docker/docker/pkg/namesgenerator
 # github.com/docker/libcontainer v2.2.1+incompatible
 github.com/docker/libcontainer/netlink
 github.com/docker/libcontainer/system
+# github.com/dsnet/compress v0.0.1
+github.com/dsnet/compress
+github.com/dsnet/compress/bzip2
+github.com/dsnet/compress/bzip2/internal/sais
+github.com/dsnet/compress/internal
+github.com/dsnet/compress/internal/errors
+github.com/dsnet/compress/internal/prefix
 # github.com/dustin/go-humanize v1.0.1-0.20200219035652-afde56e7acac
 github.com/dustin/go-humanize
 # github.com/elithrar/simple-scrypt v1.3.0
@@ -351,9 +379,31 @@ github.com/emirpasic/gods/utils
 github.com/fatih/color
 # github.com/felixge/httpsnoop v1.0.1
 github.com/felixge/httpsnoop
+# github.com/filebrowser/filebrowser/v2 v2.11.0
+## explicit
+github.com/filebrowser/filebrowser/v2/auth
+github.com/filebrowser/filebrowser/v2/cmd
+github.com/filebrowser/filebrowser/v2/diskcache
+github.com/filebrowser/filebrowser/v2/errors
+github.com/filebrowser/filebrowser/v2/files
+github.com/filebrowser/filebrowser/v2/fileutils
+github.com/filebrowser/filebrowser/v2/http
+github.com/filebrowser/filebrowser/v2/img
+github.com/filebrowser/filebrowser/v2/rules
+github.com/filebrowser/filebrowser/v2/runner
+github.com/filebrowser/filebrowser/v2/search
+github.com/filebrowser/filebrowser/v2/settings
+github.com/filebrowser/filebrowser/v2/share
+github.com/filebrowser/filebrowser/v2/storage
+github.com/filebrowser/filebrowser/v2/storage/bolt
+github.com/filebrowser/filebrowser/v2/storage/bolt/importer
+github.com/filebrowser/filebrowser/v2/users
+github.com/filebrowser/filebrowser/v2/version
 # github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568
 ## explicit
 github.com/flynn-archive/go-shlex
+# github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568
+github.com/flynn/go-shlex
 # github.com/freman/caddy2-reauth v0.0.0-20200518130136-6064aa96b1a8
 ## explicit
 github.com/freman/caddy2-reauth
@@ -435,6 +485,23 @@ github.com/ginuerzh/gosocks5
 github.com/ginuerzh/gost
 # github.com/ginuerzh/tls-dissector v0.0.2-0.20200224064855-24ab2b3a3796
 github.com/ginuerzh/tls-dissector
+# github.com/go-acme/lego v2.5.0+incompatible
+github.com/go-acme/lego/acme
+github.com/go-acme/lego/acme/api
+github.com/go-acme/lego/acme/api/internal/nonces
+github.com/go-acme/lego/acme/api/internal/secure
+github.com/go-acme/lego/acme/api/internal/sender
+github.com/go-acme/lego/certcrypto
+github.com/go-acme/lego/certificate
+github.com/go-acme/lego/challenge
+github.com/go-acme/lego/challenge/dns01
+github.com/go-acme/lego/challenge/http01
+github.com/go-acme/lego/challenge/resolver
+github.com/go-acme/lego/challenge/tlsalpn01
+github.com/go-acme/lego/lego
+github.com/go-acme/lego/log
+github.com/go-acme/lego/platform/wait
+github.com/go-acme/lego/registration
 # github.com/go-asn1-ber/asn1-ber v1.3.1
 github.com/go-asn1-ber/asn1-ber
 # github.com/go-chi/chi v4.1.2+incompatible
@@ -595,6 +662,17 @@ github.com/hashicorp/go-multierror
 # github.com/hashicorp/golang-lru v0.5.4
 github.com/hashicorp/golang-lru
 github.com/hashicorp/golang-lru/simplelru
+# github.com/hashicorp/hcl v1.0.0
+github.com/hashicorp/hcl
+github.com/hashicorp/hcl/hcl/ast
+github.com/hashicorp/hcl/hcl/parser
+github.com/hashicorp/hcl/hcl/printer
+github.com/hashicorp/hcl/hcl/scanner
+github.com/hashicorp/hcl/hcl/strconv
+github.com/hashicorp/hcl/hcl/token
+github.com/hashicorp/hcl/json/parser
+github.com/hashicorp/hcl/json/scanner
+github.com/hashicorp/hcl/json/token
 # github.com/hodgesds/perf-utils v0.0.8
 github.com/hodgesds/perf-utils
 # github.com/huandu/xstrings v1.3.1
@@ -606,6 +684,8 @@ github.com/iamd3vil/caddy_yaml_adapter
 github.com/iancoleman/strcase
 # github.com/imdario/mergo v0.3.9
 github.com/imdario/mergo
+# github.com/inconshreveable/mousetrap v1.0.0
+github.com/inconshreveable/mousetrap
 # github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
 ## explicit
 github.com/infobloxopen/go-trees/iptree
@@ -700,6 +780,8 @@ github.com/lunixbochs/vtclean
 # github.com/lunny/tango v0.5.6
 ## explicit
 github.com/lunny/tango
+# github.com/magiconair/properties v1.8.1
+github.com/magiconair/properties
 # github.com/manifoldco/promptui v0.7.0
 github.com/manifoldco/promptui
 github.com/manifoldco/promptui/list
@@ -710,6 +792,10 @@ github.com/marten-seemann/qpack
 github.com/marten-seemann/qtls
 # github.com/marten-seemann/qtls-go1-15 v0.1.1
 github.com/marten-seemann/qtls-go1-15
+# github.com/maruel/natural v0.0.0-20180416170133-dbcb3e2e8cf1
+github.com/maruel/natural
+# github.com/marusama/semaphore/v2 v2.4.1
+github.com/marusama/semaphore/v2
 # github.com/mattermost/xml-roundtrip-validator v0.0.0-20201213122252-bcd7e1b9601e
 github.com/mattermost/xml-roundtrip-validator
 # github.com/mattn/go-colorable v0.1.7
@@ -741,6 +827,8 @@ github.com/mdlayher/wifi/internal/nl80211
 # github.com/mholt/acmez v0.1.1
 github.com/mholt/acmez
 github.com/mholt/acmez/acme
+# github.com/mholt/archiver v3.1.1+incompatible
+github.com/mholt/archiver
 # github.com/mholt/caddy-l4 v0.0.0-20210209073014-d1d54b015e34
 ## explicit
 github.com/mholt/caddy-l4
@@ -755,6 +843,8 @@ github.com/mholt/caddy-l4/modules/l4tls
 # github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
 ## explicit
 github.com/mholt/caddy-webdav
+# github.com/mholt/certmagic v0.6.2-0.20190624175158-6a42ef9fe8c2
+github.com/mholt/certmagic
 # github.com/miekg/dns v1.1.35
 ## explicit
 github.com/miekg/dns
@@ -764,6 +854,8 @@ github.com/milosgajdos/tenus
 github.com/mitchellh/copystructure
 # github.com/mitchellh/go-homedir v1.1.0
 github.com/mitchellh/go-homedir
+# github.com/mitchellh/mapstructure v1.1.2
+github.com/mitchellh/mapstructure
 # github.com/mitchellh/reflectwalk v1.0.0
 github.com/mitchellh/reflectwalk
 # github.com/mmcloughlin/avo v0.0.0-20210104032911-599bdd1269f4
@@ -791,6 +883,8 @@ github.com/naoina/toml
 github.com/naoina/toml/ast
 # github.com/nightlyone/lockfile v0.0.0-20180618180623-0ad87eef1443
 github.com/nightlyone/lockfile
+# github.com/nwaples/rardecode v1.0.0
+github.com/nwaples/rardecode
 # github.com/oleiade/reflections v0.0.0-20160817071559-0e86b3c98b2f
 github.com/oleiade/reflections
 # github.com/opentracing/opentracing-go v1.2.0
@@ -844,10 +938,15 @@ github.com/p4gefau1t/trojan-go/version
 github.com/patrickmn/go-cache
 # github.com/pborman/uuid v1.2.0
 github.com/pborman/uuid
+# github.com/pelletier/go-toml v1.6.0
+github.com/pelletier/go-toml
 # github.com/philhofer/fwd v1.0.0
 github.com/philhofer/fwd
 # github.com/phuslu/geoip v1.0.20200217
 github.com/phuslu/geoip
+# github.com/pierrec/lz4 v2.0.5+incompatible
+github.com/pierrec/lz4
+github.com/pierrec/lz4/internal/xxh32
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
@@ -978,14 +1077,25 @@ github.com/songgao/water
 github.com/songgao/water/waterutil
 # github.com/soundcloud/go-runit v0.0.0-20150630195641-06ad41a06c4a
 github.com/soundcloud/go-runit/runit
+# github.com/spf13/afero v1.2.2
+github.com/spf13/afero
+github.com/spf13/afero/mem
 # github.com/spf13/cast v1.3.1
 github.com/spf13/cast
+# github.com/spf13/cobra v0.0.5
+github.com/spf13/cobra
+# github.com/spf13/jwalterweatherman v1.1.0
+github.com/spf13/jwalterweatherman
 # github.com/spf13/pflag v1.0.5
 github.com/spf13/pflag
+# github.com/spf13/viper v1.6.1
+github.com/spf13/viper
 # github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
+# github.com/subosito/gotenv v1.2.0
+github.com/subosito/gotenv
 # github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
 ## explicit
 github.com/tango-contrib/basicauth
@@ -1013,9 +1123,16 @@ github.com/txthinking/runnergroup
 github.com/txthinking/socks5
 # github.com/txthinking/x v0.0.0-20200330144832-5ad2416896a9
 github.com/txthinking/x
+# github.com/ulikunitz/xz v0.5.6
+github.com/ulikunitz/xz
+github.com/ulikunitz/xz/internal/hash
+github.com/ulikunitz/xz/internal/xlog
+github.com/ulikunitz/xz/lzma
 # github.com/urfave/cli v1.22.4
 ## explicit
 github.com/urfave/cli
+# github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8
+github.com/xi2/xz
 # github.com/xiaq/persistent v0.0.0-20200820214153-3175cfb92e14
 github.com/xiaq/persistent/hash
 github.com/xiaq/persistent/hashmap
@@ -1118,6 +1235,11 @@ golang.org/x/crypto/ssh/terminal
 golang.org/x/crypto/tea
 golang.org/x/crypto/twofish
 golang.org/x/crypto/xtea
+# golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8
+golang.org/x/image/bmp
+golang.org/x/image/ccitt
+golang.org/x/image/tiff
+golang.org/x/image/tiff/lzw
 # golang.org/x/mod v0.4.1
 ## explicit
 golang.org/x/mod/module
@@ -1330,6 +1452,8 @@ gopkg.in/alecthomas/kingpin.v2
 gopkg.in/asn1-ber.v1
 # gopkg.in/inf.v0 v0.9.1
 gopkg.in/inf.v0
+# gopkg.in/ini.v1 v1.51.1
+gopkg.in/ini.v1
 # gopkg.in/natefinch/lumberjack.v2 v2.0.0
 gopkg.in/natefinch/lumberjack.v2
 # gopkg.in/square/go-jose.v2 v2.5.1

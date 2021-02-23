@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "decoder.go",
+        "encoder.go",
+        "prefix.go",
+        "range.go",
+        "reader.go",
+        "wrap.go",
+        "writer.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/dsnet/compress/internal/prefix",
+    importpath = "github.com/dsnet/compress/internal/prefix",
+    visibility = ["//vendor/github.com/dsnet/compress:__subpackages__"],
+    deps = [
+        "//vendor/github.com/dsnet/compress:go_default_library",
+        "//vendor/github.com/dsnet/compress/internal:go_default_library",
+        "//vendor/github.com/dsnet/compress/internal/errors:go_default_library",
+    ],
+)

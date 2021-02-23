@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "assets.go",
+        "caddy.go",
+        "commands.go",
+        "controller.go",
+        "plugins.go",
+        "rlimit_nonposix.go",
+        "rlimit_posix.go",
+        "sigtrap.go",
+        "sigtrap_nonposix.go",
+        "sigtrap_posix.go",
+        "upgrade.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy",
+    importpath = "github.com/caddyserver/caddy",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/caddyfile:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/telemetry:go_default_library",
+        "//vendor/github.com/flynn/go-shlex:go_default_library",
+        "//vendor/github.com/mholt/certmagic:go_default_library",
+    ],
+)

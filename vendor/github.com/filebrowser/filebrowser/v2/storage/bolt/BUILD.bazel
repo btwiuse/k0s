@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "auth.go",
+        "bolt.go",
+        "config.go",
+        "share.go",
+        "users.go",
+        "utils.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/filebrowser/filebrowser/v2/storage/bolt",
+    importpath = "github.com/filebrowser/filebrowser/v2/storage/bolt",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/asdine/storm:go_default_library",
+        "//vendor/github.com/asdine/storm/q:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/auth:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/errors:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/settings:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/share:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/storage:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/users:go_default_library",
+    ],
+)

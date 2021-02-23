@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bucket.go",
+        "errors.go",
+        "extract.go",
+        "finder.go",
+        "kv.go",
+        "metadata.go",
+        "node.go",
+        "options.go",
+        "query.go",
+        "scan.go",
+        "sink.go",
+        "sink_sorter_swap.go",
+        "sink_sorter_swap_go1.8.go",
+        "store.go",
+        "storm.go",
+        "transaction.go",
+        "version.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/asdine/storm",
+    importpath = "github.com/asdine/storm",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/asdine/storm/codec:go_default_library",
+        "//vendor/github.com/asdine/storm/codec/json:go_default_library",
+        "//vendor/github.com/asdine/storm/index:go_default_library",
+        "//vendor/github.com/asdine/storm/internal:go_default_library",
+        "//vendor/github.com/asdine/storm/q:go_default_library",
+        "//vendor/go.etcd.io/bbolt:go_default_library",
+    ],
+)

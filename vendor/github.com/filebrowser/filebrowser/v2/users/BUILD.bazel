@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "password.go",
+        "permissions.go",
+        "storage.go",
+        "users.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/filebrowser/filebrowser/v2/users",
+    importpath = "github.com/filebrowser/filebrowser/v2/users",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/filebrowser/filebrowser/v2/errors:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/files:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/rules:go_default_library",
+        "//vendor/github.com/spf13/afero:go_default_library",
+        "//vendor/golang.org/x/crypto/bcrypt:go_default_library",
+    ],
+)

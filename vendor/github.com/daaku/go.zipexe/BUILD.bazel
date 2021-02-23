@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["zipexe.go"],
+    importmap = "k0s.io/vendor/github.com/daaku/go.zipexe",
+    importpath = "github.com/daaku/go.zipexe",
+    visibility = ["//visibility:public"],
+)
