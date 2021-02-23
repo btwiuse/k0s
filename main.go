@@ -23,8 +23,8 @@ import (
 	"k0s.io/pkg/cli/hub"
 	"k0s.io/pkg/cli/k16s"
 	"k0s.io/pkg/cli/mnt"
-	"k0s.io/pkg/cli/webproc"
 	"k0s.io/pkg/cli/trojan"
+	"k0s.io/pkg/cli/webproc"
 )
 
 func main() {
@@ -37,140 +37,49 @@ func main() {
 	// arg parse using rust-style match
 	// https://github.com/ylxdzsw/v2socks/blob/master/src/main.rs
 	// https://github.com/alexpantyukhin/go-pattern-match
-	match.Match(osargs).
+	matcher := match.Match(osargs)
+	for cmd := range cmdRun {
+		runf, _ := cmdRun[cmd]
+		matcher = matcher.
+			When(
+				[]interface{}{cmd, match.ANY},
+				func() error {
+					return runf(osargs[1:])
+				},
+			).
+			When(
+				[]interface{}{match.ANY, cmd, match.ANY},
+				func() error {
+					return runf(osargs[2:])
+				},
+			)
+	}
 
-		// hub -> hub
-		// agent -> agent
-		// client -> client
-		When([]interface{}{"dohserver", match.ANY}, func() {
-			run(dohserver.Run(osargs[1:]))
-		}).
-		When([]interface{}{"bcrypt", match.ANY}, func() {
-			run(bcrypt.Run(osargs[1:]))
-		}).
-		When([]interface{}{"k16s", match.ANY}, func() {
-			log.Fatalln(k16s.Run(osargs[1:]))
-		}).
-		When([]interface{}{"mnt", match.ANY}, func() {
-			log.Fatalln(mnt.Run(osargs[1:]))
-		}).
-		When([]interface{}{"webproc", match.ANY}, func() {
-			log.Fatalln(webproc.Run(osargs[1:]))
-		}).
-		When([]interface{}{"trojan", match.ANY}, func() {
-			log.Fatalln(trojan.Run(osargs[1:]))
-		}).
-		When([]interface{}{"goproxy", match.ANY}, func() {
-			run(goproxy.Run(osargs[1:]))
-		}).
-		When([]interface{}{"gos", match.ANY}, func() {
-			run(gos.Run(osargs[1:]))
-		}).
-		When([]interface{}{"buildkite-agent", match.ANY}, func() {
-			run(buildkite.Run(osargs[1:]))
-		}).
-		When([]interface{}{"caddy", match.ANY}, func() {
-			run(caddy.Run(osargs[1:]))
-		}).
-		When([]interface{}{"chassis", match.ANY}, func() {
-			log.Fatalln(chassis.Run(osargs[1:]))
-		}).
-		When([]interface{}{"client", match.ANY}, func() {
-			log.Fatalln(client.Run(osargs[1:]))
-		}).
-		When([]interface{}{"hub", match.ANY}, func() {
-			log.Fatalln(hub.Run(osargs[1:]))
-		}).
-		When([]interface{}{"hub2", match.ANY}, func() {
-			log.Fatalln(hub.Run2(osargs[1:]))
-		}).
-		When([]interface{}{"agent", match.ANY}, func() {
-			log.Fatalln(agent.Run(osargs[1:]))
-		}).
-		When([]interface{}{"gitd", match.ANY}, func() {
-			log.Fatalln(gitd.Run(osargs[1:]))
-		}).
-		When([]interface{}{"gost", match.ANY}, func() {
-			gost.Main(osargs[1:])
-		}).
-
-		// conntroll hub -> hub
-		// conntroll agent -> agent
-		// conntroll client -> client
-		// k0s hub -> hub
-		// k0s agent -> agent
-		// k0s client -> client
-		// * hub -> hub
-		// * agent -> agent
-		// * client -> client
-		When([]interface{}{match.ANY, "dohserver", match.ANY}, func() {
-			run(dohserver.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "bcrypt", match.ANY}, func() {
-			run(bcrypt.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "k16s", match.ANY}, func() {
-			log.Fatalln(k16s.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "mnt", match.ANY}, func() {
-			log.Fatalln(mnt.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "webproc", match.ANY}, func() {
-			log.Fatalln(webproc.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "trojan", match.ANY}, func() {
-			run(trojan.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "goproxy", match.ANY}, func() {
-			run(goproxy.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "gos", match.ANY}, func() {
-			run(gos.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "buildkite-agent", match.ANY}, func() {
-			run(buildkite.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "caddy", match.ANY}, func() {
-			run(caddy.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "chassis", match.ANY}, func() {
-			log.Fatalln(chassis.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "client", match.ANY}, func() {
-			log.Fatalln(client.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "hub", match.ANY}, func() {
-			log.Fatalln(hub.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "hub2", match.ANY}, func() {
-			log.Fatalln(hub.Run2(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "agent", match.ANY}, func() {
-			log.Fatalln(agent.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "gitd", match.ANY}, func() {
-			log.Fatalln(gitd.Run(osargs[2:]))
-		}).
-		When([]interface{}{match.ANY, "gost", match.ANY}, func() {
-			gost.Main(osargs[2:])
-		}).
-
-		// k0s -> client
-		// k0s hub -> hub
-		// k0s agent -> agent
-		When([]interface{}{"k0s", match.ANY}, func() {
-			log.Fatalln(client.Run(osargs[1:]))
-		}).
-
-		// conntroll -> usage
-		When(match.ANY, usage).
-		Result()
-}
-
-func run(err error) {
+	_, err := matcher.When(match.ANY, usage).Result()
 	if err != nil {
 		log.Fatalln(err)
 	}
+}
+
+var cmdRun = map[string]func([]string) error{
+	"dohserver":       dohserver.Run,
+	"bcrypt":          bcrypt.Run,
+	"k16s":            k16s.Run,
+	"mnt":             mnt.Run,
+	"webproc":         webproc.Run,
+	"trojan":          trojan.Run,
+	"goproxy":         goproxy.Run,
+	"gos":             gos.Run,
+	"buildkite-agent": buildkite.Run,
+	"caddy":           caddy.Run,
+	"chassis":         chassis.Run,
+	"client":          client.Run,
+	"k0s":             client.Run,
+	"hub":             hub.Run,
+	"hub2":            hub.Run2,
+	"agent":           agent.Run,
+	"gitd":            gitd.Run,
+	"gost":            gost.Main,
 }
 
 func usage() {

@@ -22,7 +22,7 @@ var (
 	pprofEnabled  = os.Getenv("PROFILING") != ""
 )
 
-func Main(args []string) {
+func Main(args []string) error {
 	gost.SetLogger(&gost.LogLogger{})
 
 	var (
@@ -88,6 +88,7 @@ func Main(args []string) {
 	}
 
 	select {}
+	return nil
 }
 
 func start() error {
