@@ -1,6 +1,6 @@
 package config
 
-func (c *config) getCmd() []string {
+func (c *Config) getCmd() []string {
 	shell := "cmd"
 	args := []string{shell}
 	if c.Cmd == "" {

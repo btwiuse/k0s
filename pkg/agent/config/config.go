@@ -40,7 +40,7 @@ func (i *arrayFlags) Set(value string) error {
 	return nil
 }
 
-type config struct {
+type Config struct {
 	ID       string            `json:"id" yaml:"-"`
 	Name     string            `json:"name" yaml:"name"`
 	Tags     []string          `json:"tags" yaml:"tags"`
@@ -60,43 +60,46 @@ type config struct {
 	Version pkg.Version `json:"version" yaml:"-"`
 }
 
-func (c *config) GetVersion() pkg.Version {
+func (c *Config) GetVersion() pkg.Version {
 	return c.Version
 }
 
-func (c *config) GetVerbose() bool {
+func (c *Config) GetVerbose() bool {
 	return c.Verbose
 }
 
-func (c *config) GetReadOnly() bool {
+func (c *Config) GetReadOnly() bool {
 	return c.ReadOnly
 }
 
-func (c *config) GetInsecure() bool {
+func (c *Config) GetInsecure() bool {
 	return c.Insecure
 }
 
-func (c *config) GetPet() bool {
+func (c *Config) GetPet() bool {
 	return c.Pet
 }
 
-func (c *config) GetCmd() []string {
+func (c *Config) GetCmd() []string {
 	return c.getCmd()
 }
 
-func (c *config) GetID() string {
+func (c *Config) GetID() string {
 	return c.ID
 }
 
-func (c *config) GetName() string {
+func (c *Config) GetName() string {
 	return c.Name
 }
 
-func (c *config) GetTags() []string {
+func (c *Config) GetTags() []string {
 	return c.Tags
 }
 
-func (c *config) GetPort() string {
+func (c *Config) GetPort() string {
+	if c.uri == nil {
+		return "443"
+	}
 	if c.uri.Port() == "" {
 		switch c.uri.Scheme {
 		case "http":
@@ -108,7 +111,7 @@ func (c *config) GetPort() string {
 	return c.uri.Port()
 }
 
-func (c *config) GetAddr() string {
+func (c *Config) GetAddr() string {
 	var (
 		scheme = c.GetScheme()
 		host   = c.GetHost()
@@ -125,7 +128,7 @@ func (c *config) GetAddr() string {
 	}
 }
 
-func (c *config) GetSchemeWS() string {
+func (c *Config) GetSchemeWS() string {
 	switch c.GetScheme() {
 	case "https":
 		return "wss"
@@ -134,41 +137,44 @@ func (c *config) GetSchemeWS() string {
 	}
 }
 
-func (c *config) GetScheme() string {
+func (c *Config) GetScheme() string {
+	if c.uri == nil {
+		return "https"
+	}
 	if c.uri.Scheme == "http" && c.uri.Hostname() == "" && c.uri.Port() == "443" {
 		return "https"
 	}
 	return c.uri.Scheme
 }
 
-type Opt func(c *config)
+type Opt func(c *Config)
 
 func SetHub(h string) Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		c.Hub = h
 	}
 }
 
 func SetCmd(h string) Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		c.Cmd = h
 	}
 }
 
 func SetPet(h bool) Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		c.Pet = h
 	}
 }
 
 func SetInsecure(h bool) Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		c.Insecure = h
 	}
 }
 
 func SetURI() Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		var hubapi = c.Hub
 		// default to http
 		if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
@@ -184,42 +190,45 @@ func SetURI() Opt {
 }
 
 func SetReadOnly(ro bool) Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		c.ReadOnly = ro
 	}
 }
 
 func SetVerbose(v bool) Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		c.Verbose = v
 	}
 }
 
 func SetID(id string) Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		c.ID = id
 	}
 }
 
 func SetName(name string) Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		c.Name = name
 	}
 }
 
 func SetTags(tags []string) Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		c.Tags = append(c.Tags, tags...)
 	}
 }
 
 func SetInfo(ifo agent.Info) Opt {
-	return func(c *config) {
+	return func(c *Config) {
 		c.Info = ifo
 	}
 }
 
-func (c *config) GetHost() string {
+func (c *Config) GetHost() string {
+	if c.uri == nil {
+		return "hub.k0s.io"
+	}
 	host := c.uri.Hostname()
 	if host == "" {
 		return "127.0.0.1"
@@ -250,8 +259,8 @@ func probeConfigFile() string {
 	return ""
 }
 
-func loadConfigFile(file string) *config {
-	c := &config{
+func loadConfigFile(file string) *Config {
+	c := &Config{
 		Hub:     pkg.DEFAULT_HUB_ADDRESS,
 		Tags:    []string{},
 		Version: version.GetVersion(),
@@ -272,7 +281,7 @@ func loadConfigFile(file string) *config {
 	return c
 }
 
-func Parse(args []string) agent.Config {
+func Parse(args []string) *Config {
 	var (
 		fset = flag.NewFlagSet("agent", flag.ExitOnError)
 
@@ -431,12 +440,12 @@ func printHubVersion(c agent.Config) {
 	fmt.Print(pretty.YAMLString(hv))
 }
 
-func (c *config) String() string {
+func (c *Config) String() string {
 	return pretty.JsonString(c)
 }
 
 func Decode(data []byte) (agent.Info, error) {
-	v := &config{
+	v := &Config{
 		Info: info.EmptyInfo(),
 	}
 	err := json.Unmarshal(data, v)

@@ -5,5 +5,11 @@ go_library(
     srcs = ["agent.go"],
     importpath = "k0s.io/pkg/plugin/agent",
     visibility = ["//visibility:public"],
-    deps = ["//pkg/cli/agent:go_default_library"],
+    deps = [
+        "//pkg:go_default_library",
+        "//pkg/agent/agent:go_default_library",
+        "//pkg/agent/config:go_default_library",
+        "//pkg/uuid:go_default_library",
+        "//pkg/version:go_default_library",
+    ],
 )

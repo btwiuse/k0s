@@ -41,7 +41,6 @@ var cmdRun = map[string]func([]string) error{
 	"caddy":           caddy.Run,
 	"chassis":         chassis.Run,
 	"client":          client.Run,
-	"k0s":             client.Run,
 	"hub":             hub.Run,
 	"hub2":            hub.Run2,
 	"agent":           agent.Run,
@@ -61,22 +60,45 @@ func main() {
 	// https://github.com/ylxdzsw/v2socks/blob/master/src/main.rs
 	// https://github.com/alexpantyukhin/go-pattern-match
 	matcher := match.Match(osargs)
+
 	for cmd := range cmdRun {
+		subcmd := cmd
 		runf, _ := cmdRun[cmd]
+		// log.Println(subcmd)
 		matcher = matcher.
 			When(
-				[]interface{}{cmd, match.ANY},
+				[]interface{}{
+					subcmd,
+					match.ANY,
+				},
 				func() error {
+					// log.Println(subcmd)
 					return runf(osargs[1:])
 				},
 			).
 			When(
-				[]interface{}{match.ANY, cmd, match.ANY},
+				[]interface{}{
+					match.ANY,
+					subcmd,
+					match.ANY,
+				},
 				func() error {
+					// log.Println(subcmd)
 					return runf(osargs[2:])
 				},
 			)
 	}
+
+	matcher = matcher.When(
+		[]interface{}{
+			"k0s",
+			match.ANY,
+		},
+		func() error {
+			// log.Println("k0s")
+			return client.Run(osargs[1:])
+		},
+	)
 
 	ok, err := matcher.Result()
 	if !ok {

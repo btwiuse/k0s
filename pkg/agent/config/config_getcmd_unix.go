@@ -4,7 +4,7 @@ package config
 
 import "os/exec"
 
-func (c *config) getCmd() []string {
+func (c *Config) getCmd() []string {
 	shell := "bash"
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
