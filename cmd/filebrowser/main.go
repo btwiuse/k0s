@@ -1,12 +1,13 @@
 package main
 
 import (
+	"os"
 	"runtime"
 
-	"github.com/filebrowser/filebrowser/v2/cmd"
+	"k0s.io/pkg/cli/filebrowser"
 )
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	cmd.Execute()
+	filebrowser.Run(os.Args[1:])
 }

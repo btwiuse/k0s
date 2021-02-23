@@ -26,6 +26,7 @@ go_library(
         "//pkg/cli/chassis:go_default_library",
         "//pkg/cli/client:go_default_library",
         "//pkg/cli/dohserver:go_default_library",
+        "//pkg/cli/filebrowser:go_default_library",
         "//pkg/cli/gitd:go_default_library",
         "//pkg/cli/goproxy:go_default_library",
         "//pkg/cli/gos:go_default_library",

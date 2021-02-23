@@ -26,3 +26,5 @@
 *.log
 *.swp
 .bin
+
+filebrowser.db

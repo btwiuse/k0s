@@ -16,6 +16,7 @@ import (
 	"k0s.io/pkg/cli/chassis"
 	"k0s.io/pkg/cli/client"
 	"k0s.io/pkg/cli/dohserver"
+	"k0s.io/pkg/cli/filebrowser"
 	"k0s.io/pkg/cli/gitd"
 	"k0s.io/pkg/cli/goproxy"
 	"k0s.io/pkg/cli/gos"
@@ -46,6 +47,7 @@ var cmdRun = map[string]func([]string) error{
 	"agent":           agent.Run,
 	"gitd":            gitd.Run,
 	"gost":            gost.Main,
+	"filebrowser":     filebrowser.Run,
 }
 
 func main() {
