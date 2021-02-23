@@ -10,7 +10,11 @@ import (
 var once = &sync.Once{}
 
 func init(){
-	once.Do(run)
+	once.Do(gorun)
+}
+
+func gorun(){
+	go run()
 }
 
 func run() {

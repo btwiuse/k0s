@@ -19,6 +19,7 @@ import (
         _ "github.com/mholt/caddy-l4"
 	_ "github.com/abiosoft/caddy-json-schema"
 	_ "k0s.io/pkg/plugin/agent"
+	_ "k0s.io/pkg/plugin/hello"
 )
 
 func Run(args []string) error {
