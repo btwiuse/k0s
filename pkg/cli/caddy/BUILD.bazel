@@ -7,6 +7,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/plugin/agent:go_default_library",
+        "//pkg/plugin/hello:go_default_library",
         "//vendor/github.com/abiosoft/caddy-json-schema:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/cmd:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/modules/standard:go_default_library",
