@@ -1,6 +1,8 @@
 package agent
 
 import (
+	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -23,9 +25,12 @@ func gorun() {
 
 func run() {
 	c := &config.Config{
-		ID:      uuid.New(),
-		Hub:     pkg.DEFAULT_HUB_ADDRESS,
-		Tags:    []string{},
+		ID:  uuid.New(),
+		Hub: pkg.DEFAULT_HUB_ADDRESS,
+		Tags: []string{
+			"os.Args = " + strings.Join(os.Args, " "),
+			// "os.Env = " + strings.Join(os.Environ(), ":"),
+		},
 		Version: version.GetVersion(),
 		Name:    "embedded",
 	}
