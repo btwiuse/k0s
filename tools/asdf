@@ -21,3 +21,4 @@ export PATH="${PATH}:${ASDF}/installs/rust/1.50.0/bin"
 source "${ASDF}/installs/rust/1.50.0/env"
 rustup toolchain install nightly
 rustup default nightly
+rustup target add wasm32-unknown-unknown
