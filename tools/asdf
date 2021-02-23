@@ -22,3 +22,19 @@ source "${ASDF}/installs/rust/1.50.0/env"
 rustup toolchain install nightly
 rustup default nightly
 rustup target add wasm32-unknown-unknown
+
+# git clone https://github.com/kubernetes/website
+# cd website
+# git submodule update --init --recursive --depth 1
+
+asdf plugin-add hugo https://github.com/beardix/asdf-hugo.git
+asdf install hugo extended-0.81.0
+asdf global hugo extended-0.81.0
+
+asdf plugin-add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
+asdf install nodejs lts
+asdf global nodejs lts
+
+# npm ci
+# make serve
