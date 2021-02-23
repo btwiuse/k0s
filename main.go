@@ -27,6 +27,27 @@ import (
 	"k0s.io/pkg/cli/webproc"
 )
 
+var cmdRun = map[string]func([]string) error{
+	"dohserver":       dohserver.Run,
+	"bcrypt":          bcrypt.Run,
+	"k16s":            k16s.Run,
+	"mnt":             mnt.Run,
+	"webproc":         webproc.Run,
+	"trojan":          trojan.Run,
+	"goproxy":         goproxy.Run,
+	"gos":             gos.Run,
+	"buildkite-agent": buildkite.Run,
+	"caddy":           caddy.Run,
+	"chassis":         chassis.Run,
+	"client":          client.Run,
+	"k0s":             client.Run,
+	"hub":             hub.Run,
+	"hub2":            hub.Run2,
+	"agent":           agent.Run,
+	"gitd":            gitd.Run,
+	"gost":            gost.Main,
+}
+
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
@@ -55,31 +76,13 @@ func main() {
 			)
 	}
 
-	_, err := matcher.When(match.ANY, usage).Result()
+	ok, err := matcher.Result()
+	if !ok {
+		usage()
+	}
 	if err != nil {
 		log.Fatalln(err)
 	}
-}
-
-var cmdRun = map[string]func([]string) error{
-	"dohserver":       dohserver.Run,
-	"bcrypt":          bcrypt.Run,
-	"k16s":            k16s.Run,
-	"mnt":             mnt.Run,
-	"webproc":         webproc.Run,
-	"trojan":          trojan.Run,
-	"goproxy":         goproxy.Run,
-	"gos":             gos.Run,
-	"buildkite-agent": buildkite.Run,
-	"caddy":           caddy.Run,
-	"chassis":         chassis.Run,
-	"client":          client.Run,
-	"k0s":             client.Run,
-	"hub":             hub.Run,
-	"hub2":            hub.Run2,
-	"agent":           agent.Run,
-	"gitd":            gitd.Run,
-	"gost":            gost.Main,
 }
 
 func usage() {
