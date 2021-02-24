@@ -110,8 +110,8 @@ func main() {
 }
 
 func usage() {
-	fmt.Println(`please specify one of the subcommands: 
-- agent
-- hub
-- client`)
+	fmt.Println("please specify one of the subcommands:")
+	for c := range cmdRun {
+		fmt.Println("-", c)
+	}
 }
