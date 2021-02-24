@@ -191,6 +191,7 @@ github.com/blang/semver
 ## explicit
 github.com/btwiuse/bcrypt/pkg/bcrypt
 # github.com/btwiuse/etcd/v3 v3.4.15
+## explicit
 github.com/btwiuse/etcd/v3/api/authpb
 github.com/btwiuse/etcd/v3/api/etcdserverpb
 github.com/btwiuse/etcd/v3/api/membershippb

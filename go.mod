@@ -22,6 +22,7 @@ require (
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/bcrypt v1.0.2
+	github.com/btwiuse/etcd/v3 v3.4.15
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.36
