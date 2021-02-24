@@ -27,4 +27,5 @@
 *.swp
 .bin
 
-filebrowser.db
+/filebrowser.db
+/tmp
