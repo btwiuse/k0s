@@ -29,3 +29,5 @@
 
 /filebrowser.db
 /tmp
+
+__pycache__/
