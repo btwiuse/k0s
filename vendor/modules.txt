@@ -853,6 +853,12 @@ github.com/marten-seemann/qtls-go1-15
 github.com/maruel/natural
 # github.com/marusama/semaphore/v2 v2.4.1
 github.com/marusama/semaphore/v2
+# github.com/mathetake/gasm v0.0.0-20200928142744-80e74517647c
+## explicit
+github.com/mathetake/gasm/hostfunc
+github.com/mathetake/gasm/wasi
+github.com/mathetake/gasm/wasm
+github.com/mathetake/gasm/wasm/leb128
 # github.com/mattermost/xml-roundtrip-validator v0.0.0-20201213122252-bcd7e1b9601e
 github.com/mattermost/xml-roundtrip-validator
 # github.com/mattn/go-colorable v0.1.8

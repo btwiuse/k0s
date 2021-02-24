@@ -4091,6 +4091,13 @@ go_repository(
     version = "v3.0.2",
 )
 
+go_repository(
+    name = "com_github_mathetake_gasm",
+    importpath = "github.com/mathetake/gasm",
+    sum = "h1:GOar/82ZJdJ9COsZmNfSKgI/h5eYlBj6WvmUkuFEuDE=",
+    version = "v0.0.0-20200928142744-80e74517647c",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()

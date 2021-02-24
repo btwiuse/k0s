@@ -62,6 +62,7 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
 	github.com/lunny/tango v0.5.6
+	github.com/mathetake/gasm v0.0.0-20200928142744-80e74517647c
 	github.com/mattn/go-isatty v0.0.12
 	github.com/mattn/go-runewidth v0.0.9
 	github.com/mattn/go-shellwords v1.0.10
