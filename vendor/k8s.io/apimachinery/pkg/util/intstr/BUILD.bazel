@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "generated.pb.go",
+        "instr_fuzz.go",
         "intstr.go",
     ],
     importmap = "k0s.io/vendor/k8s.io/apimachinery/pkg/util/intstr",

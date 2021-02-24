@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cmd.go",
+        "helpers.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/magefile/mage/sh",
+    importpath = "github.com/magefile/mage/sh",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/magefile/mage/mg:go_default_library"],
+)
