@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "grpc.go",
+        "metrics.go",
+        "policy.go",
+        "proxy.go",
+        "setup.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/coredns/coredns/plugin/grpc",
+    importpath = "github.com/coredns/coredns/plugin/grpc",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/coredns/caddy:go_default_library",
+        "//vendor/github.com/coredns/coredns/core/dnsserver:go_default_library",
+        "//vendor/github.com/coredns/coredns/pb:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/debug:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/parse:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/tls:go_default_library",
+        "//vendor/github.com/coredns/coredns/request:go_default_library",
+        "//vendor/github.com/miekg/dns:go_default_library",
+        "//vendor/github.com/opentracing/opentracing-go:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus/promauto:go_default_library",
+        "//vendor/google.golang.org/grpc:go_default_library",
+        "//vendor/google.golang.org/grpc/codes:go_default_library",
+        "//vendor/google.golang.org/grpc/credentials:go_default_library",
+        "//vendor/google.golang.org/grpc/status:go_default_library",
+    ],
+)

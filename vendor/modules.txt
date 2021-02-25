@@ -15,16 +15,28 @@ git.torproject.org/pluggable-transports/obfs4.git/transports/obfs4/framing
 gitea.com/lunny/log
 # github.com/AndreasBriese/bbloom v0.0.0-20190306092124-e2d15f34fcf9
 github.com/AndreasBriese/bbloom
+# github.com/Azure/azure-sdk-for-go v40.6.0+incompatible
+github.com/Azure/azure-sdk-for-go/profiles/latest/dns/mgmt/dns
+github.com/Azure/azure-sdk-for-go/profiles/latest/privatedns/mgmt/privatedns
+github.com/Azure/azure-sdk-for-go/services/dns/mgmt/2018-05-01/dns
+github.com/Azure/azure-sdk-for-go/services/privatedns/mgmt/2018-09-01/privatedns
+github.com/Azure/azure-sdk-for-go/version
 # github.com/Azure/go-autorest v14.2.0+incompatible
 github.com/Azure/go-autorest
-# github.com/Azure/go-autorest/autorest v0.11.12
+# github.com/Azure/go-autorest/autorest v0.11.18
 github.com/Azure/go-autorest/autorest
 github.com/Azure/go-autorest/autorest/azure
-# github.com/Azure/go-autorest/autorest/adal v0.9.5
+# github.com/Azure/go-autorest/autorest/adal v0.9.13
 github.com/Azure/go-autorest/autorest/adal
+# github.com/Azure/go-autorest/autorest/azure/auth v0.5.7
+github.com/Azure/go-autorest/autorest/azure/auth
+# github.com/Azure/go-autorest/autorest/azure/cli v0.4.2
+github.com/Azure/go-autorest/autorest/azure/cli
 # github.com/Azure/go-autorest/autorest/date v0.3.0
 github.com/Azure/go-autorest/autorest/date
-# github.com/Azure/go-autorest/logger v0.2.0
+# github.com/Azure/go-autorest/autorest/to v0.2.0
+github.com/Azure/go-autorest/autorest/to
+# github.com/Azure/go-autorest/logger v0.2.1
 github.com/Azure/go-autorest/logger
 # github.com/Azure/go-autorest/tracing v0.6.0
 github.com/Azure/go-autorest/tracing
@@ -131,7 +143,7 @@ github.com/asdine/storm/codec/json
 github.com/asdine/storm/index
 github.com/asdine/storm/internal
 github.com/asdine/storm/q
-# github.com/aws/aws-sdk-go v1.34.28
+# github.com/aws/aws-sdk-go v1.37.10
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/arn
 github.com/aws/aws-sdk-go/aws/awserr
@@ -143,6 +155,7 @@ github.com/aws/aws-sdk-go/aws/credentials
 github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds
 github.com/aws/aws-sdk-go/aws/credentials/endpointcreds
 github.com/aws/aws-sdk-go/aws/credentials/processcreds
+github.com/aws/aws-sdk-go/aws/credentials/ssocreds
 github.com/aws/aws-sdk-go/aws/credentials/stscreds
 github.com/aws/aws-sdk-go/aws/csm
 github.com/aws/aws-sdk-go/aws/defaults
@@ -153,7 +166,9 @@ github.com/aws/aws-sdk-go/aws/session
 github.com/aws/aws-sdk-go/aws/signer/v4
 github.com/aws/aws-sdk-go/internal/context
 github.com/aws/aws-sdk-go/internal/ini
-github.com/aws/aws-sdk-go/internal/s3err
+github.com/aws/aws-sdk-go/internal/s3shared
+github.com/aws/aws-sdk-go/internal/s3shared/arn
+github.com/aws/aws-sdk-go/internal/s3shared/s3err
 github.com/aws/aws-sdk-go/internal/sdkio
 github.com/aws/aws-sdk-go/internal/sdkmath
 github.com/aws/aws-sdk-go/internal/sdkrand
@@ -167,16 +182,21 @@ github.com/aws/aws-sdk-go/private/protocol/ec2query
 github.com/aws/aws-sdk-go/private/protocol/eventstream
 github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi
 github.com/aws/aws-sdk-go/private/protocol/json/jsonutil
+github.com/aws/aws-sdk-go/private/protocol/jsonrpc
 github.com/aws/aws-sdk-go/private/protocol/query
 github.com/aws/aws-sdk-go/private/protocol/query/queryutil
 github.com/aws/aws-sdk-go/private/protocol/rest
+github.com/aws/aws-sdk-go/private/protocol/restjson
 github.com/aws/aws-sdk-go/private/protocol/restxml
 github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil
 github.com/aws/aws-sdk-go/service/ec2
+github.com/aws/aws-sdk-go/service/route53
+github.com/aws/aws-sdk-go/service/route53/route53iface
 github.com/aws/aws-sdk-go/service/s3
-github.com/aws/aws-sdk-go/service/s3/internal/arn
 github.com/aws/aws-sdk-go/service/s3/s3iface
 github.com/aws/aws-sdk-go/service/s3/s3manager
+github.com/aws/aws-sdk-go/service/sso
+github.com/aws/aws-sdk-go/service/sso/ssoiface
 github.com/aws/aws-sdk-go/service/sts
 github.com/aws/aws-sdk-go/service/sts/stsiface
 # github.com/beevik/etree v1.1.0
@@ -317,6 +337,93 @@ github.com/cespare/xxhash/v2
 github.com/cheekybits/genny/generic
 # github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e
 github.com/chzyer/readline
+# github.com/coredns/caddy v1.1.0
+github.com/coredns/caddy
+github.com/coredns/caddy/caddyfile
+github.com/coredns/caddy/onevent
+github.com/coredns/caddy/onevent/hook
+# github.com/coredns/coredns v1.8.4-0.20210224180316-9d3a84377cae => github.com/btwiuse/coredns v1.8.4
+## explicit
+github.com/coredns/coredns/core/dnsserver
+github.com/coredns/coredns/core/plugin
+github.com/coredns/coredns/coremain
+github.com/coredns/coredns/pb
+github.com/coredns/coredns/plugin
+github.com/coredns/coredns/plugin/acl
+github.com/coredns/coredns/plugin/any
+github.com/coredns/coredns/plugin/auto
+github.com/coredns/coredns/plugin/autopath
+github.com/coredns/coredns/plugin/azure
+github.com/coredns/coredns/plugin/bind
+github.com/coredns/coredns/plugin/bufsize
+github.com/coredns/coredns/plugin/cache
+github.com/coredns/coredns/plugin/cache/freq
+github.com/coredns/coredns/plugin/cancel
+github.com/coredns/coredns/plugin/chaos
+github.com/coredns/coredns/plugin/clouddns
+github.com/coredns/coredns/plugin/debug
+github.com/coredns/coredns/plugin/dns64
+github.com/coredns/coredns/plugin/dnssec
+github.com/coredns/coredns/plugin/dnstap
+github.com/coredns/coredns/plugin/dnstap/msg
+github.com/coredns/coredns/plugin/erratic
+github.com/coredns/coredns/plugin/errors
+github.com/coredns/coredns/plugin/etcd
+github.com/coredns/coredns/plugin/etcd/msg
+github.com/coredns/coredns/plugin/file
+github.com/coredns/coredns/plugin/file/rrutil
+github.com/coredns/coredns/plugin/file/tree
+github.com/coredns/coredns/plugin/forward
+github.com/coredns/coredns/plugin/grpc
+github.com/coredns/coredns/plugin/health
+github.com/coredns/coredns/plugin/hosts
+github.com/coredns/coredns/plugin/k8s_external
+github.com/coredns/coredns/plugin/kubernetes
+github.com/coredns/coredns/plugin/kubernetes/object
+github.com/coredns/coredns/plugin/loadbalance
+github.com/coredns/coredns/plugin/local
+github.com/coredns/coredns/plugin/log
+github.com/coredns/coredns/plugin/loop
+github.com/coredns/coredns/plugin/metadata
+github.com/coredns/coredns/plugin/metrics
+github.com/coredns/coredns/plugin/metrics/vars
+github.com/coredns/coredns/plugin/nsid
+github.com/coredns/coredns/plugin/pkg/cache
+github.com/coredns/coredns/plugin/pkg/dnstest
+github.com/coredns/coredns/plugin/pkg/dnsutil
+github.com/coredns/coredns/plugin/pkg/doh
+github.com/coredns/coredns/plugin/pkg/edns
+github.com/coredns/coredns/plugin/pkg/fall
+github.com/coredns/coredns/plugin/pkg/fuzz
+github.com/coredns/coredns/plugin/pkg/log
+github.com/coredns/coredns/plugin/pkg/nonwriter
+github.com/coredns/coredns/plugin/pkg/parse
+github.com/coredns/coredns/plugin/pkg/rcode
+github.com/coredns/coredns/plugin/pkg/replacer
+github.com/coredns/coredns/plugin/pkg/response
+github.com/coredns/coredns/plugin/pkg/reuseport
+github.com/coredns/coredns/plugin/pkg/singleflight
+github.com/coredns/coredns/plugin/pkg/tls
+github.com/coredns/coredns/plugin/pkg/trace
+github.com/coredns/coredns/plugin/pkg/transport
+github.com/coredns/coredns/plugin/pkg/uniq
+github.com/coredns/coredns/plugin/pkg/up
+github.com/coredns/coredns/plugin/pkg/upstream
+github.com/coredns/coredns/plugin/pprof
+github.com/coredns/coredns/plugin/ready
+github.com/coredns/coredns/plugin/reload
+github.com/coredns/coredns/plugin/rewrite
+github.com/coredns/coredns/plugin/root
+github.com/coredns/coredns/plugin/route53
+github.com/coredns/coredns/plugin/secondary
+github.com/coredns/coredns/plugin/sign
+github.com/coredns/coredns/plugin/template
+github.com/coredns/coredns/plugin/test
+github.com/coredns/coredns/plugin/tls
+github.com/coredns/coredns/plugin/trace
+github.com/coredns/coredns/plugin/transfer
+github.com/coredns/coredns/plugin/whoami
+github.com/coredns/coredns/request
 # github.com/coreos/go-iptables v0.4.5
 github.com/coreos/go-iptables/iptables
 # github.com/coreos/go-semver v0.3.0
@@ -375,11 +482,15 @@ github.com/dgrijalva/jwt-go/request
 github.com/dgryski/go-farm
 # github.com/dgryski/go-jump v0.0.0-20170409065014-e1f439676b57
 github.com/dgryski/go-jump
+# github.com/dimchansky/utfbom v1.1.1
+github.com/dimchansky/utfbom
 # github.com/disintegration/imaging v1.6.2
 github.com/disintegration/imaging
 # github.com/dlclark/regexp2 v1.2.0
 github.com/dlclark/regexp2
 github.com/dlclark/regexp2/syntax
+# github.com/dnstap/golang-dnstap v0.4.0
+github.com/dnstap/golang-dnstap
 # github.com/docker/docker v1.4.2-0.20200214221943-d8772509d1a2
 ## explicit
 github.com/docker/docker/pkg/namesgenerator
@@ -411,6 +522,8 @@ github.com/emirpasic/gods/maps
 github.com/emirpasic/gods/utils
 # github.com/evanphx/json-patch v4.9.0+incompatible
 github.com/evanphx/json-patch
+# github.com/farsightsec/golang-framestream v0.3.0
+github.com/farsightsec/golang-framestream
 # github.com/fatih/color v1.10.0
 github.com/fatih/color
 # github.com/felixge/httpsnoop v1.0.1
@@ -702,6 +815,8 @@ github.com/greenpau/go-identity/internal/utils
 github.com/greenpau/versioned
 # github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 github.com/grpc-ecosystem/go-grpc-prometheus
+# github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645
+github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc
 # github.com/hairyhenderson/caddy-teapot-module v0.0.2
 ## explicit
 github.com/hairyhenderson/caddy-teapot-module
@@ -909,7 +1024,7 @@ github.com/mholt/caddy-l4/modules/l4tls
 github.com/mholt/caddy-webdav
 # github.com/mholt/certmagic v0.6.2-0.20190624175158-6a42ef9fe8c2
 github.com/mholt/certmagic
-# github.com/miekg/dns v1.1.35
+# github.com/miekg/dns v1.1.38
 ## explicit
 github.com/miekg/dns
 # github.com/milosgajdos/tenus v0.0.3
@@ -953,10 +1068,22 @@ github.com/nightlyone/lockfile
 github.com/nwaples/rardecode
 # github.com/oleiade/reflections v0.0.0-20160817071559-0e86b3c98b2f
 github.com/oleiade/reflections
+# github.com/opentracing-contrib/go-observer v0.0.0-20170622124052-a52f23424492
+github.com/opentracing-contrib/go-observer
 # github.com/opentracing/opentracing-go v1.2.0
 github.com/opentracing/opentracing-go
 github.com/opentracing/opentracing-go/ext
 github.com/opentracing/opentracing-go/log
+# github.com/openzipkin-contrib/zipkin-go-opentracing v0.4.5
+github.com/openzipkin-contrib/zipkin-go-opentracing
+# github.com/openzipkin/zipkin-go v0.2.2
+github.com/openzipkin/zipkin-go
+github.com/openzipkin/zipkin-go/idgenerator
+github.com/openzipkin/zipkin-go/model
+github.com/openzipkin/zipkin-go/propagation
+github.com/openzipkin/zipkin-go/propagation/b3
+github.com/openzipkin/zipkin-go/reporter
+github.com/openzipkin/zipkin-go/reporter/http
 # github.com/p4gefau1t/trojan-go v0.8.2
 ## explicit
 github.com/p4gefau1t/trojan-go/api
@@ -1395,6 +1522,7 @@ gomodules.xyz/jsonpatch/v3
 gomodules.xyz/orderedmap
 # google.golang.org/api v0.40.0
 google.golang.org/api/compute/v1
+google.golang.org/api/dns/v1
 google.golang.org/api/googleapi
 google.golang.org/api/googleapi/transport
 google.golang.org/api/internal
@@ -1967,6 +2095,8 @@ k8s.io/component-base/metrics/legacyregistry
 k8s.io/component-base/metrics/prometheus/workqueue
 k8s.io/component-base/metrics/testutil
 k8s.io/component-base/version
+# k8s.io/klog v1.0.0
+k8s.io/klog
 # k8s.io/klog/v2 v2.5.0
 ## explicit
 k8s.io/klog/v2
@@ -2123,6 +2253,7 @@ v2ray.com/core/transport/internet
 v2ray.com/core/transport/internet/udp
 # github.com/buildkite/agent/v3 => github.com/btwiuse/agent/v3 v3.27.1-0.20210217080418-ae42a28eefa7
 # github.com/caddyserver/forwardproxy => github.com/klzgrad/forwardproxy v0.0.0-20210120121422-9b4a5a242bd6
+# github.com/coredns/coredns => github.com/btwiuse/coredns v1.8.4
 # github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20210218034515-4e5ef1691e9f
 # github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
 # k8s.io/apiserver => github.com/btwiuse/apiserver v0.0.0-20210224090623-3008f508f679

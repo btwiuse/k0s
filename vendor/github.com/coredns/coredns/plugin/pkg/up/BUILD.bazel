@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["up.go"],
+    importmap = "k0s.io/vendor/github.com/coredns/coredns/plugin/pkg/up",
+    importpath = "github.com/coredns/coredns/plugin/pkg/up",
+    visibility = ["//visibility:public"],
+)

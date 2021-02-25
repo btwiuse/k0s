@@ -134,15 +134,15 @@ go_repository(
 go_repository(
     name = "com_github_azure_go_autorest_autorest",
     importpath = "github.com/Azure/go-autorest/autorest",
-    sum = "h1:gI8ytXbxMfI+IVbI9mP2JGCTXIuhHLgRlvQ9X4PsnHE=",
-    version = "v0.11.12",
+    sum = "h1:90Y4srNYrwOtAgVo3ndrQkTYn6kf1Eg/AjTFJ8Is2aM=",
+    version = "v0.11.18",
 )
 
 go_repository(
     name = "com_github_azure_go_autorest_autorest_adal",
     importpath = "github.com/Azure/go-autorest/autorest/adal",
-    sum = "h1:Y3bBUV4rTuxenJJs41HU3qmqsb+auo+a3Lz+PlJPpL0=",
-    version = "v0.9.5",
+    sum = "h1:Mp5hbtOePIzM8pJVRa3YLrWWmZtoxRXqUEzCfJt3+/Q=",
+    version = "v0.9.13",
 )
 
 go_repository(
@@ -162,8 +162,8 @@ go_repository(
 go_repository(
     name = "com_github_azure_go_autorest_logger",
     importpath = "github.com/Azure/go-autorest/logger",
-    sum = "h1:e4RVHVZKC5p6UANLJHkM4OfR1UKZPj8Wt8Pcx+3oqrE=",
-    version = "v0.2.0",
+    sum = "h1:IG7i4p/mDa2Ce4TRyAO8IHnVhAVF3RFU+ZtXWSmf4Tg=",
+    version = "v0.2.1",
 )
 
 go_repository(
@@ -962,22 +962,22 @@ go_repository(
 go_repository(
     name = "com_github_azure_azure_sdk_for_go",
     importpath = "github.com/Azure/azure-sdk-for-go",
-    sum = "h1:1JP8SKfroEakYiQU2ZyPDosh8w2Tg9UopKt88VyQPt4=",
-    version = "v32.4.0+incompatible",
+    sum = "h1:ULjp/a/UsBfnZcl45jjywhcBKex/k/A1cG9s9NapLFw=",
+    version = "v40.6.0+incompatible",
 )
 
 go_repository(
     name = "com_github_azure_go_autorest_autorest_azure_auth",
     importpath = "github.com/Azure/go-autorest/autorest/azure/auth",
-    sum = "h1:YgO/vSnJEc76NLw2ecIXvXa8bDWiqf1pOJzARAoZsYU=",
-    version = "v0.1.0",
+    sum = "h1:8DQB8yl7aLQuP+nuR5e2RO6454OvFlSTXXaNHshc16s=",
+    version = "v0.5.7",
 )
 
 go_repository(
     name = "com_github_azure_go_autorest_autorest_azure_cli",
     importpath = "github.com/Azure/go-autorest/autorest/azure/cli",
-    sum = "h1:YTtBrcb6mhA+PoSW8WxFDoIIyjp13XqJeX80ssQtri4=",
-    version = "v0.1.0",
+    sum = "h1:dMOmEJfkLKW/7JsokJqkyoYSgmR08hi9KrhjZb+JALY=",
+    version = "v0.4.2",
 )
 
 go_repository(
@@ -1222,8 +1222,8 @@ go_repository(
 go_repository(
     name = "com_github_dimchansky_utfbom",
     importpath = "github.com/dimchansky/utfbom",
-    sum = "h1:FcM3g+nofKgUteL8dm/UpdRXNC9KmADgTpLKsu0TRo4=",
-    version = "v1.1.0",
+    sum = "h1:vV6w1AhK4VMnhBno/TPVCoK9U/LP0PkLCS9tbxHdi/U=",
+    version = "v1.1.1",
 )
 
 go_repository(
@@ -4098,6 +4098,42 @@ go_repository(
     version = "v0.0.0-20200928142744-80e74517647c",
 )
 
+go_repository(
+    name = "com_github_coredns_caddy",
+    importpath = "github.com/coredns/caddy",
+    sum = "h1:ezvsPrT/tA/7pYDBZxu0cT0VmWk75AfIaf6GSYCNMf0=",
+    version = "v1.1.0",
+)
+
+go_repository(
+    name = "com_github_dnstap_golang_dnstap",
+    importpath = "github.com/dnstap/golang-dnstap",
+    sum = "h1:KRHBoURygdGtBjDI2w4HifJfMAhhOqDuktAokaSa234=",
+    version = "v0.4.0",
+)
+
+go_repository(
+    name = "com_github_farsightsec_golang_framestream",
+    importpath = "github.com/farsightsec/golang-framestream",
+    sum = "h1:/spFQHucTle/ZIPkYqrfshQqPe2VQEzesH243TjIwqA=",
+    version = "v0.3.0",
+)
+
+go_repository(
+    name = "com_github_grpc_ecosystem_grpc_opentracing",
+    importpath = "github.com/grpc-ecosystem/grpc-opentracing",
+    sum = "h1:MJG/KsmcqMwFAkh8mTnAwhyKoB+sTAnY4CACC110tbU=",
+    version = "v0.0.0-20180507213350-8e809c8a8645",
+)
+
+go_repository(
+    name = "com_github_coredns_coredns",
+    importpath = "github.com/coredns/coredns",
+    replace = "github.com/btwiuse/coredns",
+    sum = "h1:z6g9H1MYQrM/WNns4RkttlqcS6u8MAOJGb9g12tHixg=",
+    version = "v1.8.4",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -4683,8 +4719,8 @@ go_repository(
 go_repository(
     name = "com_github_miekg_dns",
     importpath = "github.com/miekg/dns",
-    sum = "h1:oTfOaDH+mZkdcgdIjH6yBajRGtIwcwcaR+rt23ZSrJs=",
-    version = "v1.1.35",
+    sum = "h1:MtIY+fmHUVVgv1AXzmKMWcwdCYxTRPG1EDjpqF4RCEw=",
+    version = "v1.1.38",
 )
 
 go_repository(
@@ -5202,8 +5238,8 @@ go_repository(
 go_repository(
     name = "com_github_aws_aws_sdk_go",
     importpath = "github.com/aws/aws-sdk-go",
-    sum = "h1:sscPpn/Ns3i0F4HPEWAVcwdIRaZZCuL7llJ2/60yPIk=",
-    version = "v1.34.28",
+    sum = "h1:LRwl+97B4D69Z7tz+eRUxJ1C7baBaIYhgrn5eLtua+Q=",
+    version = "v1.37.10",
 )
 
 go_repository(

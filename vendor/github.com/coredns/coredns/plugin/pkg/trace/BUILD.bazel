@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["trace.go"],
+    importmap = "k0s.io/vendor/github.com/coredns/coredns/plugin/pkg/trace",
+    importpath = "github.com/coredns/coredns/plugin/pkg/trace",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/coredns/coredns/plugin:go_default_library",
+        "//vendor/github.com/opentracing/opentracing-go:go_default_library",
+    ],
+)

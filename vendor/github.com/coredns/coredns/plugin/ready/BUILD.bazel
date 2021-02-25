@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "list.go",
+        "readiness.go",
+        "ready.go",
+        "setup.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/coredns/coredns/plugin/ready",
+    importpath = "github.com/coredns/coredns/plugin/ready",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/coredns/caddy:go_default_library",
+        "//vendor/github.com/coredns/coredns/core/dnsserver:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/log:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/reuseport:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/uniq:go_default_library",
+    ],
+)

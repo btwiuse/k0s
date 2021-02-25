@@ -5,6 +5,7 @@ go 1.16
 replace (
 	github.com/buildkite/agent/v3 => github.com/btwiuse/agent/v3 v3.27.1-0.20210217080418-ae42a28eefa7
 	github.com/caddyserver/forwardproxy => github.com/klzgrad/forwardproxy v0.0.0-20210120121422-9b4a5a242bd6
+	github.com/coredns/coredns => github.com/btwiuse/coredns v1.8.4
 	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20210218034515-4e5ef1691e9f
 	github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
 	k8s.io/apiserver => github.com/btwiuse/apiserver v0.0.0-20210224090623-3008f508f679
@@ -31,6 +32,7 @@ require (
 	github.com/caddyserver/forwardproxy v0.0.0-00010101000000-000000000000
 	github.com/caddyserver/nginx-adapter v0.0.3
 	github.com/casbin/caddy-authz/v2 v2.0.0
+	github.com/coredns/coredns v1.8.4-0.20210224180316-9d3a84377cae
 	github.com/creack/pty v1.1.11
 	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1
@@ -69,7 +71,7 @@ require (
 	github.com/mattn/go-shellwords v1.0.10
 	github.com/mholt/caddy-l4 v0.0.0-20210209073014-d1d54b015e34
 	github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
-	github.com/miekg/dns v1.1.35
+	github.com/miekg/dns v1.1.38
 	github.com/p4gefau1t/trojan-go v0.8.2
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.9.0

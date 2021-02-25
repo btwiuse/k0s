@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "clouddns.go",
+        "gcp.go",
+        "setup.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/coredns/coredns/plugin/clouddns",
+    importpath = "github.com/coredns/coredns/plugin/clouddns",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/coredns/caddy:go_default_library",
+        "//vendor/github.com/coredns/coredns/core/dnsserver:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/file:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/fall:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/log:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/upstream:go_default_library",
+        "//vendor/github.com/coredns/coredns/request:go_default_library",
+        "//vendor/github.com/miekg/dns:go_default_library",
+        "//vendor/google.golang.org/api/dns/v1:go_default_library",
+        "//vendor/google.golang.org/api/option:go_default_library",
+    ],
+)
