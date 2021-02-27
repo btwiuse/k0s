@@ -2,4 +2,4 @@
 
 FROM btwiuse/k0s
 ENTRYPOINT ["sh", "-c"]
-CMD ["k0s hub --port :$PORT"]
+CMD ["k0s hub"]
