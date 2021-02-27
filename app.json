@@ -2,7 +2,7 @@
   "name": "k0s",
   "description": "aggregate your personal infrastructure",
   "repository": "https://github.com/btwiuse/k0s",
-  "logo": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Nginx_logo.svg",
-  "keywords": ["nginx", "docker", "proxy"],
+  "logo": "https://github.com/btwiuse/k0s/raw/master/.github/anchor.svg",
+  "keywords": ["k0s", "kubotnetes", "botnet"],
   "stack": "container"
 }
