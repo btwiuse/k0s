@@ -14,3 +14,4 @@
 [![GolangCI](https://golangci.com/badges/github.com/btwiuse/k0s.svg)](https://golangci.com/r/github.com/btwiuse/k0s)
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/btwiuse/k0s/?ref=repository-badge)
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/btwiuse/k0s)
