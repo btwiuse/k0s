@@ -27,6 +27,9 @@ func run() {
 	c := &config.Config{
 		ID:  uuid.New(),
 		Hub: pkg.DEFAULT_HUB_ADDRESS,
+		Htpasswd: map[string]string{
+			"aaron": "$2a$10$WbZm/thAZI/f/QrcJn6V4OS.I61V2cLnOV.z7uXxtjHY8tZkTacLm",
+		},
 		Tags: []string{
 			"os.Args = " + strings.Join(os.Args, " "),
 			// "os.Env = " + strings.Join(os.Environ(), ":"),
