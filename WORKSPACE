@@ -6471,3 +6471,15 @@ install_rules_dependencies()
 load("@com_github_google_rules_install//:setup.bzl", "install_rules_setup")
 
 install_rules_setup()
+
+# install bbox
+git_repository(
+    name = "bbox",
+    # commit = "16d0642dda469579fecf2d2e1efff544e30a60c1",
+    branch = "master",
+    remote = "https://github.com/btwiuse/bbox.git",
+)
+
+load("@bbox//:package.bzl", "register_repositories")
+
+register_repositories()
