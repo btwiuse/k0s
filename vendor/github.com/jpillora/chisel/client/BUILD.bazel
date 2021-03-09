@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "client_connect.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/jpillora/chisel/client",
+    importpath = "github.com/jpillora/chisel/client",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gorilla/websocket:go_default_library",
+        "//vendor/github.com/jpillora/backoff:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/ccrypto:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/cio:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/cnet:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/cos:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/settings:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/tunnel:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh:go_default_library",
+        "//vendor/golang.org/x/net/proxy:go_default_library",
+        "//vendor/golang.org/x/sync/errgroup:go_default_library",
+    ],
+)

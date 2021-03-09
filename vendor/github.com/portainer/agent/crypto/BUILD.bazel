@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "ecdsa.go",
+        "tls.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/portainer/agent/crypto",
+    importpath = "github.com/portainer/agent/crypto",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/portainer/agent:go_default_library"],
+)

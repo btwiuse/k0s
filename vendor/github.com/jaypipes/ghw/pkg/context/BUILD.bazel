@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["context.go"],
+    importmap = "k0s.io/vendor/github.com/jaypipes/ghw/pkg/context",
+    importpath = "github.com/jaypipes/ghw/pkg/context",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jaypipes/ghw/pkg/option:go_default_library",
+        "//vendor/github.com/jaypipes/ghw/pkg/snapshot:go_default_library",
+    ],
+)

@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "handler.go",
+        "key_create.go",
+        "key_inspect.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/portainer/agent/http/handler/key",
+    importpath = "github.com/portainer/agent/http/handler/key",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gorilla/mux:go_default_library",
+        "//vendor/github.com/portainer/agent/http/security:go_default_library",
+        "//vendor/github.com/portainer/agent/internal/edge:go_default_library",
+        "//vendor/github.com/portainer/libhttp/error:go_default_library",
+        "//vendor/github.com/portainer/libhttp/request:go_default_library",
+        "//vendor/github.com/portainer/libhttp/response:go_default_library",
+    ],
+)

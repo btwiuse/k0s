@@ -32,11 +32,13 @@ require (
 	github.com/caddyserver/forwardproxy v0.0.0-00010101000000-000000000000
 	github.com/caddyserver/nginx-adapter v0.0.3
 	github.com/casbin/caddy-authz/v2 v2.0.0
+	github.com/containerd/containerd v1.4.3 // indirect
 	github.com/coredns/coredns v1.8.4-0.20210224180316-9d3a84377cae
 	github.com/creack/pty v1.1.11
 	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/docker/docker v1.4.2-0.20200214221943-d8772509d1a2
+	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/filebrowser/filebrowser/v2 v2.11.0
 	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
@@ -56,11 +58,14 @@ require (
 	github.com/hairyhenderson/caddy-teapot-module v0.0.2
 	github.com/iamd3vil/caddy_yaml_adapter v0.0.0-20200503183711-d479c29b475a
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
+	github.com/jaypipes/ghw v0.7.0 // indirect
+	github.com/jpillora/chisel v1.7.6 // indirect
 	github.com/jpillora/opts v1.2.0
 	github.com/jpillora/webproc v0.4.0
 	github.com/json-iterator/go v1.1.10
 	github.com/klauspost/cpuid v1.3.1 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.3 // indirect
+	github.com/koding/websocketproxy v0.0.0-20181220232114-7ed82d81a28c // indirect
 	github.com/liamg/aminal v0.9.0
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
@@ -72,8 +77,13 @@ require (
 	github.com/mholt/caddy-l4 v0.0.0-20210209073014-d1d54b015e34
 	github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
 	github.com/miekg/dns v1.1.38
+	github.com/morikuni/aec v1.0.0 // indirect
+	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/p4gefau1t/trojan-go v0.8.2
 	github.com/pkg/errors v0.9.1
+	github.com/portainer/agent v0.0.0-20210129020346-65fa249df79a
+	github.com/portainer/libcrypto v0.0.0-20201216185936-7a703a1ea452 // indirect
+	github.com/portainer/libhttp v0.0.0-20201216185909-d20481a3da82 // indirect
 	github.com/prometheus/client_golang v1.9.0
 	github.com/prometheus/common v0.15.0
 	github.com/prometheus/node_exporter v1.0.1
@@ -81,6 +91,7 @@ require (
 	github.com/rancher/dapper v0.5.5
 	github.com/rs/cors v1.7.0
 	github.com/sirupsen/logrus v1.8.0
+	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.7.0
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
 	github.com/traefik/yaegi v0.9.14
@@ -98,9 +109,10 @@ require (
 	k8s.io/apiserver v0.19.7
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.9.2
 	k8s.io/client-go v0.20.4
-	k8s.io/component-base v0.19.7
+	k8s.io/component-base v0.20.4
 	k8s.io/klog/v2 v2.5.0
 	k8s.io/kube-state-metrics/v2 v2.0.0-00010101000000-000000000000
+	k8s.io/kubectl v0.20.4
 	modernc.org/httpfs v1.0.0
 	nhooyr.io/websocket v1.8.6
 	robpike.io/ivy v0.1.0

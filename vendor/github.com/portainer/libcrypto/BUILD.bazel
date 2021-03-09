@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "decrypt.go",
+        "encrypt.go",
+        "hash.go",
+        "ssl.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/portainer/libcrypto",
+    importpath = "github.com/portainer/libcrypto",
+    visibility = ["//visibility:public"],
+)

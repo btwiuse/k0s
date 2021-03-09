@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["error.go"],
+    importmap = "k0s.io/vendor/github.com/portainer/libhttp/error",
+    importpath = "github.com/portainer/libhttp/error",
+    visibility = ["//visibility:public"],
+)

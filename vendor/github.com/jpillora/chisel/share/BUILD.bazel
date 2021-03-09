@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "compat.go",
+        "version.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/jpillora/chisel/share",
+    importpath = "github.com/jpillora/chisel/share",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jpillora/chisel/share/ccrypto:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/cio:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/cnet:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/cos:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/settings:go_default_library",
+        "//vendor/github.com/jpillora/chisel/share/tunnel:go_default_library",
+    ],
+)

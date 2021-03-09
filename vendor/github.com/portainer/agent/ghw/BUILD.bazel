@@ -1,0 +1,73 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "disk.go",
+        "disk_windows.go",
+        "pci.go",
+        "pci_windows.go",
+        "system.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/portainer/agent/ghw",
+    importpath = "github.com/portainer/agent/ghw",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:android": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:js": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:plan9": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//vendor/github.com/jaypipes/ghw:go_default_library",
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//vendor/github.com/portainer/agent:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)
