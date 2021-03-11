@@ -23,6 +23,7 @@ import (
 	"k0s.io/pkg/cli/gost"
 	"k0s.io/pkg/cli/hub"
 	"k0s.io/pkg/cli/k16s"
+	"k0s.io/pkg/cli/kubectl"
 	"k0s.io/pkg/cli/mnt"
 	"k0s.io/pkg/cli/trojan"
 	"k0s.io/pkg/cli/webproc"
@@ -32,6 +33,7 @@ var cmdRun = map[string]func([]string) error{
 	"dohserver":       dohserver.Run,
 	"bcrypt":          bcrypt.Run,
 	"k16s":            k16s.Run,
+	"kubectl":         kubectl.Run,
 	"mnt":             mnt.Run,
 	"webproc":         webproc.Run,
 	"trojan":          trojan.Run,

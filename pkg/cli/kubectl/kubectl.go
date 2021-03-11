@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package kubectl
 
 import (
 	goflag "flag"
@@ -32,7 +32,8 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 )
 
-func main() {
+func Run(args []string) error {
+	os.Args = append([]string{"kubectl"}, args...)
 	rand.Seed(time.Now().UnixNano())
 
 	command := cmd.NewDefaultKubectlCommand()
@@ -46,7 +47,5 @@ func main() {
 	logs.InitLogs()
 	defer logs.FlushLogs()
 
-	if err := command.Execute(); err != nil {
-		os.Exit(1)
-	}
+	return command.Execute()
 }
