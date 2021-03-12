@@ -82,8 +82,6 @@ github.com/Rican7/retry
 github.com/Rican7/retry/backoff
 github.com/Rican7/retry/jitter
 github.com/Rican7/retry/strategy
-# github.com/Shopify/sarama v1.28.0
-github.com/Shopify/sarama
 # github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d
 github.com/StackExchange/wmi
 # github.com/VojtechVitek/yaml-cli v0.0.5
@@ -242,15 +240,6 @@ github.com/btwiuse/cadvisor/http
 github.com/btwiuse/cadvisor/http/mux
 github.com/btwiuse/cadvisor/pages
 github.com/btwiuse/cadvisor/pages/static
-github.com/btwiuse/cadvisor/storage/bigquery
-github.com/btwiuse/cadvisor/storage/bigquery/client
-github.com/btwiuse/cadvisor/storage/elasticsearch
-github.com/btwiuse/cadvisor/storage/influxdb
-github.com/btwiuse/cadvisor/storage/kafka
-github.com/btwiuse/cadvisor/storage/redis
-github.com/btwiuse/cadvisor/storage/statsd
-github.com/btwiuse/cadvisor/storage/statsd/client
-github.com/btwiuse/cadvisor/storage/stdout
 # github.com/btwiuse/etcd/v3 v3.4.15
 ## explicit
 github.com/btwiuse/etcd/v3/api/authpb
@@ -614,12 +603,6 @@ github.com/dsnet/compress/internal/errors
 github.com/dsnet/compress/internal/prefix
 # github.com/dustin/go-humanize v1.0.1-0.20200219035652-afde56e7acac
 github.com/dustin/go-humanize
-# github.com/eapache/go-resiliency v1.2.0
-github.com/eapache/go-resiliency/breaker
-# github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21
-github.com/eapache/go-xerial-snappy
-# github.com/eapache/queue v1.1.0
-github.com/eapache/queue
 # github.com/elithrar/simple-scrypt v1.3.0
 github.com/elithrar/simple-scrypt
 # github.com/ema/qdisc v0.0.0-20190904071900-b82c76788043
@@ -692,9 +675,6 @@ github.com/freman/caddy2-reauth/jsontypes
 github.com/fsnotify/fsnotify
 # github.com/fvbommel/sortorder v1.0.1
 github.com/fvbommel/sortorder
-# github.com/garyburd/redigo v1.6.2
-github.com/garyburd/redigo/internal
-github.com/garyburd/redigo/redis
 # github.com/gdamore/encoding v1.0.0
 github.com/gdamore/encoding
 # github.com/gdamore/tcell v1.3.0
@@ -886,7 +866,6 @@ github.com/google/cadvisor/utils/cloudinfo
 github.com/google/cadvisor/utils/cloudinfo/aws
 github.com/google/cadvisor/utils/cloudinfo/azure
 github.com/google/cadvisor/utils/cloudinfo/gce
-github.com/google/cadvisor/utils/container
 github.com/google/cadvisor/utils/cpuload
 github.com/google/cadvisor/utils/cpuload/netlink
 github.com/google/cadvisor/utils/oomparser
@@ -1013,8 +992,6 @@ github.com/hashicorp/go-msgpack/codec
 github.com/hashicorp/go-multierror
 # github.com/hashicorp/go-sockaddr v1.0.0
 github.com/hashicorp/go-sockaddr
-# github.com/hashicorp/go-uuid v1.0.2
-github.com/hashicorp/go-uuid
 # github.com/hashicorp/golang-lru v0.5.4
 github.com/hashicorp/golang-lru
 github.com/hashicorp/golang-lru/simplelru
@@ -1049,10 +1026,6 @@ github.com/iancoleman/strcase
 github.com/imdario/mergo
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
-# github.com/influxdb/influxdb v0.9.6-0.20151125225445-9eab56311373
-github.com/influxdb/influxdb/client
-github.com/influxdb/influxdb/models
-github.com/influxdb/influxdb/pkg/escape
 # github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
 ## explicit
 github.com/infobloxopen/go-trees/iptree
@@ -1081,47 +1054,6 @@ github.com/jaypipes/ghw/pkg/unitutil
 github.com/jaypipes/ghw/pkg/util
 # github.com/jaypipes/pcidb v0.6.0
 github.com/jaypipes/pcidb
-# github.com/jcmturner/aescts/v2 v2.0.0
-github.com/jcmturner/aescts/v2
-# github.com/jcmturner/dnsutils/v2 v2.0.0
-github.com/jcmturner/dnsutils/v2
-# github.com/jcmturner/gofork v1.0.0
-github.com/jcmturner/gofork/encoding/asn1
-github.com/jcmturner/gofork/x/crypto/pbkdf2
-# github.com/jcmturner/gokrb5/v8 v8.4.2
-github.com/jcmturner/gokrb5/v8/asn1tools
-github.com/jcmturner/gokrb5/v8/client
-github.com/jcmturner/gokrb5/v8/config
-github.com/jcmturner/gokrb5/v8/credentials
-github.com/jcmturner/gokrb5/v8/crypto
-github.com/jcmturner/gokrb5/v8/crypto/common
-github.com/jcmturner/gokrb5/v8/crypto/etype
-github.com/jcmturner/gokrb5/v8/crypto/rfc3961
-github.com/jcmturner/gokrb5/v8/crypto/rfc3962
-github.com/jcmturner/gokrb5/v8/crypto/rfc4757
-github.com/jcmturner/gokrb5/v8/crypto/rfc8009
-github.com/jcmturner/gokrb5/v8/gssapi
-github.com/jcmturner/gokrb5/v8/iana
-github.com/jcmturner/gokrb5/v8/iana/addrtype
-github.com/jcmturner/gokrb5/v8/iana/adtype
-github.com/jcmturner/gokrb5/v8/iana/asnAppTag
-github.com/jcmturner/gokrb5/v8/iana/chksumtype
-github.com/jcmturner/gokrb5/v8/iana/errorcode
-github.com/jcmturner/gokrb5/v8/iana/etypeID
-github.com/jcmturner/gokrb5/v8/iana/flags
-github.com/jcmturner/gokrb5/v8/iana/keyusage
-github.com/jcmturner/gokrb5/v8/iana/msgtype
-github.com/jcmturner/gokrb5/v8/iana/nametype
-github.com/jcmturner/gokrb5/v8/iana/patype
-github.com/jcmturner/gokrb5/v8/kadmin
-github.com/jcmturner/gokrb5/v8/keytab
-github.com/jcmturner/gokrb5/v8/krberror
-github.com/jcmturner/gokrb5/v8/messages
-github.com/jcmturner/gokrb5/v8/pac
-github.com/jcmturner/gokrb5/v8/types
-# github.com/jcmturner/rpc/v2 v2.0.3
-github.com/jcmturner/rpc/v2/mstypes
-github.com/jcmturner/rpc/v2/ndr
 # github.com/jmespath/go-jmespath v0.4.0
 github.com/jmespath/go-jmespath
 # github.com/jonboulle/clockwork v0.2.2
@@ -1585,8 +1517,6 @@ github.com/rakyll/statik/fs
 # github.com/rancher/dapper v0.5.5
 ## explicit
 github.com/rancher/dapper/file
-# github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475
-github.com/rcrowley/go-metrics
 # github.com/refraction-networking/utls v0.0.0-20200601200209-ada0bb9b38a0
 github.com/refraction-networking/utls
 github.com/refraction-networking/utls/cpu
@@ -1826,7 +1756,6 @@ golang.org/x/crypto/ed25519
 golang.org/x/crypto/ed25519/internal/edwards25519
 golang.org/x/crypto/hkdf
 golang.org/x/crypto/internal/subtle
-golang.org/x/crypto/md4
 golang.org/x/crypto/nacl/secretbox
 golang.org/x/crypto/ocsp
 golang.org/x/crypto/pbkdf2
@@ -1938,7 +1867,6 @@ gomodules.xyz/jsonpatch/v3
 # gomodules.xyz/orderedmap v0.1.0
 gomodules.xyz/orderedmap
 # google.golang.org/api v0.41.0
-google.golang.org/api/bigquery/v2
 google.golang.org/api/compute/v1
 google.golang.org/api/dns/v1
 google.golang.org/api/googleapi
@@ -2075,10 +2003,6 @@ gopkg.in/inf.v0
 gopkg.in/ini.v1
 # gopkg.in/natefinch/lumberjack.v2 v2.0.0
 gopkg.in/natefinch/lumberjack.v2
-# gopkg.in/olivere/elastic.v2 v2.0.61
-gopkg.in/olivere/elastic.v2
-gopkg.in/olivere/elastic.v2/backoff
-gopkg.in/olivere/elastic.v2/uritemplates
 # gopkg.in/square/go-jose.v2 v2.5.1
 gopkg.in/square/go-jose.v2
 gopkg.in/square/go-jose.v2/cipher

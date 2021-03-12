@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["commandinfo.go"],
-    importmap = "k0s.io/vendor/github.com/garyburd/redigo/internal",
-    importpath = "github.com/garyburd/redigo/internal",
-    visibility = ["//vendor/github.com/garyburd/redigo:__subpackages__"],
-)

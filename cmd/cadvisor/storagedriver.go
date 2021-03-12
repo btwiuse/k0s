@@ -15,43 +15,15 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-	"strings"
 	"time"
 
 	"github.com/google/cadvisor/cache/memory"
-	_ "github.com/btwiuse/cadvisor/storage/bigquery"
-	_ "github.com/btwiuse/cadvisor/storage/elasticsearch"
-	_ "github.com/btwiuse/cadvisor/storage/influxdb"
-	_ "github.com/btwiuse/cadvisor/storage/kafka"
-	_ "github.com/btwiuse/cadvisor/storage/redis"
-	_ "github.com/btwiuse/cadvisor/storage/statsd"
-	_ "github.com/btwiuse/cadvisor/storage/stdout"
 	"github.com/google/cadvisor/storage"
-
-	"k8s.io/klog/v2"
-)
-
-var (
-	storageDriver   = flag.String("storage_driver", "", fmt.Sprintf("Storage `driver` to use. Data is always cached shortly in memory, this controls where data is pushed besides the local cache. Empty means none, multiple separated by commas. Options are: <empty>, %s", strings.Join(storage.ListDrivers(), ", ")))
-	storageDuration = flag.Duration("storage_duration", 2*time.Minute, "How long to keep data stored (Default: 2min).")
 )
 
 // NewMemoryStorage creates a memory storage with an optional backend storage option.
 func NewMemoryStorage() (*memory.InMemoryCache, error) {
 	backendStorages := []storage.StorageDriver{}
-	for _, driver := range strings.Split(*storageDriver, ",") {
-		if driver == "" {
-			continue
-		}
-		storage, err := storage.New(driver)
-		if err != nil {
-			return nil, err
-		}
-		backendStorages = append(backendStorages, storage)
-		klog.V(1).Infof("Using backend storage type %q", driver)
-	}
-	klog.V(1).Infof("Caching stats in memory for %v", *storageDuration)
-	return memory.New(*storageDuration, backendStorages), nil
+	storageDuration := 2 * time.Minute // "How long to keep data stored (Default: 2min)."
+	return memory.New(storageDuration, backendStorages), nil
 }

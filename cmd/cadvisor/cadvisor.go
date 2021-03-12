@@ -19,10 +19,8 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
-	"net/http/pprof"
 	"os"
 	"os/signal"
-	"runtime"
 	"strings"
 	"syscall"
 	"time"
@@ -47,14 +45,8 @@ import (
 
 var argIp = flag.String("listen_ip", "", "IP to listen on, defaults to all IPs")
 var argPort = flag.Int("port", 8080, "port to listen")
-var maxProcs = flag.Int("max_procs", 0, "max number of CPUs that can be used simultaneously. Less than 1 for default (number of cores).")
 
 var versionFlag = flag.Bool("version", false, "print cAdvisor version and exit")
-
-var httpAuthFile = flag.String("http_auth_file", "", "HTTP auth file for the web UI")
-var httpAuthRealm = flag.String("http_auth_realm", "localhost", "HTTP auth realm for the web UI")
-var httpDigestFile = flag.String("http_digest_file", "", "HTTP digest file for the web UI")
-var httpDigestRealm = flag.String("http_digest_realm", "localhost", "HTTP digest file for the web UI")
 
 var prometheusEndpoint = flag.String("prometheus_endpoint", "/metrics", "Endpoint to expose Prometheus metrics on")
 
@@ -63,93 +55,20 @@ var housekeepingConfig = manager.HouskeepingConfig{
 	flag.Bool("allow_dynamic_housekeeping", true, "Whether to allow the housekeeping interval to be dynamic"),
 }
 
-var enableProfiling = flag.Bool("profiling", false, "Enable profiling via web interface host:port/debug/pprof/")
-
 var collectorCert = flag.String("collector_cert", "", "Collector's certificate, exposed to endpoints for certificate based authentication.")
 var collectorKey = flag.String("collector_key", "", "Key for the collector's certificate")
-
-var storeContainerLabels = flag.Bool("store_container_labels", true, "convert container labels and environment variables into labels on prometheus metrics for each container. If flag set to false, then only metrics exported are container name, first alias, and image name")
-var whitelistedContainerLabels = flag.String("whitelisted_container_labels", "", "comma separated list of container labels to be converted to labels on prometheus metrics for each container. store_container_labels must be set to false for this to take effect.")
 
 var urlBasePrefix = flag.String("url_base_prefix", "", "prefix path that will be prepended to all paths to support some reverse proxies")
 
 var rawCgroupPrefixWhiteList = flag.String("raw_cgroup_prefix_whitelist", "", "A comma-separated list of cgroup path prefix that needs to be collected even when -docker_only is specified")
 
-var perfEvents = flag.String("perf_events_config", "", "Path to a JSON file containing configuration of perf events to measure. Empty value disabled perf events measuring.")
-
-var (
-	// Metrics to be ignored.
-	// Tcp metrics are ignored by default.
-	ignoreMetrics metricSetValue = metricSetValue{container.MetricSet{
-		container.MemoryNumaMetrics:              struct{}{},
-		container.NetworkTcpUsageMetrics:         struct{}{},
-		container.NetworkUdpUsageMetrics:         struct{}{},
-		container.NetworkAdvancedTcpUsageMetrics: struct{}{},
-		container.ProcessSchedulerMetrics:        struct{}{},
-		container.ProcessMetrics:                 struct{}{},
-		container.HugetlbUsageMetrics:            struct{}{},
-		container.ReferencedMemoryMetrics:        struct{}{},
-		container.CPUTopologyMetrics:             struct{}{},
-		container.ResctrlMetrics:                 struct{}{},
-		container.CPUSetMetrics:                  struct{}{},
-	}}
-
-	// List of metrics that can be ignored.
-	ignoreWhitelist = container.MetricSet{
-		container.AcceleratorUsageMetrics:        struct{}{},
-		container.DiskUsageMetrics:               struct{}{},
-		container.DiskIOMetrics:                  struct{}{},
-		container.MemoryNumaMetrics:              struct{}{},
-		container.NetworkUsageMetrics:            struct{}{},
-		container.NetworkTcpUsageMetrics:         struct{}{},
-		container.NetworkAdvancedTcpUsageMetrics: struct{}{},
-		container.NetworkUdpUsageMetrics:         struct{}{},
-		container.PerCpuUsageMetrics:             struct{}{},
-		container.ProcessSchedulerMetrics:        struct{}{},
-		container.ProcessMetrics:                 struct{}{},
-		container.HugetlbUsageMetrics:            struct{}{},
-		container.ReferencedMemoryMetrics:        struct{}{},
-		container.CPUTopologyMetrics:             struct{}{},
-		container.ResctrlMetrics:                 struct{}{},
-		container.CPUSetMetrics:                  struct{}{},
-	}
-)
-
-type metricSetValue struct {
-	container.MetricSet
-}
-
-func (ml *metricSetValue) String() string {
-	var values []string
-	for metric := range ml.MetricSet {
-		values = append(values, string(metric))
-	}
-	return strings.Join(values, ",")
-}
-
-func (ml *metricSetValue) Set(value string) error {
-	ml.MetricSet = container.MetricSet{}
-	if value == "" {
-		return nil
-	}
-	for _, metric := range strings.Split(value, ",") {
-		if ignoreWhitelist.Has(container.MetricKind(metric)) {
-			(*ml).Add(container.MetricKind(metric))
-		} else {
-			return fmt.Errorf("unsupported metric %q specified in disable_metrics", metric)
-		}
-	}
-	return nil
-}
-
-func init() {
-	flag.Var(&ignoreMetrics, "disable_metrics", "comma-separated list of `metrics` to be disabled. Options are 'accelerator', 'cpu_topology','disk', 'diskIO', 'memory_numa', 'network', 'tcp', 'udp', 'percpu', 'sched', 'process', 'hugetlb', 'referenced_memory', 'resctrl', 'cpuset'.")
-
+func initialize() {
 	// Default logging verbosity to V(2)
 	flag.Set("v", "2")
 }
 
 func main() {
+	initialize()
 	klog.InitFlags(nil)
 	defer klog.Flush()
 	flag.Parse()
@@ -159,9 +78,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	includedMetrics := toIncludedMetrics(ignoreMetrics.MetricSet)
-
-	setMaxProcs()
+	includedMetrics := container.AllMetrics
 
 	memoryStorage, err := NewMemoryStorage()
 	if err != nil {
@@ -172,31 +89,20 @@ func main() {
 
 	collectorHttpClient := createCollectorHttpClient(*collectorCert, *collectorKey)
 
-	resourceManager, err := manager.New(memoryStorage, sysFs, housekeepingConfig, includedMetrics, &collectorHttpClient, strings.Split(*rawCgroupPrefixWhiteList, ","), *perfEvents)
+	resourceManager, err := manager.New(memoryStorage, sysFs, housekeepingConfig, includedMetrics, &collectorHttpClient, strings.Split(*rawCgroupPrefixWhiteList, ","), "")
 	if err != nil {
 		klog.Fatalf("Failed to create a manager: %s", err)
 	}
 
 	mux := http.NewServeMux()
 
-	if *enableProfiling {
-		mux.HandleFunc("/debug/pprof/", pprof.Index)
-		mux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
-		mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
-		mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
-	}
-
 	// Register all HTTP handlers.
-	err = cadvisorhttp.RegisterHandlers(mux, resourceManager, *httpAuthFile, *httpAuthRealm, *httpDigestFile, *httpDigestRealm, *urlBasePrefix)
+	err = cadvisorhttp.RegisterHandlers(mux, resourceManager, "", "", "", "", *urlBasePrefix)
 	if err != nil {
 		klog.Fatalf("Failed to register HTTP handlers: %v", err)
 	}
 
 	containerLabelFunc := metrics.DefaultContainerLabels
-	if !*storeContainerLabels {
-		whitelistedLabels := strings.Split(*whitelistedContainerLabels, ",")
-		containerLabelFunc = metrics.BaseContainerLabels(whitelistedLabels)
-	}
 
 	// Register Prometheus collector to gather information about containers, Go runtime, processes, and machine
 	cadvisorhttp.RegisterPrometheusHandler(mux, resourceManager, *prometheusEndpoint, containerLabelFunc, includedMetrics)
@@ -216,24 +122,6 @@ func main() {
 
 	addr := fmt.Sprintf("%s:%d", *argIp, *argPort)
 	klog.Fatal(http.ListenAndServe(addr, rootMux))
-}
-
-func setMaxProcs() {
-	// TODO(vmarmol): Consider limiting if we have a CPU mask in effect.
-	// Allow as many threads as we have cores unless the user specified a value.
-	var numProcs int
-	if *maxProcs < 1 {
-		numProcs = runtime.NumCPU()
-	} else {
-		numProcs = *maxProcs
-	}
-	runtime.GOMAXPROCS(numProcs)
-
-	// Check if the setting was successful.
-	actualNumProcs := runtime.GOMAXPROCS(0)
-	if actualNumProcs != numProcs {
-		klog.Warningf("Specified max procs of %v but using %v", numProcs, actualNumProcs)
-	}
 }
 
 func installSignalHandler(containerManager manager.Manager) {
@@ -275,8 +163,4 @@ func createCollectorHttpClient(collectorCert, collectorKey string) http.Client {
 	}
 
 	return http.Client{Transport: transport}
-}
-
-func toIncludedMetrics(ignoreMetrics container.MetricSet) container.MetricSet {
-	return container.AllMetrics.Difference(ignoreMetrics)
 }

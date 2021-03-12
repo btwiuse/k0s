@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_library(
     name = "go_default_library",
@@ -11,13 +11,6 @@ go_library(
     deps = [
         "//vendor/github.com/btwiuse/cadvisor/container/install:go_default_library",
         "//vendor/github.com/btwiuse/cadvisor/http:go_default_library",
-        "//vendor/github.com/btwiuse/cadvisor/storage/bigquery:go_default_library",
-        "//vendor/github.com/btwiuse/cadvisor/storage/elasticsearch:go_default_library",
-        "//vendor/github.com/btwiuse/cadvisor/storage/influxdb:go_default_library",
-        "//vendor/github.com/btwiuse/cadvisor/storage/kafka:go_default_library",
-        "//vendor/github.com/btwiuse/cadvisor/storage/redis:go_default_library",
-        "//vendor/github.com/btwiuse/cadvisor/storage/statsd:go_default_library",
-        "//vendor/github.com/btwiuse/cadvisor/storage/stdout:go_default_library",
         "//vendor/github.com/google/cadvisor/cache/memory:go_default_library",
         "//vendor/github.com/google/cadvisor/container:go_default_library",
         "//vendor/github.com/google/cadvisor/manager:go_default_library",
@@ -36,14 +29,4 @@ go_binary(
     name = "cadvisor",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
-)
-
-go_test(
-    name = "go_default_test",
-    srcs = ["cadvisor_test.go"],
-    embed = [":go_default_library"],
-    deps = [
-        "//vendor/github.com/google/cadvisor/container:go_default_library",
-        "//vendor/github.com/stretchr/testify/assert:go_default_library",
-    ],
 )
