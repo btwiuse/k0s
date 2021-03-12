@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["install.go"],
+    importmap = "k0s.io/vendor/github.com/btwiuse/cadvisor/container/install",
+    importpath = "github.com/btwiuse/cadvisor/container/install",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/btwiuse/cadvisor/container/mesos/install:go_default_library",
+        "//vendor/github.com/google/cadvisor/container/containerd/install:go_default_library",
+        "//vendor/github.com/google/cadvisor/container/crio/install:go_default_library",
+        "//vendor/github.com/google/cadvisor/container/docker/install:go_default_library",
+        "//vendor/github.com/google/cadvisor/container/systemd/install:go_default_library",
+    ],
+)

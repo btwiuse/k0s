@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["keytab.go"],
+    importmap = "k0s.io/vendor/github.com/jcmturner/gokrb5/v8/keytab",
+    importpath = "github.com/jcmturner/gokrb5/v8/keytab",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jcmturner/gokrb5/v8/crypto:go_default_library",
+        "//vendor/github.com/jcmturner/gokrb5/v8/types:go_default_library",
+    ],
+)

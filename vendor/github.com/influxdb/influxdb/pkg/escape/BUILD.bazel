@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bytes.go",
+        "strings.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/influxdb/influxdb/pkg/escape",
+    importpath = "github.com/influxdb/influxdb/pkg/escape",
+    visibility = ["//visibility:public"],
+)

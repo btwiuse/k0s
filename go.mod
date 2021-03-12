@@ -23,6 +23,7 @@ require (
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/bcrypt v1.0.2
+	github.com/btwiuse/cadvisor v0.0.0-20210312172035-34fddda41018
 	github.com/btwiuse/etcd/v3 v3.4.15
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
@@ -32,13 +33,11 @@ require (
 	github.com/caddyserver/forwardproxy v0.0.0-00010101000000-000000000000
 	github.com/caddyserver/nginx-adapter v0.0.3
 	github.com/casbin/caddy-authz/v2 v2.0.0
-	github.com/containerd/containerd v1.4.3 // indirect
 	github.com/coredns/coredns v1.8.4-0.20210224180316-9d3a84377cae
 	github.com/creack/pty v1.1.11
 	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1
-	github.com/docker/docker v1.4.2-0.20200214221943-d8772509d1a2
-	github.com/docker/go-connections v0.4.0 // indirect
+	github.com/docker/docker v20.10.2+incompatible
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/filebrowser/filebrowser/v2 v2.11.0
 	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
@@ -47,6 +46,7 @@ require (
 	github.com/ginuerzh/gost v0.0.0-20210206051340-8dd4d8d9a123
 	github.com/go-log/log v0.2.0
 	github.com/golang/protobuf v1.4.3
+	github.com/google/cadvisor v0.39.0
 	github.com/google/uuid v1.2.0
 	github.com/goproxyio/goproxy/v2 v2.0.5
 	github.com/gorilla/handlers v1.5.1
@@ -77,8 +77,6 @@ require (
 	github.com/mholt/caddy-l4 v0.0.0-20210209073014-d1d54b015e34
 	github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
 	github.com/miekg/dns v1.1.38
-	github.com/morikuni/aec v1.0.0 // indirect
-	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/p4gefau1t/trojan-go v0.8.2
 	github.com/pkg/errors v0.9.1
 	github.com/portainer/agent v0.0.0-20210129020346-65fa249df79a
@@ -100,8 +98,8 @@ require (
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
 	golang.org/x/mod v0.4.1
 	golang.org/x/net v0.0.0-20210119194325-5f4716e94777
-	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a
-	golang.org/x/sys v0.0.0-20210218085108-9555bcde0c6a
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+	golang.org/x/sys v0.0.0-20210305230114-8fe3ee5dd75b
 	google.golang.org/grpc v1.36.0
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
@@ -110,7 +108,7 @@ require (
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.9.2
 	k8s.io/client-go v0.20.4
 	k8s.io/component-base v0.20.4
-	k8s.io/klog/v2 v2.5.0
+	k8s.io/klog/v2 v2.7.0
 	k8s.io/kube-state-metrics/v2 v2.0.0-00010101000000-000000000000
 	k8s.io/kubectl v0.20.4
 	modernc.org/httpfs v1.0.0

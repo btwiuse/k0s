@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "container.go",
+        "factory.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/google/cadvisor/container",
+    importpath = "github.com/google/cadvisor/container",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/google/cadvisor/fs:go_default_library",
+        "//vendor/github.com/google/cadvisor/info/v1:go_default_library",
+        "//vendor/github.com/google/cadvisor/watcher:go_default_library",
+        "//vendor/k8s.io/klog/v2:go_default_library",
+    ],
+)
