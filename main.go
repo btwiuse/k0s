@@ -13,6 +13,7 @@ import (
 	"k0s.io/pkg/cli/bcrypt"
 	"k0s.io/pkg/cli/buildkite"
 	"k0s.io/pkg/cli/caddy"
+	"k0s.io/pkg/cli/cadvisor"
 	"k0s.io/pkg/cli/chassis"
 	"k0s.io/pkg/cli/client"
 	"k0s.io/pkg/cli/dohserver"
@@ -41,6 +42,7 @@ var cmdRun = map[string]func([]string) error{
 	"gos":             gos.Run,
 	"buildkite-agent": buildkite.Run,
 	"caddy":           caddy.Run,
+	"cadvisor":        cadvisor.Run,
 	"chassis":         chassis.Run,
 	"client":          client.Run,
 	"hub":             hub.Run,

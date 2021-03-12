@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package cadvisor
 
 import (
 	"crypto/tls"
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -26,11 +27,12 @@ import (
 	"time"
 
 	cadvisorhttp "github.com/btwiuse/cadvisor/http"
+	"github.com/google/cadvisor/cache/memory"
 	"github.com/google/cadvisor/container"
 	"github.com/google/cadvisor/manager"
 	"github.com/google/cadvisor/metrics"
+	"github.com/google/cadvisor/storage"
 	"github.com/google/cadvisor/utils/sysfs"
-	"github.com/google/cadvisor/version"
 
 	// Register container providers
 	_ "github.com/btwiuse/cadvisor/container/install"
@@ -39,14 +41,10 @@ import (
 	_ "github.com/google/cadvisor/utils/cloudinfo/aws"
 	_ "github.com/google/cadvisor/utils/cloudinfo/azure"
 	_ "github.com/google/cadvisor/utils/cloudinfo/gce"
-
-	"k8s.io/klog/v2"
 )
 
 var argIp = flag.String("listen_ip", "", "IP to listen on, defaults to all IPs")
-var argPort = flag.Int("port", 8080, "port to listen")
-
-var versionFlag = flag.Bool("version", false, "print cAdvisor version and exit")
+var argPort = flag.Int("port", 0, "port to listen")
 
 var prometheusEndpoint = flag.String("prometheus_endpoint", "/metrics", "Endpoint to expose Prometheus metrics on")
 
@@ -62,27 +60,17 @@ var urlBasePrefix = flag.String("url_base_prefix", "", "prefix path that will be
 
 var rawCgroupPrefixWhiteList = flag.String("raw_cgroup_prefix_whitelist", "", "A comma-separated list of cgroup path prefix that needs to be collected even when -docker_only is specified")
 
-func initialize() {
+func Run(args []string) error {
+	os.Args = append([]string{"cadvisor"}, args...)
 	// Default logging verbosity to V(2)
 	flag.Set("v", "2")
-}
-
-func main() {
-	initialize()
-	klog.InitFlags(nil)
-	defer klog.Flush()
 	flag.Parse()
-
-	if *versionFlag {
-		fmt.Printf("cAdvisor version %s (%s)\n", version.Info["version"], version.Info["revision"])
-		os.Exit(0)
-	}
 
 	includedMetrics := container.AllMetrics
 
 	memoryStorage, err := NewMemoryStorage()
 	if err != nil {
-		klog.Fatalf("Failed to initialize storage driver: %s", err)
+		log.Fatalf("Failed to initialize storage driver: %s", err)
 	}
 
 	sysFs := sysfs.NewRealSysFs()
@@ -91,7 +79,7 @@ func main() {
 
 	resourceManager, err := manager.New(memoryStorage, sysFs, housekeepingConfig, includedMetrics, &collectorHttpClient, strings.Split(*rawCgroupPrefixWhiteList, ","), "")
 	if err != nil {
-		klog.Fatalf("Failed to create a manager: %s", err)
+		log.Fatalf("Failed to create a manager: %s", err)
 	}
 
 	mux := http.NewServeMux()
@@ -99,7 +87,7 @@ func main() {
 	// Register all HTTP handlers.
 	err = cadvisorhttp.RegisterHandlers(mux, resourceManager, "", "", "", "", *urlBasePrefix)
 	if err != nil {
-		klog.Fatalf("Failed to register HTTP handlers: %v", err)
+		log.Fatalf("Failed to register HTTP handlers: %v", err)
 	}
 
 	containerLabelFunc := metrics.DefaultContainerLabels
@@ -109,19 +97,19 @@ func main() {
 
 	// Start the manager.
 	if err := resourceManager.Start(); err != nil {
-		klog.Fatalf("Failed to start manager: %v", err)
+		log.Fatalf("Failed to start manager: %v", err)
 	}
 
 	// Install signal handler.
 	installSignalHandler(resourceManager)
 
-	klog.V(1).Infof("Starting cAdvisor version: %s-%s on port %d", version.Info["version"], version.Info["revision"], *argPort)
+	log.Printf("Starting cAdvisor on port %d", *argPort)
 
 	rootMux := http.NewServeMux()
 	rootMux.Handle(*urlBasePrefix+"/", http.StripPrefix(*urlBasePrefix, mux))
 
 	addr := fmt.Sprintf("%s:%d", *argIp, *argPort)
-	klog.Fatal(http.ListenAndServe(addr, rootMux))
+	return http.ListenAndServe(addr, rootMux)
 }
 
 func installSignalHandler(containerManager manager.Manager) {
@@ -132,9 +120,9 @@ func installSignalHandler(containerManager manager.Manager) {
 	go func() {
 		sig := <-c
 		if err := containerManager.Stop(); err != nil {
-			klog.Errorf("Failed to stop container manager: %v", err)
+			log.Printf("Failed to stop container manager: %v", err)
 		}
-		klog.Infof("Exiting given signal: %v", sig)
+		log.Printf("Exiting given signal: %v", sig)
 		os.Exit(0)
 	}()
 }
@@ -147,11 +135,11 @@ func createCollectorHttpClient(collectorCert, collectorKey string) http.Client {
 
 	if collectorCert != "" {
 		if collectorKey == "" {
-			klog.Fatal("The collector_key value must be specified if the collector_cert value is set.")
+			log.Fatal("The collector_key value must be specified if the collector_cert value is set.")
 		}
 		cert, err := tls.LoadX509KeyPair(collectorCert, collectorKey)
 		if err != nil {
-			klog.Fatalf("Failed to use the collector certificate and key: %s", err)
+			log.Fatalf("Failed to use the collector certificate and key: %s", err)
 		}
 
 		tlsConfig.Certificates = []tls.Certificate{cert}
@@ -163,4 +151,11 @@ func createCollectorHttpClient(collectorCert, collectorKey string) http.Client {
 	}
 
 	return http.Client{Transport: transport}
+}
+
+// NewMemoryStorage creates a memory storage with an optional backend storage option.
+func NewMemoryStorage() (*memory.InMemoryCache, error) {
+	backendStorages := []storage.StorageDriver{}
+	storageDuration := 2 * time.Minute // "How long to keep data stored (Default: 2min)."
+	return memory.New(storageDuration, backendStorages), nil
 }

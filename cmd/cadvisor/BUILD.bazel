@@ -2,27 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "cadvisor.go",
-        "storagedriver.go",
-    ],
+    srcs = ["main.go"],
     importpath = "k0s.io/cmd/cadvisor",
     visibility = ["//visibility:private"],
-    deps = [
-        "//vendor/github.com/btwiuse/cadvisor/container/install:go_default_library",
-        "//vendor/github.com/btwiuse/cadvisor/http:go_default_library",
-        "//vendor/github.com/google/cadvisor/cache/memory:go_default_library",
-        "//vendor/github.com/google/cadvisor/container:go_default_library",
-        "//vendor/github.com/google/cadvisor/manager:go_default_library",
-        "//vendor/github.com/google/cadvisor/metrics:go_default_library",
-        "//vendor/github.com/google/cadvisor/storage:go_default_library",
-        "//vendor/github.com/google/cadvisor/utils/cloudinfo/aws:go_default_library",
-        "//vendor/github.com/google/cadvisor/utils/cloudinfo/azure:go_default_library",
-        "//vendor/github.com/google/cadvisor/utils/cloudinfo/gce:go_default_library",
-        "//vendor/github.com/google/cadvisor/utils/sysfs:go_default_library",
-        "//vendor/github.com/google/cadvisor/version:go_default_library",
-        "//vendor/k8s.io/klog/v2:go_default_library",
-    ],
+    deps = ["//pkg/cli/cadvisor:go_default_library"],
 )
 
 go_binary(
