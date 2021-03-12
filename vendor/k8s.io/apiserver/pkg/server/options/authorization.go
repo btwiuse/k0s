@@ -78,14 +78,6 @@ func NewDelegatingAuthorizationOptions() *DelegatingAuthorizationOptions {
 		DenyCacheTTL:        10 * time.Second,
 		ClientTimeout:       10 * time.Second,
 		WebhookRetryBackoff: DefaultAuthWebhookRetryBackoff(),
-		// This allows the kubelet to always get health and readiness without causing an authorization check.
-		// This field can be cleared by callers if they don't want this behavior.
-		AlwaysAllowPaths: []string{"/healthz", "/readyz", "/livez"},
-		// In an authorization call delegated to a kube-apiserver (the expected common-case), system:masters has full
-		// authority in a hard-coded authorizer.  This means that our default can reasonably be to skip an authorization
-		// check for system:masters.
-		// This field can be cleared by callers if they don't want this behavior.
-		AlwaysAllowGroups: []string{"system:masters"},
 	}
 }
 
@@ -181,7 +173,7 @@ func (s *DelegatingAuthorizationOptions) toAuthorizer(client kubernetes.Interfac
 	}
 
 	if client == nil {
-		klog.Warning("No authorization-kubeconfig provided, so SubjectAccessReview of authorization tokens won't work.")
+		klog.Warningf("No authorization-kubeconfig provided, so SubjectAccessReview of authorization tokens won't work.")
 	} else {
 		cfg := authorizerfactory.DelegatingAuthorizerConfig{
 			SubjectAccessReviewClient: client.AuthorizationV1().SubjectAccessReviews(),

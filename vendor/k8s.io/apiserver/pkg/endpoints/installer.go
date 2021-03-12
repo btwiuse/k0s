@@ -253,6 +253,15 @@ func (a *APIInstaller) registerResourceHandlers(path string, storage rest.Storag
 	if !isMetadata {
 		storageMeta = defaultStorageMetadata{}
 	}
+	exporter, isExporter := storage.(rest.Exporter)
+	if !isExporter {
+		exporter = nil
+	}
+
+	versionedExportOptions, err := a.group.Creater.New(optionsExternalVersion.WithKind("ExportOptions"))
+	if err != nil {
+		return nil, nil, err
+	}
 
 	if isNamedCreater {
 		isCreater = true
@@ -675,7 +684,7 @@ func (a *APIInstaller) registerResourceHandlers(path string, storage rest.Storag
 			if isGetterWithOptions {
 				handler = restfulGetResourceWithOptions(getterWithOptions, reqScope, isSubresource)
 			} else {
-				handler = restfulGetResource(getter, reqScope)
+				handler = restfulGetResource(getter, exporter, reqScope)
 			}
 
 			if needOverride {
@@ -701,6 +710,11 @@ func (a *APIInstaller) registerResourceHandlers(path string, storage rest.Storag
 				Writes(producedObject)
 			if isGetterWithOptions {
 				if err := AddObjectParams(ws, route, versionedGetOptions); err != nil {
+					return nil, nil, err
+				}
+			}
+			if isExporter {
+				if err := AddObjectParams(ws, route, versionedExportOptions); err != nil {
 					return nil, nil, err
 				}
 			}
@@ -1213,9 +1227,9 @@ func restfulPatchResource(r rest.Patcher, scope handlers.RequestScope, admit adm
 	}
 }
 
-func restfulGetResource(r rest.Getter, scope handlers.RequestScope) restful.RouteFunction {
+func restfulGetResource(r rest.Getter, e rest.Exporter, scope handlers.RequestScope) restful.RouteFunction {
 	return func(req *restful.Request, res *restful.Response) {
-		handlers.GetResource(r, &scope)(res.ResponseWriter, req.Request)
+		handlers.GetResource(r, e, &scope)(res.ResponseWriter, req.Request)
 	}
 }
 

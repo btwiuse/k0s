@@ -30,11 +30,10 @@ import (
 	"github.com/pkg/errors"
 
 	apiequality "k8s.io/apimachinery/pkg/api/equality"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	apitypes "k8s.io/apimachinery/pkg/types"
-	utilerrors "k8s.io/apimachinery/pkg/util/errors"
+	apierrors "k8s.io/apimachinery/pkg/util/errors"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
 	fcboot "k8s.io/apiserver/pkg/apis/flowcontrol/bootstrap"
@@ -44,6 +43,7 @@ import (
 	fq "k8s.io/apiserver/pkg/util/flowcontrol/fairqueuing"
 	fcfmt "k8s.io/apiserver/pkg/util/flowcontrol/format"
 	"k8s.io/apiserver/pkg/util/flowcontrol/metrics"
+	kubeinformers "k8s.io/client-go/informers"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
 	"k8s.io/klog/v2"
@@ -62,7 +62,7 @@ import (
 // undesired becomes completely unused, all the config objects are
 // read and processed as a whole.
 
-// StartFunction begins the process of handling a request.  If the
+// StartFunction begins the process of handlig a request.  If the
 // request gets queued then this function uses the given hashValue as
 // the source of entropy as it shuffle-shards the request into a
 // queue.  The descr1 and descr2 values play no role in the logic but
@@ -152,22 +152,34 @@ type priorityLevelState struct {
 }
 
 // NewTestableController is extra flexible to facilitate testing
-func newTestableController(config TestableConfig) *configController {
+func newTestableController(
+	informerFactory kubeinformers.SharedInformerFactory,
+	flowcontrolClient flowcontrolclient.FlowcontrolV1beta1Interface,
+	serverConcurrencyLimit int,
+	requestWaitLimit time.Duration,
+	obsPairGenerator metrics.TimedObserverPairGenerator,
+	queueSetFactory fq.QueueSetFactory,
+) *configController {
 	cfgCtlr := &configController{
-		queueSetFactory:        config.QueueSetFactory,
-		obsPairGenerator:       config.ObsPairGenerator,
-		serverConcurrencyLimit: config.ServerConcurrencyLimit,
-		requestWaitLimit:       config.RequestWaitLimit,
-		flowcontrolClient:      config.FlowcontrolClient,
+		queueSetFactory:        queueSetFactory,
+		obsPairGenerator:       obsPairGenerator,
+		serverConcurrencyLimit: serverConcurrencyLimit,
+		requestWaitLimit:       requestWaitLimit,
+		flowcontrolClient:      flowcontrolClient,
 		priorityLevelStates:    make(map[string]*priorityLevelState),
 	}
-	klog.V(2).Infof("NewTestableController with serverConcurrencyLimit=%d, requestWaitLimit=%s", cfgCtlr.serverConcurrencyLimit, cfgCtlr.requestWaitLimit)
-	// Start with longish delay because conflicts will be between
-	// different processes, so take some time to go away.
-	cfgCtlr.configQueue = workqueue.NewNamedRateLimitingQueue(workqueue.NewItemExponentialFailureRateLimiter(200*time.Millisecond, 8*time.Hour), "priority_and_fairness_config_queue")
+	klog.V(2).Infof("NewTestableController with serverConcurrencyLimit=%d, requestWaitLimit=%s", serverConcurrencyLimit, requestWaitLimit)
+	cfgCtlr.initializeConfigController(informerFactory)
 	// ensure the data structure reflects the mandatory config
 	cfgCtlr.lockAndDigestConfigObjects(nil, nil)
-	fci := config.InformerFactory.Flowcontrol().V1beta1()
+	return cfgCtlr
+}
+
+// initializeConfigController sets up the controller that processes
+// config API objects.
+func (cfgCtlr *configController) initializeConfigController(informerFactory kubeinformers.SharedInformerFactory) {
+	cfgCtlr.configQueue = workqueue.NewNamedRateLimitingQueue(workqueue.NewItemExponentialFailureRateLimiter(200*time.Millisecond, 8*time.Hour), "priority_and_fairness_config_queue")
+	fci := informerFactory.Flowcontrol().V1beta1()
 	pli := fci.PriorityLevelConfigurations()
 	fsi := fci.FlowSchemas()
 	cfgCtlr.plLister = pli.Lister()
@@ -214,7 +226,6 @@ func newTestableController(config TestableConfig) *configController {
 			cfgCtlr.configQueue.Add(0)
 
 		}})
-	return cfgCtlr
 }
 
 // MaintainObservations keeps the observers from
@@ -232,6 +243,13 @@ func (cfgCtlr *configController) updateObservations() {
 			plc.queues.UpdateObservations()
 		}
 	}
+}
+
+// used from the unit tests only.
+func (cfgCtlr *configController) getPriorityLevelState(plName string) *priorityLevelState {
+	cfgCtlr.lock.Lock()
+	defer cfgCtlr.lock.Unlock()
+	return cfgCtlr.priorityLevelStates[plName]
 }
 
 func (cfgCtlr *configController) Run(stopCh <-chan struct{}) error {
@@ -327,7 +345,7 @@ type cfgMeal struct {
 	fsStatusUpdates []fsStatusUpdate
 }
 
-// A buffered set of status updates for FlowSchemas
+// A buffered set of status updates for a FlowSchema
 type fsStatusUpdate struct {
 	flowSchema *flowcontrol.FlowSchema
 	condition  flowcontrol.FlowSchemaCondition
@@ -346,25 +364,15 @@ func (cfgCtlr *configController) digestConfigObjects(newPLs []*flowcontrol.Prior
 			panic(fmt.Sprintf("Failed to json.Marshall(%#+v): %s", fsu.condition, err.Error()))
 		}
 		klog.V(4).Infof("Writing Condition %s to FlowSchema %s because its previous value was %s", string(enc), fsu.flowSchema.Name, fcfmt.Fmt(fsu.oldValue))
-		fsIfc := cfgCtlr.flowcontrolClient.FlowSchemas()
-		patchBytes := []byte(fmt.Sprintf(`{"status": {"conditions": [ %s ] } }`, string(enc)))
-		patchOptions := metav1.PatchOptions{FieldManager: ConfigConsumerAsFieldManager}
-		_, err = fsIfc.Patch(context.TODO(), fsu.flowSchema.Name, apitypes.StrategicMergePatchType, patchBytes, patchOptions, "status")
-		if err == nil {
-			continue
-		}
-		if apierrors.IsNotFound(err) {
-			// This object has been deleted.  A notification is coming
-			// and nothing more needs to be done here.
-			klog.V(5).Infof("Attempted update of concurrently deleted FlowSchema %s; nothing more needs to be done", fsu.flowSchema.Name)
-		} else {
+		_, err = cfgCtlr.flowcontrolClient.FlowSchemas().Patch(context.TODO(), fsu.flowSchema.Name, apitypes.StrategicMergePatchType, []byte(fmt.Sprintf(`{"status": {"conditions": [ %s ] } }`, string(enc))), metav1.PatchOptions{FieldManager: "api-priority-and-fairness-config-consumer-v1"}, "status")
+		if err != nil {
 			errs = append(errs, errors.Wrap(err, fmt.Sprintf("failed to set a status.condition for FlowSchema %s", fsu.flowSchema.Name)))
 		}
 	}
 	if len(errs) == 0 {
 		return nil
 	}
-	return utilerrors.NewAggregate(errs)
+	return apierrors.NewAggregate(errs)
 }
 
 func (cfgCtlr *configController) lockAndDigestConfigObjects(newPLs []*flowcontrol.PriorityLevelConfiguration, newFSs []*flowcontrol.FlowSchema) []fsStatusUpdate {
@@ -643,6 +651,7 @@ func (meal *cfgMeal) imaginePL(proto *flowcontrol.PriorityLevelConfiguration, re
 	if proto.Spec.Limited != nil {
 		meal.shareSum += float64(proto.Spec.Limited.AssuredConcurrencyShares)
 	}
+	return
 }
 
 type immediateRequest struct{}
@@ -661,14 +670,11 @@ func (cfgCtlr *configController) startRequest(ctx context.Context, rd RequestDig
 	klog.V(7).Infof("startRequest(%#+v)", rd)
 	cfgCtlr.lock.Lock()
 	defer cfgCtlr.lock.Unlock()
-	var selectedFlowSchema, catchAllFlowSchema *flowcontrol.FlowSchema
+	var selectedFlowSchema *flowcontrol.FlowSchema
 	for _, fs := range cfgCtlr.flowSchemas {
 		if matchesFlowSchema(rd, fs) {
 			selectedFlowSchema = fs
 			break
-		}
-		if fs.Name == flowcontrol.FlowSchemaNameCatchAll {
-			catchAllFlowSchema = fs
 		}
 	}
 	if selectedFlowSchema == nil {
@@ -676,13 +682,18 @@ func (cfgCtlr *configController) startRequest(ctx context.Context, rd RequestDig
 		// system:authenticated or system:unauthenticated, the catch-all flow
 		// schema should match it. However, if that invariant somehow fails,
 		// fallback to the catch-all flow schema anyway.
-		if catchAllFlowSchema == nil {
+		for _, fs := range cfgCtlr.flowSchemas {
+			if fs.Name == flowcontrol.FlowSchemaNameCatchAll {
+				selectedFlowSchema = fs
+				break
+			}
+		}
+		if selectedFlowSchema == nil {
 			// This should absolutely never, ever happen! APF guarantees two
 			// undeletable flow schemas at all times: an exempt flow schema and a
 			// catch-all flow schema.
 			panic(fmt.Sprintf("no fallback catch-all flow schema found for request %#+v and user %#+v", rd.RequestInfo, rd.User))
 		}
-		selectedFlowSchema = catchAllFlowSchema
 		klog.Warningf("no match found for request %#+v and user %#+v; selecting catchAll=%s as fallback flow schema", rd.RequestInfo, rd.User, fcfmt.Fmt(selectedFlowSchema))
 	}
 	plName := selectedFlowSchema.Spec.PriorityLevelConfiguration.Name

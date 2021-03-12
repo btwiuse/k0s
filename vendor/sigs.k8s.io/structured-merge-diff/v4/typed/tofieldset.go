@@ -137,9 +137,7 @@ func (v *toFieldSetWalker) visitMapItems(t *schema.Map, m value.Map) (errs Valid
 		v2 := v.prepareDescent(pe, tr)
 		v2.value = val
 		errs = append(errs, v2.toFieldSet()...)
-		if val.IsNull() || (val.IsMap() && val.AsMap().Length() == 0) {
-			v2.set.Insert(v2.path)
-		} else if _, ok := t.FindField(key); !ok {
+		if _, ok := t.FindField(key); !ok {
 			v2.set.Insert(v2.path)
 		}
 		v.finishDescent(v2)

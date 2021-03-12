@@ -239,8 +239,8 @@ go_repository(
 go_repository(
     name = "com_github_emicklei_go_restful",
     importpath = "github.com/emicklei/go-restful",
-    sum = "h1:spTtZBk5DYEvbxMVutUuTyh1Ao2r4iyvLdACqsl/Ljk=",
-    version = "v2.9.5+incompatible",
+    sum = "h1:8KpYO/Xl/ZudZs5RNOEhWMBY4hmzlZhhRd9cu+jrZP4=",
+    version = "v2.15.0+incompatible",
 )
 
 go_repository(
@@ -583,8 +583,8 @@ go_repository(
 go_repository(
     name = "io_k8s_sigs_structured_merge_diff_v4",
     importpath = "sigs.k8s.io/structured-merge-diff/v4",
-    sum = "h1:4oyYo8NREp49LBBhKxEqCulFjg26rawYKrnCmg+Sr6c=",
-    version = "v4.0.3",
+    sum = "h1:YHQV7Dajm86OuqnIR6zAelnDWBRjo+YhYV9PmGrh1s8=",
+    version = "v4.0.2",
 )
 
 go_repository(
@@ -3638,8 +3638,8 @@ go_repository(
 go_repository(
     name = "com_github_coreos_go_oidc",
     importpath = "github.com/coreos/go-oidc",
-    sum = "h1:sdJrfw8akMnCuUlaZU3tE/uYXFgfqom8DBE9so9EBsM=",
-    version = "v2.1.0+incompatible",
+    sum = "h1:mh48q/BqXqgjVHpy2ZY7WnWAbenxRjsz9N1i1YxjHAk=",
+    version = "v2.2.1+incompatible",
 )
 
 go_repository(
@@ -3967,8 +3967,8 @@ go_repository(
 go_repository(
     name = "com_github_pquerna_cachecontrol",
     importpath = "github.com/pquerna/cachecontrol",
-    sum = "h1:0XM1XL/OFFJjXsYXlG30spTkV/E9+gmd5GD1w2HE8xM=",
-    version = "v0.0.0-20171018203845-0dec1b30a021",
+    sum = "h1:jWKYCNlX4J5s8M0nHYkh7Y7c9gRVDEb3mq51j5J0F5M=",
+    version = "v0.0.0-20201205024021-ac21108117ac",
 )
 
 go_repository(
@@ -4045,8 +4045,8 @@ go_repository(
     name = "io_k8s_apiserver",
     importpath = "k8s.io/apiserver",
     replace = "github.com/btwiuse/apiserver",
-    sum = "h1:wvwcTvdO7EIibLLLraaLXhc9edkMdHjvqoyMck8UOYU=",
-    version = "v0.0.0-20210224090623-3008f508f679",
+    sum = "h1:XZJvyNdzpVIMBJiyzKB91WF66HuCzI+SBbKHb7Jikvo=",
+    version = "v0.20.4-btwiuse",
 )
 
 go_repository(
@@ -4059,8 +4059,8 @@ go_repository(
 go_repository(
     name = "io_k8s_sigs_apiserver_network_proxy_konnectivity_client",
     importpath = "sigs.k8s.io/apiserver-network-proxy/konnectivity-client",
-    sum = "h1:4uqm9Mv+w2MmBYD+F4qf/v6tDFUdPOk29C095RbU5mY=",
-    version = "v0.0.15",
+    sum = "h1:TihvEz9MPj2u0KWds6E2OBUXfwaL4qRJ33c7HGiJpqk=",
+    version = "v0.0.14",
 )
 
 go_repository(
@@ -4670,8 +4670,8 @@ go_repository(
 go_repository(
     name = "com_github_gogo_protobuf",
     importpath = "github.com/gogo/protobuf",
-    sum = "h1:Ov1cvc58UF3b5XjBnZv7+opcTcQFZebYjWzi34vdm4Q=",
-    version = "v1.3.2",
+    sum = "h1:DqDEcV5aeaTmdFBePNpYsp3FlcVH/2ISVVM9Qf8PSls=",
+    version = "v1.3.1",
 )
 
 go_repository(
@@ -5833,8 +5833,8 @@ go_repository(
 go_repository(
     name = "com_github_kisielk_errcheck",
     importpath = "github.com/kisielk/errcheck",
-    sum = "h1:e8esj/e4R+SAOwFwN+n3zr0nYeCyeweozKfO23MvHzY=",
-    version = "v1.5.0",
+    sum = "h1:reN85Pxc5larApoH1keMBiu2GWtPqXQ1nc9gx+jOU+E=",
+    version = "v1.2.0",
 )
 
 go_repository(

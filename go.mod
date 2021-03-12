@@ -8,7 +8,7 @@ replace (
 	github.com/coredns/coredns => github.com/btwiuse/coredns v1.8.4
 	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20210218034515-4e5ef1691e9f
 	github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
-	k8s.io/apiserver => github.com/btwiuse/apiserver v0.0.0-20210224090623-3008f508f679
+	k8s.io/apiserver => github.com/btwiuse/apiserver v0.20.4-btwiuse
 	k8s.io/kube-state-metrics/v2 => github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9
 	nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
 )

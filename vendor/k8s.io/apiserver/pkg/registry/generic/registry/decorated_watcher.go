@@ -21,18 +21,17 @@ import (
 	"net/http"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 )
 
 type decoratedWatcher struct {
 	w         watch.Interface
-	decorator func(runtime.Object)
+	decorator ObjectFunc
 	cancel    context.CancelFunc
 	resultCh  chan watch.Event
 }
 
-func newDecoratedWatcher(w watch.Interface, decorator func(runtime.Object)) *decoratedWatcher {
+func newDecoratedWatcher(w watch.Interface, decorator ObjectFunc) *decoratedWatcher {
 	ctx, cancel := context.WithCancel(context.Background())
 	d := &decoratedWatcher{
 		w:         w,
@@ -57,7 +56,11 @@ func (d *decoratedWatcher) run(ctx context.Context) {
 			}
 			switch recv.Type {
 			case watch.Added, watch.Modified, watch.Deleted, watch.Bookmark:
-				d.decorator(recv.Object)
+				err := d.decorator(recv.Object)
+				if err != nil {
+					send = makeStatusErrorEvent(err)
+					break
+				}
 				send = recv
 			case watch.Error:
 				send = recv
