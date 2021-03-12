@@ -4,7 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = ["kubectl.go"],
     importpath = "k0s.io/pkg/cli/kubectl",
-    visibility = ["//visibility:private"],
+    visibility = ["//visibility:public"],
     deps = [
         "//vendor/github.com/spf13/pflag:go_default_library",
         "//vendor/k8s.io/client-go/plugin/pkg/client/auth:go_default_library",
