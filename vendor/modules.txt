@@ -2016,6 +2016,7 @@ gopkg.in/yaml.v3
 # howett.net/plist v0.0.0-20200419221736-3b63eb3a43b5
 howett.net/plist
 # k8s.io/api v0.20.4
+## explicit
 k8s.io/api/admission/v1
 k8s.io/api/admission/v1beta1
 k8s.io/api/admissionregistration/v1

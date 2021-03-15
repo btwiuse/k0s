@@ -11,6 +11,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -23,9 +24,12 @@ import (
 
 	"github.com/spf13/pflag"
 
-	"k8s.io/kubernetes/pkg/api"
-	"k8s.io/kubernetes/pkg/client/restclient"
-	client "k8s.io/kubernetes/pkg/client/unversioned"
+	// "k8s.io/kubernetes/pkg/api"
+	// "k8s.io/kubernetes/pkg/client/restclient"
+	// client "k8s.io/kubernetes/pkg/client/unversioned"
+	api "k8s.io/api/core/v1"
+	restclient "k8s.io/client-go/rest"
+	// client "k8s.io/client-go/kubernetes"
 )
 
 var server = pflag.StringP("server", "s", "http://127.0.0.1:8080", "address of the K8s API Server")
@@ -113,12 +117,12 @@ func getPodIP(podName string) (string, error) {
 	config := &restclient.Config{
 		Host: *server,
 	}
-	c, err := client.New(config)
+	c, err := restclient.RESTClientFor(config)
 	if err != nil {
 		return "", fmt.Errorf("error building client: %v", err)
 	}
 
-	res := c.Get().Resource("pods").Timeout(5 * time.Second).Do()
+	res := c.Get().Resource("pods").Timeout(5 * time.Second).Do(context.Background())
 	obj, err := res.Get()
 	if err != nil {
 		return "", fmt.Errorf("error getting object from response: %v\n", err)

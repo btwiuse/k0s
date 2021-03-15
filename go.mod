@@ -104,7 +104,8 @@ require (
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
-	k8s.io/apiserver v0.19.7
+	k8s.io/api v0.20.4
+	k8s.io/apiserver v0.20.4
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.9.2
 	k8s.io/client-go v0.20.4
 	k8s.io/component-base v0.20.4
