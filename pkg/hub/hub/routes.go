@@ -137,6 +137,7 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	r.HandleFunc("/metrics", h.handleTunnel(api.Metrics)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/k16s", h.handleTunnel(api.K16s)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/doh", h.handleTunnel(api.Doh)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/env", h.handleTunnel(api.Env)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/terminal", h.handleTunnel(api.Terminal)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/version", h.handleTunnel(api.Version)).Methods("GET").Queries("id", "{id}")
 
@@ -280,6 +281,8 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		versionRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/k16s"):
 		k16sRelay(ag)(w, r)
+	case strings.HasPrefix(subpath, "/env"):
+		envRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/doh"):
 		dohRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):

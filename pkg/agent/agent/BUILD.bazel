@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "agent.go",
         "dohserver.go",
+        "envserver.go",
         "fileserver.go",
         "k16sserver.go",
         "lys.go",
@@ -26,6 +27,7 @@ go_library(
         "//pkg/asciitransport:go_default_library",
         "//pkg/dohserver:go_default_library",
         "//pkg/exporter:go_default_library",
+        "//pkg/exporter/env:go_default_library",
         "//pkg/exporter/k16s:go_default_library",
         "//pkg/middleware:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",

@@ -133,6 +133,38 @@ func dohRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
+func envRelay(ag types.Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var (
+			vars = mux.Vars(r)
+			id   = vars["id"]
+			path = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id)
+		)
+		r.RequestURI = path
+
+		reqbuf, err := httputil.DumpRequest(r, true)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		conn, err := wrap.Hijack(w)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		defer conn.Close()
+
+		envConn := ag.NewTunnel(api.Env)
+		defer envConn.Close()
+
+		go func() {
+			io.Copy(envConn, bytes.NewBuffer(reqbuf))
+		}()
+		io.Copy(conn, envConn)
+	}
+}
+
 func k16sRelay(ag types.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
