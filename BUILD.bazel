@@ -23,7 +23,6 @@ go_library(
         "//pkg/cli/bcrypt:go_default_library",
         "//pkg/cli/buildkite:go_default_library",
         "//pkg/cli/caddy:go_default_library",
-        "//pkg/cli/cadvisor:go_default_library",
         "//pkg/cli/chassis:go_default_library",
         "//pkg/cli/client:go_default_library",
         "//pkg/cli/dohserver:go_default_library",
