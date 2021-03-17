@@ -15,7 +15,8 @@ git.torproject.org/pluggable-transports/obfs4.git/transports/obfs4/framing
 gitea.com/lunny/log
 # github.com/AndreasBriese/bbloom v0.0.0-20190306092124-e2d15f34fcf9
 github.com/AndreasBriese/bbloom
-# github.com/Azure/azure-sdk-for-go v40.6.0+incompatible
+# github.com/Azure/azure-sdk-for-go v43.0.0+incompatible
+## explicit
 github.com/Azure/azure-sdk-for-go/profiles/latest/dns/mgmt/dns
 github.com/Azure/azure-sdk-for-go/profiles/latest/privatedns/mgmt/privatedns
 github.com/Azure/azure-sdk-for-go/services/dns/mgmt/2018-05-01/dns
@@ -2015,7 +2016,7 @@ gopkg.in/yaml.v2
 gopkg.in/yaml.v3
 # howett.net/plist v0.0.0-20200419221736-3b63eb3a43b5
 howett.net/plist
-# k8s.io/api v0.20.4
+# k8s.io/api v0.20.4 => k8s.io/api v0.20.4
 ## explicit
 k8s.io/api/admission/v1
 k8s.io/api/admission/v1beta1
@@ -2063,7 +2064,8 @@ k8s.io/api/scheduling/v1beta1
 k8s.io/api/storage/v1
 k8s.io/api/storage/v1alpha1
 k8s.io/api/storage/v1beta1
-# k8s.io/apimachinery v0.20.4
+# k8s.io/apimachinery v0.20.4 => k8s.io/apimachinery v0.20.4
+## explicit
 k8s.io/apimachinery/pkg/api/equality
 k8s.io/apimachinery/pkg/api/errors
 k8s.io/apimachinery/pkg/api/meta
@@ -2261,7 +2263,7 @@ k8s.io/autoscaler/vertical-pod-autoscaler/pkg/client/clientset/versioned/typed/a
 k8s.io/autoscaler/vertical-pod-autoscaler/pkg/client/clientset/versioned/typed/autoscaling.k8s.io/v1beta1
 k8s.io/autoscaler/vertical-pod-autoscaler/pkg/client/clientset/versioned/typed/autoscaling.k8s.io/v1beta2
 k8s.io/autoscaler/vertical-pod-autoscaler/pkg/client/clientset/versioned/typed/poc.autoscaling.k8s.io/v1alpha1
-# k8s.io/cli-runtime v0.20.4
+# k8s.io/cli-runtime v0.20.4 => k8s.io/cli-runtime v0.20.4
 k8s.io/cli-runtime/pkg/genericclioptions
 k8s.io/cli-runtime/pkg/kustomize
 k8s.io/cli-runtime/pkg/kustomize/k8sdeps
@@ -2274,7 +2276,7 @@ k8s.io/cli-runtime/pkg/kustomize/k8sdeps/transformer/patch
 k8s.io/cli-runtime/pkg/kustomize/k8sdeps/validator
 k8s.io/cli-runtime/pkg/printers
 k8s.io/cli-runtime/pkg/resource
-# k8s.io/client-go v0.20.4
+# k8s.io/client-go v0.20.4 => k8s.io/client-go v0.20.4
 ## explicit
 k8s.io/client-go/discovery
 k8s.io/client-go/discovery/cached/disk
@@ -2469,7 +2471,7 @@ k8s.io/client-go/util/homedir
 k8s.io/client-go/util/jsonpath
 k8s.io/client-go/util/keyutil
 k8s.io/client-go/util/workqueue
-# k8s.io/component-base v0.20.4
+# k8s.io/component-base v0.20.4 => k8s.io/component-base v0.20.4
 ## explicit
 k8s.io/component-base/cli/flag
 k8s.io/component-base/featuregate
@@ -2482,7 +2484,7 @@ k8s.io/component-base/metrics/legacyregistry
 k8s.io/component-base/metrics/prometheus/workqueue
 k8s.io/component-base/metrics/testutil
 k8s.io/component-base/version
-# k8s.io/component-helpers v0.20.4
+# k8s.io/component-helpers v0.20.4 => k8s.io/component-helpers v0.20.4
 k8s.io/component-helpers/auth/rbac/reconciliation
 k8s.io/component-helpers/auth/rbac/validation
 # k8s.io/klog v1.0.0
@@ -2513,7 +2515,7 @@ k8s.io/kube-state-metrics/v2/pkg/options
 k8s.io/kube-state-metrics/v2/pkg/sharding
 k8s.io/kube-state-metrics/v2/pkg/version
 k8s.io/kube-state-metrics/v2/pkg/watch
-# k8s.io/kubectl v0.20.4
+# k8s.io/kubectl v0.20.4 => k8s.io/kubectl v0.20.4
 ## explicit
 k8s.io/kubectl/pkg/apps
 k8s.io/kubectl/pkg/cmd
@@ -2592,7 +2594,9 @@ k8s.io/kubectl/pkg/util/storage
 k8s.io/kubectl/pkg/util/templates
 k8s.io/kubectl/pkg/util/term
 k8s.io/kubectl/pkg/validation
-# k8s.io/metrics v0.20.4
+# k8s.io/kubelet v0.0.0 => k8s.io/kubelet v0.20.4
+## explicit
+# k8s.io/metrics v0.20.4 => k8s.io/metrics v0.20.4
 k8s.io/metrics/pkg/apis/metrics
 k8s.io/metrics/pkg/apis/metrics/install
 k8s.io/metrics/pkg/apis/metrics/v1alpha1
@@ -2758,6 +2762,29 @@ v2ray.com/core/transport/internet/udp
 # github.com/coredns/coredns => github.com/btwiuse/coredns v1.8.4
 # github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20210218034515-4e5ef1691e9f
 # github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
+# k8s.io/api => k8s.io/api v0.20.4
+# k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.20.4
+# k8s.io/apimachinery => k8s.io/apimachinery v0.20.4
 # k8s.io/apiserver => github.com/btwiuse/apiserver v0.20.4-btwiuse
+# k8s.io/cli-runtime => k8s.io/cli-runtime v0.20.4
+# k8s.io/client-go => k8s.io/client-go v0.20.4
+# k8s.io/cloud-provider => k8s.io/cloud-provider v0.20.4
+# k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.20.4
+# k8s.io/code-generator => k8s.io/code-generator v0.20.4
+# k8s.io/component-base => k8s.io/component-base v0.20.4
+# k8s.io/component-helpers => k8s.io/component-helpers v0.20.4
+# k8s.io/controller-manager => k8s.io/controller-manager v0.20.4
+# k8s.io/cri-api => k8s.io/cri-api v0.20.4
+# k8s.io/csi-translation-lib => k8s.io/csi-translation-lib v0.20.4
+# k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.20.4
+# k8s.io/kube-controller-manager => k8s.io/kube-controller-manager v0.20.4
+# k8s.io/kube-proxy => k8s.io/kube-proxy v0.20.4
+# k8s.io/kube-scheduler => k8s.io/kube-scheduler v0.20.4
 # k8s.io/kube-state-metrics/v2 => github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9
+# k8s.io/kubectl => k8s.io/kubectl v0.20.4
+# k8s.io/kubelet => k8s.io/kubelet v0.20.4
+# k8s.io/legacy-cloud-providers => k8s.io/legacy-cloud-providers v0.20.4
+# k8s.io/metrics => k8s.io/metrics v0.20.4
+# k8s.io/mount-utils => k8s.io/mount-utils v0.20.4
+# k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.20.4
 # nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6

@@ -8,12 +8,36 @@ replace (
 	github.com/coredns/coredns => github.com/btwiuse/coredns v1.8.4
 	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20210218034515-4e5ef1691e9f
 	github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
+	k8s.io/api => k8s.io/api v0.20.4
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.20.4
+	k8s.io/apimachinery => k8s.io/apimachinery v0.20.4
 	k8s.io/apiserver => github.com/btwiuse/apiserver v0.20.4-btwiuse
+	k8s.io/cli-runtime => k8s.io/cli-runtime v0.20.4
+	k8s.io/client-go => k8s.io/client-go v0.20.4
+	k8s.io/cloud-provider => k8s.io/cloud-provider v0.20.4
+	k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.20.4
+	k8s.io/code-generator => k8s.io/code-generator v0.20.4
+	k8s.io/component-base => k8s.io/component-base v0.20.4
+	k8s.io/component-helpers => k8s.io/component-helpers v0.20.4
+	k8s.io/controller-manager => k8s.io/controller-manager v0.20.4
+	k8s.io/cri-api => k8s.io/cri-api v0.20.4
+	k8s.io/csi-translation-lib => k8s.io/csi-translation-lib v0.20.4
+	k8s.io/kube-aggregator => k8s.io/kube-aggregator v0.20.4
+	k8s.io/kube-controller-manager => k8s.io/kube-controller-manager v0.20.4
+	k8s.io/kube-proxy => k8s.io/kube-proxy v0.20.4
+	k8s.io/kube-scheduler => k8s.io/kube-scheduler v0.20.4
 	k8s.io/kube-state-metrics/v2 => github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9
+	k8s.io/kubectl => k8s.io/kubectl v0.20.4
+	k8s.io/kubelet => k8s.io/kubelet v0.20.4
+	k8s.io/legacy-cloud-providers => k8s.io/legacy-cloud-providers v0.20.4
+	k8s.io/metrics => k8s.io/metrics v0.20.4
+	k8s.io/mount-utils => k8s.io/mount-utils v0.20.4
+	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.20.4
 	nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
 )
 
 require (
+	github.com/Azure/azure-sdk-for-go v43.0.0+incompatible // indirect
 	github.com/BurntSushi/toml v0.3.1
 	github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5
@@ -105,6 +129,7 @@ require (
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	k8s.io/api v0.20.4
+	k8s.io/apimachinery v0.20.4
 	k8s.io/apiserver v0.20.4
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.9.2
 	k8s.io/client-go v0.20.4
@@ -112,6 +137,7 @@ require (
 	k8s.io/klog/v2 v2.7.0
 	k8s.io/kube-state-metrics/v2 v2.0.0-00010101000000-000000000000
 	k8s.io/kubectl v0.20.4
+	k8s.io/kubelet v0.0.0 // indirect
 	modernc.org/httpfs v1.0.0
 	nhooyr.io/websocket v1.8.6
 	robpike.io/ivy v0.1.0

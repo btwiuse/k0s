@@ -24,12 +24,11 @@ import (
 
 	"github.com/spf13/pflag"
 
-	// "k8s.io/kubernetes/pkg/api"
-	// "k8s.io/kubernetes/pkg/client/restclient"
-	// client "k8s.io/kubernetes/pkg/client/unversioned"
+	rest "k8s.io/client-go/rest"
 	api "k8s.io/api/core/v1"
-	restclient "k8s.io/client-go/rest"
-	// client "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/kubernetes/scheme"
 )
 
 var server = pflag.StringP("server", "s", "http://127.0.0.1:8080", "address of the K8s API Server")
@@ -37,6 +36,8 @@ var proxyMode = pflag.Bool("proxy", false, "start in proxy mode")
 var proxyPort = pflag.String("proxy-port", "9090", "set the port when running in proxy mode")
 
 func main() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
 	pflag.Usage = usage
 	pflag.Parse()
 
@@ -56,7 +57,7 @@ func main() {
 			// Find the request pod's IP
 			podIP, err := getPodIP(r.Host)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "error getting pod IP: %v", err)
+				log.Printf("error getting pod IP: %v", err)
 				return
 			}
 			if podIP == "" {
@@ -114,10 +115,7 @@ func usage() {
 }
 
 func getPodIP(podName string) (string, error) {
-	config := &restclient.Config{
-		Host: *server,
-	}
-	c, err := restclient.RESTClientFor(config)
+	c, err := createKubeClient(*server, "")
 	if err != nil {
 		return "", fmt.Errorf("error building client: %v", err)
 	}
@@ -142,5 +140,22 @@ func getPodIP(podName string) (string, error) {
 		return "", nil
 	}
 
+	log.Println(podName, podIP)
 	return podIP, nil
+}
+
+func createKubeClient(apiserver string, kubeconfig string) (*rest.RESTClient, error) {
+        config, err := clientcmd.BuildConfigFromFlags(apiserver, kubeconfig)
+        if err != nil {
+                return nil, err
+        }
+	config.GroupVersion = &schema.GroupVersion{Group: "", Version: "v1"}
+	config.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
+	config.APIPath = "/api"
+
+	c, err := rest.UnversionedRESTClientFor(config)
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
 }
