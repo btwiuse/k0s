@@ -144,7 +144,7 @@ func getPodIP(podName string) (string, error) {
 	return podIP, nil
 }
 
-func createKubeClient(apiserver string, kubeconfig string) (*rest.RESTClient, error) {
+func createRESTConfig(apiserver string, kubeconfig string) (*rest.Config, error) {
         config, err := clientcmd.BuildConfigFromFlags(apiserver, kubeconfig)
         if err != nil {
                 return nil, err
@@ -152,6 +152,14 @@ func createKubeClient(apiserver string, kubeconfig string) (*rest.RESTClient, er
 	config.GroupVersion = &schema.GroupVersion{Group: "", Version: "v1"}
 	config.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
 	config.APIPath = "/api"
+	return config, nil
+}
+
+func createKubeClient(apiserver string, kubeconfig string) (*rest.RESTClient, error) {
+        config, err := createRESTConfig(apiserver, kubeconfig)
+        if err != nil {
+                return nil, err
+        }
 
 	c, err := rest.UnversionedRESTClientFor(config)
 	if err != nil {
