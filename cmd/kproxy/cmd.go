@@ -34,7 +34,6 @@ func main() {
 		staticDir    = ""
 		apiPrefix    = "/"
 		staticPrefix = "/static/"
-		// filter       = &kproxy.FilterServer{}
 		keepalive    = 30 * time.Second
 
 		port = ":8090"
@@ -48,7 +47,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	handler, err := kproxy.NewHandler(staticDir, apiPrefix, staticPrefix, nil /* filter */ , clientConfig, keepalive)
+	handler, err := kproxy.NewHandler(staticDir, apiPrefix, staticPrefix, , clientConfig, keepalive)
 	if err != nil {
 		log.Fatalln(err)
 	}
