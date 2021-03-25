@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "errors.generated.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/features/dns/localdns",
+    importpath = "github.com/v2fly/v2ray-core/v4/features/dns/localdns",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/net:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/dns:go_default_library",
+    ],
+)

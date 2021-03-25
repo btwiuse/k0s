@@ -549,6 +549,8 @@ github.com/dgrijalva/jwt-go/request
 github.com/dgryski/go-farm
 # github.com/dgryski/go-jump v0.0.0-20170409065014-e1f439676b57
 github.com/dgryski/go-jump
+# github.com/dgryski/go-metro v0.0.0-20200812162917-85c65e2d0165
+github.com/dgryski/go-metro
 # github.com/dimchansky/utfbom v1.1.1
 github.com/dimchansky/utfbom
 # github.com/disintegration/imaging v1.6.2
@@ -1258,7 +1260,7 @@ github.com/mholt/caddy-l4/modules/l4tls
 github.com/mholt/caddy-webdav
 # github.com/mholt/certmagic v0.6.2-0.20190624175158-6a42ef9fe8c2
 github.com/mholt/certmagic
-# github.com/miekg/dns v1.1.38
+# github.com/miekg/dns v1.1.40
 ## explicit
 github.com/miekg/dns
 # github.com/milosgajdos/tenus v0.0.3
@@ -1427,6 +1429,8 @@ github.com/phuslu/geoip
 # github.com/pierrec/lz4 v2.6.0+incompatible
 github.com/pierrec/lz4
 github.com/pierrec/lz4/internal/xxh32
+# github.com/pires/go-proxyproto v0.5.0
+github.com/pires/go-proxyproto
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
@@ -1548,6 +1552,8 @@ github.com/satori/go.uuid
 github.com/sean-/seed
 # github.com/seccomp/libseccomp-golang v0.9.1
 github.com/seccomp/libseccomp-golang
+# github.com/seiflotfy/cuckoofilter v0.0.0-20201222105146-bc6005554a0c
+github.com/seiflotfy/cuckoofilter
 # github.com/shadowsocks/go-shadowsocks2 v0.1.3
 github.com/shadowsocks/go-shadowsocks2/core
 github.com/shadowsocks/go-shadowsocks2/internal
@@ -1662,6 +1668,117 @@ github.com/ulikunitz/xz/lzma
 # github.com/urfave/cli v1.22.5
 ## explicit
 github.com/urfave/cli
+# github.com/v2fly/v2ray-core/v4 v4.36.2
+## explicit
+github.com/v2fly/v2ray-core/v4
+github.com/v2fly/v2ray-core/v4/app/commander
+github.com/v2fly/v2ray-core/v4/app/dispatcher
+github.com/v2fly/v2ray-core/v4/app/dns
+github.com/v2fly/v2ray-core/v4/app/dns/fakedns
+github.com/v2fly/v2ray-core/v4/app/log
+github.com/v2fly/v2ray-core/v4/app/log/command
+github.com/v2fly/v2ray-core/v4/app/policy
+github.com/v2fly/v2ray-core/v4/app/proxyman
+github.com/v2fly/v2ray-core/v4/app/proxyman/command
+github.com/v2fly/v2ray-core/v4/app/proxyman/inbound
+github.com/v2fly/v2ray-core/v4/app/proxyman/outbound
+github.com/v2fly/v2ray-core/v4/app/reverse
+github.com/v2fly/v2ray-core/v4/app/router
+github.com/v2fly/v2ray-core/v4/app/stats
+github.com/v2fly/v2ray-core/v4/app/stats/command
+github.com/v2fly/v2ray-core/v4/common
+github.com/v2fly/v2ray-core/v4/common/antireplay
+github.com/v2fly/v2ray-core/v4/common/bitmask
+github.com/v2fly/v2ray-core/v4/common/buf
+github.com/v2fly/v2ray-core/v4/common/bytespool
+github.com/v2fly/v2ray-core/v4/common/cache
+github.com/v2fly/v2ray-core/v4/common/cmdarg
+github.com/v2fly/v2ray-core/v4/common/crypto
+github.com/v2fly/v2ray-core/v4/common/crypto/internal
+github.com/v2fly/v2ray-core/v4/common/dice
+github.com/v2fly/v2ray-core/v4/common/errors
+github.com/v2fly/v2ray-core/v4/common/log
+github.com/v2fly/v2ray-core/v4/common/mux
+github.com/v2fly/v2ray-core/v4/common/net
+github.com/v2fly/v2ray-core/v4/common/platform
+github.com/v2fly/v2ray-core/v4/common/platform/ctlcmd
+github.com/v2fly/v2ray-core/v4/common/platform/filesystem
+github.com/v2fly/v2ray-core/v4/common/protocol
+github.com/v2fly/v2ray-core/v4/common/protocol/bittorrent
+github.com/v2fly/v2ray-core/v4/common/protocol/dns
+github.com/v2fly/v2ray-core/v4/common/protocol/http
+github.com/v2fly/v2ray-core/v4/common/protocol/tls
+github.com/v2fly/v2ray-core/v4/common/protocol/tls/cert
+github.com/v2fly/v2ray-core/v4/common/protocol/udp
+github.com/v2fly/v2ray-core/v4/common/retry
+github.com/v2fly/v2ray-core/v4/common/serial
+github.com/v2fly/v2ray-core/v4/common/session
+github.com/v2fly/v2ray-core/v4/common/signal
+github.com/v2fly/v2ray-core/v4/common/signal/done
+github.com/v2fly/v2ray-core/v4/common/signal/pubsub
+github.com/v2fly/v2ray-core/v4/common/signal/semaphore
+github.com/v2fly/v2ray-core/v4/common/strmatcher
+github.com/v2fly/v2ray-core/v4/common/task
+github.com/v2fly/v2ray-core/v4/common/uuid
+github.com/v2fly/v2ray-core/v4/features
+github.com/v2fly/v2ray-core/v4/features/dns
+github.com/v2fly/v2ray-core/v4/features/dns/localdns
+github.com/v2fly/v2ray-core/v4/features/inbound
+github.com/v2fly/v2ray-core/v4/features/outbound
+github.com/v2fly/v2ray-core/v4/features/policy
+github.com/v2fly/v2ray-core/v4/features/routing
+github.com/v2fly/v2ray-core/v4/features/routing/dns
+github.com/v2fly/v2ray-core/v4/features/routing/session
+github.com/v2fly/v2ray-core/v4/features/stats
+github.com/v2fly/v2ray-core/v4/infra/conf
+github.com/v2fly/v2ray-core/v4/infra/conf/json
+github.com/v2fly/v2ray-core/v4/infra/conf/serial
+github.com/v2fly/v2ray-core/v4/main/confloader
+github.com/v2fly/v2ray-core/v4/main/confloader/external
+github.com/v2fly/v2ray-core/v4/main/distro/all
+github.com/v2fly/v2ray-core/v4/main/jsonem
+github.com/v2fly/v2ray-core/v4/proxy
+github.com/v2fly/v2ray-core/v4/proxy/blackhole
+github.com/v2fly/v2ray-core/v4/proxy/dns
+github.com/v2fly/v2ray-core/v4/proxy/dokodemo
+github.com/v2fly/v2ray-core/v4/proxy/freedom
+github.com/v2fly/v2ray-core/v4/proxy/http
+github.com/v2fly/v2ray-core/v4/proxy/loopback
+github.com/v2fly/v2ray-core/v4/proxy/mtproto
+github.com/v2fly/v2ray-core/v4/proxy/shadowsocks
+github.com/v2fly/v2ray-core/v4/proxy/socks
+github.com/v2fly/v2ray-core/v4/proxy/trojan
+github.com/v2fly/v2ray-core/v4/proxy/vless
+github.com/v2fly/v2ray-core/v4/proxy/vless/encoding
+github.com/v2fly/v2ray-core/v4/proxy/vless/inbound
+github.com/v2fly/v2ray-core/v4/proxy/vless/outbound
+github.com/v2fly/v2ray-core/v4/proxy/vmess
+github.com/v2fly/v2ray-core/v4/proxy/vmess/aead
+github.com/v2fly/v2ray-core/v4/proxy/vmess/encoding
+github.com/v2fly/v2ray-core/v4/proxy/vmess/inbound
+github.com/v2fly/v2ray-core/v4/proxy/vmess/outbound
+github.com/v2fly/v2ray-core/v4/transport
+github.com/v2fly/v2ray-core/v4/transport/internet
+github.com/v2fly/v2ray-core/v4/transport/internet/domainsocket
+github.com/v2fly/v2ray-core/v4/transport/internet/grpc
+github.com/v2fly/v2ray-core/v4/transport/internet/grpc/encoding
+github.com/v2fly/v2ray-core/v4/transport/internet/headers/http
+github.com/v2fly/v2ray-core/v4/transport/internet/headers/noop
+github.com/v2fly/v2ray-core/v4/transport/internet/headers/srtp
+github.com/v2fly/v2ray-core/v4/transport/internet/headers/tls
+github.com/v2fly/v2ray-core/v4/transport/internet/headers/utp
+github.com/v2fly/v2ray-core/v4/transport/internet/headers/wechat
+github.com/v2fly/v2ray-core/v4/transport/internet/headers/wireguard
+github.com/v2fly/v2ray-core/v4/transport/internet/http
+github.com/v2fly/v2ray-core/v4/transport/internet/kcp
+github.com/v2fly/v2ray-core/v4/transport/internet/quic
+github.com/v2fly/v2ray-core/v4/transport/internet/tagged
+github.com/v2fly/v2ray-core/v4/transport/internet/tagged/taggedimpl
+github.com/v2fly/v2ray-core/v4/transport/internet/tcp
+github.com/v2fly/v2ray-core/v4/transport/internet/tls
+github.com/v2fly/v2ray-core/v4/transport/internet/udp
+github.com/v2fly/v2ray-core/v4/transport/internet/websocket
+github.com/v2fly/v2ray-core/v4/transport/pipe
 # github.com/vishvananda/netlink v1.1.0
 github.com/vishvananda/netlink
 github.com/vishvananda/netlink/nl
@@ -1712,7 +1829,7 @@ go.opencensus.io/trace
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/propagation
 go.opencensus.io/trace/tracestate
-# go.starlark.net v0.0.0-20210212215732-ebe61bd709bf
+# go.starlark.net v0.0.0-20210305151048-6a590ae7f4eb
 ## explicit
 go.starlark.net/internal/compile
 go.starlark.net/internal/spell
@@ -1743,7 +1860,7 @@ go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
-# golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
+# golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83
 ## explicit
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
@@ -1784,11 +1901,12 @@ golang.org/x/image/tiff/lzw
 ## explicit
 golang.org/x/mod/module
 golang.org/x/mod/semver
-# golang.org/x/net v0.0.0-20210119194325-5f4716e94777
+# golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
 ## explicit
 golang.org/x/net/bpf
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
+golang.org/x/net/dns/dnsmessage
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/http/httpguts
@@ -1939,6 +2057,8 @@ google.golang.org/grpc/internal/transport/networktype
 google.golang.org/grpc/keepalive
 google.golang.org/grpc/metadata
 google.golang.org/grpc/peer
+google.golang.org/grpc/reflection
+google.golang.org/grpc/reflection/grpc_reflection_v1alpha
 google.golang.org/grpc/resolver
 google.golang.org/grpc/resolver/manual
 google.golang.org/grpc/serviceconfig

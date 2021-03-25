@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "errors.generated.go",
+        "handler.go",
+        "outbound.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/app/proxyman/outbound",
+    importpath = "github.com/v2fly/v2ray-core/v4/app/proxyman/outbound",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/v2ray-core/v4:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/app/proxyman:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/mux:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/net:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/session:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/outbound:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/policy:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/stats:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/proxy:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet/tls:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport/pipe:go_default_library",
+    ],
+)

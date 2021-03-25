@@ -3126,8 +3126,8 @@ go_repository(
 go_repository(
     name = "net_starlark_go",
     importpath = "go.starlark.net",
-    sum = "h1:8b1dxl/E/KcBT0eST8oMb6H06zAtsUCfNNoNVkP7Z2U=",
-    version = "v0.0.0-20210212215732-ebe61bd709bf",
+    sum = "h1:4cM8hRkSWxRrHV7AQowcBrM91A8KJcUp2z0sfQOGMY0=",
+    version = "v0.0.0-20210305151048-6a590ae7f4eb",
 )
 
 go_repository(
@@ -3434,8 +3434,8 @@ go_repository(
 go_repository(
     name = "io_h12_socks",
     importpath = "h12.io/socks",
-    sum = "h1:oiFI7YXv4h/0kBNcmAb5EkkoFJgYsOF88EQjMBxjitc=",
-    version = "v1.0.0",
+    sum = "h1:cZhhbV8+DE0Y1kotwhr1a3RC3kFO7AtuZ4GLr3qKSc8=",
+    version = "v1.0.2",
 )
 
 go_repository(
@@ -5032,6 +5032,62 @@ go_repository(
     version = "v1.0.0",
 )
 
+go_repository(
+    name = "com_github_dgryski_go_metro",
+    importpath = "github.com/dgryski/go-metro",
+    sum = "h1:BS21ZUJ/B5X2UVUbczfmdWH7GapPWAhxcMsDnjJTU1E=",
+    version = "v0.0.0-20200812162917-85c65e2d0165",
+)
+
+go_repository(
+    name = "com_github_ebfe_bcrypt_pbkdf",
+    importpath = "github.com/ebfe/bcrypt_pbkdf",
+    sum = "h1:YtdtTUN1iH97s+6PUjLnaiKSQj4oG1/EZ3N9bx6g4kU=",
+    version = "v0.0.0-20140212075826-3c8d2dcb253a",
+)
+
+go_repository(
+    name = "com_github_h12w_go_socks5",
+    importpath = "github.com/h12w/go-socks5",
+    sum = "h1:5XxdakFhqd9dnXoAZy1Mb2R/DZ6D1e+0bGC/JhucGYI=",
+    version = "v0.0.0-20200522160539-76189e178364",
+)
+
+go_repository(
+    name = "com_github_phayes_freeport",
+    importpath = "github.com/phayes/freeport",
+    sum = "h1:JhzVVoYvbOACxoUmOs6V/G4D5nPVUW73rKvXxP4XUJc=",
+    version = "v0.0.0-20180830031419-95f893ade6f2",
+)
+
+go_repository(
+    name = "com_github_pires_go_proxyproto",
+    importpath = "github.com/pires/go-proxyproto",
+    sum = "h1:A4Jv4ZCaV3AFJeGh5mGwkz4iuWUYMlQ7IoO/GTuSuLo=",
+    version = "v0.5.0",
+)
+
+go_repository(
+    name = "com_github_seiflotfy_cuckoofilter",
+    importpath = "github.com/seiflotfy/cuckoofilter",
+    sum = "h1:pqy40B3MQWYrza7YZXOXgl0Nf0QGFqrOC0BKae1UNAA=",
+    version = "v0.0.0-20201222105146-bc6005554a0c",
+)
+
+go_repository(
+    name = "com_github_v2fly_v2ray_core_v4",
+    importpath = "github.com/v2fly/v2ray-core/v4",
+    sum = "h1:JrA3N5BdIc7+rtWgmP9zqw341BmimYmEtuU4lVBFgHY=",
+    version = "v4.36.2",
+)
+
+go_repository(
+    name = "com_github_v2fly_vsign",
+    importpath = "github.com/v2fly/VSign",
+    sum = "h1:p1UzXK6VAutXFFQMnre66h7g1BjRKUnLv0HfmmRoz7w=",
+    version = "v0.0.0-20201108000810-e2adc24bf848",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -5372,8 +5428,8 @@ go_repository(
 go_repository(
     name = "com_github_golang_mock",
     importpath = "github.com/golang/mock",
-    sum = "h1:l75CXGRSwbaYNpl/Z2X1XIIAMSCquvXgpVZDhwEIJsc=",
-    version = "v1.4.4",
+    sum = "h1:jlYHihg//f7RRwuPfptm04yp4s7O6Kw8EZiVYIGcH0g=",
+    version = "v1.5.0",
 )
 
 go_repository(
@@ -5617,8 +5673,8 @@ go_repository(
 go_repository(
     name = "com_github_miekg_dns",
     importpath = "github.com/miekg/dns",
-    sum = "h1:MtIY+fmHUVVgv1AXzmKMWcwdCYxTRPG1EDjpqF4RCEw=",
-    version = "v1.1.38",
+    sum = "h1:pyyPFfGMnciYUk/mXpKkVmeMQjfXqt3FAJ2hy7tPiLA=",
+    version = "v1.1.40",
 )
 
 go_repository(
@@ -5954,8 +6010,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_crypto",
     importpath = "golang.org/x/crypto",
-    sum = "h1:DN0cp81fZ3njFcrLCytUHRSUkqBjfTo4Tx9RJTWs0EY=",
-    version = "v0.0.0-20201221181555-eec23a3978ad",
+    sum = "h1:/ZScEX8SfEmUGRHs0gxpqteO5nfNW6axyZbBdw9A12g=",
+    version = "v0.0.0-20210220033148-5ea612d1eb83",
 )
 
 go_repository(
@@ -5982,8 +6038,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_net",
     importpath = "golang.org/x/net",
-    sum = "h1:003p0dJM77cxMSyCPFphvZf/Y5/NXf5fzg6ufd1/Oew=",
-    version = "v0.0.0-20210119194325-5f4716e94777",
+    sum = "h1:qWPm9rbaAMKs8Bq/9LRpbMqxWRVUAQwMI9fVrssnTfw=",
+    version = "v0.0.0-20210226172049-e18ecbb05110",
 )
 
 go_repository(

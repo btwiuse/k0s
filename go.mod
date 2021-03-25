@@ -100,7 +100,7 @@ require (
 	github.com/mattn/go-shellwords v1.0.10
 	github.com/mholt/caddy-l4 v0.0.0-20210209073014-d1d54b015e34
 	github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
-	github.com/miekg/dns v1.1.38
+	github.com/miekg/dns v1.1.40
 	github.com/p4gefau1t/trojan-go v0.8.2
 	github.com/pkg/errors v0.9.1
 	github.com/portainer/agent v0.0.0-20210129020346-65fa249df79a
@@ -118,10 +118,11 @@ require (
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
 	github.com/traefik/yaegi v0.9.14
 	github.com/urfave/cli v1.22.5
-	go.starlark.net v0.0.0-20210212215732-ebe61bd709bf
-	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
+	github.com/v2fly/v2ray-core/v4 v4.36.2
+	go.starlark.net v0.0.0-20210305151048-6a590ae7f4eb
+	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83
 	golang.org/x/mod v0.4.1
-	golang.org/x/net v0.0.0-20210119194325-5f4716e94777
+	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20210305230114-8fe3ee5dd75b
 	google.golang.org/grpc v1.36.0

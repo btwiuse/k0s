@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "command.go",
+        "config.go",
+        "config.pb.go",
+        "errors.generated.go",
+        "outbound.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/proxy/vmess/outbound",
+    importpath = "github.com/v2fly/v2ray-core/v4/proxy/vmess/outbound",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/buf:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/net:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/platform:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/protocol:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/retry:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/session:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/signal:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/task:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/policy:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/proxy/vmess:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/proxy/vmess/encoding:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet:go_default_library",
+        "//vendor/google.golang.org/protobuf/reflect/protoreflect:go_default_library",
+        "//vendor/google.golang.org/protobuf/runtime/protoimpl:go_default_library",
+    ],
+)

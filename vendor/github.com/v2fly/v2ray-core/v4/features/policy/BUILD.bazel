@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "default.go",
+        "policy.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/features/policy",
+    importpath = "github.com/v2fly/v2ray-core/v4/features/policy",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/platform:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features:go_default_library",
+    ],
+)

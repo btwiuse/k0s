@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "addons.go",
+        "addons.pb.go",
+        "encoding.go",
+        "errors.generated.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/proxy/vless/encoding",
+    importpath = "github.com/v2fly/v2ray-core/v4/proxy/vless/encoding",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/buf:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/net:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/protocol:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/proxy/vless:go_default_library",
+    ],
+)
