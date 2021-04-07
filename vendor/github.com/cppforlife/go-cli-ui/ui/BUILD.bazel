@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "color_ui.go",
+        "combo_writer.go",
+        "conf_ui.go",
+        "indenting_ui.go",
+        "interfaces.go",
+        "json_ui.go",
+        "non_interactive.go",
+        "non_tty_ui.go",
+        "noop_logger.go",
+        "noop_ui.go",
+        "padding_ui.go",
+        "ui.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/cppforlife/go-cli-ui/ui",
+    importpath = "github.com/cppforlife/go-cli-ui/ui",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/cppforlife/color:go_default_library",
+        "//vendor/github.com/cppforlife/go-cli-ui/ui/table:go_default_library",
+        "//vendor/github.com/mattn/go-isatty:go_default_library",
+        "//vendor/github.com/vito/go-interact/interact:go_default_library",
+    ],
+)

@@ -37,7 +37,6 @@ replace (
 )
 
 require (
-	github.com/Azure/azure-sdk-for-go v43.0.0+incompatible // indirect
 	github.com/BurntSushi/toml v0.3.1
 	github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5
@@ -48,6 +47,7 @@ require (
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/bcrypt v1.0.2
 	github.com/btwiuse/cadvisor v0.0.0-20210312172035-34fddda41018
+	github.com/btwiuse/dkg v0.2.0
 	github.com/btwiuse/etcd/v3 v3.4.15
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
@@ -58,6 +58,7 @@ require (
 	github.com/caddyserver/nginx-adapter v0.0.3
 	github.com/casbin/caddy-authz/v2 v2.0.0
 	github.com/coredns/coredns v1.8.4-0.20210224180316-9d3a84377cae
+	github.com/cppforlife/go-cli-ui v0.0.0-20200716203538-1e47f820817f
 	github.com/creack/pty v1.1.11
 	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1

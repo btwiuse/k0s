@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "file_flags.go",
+        "image_flags.go",
+        "imgpkg.go",
+        "info_log.go",
+        "pull.go",
+        "push.go",
+        "registry_flags.go",
+        "tag.go",
+        "tag_list.go",
+        "ui_flags.go",
+        "version.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/btwiuse/dkg/pkg/imgpkg/cmd",
+    importpath = "github.com/btwiuse/dkg/pkg/imgpkg/cmd",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/btwiuse/dkg/pkg/imgpkg/image:go_default_library",
+        "//vendor/github.com/cppforlife/cobrautil:go_default_library",
+        "//vendor/github.com/cppforlife/go-cli-ui/ui:go_default_library",
+        "//vendor/github.com/cppforlife/go-cli-ui/ui/table:go_default_library",
+        "//vendor/github.com/google/go-containerregistry/pkg/name:go_default_library",
+        "//vendor/github.com/spf13/cobra:go_default_library",
+        "//vendor/gopkg.in/yaml.v2:go_default_library",
+    ],
+)
