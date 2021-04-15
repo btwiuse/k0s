@@ -1,11 +1,11 @@
 ---
 tasks:
-  ubuntu1804:
+  ubuntu2004:
     build_targets:
-    - "k0s"
+    - "k0s_static"
   macos:
     build_targets:
-    - "k0s"
-  windows:
-    build_targets:
-    - "k0s"
+    - "k0s_static"
+# windows:
+#   build_targets:
+#   - "k0s"
