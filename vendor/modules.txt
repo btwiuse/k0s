@@ -15,7 +15,7 @@ git.torproject.org/pluggable-transports/obfs4.git/transports/obfs4/framing
 gitea.com/lunny/log
 # github.com/AndreasBriese/bbloom v0.0.0-20190306092124-e2d15f34fcf9
 github.com/AndreasBriese/bbloom
-# github.com/Azure/azure-sdk-for-go v43.0.0+incompatible
+# github.com/Azure/azure-sdk-for-go v52.4.0+incompatible
 github.com/Azure/azure-sdk-for-go/profiles/latest/dns/mgmt/dns
 github.com/Azure/azure-sdk-for-go/profiles/latest/privatedns/mgmt/privatedns
 github.com/Azure/azure-sdk-for-go/services/dns/mgmt/2018-05-01/dns
@@ -37,7 +37,7 @@ github.com/Azure/go-autorest/autorest/azure/auth
 github.com/Azure/go-autorest/autorest/azure/cli
 # github.com/Azure/go-autorest/autorest/date v0.3.0
 github.com/Azure/go-autorest/autorest/date
-# github.com/Azure/go-autorest/autorest/to v0.3.0
+# github.com/Azure/go-autorest/autorest/to v0.4.0
 github.com/Azure/go-autorest/autorest/to
 # github.com/Azure/go-autorest/logger v0.2.1
 github.com/Azure/go-autorest/logger
@@ -300,11 +300,35 @@ github.com/buildkite/interpolate
 github.com/buildkite/shellwords
 # github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3
 github.com/buildkite/yaml
+# github.com/caddy-dns/alidns v1.0.21
+## explicit
+github.com/caddy-dns/alidns
+# github.com/caddy-dns/azure v0.2.0
+## explicit
+github.com/caddy-dns/azure
+# github.com/caddy-dns/cloudflare v0.0.0-20210401224357-964e47d3890e
+## explicit
+github.com/caddy-dns/cloudflare
+# github.com/caddy-dns/digitalocean v0.0.0-20210408173619-385f9346b5ac
+## explicit
+github.com/caddy-dns/digitalocean
+# github.com/caddy-dns/dnspod v0.0.1
+## explicit
+github.com/caddy-dns/dnspod
+# github.com/caddy-dns/duckdns v0.3.1
+## explicit
+github.com/caddy-dns/duckdns
+# github.com/caddy-dns/route53 v1.1.1
+## explicit
+github.com/caddy-dns/route53
+# github.com/caddy-dns/vultr v0.0.0-20210105121117-3162aa6b9c27
+## explicit
+github.com/caddy-dns/vultr
 # github.com/caddyserver/caddy v1.0.3
 github.com/caddyserver/caddy
 github.com/caddyserver/caddy/caddyfile
 github.com/caddyserver/caddy/telemetry
-# github.com/caddyserver/caddy/v2 v2.3.0
+# github.com/caddyserver/caddy/v2 v2.4.0-beta.2
 ## explicit
 github.com/caddyserver/caddy/v2
 github.com/caddyserver/caddy/v2/caddyconfig
@@ -314,6 +338,7 @@ github.com/caddyserver/caddy/v2/cmd
 github.com/caddyserver/caddy/v2/modules/caddyhttp
 github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth
 github.com/caddyserver/caddy/v2/modules/caddyhttp/encode
+github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/brotli
 github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/gzip
 github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/zstd
 github.com/caddyserver/caddy/v2/modules/caddyhttp/fileserver
@@ -335,17 +360,12 @@ github.com/caddyserver/caddy/v2/modules/filestorage
 github.com/caddyserver/caddy/v2/modules/logging
 github.com/caddyserver/caddy/v2/modules/metrics
 github.com/caddyserver/caddy/v2/modules/standard
-# github.com/caddyserver/certmagic v0.12.1-0.20201215190346-201f83a06067
+# github.com/caddyserver/certmagic v0.13.0
 github.com/caddyserver/certmagic
 # github.com/caddyserver/forwardproxy v0.0.0-00010101000000-000000000000 => github.com/klzgrad/forwardproxy v0.0.0-20210120121422-9b4a5a242bd6
 ## explicit
 github.com/caddyserver/forwardproxy
 github.com/caddyserver/forwardproxy/httpclient
-# github.com/caddyserver/nginx-adapter v0.0.3
-## explicit
-github.com/caddyserver/nginx-adapter
-# github.com/caddyserver/ntlm-transport v0.1.1-0.20200409193839-5d99ab17e974
-github.com/caddyserver/ntlm-transport
 # github.com/casbin/caddy-authz/v2 v2.0.0
 ## explicit
 github.com/casbin/caddy-authz/v2
@@ -562,6 +582,8 @@ github.com/dgryski/go-farm
 github.com/dgryski/go-jump
 # github.com/dgryski/go-metro v0.0.0-20200812162917-85c65e2d0165
 github.com/dgryski/go-metro
+# github.com/digitalocean/godo v1.41.0
+github.com/digitalocean/godo
 # github.com/dimchansky/utfbom v1.1.1
 github.com/dimchansky/utfbom
 # github.com/disintegration/imaging v1.6.2
@@ -1023,12 +1045,16 @@ github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc
 github.com/hairyhenderson/caddy-teapot-module
 # github.com/hashicorp/errwrap v1.0.0
 github.com/hashicorp/errwrap
+# github.com/hashicorp/go-cleanhttp v0.5.1
+github.com/hashicorp/go-cleanhttp
 # github.com/hashicorp/go-immutable-radix v1.0.0
 github.com/hashicorp/go-immutable-radix
 # github.com/hashicorp/go-msgpack v0.5.3
 github.com/hashicorp/go-msgpack/codec
 # github.com/hashicorp/go-multierror v1.0.0
 github.com/hashicorp/go-multierror
+# github.com/hashicorp/go-retryablehttp v0.6.8
+github.com/hashicorp/go-retryablehttp
 # github.com/hashicorp/go-sockaddr v1.0.0
 github.com/hashicorp/go-sockaddr
 # github.com/hashicorp/golang-lru v0.5.4
@@ -1136,8 +1162,6 @@ github.com/jpillora/webproc/agent/statik
 # github.com/json-iterator/go v1.1.10
 ## explicit
 github.com/json-iterator/go
-# github.com/jsternberg/zap-logfmt v1.2.0
-github.com/jsternberg/zap-logfmt
 # github.com/juju/ansiterm v0.0.0-20180109212912-720a0952cc2a
 github.com/juju/ansiterm
 github.com/juju/ansiterm/tabwriter
@@ -1167,8 +1191,24 @@ github.com/kr/pty
 # github.com/liamg/aminal v0.9.0
 ## explicit
 github.com/liamg/aminal/platform
-# github.com/libdns/libdns v0.1.0
+# github.com/libdns/alidns v1.0.2
+github.com/libdns/alidns
+# github.com/libdns/azure v0.2.0
+github.com/libdns/azure
+# github.com/libdns/cloudflare v0.1.0
+github.com/libdns/cloudflare
+# github.com/libdns/digitalocean v0.0.0-20210310230526-186c4ebd2215
+github.com/libdns/digitalocean
+# github.com/libdns/dnspod v0.0.1
+github.com/libdns/dnspod
+# github.com/libdns/duckdns v0.1.1
+github.com/libdns/duckdns
+# github.com/libdns/libdns v0.2.0
 github.com/libdns/libdns
+# github.com/libdns/route53 v1.1.0
+github.com/libdns/route53
+# github.com/libdns/vultr v0.0.0-20201128180404-1d5ee21ea62f
+github.com/libdns/vultr
 # github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de
 github.com/liggitt/tabwriter
 # github.com/lithammer/dedent v1.1.0
@@ -1275,7 +1315,7 @@ github.com/mesos/mesos-go/api/v1/lib/httpcli
 github.com/mesos/mesos-go/api/v1/lib/httpcli/apierrors
 github.com/mesos/mesos-go/api/v1/lib/recordio
 github.com/mesos/mesos-go/api/v1/lib/roles
-# github.com/mholt/acmez v0.1.1
+# github.com/mholt/acmez v0.1.3
 github.com/mholt/acmez
 github.com/mholt/acmez/acme
 # github.com/mholt/archiver v3.1.1+incompatible
@@ -1351,6 +1391,8 @@ github.com/naoina/toml
 github.com/naoina/toml/ast
 # github.com/nightlyone/lockfile v0.0.0-20180618180623-0ad87eef1443
 github.com/nightlyone/lockfile
+# github.com/nrdcg/dnspod-go v0.4.0
+github.com/nrdcg/dnspod-go
 # github.com/nwaples/rardecode v1.0.0
 github.com/nwaples/rardecode
 # github.com/oleiade/reflections v0.0.0-20160817071559-0e86b3c98b2f
@@ -1823,6 +1865,8 @@ github.com/vishvananda/netns
 # github.com/vito/go-interact v0.0.0-20171111012221-fa338ed9e9ec
 github.com/vito/go-interact/interact
 github.com/vito/go-interact/interact/terminal
+# github.com/vultr/govultr/v2 v2.0.0
+github.com/vultr/govultr/v2
 # github.com/willf/bitset v1.1.11
 github.com/willf/bitset
 # github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8
@@ -1984,7 +2028,7 @@ golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
-# golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1
+# golang.org/x/term v0.0.0-20210317153231-de623e64d2a6
 golang.org/x/term
 # golang.org/x/text v0.3.5
 golang.org/x/text/encoding

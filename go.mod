@@ -53,9 +53,16 @@ require (
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.36
 	github.com/buildkite/agent/v3 v3.27.0
-	github.com/caddyserver/caddy/v2 v2.3.0
+	github.com/caddy-dns/alidns v1.0.21
+	github.com/caddy-dns/azure v0.2.0
+	github.com/caddy-dns/cloudflare v0.0.0-20210401224357-964e47d3890e
+	github.com/caddy-dns/digitalocean v0.0.0-20210408173619-385f9346b5ac
+	github.com/caddy-dns/dnspod v0.0.1
+	github.com/caddy-dns/duckdns v0.3.1
+	github.com/caddy-dns/route53 v1.1.1
+	github.com/caddy-dns/vultr v0.0.0-20210105121117-3162aa6b9c27
+	github.com/caddyserver/caddy/v2 v2.4.0-beta.2
 	github.com/caddyserver/forwardproxy v0.0.0-00010101000000-000000000000
-	github.com/caddyserver/nginx-adapter v0.0.3
 	github.com/casbin/caddy-authz/v2 v2.0.0
 	github.com/coredns/coredns v1.8.4-0.20210224180316-9d3a84377cae
 	github.com/cppforlife/go-cli-ui v0.0.0-20200716203538-1e47f820817f

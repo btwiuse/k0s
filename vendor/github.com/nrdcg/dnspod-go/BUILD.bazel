@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "dnspod.go",
+        "domains.go",
+        "records.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/nrdcg/dnspod-go",
+    importpath = "github.com/nrdcg/dnspod-go",
+    visibility = ["//visibility:public"],
+)

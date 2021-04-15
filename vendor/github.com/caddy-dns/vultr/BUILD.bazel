@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["vultr.go"],
+    importmap = "k0s.io/vendor/github.com/caddy-dns/vultr",
+    importpath = "github.com/caddy-dns/vultr",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile:go_default_library",
+        "//vendor/github.com/libdns/vultr:go_default_library",
+    ],
+)

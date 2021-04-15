@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "provider.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libdns/vultr",
+    importpath = "github.com/libdns/vultr",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/libdns/libdns:go_default_library",
+        "//vendor/github.com/vultr/govultr/v2:go_default_library",
+        "//vendor/golang.org/x/oauth2:go_default_library",
+    ],
+)

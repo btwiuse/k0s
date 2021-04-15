@@ -86,7 +86,7 @@ load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 # )
 rust_repositories(
     edition = "2018",
-    iso_date = "2021-04-02",
+    iso_date = "2021-04-15",
     version = "nightly",
 )
 
@@ -828,8 +828,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_term",
     importpath = "golang.org/x/term",
-    sum = "h1:v+OssWQX+hTHEmOBgwxdZxK4zHq3yOs8F9J7mk0PY8E=",
-    version = "v0.0.0-20201126162022-7de9c90e9dd1",
+    sum = "h1:EC6+IGYTjPpRfv9a2b/6Puw0W+hLtAhkV1tPsXhutqs=",
+    version = "v0.0.0-20210317153231-de623e64d2a6",
 )
 
 go_repository(
@@ -968,8 +968,8 @@ go_repository(
 go_repository(
     name = "com_github_azure_azure_sdk_for_go",
     importpath = "github.com/Azure/azure-sdk-for-go",
-    sum = "h1:/wSNCu0e6EsHFR4Qa3vBEBbicaprEHMyyga9g8RTULI=",
-    version = "v43.0.0+incompatible",
+    sum = "h1:NpkT8MjJJMcgPJ5Q9E66QUgY9QRyxqM8MFx2P29uQZ4=",
+    version = "v52.4.0+incompatible",
 )
 
 go_repository(
@@ -989,8 +989,8 @@ go_repository(
 go_repository(
     name = "com_github_azure_go_autorest_autorest_to",
     importpath = "github.com/Azure/go-autorest/autorest/to",
-    sum = "h1:zebkZaadz7+wIQYgC7GXaz3Wb28yKYfVkkBKwc38VF8=",
-    version = "v0.3.0",
+    sum = "h1:oXVqrxakqqV1UZdSazDOPOLvOIz+XA683u8EctwboHk=",
+    version = "v0.4.0",
 )
 
 go_repository(
@@ -1045,15 +1045,15 @@ go_repository(
 go_repository(
     name = "com_github_caddyserver_caddy_v2",
     importpath = "github.com/caddyserver/caddy/v2",
-    sum = "h1:fnrqJLa3G5vfxcxmOH/+kJOcunPLhSBnjgIvjXV/QTA=",
-    version = "v2.3.0",
+    sum = "h1:DUaK4qtL3T0/gAm0fVVkHgcMN04r4zGpfPUZWHRR8QU=",
+    version = "v2.4.0-beta.2",
 )
 
 go_repository(
     name = "com_github_caddyserver_certmagic",
     importpath = "github.com/caddyserver/certmagic",
-    sum = "h1:gpjCX6/8hHRgVXxy1v2AQdoAX6XRXIA8fBUZtEpnVg0=",
-    version = "v0.12.1-0.20201215190346-201f83a06067",
+    sum = "h1:ky0rntZvIFiUKFdIikYxj31WN+Ts0Od6Wjz83iTzxfc=",
+    version = "v0.13.0",
 )
 
 go_repository(
@@ -1866,8 +1866,8 @@ go_repository(
 go_repository(
     name = "com_github_libdns_libdns",
     importpath = "github.com/libdns/libdns",
-    sum = "h1:0ctCOrVJsVzj53mop1angHp/pE3hmAhP7KiHvR0HD04=",
-    version = "v0.1.0",
+    sum = "h1:ewg3ByWrdUrxrje8ChPVMBNcotg7H9LQYg+u5De2RzI=",
+    version = "v0.2.0",
 )
 
 go_repository(
@@ -2034,8 +2034,8 @@ go_repository(
 go_repository(
     name = "com_github_mholt_acmez",
     importpath = "github.com/mholt/acmez",
-    sum = "h1:KQODCqk+hBn3O7qfCRPj6L96uG65T5BSS95FKNEqtdA=",
-    version = "v0.1.1",
+    sum = "h1:J7MmNIk4Qf9b8mAGqAh4XkNeowv3f1zW816yf4zt7Qk=",
+    version = "v0.1.3",
 )
 
 go_repository(
@@ -5350,8 +5350,8 @@ go_repository(
 go_repository(
     name = "com_github_hashicorp_go_retryablehttp",
     importpath = "github.com/hashicorp/go-retryablehttp",
-    sum = "h1:HJunrbHTDDbBb/ay4kxa1n+dLmttUlnP3V9oNE4hmsM=",
-    version = "v0.6.6",
+    sum = "h1:92lWxgpa+fF3FozM4B3UZtHZMJX8T5XT+TFdCxsPyWs=",
+    version = "v0.6.8",
 )
 
 go_repository(
@@ -5583,6 +5583,132 @@ go_repository(
     importpath = "bazil.org/fuse",
     sum = "h1:FNCRpXiquG1aoyqcIWVFmpTSKVcx2bQD38uZZeGtdlw=",
     version = "v0.0.0-20180421153158-65cc252bf669",
+)
+
+go_repository(
+    name = "com_github_caddy_dns_alidns",
+    importpath = "github.com/caddy-dns/alidns",
+    sum = "h1:u4dSp9kflUbSlghIuI65TEfNl3c5XIt7yhYU0uvekSs=",
+    version = "v1.0.21",
+)
+
+go_repository(
+    name = "com_github_caddy_dns_azure",
+    importpath = "github.com/caddy-dns/azure",
+    sum = "h1:j38dM8EAtK0u3CzKUML736MomOsbvyylMQ2hhZ3gUS0=",
+    version = "v0.2.0",
+)
+
+go_repository(
+    name = "com_github_caddy_dns_cloudflare",
+    importpath = "github.com/caddy-dns/cloudflare",
+    sum = "h1:CY82er5N3n/+2cUIxAeuNQMW++LJn9fbSXeQ7dbHJmY=",
+    version = "v0.0.0-20210401224357-964e47d3890e",
+)
+
+go_repository(
+    name = "com_github_caddy_dns_digitalocean",
+    importpath = "github.com/caddy-dns/digitalocean",
+    sum = "h1:hj7y6xn90dsHLSzHqXOAm+V/xXLPbYeHkatts+r3oEA=",
+    version = "v0.0.0-20210408173619-385f9346b5ac",
+)
+
+go_repository(
+    name = "com_github_caddy_dns_dnspod",
+    importpath = "github.com/caddy-dns/dnspod",
+    sum = "h1:ZQcuP+4tqevUUQAb6/FyF01cxWsA1rdLHns841p3XlM=",
+    version = "v0.0.1",
+)
+
+go_repository(
+    name = "com_github_caddy_dns_duckdns",
+    importpath = "github.com/caddy-dns/duckdns",
+    sum = "h1:SSqTt/kbtV9RmJ4wqys5j2ltDwfF35Tv+UU4qaOmTpY=",
+    version = "v0.3.1",
+)
+
+go_repository(
+    name = "com_github_caddy_dns_route53",
+    importpath = "github.com/caddy-dns/route53",
+    sum = "h1:0D6tC6TZf60F+EiG5Mr8XKQwSWUwKhyiFwyI4zdDe3M=",
+    version = "v1.1.1",
+)
+
+go_repository(
+    name = "com_github_caddy_dns_vultr",
+    importpath = "github.com/caddy-dns/vultr",
+    sum = "h1:+9RmeGYfnjoIf4O2EwLLPOs46k/CcWsNaGpXK8BP4vI=",
+    version = "v0.0.0-20210105121117-3162aa6b9c27",
+)
+
+go_repository(
+    name = "com_github_digitalocean_godo",
+    importpath = "github.com/digitalocean/godo",
+    sum = "h1:WYy7MIVVhTMZUNB+UA3irl2V9FyDJeDttsifYyn7jYA=",
+    version = "v1.41.0",
+)
+
+go_repository(
+    name = "com_github_libdns_alidns",
+    importpath = "github.com/libdns/alidns",
+    sum = "h1:WiT1cO2LWY95YNocTVBGipHjvRaFQOxMQ9X5bTiryRo=",
+    version = "v1.0.2",
+)
+
+go_repository(
+    name = "com_github_libdns_azure",
+    importpath = "github.com/libdns/azure",
+    sum = "h1:SVYG+iMKtSpSJZBZ0hjETAMNscPoWRMJI7nnlLonwD4=",
+    version = "v0.2.0",
+)
+
+go_repository(
+    name = "com_github_libdns_cloudflare",
+    importpath = "github.com/libdns/cloudflare",
+    sum = "h1:93WkJaGaiXCe353LHEP36kAWCUw0YjFqwhkBkU2/iic=",
+    version = "v0.1.0",
+)
+
+go_repository(
+    name = "com_github_libdns_digitalocean",
+    importpath = "github.com/libdns/digitalocean",
+    sum = "h1:JYi/h0UEECrxY2JCi5FIfZEDFuUJvwihUWdm3bnDu2A=",
+    version = "v0.0.0-20210310230526-186c4ebd2215",
+)
+
+go_repository(
+    name = "com_github_libdns_dnspod",
+    importpath = "github.com/libdns/dnspod",
+    sum = "h1:/nd9nPOZ66kwSIodPZ2GWgtkJ6jMzbAA4RKggYosodA=",
+    version = "v0.0.1",
+)
+
+go_repository(
+    name = "com_github_libdns_duckdns",
+    importpath = "github.com/libdns/duckdns",
+    sum = "h1:wkgu98DkwpjduH2fxC2YkCiNkNnfQiHaYskMkEyRZ28=",
+    version = "v0.1.1",
+)
+
+go_repository(
+    name = "com_github_libdns_route53",
+    importpath = "github.com/libdns/route53",
+    sum = "h1:LnMHXiOwoDXKDR8w2LcjGttalZTJeuaXx4lMoLrBCAo=",
+    version = "v1.1.0",
+)
+
+go_repository(
+    name = "com_github_libdns_vultr",
+    importpath = "github.com/libdns/vultr",
+    sum = "h1:i65uWz6ebW7T8bMqnJhzwj1B0HYB8mg/GXueGPxLrOs=",
+    version = "v0.0.0-20201128180404-1d5ee21ea62f",
+)
+
+go_repository(
+    name = "com_github_vultr_govultr_v2",
+    importpath = "github.com/vultr/govultr/v2",
+    sum = "h1:+lAtqfWy3g9VwL7tT2Fpyad8Vv4MxOhT/NU8O5dk+EQ=",
+    version = "v2.0.0",
 )
 
 rules_proto_dependencies()

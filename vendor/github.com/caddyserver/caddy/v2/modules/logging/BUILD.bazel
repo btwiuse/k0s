@@ -18,7 +18,6 @@ go_library(
         "//vendor/github.com/caddyserver/caddy/v2/caddyconfig:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile:go_default_library",
         "//vendor/github.com/dustin/go-humanize:go_default_library",
-        "//vendor/github.com/jsternberg/zap-logfmt:go_default_library",
         "//vendor/go.uber.org/zap:go_default_library",
         "//vendor/go.uber.org/zap/buffer:go_default_library",
         "//vendor/go.uber.org/zap/zapcore:go_default_library",

@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["brotli_precompressed.go"],
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/brotli",
+    importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/brotli",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode:go_default_library",
+    ],
+)

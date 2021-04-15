@@ -33,5 +33,6 @@ go_library(
         "//vendor/github.com/miekg/dns:go_default_library",
         "//vendor/go.uber.org/zap:go_default_library",
         "//vendor/golang.org/x/crypto/ocsp:go_default_library",
+        "//vendor/golang.org/x/net/idna:go_default_library",
     ],
 )

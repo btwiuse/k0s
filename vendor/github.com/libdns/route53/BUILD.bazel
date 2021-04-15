@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "provider.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libdns/route53",
+    importpath = "github.com/libdns/route53",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/aws/aws-sdk-go/aws:go_default_library",
+        "//vendor/github.com/aws/aws-sdk-go/aws/awserr:go_default_library",
+        "//vendor/github.com/aws/aws-sdk-go/aws/credentials:go_default_library",
+        "//vendor/github.com/aws/aws-sdk-go/aws/session:go_default_library",
+        "//vendor/github.com/aws/aws-sdk-go/service/route53:go_default_library",
+        "//vendor/github.com/libdns/libdns:go_default_library",
+    ],
+)

@@ -107,6 +107,19 @@ type AutomationPolicy struct {
 	// load.
 	OnDemand bool `json:"on_demand,omitempty"`
 
+	// Disables OCSP stapling. Disabling OCSP stapling puts clients at
+	// greater risk, reduces their privacy, and usually lowers client
+	// performance. It is NOT recommended to disable this unless you
+	// are able to justify the costs.
+	// EXPERIMENTAL. Subject to change.
+	DisableOCSPStapling bool `json:"disable_ocsp_stapling,omitempty"`
+
+	// Overrides the URLs of OCSP responders embedded in certificates.
+	// Each key is a OCSP server URL to override, and its value is the
+	// replacement. An empty value will disable querying of that server.
+	// EXPERIMENTAL. Subject to change.
+	OCSPOverrides map[string]string `json:"ocsp_overrides,omitempty"`
+
 	// Issuers stores the decoded issuer parameters. This is only
 	// used to populate an underlying certmagic.Config's Issuers
 	// field; it is not referenced thereafter.
@@ -174,7 +187,7 @@ func (ap *AutomationPolicy) Provision(tlsApp *TLS) error {
 	issuers := ap.Issuers
 	if len(issuers) == 0 {
 		var err error
-		issuers, err = DefaultIssuers(tlsApp.ctx)
+		issuers, err = DefaultIssuersProvisioned(tlsApp.ctx)
 		if err != nil {
 			return err
 		}
@@ -205,9 +218,13 @@ func (ap *AutomationPolicy) Provision(tlsApp *TLS) error {
 		RenewalWindowRatio: ap.RenewalWindowRatio,
 		KeySource:          keySource,
 		OnDemand:           ond,
-		Storage:            storage,
-		Issuers:            issuers,
-		Logger:             tlsApp.logger,
+		OCSP: certmagic.OCSPConfig{
+			DisableStapling:    ap.DisableOCSPStapling,
+			ResponderOverrides: ap.OCSPOverrides,
+		},
+		Storage: storage,
+		Issuers: issuers,
+		Logger:  tlsApp.logger,
 	}
 	ap.magic = certmagic.New(tlsApp.certCache, template)
 
@@ -225,21 +242,28 @@ func (ap *AutomationPolicy) Provision(tlsApp *TLS) error {
 	return nil
 }
 
-// DefaultIssuers returns empty but provisioned default Issuers.
+// DefaultIssuers returns empty Issuers (not provisioned) to be used as defaults.
 // This function is experimental and has no compatibility promises.
-func DefaultIssuers(ctx caddy.Context) ([]certmagic.Issuer, error) {
-	acme := new(ACMEIssuer)
-	err := acme.Provision(ctx)
-	if err != nil {
-		return nil, err
+func DefaultIssuers() []certmagic.Issuer {
+	return []certmagic.Issuer{
+		new(ACMEIssuer),
+		&ZeroSSLIssuer{ACMEIssuer: new(ACMEIssuer)},
 	}
-	zerossl := new(ZeroSSLIssuer)
-	err = zerossl.Provision(ctx)
-	if err != nil {
-		return nil, err
+}
+
+// DefaultIssuersProvisioned returns empty but provisioned default Issuers from
+// DefaultIssuers(). This function is experimental and has no compatibility promises.
+func DefaultIssuersProvisioned(ctx caddy.Context) ([]certmagic.Issuer, error) {
+	issuers := DefaultIssuers()
+	for i, iss := range issuers {
+		if prov, ok := iss.(caddy.Provisioner); ok {
+			err := prov.Provision(ctx)
+			if err != nil {
+				return nil, fmt.Errorf("provisioning default issuer %d: %T: %v", i, iss, err)
+			}
+		}
 	}
-	// TODO: eventually, insert ZeroSSL into first position in the slice -- see also httpcaddyfile/tlsapp.go for where similar defaults are configured
-	return []certmagic.Issuer{acme, zerossl}, nil
+	return issuers, nil
 }
 
 // ChallengesConfig configures the ACME challenges.

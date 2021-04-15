@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["zstd.go"],
+    srcs = [
+        "zstd.go",
+        "zstd_precompressed.go",
+    ],
     importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/zstd",
     importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/zstd",
     visibility = ["//visibility:public"],
