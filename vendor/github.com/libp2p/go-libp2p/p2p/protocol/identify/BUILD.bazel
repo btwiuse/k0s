@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "id.go",
+        "id_delta.go",
+        "id_push.go",
+        "obsaddr.go",
+        "opts.go",
+        "peer_loop.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libp2p/go-libp2p/p2p/protocol/identify",
+    importpath = "github.com/libp2p/go-libp2p/p2p/protocol/identify",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gogo/protobuf/proto:go_default_library",
+        "//vendor/github.com/ipfs/go-log:go_default_library",
+        "//vendor/github.com/libp2p/go-eventbus:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/crypto:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/event:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/host:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/network:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peer:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peerstore:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/protocol:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/record:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p/p2p/protocol/identify/pb:go_default_library",
+        "//vendor/github.com/libp2p/go-msgio/protoio:go_default_library",
+        "//vendor/github.com/multiformats/go-multiaddr:go_default_library",
+        "//vendor/github.com/multiformats/go-multiaddr/net:go_default_library",
+        "//vendor/github.com/multiformats/go-multistream:go_default_library",
+    ],
+)

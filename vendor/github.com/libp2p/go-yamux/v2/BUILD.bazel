@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "addr.go",
+        "const.go",
+        "deadline.go",
+        "mux.go",
+        "ping.go",
+        "session.go",
+        "stream.go",
+        "util.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libp2p/go-yamux/v2",
+    importpath = "github.com/libp2p/go-yamux/v2",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/libp2p/go-buffer-pool:go_default_library"],
+)

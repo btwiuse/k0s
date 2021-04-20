@@ -44,6 +44,7 @@ require (
 	github.com/abiosoft/caddy-json-schema v0.0.0-20200527180432-2d0cb96ed8ea
 	github.com/abiosoft/ishell v2.0.0+incompatible
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
+	github.com/adrg/xdg v0.3.3
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/bcrypt v1.0.2
 	github.com/btwiuse/cadvisor v0.0.0-20210312172035-34fddda41018
@@ -77,6 +78,7 @@ require (
 	github.com/gdamore/tcell v1.3.0
 	github.com/ginuerzh/gost v0.0.0-20210206051340-8dd4d8d9a123
 	github.com/go-log/log v0.2.0
+	github.com/golang/mock v1.5.0
 	github.com/golang/protobuf v1.4.3
 	github.com/google/cadvisor v0.39.0
 	github.com/google/uuid v1.2.0
@@ -90,25 +92,31 @@ require (
 	github.com/hairyhenderson/caddy-teapot-module v0.0.2
 	github.com/iamd3vil/caddy_yaml_adapter v0.0.0-20200503183711-d479c29b475a
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
+	github.com/ipfs/go-cid v0.0.7
 	github.com/jaypipes/ghw v0.7.0 // indirect
 	github.com/jpillora/chisel v1.7.6 // indirect
 	github.com/jpillora/opts v1.2.0
 	github.com/jpillora/webproc v0.4.0
 	github.com/json-iterator/go v1.1.10
 	github.com/klauspost/cpuid v1.3.1 // indirect
-	github.com/klauspost/cpuid/v2 v2.0.3 // indirect
 	github.com/koding/websocketproxy v0.0.0-20181220232114-7ed82d81a28c // indirect
 	github.com/liamg/aminal v0.9.0
+	github.com/libp2p/go-libp2p v0.13.0
+	github.com/libp2p/go-libp2p-core v0.8.5
+	github.com/libp2p/go-libp2p-kad-dht v0.11.1
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
 	github.com/lunny/tango v0.5.6
 	github.com/mathetake/gasm v0.0.0-20200928142744-80e74517647c
 	github.com/mattn/go-isatty v0.0.12
-	github.com/mattn/go-runewidth v0.0.9
+	github.com/mattn/go-runewidth v0.0.10
 	github.com/mattn/go-shellwords v1.0.10
 	github.com/mholt/caddy-l4 v0.0.0-20210209073014-d1d54b015e34
 	github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
 	github.com/miekg/dns v1.1.40
+	github.com/multiformats/go-multiaddr v0.3.1
+	github.com/multiformats/go-multihash v0.0.15
+	github.com/multiformats/go-varint v0.0.6
 	github.com/p4gefau1t/trojan-go v0.8.2
 	github.com/pkg/errors v0.9.1
 	github.com/portainer/agent v0.0.0-20210129020346-65fa249df79a
@@ -120,19 +128,24 @@ require (
 	github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4
 	github.com/rancher/dapper v0.5.5
 	github.com/rs/cors v1.7.0
+	github.com/schollz/pake/v2 v2.0.7
+	github.com/schollz/progressbar/v3 v3.8.0
 	github.com/sirupsen/logrus v1.8.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.7.0
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
 	github.com/traefik/yaegi v0.9.14
+	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.5
+	github.com/urfave/cli/v2 v2.3.0
 	github.com/v2fly/v2ray-core/v4 v4.36.2
+	github.com/whyrusleeping/mdns v0.0.0-20190826153040-b9b60ed33aa9
 	go.starlark.net v0.0.0-20210305151048-6a590ae7f4eb
-	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83
+	golang.org/x/crypto v0.0.0-20210314154223-e6e6c4f2bb5b
 	golang.org/x/mod v0.4.1
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20210305230114-8fe3ee5dd75b
+	golang.org/x/sys v0.0.0-20210309074719-68d13333faf2
 	google.golang.org/grpc v1.36.0
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6

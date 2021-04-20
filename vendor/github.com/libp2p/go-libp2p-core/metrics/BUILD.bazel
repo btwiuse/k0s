@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bandwidth.go",
+        "register.go",
+        "reporter.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libp2p/go-libp2p-core/metrics",
+    importpath = "github.com/libp2p/go-libp2p-core/metrics",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/libp2p/go-flow-metrics:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peer:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/protocol:go_default_library",
+        "//vendor/go.opencensus.io/stats/view:go_default_library",
+    ],
+)

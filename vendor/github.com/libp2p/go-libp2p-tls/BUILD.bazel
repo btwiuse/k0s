@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "conn.go",
+        "crypto.go",
+        "extension.go",
+        "transport.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libp2p/go-libp2p-tls",
+    importpath = "github.com/libp2p/go-libp2p-tls",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/libp2p/go-libp2p-core/crypto:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peer:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/sec:go_default_library",
+        "//vendor/golang.org/x/sys/cpu:go_default_library",
+    ],
+)

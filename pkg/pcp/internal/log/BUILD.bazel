@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["log.go"],
+    importpath = "k0s.io/pkg/pcp/internal/log",
+    visibility = ["//pkg/pcp:__subpackages__"],
+    deps = ["//vendor/golang.org/x/crypto/ssh/terminal:go_default_library"],
+)

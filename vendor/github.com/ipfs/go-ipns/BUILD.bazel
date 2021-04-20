@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "errors.go",
+        "ipns.go",
+        "record.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/ipfs/go-ipns",
+    importpath = "github.com/ipfs/go-ipns",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gogo/protobuf/proto:go_default_library",
+        "//vendor/github.com/ipfs/go-ipfs-util:go_default_library",
+        "//vendor/github.com/ipfs/go-ipns/pb:go_default_library",
+        "//vendor/github.com/ipfs/go-log:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/crypto:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peer:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peerstore:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-record:go_default_library",
+    ],
+)

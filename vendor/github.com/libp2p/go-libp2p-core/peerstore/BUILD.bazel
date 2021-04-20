@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["peerstore.go"],
+    importmap = "k0s.io/vendor/github.com/libp2p/go-libp2p-core/peerstore",
+    importpath = "github.com/libp2p/go-libp2p-core/peerstore",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/libp2p/go-libp2p-core/crypto:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peer:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/record:go_default_library",
+        "//vendor/github.com/multiformats/go-multiaddr:go_default_library",
+    ],
+)

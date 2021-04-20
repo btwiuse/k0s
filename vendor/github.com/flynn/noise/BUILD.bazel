@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cipher_suite.go",
+        "hkdf.go",
+        "patterns.go",
+        "state.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/flynn/noise",
+    importpath = "github.com/flynn/noise",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/golang.org/x/crypto/blake2b:go_default_library",
+        "//vendor/golang.org/x/crypto/blake2s:go_default_library",
+        "//vendor/golang.org/x/crypto/chacha20poly1305:go_default_library",
+        "//vendor/golang.org/x/crypto/curve25519:go_default_library",
+    ],
+)

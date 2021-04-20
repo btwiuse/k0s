@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "addrsplosion.go",
+        "autorelay.go",
+        "doc.go",
+        "log.go",
+        "relay.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libp2p/go-libp2p/p2p/host/relay",
+    importpath = "github.com/libp2p/go-libp2p/p2p/host/relay",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ipfs/go-log:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-circuit:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/event:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/network:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peer:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/routing:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-discovery:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p/p2p/host/basic:go_default_library",
+        "//vendor/github.com/multiformats/go-multiaddr:go_default_library",
+        "//vendor/github.com/multiformats/go-multiaddr/net:go_default_library",
+    ],
+)

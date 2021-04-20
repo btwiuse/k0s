@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "conn.go",
+        "dial.go",
+        "listen.go",
+        "relay.go",
+        "transport.go",
+        "util.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libp2p/go-libp2p-circuit",
+    importpath = "github.com/libp2p/go-libp2p-circuit",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gogo/protobuf/proto:go_default_library",
+        "//vendor/github.com/ipfs/go-log:go_default_library",
+        "//vendor/github.com/libp2p/go-buffer-pool:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-circuit/pb:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/host:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/network:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peer:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peerstore:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/transport:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-transport-upgrader:go_default_library",
+        "//vendor/github.com/libp2p/go-msgio/protoio:go_default_library",
+        "//vendor/github.com/multiformats/go-multiaddr:go_default_library",
+        "//vendor/github.com/multiformats/go-multiaddr/net:go_default_library",
+        "//vendor/github.com/multiformats/go-varint:go_default_library",
+    ],
+)

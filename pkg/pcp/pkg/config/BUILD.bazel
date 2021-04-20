@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "settings.go",
+    ],
+    importpath = "k0s.io/pkg/pcp/pkg/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/pcp/internal/wrap:go_default_library",
+        "//vendor/github.com/urfave/cli/v2:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["settings_test.go"],
+    embed = [":go_default_library"],
+    deps = [
+        "//pkg/pcp/internal/mock:go_default_library",
+        "//pkg/pcp/internal/wrap:go_default_library",
+        "//vendor/github.com/golang/mock/gomock:go_default_library",
+        "//vendor/github.com/stretchr/testify/assert:go_default_library",
+        "//vendor/github.com/stretchr/testify/require:go_default_library",
+    ],
+)

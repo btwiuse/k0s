@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "context.go",
+        "entry.go",
+        "levels.go",
+        "log.go",
+        "loggable.go",
+        "metadata.go",
+        "oldlog.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/ipfs/go-log",
+    importpath = "github.com/ipfs/go-log",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/ipfs/go-log/tracer:go_default_library",
+        "//vendor/github.com/ipfs/go-log/v2:go_default_library",
+        "//vendor/github.com/ipfs/go-log/writer:go_default_library",
+        "//vendor/github.com/opentracing/opentracing-go:go_default_library",
+        "//vendor/github.com/opentracing/opentracing-go/ext:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

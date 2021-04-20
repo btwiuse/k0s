@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["base32.go"],
+    importmap = "k0s.io/vendor/github.com/multiformats/go-base32",
+    importpath = "github.com/multiformats/go-base32",
+    visibility = ["//visibility:public"],
+)

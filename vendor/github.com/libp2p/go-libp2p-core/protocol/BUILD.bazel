@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "id.go",
+        "switch.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libp2p/go-libp2p-core/protocol",
+    importpath = "github.com/libp2p/go-libp2p-core/protocol",
+    visibility = ["//visibility:public"],
+)

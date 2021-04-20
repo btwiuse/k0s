@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "convert.go",
+        "doc.go",
+        "ip.go",
+        "net.go",
+        "private.go",
+        "registry.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/multiformats/go-multiaddr-net",
+    importpath = "github.com/multiformats/go-multiaddr-net",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/multiformats/go-multiaddr:go_default_library",
+        "//vendor/github.com/multiformats/go-multiaddr/net:go_default_library",
+    ],
+)

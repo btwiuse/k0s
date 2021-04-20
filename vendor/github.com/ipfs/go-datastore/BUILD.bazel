@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "basic_ds.go",
+        "batch.go",
+        "datastore.go",
+        "key.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/ipfs/go-datastore",
+    importpath = "github.com/ipfs/go-datastore",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/google/uuid:go_default_library",
+        "//vendor/github.com/ipfs/go-datastore/query:go_default_library",
+    ],
+)

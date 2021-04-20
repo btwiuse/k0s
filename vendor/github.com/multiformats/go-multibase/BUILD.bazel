@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "base16.go",
+        "base2.go",
+        "base32.go",
+        "encoder.go",
+        "multibase.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/multiformats/go-multibase",
+    importpath = "github.com/multiformats/go-multibase",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/mr-tron/base58/base58:go_default_library",
+        "//vendor/github.com/multiformats/go-base32:go_default_library",
+        "//vendor/github.com/multiformats/go-base36:go_default_library",
+    ],
+)

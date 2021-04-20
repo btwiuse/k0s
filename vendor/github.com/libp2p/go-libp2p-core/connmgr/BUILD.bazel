@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "decay.go",
+        "gater.go",
+        "manager.go",
+        "null.go",
+        "presets.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libp2p/go-libp2p-core/connmgr",
+    importpath = "github.com/libp2p/go-libp2p-core/connmgr",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/libp2p/go-libp2p-core/control:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/network:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peer:go_default_library",
+        "//vendor/github.com/multiformats/go-multiaddr:go_default_library",
+    ],
+)

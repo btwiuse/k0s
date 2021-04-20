@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bytestring.go",
+        "dht.pb.go",
+        "message.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/libp2p/go-libp2p-kad-dht/pb",
+    importpath = "github.com/libp2p/go-libp2p-kad-dht/pb",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gogo/protobuf/gogoproto:go_default_library",
+        "//vendor/github.com/gogo/protobuf/proto:go_default_library",
+        "//vendor/github.com/ipfs/go-log:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/network:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-core/peer:go_default_library",
+        "//vendor/github.com/libp2p/go-libp2p-record/pb:go_default_library",
+        "//vendor/github.com/multiformats/go-multiaddr:go_default_library",
+    ],
+)

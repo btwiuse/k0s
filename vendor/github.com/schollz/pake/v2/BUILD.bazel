@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["pake.go"],
+    importmap = "k0s.io/vendor/github.com/schollz/pake/v2",
+    importpath = "github.com/schollz/pake/v2",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/tscholl2/siec:go_default_library",
+        "//vendor/golang.org/x/crypto/bcrypt:go_default_library",
+    ],
+)

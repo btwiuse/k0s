@@ -1,0 +1,56 @@
+syntax = "proto3";
+option go_package = "k0s.io/pkg/pcp/pkg/proto";
+
+// A message object that is shared among all requests.
+message Header {
+
+  // A unique request ID to allow idempotency.
+  string request_id = 1;
+
+  // Unix time in milliseconds.
+  int64 timestamp = 2;
+
+  // The ID of the node that created the message (not the peer that may have sent it)
+  string node_id = 3;
+
+  // Authoring node Secp256k1 public key (32bytes) - protobufs serialized
+  bytes node_pub_key = 4;
+
+  // The signature of the message data.
+  bytes signature = 5;
+}
+
+// PushRequest is sent to the receiving peer for acceptance.
+// It contains basic information about the data that is
+// about to be transmitted.
+message PushRequest {
+
+  // General meta information about the request.
+  Header header = 1;
+
+  // The name of the file that is about to be transferred.
+  // This will also be the name that the receiving peer
+  // uses upon save.
+  string name = 2;
+
+  // The size of the file to be transmitted.
+  int64 size = 3;
+
+  // Whether or not the file is a directory.
+  bool is_dir = 4;
+
+  // The number of files to be transferred.
+  bool file_count = 5;
+}
+
+// PushResponse is sent as a reply to the PushRequest message.
+// It just indicates if the receiving peer is willing to
+// accept the file.
+message PushResponse {
+
+  // General meta information about the request.
+  Header header = 1;
+
+  // Whether or not the user accepted the file transfer.
+  bool accept = 2;
+}

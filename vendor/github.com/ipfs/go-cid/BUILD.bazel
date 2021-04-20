@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "builder.go",
+        "cid.go",
+        "deprecated.go",
+        "set.go",
+        "varint.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/ipfs/go-cid",
+    importpath = "github.com/ipfs/go-cid",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/multiformats/go-multibase:go_default_library",
+        "//vendor/github.com/multiformats/go-multihash:go_default_library",
+        "//vendor/github.com/multiformats/go-varint:go_default_library",
+    ],
+)

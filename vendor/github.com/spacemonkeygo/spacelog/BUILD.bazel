@@ -1,0 +1,39 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "capture.go",
+        "capture_linux.go",
+        "capture_other.go",
+        "capture_solaris.go",
+        "capture_windows.go",
+        "collection.go",
+        "convenience.go",
+        "doc.go",
+        "event.go",
+        "handler.go",
+        "level.go",
+        "logger.go",
+        "output.go",
+        "output_other.go",
+        "output_windows.go",
+        "setup.go",
+        "sighup_other.go",
+        "syslog.go",
+        "syslog_windows.go",
+        "templates.go",
+        "templates_others.go",
+        "templates_windows.go",
+        "text.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/spacemonkeygo/spacelog",
+    importpath = "github.com/spacemonkeygo/spacelog",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//vendor/golang.org/x/sys/unix:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)
