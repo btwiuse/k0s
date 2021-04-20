@@ -12,7 +12,7 @@ import (
 	"k0s.io/pkg/cli/agent"
 	"k0s.io/pkg/cli/bcrypt"
 	"k0s.io/pkg/cli/buildkite"
-	"k0s.io/pkg/cli/caddy"
+	// "k0s.io/pkg/cli/caddy"
 	"k0s.io/pkg/cli/chassis"
 	"k0s.io/pkg/cli/client"
 	"k0s.io/pkg/cli/dohserver"
@@ -25,6 +25,7 @@ import (
 	"k0s.io/pkg/cli/k16s"
 	"k0s.io/pkg/cli/kubectl"
 	"k0s.io/pkg/cli/mnt"
+	"k0s.io/pkg/cli/pcp"
 	"k0s.io/pkg/cli/trojan"
 	"k0s.io/pkg/cli/webproc"
 )
@@ -40,7 +41,7 @@ var cmdRun = map[string]func([]string) error{
 	"goproxy":         goproxy.Run,
 	"gos":             gos.Run,
 	"buildkite-agent": buildkite.Run,
-	"caddy":           caddy.Run,
+	// "caddy":           caddy.Run,
 	"chassis":         chassis.Run,
 	"client":          client.Run,
 	"hub":             hub.Run,
@@ -48,6 +49,7 @@ var cmdRun = map[string]func([]string) error{
 	"agent":           agent.Run,
 	"gitd":            gitd.Run,
 	"gost":            gost.Main,
+	"pcp":             pcp.Run,
 	"filebrowser":     filebrowser.Run,
 }
 
