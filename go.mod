@@ -44,7 +44,6 @@ require (
 	github.com/abiosoft/caddy-json-schema v0.0.0-20200527180432-2d0cb96ed8ea
 	github.com/abiosoft/ishell v2.0.0+incompatible
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
-	github.com/adrg/xdg v0.3.3
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/bcrypt v1.0.2
 	github.com/btwiuse/cadvisor v0.0.0-20210312172035-34fddda41018
@@ -54,21 +53,20 @@ require (
 	github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882
 	github.com/btwiuse/wetty v0.0.36
 	github.com/buildkite/agent/v3 v3.27.0
-	github.com/caddy-dns/alidns v1.0.21
+	github.com/caddy-dns/alidns v1.0.3-0.20210322055141-7532f6617482
 	github.com/caddy-dns/azure v0.2.0
-	github.com/caddy-dns/cloudflare v0.0.0-20210401224357-964e47d3890e
+	github.com/caddy-dns/cloudflare v0.0.0-20210105070211-eda8e5aa2223
 	github.com/caddy-dns/digitalocean v0.0.0-20210408173619-385f9346b5ac
 	github.com/caddy-dns/dnspod v0.0.1
-	github.com/caddy-dns/duckdns v0.3.1
+	github.com/caddy-dns/duckdns v0.2.2
 	github.com/caddy-dns/route53 v1.1.1
 	github.com/caddy-dns/vultr v0.0.0-20210105121117-3162aa6b9c27
-	github.com/caddyserver/caddy/v2 v2.4.0-beta.2
+	github.com/caddyserver/caddy/v2 v2.3.0
 	github.com/caddyserver/forwardproxy v0.0.0-00010101000000-000000000000
 	github.com/casbin/caddy-authz/v2 v2.0.0
 	github.com/coredns/coredns v1.8.4-0.20210224180316-9d3a84377cae
 	github.com/cppforlife/go-cli-ui v0.0.0-20200716203538-1e47f820817f
 	github.com/creack/pty v1.1.11
-	github.com/dchest/siphash v1.2.1 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/docker/docker v20.10.2+incompatible
 	github.com/emirpasic/gods v1.12.0 // indirect
@@ -78,7 +76,6 @@ require (
 	github.com/gdamore/tcell v1.3.0
 	github.com/ginuerzh/gost v0.0.0-20210206051340-8dd4d8d9a123
 	github.com/go-log/log v0.2.0
-	github.com/golang/mock v1.5.0
 	github.com/golang/protobuf v1.4.3
 	github.com/google/cadvisor v0.39.0
 	github.com/google/uuid v1.2.0
@@ -90,21 +87,17 @@ require (
 	github.com/greenpau/caddy-auth-portal v0.0.0-00010101000000-000000000000
 	github.com/greenpau/caddy-trace v1.1.5
 	github.com/hairyhenderson/caddy-teapot-module v0.0.2
+	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/iamd3vil/caddy_yaml_adapter v0.0.0-20200503183711-d479c29b475a
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
-	github.com/ipfs/go-cid v0.0.7
 	github.com/jaypipes/ghw v0.7.0 // indirect
 	github.com/jpillora/chisel v1.7.6 // indirect
 	github.com/jpillora/opts v1.2.0
 	github.com/jpillora/webproc v0.4.0
 	github.com/json-iterator/go v1.1.10
-	github.com/klauspost/cpuid v1.3.1 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.4 // indirect
 	github.com/koding/websocketproxy v0.0.0-20181220232114-7ed82d81a28c // indirect
 	github.com/liamg/aminal v0.9.0
-	github.com/libp2p/go-libp2p v0.13.0
-	github.com/libp2p/go-libp2p-core v0.8.5
-	github.com/libp2p/go-libp2p-kad-dht v0.11.1
-	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
 	github.com/lunny/tango v0.5.6
 	github.com/mathetake/gasm v0.0.0-20200928142744-80e74517647c
@@ -114,9 +107,6 @@ require (
 	github.com/mholt/caddy-l4 v0.0.0-20210209073014-d1d54b015e34
 	github.com/mholt/caddy-webdav v0.0.0-20200916200058-c949b3226234
 	github.com/miekg/dns v1.1.40
-	github.com/multiformats/go-multiaddr v0.3.1
-	github.com/multiformats/go-multihash v0.0.15
-	github.com/multiformats/go-varint v0.0.6
 	github.com/p4gefau1t/trojan-go v0.8.2
 	github.com/pkg/errors v0.9.1
 	github.com/portainer/agent v0.0.0-20210129020346-65fa249df79a
@@ -127,25 +117,22 @@ require (
 	github.com/prometheus/node_exporter v1.0.1
 	github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4
 	github.com/rancher/dapper v0.5.5
+	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/cors v1.7.0
-	github.com/schollz/pake/v2 v2.0.7
-	github.com/schollz/progressbar/v3 v3.8.0
 	github.com/sirupsen/logrus v1.8.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.7.0
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
 	github.com/traefik/yaegi v0.9.14
-	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/urfave/cli v1.22.5
-	github.com/urfave/cli/v2 v2.3.0
 	github.com/v2fly/v2ray-core/v4 v4.36.2
-	github.com/whyrusleeping/mdns v0.0.0-20190826153040-b9b60ed33aa9
 	go.starlark.net v0.0.0-20210305151048-6a590ae7f4eb
 	golang.org/x/crypto v0.0.0-20210314154223-e6e6c4f2bb5b
 	golang.org/x/mod v0.4.1
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20210309074719-68d13333faf2
+	golang.org/x/term v0.0.0-20210220032956-6a3ed077a48d // indirect
 	google.golang.org/grpc v1.36.0
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
@@ -159,7 +146,6 @@ require (
 	k8s.io/klog/v2 v2.7.0
 	k8s.io/kube-state-metrics/v2 v2.0.0-00010101000000-000000000000
 	k8s.io/kubectl v0.20.4
-	k8s.io/kubelet v0.0.0 // indirect
 	modernc.org/httpfs v1.0.0
 	nhooyr.io/websocket v1.8.6
 	robpike.io/ivy v0.1.0

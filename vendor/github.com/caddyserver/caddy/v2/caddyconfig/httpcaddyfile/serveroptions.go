@@ -57,14 +57,21 @@ func unmarshalCaddyfileServerOptions(d *caddyfile.Dispenser) (interface{}, error
 			switch d.Val() {
 			case "listener_wrappers":
 				for nesting := d.Nesting(); d.NextBlock(nesting); {
-					modID := "caddy.listeners." + d.Val()
-					unm, err := caddyfile.UnmarshalModule(d, modID)
+					mod, err := caddy.GetModule("caddy.listeners." + d.Val())
+					if err != nil {
+						return nil, fmt.Errorf("finding listener module '%s': %v", d.Val(), err)
+					}
+					unm, ok := mod.New().(caddyfile.Unmarshaler)
+					if !ok {
+						return nil, fmt.Errorf("listener module '%s' is not a Caddyfile unmarshaler", mod)
+					}
+					err = unm.UnmarshalCaddyfile(d.NewFromNextSegment())
 					if err != nil {
 						return nil, err
 					}
 					listenerWrapper, ok := unm.(caddy.ListenerWrapper)
 					if !ok {
-						return nil, fmt.Errorf("module %s (%T) is not a listener wrapper", modID, unm)
+						return nil, fmt.Errorf("module %s is not a listener wrapper", mod)
 					}
 					jsonListenerWrapper := caddyconfig.JSONModuleObject(
 						listenerWrapper,

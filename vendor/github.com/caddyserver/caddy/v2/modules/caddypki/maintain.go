@@ -50,7 +50,7 @@ func (p *PKI) renewCerts() {
 		if err != nil {
 			p.log.Error("renewing intermediate certificates",
 				zap.Error(err),
-				zap.String("ca", ca.ID))
+				zap.String("ca", ca.id))
 		}
 	}
 }
@@ -59,7 +59,7 @@ func (p *PKI) renewCertsForCA(ca *CA) error {
 	ca.mu.Lock()
 	defer ca.mu.Unlock()
 
-	log := p.log.With(zap.String("ca", ca.ID))
+	log := p.log.With(zap.String("ca", ca.id))
 
 	// only maintain the root if it's not manually provided in the config
 	if ca.Root == nil {

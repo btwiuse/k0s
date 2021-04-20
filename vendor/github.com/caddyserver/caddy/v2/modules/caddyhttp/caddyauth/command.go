@@ -25,7 +25,7 @@ import (
 
 	"github.com/caddyserver/caddy/v2"
 	caddycmd "github.com/caddyserver/caddy/v2/cmd"
-	"golang.org/x/term"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 func init() {
@@ -67,27 +67,27 @@ func cmdHashPassword(fs caddycmd.Flags) (int, error) {
 
 	if len(plaintext) == 0 {
 		fd := int(os.Stdin.Fd())
-		if term.IsTerminal(fd) {
+		if terminal.IsTerminal(fd) {
 			// ensure the terminal state is restored on SIGINT
-			state, _ := term.GetState(fd)
+			state, _ := terminal.GetState(fd)
 			c := make(chan os.Signal, 1)
 			signal.Notify(c, os.Interrupt)
 			go func() {
 				<-c
-				_ = term.Restore(fd, state)
+				_ = terminal.Restore(fd, state)
 				os.Exit(caddy.ExitCodeFailedStartup)
 			}()
 			defer signal.Stop(c)
 
 			fmt.Fprint(os.Stderr, "Enter password: ")
-			plaintext, err = term.ReadPassword(fd)
+			plaintext, err = terminal.ReadPassword(fd)
 			fmt.Fprintln(os.Stderr)
 			if err != nil {
 				return caddy.ExitCodeFailedStartup, err
 			}
 
 			fmt.Fprint(os.Stderr, "Confirm password: ")
-			confirmation, err := term.ReadPassword(fd)
+			confirmation, err := terminal.ReadPassword(fd)
 			fmt.Fprintln(os.Stderr)
 			if err != nil {
 				return caddy.ExitCodeFailedStartup, err

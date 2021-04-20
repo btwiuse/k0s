@@ -121,60 +121,61 @@ func (p *defaultPolicy) Push(keys []uint64) bool {
 func (p *defaultPolicy) Add(key uint64, cost int64) ([]*item, bool) {
 	p.Lock()
 	defer p.Unlock()
-	// Cannot add an item bigger than entire cache.
+	// can't add an item bigger than entire cache
 	if cost > p.evict.maxCost {
 		return nil, false
 	}
-	// No need to go any further if the item is already in the cache.
+	// we don't need to go any further if the item is already in the cache
 	if has := p.evict.updateIfHas(key, cost); has {
-		// An update does not count as an addition, so return false.
+		// If we are just updating, we are not adding, so this should return a false.
 		return nil, false
 	}
-	// If the execution reaches this point, the key doesn't exist in the cache.
-	// Calculate the remaining room in the cache (usually bytes).
+	// if we got this far, this key doesn't exist in the cache
+	//
+	// calculate the remaining room in the cache (usually bytes)
 	room := p.evict.roomLeft(cost)
 	if room >= 0 {
-		// There's enough room in the cache to store the new item without
-		// overflowing. Do that now and stop here.
+		// there's enough room in the cache to store the new item without
+		// overflowing, so we can do that now and stop here
 		p.evict.add(key, cost)
 		p.metrics.add(costAdd, key, uint64(cost))
 		return nil, true
 	}
-	// incHits is the hit count for the incoming item.
+	// incHits is the hit count for the incoming item
 	incHits := p.admit.Estimate(key)
-	// sample is the eviction candidate pool to be filled via random sampling.
+	// sample is the eviction candidate pool to be filled via random sampling
 	//
 	// TODO: perhaps we should use a min heap here. Right now our time
 	// complexity is N for finding the min. Min heap should bring it down to
 	// O(lg N).
 	sample := make([]*policyPair, 0, lfuSample)
-	// As items are evicted they will be appended to victims.
+	// as items are evicted they will be appended to victims
 	victims := make([]*item, 0)
-	// Delete victims until there's enough space or a minKey is found that has
+	// delete victims until there's enough space or a minKey is found that has
 	// more hits than incoming item.
 	for ; room < 0; room = p.evict.roomLeft(cost) {
-		// Fill up empty slots in sample.
+		// fill up empty slots in sample
 		sample = p.evict.fillSample(sample)
-		// Find minimally used item in sample.
+		// find minimally used item in sample
 		minKey, minHits, minId, minCost := uint64(0), int64(math.MaxInt64), 0, int64(0)
 		for i, pair := range sample {
-			// Look up hit count for sample key.
+			// look up hit count for sample key
 			if hits := p.admit.Estimate(pair.key); hits < minHits {
 				minKey, minHits, minId, minCost = pair.key, hits, i, pair.cost
 			}
 		}
-		// If the incoming item isn't worth keeping in the policy, reject.
+		// if the incoming item isn't worth keeping in the policy, reject.
 		if incHits < minHits {
 			p.metrics.add(rejectSets, key, 1)
 			return victims, false
 		}
-		// Delete the victim from metadata.
+		// delete the victim from metadata
 		p.evict.del(minKey)
 
-		// Delete the victim from sample.
+		// delete the victim from sample
 		sample[minId] = sample[len(sample)-1]
 		sample = sample[:len(sample)-1]
-		// Store victim in evicted victims slice.
+		// store victim in evicted victims slice
 		victims = append(victims, &item{
 			key:      minKey,
 			conflict: 0,
@@ -230,7 +231,7 @@ func (p *defaultPolicy) Clear() {
 }
 
 func (p *defaultPolicy) Close() {
-	// Block until the p.processItems goroutine returns.
+	// block until p.processItems goroutine is returned
 	p.stop <- struct{}{}
 	close(p.stop)
 	close(p.itemsCh)
@@ -286,8 +287,8 @@ func (p *sampledLFU) add(key uint64, cost int64) {
 
 func (p *sampledLFU) updateIfHas(key uint64, cost int64) bool {
 	if prev, found := p.keyCosts[key]; found {
-		// Update the cost of an existing key, but don't worry about evicting.
-		// Evictions will be handled the next time a new item is added.
+		// update the cost of an existing key, but don't worry about evicting,
+		// evictions will be handled the next time a new item is added
 		p.metrics.add(keyUpdate, key, 1)
 		if prev > cost {
 			diff := prev - cost
@@ -335,15 +336,15 @@ func (p *tinyLFU) Push(keys []uint64) {
 func (p *tinyLFU) Estimate(key uint64) int64 {
 	hits := p.freq.Estimate(key)
 	if p.door.Has(key) {
-		hits++
+		hits += 1
 	}
 	return hits
 }
 
 func (p *tinyLFU) Increment(key uint64) {
-	// Flip doorkeeper bit if not already done.
+	// flip doorkeeper bit if not already
 	if added := p.door.AddIfNotHas(key); !added {
-		// Increment count-min counter if doorkeeper bit is already set.
+		// increment count-min counter if doorkeeper bit is already set.
 		p.freq.Increment(key)
 	}
 	p.incrs++

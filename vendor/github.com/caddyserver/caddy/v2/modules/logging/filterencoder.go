@@ -115,14 +115,21 @@ func (fe *FilterEncoder) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 					return d.ArgErr()
 				}
 				moduleName := d.Val()
-				moduleID := "caddy.logging.encoders." + moduleName
-				unm, err := caddyfile.UnmarshalModule(d, moduleID)
+				mod, err := caddy.GetModule("caddy.logging.encoders." + moduleName)
+				if err != nil {
+					return d.Errf("getting log encoder module named '%s': %v", moduleName, err)
+				}
+				unm, ok := mod.New().(caddyfile.Unmarshaler)
+				if !ok {
+					return d.Errf("log encoder module '%s' is not a Caddyfile unmarshaler", mod)
+				}
+				err = unm.UnmarshalCaddyfile(d.NewFromNextSegment())
 				if err != nil {
 					return err
 				}
 				enc, ok := unm.(zapcore.Encoder)
 				if !ok {
-					return d.Errf("module %s (%T) is not a zapcore.Encoder", moduleID, unm)
+					return d.Errf("module %s is not a zapcore.Encoder", mod)
 				}
 				fe.WrappedRaw = caddyconfig.JSONModuleObject(enc, "format", moduleName, nil)
 
@@ -133,19 +140,26 @@ func (fe *FilterEncoder) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 						return d.ArgErr()
 					}
 					filterName := d.Val()
-					moduleID := "caddy.logging.encoders.filter." + filterName
-					unm, err := caddyfile.UnmarshalModule(d, moduleID)
+					mod, err := caddy.GetModule("caddy.logging.encoders.filter." + filterName)
+					if err != nil {
+						return d.Errf("getting log filter module named '%s': %v", filterName, err)
+					}
+					unm, ok := mod.New().(caddyfile.Unmarshaler)
+					if !ok {
+						return d.Errf("log encoder module '%s' is not a Caddyfile unmarshaler", mod)
+					}
+					err = unm.UnmarshalCaddyfile(d.NewFromNextSegment())
 					if err != nil {
 						return err
 					}
-					filter, ok := unm.(LogFieldFilter)
+					f, ok := unm.(LogFieldFilter)
 					if !ok {
-						return d.Errf("module %s (%T) is not a logging.LogFieldFilter", moduleID, unm)
+						return d.Errf("module %s is not a LogFieldFilter", mod)
 					}
 					if fe.FieldsRaw == nil {
 						fe.FieldsRaw = make(map[string]json.RawMessage)
 					}
-					fe.FieldsRaw[field] = caddyconfig.JSONModuleObject(filter, "filter", filterName, nil)
+					fe.FieldsRaw[field] = caddyconfig.JSONModuleObject(f, "filter", filterName, nil)
 				}
 
 			default:

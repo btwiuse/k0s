@@ -34,16 +34,11 @@ import (
 // If you don't have the PEM blocks already, just pass in nil.
 //
 // Errors here are not necessarily fatal, it could just be that the
-// certificate doesn't have an issuer URL. This function may return
-// both nil values if OCSP stapling is disabled according to ocspConfig.
+// certificate doesn't have an issuer URL.
 //
 // If a status was received, it returns that status. Note that the
 // returned status is not always stapled to the certificate.
-func stapleOCSP(ocspConfig OCSPConfig, storage Storage, cert *Certificate, pemBundle []byte) (*ocsp.Response, error) {
-	if ocspConfig.DisableStapling {
-		return nil, nil
-	}
-
+func stapleOCSP(storage Storage, cert *Certificate, pemBundle []byte) (*ocsp.Response, error) {
 	if pemBundle == nil {
 		// we need a PEM encoding only for some function calls below
 		bundle := new(bytes.Buffer)
@@ -87,7 +82,7 @@ func stapleOCSP(ocspConfig OCSPConfig, storage Storage, cert *Certificate, pemBu
 	// If we couldn't get a fresh staple by reading the cache,
 	// then we need to request it from the OCSP responder
 	if ocspResp == nil || len(ocspBytes) == 0 {
-		ocspBytes, ocspResp, ocspErr = getOCSPForCert(ocspConfig, pemBundle)
+		ocspBytes, ocspResp, ocspErr = getOCSPForCert(pemBundle)
 		if ocspErr != nil {
 			// An error here is not a problem because a certificate may simply
 			// not contain a link to an OCSP server. But we should log it anyway.
@@ -130,7 +125,7 @@ func stapleOCSP(ocspConfig OCSPConfig, storage Storage, cert *Certificate, pemBu
 // values are nil, the OCSP status may be assumed OCSPUnknown.
 //
 // Borrowed from xenolf.
-func getOCSPForCert(ocspConfig OCSPConfig, bundle []byte) ([]byte, *ocsp.Response, error) {
+func getOCSPForCert(bundle []byte) ([]byte, *ocsp.Response, error) {
 	// TODO: Perhaps this should be synchronized too, with a Locker?
 
 	certificates, err := parseCertsFromPEMBundle(bundle)
@@ -147,18 +142,6 @@ func getOCSPForCert(ocspConfig OCSPConfig, bundle []byte) ([]byte, *ocsp.Respons
 	if len(issuedCert.OCSPServer) == 0 {
 		return nil, nil, fmt.Errorf("no OCSP server specified in certificate")
 	}
-
-	// apply override for responder URL
-	respURL := issuedCert.OCSPServer[0]
-	if len(ocspConfig.ResponderOverrides) > 0 {
-		if override, ok := ocspConfig.ResponderOverrides[respURL]; ok {
-			respURL = override
-		}
-	}
-	if respURL == "" {
-		return nil, nil, fmt.Errorf("override disables querying OCSP responder: %v", issuedCert.OCSPServer[0])
-	}
-
 	if len(certificates) == 1 {
 		if len(issuedCert.IssuingCertificateURL) == 0 {
 			return nil, nil, fmt.Errorf("no URL to issuing certificate")
@@ -193,7 +176,7 @@ func getOCSPForCert(ocspConfig OCSPConfig, bundle []byte) ([]byte, *ocsp.Respons
 	}
 
 	reader := bytes.NewReader(ocspReq)
-	req, err := http.Post(respURL, "application/ocsp-request", reader)
+	req, err := http.Post(issuedCert.OCSPServer[0], "application/ocsp-request", reader)
 	if err != nil {
 		return nil, nil, fmt.Errorf("making OCSP request: %v", err)
 	}

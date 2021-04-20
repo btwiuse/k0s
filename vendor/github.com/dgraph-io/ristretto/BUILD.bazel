@@ -8,7 +8,6 @@ go_library(
         "ring.go",
         "sketch.go",
         "store.go",
-        "ttl.go",
     ],
     importmap = "k0s.io/vendor/github.com/dgraph-io/ristretto",
     importpath = "github.com/dgraph-io/ristretto",

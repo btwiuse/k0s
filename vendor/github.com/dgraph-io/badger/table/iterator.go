@@ -382,8 +382,7 @@ func (itr *Iterator) prev() {
 	}
 }
 
-// Key follows the y.Iterator interface.
-// Returns the key with timestamp.
+// Key follows the y.Iterator interface
 func (itr *Iterator) Key() []byte {
 	return itr.bi.Key()
 }
@@ -435,12 +434,7 @@ type ConcatIterator struct {
 func NewConcatIterator(tbls []*Table, reversed bool) *ConcatIterator {
 	iters := make([]*Iterator, len(tbls))
 	for i := 0; i < len(tbls); i++ {
-		// Increment the reference count. Since, we're not creating the iterator right now.
-		// Here, We'll hold the reference of the tables, till the lifecycle of the iterator.
-		tbls[i].IncrRef()
-
-		// Save cycles by not initializing the iterators until needed.
-		// iters[i] = tbls[i].NewIterator(reversed)
+		iters[i] = tbls[i].NewIterator(reversed)
 	}
 	return &ConcatIterator{
 		reversed: reversed,
@@ -454,12 +448,9 @@ func (s *ConcatIterator) setIdx(idx int) {
 	s.idx = idx
 	if idx < 0 || idx >= len(s.iters) {
 		s.cur = nil
-		return
+	} else {
+		s.cur = s.iters[s.idx]
 	}
-	if s.iters[idx] == nil {
-		s.iters[idx] = s.tables[idx].NewIterator(s.reversed)
-	}
-	s.cur = s.iters[s.idx]
 }
 
 // Rewind implements y.Interface
@@ -539,16 +530,7 @@ func (s *ConcatIterator) Next() {
 
 // Close implements y.Interface.
 func (s *ConcatIterator) Close() error {
-	for _, t := range s.tables {
-		// DeReference the tables while closing the iterator.
-		if err := t.DecrRef(); err != nil {
-			return err
-		}
-	}
 	for _, it := range s.iters {
-		if it == nil {
-			continue
-		}
 		if err := it.Close(); err != nil {
 			return errors.Wrap(err, "ConcatIterator")
 		}

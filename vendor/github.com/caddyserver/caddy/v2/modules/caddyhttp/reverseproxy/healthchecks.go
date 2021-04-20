@@ -26,7 +26,6 @@ import (
 	"regexp"
 	"runtime/debug"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/caddyserver/caddy/v2"
@@ -51,12 +50,8 @@ type HealthChecks struct {
 // health checks (that is, health checks which occur in a
 // background goroutine independently).
 type ActiveHealthChecks struct {
-	// The path to use for health checks.
-	// DEPRECATED: Use 'uri' instead.
+	// The URI path to use for health checks.
 	Path string `json:"path,omitempty"`
-
-	// The URI (path and query) to use for health checks
-	URI string `json:"uri,omitempty"`
 
 	// The port to use (if different from the upstream's dial
 	// address) for health checks.
@@ -83,7 +78,6 @@ type ActiveHealthChecks struct {
 	// body of a healthy backend.
 	ExpectBody string `json:"expect_body,omitempty"`
 
-	uri        *url.URL
 	httpClient *http.Client
 	bodyRegexp *regexp.Regexp
 	logger     *zap.Logger
@@ -223,15 +217,7 @@ func (h *Handler) doActiveHealthCheck(dialInfo DialInfo, hostAddr string, host H
 	u := &url.URL{
 		Scheme: scheme,
 		Host:   hostAddr,
-	}
-
-	// if we have a provisioned uri, use that, otherwise use
-	// the deprecated Path option
-	if h.HealthChecks.Active.uri != nil {
-		u.Path = h.HealthChecks.Active.uri.Path
-		u.RawQuery = h.HealthChecks.Active.uri.RawQuery
-	} else {
-		u.Path = h.HealthChecks.Active.Path
+		Path:   h.HealthChecks.Active.Path,
 	}
 
 	// adjust the port, if configured to be different
@@ -255,11 +241,7 @@ func (h *Handler) doActiveHealthCheck(dialInfo DialInfo, hostAddr string, host H
 		return fmt.Errorf("making request: %v", err)
 	}
 	for key, hdrs := range h.HealthChecks.Active.Headers {
-		if strings.ToLower(key) == "host" {
-			req.Host = h.HealthChecks.Active.Headers.Get(key)
-		} else {
-			req.Header[key] = hdrs
-		}
+		req.Header[key] = hdrs
 	}
 
 	// do the request, being careful to tame the response body

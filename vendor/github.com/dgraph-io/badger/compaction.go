@@ -64,10 +64,8 @@ func (r keyRange) overlapsWith(dst keyRange) bool {
 	return true
 }
 
-func getKeyRange(tables ...*table.Table) keyRange {
-	if len(tables) == 0 {
-		return keyRange{}
-	}
+func getKeyRange(tables []*table.Table) keyRange {
+	y.AssertTrue(len(tables) > 0)
 	smallest := tables[0].Smallest()
 	biggest := tables[0].Biggest()
 	for i := 1; i < len(tables); i++ {
@@ -78,9 +76,6 @@ func getKeyRange(tables ...*table.Table) keyRange {
 			biggest = tables[i].Biggest()
 		}
 	}
-
-	// We pick all the versions of the smallest and the biggest key. Note that version zero would
-	// be the rightmost key, considering versions are default sorted in descending order.
 	return keyRange{
 		left:  y.KeyWithTs(y.ParseKey(smallest), math.MaxUint64),
 		right: y.KeyWithTs(y.ParseKey(biggest), 0),
@@ -134,7 +129,7 @@ func (cs *compactStatus) toLog(tr trace.Trace) {
 
 	tr.LazyPrintf("Compaction status:")
 	for i, l := range cs.levels {
-		if l.debug() == "" {
+		if len(l.debug()) == 0 {
 			continue
 		}
 		tr.LazyPrintf("[%d] %s", i, l.debug())
@@ -177,12 +172,16 @@ func (cs *compactStatus) compareAndAdd(_ thisAndNextLevelRLocked, cd compactDef)
 	}
 	// Check whether this level really needs compaction or not. Otherwise, we'll end up
 	// running parallel compactions for the same level.
-	// Update: We should not be checking size here. Compaction priority already did the size checks.
-	// Here we should just be executing the wish of others.
+	// NOTE: We can directly call thisLevel.totalSize, because we already have acquire a read lock
+	// over this and the next level.
+	if cd.thisLevel.totalSize-thisLevel.delSize < cd.thisLevel.maxTotalSize {
+		return false
+	}
 
 	thisLevel.ranges = append(thisLevel.ranges, cd.thisRange)
 	nextLevel.ranges = append(nextLevel.ranges, cd.nextRange)
 	thisLevel.delSize += cd.thisSize
+
 	return true
 }
 

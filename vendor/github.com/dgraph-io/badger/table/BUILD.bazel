@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "builder.go",
         "iterator.go",
-        "merge_iterator.go",
         "table.go",
     ],
     importmap = "k0s.io/vendor/github.com/dgraph-io/badger/table",

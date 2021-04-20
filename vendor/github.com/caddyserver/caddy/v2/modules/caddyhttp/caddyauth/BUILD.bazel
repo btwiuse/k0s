@@ -21,6 +21,6 @@ go_library(
         "//vendor/go.uber.org/zap:go_default_library",
         "//vendor/golang.org/x/crypto/bcrypt:go_default_library",
         "//vendor/golang.org/x/crypto/scrypt:go_default_library",
-        "//vendor/golang.org/x/term:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh/terminal:go_default_library",
     ],
 )

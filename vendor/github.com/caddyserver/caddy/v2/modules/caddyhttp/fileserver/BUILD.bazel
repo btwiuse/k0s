@@ -21,7 +21,6 @@ go_library(
         "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/cmd:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp:go_default_library",
-        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/rewrite:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/templates:go_default_library",
         "//vendor/github.com/caddyserver/certmagic:go_default_library",

@@ -17,11 +17,8 @@
 package table
 
 import (
-	"bytes"
-	"crypto/sha256"
 	"encoding/binary"
 	"fmt"
-	"io"
 	"os"
 	"path"
 	"path/filepath"
@@ -44,13 +41,6 @@ type keyOffset struct {
 	len    int
 }
 
-// TableInterface is useful for testing.
-type TableInterface interface {
-	Smallest() []byte
-	Biggest() []byte
-	DoesNotHave(key []byte) bool
-}
-
 // Table represents a loaded table file with the info we have about it
 type Table struct {
 	sync.Mutex
@@ -59,18 +49,16 @@ type Table struct {
 	tableSize int      // Initialized in OpenTable, using fd.Stat().
 
 	blockIndex []keyOffset
-	ref        int32 // For file garbage collection. Atomic.
+	ref        int32 // For file garbage collection.  Atomic.
 
 	loadingMode options.FileLoadingMode
 	mmap        []byte // Memory mapped.
 
 	// The following are initialized once and const.
-	smallest, biggest []byte // Smallest and largest keys (with timestamps).
+	smallest, biggest []byte // Smallest and largest keys.
 	id                uint64 // file id, part of filename
 
 	bf bbloom.Bloom
-
-	Checksum []byte
 }
 
 // IncrRef increments the refcount (having to do with whether the file should be deleted)
@@ -87,10 +75,7 @@ func (t *Table) DecrRef() error {
 
 		// It's necessary to delete windows files
 		if t.loadingMode == options.MemoryMap {
-			if err := y.Munmap(t.mmap); err != nil {
-				return err
-			}
-			t.mmap = nil
+			y.Munmap(t.mmap)
 		}
 		if err := t.fd.Truncate(0); err != nil {
 			// This is very important to let the FS know that the file is deleted.
@@ -120,7 +105,7 @@ func (b block) NewIterator() *blockIterator {
 // entry.  Returns a table with one reference count on it (decrementing which may delete the file!
 // -- consider t.Close() instead).  The fd has to writeable because we call Truncate on it before
 // deleting.
-func OpenTable(fd *os.File, mode options.FileLoadingMode, cksum []byte) (*Table, error) {
+func OpenTable(fd *os.File, loadingMode options.FileLoadingMode) (*Table, error) {
 	fileInfo, err := fd.Stat()
 	if err != nil {
 		// It's OK to ignore fd.Close() errs in this function because we have only read
@@ -139,23 +124,25 @@ func OpenTable(fd *os.File, mode options.FileLoadingMode, cksum []byte) (*Table,
 		fd:          fd,
 		ref:         1, // Caller is given one reference.
 		id:          id,
-		loadingMode: mode,
+		loadingMode: loadingMode,
 	}
 
 	t.tableSize = int(fileInfo.Size())
 
-	// We first load to RAM, so we can read the index and do checksum.
-	if err := t.loadToRAM(); err != nil {
-		return nil, err
+	if loadingMode == options.MemoryMap {
+		t.mmap, err = y.Mmap(fd, false, fileInfo.Size())
+		if err != nil {
+			_ = fd.Close()
+			return nil, y.Wrapf(err, "Unable to map file")
+		}
+	} else if loadingMode == options.LoadToRAM {
+		err = t.loadToRAM()
+		if err != nil {
+			_ = fd.Close()
+			return nil, y.Wrap(err)
+		}
 	}
-	// Enforce checksum before we read index. Otherwise, if the file was
-	// truncated, we'd end up with panics in readIndex.
-	if len(cksum) > 0 && !bytes.Equal(t.Checksum, cksum) {
-		return nil, fmt.Errorf(
-			"CHECKSUM_MISMATCH: Table checksum does not match checksum in MANIFEST."+
-				" NOT including table %s. This would lead to missing data."+
-				"\n  sha256 %x Expected\n  sha256 %x Found\n", filename, cksum, t.Checksum)
-	}
+
 	if err := t.readIndex(); err != nil {
 		return nil, y.Wrap(err)
 	}
@@ -173,37 +160,19 @@ func OpenTable(fd *os.File, mode options.FileLoadingMode, cksum []byte) (*Table,
 	if it2.Valid() {
 		t.biggest = it2.Key()
 	}
-
-	switch mode {
-	case options.LoadToRAM:
-		// No need to do anything. t.mmap is already filled.
-	case options.MemoryMap:
-		t.mmap, err = y.Mmap(fd, false, fileInfo.Size())
-		if err != nil {
-			_ = fd.Close()
-			return nil, y.Wrapf(err, "Unable to map file: %q", fileInfo.Name())
-		}
-	case options.FileIO:
-		t.mmap = nil
-	default:
-		panic(fmt.Sprintf("Invalid loading mode: %v", mode))
-	}
 	return t, nil
 }
 
 // Close closes the open table.  (Releases resources back to the OS.)
 func (t *Table) Close() error {
 	if t.loadingMode == options.MemoryMap {
-		if err := y.Munmap(t.mmap); err != nil {
-			return err
-		}
-		t.mmap = nil
+		y.Munmap(t.mmap)
 	}
 
 	return t.fd.Close()
 }
 
-func (t *Table) read(off, sz int) ([]byte, error) {
+func (t *Table) read(off int, sz int) ([]byte, error) {
 	if len(t.mmap) > 0 {
 		if len(t.mmap[off:]) < sz {
 			return nil, y.ErrEOF
@@ -218,16 +187,13 @@ func (t *Table) read(off, sz int) ([]byte, error) {
 	return res, err
 }
 
-func (t *Table) readNoFail(off, sz int) []byte {
+func (t *Table) readNoFail(off int, sz int) []byte {
 	res, err := t.read(off, sz)
 	y.Check(err)
 	return res
 }
 
 func (t *Table) readIndex() error {
-	if len(t.mmap) != t.tableSize {
-		panic("Table size does not match the read bytes")
-	}
 	readPos := t.tableSize
 
 	// Read bloom filter.
@@ -267,17 +233,54 @@ func (t *Table) readIndex() error {
 		t.blockIndex = append(t.blockIndex, ko)
 	}
 
-	// Execute this index read serially, because we already have table data in memory.
-	var h header
-	for idx := range t.blockIndex {
-		ko := &t.blockIndex[idx]
+	che := make(chan error, len(t.blockIndex))
+	blocks := make(chan int, len(t.blockIndex))
 
-		hbuf := t.readNoFail(ko.offset, h.Size())
-		h.Decode(hbuf)
-		y.AssertTrue(h.plen == 0)
+	for i := 0; i < len(t.blockIndex); i++ {
+		blocks <- i
+	}
 
-		key := t.readNoFail(ko.offset+len(hbuf), int(h.klen))
-		ko.key = append([]byte{}, key...)
+	for i := 0; i < 64; i++ { // Run 64 goroutines.
+		go func() {
+			var h header
+
+			for index := range blocks {
+				ko := &t.blockIndex[index]
+
+				offset := ko.offset
+				buf, err := t.read(offset, h.Size())
+				if err != nil {
+					che <- errors.Wrap(err, "While reading first header in block")
+					continue
+				}
+
+				h.Decode(buf)
+				y.AssertTruef(h.plen == 0, "Key offset: %+v, h.plen = %d", *ko, h.plen)
+
+				offset += h.Size()
+				buf = make([]byte, h.klen)
+				var out []byte
+				if out, err = t.read(offset, int(h.klen)); err != nil {
+					che <- errors.Wrap(err, "While reading first key in block")
+					continue
+				}
+				y.AssertTrue(len(buf) == copy(buf, out))
+
+				ko.key = buf
+				che <- nil
+			}
+		}()
+	}
+	close(blocks) // to stop reading goroutines
+
+	var readError error
+	for i := 0; i < len(t.blockIndex); i++ {
+		if err := <-che; err != nil && readError == nil {
+			readError = err
+		}
+	}
+	if readError != nil {
+		return readError
 	}
 
 	return nil
@@ -345,17 +348,11 @@ func NewFilename(id uint64, dir string) string {
 }
 
 func (t *Table) loadToRAM() error {
-	if _, err := t.fd.Seek(0, io.SeekStart); err != nil {
-		return err
-	}
 	t.mmap = make([]byte, t.tableSize)
-	sum := sha256.New()
-	tee := io.TeeReader(t.fd, sum)
-	read, err := tee.Read(t.mmap)
+	read, err := t.fd.ReadAt(t.mmap, 0)
 	if err != nil || read != t.tableSize {
 		return y.Wrapf(err, "Unable to load file in memory. Table file: %s", t.Filename())
 	}
-	t.Checksum = sum.Sum(nil)
 	y.NumReads.Add(1)
 	y.NumBytesRead.Add(int64(read))
 	return nil

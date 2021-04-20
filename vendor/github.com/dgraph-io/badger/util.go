@@ -17,7 +17,6 @@
 package badger
 
 import (
-	"encoding/hex"
 	"io/ioutil"
 	"math/rand"
 	"sync/atomic"
@@ -27,6 +26,31 @@ import (
 	"github.com/dgraph-io/badger/y"
 	"github.com/pkg/errors"
 )
+
+// summary is produced when DB is closed. Currently it is used only for testing.
+type summary struct {
+	fileIDs map[uint64]bool
+}
+
+func (s *levelsController) getSummary() *summary {
+	out := &summary{
+		fileIDs: make(map[uint64]bool),
+	}
+	for _, l := range s.levels {
+		l.getSummary(out)
+	}
+	return out
+}
+
+func (s *levelHandler) getSummary(sum *summary) {
+	s.RLock()
+	defer s.RUnlock()
+	for _, t := range s.tables {
+		sum.fileIDs[t.ID()] = true
+	}
+}
+
+func (s *DB) validate() error { return s.lc.validate() }
 
 func (s *levelsController) validate() error {
 	for _, l := range s.levels {
@@ -53,9 +77,8 @@ func (s *levelHandler) validate() error {
 
 		if y.CompareKeys(s.tables[j-1].Biggest(), s.tables[j].Smallest()) >= 0 {
 			return errors.Errorf(
-				"Inter: Biggest(j-1) \n%s\n vs Smallest(j): \n%s\n: level=%d j=%d numTables=%d",
-				hex.Dump(s.tables[j-1].Biggest()), hex.Dump(s.tables[j].Smallest()),
-				s.level, j, numTables)
+				"Inter: %q vs %q: level=%d j=%d numTables=%d",
+				string(s.tables[j-1].Biggest()), string(s.tables[j].Smallest()), s.level, j, numTables)
 		}
 
 		if y.CompareKeys(s.tables[j].Smallest(), s.tables[j].Biggest()) > 0 {

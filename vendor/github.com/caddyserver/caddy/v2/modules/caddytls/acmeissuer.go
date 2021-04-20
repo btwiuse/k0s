@@ -59,13 +59,6 @@ type ACMEIssuer struct {
 	// other than ACME transactions.
 	Email string `json:"email,omitempty"`
 
-	// If you have an existing account with the ACME server, put
-	// the private key here in PEM format. The ACME client will
-	// look up your account information with this key first before
-	// trying to create a new one. You can use placeholders here,
-	// for example if you have it in an environment variable.
-	AccountKey string `json:"account_key,omitempty"`
-
 	// If using an ACME CA that requires an external account
 	// binding, specify the CA-provided credentials here.
 	ExternalAccount *acme.EAB `json:"external_account,omitempty"`
@@ -105,24 +98,13 @@ func (ACMEIssuer) CaddyModule() caddy.ModuleInfo {
 func (iss *ACMEIssuer) Provision(ctx caddy.Context) error {
 	iss.logger = ctx.Logger(iss)
 
-	repl := caddy.NewReplacer()
-
 	// expand email address, if non-empty
 	if iss.Email != "" {
-		email, err := repl.ReplaceOrErr(iss.Email, true, true)
+		email, err := caddy.NewReplacer().ReplaceOrErr(iss.Email, true, true)
 		if err != nil {
 			return fmt.Errorf("expanding email address '%s': %v", iss.Email, err)
 		}
 		iss.Email = email
-	}
-
-	// expand account key, if non-empty
-	if iss.AccountKey != "" {
-		accountKey, err := repl.ReplaceOrErr(iss.AccountKey, true, true)
-		if err != nil {
-			return fmt.Errorf("expanding account key PEM '%s': %v", iss.AccountKey, err)
-		}
-		iss.AccountKey = accountKey
 	}
 
 	// DNS providers
@@ -179,7 +161,6 @@ func (iss *ACMEIssuer) makeIssuerTemplate() (certmagic.ACMEManager, error) {
 		CA:                iss.CA,
 		TestCA:            iss.TestCA,
 		Email:             iss.Email,
-		AccountKeyPEM:     iss.AccountKey,
 		CertObtainTimeout: time.Duration(iss.ACMETimeout),
 		TrustedRoots:      iss.rootPool,
 		ExternalAccount:   iss.ExternalAccount,
@@ -252,7 +233,7 @@ func (iss *ACMEIssuer) GetACMEIssuer() *ACMEIssuer { return iss }
 
 // UnmarshalCaddyfile deserializes Caddyfile tokens into iss.
 //
-//     ... acme [<directory_url>] {
+//     ... acme {
 //         dir <directory_url>
 //         test_dir <test_directory_url>
 //         email <email>
@@ -269,18 +250,9 @@ func (iss *ACMEIssuer) GetACMEIssuer() *ACMEIssuer { return iss }
 //
 func (iss *ACMEIssuer) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	for d.Next() {
-		if d.NextArg() {
-			iss.CA = d.Val()
-			if d.NextArg() {
-				return d.ArgErr()
-			}
-		}
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			switch d.Val() {
 			case "dir":
-				if iss.CA != "" {
-					return d.Errf("directory is already specified: %s", iss.CA)
-				}
 				if !d.AllArgs(&iss.CA) {
 					return d.ArgErr()
 				}
@@ -382,11 +354,18 @@ func (iss *ACMEIssuer) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				if iss.Challenges.DNS == nil {
 					iss.Challenges.DNS = new(DNSChallengeConfig)
 				}
-				unm, err := caddyfile.UnmarshalModule(d, "dns.providers."+provName)
+				dnsProvModule, err := caddy.GetModule("dns.providers." + provName)
 				if err != nil {
-					return err
+					return d.Errf("getting DNS provider module named '%s': %v", provName, err)
 				}
-				iss.Challenges.DNS.ProviderRaw = caddyconfig.JSONModuleObject(unm, "name", provName, nil)
+				dnsProvModuleInstance := dnsProvModule.New()
+				if unm, ok := dnsProvModuleInstance.(caddyfile.Unmarshaler); ok {
+					err = unm.UnmarshalCaddyfile(d.NewFromNextSegment())
+					if err != nil {
+						return err
+					}
+				}
+				iss.Challenges.DNS.ProviderRaw = caddyconfig.JSONModuleObject(dnsProvModuleInstance, "name", provName, nil)
 
 			case "resolvers":
 				if iss.Challenges == nil {

@@ -108,10 +108,10 @@ type cfDNSRecord struct {
 	} `json:"meta,omitempty"`
 }
 
-func (r cfDNSRecord) libdnsRecord(zone string) libdns.Record {
+func (r cfDNSRecord) libdnsRecord() libdns.Record {
 	return libdns.Record{
 		Type:  r.Type,
-		Name:  libdns.RelativeName(r.Name, zone),
+		Name:  r.Name,
 		Value: r.Content,
 		TTL:   time.Duration(r.TTL) * time.Second,
 		ID:    r.ID,

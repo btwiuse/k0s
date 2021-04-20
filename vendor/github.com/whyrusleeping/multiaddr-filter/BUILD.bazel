@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["mask.go"],
-    importmap = "k0s.io/vendor/github.com/whyrusleeping/multiaddr-filter",
-    importpath = "github.com/whyrusleeping/multiaddr-filter",
-    visibility = ["//visibility:public"],
-)

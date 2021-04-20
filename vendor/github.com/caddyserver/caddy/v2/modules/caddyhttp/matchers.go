@@ -513,8 +513,7 @@ func (m *MatchHeader) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 
 // Match returns true if r matches m.
 func (m MatchHeader) Match(r *http.Request) bool {
-	repl := r.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
-	return matchHeaders(r.Header, http.Header(m), r.Host, repl)
+	return matchHeaders(r.Header, http.Header(m), r.Host)
 }
 
 // getHeaderFieldVals returns the field values for the given fieldName from input.
@@ -531,7 +530,7 @@ func getHeaderFieldVals(input http.Header, fieldName, host string) []string {
 // matchHeaders returns true if input matches the criteria in against without regex.
 // The host parameter should be obtained from the http.Request.Host field since
 // net/http removes it from the header map.
-func matchHeaders(input, against http.Header, host string, repl *caddy.Replacer) bool {
+func matchHeaders(input, against http.Header, host string) bool {
 	for field, allowedFieldVals := range against {
 		actualFieldVals := getHeaderFieldVals(input, field, host)
 		if allowedFieldVals != nil && len(allowedFieldVals) == 0 && actualFieldVals != nil {
@@ -547,9 +546,6 @@ func matchHeaders(input, against http.Header, host string, repl *caddy.Replacer)
 	fieldVals:
 		for _, actualFieldVal := range actualFieldVals {
 			for _, allowedFieldVal := range allowedFieldVals {
-				if repl != nil {
-					allowedFieldVal = repl.ReplaceAll(allowedFieldVal, "")
-				}
 				switch {
 				case allowedFieldVal == "*":
 					match = true
@@ -989,7 +985,7 @@ func (rm ResponseMatcher) Match(statusCode int, hdr http.Header) bool {
 	if !rm.matchStatusCode(statusCode) {
 		return false
 	}
-	return matchHeaders(hdr, rm.Headers, "", nil)
+	return matchHeaders(hdr, rm.Headers, "")
 }
 
 func (rm ResponseMatcher) matchStatusCode(statusCode int) bool {

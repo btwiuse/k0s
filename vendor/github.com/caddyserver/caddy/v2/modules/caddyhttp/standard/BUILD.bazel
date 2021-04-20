@@ -10,7 +10,6 @@ go_library(
         "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode:go_default_library",
-        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/brotli:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/gzip:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/zstd:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/fileserver:go_default_library",

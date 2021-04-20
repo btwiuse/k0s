@@ -53,7 +53,7 @@ func (p *Provider) setRecord(ctx context.Context, zone string, record libdns.Rec
 
 	// sanitize the domain, combines the zone and record names
 	// the record name should typically be relative to the zone
-	domain := libdns.AbsoluteName(record.Name, zone)
+	domain := getDomainFromZoneAndRecord(zone, record)
 
 	params := map[string]string{"verbose": "true"}
 
@@ -90,7 +90,7 @@ func (p *Provider) doRequest(ctx context.Context, domain string, params map[stri
 	} else {
 		mainDomain = getMainDomain(domain)
 	}
-
+	
 	if len(mainDomain) == 0 {
 		return nil, fmt.Errorf("unable to find the main domain for: %s", domain)
 	}
@@ -134,12 +134,23 @@ func (p *Provider) doRequest(ctx context.Context, domain string, params map[stri
 	return bodyParts, nil
 }
 
+func getDomainFromZoneAndRecord(zone string, record libdns.Record) string {
+	// the record may contain the zone, and possibly the FQDN ".", so trim those
+	recordName := strings.TrimSuffix(strings.TrimRight(record.Name, "."), ".duckdns.org")
+
+	// concat the record to the zone
+	// note this may contain "_acme-challenge." as well, but
+	// that should be stripped off by getMainDomain() later
+	domain := recordName + "." + strings.TrimRight(zone, ".")
+
+	return domain
+}
+
 // DuckDNS only lets you write to your subdomain.
 // It must be in format subdomain.duckdns.org,
 // not in format subsubdomain.subdomain.duckdns.org.
 // So strip off everything that is not top 3 levels.
 func getMainDomain(domain string) string {
-	domain = strings.TrimSuffix(domain, ".")
 	split := dns.Split(domain)
 	if strings.HasSuffix(strings.ToLower(domain), "duckdns.org") {
 		if len(split) < 3 {

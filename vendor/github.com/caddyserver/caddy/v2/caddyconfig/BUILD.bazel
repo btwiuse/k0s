@@ -4,7 +4,6 @@ go_library(
     name = "go_default_library",
     srcs = [
         "configadapters.go",
-        "httploader.go",
         "load.go",
     ],
     importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/caddyconfig",

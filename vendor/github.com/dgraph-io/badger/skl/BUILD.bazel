@@ -9,8 +9,5 @@ go_library(
     importmap = "k0s.io/vendor/github.com/dgraph-io/badger/skl",
     importpath = "github.com/dgraph-io/badger/skl",
     visibility = ["//visibility:public"],
-    deps = [
-        "//vendor/github.com/dgraph-io/badger/y:go_default_library",
-        "//vendor/github.com/dgraph-io/ristretto/z:go_default_library",
-    ],
+    deps = ["//vendor/github.com/dgraph-io/badger/y:go_default_library"],
 )
