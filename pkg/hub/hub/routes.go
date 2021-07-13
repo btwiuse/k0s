@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"net/http/pprof"
+	"os"
 	"strings"
 	"time"
 
@@ -33,6 +34,17 @@ type hub struct {
 
 	c              types.Config
 	MetricsHandler http.Handler
+	BinHandler     http.Handler
+}
+
+func binHandler() http.Handler {
+	exe, err := os.Executable()
+	if err != nil {
+		return http.NotFoundHandler()
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, exe)
+	})
 }
 
 func NewHub(c types.Config) types.Hub {
@@ -42,6 +54,7 @@ func NewHub(c types.Config) types.Hub {
 			c:              c,
 			AgentManager:   NewAgentManager(),
 			MetricsHandler: middleware.GzipMiddleware(exporter.NewHandler()),
+			BinHandler:     middleware.GzipMiddleware(binHandler()),
 		}
 	)
 	// ensure core fields of h is not empty before return
@@ -144,6 +157,7 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	// hub specific function
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
 	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
+	r.Handle("/bin/k0s", h.BinHandler).Methods("GET")
 	// return middleware.LoggingMiddleware(middleware.AllowAllCorsMiddleware(r))
 	return middleware.AllowAllCorsMiddleware(r)
 }
