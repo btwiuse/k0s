@@ -8996,7 +8996,7 @@ print_seq()
 # https://github.com/google/bazel_rules_install
 git_repository(
     name = "com_github_google_rules_install",
-#   branch = "main",
+    # branch = "main",
     commit = "e93a17ed42a8a622a78fbf4737309e583f4b3cb4",
     remote = "https://github.com/google/bazel_rules_install.git",
 )
