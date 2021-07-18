@@ -27,6 +27,7 @@ import (
 	_ "github.com/caddy-dns/route53"
 	_ "k0s.io/pkg/plugin/agent"
 	_ "k0s.io/pkg/plugin/hello"
+	_ "k0s.io/pkg/module/hub"
 )
 
 func Run(args []string) error {
