@@ -36,6 +36,7 @@ main(){
   DEFAULT_TARGETS=(
     //:k0s
     //:k0s_rs
+    //:hub_rs
     //cmd/hub
     //cmd/hub2
     //cmd/agent

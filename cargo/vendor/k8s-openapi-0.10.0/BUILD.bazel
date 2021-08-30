@@ -6,15 +6,15 @@ DO NOT EDIT! Replaced on runs of cargo-raze
 """
 
 # buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
 load(
     "@rules_rust//rust:rust.bzl",
     "rust_binary",
     "rust_library",
     "rust_test",
 )
-
-# buildifier: disable=load
-load("@bazel_skylib//lib:selects.bzl", "selects")
 
 package(default_visibility = [
     # Public for visibility by "@raze__crate__version//" targets.
@@ -29,6 +29,7 @@ licenses([
 ])
 
 # Generated Targets
+# buildifier: disable=out-of-order-load
 # buildifier: disable=load-on-top
 load(
     "@rules_rust//cargo:cargo_build_script.bzl",
@@ -51,6 +52,7 @@ cargo_build_script(
     crate_root = "build.rs",
     data = glob(["**"]),
     edition = "2018",
+    links = "k8s-openapi-0.10.0",
     rustc_flags = [
         "--cap-lints=allow",
     ],
@@ -89,15 +91,15 @@ rust_library(
     version = "0.10.0",
     # buildifier: leave-alone
     deps = [
-        ":k8s_openapi_build_script",
         "//cargo/vendor/base64-0.13.0:base64",
         "//cargo/vendor/bytes-0.5.6:bytes",
         "//cargo/vendor/chrono-0.4.19:chrono",
-        "//cargo/vendor/http-0.2.2:http",
+        "//cargo/vendor/http-0.2.4:http",
         "//cargo/vendor/percent-encoding-2.1.0:percent_encoding",
-        "//cargo/vendor/serde-1.0.118:serde",
+        "//cargo/vendor/serde-1.0.130:serde",
         "//cargo/vendor/serde-value-0.7.0:serde_value",
-        "//cargo/vendor/serde_json-1.0.61:serde_json",
-        "//cargo/vendor/url-2.2.0:url",
+        "//cargo/vendor/serde_json-1.0.67:serde_json",
+        "//cargo/vendor/url-2.2.2:url",
+        ":k8s_openapi_build_script",
     ],
 )

@@ -6,15 +6,15 @@ DO NOT EDIT! Replaced on runs of cargo-raze
 """
 
 # buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
 load(
     "@rules_rust//rust:rust.bzl",
     "rust_binary",
     "rust_library",
     "rust_test",
 )
-
-# buildifier: disable=load
-load("@bazel_skylib//lib:selects.bzl", "selects")
 
 package(default_visibility = [
     # Public for visibility by "@raze__crate__version//" targets.
@@ -55,8 +55,8 @@ rust_library(
     version = "0.3.0",
     # buildifier: leave-alone
     deps = [
-        "//cargo/vendor/native-tls-0.2.7:native_tls",
-        "//cargo/vendor/tokio-1.0.1:tokio",
+        "//cargo/vendor/native-tls-0.2.8:native_tls",
+        "//cargo/vendor/tokio-1.10.1:tokio",
     ] + selects.with_or({
         # cfg(all(not(target_os = "macos"), not(windows), not(target_os = "ios")))
         (

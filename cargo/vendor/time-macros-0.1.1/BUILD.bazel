@@ -6,15 +6,15 @@ DO NOT EDIT! Replaced on runs of cargo-raze
 """
 
 # buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
 load(
     "@rules_rust//rust:rust.bzl",
     "rust_binary",
     "rust_library",
     "rust_test",
 )
-
-# buildifier: disable=load
-load("@bazel_skylib//lib:selects.bzl", "selects")
 
 package(default_visibility = [
     # Public for visibility by "@raze__crate__version//" targets.
@@ -41,7 +41,7 @@ rust_library(
     edition = "2018",
     proc_macro_deps = [
         "//cargo/vendor/proc-macro-hack-0.5.19:proc_macro_hack",
-        "//cargo/vendor/time-macros-impl-0.1.1:time_macros_impl",
+        "//cargo/vendor/time-macros-impl-0.1.2:time_macros_impl",
     ],
     rustc_flags = [
         "--cap-lints=allow",

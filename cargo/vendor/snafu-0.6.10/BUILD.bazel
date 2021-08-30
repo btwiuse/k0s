@@ -6,15 +6,15 @@ DO NOT EDIT! Replaced on runs of cargo-raze
 """
 
 # buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
 load(
     "@rules_rust//rust:rust.bzl",
     "rust_binary",
     "rust_library",
     "rust_test",
 )
-
-# buildifier: disable=load
-load("@bazel_skylib//lib:selects.bzl", "selects")
 
 package(default_visibility = [
     # Public for visibility by "@raze__crate__version//" targets.
@@ -34,11 +34,8 @@ rust_library(
     name = "snafu",
     srcs = glob(["**/*.rs"]),
     aliases = {
-        "//cargo/vendor/futures-core-0.3.9:futures_core": "futures_core_crate",
+        "//cargo/vendor/futures-core-0.3.16:futures_core": "futures_core_crate",
     },
-    compile_data = [
-        ":md",
-    ],
     crate_features = [
         "default",
         "futures",
@@ -65,14 +62,9 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         "//cargo/vendor/doc-comment-0.3.3:doc_comment",
-        "//cargo/vendor/futures-core-0.3.9:futures_core",
-        "//cargo/vendor/pin-project-0.4.27:pin_project",
+        "//cargo/vendor/futures-core-0.3.16:futures_core",
+        "//cargo/vendor/pin-project-0.4.28:pin_project",
     ],
-)
-
-filegroup(
-    name = "md",
-    srcs = glob(["**/*.md"]),
 )
 
 # Unsupported target "backtrace" with type "test" omitted

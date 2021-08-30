@@ -6,15 +6,15 @@ DO NOT EDIT! Replaced on runs of cargo-raze
 """
 
 # buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
 load(
     "@rules_rust//rust:rust.bzl",
     "rust_binary",
     "rust_library",
     "rust_test",
 )
-
-# buildifier: disable=load
-load("@bazel_skylib//lib:selects.bzl", "selects")
 
 package(default_visibility = [
     # Public for visibility by "@raze__crate__version//" targets.
@@ -42,7 +42,7 @@ rust_library(
     data = [],
     edition = "2018",
     proc_macro_deps = [
-        "//cargo/vendor/derivative-2.1.3:derivative",
+        "//cargo/vendor/derivative-2.2.0:derivative",
     ],
     rustc_flags = [
         "--cap-lints=allow",
@@ -54,15 +54,15 @@ rust_library(
     version = "0.47.0",
     # buildifier: leave-alone
     deps = [
-        "//cargo/vendor/dashmap-4.0.1:dashmap",
-        "//cargo/vendor/futures-0.3.9:futures",
+        "//cargo/vendor/dashmap-4.0.2:dashmap",
+        "//cargo/vendor/futures-0.3.16:futures",
         "//cargo/vendor/k8s-openapi-0.10.0:k8s_openapi",
         "//cargo/vendor/kube-0.47.0:kube",
-        "//cargo/vendor/pin-project-1.0.3:pin_project",
-        "//cargo/vendor/serde-1.0.118:serde",
-        "//cargo/vendor/smallvec-1.6.0:smallvec",
+        "//cargo/vendor/pin-project-1.0.8:pin_project",
+        "//cargo/vendor/serde-1.0.130:serde",
+        "//cargo/vendor/smallvec-1.6.1:smallvec",
         "//cargo/vendor/snafu-0.6.10:snafu",
-        "//cargo/vendor/tokio-1.0.1:tokio",
-        "//cargo/vendor/tokio-util-0.6.0:tokio_util",
+        "//cargo/vendor/tokio-1.10.1:tokio",
+        "//cargo/vendor/tokio-util-0.6.7:tokio_util",
     ],
 )

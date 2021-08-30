@@ -113,6 +113,23 @@ rust_binary(
 )
 
 rust_binary(
+    name = "hub_rs",
+    srcs = ["src/hub.rs"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//cargo:actix",
+        "//cargo:actix_web",
+        "//cargo:actix_web_actors",
+        "//cargo:actix_http",
+        "//cargo:serde",
+        "//cargo:serde_json",
+        "//cargo:log",
+        "//cargo:simple_logger",
+        "//cargo:lazy_static",
+    ],
+)
+
+rust_binary(
     name = "k8s-controller",
     srcs = ["src/k8s-controller.rs"],
     visibility = ["//visibility:public"],

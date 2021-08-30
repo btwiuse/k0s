@@ -23,6 +23,7 @@ raze:             ## auto generate BUILD.bazel files from Cargo.toml
 	@ which cargo-raze || (echo please cargo install cargo-raze | grep --color . 1>&2 && false)
 	@ cargo vendor --versioned-dirs cargo/vendor &>/dev/null
 	@ cargo raze
+	# @ $(BAZEL) run @cargo_raze//:raze -- --manifest-path=$(realpath /Cargo.toml)
 	@ git status cargo
 
 gazelle:             ## auto generate BUILD.bazel files from go.mod

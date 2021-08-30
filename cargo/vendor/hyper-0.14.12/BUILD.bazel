@@ -1,0 +1,138 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:rust.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT"
+])
+
+# Generated Targets
+
+# Unsupported target "body" with type "bench" omitted
+
+# Unsupported target "connect" with type "bench" omitted
+
+# Unsupported target "end_to_end" with type "bench" omitted
+
+# Unsupported target "pipeline" with type "bench" omitted
+
+# Unsupported target "server" with type "bench" omitted
+
+# Unsupported target "hyper" with type "cdylib" omitted
+
+# Unsupported target "client" with type "example" omitted
+
+# Unsupported target "client_json" with type "example" omitted
+
+# Unsupported target "echo" with type "example" omitted
+
+# Unsupported target "gateway" with type "example" omitted
+
+# Unsupported target "hello" with type "example" omitted
+
+# Unsupported target "http_proxy" with type "example" omitted
+
+# Unsupported target "multi_server" with type "example" omitted
+
+# Unsupported target "params" with type "example" omitted
+
+# Unsupported target "send_file" with type "example" omitted
+
+# Unsupported target "service_struct_impl" with type "example" omitted
+
+# Unsupported target "single_threaded" with type "example" omitted
+
+# Unsupported target "state" with type "example" omitted
+
+# Unsupported target "tower_client" with type "example" omitted
+
+# Unsupported target "tower_server" with type "example" omitted
+
+# Unsupported target "upgrades" with type "example" omitted
+
+# Unsupported target "web_api" with type "example" omitted
+
+rust_library(
+    name = "hyper",
+    srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
+    crate_features = [
+        "client",
+        "h2",
+        "http1",
+        "http2",
+        "runtime",
+        "socket2",
+        "tcp",
+    ],
+    crate_root = "src/lib.rs",
+    crate_type = "lib",
+    data = [],
+    edition = "2018",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+    version = "0.14.12",
+    # buildifier: leave-alone
+    deps = [
+        "//cargo/vendor/bytes-1.1.0:bytes",
+        "//cargo/vendor/futures-channel-0.3.16:futures_channel",
+        "//cargo/vendor/futures-core-0.3.16:futures_core",
+        "//cargo/vendor/futures-util-0.3.16:futures_util",
+        "//cargo/vendor/h2-0.3.4:h2",
+        "//cargo/vendor/http-0.2.4:http",
+        "//cargo/vendor/http-body-0.4.3:http_body",
+        "//cargo/vendor/httparse-1.5.1:httparse",
+        "//cargo/vendor/httpdate-1.0.1:httpdate",
+        "//cargo/vendor/itoa-0.4.8:itoa",
+        "//cargo/vendor/pin-project-lite-0.2.7:pin_project_lite",
+        "//cargo/vendor/socket2-0.4.1:socket2",
+        "//cargo/vendor/tokio-1.10.1:tokio",
+        "//cargo/vendor/tower-service-0.3.1:tower_service",
+        "//cargo/vendor/tracing-0.1.26:tracing",
+        "//cargo/vendor/want-0.3.0:want",
+    ] + selects.with_or({
+        # cfg(any(target_os = "linux", target_os = "macos"))
+        (
+            "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+        ): [
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+# Unsupported target "hyper" with type "staticlib" omitted
+
+# Unsupported target "client" with type "test" omitted
+
+# Unsupported target "integration" with type "test" omitted
+
+# Unsupported target "server" with type "test" omitted
