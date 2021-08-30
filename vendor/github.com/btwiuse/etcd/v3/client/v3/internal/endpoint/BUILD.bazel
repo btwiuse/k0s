@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["endpoint.go"],
-    importmap = "k0s.io/vendor/github.com/btwiuse/etcd/v3/client/v3/internal/endpoint",
-    importpath = "github.com/btwiuse/etcd/v3/client/v3/internal/endpoint",
-    visibility = ["//vendor/github.com/btwiuse/etcd/v3/client/v3:__subpackages__"],
-)

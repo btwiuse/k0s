@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["done.go"],
-    importmap = "k0s.io/vendor/v2ray.com/core/common/signal/done",
-    importpath = "v2ray.com/core/common/signal/done",
-    visibility = ["//visibility:public"],
-)

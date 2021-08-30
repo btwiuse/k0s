@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["libdns.go"],
-    importmap = "k0s.io/vendor/github.com/libdns/libdns",
-    importpath = "github.com/libdns/libdns",
-    visibility = ["//visibility:public"],
-)

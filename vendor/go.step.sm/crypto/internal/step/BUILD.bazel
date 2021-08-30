@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["config.go"],
-    importmap = "k0s.io/vendor/go.step.sm/crypto/internal/step",
-    importpath = "go.step.sm/crypto/internal/step",
-    visibility = ["//vendor/go.step.sm/crypto:__subpackages__"],
-)

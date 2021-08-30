@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 package(
-    default_visibility = ["//visibility:public"],
+    default_visibility = ["//parser:__subpackages__"],
     licenses = ["notice"],  # Apache 2.0
 )
 
@@ -15,13 +15,12 @@ go_library(
         "cel_parser.go",
         "cel_visitor.go",
     ],
+    importpath = "github.com/google/cel-go/parser/gen",
+    deps = [
+        "@com_github_antlr//runtime/Go/antlr:go_default_library",
+    ],
     data = [
         "CEL.tokens",
         "CELLexer.tokens",
-    ],
-    importmap = "k0s.io/vendor/github.com/google/cel-go/parser/gen",
-    importpath = "github.com/google/cel-go/parser/gen",
-    deps = [
-        "//vendor/github.com/antlr/antlr4/runtime/Go/antlr:go_default_library",
     ],
 )

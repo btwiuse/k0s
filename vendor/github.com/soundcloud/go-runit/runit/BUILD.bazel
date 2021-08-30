@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["runit.go"],
-    importmap = "k0s.io/vendor/github.com/soundcloud/go-runit/runit",
-    importpath = "github.com/soundcloud/go-runit/runit",
-    visibility = ["//visibility:public"],
-)

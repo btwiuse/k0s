@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 
 package(
     licenses = ["notice"],  # Apache 2.0
@@ -11,15 +11,30 @@ go_library(
         "guards.go",
         "strings.go",
     ],
-    importmap = "k0s.io/vendor/github.com/google/cel-go/ext",
     importpath = "github.com/google/cel-go/ext",
-    visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/google/cel-go/cel:go_default_library",
-        "//vendor/github.com/google/cel-go/checker/decls:go_default_library",
-        "//vendor/github.com/google/cel-go/common/types:go_default_library",
-        "//vendor/github.com/google/cel-go/common/types/ref:go_default_library",
-        "//vendor/github.com/google/cel-go/interpreter/functions:go_default_library",
-        "//vendor/google.golang.org/genproto/googleapis/api/expr/v1alpha1:go_default_library",
+        "//cel:go_default_library",
+        "//checker/decls:go_default_library",
+        "//common/types:go_default_library",
+        "//common/types/ref:go_default_library",
+        "//interpreter/functions:go_default_library",
+        "@org_golang_google_genproto//googleapis/api/expr/v1alpha1:go_default_library",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+
+go_test(
+    name = "go_default_test",
+    size = "small",
+    srcs = [
+        "encoders_test.go",
+        "strings_test.go",
+    ],
+    embed = [
+        ":go_strings_library",
+    ],
+    deps = [
+        "//cel:go_default_library",
     ],
 )
