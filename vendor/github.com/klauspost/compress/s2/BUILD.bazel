@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "decode.go",
+        "decode_amd64.s",
+        "decode_arm64.s",
+        "decode_asm.go",
+        "decode_other.go",
+        "encode.go",
+        "encode_all.go",
+        "encode_amd64.go",
+        "encode_best.go",
+        "encode_better.go",
+        "encode_go.go",
+        "encodeblock_amd64.go",
+        "encodeblock_amd64.s",
+        "s2.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/klauspost/compress/s2",
+    importpath = "github.com/klauspost/compress/s2",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "balancing.go",
+        "condition.go",
+        "condition_geoip.go",
+        "config.go",
+        "config.pb.go",
+        "errors.generated.go",
+        "router.go",
+    ],
+    importmap = "k0s.io/vendor/v2ray.com/core/app/router",
+    importpath = "v2ray.com/core/app/router",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/go.starlark.net/starlark:go_default_library",
+        "//vendor/go.starlark.net/syntax:go_default_library",
+        "//vendor/v2ray.com/core:go_default_library",
+        "//vendor/v2ray.com/core/common:go_default_library",
+        "//vendor/v2ray.com/core/common/dice:go_default_library",
+        "//vendor/v2ray.com/core/common/errors:go_default_library",
+        "//vendor/v2ray.com/core/common/net:go_default_library",
+        "//vendor/v2ray.com/core/common/session:go_default_library",
+        "//vendor/v2ray.com/core/common/strmatcher:go_default_library",
+        "//vendor/v2ray.com/core/features/dns:go_default_library",
+        "//vendor/v2ray.com/core/features/outbound:go_default_library",
+        "//vendor/v2ray.com/core/features/routing:go_default_library",
+    ],
+)

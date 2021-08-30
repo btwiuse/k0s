@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "acmeserver.go",
+        "caddyfile.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddypki/acmeserver",
+    importpath = "github.com/caddyserver/caddy/v2/modules/caddypki/acmeserver",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddypki:go_default_library",
+        "//vendor/github.com/go-chi/chi:go_default_library",
+        "//vendor/github.com/smallstep/certificates/acme:go_default_library",
+        "//vendor/github.com/smallstep/certificates/acme/api:go_default_library",
+        "//vendor/github.com/smallstep/certificates/acme/db/nosql:go_default_library",
+        "//vendor/github.com/smallstep/certificates/authority:go_default_library",
+        "//vendor/github.com/smallstep/certificates/authority/provisioner:go_default_library",
+        "//vendor/github.com/smallstep/certificates/db:go_default_library",
+        "//vendor/github.com/smallstep/nosql:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "d.go",
+        "dart.go",
+        "diff.go",
+        "django.go",
+        "docker.go",
+        "dtd.go",
+        "dylan.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/d",
+    importpath = "github.com/alecthomas/chroma/lexers/d",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/alecthomas/chroma:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/b:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/internal:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/j:go_default_library",
+    ],
+)

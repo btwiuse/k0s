@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "scan.go",
+        "type_string.go",
+    ],
+    importmap = "k0s.io/vendor/robpike.io/ivy/scan",
+    importpath = "robpike.io/ivy/scan",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/robpike.io/ivy/exec:go_default_library",
+        "//vendor/robpike.io/ivy/value:go_default_library",
+    ],
+)

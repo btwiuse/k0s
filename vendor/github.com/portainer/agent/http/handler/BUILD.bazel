@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "handler.go",
+        "handlerv1.go",
+        "handlerv2.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/portainer/agent/http/handler",
+    importpath = "github.com/portainer/agent/http/handler",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/portainer/agent:go_default_library",
+        "//vendor/github.com/portainer/agent/http/handler/agent:go_default_library",
+        "//vendor/github.com/portainer/agent/http/handler/browse:go_default_library",
+        "//vendor/github.com/portainer/agent/http/handler/docker:go_default_library",
+        "//vendor/github.com/portainer/agent/http/handler/host:go_default_library",
+        "//vendor/github.com/portainer/agent/http/handler/key:go_default_library",
+        "//vendor/github.com/portainer/agent/http/handler/kubernetes:go_default_library",
+        "//vendor/github.com/portainer/agent/http/handler/ping:go_default_library",
+        "//vendor/github.com/portainer/agent/http/handler/websocket:go_default_library",
+        "//vendor/github.com/portainer/agent/http/proxy:go_default_library",
+        "//vendor/github.com/portainer/agent/http/security:go_default_library",
+        "//vendor/github.com/portainer/agent/internal/edge:go_default_library",
+        "//vendor/github.com/portainer/agent/kubernetes:go_default_library",
+        "//vendor/github.com/portainer/libhttp/error:go_default_library",
+    ],
+)

@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "config.go",
+        "conn.go",
+        "server.go",
+        "tunnel.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/p4gefau1t/trojan-go/tunnel/websocket",
+    importpath = "github.com/p4gefau1t/trojan-go/tunnel/websocket",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/p4gefau1t/trojan-go/common:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/config:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/log:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/redirector:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/tunnel:go_default_library",
+        "//vendor/golang.org/x/net/websocket:go_default_library",
+    ],
+)

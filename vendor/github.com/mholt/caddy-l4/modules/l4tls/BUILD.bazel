@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "clienthello.go",
+        "handler.go",
+        "matcher.go",
+        "parsehello.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/mholt/caddy-l4/modules/l4tls",
+    importpath = "github.com/mholt/caddy-l4/modules/l4tls",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddytls:go_default_library",
+        "//vendor/github.com/mholt/caddy-l4/layer4:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+        "//vendor/golang.org/x/crypto/cryptobyte:go_default_library",
+    ],
+)

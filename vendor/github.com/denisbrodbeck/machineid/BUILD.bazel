@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "helper.go",
+        "id.go",
+        "id_bsd.go",
+        "id_darwin.go",
+        "id_linux.go",
+        "id_windows.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/denisbrodbeck/machineid",
+    importpath = "github.com/denisbrodbeck/machineid",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//vendor/golang.org/x/sys/windows/registry:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

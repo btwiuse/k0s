@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "block.go",
+        "doc.go",
+        "esc.go",
+        "html.go",
+        "inline.go",
+        "markdown.go",
+        "node.go",
+        "smartypants.go",
+    ],
+    importmap = "k0s.io/vendor/go.step.sm/cli-utils/pkg/blackfriday",
+    importpath = "go.step.sm/cli-utils/pkg/blackfriday",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/shurcooL/sanitized_anchor_name:go_default_library"],
+)

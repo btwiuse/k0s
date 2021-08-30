@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "blackhole.go",
+        "callback.go",
+        "element.go",
+        "env.go",
+        "env_list.go",
+        "ptr.go",
+        "read_only.go",
+        "vars.go",
+    ],
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/eval/vars",
+    importpath = "src.elv.sh/pkg/eval/vars",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/xiaq/persistent/vector:go_default_library",
+        "//vendor/src.elv.sh/pkg/diag:go_default_library",
+        "//vendor/src.elv.sh/pkg/eval/vals:go_default_library",
+    ],
+)

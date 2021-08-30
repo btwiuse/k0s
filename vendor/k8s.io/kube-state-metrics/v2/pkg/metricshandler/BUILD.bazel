@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["metrics_handler.go"],
+    importmap = "k0s.io/vendor/k8s.io/kube-state-metrics/v2/pkg/metricshandler",
+    importpath = "k8s.io/kube-state-metrics/v2/pkg/metricshandler",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/k8s.io/api/apps/v1:go_default_library",
+        "//vendor/k8s.io/apimachinery/pkg/apis/meta/v1:go_default_library",
+        "//vendor/k8s.io/apimachinery/pkg/fields:go_default_library",
+        "//vendor/k8s.io/client-go/kubernetes:go_default_library",
+        "//vendor/k8s.io/client-go/tools/cache:go_default_library",
+        "//vendor/k8s.io/klog/v2:go_default_library",
+        "//vendor/k8s.io/kube-state-metrics/v2/external/store:go_default_library",
+        "//vendor/k8s.io/kube-state-metrics/v2/pkg/metrics_store:go_default_library",
+        "//vendor/k8s.io/kube-state-metrics/v2/pkg/options:go_default_library",
+    ],
+)

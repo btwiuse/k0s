@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.pb.go",
+        "dns.go",
+        "errors.generated.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/proxy/dns",
+    importpath = "github.com/v2fly/v2ray-core/v4/proxy/dns",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/buf:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/net:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/protocol/dns:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/session:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/task:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/dns:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet:go_default_library",
+        "//vendor/golang.org/x/net/dns/dnsmessage:go_default_library",
+        "//vendor/google.golang.org/protobuf/reflect/protoreflect:go_default_library",
+        "//vendor/google.golang.org/protobuf/runtime/protoimpl:go_default_library",
+    ],
+)

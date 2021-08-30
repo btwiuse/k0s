@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "rotate.go",
+        "rotate19.go",
+        "xxhash.go",
+        "xxhash_amd64.go",
+        "xxhash_amd64.s",
+        "xxhash_other.go",
+        "xxhash_unsafe.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/cespare/xxhash",
+    importpath = "github.com/cespare/xxhash",
+    visibility = ["//visibility:public"],
+)

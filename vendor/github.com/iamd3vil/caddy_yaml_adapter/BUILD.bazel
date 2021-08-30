@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["yaml.go"],
+    importmap = "k0s.io/vendor/github.com/iamd3vil/caddy_yaml_adapter",
+    importpath = "github.com/iamd3vil/caddy_yaml_adapter",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2/caddyconfig:go_default_library",
+        "//vendor/github.com/ghodss/yaml:go_default_library",
+    ],
+)

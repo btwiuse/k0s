@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "credit_card.go",
+        "credit_card_association.go",
+        "credit_card_issuer.go",
+        "database.go",
+        "email.go",
+        "handle.go",
+        "image.go",
+        "location.go",
+        "lockout.go",
+        "mfa_token.go",
+        "name.go",
+        "organization.go",
+        "password.go",
+        "public_key.go",
+        "random.go",
+        "registration.go",
+        "role.go",
+        "user.go",
+        "uuid.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/greenpau/go-identity",
+    importpath = "github.com/greenpau/go-identity",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/greenpau/go-identity/internal/utils:go_default_library",
+        "//vendor/github.com/greenpau/versioned:go_default_library",
+        "//vendor/github.com/satori/go.uuid:go_default_library",
+        "//vendor/golang.org/x/crypto/bcrypt:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh:go_default_library",
+    ],
+)

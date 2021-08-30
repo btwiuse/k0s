@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "log.go",
+        "plugin.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/coredns/coredns/plugin/pkg/log",
+    importpath = "github.com/coredns/coredns/plugin/pkg/log",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,65 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cmdProc.go",
+        "darwinLaunch.go",
+        "interfaces.go",
+        "linuxLaunch.go",
+        "settings.go",
+        "unixpty.go",
+        "winLaunch.go",
+        "winproc.go",
+        "winpty.go",
+    ],
+    cgo = True,
+    importmap = "k0s.io/vendor/github.com/liamg/aminal/platform",
+    importpath = "github.com/liamg/aminal/platform",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:android": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:js": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:plan9": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//vendor/github.com/kr/pty:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//vendor/github.com/MaxRis/w32:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

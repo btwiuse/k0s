@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "crt.go",
+        "csr.go",
+        "identity.go",
+        "intermediateProfile.go",
+        "leafProfile.go",
+        "profile.go",
+        "rootProfile.go",
+        "types.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/smallstep/cli/crypto/x509util",
+    importpath = "github.com/smallstep/cli/crypto/x509util",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/smallstep/cli/crypto/keys:go_default_library",
+        "//vendor/github.com/smallstep/cli/crypto/pemutil:go_default_library",
+        "//vendor/github.com/smallstep/cli/errs:go_default_library",
+        "//vendor/github.com/smallstep/cli/utils:go_default_library",
+    ],
+)

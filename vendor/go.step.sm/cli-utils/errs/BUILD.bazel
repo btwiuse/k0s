@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["errs.go"],
+    importmap = "k0s.io/vendor/go.step.sm/cli-utils/errs",
+    importpath = "go.step.sm/cli-utils/errs",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/urfave/cli:go_default_library",
+    ],
+)

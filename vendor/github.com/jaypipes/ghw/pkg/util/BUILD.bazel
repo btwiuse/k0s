@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["util.go"],
+    importmap = "k0s.io/vendor/github.com/jaypipes/ghw/pkg/util",
+    importpath = "github.com/jaypipes/ghw/pkg/util",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/jaypipes/ghw/pkg/context:go_default_library"],
+)

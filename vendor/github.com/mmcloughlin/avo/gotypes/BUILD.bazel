@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "components.go",
+        "doc.go",
+        "signature.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/gotypes",
+    importpath = "github.com/mmcloughlin/avo/gotypes",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/mmcloughlin/avo/operand:go_default_library",
+        "//vendor/github.com/mmcloughlin/avo/reg:go_default_library",
+    ],
+)

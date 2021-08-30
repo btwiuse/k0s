@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["diff.go"],
+    importmap = "k0s.io/vendor/k8s.io/kubectl/pkg/cmd/diff",
+    importpath = "k8s.io/kubectl/pkg/cmd/diff",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jonboulle/clockwork:go_default_library",
+        "//vendor/github.com/spf13/cobra:go_default_library",
+        "//vendor/k8s.io/apimachinery/pkg/api/errors:go_default_library",
+        "//vendor/k8s.io/apimachinery/pkg/api/meta:go_default_library",
+        "//vendor/k8s.io/apimachinery/pkg/apis/meta/v1:go_default_library",
+        "//vendor/k8s.io/apimachinery/pkg/apis/meta/v1/unstructured:go_default_library",
+        "//vendor/k8s.io/apimachinery/pkg/runtime:go_default_library",
+        "//vendor/k8s.io/apimachinery/pkg/types:go_default_library",
+        "//vendor/k8s.io/cli-runtime/pkg/genericclioptions:go_default_library",
+        "//vendor/k8s.io/cli-runtime/pkg/resource:go_default_library",
+        "//vendor/k8s.io/client-go/discovery:go_default_library",
+        "//vendor/k8s.io/client-go/dynamic:go_default_library",
+        "//vendor/k8s.io/klog/v2:go_default_library",
+        "//vendor/k8s.io/kubectl/pkg/cmd/apply:go_default_library",
+        "//vendor/k8s.io/kubectl/pkg/cmd/util:go_default_library",
+        "//vendor/k8s.io/kubectl/pkg/scheme:go_default_library",
+        "//vendor/k8s.io/kubectl/pkg/util:go_default_library",
+        "//vendor/k8s.io/kubectl/pkg/util/i18n:go_default_library",
+        "//vendor/k8s.io/kubectl/pkg/util/openapi:go_default_library",
+        "//vendor/k8s.io/kubectl/pkg/util/templates:go_default_library",
+        "//vendor/k8s.io/utils/exec:go_default_library",
+        "//vendor/sigs.k8s.io/yaml:go_default_library",
+    ],
+)

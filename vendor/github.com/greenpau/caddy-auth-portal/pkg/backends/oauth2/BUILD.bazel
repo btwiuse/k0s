@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "backend.go",
+        "jwks.go",
+        "state.go",
+        "user.go",
+        "validator.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-portal/pkg/backends/oauth2",
+    importpath = "github.com/greenpau/caddy-auth-portal/pkg/backends/oauth2",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/dgrijalva/jwt-go:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-jwt/pkg/claims:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-jwt/pkg/config:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-portal/pkg/errors:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-portal/pkg/utils:go_default_library",
+        "//vendor/github.com/greenpau/go-identity:go_default_library",
+        "//vendor/github.com/satori/go.uuid:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

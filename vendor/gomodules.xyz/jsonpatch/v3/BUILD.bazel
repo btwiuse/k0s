@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["jsonpatch.go"],
+    importmap = "k0s.io/vendor/gomodules.xyz/jsonpatch/v3",
+    importpath = "gomodules.xyz/jsonpatch/v3",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/gomodules.xyz/orderedmap:go_default_library"],
+)

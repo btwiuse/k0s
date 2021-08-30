@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "default_effector.go",
+        "effector.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/casbin/casbin/v2/effect",
+    importpath = "github.com/casbin/casbin/v2/effect",
+    visibility = ["//visibility:public"],
+)

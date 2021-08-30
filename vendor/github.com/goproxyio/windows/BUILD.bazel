@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "psapi_windows.go",
+        "reparse_windows.go",
+        "security_windows.go",
+        "symlink_windows.go",
+        "syscall_windows.go",
+        "zsyscall_windows.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/goproxyio/windows",
+    importpath = "github.com/goproxyio/windows",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//vendor/github.com/goproxyio/windows/sysdll:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

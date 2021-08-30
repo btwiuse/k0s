@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "reader.go",
+        "writer.go",
+        "writer_unsafe.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/philhofer/fwd",
+    importpath = "github.com/philhofer/fwd",
+    visibility = ["//visibility:public"],
+)

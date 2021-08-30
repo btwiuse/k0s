@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "connection_id.go",
+        "encryption_level.go",
+        "key_phase.go",
+        "packet_number.go",
+        "params.go",
+        "perspective.go",
+        "protocol.go",
+        "stream.go",
+        "version.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/internal/protocol",
+    importpath = "github.com/lucas-clemente/quic-go/internal/protocol",
+    visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
+)

@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "assign.go",
+        "function.go",
+        "help.go",
+        "helpdocs.go",
+        "parse.go",
+        "save.go",
+        "special.go",
+    ],
+    importmap = "k0s.io/vendor/robpike.io/ivy/parse",
+    importpath = "robpike.io/ivy/parse",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/robpike.io/ivy/config:go_default_library",
+        "//vendor/robpike.io/ivy/exec:go_default_library",
+        "//vendor/robpike.io/ivy/scan:go_default_library",
+        "//vendor/robpike.io/ivy/value:go_default_library",
+    ],
+)

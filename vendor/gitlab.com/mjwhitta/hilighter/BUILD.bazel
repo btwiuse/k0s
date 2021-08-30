@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "fmt_wrappers.go",
+        "generated.go",
+        "globals.go",
+        "hilighter.go",
+        "utils.go",
+    ],
+    importmap = "k0s.io/vendor/gitlab.com/mjwhitta/hilighter",
+    importpath = "gitlab.com/mjwhitta/hilighter",
+    visibility = ["//visibility:public"],
+)

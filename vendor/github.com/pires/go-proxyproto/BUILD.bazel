@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "addr_proto.go",
+        "header.go",
+        "policy.go",
+        "protocol.go",
+        "tlv.go",
+        "v1.go",
+        "v2.go",
+        "version_cmd.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/pires/go-proxyproto",
+    importpath = "github.com/pires/go-proxyproto",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "decode.go",
+        "encode.go",
+        "snappy.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/klauspost/compress/snappy",
+    importpath = "github.com/klauspost/compress/snappy",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/klauspost/compress/s2:go_default_library"],
+)

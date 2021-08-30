@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "ca.go",
+        "certificates.go",
+        "command.go",
+        "crypto.go",
+        "maintain.go",
+        "pki.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddypki",
+    importpath = "github.com/caddyserver/caddy/v2/modules/caddypki",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/cmd:go_default_library",
+        "//vendor/github.com/caddyserver/certmagic:go_default_library",
+        "//vendor/github.com/smallstep/certificates/authority:go_default_library",
+        "//vendor/github.com/smallstep/certificates/db:go_default_library",
+        "//vendor/github.com/smallstep/cli/crypto/x509util:go_default_library",
+        "//vendor/github.com/smallstep/truststore:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

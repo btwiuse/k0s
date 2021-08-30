@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "config.pb.go",
+        "connection.go",
+        "dialer.go",
+        "errors.generated.go",
+        "header.go",
+        "internet.go",
+        "memory_settings.go",
+        "sockopt.go",
+        "sockopt_darwin.go",
+        "sockopt_linux.go",
+        "sockopt_other.go",
+        "sockopt_windows.go",
+        "system_dialer.go",
+        "system_listener.go",
+        "tcp_hub.go",
+    ],
+    importmap = "k0s.io/vendor/v2ray.com/core/transport/internet",
+    importpath = "v2ray.com/core/transport/internet",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/v2ray.com/core/common:go_default_library",
+        "//vendor/v2ray.com/core/common/errors:go_default_library",
+        "//vendor/v2ray.com/core/common/net:go_default_library",
+        "//vendor/v2ray.com/core/common/serial:go_default_library",
+        "//vendor/v2ray.com/core/common/session:go_default_library",
+        "//vendor/v2ray.com/core/features:go_default_library",
+        "//vendor/v2ray.com/core/features/stats:go_default_library",
+    ],
+)

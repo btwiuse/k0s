@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "const_bsd.go",
+        "const_linux.go",
+        "getpass.go",
+        "getpass_nix.go",
+        "getpass_windows.go",
+        "isatty.go",
+        "isatty-c.go",
+        "isatty_nix.go",
+        "isatty_windows.go",
+    ],
+    cgo = True,
+    importmap = "k0s.io/vendor/github.com/andrew-d/go-termutil",
+    importpath = "github.com/andrew-d/go-termutil",
+    visibility = ["//visibility:public"],
+)

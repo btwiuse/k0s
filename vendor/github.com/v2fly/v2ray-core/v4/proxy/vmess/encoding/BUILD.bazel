@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "auth.go",
+        "client.go",
+        "commands.go",
+        "encoding.go",
+        "errors.generated.go",
+        "server.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/proxy/vmess/encoding",
+    importpath = "github.com/v2fly/v2ray-core/v4/proxy/vmess/encoding",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/v2ray-core/v4/common:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/bitmask:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/buf:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/crypto:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/dice:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/net:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/protocol:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/serial:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/task:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/uuid:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/proxy/vmess:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/proxy/vmess/aead:go_default_library",
+        "//vendor/golang.org/x/crypto/chacha20poly1305:go_default_library",
+        "//vendor/golang.org/x/crypto/sha3:go_default_library",
+    ],
+)

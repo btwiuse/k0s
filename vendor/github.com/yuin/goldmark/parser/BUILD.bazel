@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "attribute.go",
+        "atx_heading.go",
+        "auto_link.go",
+        "blockquote.go",
+        "code_block.go",
+        "code_span.go",
+        "delimiter.go",
+        "emphasis.go",
+        "fcode_block.go",
+        "html_block.go",
+        "link.go",
+        "link_ref.go",
+        "list.go",
+        "list_item.go",
+        "paragraph.go",
+        "parser.go",
+        "raw_html.go",
+        "setext_headings.go",
+        "thematic_break.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/yuin/goldmark/parser",
+    importpath = "github.com/yuin/goldmark/parser",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/yuin/goldmark/ast:go_default_library",
+        "//vendor/github.com/yuin/goldmark/text:go_default_library",
+        "//vendor/github.com/yuin/goldmark/util:go_default_library",
+    ],
+)

@@ -111,6 +111,7 @@ func (f Interface) toSchema() *Schema {
 
 // populate populates the Interface with the type of s.
 func (f *Interface) populate(s interface{}) {
+	if s == nil { f.Type = "string"; return }
 	v := reflect.ValueOf(s)
 
 	elemVal := func() interface{} { return reflect.Zero(v.Type().Elem()).Interface() }

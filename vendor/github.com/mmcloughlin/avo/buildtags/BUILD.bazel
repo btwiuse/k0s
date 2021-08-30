@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["buildtags.go"],
+    importmap = "k0s.io/vendor/github.com/mmcloughlin/avo/buildtags",
+    importpath = "github.com/mmcloughlin/avo/buildtags",
+    visibility = ["//visibility:public"],
+)

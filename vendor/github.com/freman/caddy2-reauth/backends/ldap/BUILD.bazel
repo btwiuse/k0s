@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["auth.go"],
+    importmap = "k0s.io/vendor/github.com/freman/caddy2-reauth/backends/ldap",
+    importpath = "github.com/freman/caddy2-reauth/backends/ldap",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/freman/caddy2-reauth/backends:go_default_library",
+        "//vendor/github.com/freman/caddy2-reauth/jsontypes:go_default_library",
+        "//vendor/github.com/go-ldap/ldap/v3:go_default_library",
+    ],
+)

@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["websocketproxy.go"],
+    importmap = "k0s.io/vendor/github.com/koding/websocketproxy",
+    importpath = "github.com/koding/websocketproxy",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/gorilla/websocket:go_default_library"],
+)

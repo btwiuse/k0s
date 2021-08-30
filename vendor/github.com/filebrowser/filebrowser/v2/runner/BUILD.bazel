@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "parser.go",
+        "runner.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/filebrowser/filebrowser/v2/runner",
+    importpath = "github.com/filebrowser/filebrowser/v2/runner",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/settings:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/users:go_default_library",
+    ],
+)

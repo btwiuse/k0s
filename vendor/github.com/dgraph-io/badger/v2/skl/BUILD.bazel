@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "arena.go",
+        "skl.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/dgraph-io/badger/v2/skl",
+    importpath = "github.com/dgraph-io/badger/v2/skl",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/dgraph-io/badger/v2/y:go_default_library",
+        "//vendor/github.com/dgraph-io/ristretto/z:go_default_library",
+    ],
+)

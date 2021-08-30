@@ -115,7 +115,6 @@ require (
 	github.com/prometheus/client_golang v1.10.1-0.20210603120351-253906201bda
 	github.com/prometheus/common v0.26.0
 	github.com/prometheus/node_exporter v1.0.1
-	github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4
 	github.com/rancher/dapper v0.5.5
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/cors v1.7.0
@@ -126,12 +125,13 @@ require (
 	github.com/traefik/yaegi v0.9.14
 	github.com/urfave/cli v1.22.5
 	github.com/v2fly/v2ray-core/v4 v4.36.2
+	gitlab.com/mjwhitta/sysinfo v1.2.5
 	go.starlark.net v0.0.0-20210305151048-6a590ae7f4eb
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	golang.org/x/mod v0.4.2
 	golang.org/x/net v0.0.0-20210525063256-abc453219eb5
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20210603081109-ebe580a85c40
+	golang.org/x/sys v0.0.0-20210817190340-bfb29a6856f2
 	google.golang.org/grpc v1.38.0
 	google.golang.org/protobuf v1.26.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
@@ -484,6 +484,10 @@ require (
 	github.com/xtaci/tcpraw v1.2.25 // indirect
 	github.com/yuin/goldmark v1.3.7 // indirect
 	github.com/yuin/goldmark-highlighting v0.0.0-20210516132338-9216f9c5aa01 // indirect
+	gitlab.com/mjwhitta/hilighter v1.9.2 // indirect
+	gitlab.com/mjwhitta/pathname v1.0.9 // indirect
+	gitlab.com/mjwhitta/safety v1.7.1 // indirect
+	gitlab.com/mjwhitta/where v1.0.21 // indirect
 	go.etcd.io/bbolt v1.3.5 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.step.sm/cli-utils v0.2.0 // indirect

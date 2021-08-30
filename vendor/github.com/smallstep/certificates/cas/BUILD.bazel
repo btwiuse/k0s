@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["cas.go"],
+    importmap = "k0s.io/vendor/github.com/smallstep/certificates/cas",
+    importpath = "github.com/smallstep/certificates/cas",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/smallstep/certificates/cas/apiv1:go_default_library",
+        "//vendor/github.com/smallstep/certificates/cas/softcas:go_default_library",
+    ],
+)

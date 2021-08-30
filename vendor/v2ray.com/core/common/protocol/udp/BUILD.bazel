@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "packet.go",
+        "udp.go",
+    ],
+    importmap = "k0s.io/vendor/v2ray.com/core/common/protocol/udp",
+    importpath = "v2ray.com/core/common/protocol/udp",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/v2ray.com/core/common/buf:go_default_library",
+        "//vendor/v2ray.com/core/common/net:go_default_library",
+    ],
+)

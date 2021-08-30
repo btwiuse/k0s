@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "batch.go",
+        "parser.go",
+        "posix.go",
+        "quote.go",
+        "split.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/buildkite/shellwords",
+    importpath = "github.com/buildkite/shellwords",
+    visibility = ["//visibility:public"],
+)

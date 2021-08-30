@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "authid.go",
+        "consts.go",
+        "encrypt.go",
+        "kdf.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/proxy/vmess/aead",
+    importpath = "github.com/v2fly/v2ray-core/v4/proxy/vmess/aead",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/v2ray-core/v4/common:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/antireplay:go_default_library",
+    ],
+)

@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "ast.go",
+        "build.go",
+        "cfg.go",
+        "doc.go",
+        "dot.go",
+        "gta.go",
+        "hooks.go",
+        "interp.go",
+        "op.go",
+        "run.go",
+        "scope.go",
+        "src.go",
+        "type.go",
+        "typecheck.go",
+        "value.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/traefik/yaegi/interp",
+    importpath = "github.com/traefik/yaegi/interp",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["distributedstek.go"],
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddytls/distributedstek",
+    importpath = "github.com/caddyserver/caddy/v2/modules/caddytls/distributedstek",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddytls:go_default_library",
+        "//vendor/github.com/caddyserver/certmagic:go_default_library",
+    ],
+)

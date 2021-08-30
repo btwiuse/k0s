@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "client_linux.go",
+        "client_others.go",
+        "doc.go",
+        "wifi.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/mdlayher/wifi",
+    importpath = "github.com/mdlayher/wifi",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:android": [
+            "//vendor/github.com/mdlayher/genetlink:go_default_library",
+            "//vendor/github.com/mdlayher/netlink:go_default_library",
+            "//vendor/github.com/mdlayher/netlink/nlenc:go_default_library",
+            "//vendor/github.com/mdlayher/wifi/internal/nl80211:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//vendor/github.com/mdlayher/genetlink:go_default_library",
+            "//vendor/github.com/mdlayher/netlink:go_default_library",
+            "//vendor/github.com/mdlayher/netlink/nlenc:go_default_library",
+            "//vendor/github.com/mdlayher/wifi/internal/nl80211:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "agents.go",
+        "annotations.go",
+        "artifacts.go",
+        "auth.go",
+        "chunks.go",
+        "client.go",
+        "header_times.go",
+        "heartbeats.go",
+        "jobs.go",
+        "meta_data.go",
+        "pings.go",
+        "pipelines.go",
+        "retryable.go",
+        "steps.go",
+        "uuid.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/api",
+    importpath = "github.com/buildkite/agent/v3/api",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/buildkite/agent/v3/logger:go_default_library",
+        "//vendor/github.com/google/go-querystring/query:go_default_library",
+        "//vendor/github.com/pborman/uuid:go_default_library",
+    ],
+)

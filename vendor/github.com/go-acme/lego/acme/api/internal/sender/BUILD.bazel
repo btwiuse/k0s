@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "sender.go",
+        "useragent.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/go-acme/lego/acme/api/internal/sender",
+    importpath = "github.com/go-acme/lego/acme/api/internal/sender",
+    visibility = ["//vendor/github.com/go-acme/lego/acme/api:__subpackages__"],
+    deps = ["//vendor/github.com/go-acme/lego/acme:go_default_library"],
+)

@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "delete.go",
+        "find.go",
+        "get.go",
+        "match.go",
+        "set.go",
+        "transform.go",
+        "yaml.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/VojtechVitek/yaml-cli",
+    importpath = "github.com/VojtechVitek/yaml-cli",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/gopkg.in/yaml.v3:go_default_library",
+    ],
+)

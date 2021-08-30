@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "client.go",
+        "client_config.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/go-acme/lego/lego",
+    importpath = "github.com/go-acme/lego/lego",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/go-acme/lego/acme/api:go_default_library",
+        "//vendor/github.com/go-acme/lego/certcrypto:go_default_library",
+        "//vendor/github.com/go-acme/lego/certificate:go_default_library",
+        "//vendor/github.com/go-acme/lego/challenge/resolver:go_default_library",
+        "//vendor/github.com/go-acme/lego/registration:go_default_library",
+    ],
+)

@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "errors.generated.go",
+        "impl.go",
+        "taggedimpl.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/transport/internet/tagged/taggedimpl",
+    importpath = "github.com/v2fly/v2ray-core/v4/transport/internet/tagged/taggedimpl",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/v2ray-core/v4:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/net:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/session:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/routing:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet/tagged:go_default_library",
+    ],
+)

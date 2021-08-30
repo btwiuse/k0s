@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "conn.go",
+        "files.go",
+        "files_handler.go",
+        "state.go",
+        "sync.go",
+        "transport.go",
+        "transport_sse.go",
+        "transport_ws.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/jpillora/velox/go",
+    importpath = "github.com/jpillora/velox/go",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gorilla/websocket:go_default_library",
+        "//vendor/github.com/jpillora/eventsource:go_default_library",
+        "//vendor/gomodules.xyz/jsonpatch/v3:go_default_library",
+    ],
+)

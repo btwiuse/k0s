@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "claim.go",
+        "fsutil.go",
+        "gethome.go",
+        "getwd.go",
+        "search.go",
+    ],
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/fsutil",
+    importpath = "src.elv.sh/pkg/fsutil",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/src.elv.sh/pkg/env:go_default_library"],
+)

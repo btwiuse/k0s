@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "compress.go",
+        "context.go",
+        "cookie.go",
+        "doc.go",
+        "error.go",
+        "file.go",
+        "form.go",
+        "group.go",
+        "logger.go",
+        "param.go",
+        "pool.go",
+        "prefix.go",
+        "query.go",
+        "recovery.go",
+        "response.go",
+        "return.go",
+        "router.go",
+        "static.go",
+        "tan.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/lunny/tango",
+    importpath = "github.com/lunny/tango",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/gitea.com/lunny/log:go_default_library"],
+)

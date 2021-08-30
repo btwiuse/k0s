@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "black_lies.go",
+        "cache.go",
+        "dnskey.go",
+        "dnssec.go",
+        "handler.go",
+        "metrics.go",
+        "responsewriter.go",
+        "rrsig.go",
+        "setup.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/coredns/coredns/plugin/dnssec",
+    importpath = "github.com/coredns/coredns/plugin/dnssec",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/coredns/caddy:go_default_library",
+        "//vendor/github.com/coredns/coredns/core/dnsserver:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/metrics:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/cache:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/log:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/response:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/singleflight:go_default_library",
+        "//vendor/github.com/coredns/coredns/request:go_default_library",
+        "//vendor/github.com/miekg/dns:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus/promauto:go_default_library",
+        "//vendor/golang.org/x/crypto/ed25519:go_default_library",
+    ],
+)

@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "alloc.go",
+        "frame.go",
+        "mux.go",
+        "session.go",
+        "shaper.go",
+        "stream.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/xtaci/smux",
+    importpath = "github.com/xtaci/smux",
+    visibility = ["//visibility:public"],
+)

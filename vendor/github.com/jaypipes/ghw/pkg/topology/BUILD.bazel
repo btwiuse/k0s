@@ -1,0 +1,62 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "topology.go",
+        "topology_linux.go",
+        "topology_stub.go",
+        "topology_windows.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/jaypipes/ghw/pkg/topology",
+    importpath = "github.com/jaypipes/ghw/pkg/topology",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jaypipes/ghw/pkg/context:go_default_library",
+        "//vendor/github.com/jaypipes/ghw/pkg/cpu:go_default_library",
+        "//vendor/github.com/jaypipes/ghw/pkg/marshal:go_default_library",
+        "//vendor/github.com/jaypipes/ghw/pkg/memory:go_default_library",
+        "//vendor/github.com/jaypipes/ghw/pkg/option:go_default_library",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:android": [
+            "//vendor/github.com/jaypipes/ghw/pkg/linuxpath:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:js": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//vendor/github.com/jaypipes/ghw/pkg/linuxpath:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:plan9": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//vendor/github.com/pkg/errors:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

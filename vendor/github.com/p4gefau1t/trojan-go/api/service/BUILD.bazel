@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "api.pb.go",
+        "client.go",
+        "config.go",
+        "server.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/p4gefau1t/trojan-go/api/service",
+    importpath = "github.com/p4gefau1t/trojan-go/api/service",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/api:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/common:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/config:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/log:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/statistic:go_default_library",
+        "//vendor/github.com/p4gefau1t/trojan-go/tunnel/trojan:go_default_library",
+        "//vendor/google.golang.org/grpc:go_default_library",
+        "//vendor/google.golang.org/grpc/codes:go_default_library",
+        "//vendor/google.golang.org/grpc/credentials:go_default_library",
+        "//vendor/google.golang.org/grpc/status:go_default_library",
+        "//vendor/google.golang.org/protobuf/reflect/protoreflect:go_default_library",
+        "//vendor/google.golang.org/protobuf/runtime/protoimpl:go_default_library",
+    ],
+)

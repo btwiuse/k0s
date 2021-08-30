@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "doc.go",
+        "id.go",
+        "set.go",
+        "slice.go",
+        "urls.go",
+        "urlsmap.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/btwiuse/etcd/v3/pkg/types",
+    importpath = "github.com/btwiuse/etcd/v3/pkg/types",
+    visibility = ["//visibility:public"],
+)

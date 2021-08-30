@@ -1892,10 +1892,6 @@ github.com/prometheus/procfs/internal/util
 github.com/prometheus/procfs/nfs
 github.com/prometheus/procfs/sysfs
 github.com/prometheus/procfs/xfs
-# github.com/pupapaik/sysinfo v0.0.0-20200106202926-c17dea004cd4
-## explicit; go 1.12
-github.com/pupapaik/sysinfo
-github.com/pupapaik/sysinfo/cpuid
 # github.com/qri-io/jsonpointer v0.0.0-20180309164927-168dd9e45cf2
 ## explicit
 github.com/qri-io/jsonpointer
@@ -2267,6 +2263,21 @@ github.com/yuin/goldmark/util
 # github.com/yuin/goldmark-highlighting v0.0.0-20210516132338-9216f9c5aa01
 ## explicit; go 1.13
 github.com/yuin/goldmark-highlighting
+# gitlab.com/mjwhitta/hilighter v1.9.2
+## explicit; go 1.17
+gitlab.com/mjwhitta/hilighter
+# gitlab.com/mjwhitta/pathname v1.0.9
+## explicit; go 1.17
+gitlab.com/mjwhitta/pathname
+# gitlab.com/mjwhitta/safety v1.7.1
+## explicit; go 1.17
+gitlab.com/mjwhitta/safety
+# gitlab.com/mjwhitta/sysinfo v1.2.5
+## explicit; go 1.17
+gitlab.com/mjwhitta/sysinfo
+# gitlab.com/mjwhitta/where v1.0.21
+## explicit; go 1.17
+gitlab.com/mjwhitta/where
 # go.etcd.io/bbolt v1.3.5
 ## explicit; go 1.12
 go.etcd.io/bbolt
@@ -2412,7 +2423,7 @@ golang.org/x/oauth2/jwt
 ## explicit
 golang.org/x/sync/errgroup
 golang.org/x/sync/singleflight
-# golang.org/x/sys v0.0.0-20210603081109-ebe580a85c40
+# golang.org/x/sys v0.0.0-20210817190340-bfb29a6856f2
 ## explicit; go 1.17
 golang.org/x/sys/cpu
 golang.org/x/sys/execabs

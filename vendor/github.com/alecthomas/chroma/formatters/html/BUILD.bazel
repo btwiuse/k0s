@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["html.go"],
+    importmap = "k0s.io/vendor/github.com/alecthomas/chroma/formatters/html",
+    importpath = "github.com/alecthomas/chroma/formatters/html",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/alecthomas/chroma:go_default_library"],
+)

@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["bpool.go"],
+    importmap = "k0s.io/vendor/nhooyr.io/websocket/internal/bpool",
+    importpath = "nhooyr.io/websocket/internal/bpool",
+    visibility = ["//vendor/nhooyr.io/websocket:__subpackages__"],
+)

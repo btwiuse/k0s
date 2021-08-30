@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "keywords.go",
+        "keywords_arrays.go",
+        "keywords_booleans.go",
+        "keywords_conditionals.go",
+        "keywords_format.go",
+        "keywords_numeric.go",
+        "keywords_objects.go",
+        "keywords_strings.go",
+        "schema.go",
+        "traversal.go",
+        "validate.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/qri-io/jsonschema",
+    importpath = "github.com/qri-io/jsonschema",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/qri-io/jsonpointer:go_default_library"],
+)

@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "service.go",
+        "service_enum.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/filebrowser/filebrowser/v2/img",
+    importpath = "github.com/filebrowser/filebrowser/v2/img",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/disintegration/imaging:go_default_library",
+        "//vendor/github.com/marusama/semaphore/v2:go_default_library",
+    ],
+)

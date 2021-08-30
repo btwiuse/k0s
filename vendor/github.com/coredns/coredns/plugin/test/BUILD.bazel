@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "doc.go",
+        "file.go",
+        "helpers.go",
+        "responsewriter.go",
+        "scrape.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/coredns/coredns/plugin/test",
+    importpath = "github.com/coredns/coredns/plugin/test",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/matttproud/golang_protobuf_extensions/pbutil:go_default_library",
+        "//vendor/github.com/miekg/dns:go_default_library",
+        "//vendor/github.com/prometheus/client_model/go:go_default_library",
+        "//vendor/github.com/prometheus/common/expfmt:go_default_library",
+    ],
+)

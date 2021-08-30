@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "always.go",
+        "dynamic.go",
+        "errors.generated.go",
+        "inbound.go",
+        "worker.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/app/proxyman/inbound",
+    importpath = "github.com/v2fly/v2ray-core/v4/app/proxyman/inbound",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/v2ray-core/v4:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/app/proxyman:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/buf:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/dice:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/mux:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/net:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/serial:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/session:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/signal/done:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/task:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/inbound:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/policy:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/routing:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/stats:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/proxy:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet/tcp:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet/udp:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/transport/pipe:go_default_library",
+    ],
+)

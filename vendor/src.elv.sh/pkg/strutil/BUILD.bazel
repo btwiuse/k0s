@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "camel_to_dashed.go",
+        "chop.go",
+        "eol_sol.go",
+        "strutil.go",
+        "subseq.go",
+    ],
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/strutil",
+    importpath = "src.elv.sh/pkg/strutil",
+    visibility = ["//visibility:public"],
+)

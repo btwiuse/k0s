@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["io.go"],
+    importmap = "k0s.io/vendor/go.step.sm/crypto/internal/utils",
+    importpath = "go.step.sm/crypto/internal/utils",
+    visibility = ["//vendor/go.step.sm/crypto:__subpackages__"],
+    deps = ["//vendor/github.com/pkg/errors:go_default_library"],
+)

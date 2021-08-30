@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["models.go"],
+    importmap = "k0s.io/vendor/github.com/Azure/azure-sdk-for-go/profiles/latest/dns/mgmt/dns",
+    importpath = "github.com/Azure/azure-sdk-for-go/profiles/latest/dns/mgmt/dns",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/Azure/azure-sdk-for-go/services/dns/mgmt/2018-05-01/dns:go_default_library"],
+)

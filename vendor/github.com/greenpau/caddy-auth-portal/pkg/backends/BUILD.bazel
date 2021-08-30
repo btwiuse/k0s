@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["backend.go"],
+    importmap = "k0s.io/vendor/github.com/greenpau/caddy-auth-portal/pkg/backends",
+    importpath = "github.com/greenpau/caddy-auth-portal/pkg/backends",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/greenpau/caddy-auth-jwt/pkg/config:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-portal/pkg/backends/boltdb:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-portal/pkg/backends/ldap:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-portal/pkg/backends/local:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-portal/pkg/backends/oauth2:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-portal/pkg/backends/saml:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-portal/pkg/backends/x509:go_default_library",
+        "//vendor/github.com/greenpau/caddy-auth-portal/pkg/errors:go_default_library",
+        "//vendor/github.com/greenpau/go-identity:go_default_library",
+        "//vendor/go.uber.org/zap:go_default_library",
+    ],
+)

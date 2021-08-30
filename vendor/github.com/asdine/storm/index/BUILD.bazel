@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "errors.go",
+        "indexes.go",
+        "list.go",
+        "options.go",
+        "unique.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/asdine/storm/index",
+    importpath = "github.com/asdine/storm/index",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/asdine/storm/internal:go_default_library",
+        "//vendor/go.etcd.io/bbolt:go_default_library",
+    ],
+)

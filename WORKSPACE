@@ -6747,6 +6747,69 @@ go_repository(
     version = "v0.2.0",
 )
 
+go_repository(
+    name = "com_gitlab_mjwhitta_cli",
+    importpath = "gitlab.com/mjwhitta/cli",
+    sum = "h1:FSRlQy+DgLZXkCdpVSnbgHjJhCLZgM+rjJ/uiH5wlvM=",
+    version = "v1.8.1",
+)
+
+go_repository(
+    name = "com_gitlab_mjwhitta_hilighter",
+    importpath = "gitlab.com/mjwhitta/hilighter",
+    sum = "h1:PLzs5G6tRmlC8IKr44wJDDC+lwfRO0XaLnfLju44ibE=",
+    version = "v1.9.2",
+)
+
+go_repository(
+    name = "com_gitlab_mjwhitta_jq",
+    importpath = "gitlab.com/mjwhitta/jq",
+    sum = "h1:BU7bAoYZG2Kqgqw6F33aTqqSj70hSq3BynvlN2fzixo=",
+    version = "v1.3.2",
+)
+
+go_repository(
+    name = "com_gitlab_mjwhitta_jsoncfg",
+    importpath = "gitlab.com/mjwhitta/jsoncfg",
+    sum = "h1:8UNy57FGbFzqT6f6fewkQ5ZDhFMvYE/5CCNRwGg8Co8=",
+    version = "v1.4.6",
+)
+
+go_repository(
+    name = "com_gitlab_mjwhitta_log",
+    importpath = "gitlab.com/mjwhitta/log",
+    sum = "h1:gQ7u3rMnu21KMNFI7OHDhX6yCkdbd6tFcQwPEj4nZQU=",
+    version = "v1.4.4",
+)
+
+go_repository(
+    name = "com_gitlab_mjwhitta_pathname",
+    importpath = "gitlab.com/mjwhitta/pathname",
+    sum = "h1:5nXh0FniuMxB1Bpc5hC2ZtRlff8HnDOvn8lfDVIa5Pg=",
+    version = "v1.0.9",
+)
+
+go_repository(
+    name = "com_gitlab_mjwhitta_safety",
+    importpath = "gitlab.com/mjwhitta/safety",
+    sum = "h1:Gm/P60SUSkuvYNV1hy83GCJDTBlZLsEUMDF6fFD/7KE=",
+    version = "v1.7.1",
+)
+
+go_repository(
+    name = "com_gitlab_mjwhitta_sysinfo",
+    importpath = "gitlab.com/mjwhitta/sysinfo",
+    sum = "h1:0B19uPOk5ClbXmMA6rrYzTtAhI3wEUvUhhECRNVwBhY=",
+    version = "v1.2.5",
+)
+
+go_repository(
+    name = "com_gitlab_mjwhitta_where",
+    importpath = "gitlab.com/mjwhitta/where",
+    sum = "h1:0Fb2nU4zZtiDdJKUvoTd5TKRaOJ6Q8gcYmv925FLt84=",
+    version = "v1.0.21",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -7718,8 +7781,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_sys",
     importpath = "golang.org/x/sys",
-    sum = "h1:JWgyZ1qgdTaF3N3oxC+MdTV7qvEEgHo3otj+HB5CM7Q=",
-    version = "v0.0.0-20210603081109-ebe580a85c40",
+    sum = "h1:c8PlLMqBbOHoqtjteWm5/kbe6rNY2pbRfbIMVnepueo=",
+    version = "v0.0.0-20210817190340-bfb29a6856f2",
 )
 
 go_repository(

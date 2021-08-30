@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "chacha20.go",
+        "chacha20_amd64.go",
+        "chacha20_amd64.s",
+        "chacha20_ref.go",
+        "chacha20_ref_go19.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Yawning/chacha20",
+    importpath = "github.com/Yawning/chacha20",
+    visibility = ["//visibility:public"],
+)

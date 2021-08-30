@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["base.go"],
+    importmap = "k0s.io/vendor/git.torproject.org/pluggable-transports/obfs4.git/transports/base",
+    importpath = "git.torproject.org/pluggable-transports/obfs4.git/transports/base",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/git.torproject.org/pluggable-transports/goptlib.git:go_default_library"],
+)

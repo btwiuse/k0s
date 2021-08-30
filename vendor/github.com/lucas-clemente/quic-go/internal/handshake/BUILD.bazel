@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "aead.go",
+        "crypto_setup.go",
+        "header_protector.go",
+        "hkdf.go",
+        "initial_aead.go",
+        "interface.go",
+        "mockgen.go",
+        "retry.go",
+        "session_ticket.go",
+        "tls_extension_handler.go",
+        "token_generator.go",
+        "token_protector.go",
+        "updatable_aead.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/internal/handshake",
+    importpath = "github.com/lucas-clemente/quic-go/internal/handshake",
+    visibility = ["//vendor/github.com/lucas-clemente/quic-go:__subpackages__"],
+    deps = [
+        "//vendor/github.com/lucas-clemente/quic-go/internal/protocol:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/qerr:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/qtls:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/utils:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/internal/wire:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/logging:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/quicvarint:go_default_library",
+        "//vendor/golang.org/x/crypto/chacha20:go_default_library",
+        "//vendor/golang.org/x/crypto/hkdf:go_default_library",
+    ],
+)

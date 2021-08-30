@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "html5entities.go",
+        "unicode_case_folding.go",
+        "util.go",
+        "util_safe.go",
+        "util_unsafe.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/yuin/goldmark/util",
+    importpath = "github.com/yuin/goldmark/util",
+    visibility = ["//visibility:public"],
+)

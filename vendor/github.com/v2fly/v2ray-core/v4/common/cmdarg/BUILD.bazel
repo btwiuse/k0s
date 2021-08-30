@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["cmdarg.go"],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/common/cmdarg",
+    importpath = "github.com/v2fly/v2ray-core/v4/common/cmdarg",
+    visibility = ["//visibility:public"],
+)

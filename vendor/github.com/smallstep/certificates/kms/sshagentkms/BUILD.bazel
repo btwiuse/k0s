@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["sshagentkms.go"],
+    importmap = "k0s.io/vendor/github.com/smallstep/certificates/kms/sshagentkms",
+    importpath = "github.com/smallstep/certificates/kms/sshagentkms",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/smallstep/certificates/kms/apiv1:go_default_library",
+        "//vendor/go.step.sm/crypto/pemutil:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh:go_default_library",
+        "//vendor/golang.org/x/crypto/ssh/agent:go_default_library",
+    ],
+)

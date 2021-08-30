@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["imports.go"],
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/standard",
+    importpath = "github.com/caddyserver/caddy/v2/modules/caddyhttp/standard",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/caddyauth:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/brotli:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/gzip:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/encode/zstd:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/fileserver:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/headers:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/map:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/push:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/requestbody:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/reverseproxy/fastcgi:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/rewrite:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/modules/caddyhttp/templates:go_default_library",
+    ],
+)

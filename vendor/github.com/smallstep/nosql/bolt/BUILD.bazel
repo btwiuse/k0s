@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["bbolt.go"],
+    importmap = "k0s.io/vendor/github.com/smallstep/nosql/bolt",
+    importpath = "github.com/smallstep/nosql/bolt",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/smallstep/nosql/database:go_default_library",
+        "//vendor/go.etcd.io/bbolt:go_default_library",
+    ],
+)

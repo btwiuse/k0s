@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "errors.generated.go",
+        "loader.go",
+        "serial.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/infra/conf/serial",
+    importpath = "github.com/v2fly/v2ray-core/v4/infra/conf/serial",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/v2ray-core/v4:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/infra/conf:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/infra/conf/json:go_default_library",
+    ],
+)

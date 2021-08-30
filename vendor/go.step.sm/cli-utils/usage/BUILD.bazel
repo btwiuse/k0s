@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "css.go",
+        "help.go",
+        "html.go",
+        "printer.go",
+        "renderer.go",
+        "report.go",
+        "usage.go",
+    ],
+    importmap = "k0s.io/vendor/go.step.sm/cli-utils/usage",
+    importpath = "go.step.sm/cli-utils/usage",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/samfoo/ansi:go_default_library",
+        "//vendor/github.com/urfave/cli:go_default_library",
+        "//vendor/go.step.sm/cli-utils/errs:go_default_library",
+        "//vendor/go.step.sm/cli-utils/pkg/blackfriday:go_default_library",
+        "//vendor/golang.org/x/net/html:go_default_library",
+    ],
+)

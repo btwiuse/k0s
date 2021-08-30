@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "reader.go",
+        "segment.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/yuin/goldmark/text",
+    importpath = "github.com/yuin/goldmark/text",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/yuin/goldmark/util:go_default_library"],
+)

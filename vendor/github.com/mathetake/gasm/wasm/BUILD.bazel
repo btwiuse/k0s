@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "const_expr.go",
+        "module.go",
+        "optcode.go",
+        "section.go",
+        "segment.go",
+        "type.go",
+        "value.go",
+        "vm.go",
+        "vm_call.go",
+        "vm_const.go",
+        "vm_control.go",
+        "vm_func.go",
+        "vm_global.go",
+        "vm_local.go",
+        "vm_memory.go",
+        "vm_num.go",
+        "vm_stack.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/mathetake/gasm/wasm",
+    importpath = "github.com/mathetake/gasm/wasm",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/mathetake/gasm/wasm/leb128:go_default_library"],
+)

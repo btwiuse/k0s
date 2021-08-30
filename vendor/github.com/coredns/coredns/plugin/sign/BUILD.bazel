@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "dnssec.go",
+        "file.go",
+        "keys.go",
+        "nsec.go",
+        "setup.go",
+        "sign.go",
+        "signer.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/coredns/coredns/plugin/sign",
+    importpath = "github.com/coredns/coredns/plugin/sign",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/coredns/caddy:go_default_library",
+        "//vendor/github.com/coredns/coredns/core/dnsserver:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/file:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/file/tree:go_default_library",
+        "//vendor/github.com/coredns/coredns/plugin/pkg/log:go_default_library",
+        "//vendor/github.com/miekg/dns:go_default_library",
+        "//vendor/golang.org/x/crypto/ed25519:go_default_library",
+    ],
+)

@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["retry.go"],
+    importmap = "k0s.io/vendor/github.com/Rican7/retry",
+    importpath = "github.com/Rican7/retry",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/Rican7/retry/strategy:go_default_library"],
+)

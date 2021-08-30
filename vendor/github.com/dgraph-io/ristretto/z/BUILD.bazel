@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "allocator.go",
+        "bbloom.go",
+        "buffer.go",
+        "calloc.go",
+        "calloc_32bit.go",
+        "calloc_64bit.go",
+        "calloc_nojemalloc.go",
+        "histogram.go",
+        "rtutil.go",
+        "rtutil.s",
+        "z.go",
+    ],
+    cgo = True,
+    importmap = "k0s.io/vendor/github.com/dgraph-io/ristretto/z",
+    importpath = "github.com/dgraph-io/ristretto/z",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/cespare/xxhash:go_default_library",
+        "//vendor/github.com/dustin/go-humanize:go_default_library",
+    ],
+)

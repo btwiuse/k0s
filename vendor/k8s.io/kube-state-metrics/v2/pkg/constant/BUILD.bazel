@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["resource_unit.go"],
+    importmap = "k0s.io/vendor/k8s.io/kube-state-metrics/v2/pkg/constant",
+    importpath = "k8s.io/kube-state-metrics/v2/pkg/constant",
+    visibility = ["//visibility:public"],
+)

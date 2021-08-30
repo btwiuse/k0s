@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "hook.go",
+        "scriptwrapper.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/hook",
+    importpath = "github.com/buildkite/agent/v3/hook",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/buildkite/agent/v3/bootstrap/shell:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/env:go_default_library",
+        "//vendor/github.com/buildkite/agent/v3/utils:go_default_library",
+    ],
+)

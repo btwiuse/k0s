@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["bcrypt_pbkdf.go"],
+    importmap = "k0s.io/vendor/go.step.sm/crypto/internal/bcrypt_pbkdf",
+    importpath = "go.step.sm/crypto/internal/bcrypt_pbkdf",
+    visibility = ["//vendor/go.step.sm/crypto:__subpackages__"],
+    deps = ["//vendor/golang.org/x/crypto/blowfish:go_default_library"],
+)
