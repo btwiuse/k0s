@@ -15,6 +15,7 @@ type Client interface {
 	RunSocks() error
 	RunDoh() error
 	Run() error
+	MiniRun() error
 	ListAgents() ([]hub.AgentInfo, error)
 }
 

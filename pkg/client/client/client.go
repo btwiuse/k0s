@@ -89,6 +89,14 @@ func (cl *client) ListAgents() (agis []hub.AgentInfo, err error) {
 	return agis, err
 }
 
+func (cl *client) MiniRun() error {
+	id := os.Getenv("ID")
+	endpoint := fmt.Sprintf("/api/agent/%s/terminal", id)
+	log.Println(os.Args, endpoint)
+	cl.terminalConnect(endpoint, nil)
+	return nil
+}
+
 func (cl *client) Run() error {
 	cl.sl.AddCmd(&ishell.Cmd{
 		Name: "self",

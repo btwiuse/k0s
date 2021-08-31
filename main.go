@@ -15,6 +15,7 @@ import (
 	"k0s.io/pkg/cli/caddy"
 	"k0s.io/pkg/cli/chassis"
 	"k0s.io/pkg/cli/client"
+	"k0s.io/pkg/cli/miniclient"
 	"k0s.io/pkg/cli/dohserver"
 	"k0s.io/pkg/cli/filebrowser"
 	"k0s.io/pkg/cli/gitd"
@@ -43,6 +44,7 @@ var cmdRun = map[string]func([]string) error{
 	"caddy":           caddy.Run,
 	"chassis":         chassis.Run,
 	"client":          client.Run,
+	"miniclient":      miniclient.Run,
 	"hub":             hub.Run,
 	"hub2":            hub.Run2,
 	"agent":           agent.Run,
