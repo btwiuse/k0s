@@ -16,6 +16,27 @@ import (
 	"nhooyr.io/websocket"
 )
 
+func terminalV2Relay(ag types.Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		wsc, err := websocket.Accept(w, r, &websocket.AcceptOptions{
+			InsecureSkipVerify: true,
+			Subprotocols:       []string{"wetty"},
+		})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
+		defer wsconn.Close()
+
+		conn := ag.NewTunnel(api.TerminalV2)
+		defer conn.Close()
+
+		go io.Copy(conn, wsconn)
+		io.Copy(wsconn, conn)
+	}
+}
+
 func terminalRelay(ag types.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		wsc, err := websocket.Accept(w, r, &websocket.AcceptOptions{

@@ -11,9 +11,9 @@ import (
 
 	"github.com/btwiuse/wetty/pkg/assets"
 	asciitransport "k0s.io/pkg/asciitransport/v2"
+	"k0s.io/pkg/localcmd"
 	"k0s.io/pkg/utils"
 	"k0s.io/pkg/wetty/wetty"
-    "k0s.io/pkg/localcmd"
 )
 
 func (server *Server) setupHandlers(pathPrefix string) http.Handler {
@@ -51,16 +51,16 @@ func (server *Server) terminalHandler(w http.ResponseWriter, r *http.Request) {
 	defer conn.Close()
 	wsconn := utils.NetConn(conn)
 
-	var	term *localcmd.Lc
-    if term0 == nil {
-        term0, _ = server.factory.New()
-    }
-    term = term0
+	var term *localcmd.Lc
+	if term0 == nil {
+		term0, _ = server.factory.New()
+	}
+	term = term0
 	var (
-		opts    = []asciitransport.Opt{
+		opts = []asciitransport.Opt{
 			asciitransport.WithReader(term),
 			asciitransport.WithWriter(term),
-			asciitransport.WithResizeHook(func(w, h uint16){
+			asciitransport.WithResizeHook(func(w, h uint16) {
 				// cols, rows
 				err := term.Resize(int(h), int(w))
 				if err != nil {

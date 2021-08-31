@@ -118,14 +118,13 @@ rust_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//cargo:actix",
+        "//cargo:actix_http",
         "//cargo:actix_web",
         "//cargo:actix_web_actors",
-        "//cargo:actix_http",
+        "//cargo:log",
         "//cargo:serde",
         "//cargo:serde_json",
-        "//cargo:log",
         "//cargo:simple_logger",
-        "//cargo:lazy_static",
     ],
 )
 

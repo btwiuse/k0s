@@ -24,7 +24,7 @@ func autoServe(l net.Listener) {
 		}
 
 		go func() {
-			defer func(){
+			defer func() {
 				if r := recover(); r != nil {
 					log.Println("socks5server: recovered from panic:", r, c)
 				}

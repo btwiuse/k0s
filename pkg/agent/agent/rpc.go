@@ -30,6 +30,7 @@ func (rpc *YS) plumbing() {
 	defer rpc.Close()
 	for rpc.Scan() {
 		cmd := rpc.Text()
+		// log.Println(cmd)
 		tun, err := api.FromString(cmd)
 		if err != nil {
 			log.Println(err)

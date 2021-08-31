@@ -18,6 +18,7 @@ const (
 	K16s
 	Doh
 	Env
+	TerminalV2
 
 	MaxTunnel // number of tunnels
 )
@@ -34,6 +35,7 @@ var tunnelNames = []string{
 	"K16S",
 	"DOH",
 	"ENV",
+	"TERMINALV2",
 }
 
 func (tun Tunnel) String() string {
