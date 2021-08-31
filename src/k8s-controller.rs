@@ -1,37 +1,42 @@
 // #[macro_use]
 // extern crate serde_derive;
-extern crate tokio;
-extern crate schemars;
 extern crate kube;
+extern crate schemars;
+extern crate tokio;
 // extern crate kube_derive;
-extern crate kube_runtime;
 extern crate futures;
+extern crate kube_runtime;
 
-use kube::Client;
-use kube::api::Api;
-use kube::api::Meta;
-use kube::api::ListParams;
-use kube_runtime::watcher;
-use kube_runtime::watcher::Event;
 use futures::StreamExt;
 use futures::TryStreamExt;
+use kube::api::Api;
+use kube::api::ListParams;
+use kube::api::Meta;
+use kube::Client;
+use kube_runtime::watcher;
+use kube_runtime::watcher::Event;
 
 // macros
 use kube::CustomResource;
-use serde::Serialize;
-use serde::Deserialize;
 use schemars::JsonSchema;
+use serde::Deserialize;
+use serde::Serialize;
 
 // this is our new Book struct
 #[derive(CustomResource, Serialize, Deserialize, Default, Clone, Debug, PartialEq, JsonSchema)]
-#[kube(group = "example.technosophos.com", version = "v1", kind = "Book", namespaced)]
+#[kube(
+    group = "example.technosophos.com",
+    version = "v1",
+    kind = "Book",
+    namespaced
+)]
 pub struct KubeBook {
     pub title: String,
     pub authors: Option<Vec<String>>,
 }
 
 #[tokio::main]
-async fn main() -> (){
+async fn main() -> () {
     // create a new client
     let client = Client::try_default().await.unwrap();
 

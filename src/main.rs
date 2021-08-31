@@ -2,7 +2,7 @@ extern crate rand;
 extern crate serde;
 extern crate serde_json;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 fn print_rand() {
     println!("char: {}", rand::random::<char>());
@@ -49,15 +49,15 @@ fn print_serde() {
 }
 
 // https://bastion.turbofish.rs/
-fn turbofish(){
+fn turbofish() {
     let (oh, woe, is, me) = ("the", "Turbofish", "remains", "undefeated");
-    let (_, _): (bool, bool) = (oh<woe, is>(me));
+    let (_, _): (bool, bool) = (oh < woe, is > (me));
 }
 
 fn main() {
     println!("Hello, world!");
-    turbofish::<>();
-    print_rand::<>();
-    print_json::<>();
-    print_serde::<>();
+    turbofish();
+    print_rand();
+    print_json();
+    print_serde();
 }
