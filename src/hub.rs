@@ -1,20 +1,11 @@
 use actix::prelude::*;
 use actix_web::*;
 use actix_web_actors::ws;
-use lazy_static::lazy_static;
 use serde::Deserialize;
 use simple_logger::SimpleLogger;
-use std::collections::HashMap;
-use std::sync::{Arc, RwLock};
+use std::collections::{HashMap, VecDeque};
 
-lazy_static! {
-    // static ref X_AGENTS: Arc<RwLock<HashMap<String, Addr<Agent>>>> = Arc::new(RwLock::new(HashMap::<String, Addr<Agent>>::new()));
-    static ref X_PENDING_CLIENTS: Arc<RwLock<HashMap<String, Addr<Client>>>> =
-        Arc::new(RwLock::new(HashMap::<String, Addr<Client>>::new()));
-    static ref X_CLIENT_TERMINAL_PAIRS: Arc<RwLock<HashMap<Addr<Client>, Addr<Terminal>>>> =
-        Arc::new(RwLock::new(HashMap::<Addr<Client>, Addr<Terminal>>::new()));
-}
-
+#[derive(Debug)]
 struct Agent {
     // seq: u32,
     // agent_id: String,
@@ -33,12 +24,29 @@ impl Agent {
 
 #[derive(Message)]
 #[rtype(result = "()")]
+struct Stop;
+
+impl Handler<Stop> for Terminal {
+    type Result = ();
+    fn handle(&mut self, _s: Stop, ctx: &mut Self::Context) {
+        ctx.stop();
+    }
+}
+
+impl Handler<Stop> for Client {
+    type Result = ();
+    fn handle(&mut self, _s: Stop, ctx: &mut Self::Context) {
+        ctx.stop();
+    }
+}
+
+#[derive(Message)]
+#[rtype(result = "()")]
 struct NewTerminal;
 
 impl Handler<NewTerminal> for Agent {
     type Result = ();
     fn handle(&mut self, _msg: NewTerminal, ctx: &mut Self::Context) {
-        // self.handle_msg(msg.0, ctx);
         println!("received NewTerminal");
         ctx.binary("TERMINAL\n");
     }
@@ -51,23 +59,10 @@ impl Agent {
     }
     fn on_init(&mut self, ctx: &mut <Self as Actor>::Context) {
         let id = self.agent_id.as_ref().unwrap().clone();
-        /*
-        let mut agents = X_AGENTS.write().unwrap();
-        // let set = agents.entry(id).or_insert(HashSet::<Addr<Self>>::new());
-        // set.insert(ctx.address());
-        // agents[id] = ctx.address();
-        *agents.entry(id).or_insert(ctx.address()) = ctx.address();
-        */
         self.app_store.do_send(Event::AddAgent(id, ctx.address()));
     }
     fn on_stop(&mut self, _ctx: &mut <Self as Actor>::Context) {
         let id = self.agent_id.as_ref().unwrap().clone();
-        /*
-        let mut agents = X_AGENTS.write().unwrap();
-        // let set = agents.entry(id).or_insert(HashSet::<Addr<Self>>::new());
-        // set.remove(&ctx.address());
-        agents.remove(&id);
-        */
         self.app_store.do_send(Event::RemoveAgent(id));
     }
     fn init(&mut self, msg: ws::Message, ctx: &mut <Self as Actor>::Context) {
@@ -140,15 +135,8 @@ async fn api_agent(
     req: HttpRequest,
     stream: web::Payload,
     agent_id: web::Query<ID>,
-    // data: web::Data<RwLock<AppState>>,
     store: web::Data<Addr<AppStore>>,
 ) -> Result<HttpResponse, Error> {
-    // let id = id.id.clone();
-    // let id = "todo"
-    // let seq = agent_count(id);
-    // let mut data = data.write().unwrap();
-    // data.counter += 1;
-
     let agent_id = agent_id.id.clone();
     let store = store.get_ref();
     let handler = Agent::new(agent_id, store.clone());
@@ -158,6 +146,7 @@ async fn api_agent(
     ws::start(handler, &req, stream)
 }
 
+#[derive(Debug)]
 struct Terminal {
     agent_id: String,
     client_addr: Option<Addr<Client>>,
@@ -185,24 +174,34 @@ impl Handler<WsMessage> for Terminal {
     }
 }
 
+#[derive(Message)]
+#[rtype(result = "()")]
+struct SetClientAddr(Addr<Client>);
+
+impl Handler<SetClientAddr> for Terminal {
+    type Result = ();
+    fn handle(&mut self, s: SetClientAddr, _ctx: &mut Self::Context) {
+        println!("setting self.client_addr");
+        self.client_addr = Some(s.0);
+    }
+}
+
 impl Actor for Terminal {
     type Context = ws::WebsocketContext<Self>;
     fn started(&mut self, ctx: &mut Self::Context) {
-        let mut pending_clients = X_PENDING_CLIENTS.write().unwrap();
         let id = self.agent_id.clone();
-        let client_addr = pending_clients[&id].clone();
-        self.client_addr = Some(client_addr.clone());
-        pending_clients.remove(&id);
 
-        let mut client_terminal_pairs = X_CLIENT_TERMINAL_PAIRS.write().unwrap();
-        *client_terminal_pairs
-            .entry(client_addr)
-            .or_insert(ctx.address()) = ctx.address();
+        self.app_store
+            .do_send(Event::PairPendingClient(id, ctx.address()));
 
-        println!("agent started");
+        println!("Terminal started");
     }
     fn stopped(&mut self, _ctx: &mut Self::Context) {
         // close client too
+        println!("Terminal stopped -> Client.stop()");
+        if let Some(client_addr) = self.client_addr.clone() {
+            client_addr.do_send(Stop);
+        }
     }
 }
 
@@ -248,9 +247,6 @@ async fn api_terminal(
     agent_id: web::Query<ID>,
     store: web::Data<Addr<AppStore>>,
 ) -> Result<HttpResponse, Error> {
-    // let id = id.id.clone();
-    // let id = "todo"
-    // let seq = agent_count(id);
     let agent_id = agent_id.id.clone().unwrap();
     let client_addr: Option<Addr<Client>> = None;
     let store = store.get_ref();
@@ -261,19 +257,36 @@ async fn api_terminal(
     ws::start(handler, &req, stream)
 }
 
+#[derive(Debug)]
 struct Client {
+    buffer: VecDeque<ws::Message>,
     agent_id: String,
     agent_addr: Addr<Agent>,
     app_store: Addr<AppStore>,
+    terminal_addr: Option<Addr<Terminal>>,
 }
 
 impl Client {
     fn new(agent_id: String, agent_addr: Addr<Agent>, app_store: Addr<AppStore>) -> Self {
         Client {
+            buffer: VecDeque::<ws::Message>::new(),
             agent_id,
             agent_addr,
             app_store,
+            terminal_addr: None,
         }
+    }
+}
+
+#[derive(Message)]
+#[rtype(result = "()")]
+struct SetTerminalAddr(Addr<Terminal>);
+
+impl Handler<SetTerminalAddr> for Client {
+    type Result = ();
+    fn handle(&mut self, s: SetTerminalAddr, _ctx: &mut Self::Context) {
+        println!("setting self.terminal_addr");
+        self.terminal_addr = Some(s.0);
     }
 }
 
@@ -287,30 +300,30 @@ impl Handler<WsMessage> for Client {
 impl Actor for Client {
     type Context = ws::WebsocketContext<Self>;
     fn started(&mut self, ctx: &mut Self::Context) {
-        let mut pending_clients = X_PENDING_CLIENTS.write().unwrap();
         let id = self.agent_id.clone();
-        *pending_clients.entry(id).or_insert(ctx.address()) = ctx.address();
-
+        self.app_store
+            .do_send(Event::AddPendingClient(id, ctx.address()));
         self.agent_addr.do_send(NewTerminal);
-        println!("client started");
+        println!("Client started");
     }
-    fn stopped(&mut self, _ctx: &mut Self::Context) {}
+    fn stopped(&mut self, _ctx: &mut Self::Context) {
+        println!("Client stopped");
+    }
 }
 
 impl Client {
-    fn forward(&mut self, msg: ws::Message, ctx: &mut <Self as Actor>::Context) {
-        // println!("client forward");
-        loop {
-            let client_terminal_pairs = X_CLIENT_TERMINAL_PAIRS.read().unwrap();
-            if client_terminal_pairs.get(&ctx.address()).is_some() {
-                break;
-            } else {
-                std::thread::sleep(std::time::Duration::from_millis(10));
+    fn forward(&mut self, msg: ws::Message, _ctx: &mut <Self as Actor>::Context) {
+        println!("client forward");
+        // let terminal_addr = self.terminal_addr.clone().unwrap();
+        if self.terminal_addr.is_none() {
+            self.buffer.push_back(msg);
+            println!("push_back!");
+        } else {
+            while let Some(m) = self.buffer.pop_front() {
+                self.terminal_addr.as_ref().unwrap().do_send(WsMessage(m));
             }
+            self.terminal_addr.as_ref().unwrap().do_send(WsMessage(msg));
         }
-        let client_terminal_pairs = X_CLIENT_TERMINAL_PAIRS.read().unwrap();
-        let terminal_addr = client_terminal_pairs.get(&ctx.address()).unwrap();
-        terminal_addr.do_send(WsMessage(msg));
     }
     fn handle_msg(&mut self, msg: ws::Message, ctx: &mut <Self as Actor>::Context) {
         let mut message = "".to_string();
@@ -332,6 +345,7 @@ impl Client {
 
 impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Client {
     fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
+        // self.ensure_terminal();
         match msg {
             Ok(m) => {
                 self.forward(m, ctx);
@@ -351,11 +365,6 @@ async fn api_client(
     println!("path: {}\n", req.path());
 
     let agent_id = id.id.clone().unwrap();
-    /*
-    let agents = X_AGENTS.read().unwrap();
-    let agent_addr = agents.get(&agent_id);
-    let contains = agent_addr.is_none()
-    */
     let (contains, agent_addr) = store.send(ContainsAgent(agent_id.clone())).await.unwrap();
     if !contains {
         return Ok(HttpResponse::NotFound().body("not found"));
@@ -370,12 +379,11 @@ struct ID {
     id: Option<String>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct AppStore {
     counter: usize,
     agents: HashMap<String, Addr<Agent>>,
     pending_clients: HashMap<String, Addr<Client>>,
-    client_terminal_pairs: HashMap<Addr<Client>, Addr<Terminal>>,
 }
 
 impl Actor for AppStore {
@@ -388,7 +396,6 @@ impl AppStore {
             counter: 0,
             agents: HashMap::<String, Addr<Agent>>::new(),
             pending_clients: HashMap::<String, Addr<Client>>::new(),
-            client_terminal_pairs: HashMap::<Addr<Client>, Addr<Terminal>>::new(),
         }
     }
 }
@@ -399,6 +406,8 @@ enum Event {
     Inc,
     AddAgent(String, Addr<Agent>),
     RemoveAgent(String),
+    AddPendingClient(String, Addr<Client>),
+    PairPendingClient(String, Addr<Terminal>),
 }
 
 impl Handler<Event> for AppStore {
@@ -408,6 +417,8 @@ impl Handler<Event> for AppStore {
             Event::Inc => self.inc(),
             Event::AddAgent(id, addr) => self.add_agent(id, addr),
             Event::RemoveAgent(id) => self.remove_agent(id),
+            Event::AddPendingClient(id, addr) => self.add_pending_client(id, addr),
+            Event::PairPendingClient(id, addr) => self.pair_pending_client(id, addr),
         }
     }
 }
@@ -417,10 +428,20 @@ impl Handler<Event> for AppStore {
 struct ContainsAgent(String);
 
 impl Handler<ContainsAgent> for AppStore {
-    // type Result = (bool, Option<Addr<Agent>>);
     type Result = MessageResult<ContainsAgent>;
     fn handle(&mut self, c: ContainsAgent, _ctx: &mut Self::Context) -> Self::Result {
         MessageResult(self.has_agent(c.0))
+    }
+}
+
+#[derive(Message)]
+#[rtype(result = "AppStore")]
+struct AppState;
+
+impl Handler<AppState> for AppStore {
+    type Result = MessageResult<AppState>;
+    fn handle(&mut self, _a: AppState, _ctx: &mut Self::Context) -> Self::Result {
+        MessageResult(self.clone())
     }
 }
 
@@ -446,6 +467,39 @@ impl AppStore {
         println!("store agents contains {}: {}", agent_id, contains);
         (contains, agent_addr.cloned())
     }
+    fn add_pending_client(&mut self, agent_id: String, client_addr: Addr<Client>) {
+        *self
+            .pending_clients
+            .entry(agent_id.clone())
+            .or_insert(client_addr.clone()) = client_addr.clone();
+        println!("store pending clients added: {}", agent_id);
+    }
+    fn pair_pending_client(&mut self, agent_id: String, terminal_addr: Addr<Terminal>) {
+        let client_addr: Addr<Client>;
+
+        {
+            client_addr = self.pending_clients.get(&agent_id.clone()).unwrap().clone();
+        }
+
+        {
+            self.pending_clients.remove(&agent_id.clone());
+        }
+        println!("store pending clients removed: {}", agent_id);
+
+        client_addr.do_send(SetTerminalAddr(terminal_addr.clone()));
+        terminal_addr.do_send(SetClientAddr(client_addr.clone()));
+
+        println!(
+            "client terminal pairs added: {:?} <=> {:?}",
+            client_addr, terminal_addr
+        );
+    }
+}
+
+#[get("/state")]
+async fn state(store: web::Data<Addr<AppStore>>) -> impl Responder {
+    let state = store.send(AppState).await.unwrap();
+    format!("{:?}", state)
 }
 
 #[get("/inc")]
@@ -471,6 +525,7 @@ async fn main() -> std::io::Result<()> {
             // compiler said should use app_data here. but didn't work for me
             .data(store.clone())
             .service(inc)
+            .service(state)
             .service(api_client)
             .service(api_terminal)
             .service(api_agent)
