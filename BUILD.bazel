@@ -121,6 +121,7 @@ rust_binary(
         "//cargo:actix_http",
         "//cargo:actix_web",
         "//cargo:actix_web_actors",
+        "//cargo:bytes",
         "//cargo:log",
         "//cargo:serde",
         "//cargo:serde_json",

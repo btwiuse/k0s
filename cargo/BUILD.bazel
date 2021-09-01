@@ -49,6 +49,15 @@ alias(
 )
 
 alias(
+    name = "bytes",
+    actual = "//cargo/vendor/bytes-1.1.0:bytes",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "futures",
     actual = "//cargo/vendor/futures-0.3.16:futures",
     tags = [

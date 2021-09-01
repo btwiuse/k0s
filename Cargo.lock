@@ -971,6 +971,7 @@ dependencies = [
  "actix-http",
  "actix-web",
  "actix-web-actors",
+ "bytes 1.1.0",
  "futures",
  "k8s-openapi",
  "kube",

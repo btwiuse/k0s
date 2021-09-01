@@ -1,6 +1,8 @@
 use actix::prelude::*;
+use actix_http::ws::{Codec, Item};
 use actix_web::*;
 use actix_web_actors::ws;
+use bytes::{BufMut, BytesMut};
 use serde::Deserialize;
 use simple_logger::SimpleLogger;
 use std::collections::{HashMap, VecDeque};
@@ -42,13 +44,12 @@ impl Handler<Stop> for Client {
 
 #[derive(Message)]
 #[rtype(result = "()")]
-struct NewTerminal;
+struct NewTunnel(Command);
 
-impl Handler<NewTerminal> for Agent {
+impl Handler<NewTunnel> for Agent {
     type Result = ();
-    fn handle(&mut self, _msg: NewTerminal, ctx: &mut Self::Context) {
-        println!("received NewTerminal");
-        ctx.binary("TERMINAL\n");
+    fn handle(&mut self, n: NewTunnel, ctx: &mut Self::Context) {
+        ctx.binary(n.0.to_string());
     }
 }
 
@@ -86,6 +87,7 @@ impl Agent {
         if let Ok(id) = deserialized {
             if let Some(id) = id.id {
                 println!("env ID={} ~/kubotnetes/k0s.io miniclient :8000", id);
+                println!("env ID={} ~/kubotnetes/k0s.io miniclient2 :8000", id);
                 self.agent_id = Some(id);
                 self.on_init(ctx);
             }
@@ -143,7 +145,14 @@ async fn api_agent(
 
     store.do_send(Event::Inc);
 
-    ws::start(handler, &req, stream)
+    // ws::start(handler, &req, stream)
+
+    let mut res = ws::handshake(&req)?;
+    Ok(res.streaming(ws::WebsocketContext::with_codec(
+        handler,
+        stream,
+        Codec::new().max_size(10 * 1024 * 1024), // 10mb frame limit
+    )))
 }
 
 #[derive(Debug)]
@@ -170,7 +179,7 @@ struct WsMessage(ws::Message);
 impl Handler<WsMessage> for Terminal {
     type Result = ();
     fn handle(&mut self, msg: WsMessage, ctx: &mut Self::Context) {
-        self.handle_msg(msg.0, ctx);
+        self.receive_from_client(msg.0, ctx);
     }
 }
 
@@ -206,26 +215,31 @@ impl Actor for Terminal {
 }
 
 impl Terminal {
-    fn forward(&mut self, msg: ws::Message, _ctx: &mut <Self as Actor>::Context) {
-        // println!("agent forward");
+    fn forward_to_client(&mut self, msg: ws::Message, _ctx: &mut <Self as Actor>::Context) {
         if let Some(client_addr) = self.client_addr.clone() {
             client_addr.do_send(WsMessage(msg))
         }
     }
-    fn handle_msg(&mut self, msg: ws::Message, ctx: &mut <Self as Actor>::Context) {
-        let mut message = "".to_string();
+    fn receive_from_client(&mut self, msg: ws::Message, ctx: &mut <Self as Actor>::Context) {
+        // let mut message = "".to_string();
         match msg {
             ws::Message::Text(m) => {
-                message = m.to_string();
+                // message = m.to_string();
+                println!(
+                    "terminal::receive_from_client::ws::Message::Text {}",
+                    m.len()
+                );
                 ctx.text(m);
             }
             ws::Message::Binary(m) => {
-                message = String::from_utf8_lossy(&m).to_string();
+                // let message = String::from_utf8_lossy(&m).to_string();
+                // if m.len() != message.len() { println!("terminal::handle_msg_from_client::bin({}) != str({})", m.len(), message.len()); }
+                println!("terminal::receive_from_client::bin({})", m.len());
                 ctx.binary(m);
             }
             _ => (),
         };
-        println!("terminal::handle_msg({}): {}", message.len(), message);
+        // println!("terminal::handle_msg({}): {}", message.len(), message);
     }
 }
 
@@ -233,7 +247,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Terminal {
     fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
         match msg {
             Ok(m) => {
-                self.forward(m, ctx);
+                self.forward_to_client(m, ctx);
             }
             _ => {}
         }
@@ -254,26 +268,81 @@ async fn api_terminal(
 
     println!("/api/terminal?id={}", agent_id);
 
-    ws::start(handler, &req, stream)
+    // ws::start(handler, &req, stream)
+
+    let mut res = ws::handshake(&req)?;
+    Ok(res.streaming(ws::WebsocketContext::with_codec(
+        handler,
+        stream,
+        Codec::new().max_size(10 * 1024 * 1024), // 10mb frame limit
+    )))
+}
+
+#[get("/api/terminalv2")]
+async fn api_terminal_v2(
+    req: HttpRequest,
+    stream: web::Payload,
+    agent_id: web::Query<ID>,
+    store: web::Data<Addr<AppStore>>,
+) -> Result<HttpResponse, Error> {
+    let agent_id = agent_id.id.clone().unwrap();
+    let client_addr: Option<Addr<Client>> = None;
+    let store = store.get_ref();
+    let handler = Terminal::new(agent_id.clone(), client_addr, store.clone());
+
+    println!("/api/terminalv2?id={}", agent_id);
+
+    // ws::start(handler, &req, stream)
+
+    let mut res = ws::handshake(&req)?;
+    Ok(res.streaming(ws::WebsocketContext::with_codec(
+        handler,
+        stream,
+        Codec::new().max_size(10 * 1024 * 1024), // 10mb frame limit
+    )))
 }
 
 #[derive(Debug)]
 struct Client {
     buffer: VecDeque<ws::Message>,
+    continuation_frame_buffer: BytesMut,
     agent_id: String,
     agent_addr: Addr<Agent>,
     app_store: Addr<AppStore>,
     terminal_addr: Option<Addr<Terminal>>,
+    command: Command,
+}
+
+#[derive(Clone, Debug)]
+enum Command {
+    Terminal,
+    TerminalV2,
+}
+
+impl Command {
+    fn to_string(&self) -> String {
+        match self {
+            Command::Terminal => "TERMINAL\n".into(),
+            Command::TerminalV2 => "TERMINALV2\n".into(),
+        }
+    }
 }
 
 impl Client {
-    fn new(agent_id: String, agent_addr: Addr<Agent>, app_store: Addr<AppStore>) -> Self {
+    fn new(
+        agent_id: String,
+        agent_addr: Addr<Agent>,
+        app_store: Addr<AppStore>,
+        command: Command,
+    ) -> Self {
         Client {
             buffer: VecDeque::<ws::Message>::new(),
+            continuation_frame_buffer: BytesMut::new(),
             agent_id,
             agent_addr,
             app_store,
             terminal_addr: None,
+            command,
         }
     }
 }
@@ -293,17 +362,18 @@ impl Handler<SetTerminalAddr> for Client {
 impl Handler<WsMessage> for Client {
     type Result = ();
     fn handle(&mut self, msg: WsMessage, ctx: &mut Self::Context) {
-        self.handle_msg(msg.0, ctx);
+        self.receive_from_terminal(msg.0, ctx);
     }
 }
 
 impl Actor for Client {
     type Context = ws::WebsocketContext<Self>;
     fn started(&mut self, ctx: &mut Self::Context) {
+        ctx.set_mailbox_capacity(1024);
         let id = self.agent_id.clone();
         self.app_store
             .do_send(Event::AddPendingClient(id, ctx.address()));
-        self.agent_addr.do_send(NewTerminal);
+        self.agent_addr.do_send(NewTunnel(self.command.to_owned()));
         println!("Client started");
     }
     fn stopped(&mut self, _ctx: &mut Self::Context) {
@@ -312,8 +382,8 @@ impl Actor for Client {
 }
 
 impl Client {
-    fn forward(&mut self, msg: ws::Message, _ctx: &mut <Self as Actor>::Context) {
-        println!("client forward");
+    fn forward_to_terminal(&mut self, msg: ws::Message, _ctx: &mut <Self as Actor>::Context) {
+        // println!("client forward");
         // let terminal_addr = self.terminal_addr.clone().unwrap();
         if self.terminal_addr.is_none() {
             self.buffer.push_back(msg);
@@ -325,21 +395,34 @@ impl Client {
             self.terminal_addr.as_ref().unwrap().do_send(WsMessage(msg));
         }
     }
-    fn handle_msg(&mut self, msg: ws::Message, ctx: &mut <Self as Actor>::Context) {
-        let mut message = "".to_string();
+    fn receive_from_terminal(&mut self, msg: ws::Message, ctx: &mut <Self as Actor>::Context) {
         match msg {
             ws::Message::Text(m) => {
-                message = m.to_string();
                 ctx.text(m);
             }
+            ws::Message::Nop => (),
+            ws::Message::Ping(_) => (),
+            ws::Message::Pong(_) => (),
+            ws::Message::Close(_) => (),
             ws::Message::Binary(m) => {
-                message = String::from_utf8_lossy(&m).to_string();
-                println!("bin({}): {:?}", m.len(), m);
                 ctx.binary(m);
             }
-            _ => (),
+            ws::Message::Continuation(c) => match c {
+                Item::FirstText(ref m) | Item::FirstBinary(ref m) => {
+                    self.continuation_frame_buffer.clear();
+                    self.continuation_frame_buffer.put(m.to_owned());
+                }
+                Item::Continue(ref m) => {
+                    self.continuation_frame_buffer.put(m.to_owned());
+                }
+                Item::Last(ref m) => {
+                    self.continuation_frame_buffer.put(m.to_owned());
+                    ctx.binary(self.continuation_frame_buffer.clone());
+                    self.continuation_frame_buffer.clear();
+                }
+            },
         };
-        println!("client::handle_msg({}): {}", message.len(), message);
+        // println!("client::handle_msg({}): {}", message.len(), message);
     }
 }
 
@@ -348,7 +431,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Client {
         // self.ensure_terminal();
         match msg {
             Ok(m) => {
-                self.forward(m, ctx);
+                self.forward_to_terminal(m, ctx);
             }
             _ => {}
         }
@@ -356,12 +439,12 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Client {
 }
 
 #[get("/api/agent/{id}/terminal")]
-async fn api_client(
+async fn api_client_terminal(
     req: HttpRequest,
     stream: web::Payload,
     id: web::Path<ID>,
     store: web::Data<Addr<AppStore>>,
-) -> impl Responder {
+) -> Result<HttpResponse, Error> /*impl Responder */ {
     println!("path: {}\n", req.path());
 
     let agent_id = id.id.clone().unwrap();
@@ -370,8 +453,51 @@ async fn api_client(
         return Ok(HttpResponse::NotFound().body("not found"));
     }
     let store = store.get_ref();
-    let handler = Client::new(agent_id, agent_addr.unwrap().clone(), store.clone());
-    ws::start(handler, &req, stream)
+    let handler = Client::new(
+        agent_id,
+        agent_addr.unwrap().clone(),
+        store.clone(),
+        Command::Terminal,
+    );
+    // ws::start(handler, &req, stream)
+
+    let mut res = ws::handshake(&req)?;
+    Ok(res.streaming(ws::WebsocketContext::with_codec(
+        handler,
+        stream,
+        Codec::new().max_size(10 * 1024 * 1024), // 10mb frame limit
+    )))
+}
+
+#[get("/api/agent/{id}/terminalv2")]
+async fn api_client_terminal_v2(
+    req: HttpRequest,
+    stream: web::Payload,
+    id: web::Path<ID>,
+    store: web::Data<Addr<AppStore>>,
+) -> Result<HttpResponse, Error> /*impl Responder */ {
+    println!("path: {}\n", req.path());
+
+    let agent_id = id.id.clone().unwrap();
+    let (contains, agent_addr) = store.send(ContainsAgent(agent_id.clone())).await.unwrap();
+    if !contains {
+        return Ok(HttpResponse::NotFound().body("not found"));
+    }
+    let store = store.get_ref();
+    let handler = Client::new(
+        agent_id,
+        agent_addr.unwrap().clone(),
+        store.clone(),
+        Command::TerminalV2,
+    );
+    // ws::start(handler, &req, stream)
+
+    let mut res = ws::handshake(&req)?;
+    Ok(res.streaming(ws::WebsocketContext::with_codec(
+        handler,
+        stream,
+        Codec::new().max_size(10 * 1024 * 1024), // 10mb frame limit
+    )))
 }
 
 #[derive(Deserialize)]
@@ -526,8 +652,10 @@ async fn main() -> std::io::Result<()> {
             .data(store.clone())
             .service(inc)
             .service(state)
-            .service(api_client)
+            .service(api_client_terminal)
+            .service(api_client_terminal_v2)
             .service(api_terminal)
+            .service(api_terminal_v2)
             .service(api_agent)
     })
     .bind("127.0.0.1:8000")?
