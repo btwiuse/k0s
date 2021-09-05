@@ -1,8 +1,8 @@
-import * as time from './pkg/time.ts'
+import * as time from './pkg/time.ts';
 
 const name = "k0s";
 
 export {
-  k0s,
+  name,
   time,
 };
