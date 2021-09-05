@@ -1,4 +1,6 @@
-const name = "k0s";
+function name(): string{
+	return "asdf"
+}
 
 export {
   name,
