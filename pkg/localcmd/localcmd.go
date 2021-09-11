@@ -3,12 +3,15 @@
 package localcmd
 
 import (
+	"io"
 	"os"
 	"os/exec"
 	"syscall"
 	"unsafe"
 
 	"github.com/creack/pty"
+        "golang.org/x/text/encoding/unicode"
+	"golang.org/x/text/transform"
 )
 
 // Factory implements the server.Factory interface
@@ -26,6 +29,8 @@ func (factory *Factory) New() (*Lc, error) {
 type Lc struct {
 	cmd       *exec.Cmd
 	pty       *os.File
+	ptyReader io.Reader
+	ptyWriter io.Writer
 	ptyClosed chan struct{}
 }
 
@@ -43,6 +48,8 @@ func NewLc(args []string) (*Lc, error) {
 	lcmd := &Lc{
 		cmd:       cmd,
 		pty:       pty,
+		ptyReader: transform.NewReader(pty, unicode.UTF8.NewDecoder()),
+		ptyWriter: transform.NewWriter(pty, unicode.UTF8.NewEncoder()),
 		ptyClosed: ptyClosed,
 	}
 
@@ -62,11 +69,11 @@ func NewLc(args []string) (*Lc, error) {
 }
 
 func (lcmd *Lc) Read(p []byte) (n int, err error) {
-	return lcmd.pty.Read(p)
+	return lcmd.ptyReader.Read(p)
 }
 
 func (lcmd *Lc) Write(p []byte) (n int, err error) {
-	return lcmd.pty.Write(p)
+	return lcmd.ptyWriter.Write(p)
 }
 
 func (lcmd *Lc) Close() error {

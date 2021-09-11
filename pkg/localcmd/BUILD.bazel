@@ -5,5 +5,9 @@ go_library(
     srcs = ["localcmd.go"],
     importpath = "k0s.io/pkg/localcmd",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/creack/pty:go_default_library"],
+    deps = [
+        "//vendor/github.com/creack/pty:go_default_library",
+        "//vendor/golang.org/x/text/encoding/unicode:go_default_library",
+        "//vendor/golang.org/x/text/transform:go_default_library",
+    ],
 )
