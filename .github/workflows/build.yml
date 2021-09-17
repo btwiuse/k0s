@@ -15,7 +15,11 @@ jobs:
     - name: Run Ubuntu
       uses: docker://ubuntu
       with:
-        entrypoint: bash
+        args:
+        - bash
+        - -c
+        - |
+          ls -la
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
