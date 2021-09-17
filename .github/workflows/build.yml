@@ -13,7 +13,7 @@ jobs:
       run: git fetch --prune --unshallow
 
     - name: Run Build
-      uses: techknowlogick/xgo:latest
+      uses: docker://techknowlogick/xgo:latest
       with:
         entrypoint: bash
       env:
