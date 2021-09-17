@@ -32,6 +32,7 @@ jobs:
     - name: Run Ubuntu
       uses: docker://ubuntu
       with:
+        entrypoint: bash -c
         args: ls -la
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
@@ -61,6 +62,7 @@ jobs:
     - name: make build-linux
       uses: docker://techknowlogick/xgo:latest
       with:
+        entrypoint: bash -c
         args: make build-linux
 
   build-windows:
@@ -75,6 +77,7 @@ jobs:
     - name: make build-windows
       uses: docker://techknowlogick/xgo:latest
       with:
+        entrypoint: bash -c
         args: make build-windows
 
   build-darwin:
@@ -89,6 +92,7 @@ jobs:
     - name: make build-darwin
       uses: docker://techknowlogick/xgo:latest
       with:
+        entrypoint: bash -c
         args: make build-darwin
 
   build-android:
@@ -103,4 +107,5 @@ jobs:
     - name: make build-android
       uses: docker://techknowlogick/xgo:latest
       with:
+        entrypoint: bash -c
         args: make build-android
