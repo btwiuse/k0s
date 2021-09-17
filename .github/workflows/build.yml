@@ -49,3 +49,16 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
+  build-windows:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Unshallow  # required for the changelog to work correctly.
+      run: git fetch --prune --unshallow
+
+    - name: make build-windows
+      uses: docker://techknowlogick/xgo:latest
+      with:
+        args: make build-windows
