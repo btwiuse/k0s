@@ -12,6 +12,23 @@ jobs:
     - name: Unshallow  # required for the changelog to work correctly.
       run: git fetch --prune --unshallow
 
+    - name: Set Go Version
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.17.1
+
+    - run: make build
+      name: make build
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Unshallow  # required for the changelog to work correctly.
+      run: git fetch --prune --unshallow
+
     - name: Run Ubuntu
       uses: docker://ubuntu
       with:
