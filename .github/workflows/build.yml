@@ -20,7 +20,7 @@ jobs:
     - run: make build
       name: make build
 
-  build-linux:
+  build-todo:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
