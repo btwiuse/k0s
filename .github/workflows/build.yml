@@ -17,6 +17,13 @@ jobs:
       with:
         go-version: ^1.17.1
 
+    - name: Setup Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/go-build
+        key: ${{ runner.os }}-build
+
     - run: make build
       name: make build
 
@@ -65,6 +72,13 @@ jobs:
     - name: Unshallow  # required for the changelog to work correctly.
       run: git fetch --prune --unshallow
 
+    - name: Setup Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/go-build
+        key: ${{ runner.os }}-build-linux
+
     - name: make build-linux
       uses: docker://techknowlogick/xgo:latest
       with:
@@ -93,6 +107,13 @@ jobs:
     - name: Unshallow  # required for the changelog to work correctly.
       run: git fetch --prune --unshallow
 
+    - name: Setup Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/go-build
+        key: ${{ runner.os }}-build-linux-arm
+
     - name: make build-linux-arm
       uses: docker://techknowlogick/xgo:latest
       with:
@@ -113,6 +134,13 @@ jobs:
 
     - name: Unshallow  # required for the changelog to work correctly.
       run: git fetch --prune --unshallow
+
+    - name: Setup Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/go-build
+        key: ${{ runner.os }}-build-linux-others
 
     - name: make build-linux-others
       uses: docker://techknowlogick/xgo:latest
@@ -135,6 +163,13 @@ jobs:
     - name: Unshallow  # required for the changelog to work correctly.
       run: git fetch --prune --unshallow
 
+    - name: Setup Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/go-build
+        key: ${{ runner.os }}-build-windows
+
     - name: make build-windows
       uses: docker://techknowlogick/xgo:latest
       with:
@@ -155,6 +190,13 @@ jobs:
 
     - name: Unshallow  # required for the changelog to work correctly.
       run: git fetch --prune --unshallow
+
+    - name: Setup Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/go-build
+        key: ${{ runner.os }}-build-darwin
 
     - name: make build-darwin
       uses: docker://techknowlogick/xgo:latest
@@ -177,6 +219,13 @@ jobs:
     - name: Unshallow  # required for the changelog to work correctly.
       run: git fetch --prune --unshallow
 
+    - name: Setup Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/bazel
+        key: ${{ runner.os }}-bazel-build-android
+
     - name: make bazel-build-android
       uses: docker://techknowlogick/xgo:latest
       with:
@@ -190,3 +239,4 @@ jobs:
       with:
         name: bazel-build-android
         path: bin/
+
