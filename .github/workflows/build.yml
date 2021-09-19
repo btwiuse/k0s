@@ -65,6 +65,12 @@ jobs:
         entrypoint: bash
         args: -c "make build-linux"
 
+    - name: archive
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: bin/
+
   build-linux-arm:
     runs-on: ubuntu-latest
     steps:
