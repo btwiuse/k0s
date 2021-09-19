@@ -95,7 +95,7 @@ jobs:
         entrypoint: bash
         args: -c "make build-darwin"
 
-  build-android:
+  bazel-build-android:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -104,8 +104,8 @@ jobs:
     - name: Unshallow  # required for the changelog to work correctly.
       run: git fetch --prune --unshallow
 
-    - name: make build-android
+    - name: make bazel-build-android
       uses: docker://techknowlogick/xgo:latest
       with:
         entrypoint: bash
-        args: -c "make build-android"
+        args: -c "make bazel-build-android"
