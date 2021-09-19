@@ -227,7 +227,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ~/.cache/bazel
+          .cache/bazel
         key: ${{ runner.os }}-bazel-build-android
 
     - name: make bazel-build-android
@@ -237,6 +237,7 @@ jobs:
         args: -c "make bazel-build-android"
       env:
         ANDROID_NDK_BAZEL: True
+        TEST_TMPDIR: /github/workspace/.cache/bazel
 
     - name: archive artifacts
       uses: actions/upload-artifact@v2
