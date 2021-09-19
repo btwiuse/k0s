@@ -46,7 +46,7 @@ jobs:
       uses: docker://ubuntu
       with:
         entrypoint: bash
-        args: -c "ls -la"
+        args: -c "ls -la; pwd; env"
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
@@ -76,7 +76,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ~/.cache/go-build
+          .cache/go-build
         key: ${{ runner.os }}-build-linux
 
     - name: make build-linux
@@ -84,12 +84,8 @@ jobs:
       with:
         entrypoint: bash
         args: -c "make build-linux"
-
-    - name: archive artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: build-linux
-        path: bin/
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
       uses: actions/upload-artifact@v2
@@ -111,7 +107,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ~/.cache/go-build
+          .cache/go-build
         key: ${{ runner.os }}-build-linux-arm
 
     - name: make build-linux-arm
@@ -119,6 +115,8 @@ jobs:
       with:
         entrypoint: bash
         args: -c "make build-linux-arm"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
       uses: actions/upload-artifact@v2
@@ -139,7 +137,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ~/.cache/go-build
+          .cache/go-build
         key: ${{ runner.os }}-build-linux-others
 
     - name: make build-linux-others
@@ -147,6 +145,8 @@ jobs:
       with:
         entrypoint: bash
         args: -c "make build-linux-others"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
       uses: actions/upload-artifact@v2
@@ -167,7 +167,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ~/.cache/go-build
+          .cache/go-build
         key: ${{ runner.os }}-build-windows
 
     - name: make build-windows
@@ -175,6 +175,8 @@ jobs:
       with:
         entrypoint: bash
         args: -c "make build-windows"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
       uses: actions/upload-artifact@v2
@@ -195,7 +197,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ~/.cache/go-build
+          .cache/go-build
         key: ${{ runner.os }}-build-darwin
 
     - name: make build-darwin
@@ -203,6 +205,8 @@ jobs:
       with:
         entrypoint: bash
         args: -c "make build-darwin"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
       uses: actions/upload-artifact@v2
