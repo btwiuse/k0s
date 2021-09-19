@@ -139,3 +139,5 @@ jobs:
       with:
         entrypoint: bash
         args: -c "make bazel-build-android"
+      env:
+        ANDROID_NDK_BAZEL: True
