@@ -32,10 +32,8 @@ jobs:
     - name: Run Ubuntu
       uses: docker://ubuntu
       with:
-        entrypoint:
-        - bash
-        - -c
-        args: ls -la
+        entrypoint: bash
+        args: -c "ls -la"
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
@@ -48,9 +46,7 @@ jobs:
     - name: Run Build
       uses: docker://techknowlogick/xgo:latest
       with:
-        entrypoint:
-        - bash
-        - -c
+        entrypoint: bash
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
@@ -66,10 +62,8 @@ jobs:
     - name: make build-linux
       uses: docker://techknowlogick/xgo:latest
       with:
-        entrypoint:
-        - bash
-        - -c
-        args: make build-linux
+        entrypoint: bash
+        args: -c "make build-linux"
 
   build-windows:
     runs-on: ubuntu-latest
@@ -83,10 +77,8 @@ jobs:
     - name: make build-windows
       uses: docker://techknowlogick/xgo:latest
       with:
-        entrypoint:
-        - bash
-        - -c
-        args: make build-windows
+        entrypoint: bash
+        args: -c "make build-windows"
 
   build-darwin:
     runs-on: ubuntu-latest
@@ -100,10 +92,8 @@ jobs:
     - name: make build-darwin
       uses: docker://techknowlogick/xgo:latest
       with:
-        entrypoint:
-        - bash
-        - -c
-        args: make build-darwin
+        entrypoint: bash
+        args: -c "make build-darwin"
 
   build-android:
     runs-on: ubuntu-latest
@@ -117,7 +107,5 @@ jobs:
     - name: make build-android
       uses: docker://techknowlogick/xgo:latest
       with:
-        entrypoint:
-        - bash
-        - -c
-        args: make build-android
+        entrypoint: bash
+        args: -c "make build-android"
