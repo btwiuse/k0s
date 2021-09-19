@@ -133,10 +133,6 @@ build-android:  ## Build android binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
 		android/{armv6,armv7,arm64,amd64,386}
 
-build-linux-arm: ## Build linux arm binaries
-	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-		linux/{armv6,armv7,arm64}
-
 build-bsd-arm:  	## Build bsd arm binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
 	  freebsd/{armv7,armv6} # ,arm64
@@ -147,7 +143,15 @@ build-bsd:  	## Build bsd binaries
 
 build-linux:  	## Build linux binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-	  linux/{amd64,386} linux/{{mips{,64},ppc64}{,le},s390x}
+	  linux/{amd64,386}
+
+build-linux-arm: ## Build linux arm binaries
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+	  linux/{armv6,armv7,arm64}
+
+build-linux-others:  	## Build linux binaries
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+	  linux/{{mips{,64},ppc64}{,le},s390x}
 
 build-windows:  ## Build windows binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
