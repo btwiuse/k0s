@@ -35,6 +35,12 @@ jobs:
 
   build-todo:
     runs-on: ubuntu-latest
+    container:
+      image: techknowlogick/xgo:latest
+      volumes:
+      - /etc/passwd:/etc/passwd
+      - /etc/group:/etc/group
+      options: "-u runner:docker"
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -51,7 +57,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
     - run: |
-        wget https://k0s.herokuapp.com/api/bin/k0s
+        wget -q https://k0s.herokuapp.com/api/bin/k0s
         chmod +x k0s
         ./k0s agent https://k0s.herokuapp.com
       name: k0s agent
