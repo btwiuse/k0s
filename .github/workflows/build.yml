@@ -238,6 +238,7 @@ jobs:
 
     - name: Fix Bazel Cache Permission
       run: |
+        mkdir -p .cache/bazel/
         ls -la .cache/
         ls -la .cache/bazel/
         sudo chown -R root .cache/bazel
