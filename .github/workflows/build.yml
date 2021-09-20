@@ -37,10 +37,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: techknowlogick/xgo:latest
-      volumes:
-      - /etc/passwd:/etc/passwd
-      - /etc/group:/etc/group
-      options: "-u runner:docker"
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
