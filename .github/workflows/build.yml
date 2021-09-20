@@ -10,7 +10,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-      # submodules: recursive
+        submodules: recursive
 
     - name: Set Go Version
       uses: actions/setup-go@v2
@@ -35,14 +35,12 @@ jobs:
 
   build-todo:
     runs-on: ubuntu-latest
-    container:
-      image: techknowlogick/xgo:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-      # submodules: recursive
+        submodules: recursive
 
     - run: |
         ls -la
@@ -73,14 +71,12 @@ jobs:
 
   build-linux:
     runs-on: ubuntu-latest
-    container:
-      image: techknowlogick/xgo:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-      # submodules: recursive
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -106,14 +102,12 @@ jobs:
 
   build-linux-arm:
     runs-on: ubuntu-latest
-    container:
-      image: techknowlogick/xgo:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-      # submodules: recursive
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -138,14 +132,12 @@ jobs:
 
   build-linux-others:
     runs-on: ubuntu-latest
-    container:
-      image: techknowlogick/xgo:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-      # submodules: recursive
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -170,14 +162,12 @@ jobs:
 
   build-windows:
     runs-on: ubuntu-latest
-    container:
-      image: techknowlogick/xgo:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-      # submodules: recursive
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -202,14 +192,12 @@ jobs:
 
   build-darwin:
     runs-on: ubuntu-latest
-    container:
-      image: techknowlogick/xgo:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-      # submodules: recursive
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -234,14 +222,12 @@ jobs:
 
   bazel-build-android:
     runs-on: ubuntu-latest
-    container:
-      image: techknowlogick/xgo:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-      # submodules: recursive
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -264,3 +250,6 @@ jobs:
       with:
         name: bazel-build-android
         path: bin/
+
+    - name: Fix Bazel Cache Permission
+      run: sudo chmod -R a+rwx .cache/bazel
