@@ -41,8 +41,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Unshallow  # required for the changelog to work correctly.
-      run: git fetch --prune --unshallow
+    - run: |
+        ls -la
+        pwd
+        env
+      name: probe env
 
     - name: Run Ubuntu
       uses: docker://ubuntu
@@ -248,5 +251,5 @@ jobs:
         path: bin/
 
     - name: Fix Bazel Cache Permission
-      run: sudo chown -R $USER .cache/bazel
+      run: sudo chmod -R a+rwx .cache/bazel
 
