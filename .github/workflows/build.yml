@@ -8,9 +8,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Unshallow  # required for the changelog to work correctly.
-      run: git fetch --prune --unshallow
+      with:
+        fetch-depth: 0
+        submodules: recursive
 
     - name: Set Go Version
       uses: actions/setup-go@v2
@@ -40,6 +40,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
 
     - run: |
         ls -la
@@ -73,9 +76,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Unshallow  # required for the changelog to work correctly.
-      run: git fetch --prune --unshallow
+      with:
+        fetch-depth: 0
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -104,9 +107,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Unshallow  # required for the changelog to work correctly.
-      run: git fetch --prune --unshallow
+      with:
+        fetch-depth: 0
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -134,9 +137,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Unshallow  # required for the changelog to work correctly.
-      run: git fetch --prune --unshallow
+      with:
+        fetch-depth: 0
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -164,9 +167,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Unshallow  # required for the changelog to work correctly.
-      run: git fetch --prune --unshallow
+      with:
+        fetch-depth: 0
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -194,9 +197,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Unshallow  # required for the changelog to work correctly.
-      run: git fetch --prune --unshallow
+      with:
+        fetch-depth: 0
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -221,12 +224,14 @@ jobs:
 
   bazel-build-android:
     runs-on: ubuntu-latest
+    container:
+      image: techknowlogick/xgo:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Unshallow  # required for the changelog to work correctly.
-      run: git fetch --prune --unshallow
+      with:
+        fetch-depth: 0
+        submodules: recursive
 
     - name: Setup Cache
       uses: actions/cache@v2
@@ -249,7 +254,3 @@ jobs:
       with:
         name: bazel-build-android
         path: bin/
-
-    - name: Fix Bazel Cache Permission
-      run: sudo chmod -R a+rwx .cache/bazel
-
