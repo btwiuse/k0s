@@ -245,3 +245,6 @@ jobs:
         name: bazel-build-android
         path: bin/
 
+    - name: Fix Bazel Cache Permission
+      run: sudo chown -R $USER .cache/bazel
+
