@@ -233,8 +233,15 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          .cache/bazel
+          .cache/bazel/
         key: ${{ runner.os }}-bazel-build-android
+
+    - name: Fix Bazel Cache Permission
+      run: |
+        ls -la .cache/
+        ls -la .cache/bazel/
+        sudo chown -R root .cache/bazel
+        ls -la .cache/bazel/
 
     - name: make bazel-build-android
       uses: docker://techknowlogick/xgo:latest
