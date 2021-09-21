@@ -306,7 +306,7 @@ jobs:
     steps:
     - name: Get current date
       id: date
-      run: echo "::set-output name=date::$(date +'%Y%m%d%H')-${{ github.run_number }}"
+      run: echo "::set-output name=date::${{ github.run_number }}-$(date +'%Y%m%d')"
 
     - name: Checkout code
       uses: actions/checkout@v2
