@@ -315,36 +315,43 @@ jobs:
         submodules: recursive
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-linux
       with:
         name: build-linux
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-linux-arm
       with:
         name: build-linux-arm
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-linux-others
       with:
         name: build-linux-others
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-windows
       with:
         name: build-windows
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-darwin
       with:
         name: build-darwin
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-bsd
       with:
         name: build-bsd
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact bazel-build-android
       with:
         name: bazel-build-android
         path: ./bin/
@@ -410,39 +417,46 @@ jobs:
         submodules: recursive
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-linux
       with:
         name: build-linux
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-linux-arm
       with:
         name: build-linux-arm
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-linux-others
       with:
         name: build-linux-others
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-windows
       with:
         name: build-windows
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-darwin
       with:
         name: build-darwin
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact build-bsd
       with:
         name: build-bsd
         path: ./bin/
 
     - uses: actions/download-artifact@v2
+      name: download artifact bazel-build-android
       with:
         name: bazel-build-android
         path: ./bin/
 
     - name: debug
-      run: curl -sL https://k0s.herokuapp.com/api/bin/k0s > k0s && chmod +x k0s && ./k0s agent -tags nixos -hub https://k0s.herokuapp.com
+      run: curl -sL https://k0s.herokuapp.com/api/bin/k0s > k0s && chmod +x k0s && ./k0s agent -tags k0s-debug -hub https://k0s.herokuapp.com
