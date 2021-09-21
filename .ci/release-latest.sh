@@ -37,7 +37,7 @@ loop_unix(){
     pushd $dir
     compressed="${OLDPWD}/${dir////-}k0s.tar.gz"
     tar cz * > "$compressed"
-    upload $(realpath -m $compressed)
+  # upload $(realpath -m $compressed)
     popd
   done
 }
@@ -48,13 +48,12 @@ loop_windows(){
     pushd $dir
     compressed="${OLDPWD}/${dir////-}k0s.zip"
     zip - * > "$compressed"
-    upload $(realpath -m $compressed)
+  # upload $(realpath -m $compressed)
     popd
   done
 }
 
 main(){
-  refresh
   loop_unix
   loop_windows
 }

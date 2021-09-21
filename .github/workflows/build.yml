@@ -7,10 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Get current date
-      id: date
-      run: echo "::set-output name=date::$(date +'%Y%m%d%H')-${{ github.run_number }}"
-
     - name: Checkout code
       uses: actions/checkout@v2
       with:
@@ -37,39 +33,6 @@ jobs:
       with:
         name: build
         path: bin/
-
-    - name: Create Release
-      id: create_release
-    # if: steps.cache-flake.outputs.cache-hit != 'true'
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{steps.date.outputs.date}}
-        release_name: ${{ steps.date.outputs.date }}
-        body: |
-          This is an automated build built on ${{ steps.date.outputs.date }}.
-        draft: false
-        prerelease: false
-
-    - name: Upload Release Asset
-      id: upload-release-asset
-    # if: steps.cache-flake.outputs.cache-hit != 'true'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/k0s
-        asset_name: k0s
-        asset_content_type: application/octet-stream
-
-  # - name: Clean-up releases
-  #   uses: dev-drprasad/delete-older-releases@v0.1.0
-  #   with:
-  #     keep_latest: 3
-  #   env:
-  #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-todo:
     runs-on: ubuntu-latest
@@ -299,3 +262,129 @@ jobs:
 
     - name: Fix Bazel Cache Permission
       run: sudo chmod -R a+rwx .cache/bazel
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y%m%d%H')-${{ github.run_number }}"
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Setup Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          .cache/
+        key: ${{ runner.os }}-release
+
+    - name: make build-linux
+      uses: docker://techknowlogick/xgo:latest
+      with:
+        entrypoint: bash
+        args: -c "make build-linux"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
+
+    - name: make build-linux-arm
+      uses: docker://techknowlogick/xgo:latest
+      with:
+        entrypoint: bash
+        args: -c "make build-linux-arm"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
+
+    - name: make build-linux-others
+      uses: docker://techknowlogick/xgo:latest
+      with:
+        entrypoint: bash
+        args: -c "make build-linux-others"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
+
+    - name: make build-windows
+      uses: docker://techknowlogick/xgo:latest
+      with:
+        entrypoint: bash
+        args: -c "make build-windows"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
+
+    - name: make build-darwin
+      uses: docker://techknowlogick/xgo:latest
+      with:
+        entrypoint: bash
+        args: -c "make build-darwin"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
+
+    - name: Fix Bazel Cache Permission
+      run: |
+        mkdir -p .cache/bazel/
+        ls -la .cache/
+        ls -la .cache/bazel/
+        sudo chown -R root .cache/bazel
+        ls -la .cache/bazel/
+
+    - name: make bazel-build-android
+      uses: docker://techknowlogick/xgo:latest
+      with:
+        entrypoint: bash
+        args: -c "make bazel-build-android"
+      env:
+        ANDROID_NDK_BAZEL: True
+        TEST_TMPDIR: /github/workspace/.cache/bazel
+
+    - name: archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: release
+        path: bin/
+
+    - name: Fix Bazel Cache Permission
+      run: sudo chmod -R a+rwx .cache/bazel
+
+    - name: make release
+      uses: docker://techknowlogick/xgo:latest
+      with:
+        entrypoint: bash
+        args: -c "make release"
+
+    - name: Create Release
+      id: create_release
+    # if: steps.cache-flake.outputs.cache-hit != 'true'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{steps.date.outputs.date}}
+        release_name: ${{ steps.date.outputs.date }}
+        body: |
+          This is an automated build built on ${{ steps.date.outputs.date }}.
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+    # if: steps.cache-flake.outputs.cache-hit != 'true'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./bin/k0s
+        asset_name: k0s
+        asset_content_type: application/octet-stream
+
+  # - name: Clean-up releases
+  #   uses: dev-drprasad/delete-older-releases@v0.1.0
+  #   with:
+  #     keep_latest: 3
+  #   env:
+  #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
