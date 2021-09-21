@@ -374,8 +374,8 @@ jobs:
         prerelease: false
         body: |
           This is an automated build built on ${{ steps.date.outputs.date }} by [runner](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) .
-        name: ${{ steps.date.outputs.date }}
-        tag_name: ${{steps.date.outputs.date}}
+        name: release-${{steps.date.outputs.date}}
+        tag_name: release-${{steps.date.outputs.date}}
         files: |
           ./bin/k0s-*
 
