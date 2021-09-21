@@ -302,7 +302,7 @@ jobs:
     - build-windows
     - build-darwin
     - build-bsd
-    - build-android
+    - bazel-build-android
     steps:
     - name: Get current date
       id: date
