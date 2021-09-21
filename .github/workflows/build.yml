@@ -363,30 +363,21 @@ jobs:
         args: -c "make release"
 
     - name: Create Release
-      id: create_release
-    # if: steps.cache-flake.outputs.cache-hit != 'true'
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{steps.date.outputs.date}}
-        release_name: ${{ steps.date.outputs.date }}
-        body: |
-          This is an automated build built on ${{ steps.date.outputs.date }}.
-        draft: false
-        prerelease: false
-
-    - name: Upload Release Asset
       id: upload-release-asset
     # if: steps.cache-flake.outputs.cache-hit != 'true'
-      uses: actions/upload-release-asset@v1
+    # uses: actions/upload-release-asset@v1
+      uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/k0s
-        asset_name: k0s
-        asset_content_type: application/octet-stream
+        draft: false
+        prerelease: false
+        body: |
+          This is an automated build built on ${{ steps.date.outputs.date }}.
+        name: ${{ steps.date.outputs.date }}
+        tag_name: ${{steps.date.outputs.date}}
+        files: |
+          ./bin/k0s-*
 
   # - name: Clean-up releases
   #   uses: dev-drprasad/delete-older-releases@v0.1.0
