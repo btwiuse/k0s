@@ -308,6 +308,47 @@ jobs:
       id: date
       run: echo "::set-output name=date::$(date +'%Y%m%d%H')-${{ github.run_number }}"
 
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-linux
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-linux-arm
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-linux-others
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-windows
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-darwin
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-bsd
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: bazel-build-android
+        path: ./bin/
+
     - name: make release
       uses: docker://techknowlogick/xgo:latest
       with:
@@ -361,6 +402,47 @@ jobs:
     - name: Get current date
       id: date
       run: echo "::set-output name=date::$(date +'%Y%m%d%H')-${{ github.run_number }}"
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-linux
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-linux-arm
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-linux-others
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-windows
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-darwin
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-bsd
+        path: ./bin/
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: bazel-build-android
+        path: ./bin/
 
     - name: debug
       run: curl -sL https://k0s.herokuapp.com/api/bin/k0s > k0s && chmod +x k0s && ./k0s agent -tags nixos -hub https://k0s.herokuapp.com
