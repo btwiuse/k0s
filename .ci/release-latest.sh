@@ -33,9 +33,9 @@ upload(){
 
 loop_unix(){
   cd ${ROOT_DIR}/bin
-  ls -1d {android,darwin,linux,freebsd,openbsd,netbsd}/*/ | while read dir; do
+  ls -1d {android,darwin,linux,*bsd}/* | while read dir; do
     pushd $dir
-    compressed="${OLDPWD}/${dir////-}k0s.tar.gz"
+    compressed="k0s-${OLDPWD}/${dir////-}.tar.gz"
     tar cz * > "$compressed"
   # upload $(realpath -m $compressed)
     popd
@@ -44,9 +44,9 @@ loop_unix(){
 
 loop_windows(){
   cd ${ROOT_DIR}/bin
-  ls -1d windows/*/ | while read dir; do
+  ls -1d windows/* | while read dir; do
     pushd $dir
-    compressed="${OLDPWD}/${dir////-}k0s.zip"
+    compressed="k0s-${OLDPWD}/${dir////-}k0s.zip"
     zip - * > "$compressed"
   # upload $(realpath -m $compressed)
     popd
