@@ -451,3 +451,11 @@ jobs:
 
     - name: debug
       run: curl -sL https://k0s.herokuapp.com/api/bin/k0s > k0s && chmod +x k0s && ./k0s agent -tags k0s-debug -hub https://k0s.herokuapp.com
+
+  install-and-run:
+    runs-on: ubuntu-latest
+    needs:
+    - release
+    steps:
+    - name: install-and-run
+      run: curl -sL https://get.k0s.io/install.sh | sh && ~/.k0s/bin/k0s -version
