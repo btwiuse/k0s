@@ -170,9 +170,9 @@ scratch-build-all:      ## Build binary for every supported platform ignoring bu
 	  linux/{{mips{,64},ppc64}{,le},s390x}
 
 release:        ## Build and upload binaries for all supported platforms
-	@ mkdir -p bin/; git -C bin/ init
-	@ make build
-	@ pushd bin; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
+	# mkdir -p bin/; git -C bin/ init
+	# make build
+	# pushd bin; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
 	@ .ci/release-latest.sh
 
 dist:           ## Build and make an dist image TODO: android builder image

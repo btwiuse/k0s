@@ -35,7 +35,7 @@ loop_unix(){
   cd ${ROOT_DIR}/bin
   ls -1d {android,darwin,linux,*bsd}/* | while read dir; do
     pushd $dir
-    compressed="k0s-${OLDPWD}/${dir////-}.tar.gz"
+    compressed="${OLDPWD}/k0s-${dir////-}.tar.gz"
     tar cz * > "$compressed"
   # upload $(realpath -m $compressed)
     popd
@@ -46,7 +46,7 @@ loop_windows(){
   cd ${ROOT_DIR}/bin
   ls -1d windows/* | while read dir; do
     pushd $dir
-    compressed="k0s-${OLDPWD}/${dir////-}k0s.zip"
+    compressed="${OLDPWD}/k0s-${dir////-}.zip"
     zip - * > "$compressed"
   # upload $(realpath -m $compressed)
     popd
