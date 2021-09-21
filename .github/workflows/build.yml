@@ -221,6 +221,36 @@ jobs:
         name: build-darwin
         path: bin/
 
+  build-bsd:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Setup Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          .cache/go-build
+        key: ${{ runner.os }}-build-bsd
+
+    - name: make build-bsd
+      uses: docker://techknowlogick/xgo:latest
+      with:
+        entrypoint: bash
+        args: -c "make build-bsd"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
+
+    - name: archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-bsd
+        path: bin/
+
   bazel-build-android:
     runs-on: ubuntu-latest
     steps:
@@ -265,6 +295,14 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
+    needs:
+    - build-linux
+    - build-linux-arm
+    - build-linux-others
+    - build-windows
+    - build-darwin
+    - build-bsd
+    - build-android
     steps:
     - name: Get current date
       id: date
@@ -320,6 +358,14 @@ jobs:
       with:
         entrypoint: bash
         args: -c "make build-darwin"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
+
+    - name: make build-bsd
+      uses: docker://techknowlogick/xgo:latest
+      with:
+        entrypoint: bash
+        args: -c "make build-bsd"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
