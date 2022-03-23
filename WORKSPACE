@@ -39,7 +39,7 @@ go_rules_dependencies()
 
 go_register_toolchains(
     nogo = "@//:nogo",
-    version = "1.17.1",
+    version = "1.17.8",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
@@ -76,6 +76,12 @@ git_repository(
     remote = "https://github.com/bazelbuild/rules_rust.git",
 )
 
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+
+rules_rust_dependencies()
+
+rust_register_toolchains()
+
 load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 
 # https://bazelbuild.github.io/rules_rust/
@@ -86,7 +92,7 @@ load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 # )
 rust_repositories(
     edition = "2021",
-    iso_date = "2021-09-10",
+    iso_date = "2022-03-22",
     version = "nightly",
 )
 
@@ -9151,8 +9157,8 @@ print_seq()
 # https://github.com/google/bazel_rules_install
 git_repository(
     name = "com_github_google_rules_install",
-    # branch = "main",
-    commit = "e93a17ed42a8a622a78fbf4737309e583f4b3cb4",
+    branch = "main",
+    # commit = "e93a17ed42a8a622a78fbf4737309e583f4b3cb4",
     remote = "https://github.com/google/bazel_rules_install.git",
 )
 

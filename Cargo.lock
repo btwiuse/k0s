@@ -958,7 +958,7 @@ dependencies = [
 
 [[package]]
 name = "k0s"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "actix",
  "actix-http",

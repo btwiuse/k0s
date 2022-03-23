@@ -82,15 +82,7 @@ go_library(
             "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet/tls:go_default_library",
             "//vendor/golang.org/x/sys/unix:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:ios_386": [
-            "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet/tls:go_default_library",
-            "//vendor/golang.org/x/sys/unix:go_default_library",
-        ],
         "@io_bazel_rules_go//go/platform:ios_amd64": [
-            "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet/tls:go_default_library",
-            "//vendor/golang.org/x/sys/unix:go_default_library",
-        ],
-        "@io_bazel_rules_go//go/platform:ios_arm": [
             "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet/tls:go_default_library",
             "//vendor/golang.org/x/sys/unix:go_default_library",
         ],
