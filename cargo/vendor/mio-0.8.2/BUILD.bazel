@@ -1,0 +1,86 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT"
+])
+
+# Generated Targets
+
+# Unsupported target "tcp_listenfd_server" with type "example" omitted
+
+# Unsupported target "tcp_server" with type "example" omitted
+
+# Unsupported target "udp_server" with type "example" omitted
+
+rust_library(
+    name = "mio",
+    srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
+    crate_features = [
+        "default",
+        "net",
+        "os-ext",
+        "os-poll",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2018",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=mio",
+        "manual",
+    ],
+    version = "0.8.2",
+    # buildifier: leave-alone
+    deps = [
+        "//cargo/vendor/log-0.4.14:log",
+    ] + selects.with_or({
+        # cfg(unix)
+        (
+            "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+        ): [
+            "//cargo/vendor/libc-0.2.121:libc",
+        ],
+        "//conditions:default": [],
+    }) + selects.with_or({
+        # cfg(windows)
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+            "//cargo/vendor/miow-0.3.7:miow",
+            "//cargo/vendor/ntapi-0.3.6:ntapi",
+            "//cargo/vendor/winapi-0.3.9:winapi",
+        ],
+        "//conditions:default": [],
+    }),
+)

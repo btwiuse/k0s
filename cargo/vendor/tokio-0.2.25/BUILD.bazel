@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -73,7 +74,6 @@ rust_library(
         "winapi",
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2018",
     proc_macro_deps = [
@@ -84,6 +84,7 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=tokio",
         "manual",
     ],
     version = "0.2.25",
@@ -105,7 +106,7 @@ rust_library(
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
         ): [
-            "//cargo/vendor/libc-0.2.101:libc",
+            "//cargo/vendor/libc-0.2.121:libc",
             "//cargo/vendor/mio-uds-0.6.8:mio_uds",
             "//cargo/vendor/signal-hook-registry-1.4.0:signal_hook_registry",
         ],

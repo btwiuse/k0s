@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -37,12 +38,9 @@ licenses([
 rust_library(
     name = "tokio_native_tls",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
     crate_features = [
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2018",
     rustc_flags = [
@@ -50,35 +48,15 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=tokio-native-tls",
         "manual",
     ],
     version = "0.3.0",
     # buildifier: leave-alone
     deps = [
         "//cargo/vendor/native-tls-0.2.8:native_tls",
-        "//cargo/vendor/tokio-1.10.1:tokio",
-    ] + selects.with_or({
-        # cfg(all(not(target_os = "macos"), not(windows), not(target_os = "ios")))
-        (
-            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
-        ): [
-        ],
-        "//conditions:default": [],
-    }) + selects.with_or({
-        # cfg(any(target_os = "macos", target_os = "ios"))
-        (
-            "@rules_rust//rust/platform:x86_64-apple-darwin",
-        ): [
-        ],
-        "//conditions:default": [],
-    }) + selects.with_or({
-        # cfg(windows)
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-        ],
-        "//conditions:default": [],
-    }),
+        "//cargo/vendor/tokio-1.17.0:tokio",
+    ],
 )
 
 # Unsupported target "bad" with type "test" omitted

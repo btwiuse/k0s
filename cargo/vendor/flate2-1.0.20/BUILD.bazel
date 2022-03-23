@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -83,7 +84,6 @@ rust_library(
         "rust_backend",
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2018",
     rustc_flags = [
@@ -91,6 +91,7 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=flate2",
         "manual",
     ],
     version = "1.0.20",
@@ -98,7 +99,7 @@ rust_library(
     deps = [
         "//cargo/vendor/cfg-if-1.0.0:cfg_if",
         "//cargo/vendor/crc32fast-1.2.1:crc32fast",
-        "//cargo/vendor/libc-0.2.101:libc",
+        "//cargo/vendor/libc-0.2.121:libc",
         "//cargo/vendor/miniz_oxide-0.4.4:miniz_oxide",
     ],
 )

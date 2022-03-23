@@ -14,7 +14,7 @@ licenses([
 # Aliased targets
 alias(
     name = "actix",
-    actual = "//cargo/vendor/actix-0.12.0:actix",
+    actual = "//cargo/vendor/actix-0.13.0:actix",
     tags = [
         "cargo-raze",
         "manual",
@@ -23,7 +23,16 @@ alias(
 
 alias(
     name = "actix_http",
-    actual = "//cargo/vendor/actix-http-3.0.0-beta.9:actix_http",
+    actual = "//cargo/vendor/actix-http-3.0.4:actix_http",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "actix_rt",
+    actual = "//cargo/vendor/actix-rt-2.7.0:actix_rt",
     tags = [
         "cargo-raze",
         "manual",
@@ -32,7 +41,7 @@ alias(
 
 alias(
     name = "actix_web",
-    actual = "//cargo/vendor/actix-web-4.0.0-beta.8:actix_web",
+    actual = "//cargo/vendor/actix-web-4.0.1:actix_web",
     tags = [
         "cargo-raze",
         "manual",
@@ -41,7 +50,7 @@ alias(
 
 alias(
     name = "actix_web_actors",
-    actual = "//cargo/vendor/actix-web-actors-4.0.0-beta.6:actix_web_actors",
+    actual = "//cargo/vendor/actix-web-actors-4.1.0:actix_web_actors",
     tags = [
         "cargo-raze",
         "manual",
@@ -140,7 +149,7 @@ alias(
 
 alias(
     name = "simple_logger",
-    actual = "//cargo/vendor/simple_logger-1.13.0:simple_logger",
+    actual = "//cargo/vendor/simple_logger-2.1.0:simple_logger",
     tags = [
         "cargo-raze",
         "manual",

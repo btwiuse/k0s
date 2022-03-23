@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -71,7 +72,6 @@ rust_library(
     crate_features = [
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2018",
     rustc_flags = [
@@ -79,6 +79,7 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=openssl",
         "manual",
     ],
     version = "0.10.36",
@@ -87,7 +88,7 @@ rust_library(
         "//cargo/vendor/bitflags-1.3.2:bitflags",
         "//cargo/vendor/cfg-if-1.0.0:cfg_if",
         "//cargo/vendor/foreign-types-0.3.2:foreign_types",
-        "//cargo/vendor/libc-0.2.101:libc",
+        "//cargo/vendor/libc-0.2.121:libc",
         "//cargo/vendor/once_cell-1.8.0:once_cell",
         "//cargo/vendor/openssl-sys-0.9.66:openssl_sys",
         ":openssl_build_script",

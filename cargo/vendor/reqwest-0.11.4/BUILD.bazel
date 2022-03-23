@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -63,7 +64,6 @@ rust_library(
         "tokio-util",
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2018",
     rustc_flags = [
@@ -71,13 +71,14 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=reqwest",
         "manual",
     ],
     version = "0.11.4",
     # buildifier: leave-alone
     deps = [
         "//cargo/vendor/bytes-1.1.0:bytes",
-        "//cargo/vendor/http-0.2.4:http",
+        "//cargo/vendor/http-0.2.6:http",
         "//cargo/vendor/serde-1.0.130:serde",
         "//cargo/vendor/serde_json-1.0.67:serde_json",
         "//cargo/vendor/serde_urlencoded-0.7.0:serde_urlencoded",
@@ -104,7 +105,7 @@ rust_library(
             "//cargo/vendor/native-tls-0.2.8:native_tls",
             "//cargo/vendor/percent-encoding-2.1.0:percent_encoding",
             "//cargo/vendor/pin-project-lite-0.2.7:pin_project_lite",
-            "//cargo/vendor/tokio-1.10.1:tokio",
+            "//cargo/vendor/tokio-1.17.0:tokio",
             "//cargo/vendor/tokio-native-tls-0.3.0:tokio_native_tls",
             "//cargo/vendor/tokio-util-0.6.7:tokio_util",
         ],

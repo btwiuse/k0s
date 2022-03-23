@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -43,7 +44,6 @@ rust_library(
         "tokio",
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2018",
     rustc_flags = [
@@ -51,6 +51,7 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=async-compression",
         "manual",
     ],
     version = "0.3.8",
@@ -60,7 +61,7 @@ rust_library(
         "//cargo/vendor/futures-core-0.3.16:futures_core",
         "//cargo/vendor/memchr-2.4.1:memchr",
         "//cargo/vendor/pin-project-lite-0.2.7:pin_project_lite",
-        "//cargo/vendor/tokio-1.10.1:tokio",
+        "//cargo/vendor/tokio-1.17.0:tokio",
     ],
 )
 

@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -44,7 +45,6 @@ rust_library(
         "openssl",
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2018",
     proc_macro_deps = [
@@ -55,6 +55,7 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=kube",
         "manual",
     ],
     version = "0.47.0",
@@ -68,7 +69,7 @@ rust_library(
         "//cargo/vendor/either-1.6.1:either",
         "//cargo/vendor/futures-0.3.16:futures",
         "//cargo/vendor/futures-util-0.3.16:futures_util",
-        "//cargo/vendor/http-0.2.4:http",
+        "//cargo/vendor/http-0.2.6:http",
         "//cargo/vendor/jsonpath_lib-0.2.6:jsonpath_lib",
         "//cargo/vendor/k8s-openapi-0.10.0:k8s_openapi",
         "//cargo/vendor/log-0.4.14:log",
@@ -81,7 +82,7 @@ rust_library(
         "//cargo/vendor/static_assertions-1.1.0:static_assertions",
         "//cargo/vendor/thiserror-1.0.28:thiserror",
         "//cargo/vendor/time-0.2.27:time",
-        "//cargo/vendor/tokio-1.10.1:tokio",
+        "//cargo/vendor/tokio-1.17.0:tokio",
         "//cargo/vendor/url-2.2.2:url",
     ],
 )

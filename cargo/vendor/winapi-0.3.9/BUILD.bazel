@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -58,12 +59,10 @@ cargo_build_script(
         "minschannel",
         "minwinbase",
         "minwindef",
-        "mstcpip",
         "mswsock",
         "namedpipeapi",
         "ntdef",
         "ntsecapi",
-        "ntstatus",
         "objbase",
         "processenv",
         "profileapi",
@@ -125,12 +124,10 @@ rust_library(
         "minschannel",
         "minwinbase",
         "minwindef",
-        "mstcpip",
         "mswsock",
         "namedpipeapi",
         "ntdef",
         "ntsecapi",
-        "ntstatus",
         "objbase",
         "processenv",
         "profileapi",
@@ -157,7 +154,6 @@ rust_library(
         "ws2tcpip",
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2015",
     rustc_flags = [
@@ -165,6 +161,7 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=winapi",
         "manual",
     ],
     version = "0.3.9",

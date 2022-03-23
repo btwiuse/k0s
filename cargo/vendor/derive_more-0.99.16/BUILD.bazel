@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -32,7 +33,7 @@ licenses([
 
 # Unsupported target "deny_missing_docs" with type "example" omitted
 
-rust_library(
+rust_proc_macro(
     name = "derive_more",
     srcs = glob(["**/*.rs"]),
     crate_features = [
@@ -64,7 +65,6 @@ rust_library(
         "unwrap",
     ],
     crate_root = "src/lib.rs",
-    crate_type = "proc-macro",
     data = [],
     edition = "2018",
     rustc_flags = [
@@ -72,6 +72,7 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=derive_more",
         "manual",
     ],
     version = "0.99.16",

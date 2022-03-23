@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -78,7 +79,6 @@ rust_library(
         "v1_18",
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2018",
     rustc_flags = [
@@ -86,6 +86,7 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=k8s-openapi",
         "manual",
     ],
     version = "0.10.0",
@@ -94,7 +95,7 @@ rust_library(
         "//cargo/vendor/base64-0.13.0:base64",
         "//cargo/vendor/bytes-0.5.6:bytes",
         "//cargo/vendor/chrono-0.4.19:chrono",
-        "//cargo/vendor/http-0.2.4:http",
+        "//cargo/vendor/http-0.2.6:http",
         "//cargo/vendor/percent-encoding-2.1.0:percent_encoding",
         "//cargo/vendor/serde-1.0.130:serde",
         "//cargo/vendor/serde-value-0.7.0:serde_value",

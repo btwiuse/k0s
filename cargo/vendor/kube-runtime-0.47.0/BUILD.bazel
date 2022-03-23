@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -38,7 +39,6 @@ rust_library(
         "native-tls",
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2018",
     proc_macro_deps = [
@@ -49,6 +49,7 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=kube-runtime",
         "manual",
     ],
     version = "0.47.0",
@@ -62,7 +63,7 @@ rust_library(
         "//cargo/vendor/serde-1.0.130:serde",
         "//cargo/vendor/smallvec-1.6.1:smallvec",
         "//cargo/vendor/snafu-0.6.10:snafu",
-        "//cargo/vendor/tokio-1.10.1:tokio",
+        "//cargo/vendor/tokio-1.17.0:tokio",
         "//cargo/vendor/tokio-util-0.6.7:tokio_util",
     ],
 )

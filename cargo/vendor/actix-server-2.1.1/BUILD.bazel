@@ -1,0 +1,73 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
+])
+
+# Generated Targets
+
+# Unsupported target "file-reader" with type "example" omitted
+
+# Unsupported target "tcp-echo" with type "example" omitted
+
+rust_library(
+    name = "actix_server",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2018",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=actix_server",
+        "manual",
+    ],
+    version = "2.1.1",
+    # buildifier: leave-alone
+    deps = [
+        "//cargo/vendor/actix-rt-2.7.0:actix_rt",
+        "//cargo/vendor/actix-service-2.0.0:actix_service",
+        "//cargo/vendor/actix-utils-3.0.0:actix_utils",
+        "//cargo/vendor/futures-core-0.3.16:futures_core",
+        "//cargo/vendor/futures-util-0.3.16:futures_util",
+        "//cargo/vendor/mio-0.8.2:mio",
+        "//cargo/vendor/num_cpus-1.13.0:num_cpus",
+        "//cargo/vendor/socket2-0.4.4:socket2",
+        "//cargo/vendor/tokio-1.17.0:tokio",
+        "//cargo/vendor/tracing-0.1.32:tracing",
+    ],
+)
+
+# Unsupported target "server" with type "test" omitted
+
+# Unsupported target "testing_server" with type "test" omitted

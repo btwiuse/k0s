@@ -10,9 +10,10 @@ load("@bazel_skylib//lib:selects.bzl", "selects")
 
 # buildifier: disable=load
 load(
-    "@rules_rust//rust:rust.bzl",
+    "@rules_rust//rust:defs.bzl",
     "rust_binary",
     "rust_library",
+    "rust_proc_macro",
     "rust_test",
 )
 
@@ -38,7 +39,6 @@ rust_library(
     crate_features = [
     ],
     crate_root = "src/lib.rs",
-    crate_type = "lib",
     data = [],
     edition = "2015",
     rustc_flags = [
@@ -46,6 +46,7 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=mio-uds",
         "manual",
     ],
     version = "0.6.8",
@@ -58,7 +59,7 @@ rust_library(
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
         ): [
             "//cargo/vendor/iovec-0.1.4:iovec",
-            "//cargo/vendor/libc-0.2.101:libc",
+            "//cargo/vendor/libc-0.2.121:libc",
             "//cargo/vendor/mio-0.6.23:mio",
         ],
         "//conditions:default": [],
