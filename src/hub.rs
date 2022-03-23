@@ -1,6 +1,11 @@
-use actix::prelude::*;
+use actix::prelude::{
+    Actor, ActorContext, Addr, AsyncContext, Context, Handler, Message, MessageResult,
+    StreamHandler,
+};
 use actix_http::ws::{Codec, Item};
-use actix_web::*;
+use actix_web::{
+    get, middleware, web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder,
+};
 use actix_web_actors::ws;
 use bytes::{BufMut, BytesMut};
 use serde::Deserialize;
@@ -636,7 +641,7 @@ async fn inc(store: web::Data<Addr<AppStore>>) -> impl Responder {
 
 /// Telemetry entry point. Listening by default on 127.0.0.1:8000.
 /// This can be changed using the `PORT` and `BIND` ENV variables.
-#[actix_web::main]
+#[actix_rt::main]
 async fn main() -> std::io::Result<()> {
     SimpleLogger::new()
         .with_level(log::LevelFilter::Info)
