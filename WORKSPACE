@@ -4120,10 +4120,10 @@ go_repository(
 )
 
 go_repository(
-    name = "com_github_mathetake_gasm",
-    importpath = "github.com/mathetake/gasm",
-    sum = "h1:GOar/82ZJdJ9COsZmNfSKgI/h5eYlBj6WvmUkuFEuDE=",
-    version = "v0.0.0-20200928142744-80e74517647c",
+    name = "com_github_tetratelabs_wazero",
+    importpath = "github.com/tetratelabs/wazero",
+    sum = "h1:T6qVU9nmdy2pQ82ml5iiv0cGNLCzAQ2VNG+U3bQEniQ=",
+    version = "v0.0.0-20220401224236-2664b1eb62a2",
 )
 
 go_repository(
@@ -6829,6 +6829,13 @@ go_repository(
     importpath = "gitlab.com/mjwhitta/where",
     sum = "h1:0Fb2nU4zZtiDdJKUvoTd5TKRaOJ6Q8gcYmv925FLt84=",
     version = "v1.0.21",
+)
+
+go_repository(
+    name = "com_github_twitchyliquid64_golang_asm",
+    importpath = "github.com/twitchyliquid64/golang-asm",
+    sum = "h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS4MhqMhdFk5YI=",
+    version = "v0.15.1",
 )
 
 rules_proto_dependencies()
