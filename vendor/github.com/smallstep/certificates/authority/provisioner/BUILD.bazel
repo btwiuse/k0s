@@ -18,6 +18,7 @@ go_library(
         "oidc.go",
         "options.go",
         "provisioner.go",
+        "scep.go",
         "sign_options.go",
         "sign_ssh_options.go",
         "ssh_options.go",
@@ -30,6 +31,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/smallstep/certificates/authority/admin:go_default_library",
         "//vendor/github.com/smallstep/certificates/db:go_default_library",
         "//vendor/github.com/smallstep/certificates/errs:go_default_library",
         "//vendor/go.step.sm/crypto/jose:go_default_library",

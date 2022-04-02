@@ -34,7 +34,6 @@ type WriteBatch struct {
 
 	isManaged bool
 	commitTs  uint64
-	finished  bool
 }
 
 // NewWriteBatch creates a new WriteBatch. This provides a way to conveniently do a lot of writes,
@@ -73,16 +72,12 @@ func (wb *WriteBatch) SetMaxPendingTxns(max int) {
 //
 // Note that any committed writes would still go through despite calling Cancel.
 func (wb *WriteBatch) Cancel() {
-	wb.Lock()
-	defer wb.Unlock()
-	wb.finished = true
 	if err := wb.throttle.Finish(); err != nil {
 		wb.db.opt.Errorf("WatchBatch.Cancel error while finishing: %v", err)
 	}
 	wb.txn.Discard()
 }
 
-// The caller of this callback must hold the lock.
 func (wb *WriteBatch) callback(err error) {
 	// sync.WaitGroup is thread-safe, so it doesn't need to be run inside wb.Lock.
 	defer wb.throttle.Done(err)
@@ -90,6 +85,8 @@ func (wb *WriteBatch) callback(err error) {
 		return
 	}
 
+	wb.Lock()
+	defer wb.Unlock()
 	if wb.err != nil {
 		return
 	}
@@ -183,12 +180,8 @@ func (wb *WriteBatch) commit() error {
 	if wb.err != nil {
 		return wb.err
 	}
-	if wb.finished {
-		return y.ErrCommitAfterFinish
-	}
 	if err := wb.throttle.Do(); err != nil {
-		wb.err = err
-		return wb.err
+		return err
 	}
 	wb.txn.CommitWith(wb.callback)
 	wb.txn = wb.db.newTransaction(true, wb.isManaged)
@@ -200,19 +193,11 @@ func (wb *WriteBatch) commit() error {
 // returns any error stored by WriteBatch.
 func (wb *WriteBatch) Flush() error {
 	wb.Lock()
-	err := wb.commit()
-	if err != nil {
-		wb.Unlock()
-		return err
-	}
-	wb.finished = true
+	_ = wb.commit()
 	wb.txn.Discard()
 	wb.Unlock()
 
 	if err := wb.throttle.Finish(); err != nil {
-		if wb.err != nil {
-			return errors.Errorf("wb.err: %s err: %s", wb.err, err)
-		}
 		return err
 	}
 

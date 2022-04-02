@@ -5,6 +5,7 @@ import (
 	"crypto"
 	"crypto/dsa" //nolint
 	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/asn1"
@@ -20,6 +21,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/pkg/errors"
 	"github.com/smallstep/certificates/authority"
+	"github.com/smallstep/certificates/authority/config"
 	"github.com/smallstep/certificates/authority/provisioner"
 	"github.com/smallstep/certificates/errs"
 	"github.com/smallstep/certificates/logging"
@@ -31,13 +33,13 @@ type Authority interface {
 	// context specifies the Authorize[Sign|Revoke|etc.] method.
 	Authorize(ctx context.Context, ott string) ([]provisioner.SignOption, error)
 	AuthorizeSign(ott string) ([]provisioner.SignOption, error)
-	GetTLSOptions() *authority.TLSOptions
+	GetTLSOptions() *config.TLSOptions
 	Root(shasum string) (*x509.Certificate, error)
 	Sign(cr *x509.CertificateRequest, opts provisioner.SignOptions, signOpts ...provisioner.SignOption) ([]*x509.Certificate, error)
 	Renew(peer *x509.Certificate) ([]*x509.Certificate, error)
 	Rekey(peer *x509.Certificate, pk crypto.PublicKey) ([]*x509.Certificate, error)
 	LoadProvisionerByCertificate(*x509.Certificate) (provisioner.Interface, error)
-	LoadProvisionerByID(string) (provisioner.Interface, error)
+	LoadProvisionerByName(string) (provisioner.Interface, error)
 	GetProvisioners(cursor string, limit int) (provisioner.List, string, error)
 	Revoke(context.Context, *authority.RevokeOptions) error
 	GetEncryptedKey(kid string) (string, error)
@@ -238,9 +240,9 @@ type caHandler struct {
 }
 
 // New creates a new RouterHandler with the CA endpoints.
-func New(authority Authority) RouterHandler {
+func New(auth Authority) RouterHandler {
 	return &caHandler{
-		Authority: authority,
+		Authority: auth,
 	}
 }
 
@@ -293,7 +295,7 @@ func (h *caHandler) Health(w http.ResponseWriter, r *http.Request) {
 // certificate for the given SHA256.
 func (h *caHandler) Root(w http.ResponseWriter, r *http.Request) {
 	sha := chi.URLParam(r, "sha")
-	sum := strings.ToLower(strings.Replace(sha, "-", "", -1))
+	sum := strings.ToLower(strings.ReplaceAll(sha, "-", ""))
 	// Load root certificate with the
 	cert, err := h.Authority.Root(sum)
 	if err != nil {
@@ -314,7 +316,7 @@ func certChainToPEM(certChain []*x509.Certificate) []Certificate {
 
 // Provisioners returns the list of provisioners configured in the authority.
 func (h *caHandler) Provisioners(w http.ResponseWriter, r *http.Request) {
-	cursor, limit, err := parseCursor(r)
+	cursor, limit, err := ParseCursor(r)
 	if err != nil {
 		WriteError(w, errs.BadRequestErr(err))
 		return
@@ -398,7 +400,7 @@ func logOtt(w http.ResponseWriter, token string) {
 func LogCertificate(w http.ResponseWriter, cert *x509.Certificate) {
 	if rl, ok := w.(logging.ResponseLogger); ok {
 		m := map[string]interface{}{
-			"serial":      cert.SerialNumber,
+			"serial":      cert.SerialNumber.String(),
 			"subject":     cert.Subject.CommonName,
 			"issuer":      cert.Issuer.CommonName,
 			"valid-from":  cert.NotBefore.Format(time.RFC3339),
@@ -407,25 +409,27 @@ func LogCertificate(w http.ResponseWriter, cert *x509.Certificate) {
 			"certificate": base64.StdEncoding.EncodeToString(cert.Raw),
 		}
 		for _, ext := range cert.Extensions {
-			if ext.Id.Equal(oidStepProvisioner) {
-				val := &stepProvisioner{}
-				rest, err := asn1.Unmarshal(ext.Value, val)
-				if err != nil || len(rest) > 0 {
-					break
-				}
-				if len(val.CredentialID) > 0 {
-					m["provisioner"] = fmt.Sprintf("%s (%s)", val.Name, val.CredentialID)
-				} else {
-					m["provisioner"] = fmt.Sprintf("%s", val.Name)
-				}
+			if !ext.Id.Equal(oidStepProvisioner) {
+				continue
+			}
+			val := &stepProvisioner{}
+			rest, err := asn1.Unmarshal(ext.Value, val)
+			if err != nil || len(rest) > 0 {
 				break
 			}
+			if len(val.CredentialID) > 0 {
+				m["provisioner"] = fmt.Sprintf("%s (%s)", val.Name, val.CredentialID)
+			} else {
+				m["provisioner"] = string(val.Name)
+			}
+			break
 		}
 		rl.WithFields(m)
 	}
 }
 
-func parseCursor(r *http.Request) (cursor string, limit int, err error) {
+// ParseCursor parses the cursor and limit from the request query params.
+func ParseCursor(r *http.Request) (cursor string, limit int, err error) {
 	q := r.URL.Query()
 	cursor = q.Get("cursor")
 	if v := q.Get("limit"); len(v) > 0 {
@@ -437,7 +441,6 @@ func parseCursor(r *http.Request) (cursor string, limit int, err error) {
 	return
 }
 
-// TODO: add support for Ed25519 once it's supported
 func fmtPublicKey(cert *x509.Certificate) string {
 	var params string
 	switch pk := cert.PublicKey.(type) {
@@ -445,6 +448,8 @@ func fmtPublicKey(cert *x509.Certificate) string {
 		params = pk.Curve.Params().Name
 	case *rsa.PublicKey:
 		params = strconv.Itoa(pk.Size() * 8)
+	case ed25519.PublicKey:
+		return cert.PublicKeyAlgorithm.String()
 	case *dsa.PublicKey:
 		params = strconv.Itoa(pk.Q.BitLen() * 8)
 	default:

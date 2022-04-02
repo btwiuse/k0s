@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["framing.go"],
+    importmap = "k0s.io/vendor/gitlab.com/yawning/obfs4.git/transports/obfs4/framing",
+    importpath = "gitlab.com/yawning/obfs4.git/transports/obfs4/framing",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/gitlab.com/yawning/obfs4.git/common/csrand:go_default_library",
+        "//vendor/gitlab.com/yawning/obfs4.git/common/drbg:go_default_library",
+        "//vendor/golang.org/x/crypto/nacl/secretbox:go_default_library",
+    ],
+)

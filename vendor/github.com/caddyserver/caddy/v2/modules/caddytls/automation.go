@@ -27,8 +27,8 @@ import (
 
 // AutomationConfig governs the automated management of TLS certificates.
 type AutomationConfig struct {
-	// The list of automation policies. The first matching
-	// policy will be applied for a given certificate/name.
+	// The list of automation policies. The first policy matching
+	// a certificate or subject name will be applied.
 	Policies []*AutomationPolicy `json:"policies,omitempty"`
 
 	// On-Demand TLS defers certificate operations to the
@@ -39,7 +39,7 @@ type AutomationConfig struct {
 	// In 2015, Caddy became the first web server to
 	// implement this experimental technology.
 	//
-	// Note that this field does not enable on-demand TLS,
+	// Note that this field does not enable on-demand TLS;
 	// it only configures it for when it is used. To enable
 	// it, create an automation policy with `on_demand`.
 	OnDemand *OnDemandConfig `json:"on_demand,omitempty"`
@@ -88,10 +88,6 @@ type AutomationPolicy struct {
 	// subjects do not qualify for public certificates; othewise acme and
 	// zerossl.
 	IssuersRaw []json.RawMessage `json:"issuers,omitempty" caddy:"namespace=tls.issuance inline_key=module"`
-
-	// DEPRECATED: Use `issuers` instead (November 2020). This field will
-	// be removed in the future.
-	IssuerRaw json.RawMessage `json:"issuer,omitempty" caddy:"namespace=tls.issuance inline_key=module"`
 
 	// If true, certificates will be requested with MustStaple. Not all
 	// CAs support this, and there are potentially serious consequences
@@ -178,12 +174,6 @@ func (ap *AutomationPolicy) Provision(tlsApp *TLS) error {
 				return nil
 			},
 		}
-	}
-
-	// TODO: IssuerRaw field deprecated as of November 2020 - remove this shim after deprecation is complete
-	if ap.IssuerRaw != nil {
-		tlsApp.logger.Warn("the 'issuer' field is deprecated and will be removed in the future; use 'issuers' instead; your issuer has been appended automatically for now")
-		ap.IssuersRaw = append(ap.IssuersRaw, ap.IssuerRaw)
 	}
 
 	// load and provision any explicitly-configured issuer modules

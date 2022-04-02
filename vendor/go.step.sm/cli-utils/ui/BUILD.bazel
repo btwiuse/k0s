@@ -6,6 +6,7 @@ go_library(
         "options.go",
         "templates.go",
         "ui.go",
+        "ui_other.go",
         "ui_windows.go",
         "validators.go",
     ],

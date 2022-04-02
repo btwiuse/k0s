@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "certs_selector.go",
+        "scep.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/micromdm/scep/v2/scep",
+    importpath = "github.com/micromdm/scep/v2/scep",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/go-kit/kit/log:go_default_library",
+        "//vendor/github.com/go-kit/kit/log/level:go_default_library",
+        "//vendor/github.com/micromdm/scep/v2/cryptoutil:go_default_library",
+        "//vendor/github.com/micromdm/scep/v2/cryptoutil/x509util:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/go.mozilla.org/pkcs7:go_default_library",
+    ],
+)

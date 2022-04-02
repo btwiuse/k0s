@@ -6,6 +6,7 @@ go_library(
         "r.go",
         "racket.go",
         "ragel.go",
+        "raku.go",
         "reasonml.go",
         "regedit.go",
         "rexx.go",
@@ -19,5 +20,6 @@ go_library(
     deps = [
         "//vendor/github.com/alecthomas/chroma:go_default_library",
         "//vendor/github.com/alecthomas/chroma/lexers/internal:go_default_library",
+        "//vendor/github.com/dlclark/regexp2:go_default_library",
     ],
 )

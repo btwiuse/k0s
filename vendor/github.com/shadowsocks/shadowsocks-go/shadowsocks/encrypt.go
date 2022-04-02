@@ -10,9 +10,8 @@ import (
 	"encoding/binary"
 	"errors"
 	"io"
-	"strings"
 
-	"github.com/Yawning/chacha20"
+	"github.com/aead/chacha20"
 	"golang.org/x/crypto/blowfish"
 	"golang.org/x/crypto/cast5"
 	"golang.org/x/crypto/salsa20/salsa"
@@ -103,11 +102,11 @@ func newRC4MD5Stream(key, iv []byte, _ DecOrEnc) (cipher.Stream, error) {
 }
 
 func newChaCha20Stream(key, iv []byte, _ DecOrEnc) (cipher.Stream, error) {
-	return chacha20.NewCipher(key, iv)
+	return chacha20.NewCipher(iv, key)
 }
 
 func newChaCha20IETFStream(key, iv []byte, _ DecOrEnc) (cipher.Stream, error) {
-	return chacha20.NewCipher(key, iv)
+	return chacha20.NewCipher(iv, key)
 }
 
 type salsaStreamCipher struct {
@@ -167,6 +166,7 @@ var cipherMethod = map[string]*cipherInfo{
 	"bf-cfb":        {16, 8, newBlowFishStream},
 	"cast5-cfb":     {16, 8, newCast5Stream},
 	"rc4-md5":       {16, 16, newRC4MD5Stream},
+	"rc4-md5-6":     {16, 6, newRC4MD5Stream},
 	"chacha20":      {32, 8, newChaCha20Stream},
 	"chacha20-ietf": {32, 12, newChaCha20IETFStream},
 	"salsa20":       {32, 8, newSalsa20Stream},
@@ -188,8 +188,6 @@ type Cipher struct {
 	dec  cipher.Stream
 	key  []byte
 	info *cipherInfo
-	ota  bool // one-time auth
-	iv   []byte
 }
 
 // NewCipher creates a cipher that can be used in Dial() etc.
@@ -198,13 +196,6 @@ type Cipher struct {
 func NewCipher(method, password string) (c *Cipher, err error) {
 	if password == "" {
 		return nil, errEmptyPassword
-	}
-	var ota bool
-	if strings.HasSuffix(strings.ToLower(method), "-auth") {
-		method = method[:len(method)-5] // len("-auth") = 5
-		ota = true
-	} else {
-		ota = false
 	}
 	mi, ok := cipherMethod[method]
 	if !ok {
@@ -218,20 +209,14 @@ func NewCipher(method, password string) (c *Cipher, err error) {
 	if err != nil {
 		return nil, err
 	}
-	c.ota = ota
 	return c, nil
 }
 
 // Initializes the block cipher with CFB mode, returns IV.
 func (c *Cipher) initEncrypt() (iv []byte, err error) {
-	if c.iv == nil {
-		iv = make([]byte, c.info.ivLen)
-		if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-			return nil, err
-		}
-		c.iv = iv
-	} else {
-		iv = c.iv
+	iv = make([]byte, c.info.ivLen)
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
 	}
 	c.enc, err = c.info.newStream(c.key, iv, Encrypt)
 	return
@@ -268,6 +253,5 @@ func (c *Cipher) Copy() *Cipher {
 	nc := *c
 	nc.enc = nil
 	nc.dec = nil
-	nc.ota = c.ota
 	return &nc
 }

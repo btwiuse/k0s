@@ -5,10 +5,13 @@ go_library(
     srcs = [
         "blocks.go",
         "blocks_amd64.s",
+        "blocks_arm.s",
+        "blocks_asm.go",
         "hash.go",
         "hash128.go",
         "hash128_amd64.s",
         "hash_amd64.s",
+        "hash_arm.go",
         "hash_asm.go",
         "siphash.go",
     ],

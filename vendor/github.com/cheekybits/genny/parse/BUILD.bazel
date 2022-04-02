@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "builtins.go",
+        "doc.go",
+        "errors.go",
+        "parse.go",
+        "typesets.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/cheekybits/genny/parse",
+    importpath = "github.com/cheekybits/genny/parse",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/golang.org/x/tools/imports:go_default_library"],
+)

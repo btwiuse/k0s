@@ -5,7 +5,6 @@ go_library(
     srcs = [
         "error_codes.go",
         "errors.go",
-        "errors_go116.go",
     ],
     importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/internal/qerr",
     importpath = "github.com/lucas-clemente/quic-go/internal/qerr",

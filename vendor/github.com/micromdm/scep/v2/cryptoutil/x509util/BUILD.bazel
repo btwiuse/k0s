@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "doc.go",
+        "x509util.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/micromdm/scep/v2/cryptoutil/x509util",
+    importpath = "github.com/micromdm/scep/v2/cryptoutil/x509util",
+    visibility = ["//visibility:public"],
+)

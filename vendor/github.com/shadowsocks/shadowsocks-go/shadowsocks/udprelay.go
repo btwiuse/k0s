@@ -13,7 +13,7 @@ import (
 
 const (
 	idType  = 0 // address type index
-	idIP0   = 1 // ip addres start index
+	idIP0   = 1 // ip address start index
 	idDmLen = 1 // domain address length index
 	idDm0   = 2 // domain address start index
 
@@ -24,7 +24,7 @@ const (
 	lenIPv4     = 1 + net.IPv4len + 2 // 1addrType + ipv4 + 2port
 	lenIPv6     = 1 + net.IPv6len + 2 // 1addrType + ipv6 + 2port
 	lenDmBase   = 1 + 1 + 2           // 1addrType + 1addrLen + 2port, plus addrLen
-	lenHmacSha1 = 10
+	// lenHmacSha1 = 10
 )
 
 var (
@@ -68,11 +68,13 @@ func (table *natTable) Get(index string) (c net.PacketConn, ok bool, err error) 
 	return
 }
 
+//noinspection GoRedundantParens
 type requestHeaderList struct {
 	sync.Mutex
 	List map[string]([]byte)
 }
 
+//noinspection GoRedundantParens
 func newReqList() *requestHeaderList {
 	ret := &requestHeaderList{List: map[string]([]byte){}}
 	go func() {
@@ -87,7 +89,7 @@ func newReqList() *requestHeaderList {
 func (r *requestHeaderList) Refresh() {
 	r.Lock()
 	defer r.Unlock()
-	for k, _ := range r.List {
+	for k := range r.List {
 		delete(r.List, k)
 	}
 }
@@ -130,7 +132,7 @@ func parseHeaderFromAddr(addr net.Addr) ([]byte, int) {
 	return buf[:1+iplen+2], 1 + iplen + 2
 }
 
-func Pipeloop(write net.PacketConn, writeAddr net.Addr, readClose net.PacketConn) {
+func Pipeloop(write net.PacketConn, writeAddr net.Addr, readClose net.PacketConn, addTraffic func(int)) {
 	buf := leakyBuf.Get()
 	defer leakyBuf.Put(buf)
 	defer readClose.Close()
@@ -150,26 +152,21 @@ func Pipeloop(write net.PacketConn, writeAddr net.Addr, readClose net.PacketConn
 		}
 		// need improvement here
 		if req, ok := reqList.Get(raddr.String()); ok {
-			write.WriteTo(append(req, buf[:n]...), writeAddr)
+			n, _ := write.WriteTo(append(req, buf[:n]...), writeAddr)
+			addTraffic(n)
 		} else {
 			header, hlen := parseHeaderFromAddr(raddr)
-			write.WriteTo(append(header[:hlen], buf[:n]...), writeAddr)
+			n, _ := write.WriteTo(append(header[:hlen], buf[:n]...), writeAddr)
+			addTraffic(n)
 		}
 	}
 }
 
-func handleUDPConnection(handle *SecurePacketConn, n int, src net.Addr, receive []byte) {
+func handleUDPConnection(handle *SecurePacketConn, n int, src net.Addr, receive []byte, addTraffic func(int)) {
 	var dstIP net.IP
 	var reqLen int
-	var ota bool
 	addrType := receive[idType]
 	defer leakyBuf.Put(receive)
-
-	if addrType&OneTimeAuthMask > 0 {
-		ota = true
-	}
-	receive[idType] &= ^OneTimeAuthMask
-	compatiblemode := !handle.IsOta() && ota
 
 	switch addrType & AddrMask {
 	case typeIPv4:
@@ -220,24 +217,20 @@ func handleUDPConnection(handle *SecurePacketConn, n int, src net.Addr, receive 
 		return
 	}
 	if !exist {
-		Debug.Printf("[udp]new client %s->%s via %s ota=%v\n", src, dst, remote.LocalAddr(), ota)
+		Debug.Printf("[udp]new client %s->%s via %s\n", src, dst, remote.LocalAddr())
 		go func() {
-			if compatiblemode {
-				Pipeloop(handle.ForceOTA(), src, remote)
-			} else {
-				Pipeloop(handle, src, remote)
-			}
-
+			Pipeloop(handle, src, remote, addTraffic)
 			natlist.Delete(src.String())
 		}()
 	} else {
-		Debug.Printf("[udp]using cached client %s->%s via %s ota=%v\n", src, dst, remote.LocalAddr(), ota)
+		Debug.Printf("[udp]using cached client %s->%s via %s\n", src, dst, remote.LocalAddr())
 	}
 	if remote == nil {
 		fmt.Println("WTF")
 	}
 	remote.SetDeadline(time.Now().Add(udpTimeout))
-	_, err = remote.WriteTo(receive[reqLen:n], dst)
+	n, err = remote.WriteTo(receive[reqLen:n], dst)
+	addTraffic(n)
 	if err != nil {
 		if ne, ok := err.(*net.OpError); ok && (ne.Err == syscall.EMFILE || ne.Err == syscall.ENFILE) {
 			// log too many open file error
@@ -254,12 +247,12 @@ func handleUDPConnection(handle *SecurePacketConn, n int, src net.Addr, receive 
 	return
 }
 
-func ReadAndHandleUDPReq(c *SecurePacketConn) error {
+func ReadAndHandleUDPReq(c *SecurePacketConn, addTraffic func(int)) error {
 	buf := leakyBuf.Get()
 	n, src, err := c.ReadFrom(buf[0:])
 	if err != nil {
 		return err
 	}
-	go handleUDPConnection(c, n, src, buf)
+	go handleUDPConnection(c, n, src, buf, addTraffic)
 	return nil
 }

@@ -10,6 +10,7 @@ go_library(
         "mathematica.go",
         "matlab.go",
         "mcfunction.go",
+        "metal.go",
         "minizinc.go",
         "mlir.go",
         "modula2.go",

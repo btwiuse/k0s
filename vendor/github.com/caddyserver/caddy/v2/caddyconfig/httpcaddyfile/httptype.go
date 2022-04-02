@@ -113,6 +113,8 @@ func (st ServerType) Setup(inputServerBlocks []caddyfile.ServerBlock,
 		"{tls_client_serial}", "{http.request.tls.client.serial}",
 		"{tls_client_subject}", "{http.request.tls.client.subject}",
 		"{tls_client_certificate_pem}", "{http.request.tls.client.certificate_pem}",
+		"{tls_client_certificate_der_base64}", "{http.request.tls.client.certificate_der_base64}",
+		"{upstream_hostport}", "{http.reverse_proxy.upstream.hostport}",
 	)
 
 	// these are placeholders that allow a user-defined final
@@ -169,7 +171,11 @@ func (st ServerType) Setup(inputServerBlocks []caddyfile.ServerBlock,
 			dirFunc, ok := registeredDirectives[dir]
 			if !ok {
 				tkn := segment[0]
-				return nil, warnings, fmt.Errorf("%s:%d: unrecognized directive: %s", tkn.File, tkn.Line, dir)
+				message := "%s:%d: unrecognized directive: %s"
+				if !sb.block.HasBraces {
+					message += "\nDid you mean to define a second site? If so, you must use curly braces around each site to separate their configurations."
+				}
+				return nil, warnings, fmt.Errorf(message, tkn.File, tkn.Line, dir)
 			}
 
 			h := Helper{
@@ -522,6 +528,16 @@ func (st *ServerType) serversFromPairings(
 			}
 		}
 
+		// if needed, the ServerLogConfig is initialized beforehand so
+		// that all server blocks can populate it with data, even when not
+		// coming with a log directive
+		for _, sblock := range p.serverBlocks {
+			if len(sblock.pile["custom_log"]) != 0 {
+				srv.Logs = new(caddyhttp.ServerLogConfig)
+				break
+			}
+		}
+
 		// create a subroute for each site in the server block
 		for _, sblock := range p.serverBlocks {
 			matcherSetsEnc, err := st.compileEncodedMatcherSets(sblock)
@@ -636,9 +652,6 @@ func (st *ServerType) serversFromPairings(
 			sblockLogHosts := sblock.hostsFromKeys(true)
 			for _, cval := range sblock.pile["custom_log"] {
 				ncl := cval.Value.(namedCustomLog)
-				if srv.Logs == nil {
-					srv.Logs = new(caddyhttp.ServerLogConfig)
-				}
 				if sblock.hasHostCatchAllKey() {
 					// all requests for hosts not able to be listed should use
 					// this log because it's a catch-all-hosts server block

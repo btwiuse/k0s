@@ -184,8 +184,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				log = logger.Error
 			}
 
+			userID, _ := repl.GetString("http.auth.user.id")
+
 			log("handled request",
 				zap.String("common_log", repl.ReplaceAll(commonLogFormat, commonLogEmptyValue)),
+				zap.String("user_id", userID),
 				zap.Duration("duration", duration),
 				zap.Int("size", wrec.Size()),
 				zap.Int("status", wrec.Status()),
@@ -379,7 +382,9 @@ func (s *Server) hasTLSClientAuth() bool {
 // that it is after any other host matcher but before any "catch-all"
 // route without a host matcher.
 func (s *Server) findLastRouteWithHostMatcher() int {
+	foundHostMatcher := false
 	lastIndex := len(s.Routes)
+
 	for i, route := range s.Routes {
 		// since we want to break out of an inner loop, use a closure
 		// to allow us to use 'return' when we found a host matcher
@@ -388,6 +393,7 @@ func (s *Server) findLastRouteWithHostMatcher() int {
 				for _, matcher := range sets {
 					switch matcher.(type) {
 					case *MatchHost:
+						foundHostMatcher = true
 						return true
 					}
 				}
@@ -401,6 +407,14 @@ func (s *Server) findLastRouteWithHostMatcher() int {
 			lastIndex = i + 1
 		}
 	}
+
+	// If we didn't actually find a host matcher, return 0
+	// because that means every defined route was a "catch-all".
+	// See https://caddy.community/t/how-to-set-priority-in-caddyfile/13002/8
+	if !foundHostMatcher {
+		return 0
+	}
+
 	return lastIndex
 }
 
