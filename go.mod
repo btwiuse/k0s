@@ -100,7 +100,6 @@ require (
 	github.com/liamg/aminal v0.9.0
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
 	github.com/lunny/tango v0.5.6
-	github.com/mathetake/gasm v0.0.0-20200928142744-80e74517647c
 	github.com/mattn/go-isatty v0.0.13
 	github.com/mattn/go-runewidth v0.0.10
 	github.com/mattn/go-shellwords v1.0.10
@@ -122,6 +121,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.7.0
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
+	github.com/tetratelabs/wazero v0.0.0-20220401224236-2664b1eb62a2
 	github.com/traefik/yaegi v0.9.14
 	github.com/urfave/cli v1.22.5
 	github.com/v2fly/v2ray-core/v4 v4.36.2
@@ -468,6 +468,7 @@ require (
 	github.com/tinylib/msgp v1.1.2 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
+	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/txthinking/runnergroup v0.0.0-20200327135940-540a793bb997 // indirect
 	github.com/txthinking/socks5 v0.0.0-20200531111549-252709fcb919 // indirect
 	github.com/txthinking/x v0.0.0-20200330144832-5ad2416896a9 // indirect
