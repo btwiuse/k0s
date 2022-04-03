@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["interpreter.go"],
+    importmap = "k0s.io/vendor/github.com/tetratelabs/wazero/internal/wasm/interpreter",
+    importpath = "github.com/tetratelabs/wazero/internal/wasm/interpreter",
+    visibility = ["//vendor/github.com/tetratelabs/wazero:__subpackages__"],
+    deps = [
+        "//vendor/github.com/tetratelabs/wazero/internal/moremath:go_default_library",
+        "//vendor/github.com/tetratelabs/wazero/internal/wasm:go_default_library",
+        "//vendor/github.com/tetratelabs/wazero/internal/wasm/buildoptions:go_default_library",
+        "//vendor/github.com/tetratelabs/wazero/internal/wazeroir:go_default_library",
+        "//vendor/github.com/tetratelabs/wazero/sys:go_default_library",
+    ],
+)

@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "builder.go",
+        "config.go",
+        "config_supported.go",
+        "config_unsupported.go",
+        "wasm.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/tetratelabs/wazero",
+    importpath = "github.com/tetratelabs/wazero",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/tetratelabs/wazero/api:go_default_library",
+        "//vendor/github.com/tetratelabs/wazero/internal/wasm:go_default_library",
+        "//vendor/github.com/tetratelabs/wazero/internal/wasm/binary:go_default_library",
+        "//vendor/github.com/tetratelabs/wazero/internal/wasm/interpreter:go_default_library",
+        "//vendor/github.com/tetratelabs/wazero/internal/wasm/jit:go_default_library",
+        "//vendor/github.com/tetratelabs/wazero/internal/wasm/text:go_default_library",
+    ],
+)

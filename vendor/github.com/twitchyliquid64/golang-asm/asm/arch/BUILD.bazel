@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "arch.go",
+        "arm.go",
+        "arm64.go",
+        "mips.go",
+        "ppc64.go",
+        "riscv64.go",
+        "s390x.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/twitchyliquid64/golang-asm/asm/arch",
+    importpath = "github.com/twitchyliquid64/golang-asm/asm/arch",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/twitchyliquid64/golang-asm/obj:go_default_library",
+        "//vendor/github.com/twitchyliquid64/golang-asm/obj/arm:go_default_library",
+        "//vendor/github.com/twitchyliquid64/golang-asm/obj/arm64:go_default_library",
+        "//vendor/github.com/twitchyliquid64/golang-asm/obj/mips:go_default_library",
+        "//vendor/github.com/twitchyliquid64/golang-asm/obj/ppc64:go_default_library",
+        "//vendor/github.com/twitchyliquid64/golang-asm/obj/riscv:go_default_library",
+        "//vendor/github.com/twitchyliquid64/golang-asm/obj/s390x:go_default_library",
+        "//vendor/github.com/twitchyliquid64/golang-asm/obj/wasm:go_default_library",
+        "//vendor/github.com/twitchyliquid64/golang-asm/obj/x86:go_default_library",
+    ],
+)

@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["sys.go"],
+    importmap = "k0s.io/vendor/github.com/tetratelabs/wazero/sys",
+    importpath = "github.com/tetratelabs/wazero/sys",
+    visibility = ["//visibility:public"],
+)
