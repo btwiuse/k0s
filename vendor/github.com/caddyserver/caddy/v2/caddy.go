@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -268,8 +267,9 @@ func unsyncedDecodeAndRun(cfgJSON []byte, allowPersist bool) error {
 		newCfg != nil &&
 		newCfg.Admin != nil &&
 		newCfg.Admin.Config != nil &&
-		newCfg.Admin.Config.LoadRaw != nil {
-		return fmt.Errorf("recursive config loading detected: pulled configs cannot pull other configs")
+		newCfg.Admin.Config.LoadRaw != nil &&
+		newCfg.Admin.Config.LoadInterval <= 0 {
+		return fmt.Errorf("recursive config loading detected: pulled configs cannot pull other configs without positive load_interval")
 	}
 
 	// run the new config and start all its apps
@@ -299,7 +299,7 @@ func unsyncedDecodeAndRun(cfgJSON []byte, allowPersist bool) error {
 				zap.String("dir", dir),
 				zap.Error(err))
 		} else {
-			err := ioutil.WriteFile(ConfigAutosavePath, cfgJSON, 0600)
+			err := os.WriteFile(ConfigAutosavePath, cfgJSON, 0600)
 			if err == nil {
 				Log().Info("autosaved config (load with --resume flag)", zap.String("file", ConfigAutosavePath))
 			} else {
@@ -480,23 +480,42 @@ func finishSettingUp(ctx Context, cfg *Config) error {
 		if err != nil {
 			return fmt.Errorf("loading config loader module: %s", err)
 		}
-		loadedConfig, err := val.(ConfigLoader).LoadConfig(ctx)
-		if err != nil {
-			return fmt.Errorf("loading dynamic config from %T: %v", val, err)
-		}
-
-		// do this in a goroutine so current config can finish being loaded; otherwise deadlock
-		go func() {
-			Log().Info("applying dynamically-loaded config", zap.String("loader_module", val.(Module).CaddyModule().ID.Name()))
+		runLoadedConfig := func(config []byte) {
+			Log().Info("applying dynamically-loaded config", zap.String("loader_module", val.(Module).CaddyModule().ID.Name()), zap.Int("pull_interval", int(cfg.Admin.Config.LoadInterval)))
 			currentCfgMu.Lock()
-			err := unsyncedDecodeAndRun(loadedConfig, false)
+			err := unsyncedDecodeAndRun(config, false)
 			currentCfgMu.Unlock()
 			if err == nil {
 				Log().Info("dynamically-loaded config applied successfully")
 			} else {
 				Log().Error("running dynamically-loaded config failed", zap.Error(err))
 			}
-		}()
+		}
+		if cfg.Admin.Config.LoadInterval > 0 {
+			go func() {
+				select {
+				// if LoadInterval is positive, will wait for the interval and then run with new config
+				case <-time.After(time.Duration(cfg.Admin.Config.LoadInterval)):
+					loadedConfig, err := val.(ConfigLoader).LoadConfig(ctx)
+					if err != nil {
+						Log().Error("loading dynamic config failed", zap.Error(err))
+						return
+					}
+					runLoadedConfig(loadedConfig)
+				case <-ctx.Done():
+					return
+				}
+			}()
+		} else {
+			// if no LoadInterval is provided, will load config synchronously
+			loadedConfig, err := val.(ConfigLoader).LoadConfig(ctx)
+			if err != nil {
+				return fmt.Errorf("loading dynamic config from %T: %v", val, err)
+			}
+			// do this in a goroutine so current config can finish being loaded; otherwise deadlock
+			go runLoadedConfig(loadedConfig)
+		}
+
 	}
 
 	return nil
@@ -680,13 +699,13 @@ func ParseDuration(s string) (time.Duration, error) {
 // have its own unique ID.
 func InstanceID() (uuid.UUID, error) {
 	uuidFilePath := filepath.Join(AppDataDir(), "instance.uuid")
-	uuidFileBytes, err := ioutil.ReadFile(uuidFilePath)
+	uuidFileBytes, err := os.ReadFile(uuidFilePath)
 	if os.IsNotExist(err) {
 		uuid, err := uuid.NewRandom()
 		if err != nil {
 			return uuid, err
 		}
-		err = ioutil.WriteFile(uuidFilePath, []byte(uuid.String()), 0600)
+		err = os.WriteFile(uuidFilePath, []byte(uuid.String()), 0600)
 		return uuid, err
 	} else if err != nil {
 		return [16]byte{}, err

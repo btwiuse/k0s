@@ -15,7 +15,7 @@ go_library(
     importpath = "go.step.sm/cli-utils/usage",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/samfoo/ansi:go_default_library",
+        "//vendor/github.com/mgutz/ansi:go_default_library",
         "//vendor/github.com/urfave/cli:go_default_library",
         "//vendor/go.step.sm/cli-utils/errs:go_default_library",
         "//vendor/go.step.sm/cli-utils/pkg/blackfriday:go_default_library",

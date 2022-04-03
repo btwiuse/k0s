@@ -18,7 +18,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -189,13 +188,14 @@ func (h *Handler) doActiveHealthCheckForAllHosts() {
 				return
 			}
 			hostAddr := addr.JoinHostPort(0)
+			dialAddr := hostAddr
 			if addr.IsUnixNetwork() {
 				// this will be used as the Host portion of a http.Request URL, and
 				// paths to socket files would produce an error when creating URL,
 				// so use a fake Host value instead; unix sockets are usually local
 				hostAddr = "localhost"
 			}
-			err = h.doActiveHealthCheck(DialInfo{Network: addr.Network, Address: hostAddr}, hostAddr, upstream.Host)
+			err = h.doActiveHealthCheck(DialInfo{Network: addr.Network, Address: dialAddr}, hostAddr, upstream.Host)
 			if err != nil {
 				h.HealthChecks.Active.logger.Error("active health check failed",
 					zap.String("address", hostAddr),
@@ -281,7 +281,7 @@ func (h *Handler) doActiveHealthCheck(dialInfo DialInfo, hostAddr string, host H
 	}
 	defer func() {
 		// drain any remaining body so connection could be re-used
-		_, _ = io.Copy(ioutil.Discard, body)
+		_, _ = io.Copy(io.Discard, body)
 		resp.Body.Close()
 	}()
 
@@ -312,7 +312,7 @@ func (h *Handler) doActiveHealthCheck(dialInfo DialInfo, hostAddr string, host H
 
 	// if body does not match regex, mark down
 	if h.HealthChecks.Active.bodyRegexp != nil {
-		bodyBytes, err := ioutil.ReadAll(body)
+		bodyBytes, err := io.ReadAll(body)
 		if err != nil {
 			h.HealthChecks.Active.logger.Info("failed to read response body",
 				zap.String("host", hostAddr),

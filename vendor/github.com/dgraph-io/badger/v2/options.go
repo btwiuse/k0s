@@ -116,7 +116,7 @@ func DefaultOptions(path string) Options {
 		Dir:                 path,
 		ValueDir:            path,
 		LevelOneSize:        256 << 20,
-		LevelSizeMultiplier: 15,
+		LevelSizeMultiplier: 10,
 		TableLoadingMode:    options.MemoryMap,
 		ValueLogLoadingMode: options.MemoryMap,
 		// table.MemoryMap to mmap() the tables.
@@ -143,6 +143,7 @@ func DefaultOptions(path string) Options {
 		// compression is ratio supposed to increase with increasing compression level but since the
 		// input for compression algorithm is small (4 KB), we don't get significant benefit at
 		// level 3.
+		// NOTE: The benchmarks are with DataDog ZSTD that requires CGO. Hence, no longer valid.
 		// no_compression-16              10	 502848865 ns/op	 165.46 MB/s	-
 		// zstd_compression/level_1-16     7	 739037966 ns/op	 112.58 MB/s	2.93
 		// zstd_compression/level_3-16     7	 756950250 ns/op	 109.91 MB/s	2.72
@@ -169,7 +170,6 @@ func DefaultOptions(path string) Options {
 
 func buildTableOptions(opt Options) table.Options {
 	return table.Options{
-		TableSize:            uint64(opt.MaxTableSize),
 		BlockSize:            opt.BlockSize,
 		BloomFalsePositive:   opt.BloomFalsePositive,
 		LoadBloomsOnOpen:     opt.LoadBloomsOnOpen,
@@ -219,6 +219,17 @@ func (opt Options) WithDir(val string) Options {
 // This is set automatically to be the path given to `DefaultOptions`.
 func (opt Options) WithValueDir(val string) Options {
 	opt.ValueDir = val
+	return opt
+}
+
+// WithLoggingLevel returns a new Options value with logging level of the
+// default logger set to the given value.
+// LoggingLevel sets the level of logging. It should be one of DEBUG, INFO,
+// WARNING or ERROR levels.
+//
+// The default value of LoggingLevel is INFO.
+func (opt Options) WithLoggingLevel(val loggingLevel) Options {
+	opt.Logger = defaultLogger(val)
 	return opt
 }
 
@@ -299,17 +310,6 @@ func (opt Options) WithLogger(val Logger) Options {
 	return opt
 }
 
-// WithLoggingLevel returns a new Options value with logging level of the
-// default logger set to the given value.
-// LoggingLevel sets the level of logging. It should be one of DEBUG, INFO,
-// WARNING or ERROR levels.
-//
-// The default value of LoggingLevel is INFO.
-func (opt Options) WithLoggingLevel(val loggingLevel) Options {
-	opt.Logger = defaultLogger(val)
-	return opt
-}
-
 // WithMaxTableSize returns a new Options value with MaxTableSize set to the given value.
 //
 // MaxTableSize sets the maximum size in bytes for each LSM table or file.
@@ -327,7 +327,7 @@ func (opt Options) WithMaxTableSize(val int64) Options {
 // Once a level grows to be larger than this ratio allowed, the compaction process will be
 //  triggered.
 //
-// The default value of LevelSizeMultiplier is 15.
+// The default value of LevelSizeMultiplier is 10.
 func (opt Options) WithLevelSizeMultiplier(val int) Options {
 	opt.LevelSizeMultiplier = val
 	return opt
@@ -373,8 +373,6 @@ func (opt Options) WithNumMemtables(val int) Options {
 // consume more memory.
 //
 // The default value of BloomFalsePositive is 0.01.
-//
-// Setting this to 0 disables the bloom filter completely.
 func (opt Options) WithBloomFalsePositive(val float64) Options {
 	opt.BloomFalsePositive = val
 	return opt
@@ -452,7 +450,7 @@ func (opt Options) WithValueLogMaxEntries(val uint32) Options {
 // NumCompactors sets the number of compaction workers to run concurrently.
 // Setting this to zero stops compactions, which could eventually cause writes to block forever.
 //
-// The default value of NumCompactors is 2. One is dedicated just for L0 and L1.
+// The default value of NumCompactors is 2. One is dedicated just for L0.
 func (opt Options) WithNumCompactors(val int) Options {
 	opt.NumCompactors = val
 	return opt
@@ -590,6 +588,7 @@ func (opt Options) WithInMemory(b bool) Options {
 // algorithm is small (4 KB), we don't get significant benefit at level 3. It is advised to write
 // your own benchmarks before choosing a compression algorithm or level.
 //
+// NOTE: The benchmarks are with DataDog ZSTD that requires CGO. Hence, no longer valid.
 // no_compression-16              10	 502848865 ns/op	 165.46 MB/s	-
 // zstd_compression/level_1-16     7	 739037966 ns/op	 112.58 MB/s	2.93
 // zstd_compression/level_3-16     7	 756950250 ns/op	 109.91 MB/s	2.72

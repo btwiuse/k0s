@@ -267,7 +267,7 @@ func (s *levelHandler) get(key []byte) (y.ValueStruct, error) {
 			continue
 		}
 
-		it := th.NewIterator(0)
+		it := th.NewIterator(false)
 		defer it.Close()
 
 		y.NumLSMGets.Add(s.strLevel, 1)
@@ -291,10 +291,6 @@ func (s *levelHandler) appendIterators(iters []y.Iterator, opt *IteratorOptions)
 	s.RLock()
 	defer s.RUnlock()
 
-	var topt int
-	if opt.Reverse {
-		topt = table.REVERSED
-	}
 	if s.level == 0 {
 		// Remember to add in reverse order!
 		// The newer table at the end of s.tables should be added first as it takes precedence.
@@ -305,14 +301,14 @@ func (s *levelHandler) appendIterators(iters []y.Iterator, opt *IteratorOptions)
 				out = append(out, t)
 			}
 		}
-		return appendIteratorsReversed(iters, out, topt)
+		return appendIteratorsReversed(iters, out, opt.Reverse)
 	}
 
 	tables := opt.pickTables(s.tables)
 	if len(tables) == 0 {
 		return iters
 	}
-	return append(iters, table.NewConcatIterator(tables, topt))
+	return append(iters, table.NewConcatIterator(tables, opt.Reverse))
 }
 
 type levelHandlerRLocked struct{}

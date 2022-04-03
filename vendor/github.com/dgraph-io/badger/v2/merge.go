@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/dgraph-io/badger/v2/y"
-	"github.com/dgraph-io/ristretto/z"
 	"github.com/pkg/errors"
 )
 
@@ -31,7 +30,7 @@ type MergeOperator struct {
 	f      MergeFunc
 	db     *DB
 	key    []byte
-	closer *z.Closer
+	closer *y.Closer
 }
 
 // MergeFunc accepts two byte slices, one representing an existing value, and
@@ -50,7 +49,7 @@ func (db *DB) GetMergeOperator(key []byte,
 		f:      f,
 		db:     db,
 		key:    key,
-		closer: z.NewCloser(1),
+		closer: y.NewCloser(1),
 	}
 
 	go op.runCompactions(dur)

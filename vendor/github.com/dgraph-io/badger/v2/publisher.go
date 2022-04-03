@@ -22,13 +22,12 @@ import (
 	"github.com/dgraph-io/badger/v2/pb"
 	"github.com/dgraph-io/badger/v2/trie"
 	"github.com/dgraph-io/badger/v2/y"
-	"github.com/dgraph-io/ristretto/z"
 )
 
 type subscriber struct {
 	prefixes  [][]byte
 	sendCh    chan<- *pb.KVList
-	subCloser *z.Closer
+	subCloser *y.Closer
 }
 
 type publisher struct {
@@ -48,7 +47,7 @@ func newPublisher() *publisher {
 	}
 }
 
-func (p *publisher) listenForUpdates(c *z.Closer) {
+func (p *publisher) listenForUpdates(c *y.Closer) {
 	defer func() {
 		p.cleanSubscribers()
 		c.Done()
@@ -109,7 +108,7 @@ func (p *publisher) publishUpdates(reqs requests) {
 	}
 }
 
-func (p *publisher) newSubscriber(c *z.Closer, prefixes ...[]byte) (<-chan *pb.KVList, uint64) {
+func (p *publisher) newSubscriber(c *y.Closer, prefixes ...[]byte) (<-chan *pb.KVList, uint64) {
 	p.Lock()
 	defer p.Unlock()
 	ch := make(chan *pb.KVList, 1000)

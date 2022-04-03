@@ -11,6 +11,7 @@ go_library(
         "gnuplot.go",
         "go.go",
         "graphql.go",
+        "groff.go",
         "groovy.go",
     ],
     importmap = "k0s.io/vendor/github.com/alecthomas/chroma/lexers/g",

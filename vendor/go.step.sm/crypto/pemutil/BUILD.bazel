@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "cosign.go",
         "pem.go",
         "pkcs8.go",
         "ssh.go",
@@ -16,7 +17,9 @@ go_library(
         "//vendor/go.step.sm/crypto/internal/utils:go_default_library",
         "//vendor/go.step.sm/crypto/keyutil:go_default_library",
         "//vendor/go.step.sm/crypto/randutil:go_default_library",
+        "//vendor/golang.org/x/crypto/nacl/secretbox:go_default_library",
         "//vendor/golang.org/x/crypto/pbkdf2:go_default_library",
+        "//vendor/golang.org/x/crypto/scrypt:go_default_library",
         "//vendor/golang.org/x/crypto/ssh:go_default_library",
     ],
 )

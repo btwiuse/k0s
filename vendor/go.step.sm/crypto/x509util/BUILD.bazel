@@ -6,6 +6,7 @@ go_library(
         "algorithms.go",
         "certificate.go",
         "certificate_request.go",
+        "certpool.go",
         "extensions.go",
         "marshal_utils.go",
         "name.go",

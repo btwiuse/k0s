@@ -32,7 +32,6 @@ import (
 	"github.com/dgraph-io/badger/v2/pb"
 	"github.com/dgraph-io/badger/v2/table"
 	"github.com/dgraph-io/badger/v2/y"
-	"github.com/dgraph-io/ristretto/z"
 	"github.com/pkg/errors"
 )
 
@@ -269,13 +268,21 @@ func (s *levelsController) dropTree() (int, error) {
 }
 
 // dropPrefix runs a L0->L1 compaction, and then runs same level compaction on the rest of the
-// levels. For L0->L1 compaction, it runs compactions normally, but skips over
-// all the keys with the provided prefix.
+// levels. For L0->L1 compaction, it runs compactions normally, but skips over all the keys with the
+// provided prefix and also the internal move keys for the same prefix.
 // For Li->Li compactions, it picks up the tables which would have the prefix. The
 // tables who only have keys with this prefix are quickly dropped. The ones which have other keys
 // are run through MergeIterator and compacted to create new tables. All the mechanisms of
 // compactions apply, i.e. level sizes and MANIFEST are updated as in the normal flow.
 func (s *levelsController) dropPrefixes(prefixes [][]byte) error {
+	// Internal move keys related to the given prefix should also be skipped.
+	for _, prefix := range prefixes {
+		key := make([]byte, 0, len(badgerMove)+len(prefix))
+		key = append(key, badgerMove...)
+		key = append(key, prefix...)
+		prefixes = append(prefixes, key)
+	}
+
 	opt := s.kv.opt
 	// Iterate levels in the reverse order because if we were to iterate from
 	// lower level (say level 0) to a higher level (say level 3) we could have
@@ -355,7 +362,7 @@ func (s *levelsController) dropPrefixes(prefixes [][]byte) error {
 	return nil
 }
 
-func (s *levelsController) startCompact(lc *z.Closer) {
+func (s *levelsController) startCompact(lc *y.Closer) {
 	n := s.kv.opt.NumCompactors
 	lc.AddRunning(n - 1)
 	for i := 0; i < n; i++ {
@@ -365,7 +372,7 @@ func (s *levelsController) startCompact(lc *z.Closer) {
 	}
 }
 
-func (s *levelsController) runCompactor(id int, lc *z.Closer) {
+func (s *levelsController) runCompactor(id int, lc *y.Closer) {
 	defer lc.Done()
 
 	randomDelay := time.NewTimer(time.Duration(rand.Int31n(1000)) * time.Millisecond)
@@ -510,10 +517,10 @@ func (s *levelsController) compactBuildTables(
 	var iters []y.Iterator
 	switch {
 	case lev == 0:
-		iters = appendIteratorsReversed(iters, topTables, table.NOCACHE)
+		iters = appendIteratorsReversed(iters, topTables, false)
 	case len(topTables) > 0:
 		y.AssertTrue(len(topTables) == 1)
-		iters = []y.Iterator{topTables[0].NewIterator(table.NOCACHE)}
+		iters = []y.Iterator{topTables[0].NewIterator(false)}
 	}
 
 	// Next level has level>=1 and we can use ConcatIterator as key ranges do not overlap.
@@ -534,7 +541,7 @@ nextTable:
 		}
 		valid = append(valid, table)
 	}
-	iters = append(iters, table.NewConcatIterator(valid, table.NOCACHE))
+	iters = append(iters, table.NewConcatIterator(valid, false))
 	it := table.NewMergeIterator(iters, false)
 	defer it.Close() // Important to close the iterator to do ref counting.
 
@@ -586,7 +593,7 @@ nextTable:
 			}
 
 			if !y.SameKey(it.Key(), lastKey) {
-				if builder.ReachedCapacity(uint64(float64(s.kv.opt.MaxTableSize) * 0.9)) {
+				if builder.ReachedCapacity(s.kv.opt.MaxTableSize) {
 					// Only break if we are on a different key, and have reached capacity. We want
 					// to ensure that all versions of the key are stored in the same sstable, and
 					// not divided across multiple tables at the same level.
@@ -649,9 +656,6 @@ nextTable:
 		s.kv.opt.Debugf("LOG Compact. Added %d keys. Skipped %d keys. Iteration took: %v",
 			numKeys, numSkips, time.Since(timeStart))
 		if builder.Empty() {
-			// Cleanup builder resources:
-			builder.Finish(false)
-			builder.Close()
 			continue
 		}
 		numBuilds++
@@ -670,7 +674,7 @@ nextTable:
 					return nil, errors.Wrapf(err, "While opening new table: %d", fileID)
 				}
 
-				if _, err := fd.Write(builder.Finish(false)); err != nil {
+				if _, err := fd.Write(builder.Finish()); err != nil {
 					return nil, errors.Wrapf(err, "Unable to write to file: %d", fileID)
 				}
 				tbl, err := table.OpenTable(fd, bopts)
@@ -681,7 +685,7 @@ nextTable:
 			var tbl *table.Table
 			var err error
 			if s.kv.opt.InMemory {
-				tbl, err = table.OpenInMemoryTable(builder.Finish(true), fileID, &bopts)
+				tbl, err = table.OpenInMemoryTable(builder.Finish(), fileID, &bopts)
 			} else {
 				tbl, err = build(fileID)
 			}
@@ -693,11 +697,7 @@ nextTable:
 
 			mu.Lock()
 			newTables = append(newTables, tbl)
-			// num := atomic.LoadInt32(&table.NumBlocks)
 			mu.Unlock()
-
-			// TODO(ibrahim): When ristretto PR #186 merges, bring this back.
-			// s.kv.opt.Debugf("Num Blocks: %d. Num Allocs (MB): %.2f\n", num, (z.NumAllocBytes() / 1 << 20))
 		}(builder)
 	}
 
@@ -1070,10 +1070,8 @@ func (s *levelsController) close() error {
 	return errors.Wrap(err, "levelsController.Close")
 }
 
-// get searches for a given key in all the levels of the LSM tree. It returns
-// key version <= the expected version (maxVs). If not found, it returns an empty
-// y.ValueStruct.
-func (s *levelsController) get(key []byte, maxVs y.ValueStruct, startLevel int) (
+// get returns the found value if any. If not found, we return nil.
+func (s *levelsController) get(key []byte, maxVs *y.ValueStruct, startLevel int) (
 	y.ValueStruct, error) {
 	if s.kv.IsClosed() {
 		return y.ValueStruct{}, ErrDBClosed
@@ -1096,20 +1094,23 @@ func (s *levelsController) get(key []byte, maxVs y.ValueStruct, startLevel int) 
 		if vs.Value == nil && vs.Meta == 0 {
 			continue
 		}
-		if vs.Version == version {
+		if maxVs == nil || vs.Version == version {
 			return vs, nil
 		}
 		if maxVs.Version < vs.Version {
-			maxVs = vs
+			*maxVs = vs
 		}
 	}
-	return maxVs, nil
+	if maxVs != nil {
+		return *maxVs, nil
+	}
+	return y.ValueStruct{}, nil
 }
 
-func appendIteratorsReversed(out []y.Iterator, th []*table.Table, opt int) []y.Iterator {
+func appendIteratorsReversed(out []y.Iterator, th []*table.Table, reversed bool) []y.Iterator {
 	for i := len(th) - 1; i >= 0; i-- {
 		// This will increment the reference of the table handler.
-		out = append(out, th[i].NewIterator(opt))
+		out = append(out, th[i].NewIterator(reversed))
 	}
 	return out
 }
@@ -1134,7 +1135,6 @@ type TableInfo struct {
 	Right       []byte
 	KeyCount    uint64 // Number of keys in the table
 	EstimatedSz uint64
-	IndexSz     int
 }
 
 func (s *levelsController) getTableInfo(withKeysCount bool) (result []TableInfo) {
@@ -1143,7 +1143,7 @@ func (s *levelsController) getTableInfo(withKeysCount bool) (result []TableInfo)
 		for _, t := range l.tables {
 			var count uint64
 			if withKeysCount {
-				it := t.NewIterator(table.NOCACHE)
+				it := t.NewIterator(false)
 				for it.Rewind(); it.Valid(); it.Next() {
 					count++
 				}
@@ -1157,7 +1157,6 @@ func (s *levelsController) getTableInfo(withKeysCount bool) (result []TableInfo)
 				Right:       t.Biggest(),
 				KeyCount:    count,
 				EstimatedSz: t.EstimatedSize(),
-				IndexSz:     t.IndexSize(),
 			}
 			result = append(result, info)
 		}
@@ -1198,20 +1197,4 @@ func (s *levelsController) verifyChecksum() error {
 	}
 
 	return nil
-}
-
-// Returns the sorted list of splits for all the levels and tables based
-// on the block offsets.
-func (s *levelsController) keySplits(numPerTable int, prefix []byte) []string {
-	splits := make([]string, 0)
-	for _, l := range s.levels {
-		l.RLock()
-		for _, t := range l.tables {
-			tableSplits := t.KeySplits(numPerTable, prefix)
-			splits = append(splits, tableSplits...)
-		}
-		l.RUnlock()
-	}
-	sort.Strings(splits)
-	return splits
 }

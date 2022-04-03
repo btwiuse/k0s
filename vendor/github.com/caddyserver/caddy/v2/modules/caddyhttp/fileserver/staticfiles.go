@@ -19,6 +19,7 @@ import (
 	weakrand "math/rand"
 	"mime"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -70,6 +71,10 @@ type FileServer struct {
 
 	// Use redirects to enforce trailing slashes for directories, or to
 	// remove trailing slash from URIs for files. Default is true.
+	//
+	// Canonicalization will not happen if the last element of the request's
+	// path (the filename) is changed in an internal rewrite, to avoid
+	// clobbering the explicit rewrite with implicit behavior.
 	CanonicalURIs *bool `json:"canonical_uris,omitempty"`
 
 	// Override the status code written when successfully serving a file.
@@ -161,6 +166,16 @@ func (fsrv *FileServer) ServeHTTP(w http.ResponseWriter, r *http.Request, next c
 	filesToHide := fsrv.transformHidePaths(repl)
 
 	root := repl.ReplaceAll(fsrv.Root, ".")
+	// PathUnescape returns an error if the escapes aren't well-formed,
+	// meaning the count % matches the RFC. Return early if the escape is
+	// improper.
+	if _, err := url.PathUnescape(r.URL.Path); err != nil {
+		fsrv.logger.Debug("improper path escape",
+			zap.String("site_root", root),
+			zap.String("request_path", r.URL.Path),
+			zap.Error(err))
+		return err
+	}
 	filename := caddyhttp.SanitizedPathJoin(root, r.URL.Path)
 
 	fsrv.logger.Debug("sanitized path join",

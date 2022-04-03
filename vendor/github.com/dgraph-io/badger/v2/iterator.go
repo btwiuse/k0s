@@ -41,21 +41,20 @@ const (
 // Item is returned during iteration. Both the Key() and Value() output is only valid until
 // iterator.Next() is called.
 type Item struct {
+	status    prefetchStatus
+	err       error
+	wg        sync.WaitGroup
+	db        *DB
 	key       []byte
 	vptr      []byte
-	val       []byte
-	version   uint64
+	meta      byte // We need to store meta to know about bitValuePointer.
+	userMeta  byte
 	expiresAt uint64
-
-	slice *y.Slice // Used only during prefetching.
-	next  *Item
-	txn   *Txn
-
-	err      error
-	wg       sync.WaitGroup
-	status   prefetchStatus
-	meta     byte // We need to store meta to know about bitValuePointer.
-	userMeta byte
+	val       []byte
+	slice     *y.Slice // Used only during prefetching.
+	next      *Item
+	version   uint64
+	txn       *Txn
 }
 
 // String returns a string representation of Item
@@ -151,29 +150,65 @@ func (item *Item) DiscardEarlierVersions() bool {
 
 func (item *Item) yieldItemValue() ([]byte, func(), error) {
 	key := item.Key() // No need to copy.
-	if !item.hasValue() {
-		return nil, nil, nil
-	}
+	for {
+		if !item.hasValue() {
+			return nil, nil, nil
+		}
 
-	if item.slice == nil {
-		item.slice = new(y.Slice)
-	}
+		if item.slice == nil {
+			item.slice = new(y.Slice)
+		}
 
-	if (item.meta & bitValuePointer) == 0 {
-		val := item.slice.Resize(len(item.vptr))
-		copy(val, item.vptr)
-		return val, nil, nil
-	}
+		if (item.meta & bitValuePointer) == 0 {
+			val := item.slice.Resize(len(item.vptr))
+			copy(val, item.vptr)
+			return val, nil, nil
+		}
 
-	var vp valuePointer
-	vp.Decode(item.vptr)
-	db := item.txn.db
-	result, cb, err := db.vlog.Read(vp, item.slice)
-	if err != nil {
-		db.opt.Logger.Errorf(`Unable to read: Key: %v, Version : %v,
+		var vp valuePointer
+		vp.Decode(item.vptr)
+		result, cb, err := item.db.vlog.Read(vp, item.slice)
+		if err != ErrRetry {
+			if err != nil {
+				item.db.opt.Logger.Errorf(`Unable to read: Key: %v, Version : %v,
 				meta: %v, userMeta: %v`, key, item.version, item.meta, item.userMeta)
+			}
+			return result, cb, err
+		}
+		if bytes.HasPrefix(key, badgerMove) {
+			// err == ErrRetry
+			// Error is retry even after checking the move keyspace. So, let's
+			// just assume that value is not present.
+			return nil, cb, nil
+		}
+
+		// The value pointer is pointing to a deleted value log. Look for the
+		// move key and read that instead.
+		runCallback(cb)
+		// Do not put badgerMove on the left in append. It seems to cause some sort of manipulation.
+		keyTs := y.KeyWithTs(item.Key(), item.Version())
+		key = make([]byte, len(badgerMove)+len(keyTs))
+		n := copy(key, badgerMove)
+		copy(key[n:], keyTs)
+		// Note that we can't set item.key to move key, because that would
+		// change the key user sees before and after this call. Also, this move
+		// logic is internal logic and should not impact the external behavior
+		// of the retrieval.
+		vs, err := item.db.get(key)
+		if err != nil {
+			return nil, nil, err
+		}
+		if vs.Version != item.Version() {
+			return nil, nil, nil
+		}
+		// Bug fix: Always copy the vs.Value into vptr here. Otherwise, when item is reused this
+		// slice gets overwritten.
+		item.vptr = y.SafeCopy(item.vptr, vs.Value)
+		item.meta &^= bitValuePointer // Clear the value pointer bit.
+		if vs.Meta&bitValuePointer > 0 {
+			item.meta |= bitValuePointer // This meta would only be about value pointer.
+		}
 	}
-	return result, cb, err
 }
 
 func runCallback(cb func()) {
@@ -191,7 +226,7 @@ func (item *Item) prefetchValue() {
 	if val == nil {
 		return
 	}
-	if item.txn.db.opt.ValueLogLoadingMode == options.MemoryMap {
+	if item.db.opt.ValueLogLoadingMode == options.MemoryMap {
 		buf := item.slice.Resize(len(val))
 		copy(buf, val)
 		item.val = buf
@@ -294,21 +329,20 @@ func (l *list) pop() *Item {
 // should work for most applications. Consider using that as a starting point
 // before customizing it for your own needs.
 type IteratorOptions struct {
-	// PrefetchSize is the number of KV pairs to prefetch while iterating.
-	// Valid only if PrefetchValues is true.
-	PrefetchSize int
-	// PrefetchValues Indicates whether we should prefetch values during
-	// iteration and store them.
+	// Indicates whether we should prefetch values during iteration and store them.
 	PrefetchValues bool
-	Reverse        bool // Direction of iteration. False is forward, true is backward.
-	AllVersions    bool // Fetch all valid versions of the same key.
-	InternalAccess bool // Used to allow internal access to badger keys.
+	// How many KV pairs to prefetch while iterating. Valid only if PrefetchValues is true.
+	PrefetchSize int
+	Reverse      bool // Direction of iteration. False is forward, true is backward.
+	AllVersions  bool // Fetch all valid versions of the same key.
 
-	// The following option is used to narrow down the SSTables that iterator
-	// picks up. If Prefix is specified, only tables which could have this
-	// prefix are picked based on their range of keys.
-	prefixIsKey bool   // If set, use the prefix for bloom filter lookup.
+	// The following option is used to narrow down the SSTables that iterator picks up. If
+	// Prefix is specified, only tables which could have this prefix are picked based on their range
+	// of keys.
 	Prefix      []byte // Only iterate over this given prefix.
+	prefixIsKey bool   // If set, use the prefix for bloom filter lookup.
+
+	InternalAccess bool // Used to allow internal access to badger keys.
 }
 
 func (opt *IteratorOptions) compareToPrefix(key []byte) int {
@@ -471,7 +505,7 @@ func (txn *Txn) NewKeyIterator(key []byte, opt IteratorOptions) *Iterator {
 func (it *Iterator) newItem() *Item {
 	item := it.waste.pop()
 	if item == nil {
-		item = &Item{slice: new(y.Slice), txn: it.txn}
+		item = &Item{slice: new(y.Slice), db: it.txn.db, txn: it.txn}
 	}
 	return item
 }

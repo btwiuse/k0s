@@ -39,6 +39,10 @@ h1 a:hover {
 	color: #319cff;
 }
 
+a:visited {
+  color: #800080;
+}
+
 header,
 #summary {
 	padding-left: 5%;
@@ -426,7 +430,7 @@ footer {
 		</footer>
 		<script>
 			var filterEl = document.getElementById('filter');
-			filterEl.focus();
+			filterEl.focus({ preventScroll: true });
 
 			function initFilter() {
 				if (!filterEl.value) {

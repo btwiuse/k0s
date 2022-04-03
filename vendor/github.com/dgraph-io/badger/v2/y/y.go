@@ -36,15 +36,6 @@ var (
 	// ErrEOF indicates an end of file when trying to read from a memory mapped file
 	// and encountering the end of slice.
 	ErrEOF = errors.New("End of mapped region")
-
-	// ErrZstdCgo indicates that badger was built without cgo but ZSTD
-	// compression algorithm is being used for compression. ZSTD cannot work
-	// without CGO.
-	ErrZstdCgo = errors.New("zstd compression requires building badger with cgo enabled")
-
-	// ErrCommitAfterFinish indicates that write batch commit was called after
-	// finish
-	ErrCommitAfterFinish = errors.New("Batch commit not permitted after finish")
 )
 
 const (
@@ -62,6 +53,9 @@ var (
 
 	// CastagnoliCrcTable is a CRC32 polynomial table
 	CastagnoliCrcTable = crc32.MakeTable(crc32.Castagnoli)
+
+	// Dummy channel for nil closers.
+	dummyCloserChan = make(chan struct{})
 )
 
 // OpenExistingFile opens an existing file, errors if it doesn't exist.
@@ -186,6 +180,63 @@ func FixedDuration(d time.Duration) string {
 		str = fmt.Sprintf("%02dh", int(d.Hours())) + str
 	}
 	return str
+}
+
+// Closer holds the two things we need to close a goroutine and wait for it to finish: a chan
+// to tell the goroutine to shut down, and a WaitGroup with which to wait for it to finish shutting
+// down.
+type Closer struct {
+	closed    chan struct{}
+	waiting   sync.WaitGroup
+	closeOnce sync.Once
+}
+
+// NewCloser constructs a new Closer, with an initial count on the WaitGroup.
+func NewCloser(initial int) *Closer {
+	ret := &Closer{closed: make(chan struct{})}
+	ret.waiting.Add(initial)
+	return ret
+}
+
+// AddRunning Add()'s delta to the WaitGroup.
+func (lc *Closer) AddRunning(delta int) {
+	lc.waiting.Add(delta)
+}
+
+// Signal signals the HasBeenClosed signal.
+func (lc *Closer) Signal() {
+	// Todo(ibrahim): Change Signal to return error on next badger breaking change.
+	lc.closeOnce.Do(func() {
+		close(lc.closed)
+	})
+}
+
+// HasBeenClosed gets signaled when Signal() is called.
+func (lc *Closer) HasBeenClosed() <-chan struct{} {
+	if lc == nil {
+		return dummyCloserChan
+	}
+	return lc.closed
+}
+
+// Done calls Done() on the WaitGroup.
+func (lc *Closer) Done() {
+	if lc == nil {
+		return
+	}
+	lc.waiting.Done()
+}
+
+// Wait waits on the WaitGroup.  (It waits for NewCloser's initial value, AddRunning, and Done
+// calls to balance out.)
+func (lc *Closer) Wait() {
+	lc.waiting.Wait()
+}
+
+// SignalAndWait calls Signal(), then Wait().
+func (lc *Closer) SignalAndWait() {
+	lc.Signal()
+	lc.Wait()
 }
 
 // Throttle allows a limited number of workers to run at a time. It also

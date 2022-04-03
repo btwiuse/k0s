@@ -11,10 +11,18 @@ const (
 	Version1 = 0x01
 )
 
-// request flags
 const (
-	// FUDP is a flag indicating that the client is going to relay UDP data.
+	// FUDP is a flag indicating that the request is UDP-oriented.
 	FUDP uint8 = 0x80
+)
+
+// request commands
+const (
+	CONNECT   uint8 = 0x01
+	BIND      uint8 = 0x02
+	ASSOCIATE uint8 = 0x03
+
+	CmdMask uint8 = 0x0F
 )
 
 // response status list
@@ -25,6 +33,8 @@ const (
 	StatusForbidden          = 0x03
 	StatusTimeout            = 0x04
 	StatusServiceUnavailable = 0x05
+	StatusHostUnreachable    = 0x06
+	StatusNetworkUnreachable = 0x07
 )
 
 var (

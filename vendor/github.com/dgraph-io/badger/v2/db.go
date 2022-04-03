@@ -37,7 +37,6 @@ import (
 	"github.com/dgraph-io/badger/v2/table"
 	"github.com/dgraph-io/badger/v2/y"
 	"github.com/dgraph-io/ristretto"
-	"github.com/dgraph-io/ristretto/z"
 	humanize "github.com/dustin/go-humanize"
 	"github.com/pkg/errors"
 )
@@ -46,20 +45,17 @@ var (
 	badgerPrefix      = []byte("!badger!")        // Prefix for internal keys used by badger.
 	head              = []byte("!badger!head")    // For storing value offset for replay.
 	txnKey            = []byte("!badger!txn")     // For indicating end of entries in txn.
+	badgerMove        = []byte("!badger!move")    // For key-value pairs which got moved during GC.
 	lfDiscardStatsKey = []byte("!badger!discard") // For storing lfDiscardStats
 )
 
-const (
-	maxNumSplits = 128
-)
-
 type closers struct {
-	updateSize *z.Closer
-	compactors *z.Closer
-	memtable   *z.Closer
-	writes     *z.Closer
-	valueGC    *z.Closer
-	pub        *z.Closer
+	updateSize *y.Closer
+	compactors *y.Closer
+	memtable   *y.Closer
+	writes     *y.Closer
+	valueGC    *y.Closer
+	pub        *y.Closer
 }
 
 // DB provides the various functions required to interact with Badger.
@@ -196,43 +192,40 @@ func (db *DB) replayFunction() func(Entry, valuePointer) error {
 	}
 }
 
-func checkAndSetOptions(opt *Options) error {
+// Open returns a new DB object.
+func Open(opt Options) (db *DB, err error) {
 	// It's okay to have zero compactors which will disable all compactions but
 	// we cannot have just one compactor otherwise we will end up with all data
-	// on level 2.
+	// one level 2.
 	if opt.NumCompactors == 1 {
-		return errors.New("Cannot have 1 compactor. Need at least 2")
+		return nil, errors.New("Cannot have 1 compactor. Need at least 2")
 	}
 	if opt.InMemory && (opt.Dir != "" || opt.ValueDir != "") {
-		return errors.New("Cannot use badger in Disk-less mode with Dir or ValueDir set")
+		return nil, errors.New("Cannot use badger in Disk-less mode with Dir or ValueDir set")
 	}
 	opt.maxBatchSize = (15 * opt.MaxTableSize) / 100
 	opt.maxBatchCount = opt.maxBatchSize / int64(skl.MaxNodeSize)
 
 	// We are limiting opt.ValueThreshold to maxValueThreshold for now.
 	if opt.ValueThreshold > maxValueThreshold {
-		return errors.Errorf("Invalid ValueThreshold, must be less or equal to %d",
+		return nil, errors.Errorf("Invalid ValueThreshold, must be less or equal to %d",
 			maxValueThreshold)
 	}
 
 	// If ValueThreshold is greater than opt.maxBatchSize, we won't be able to push any data using
 	// the transaction APIs. Transaction batches entries into batches of size opt.maxBatchSize.
 	if int64(opt.ValueThreshold) > opt.maxBatchSize {
-		return errors.Errorf("Valuethreshold greater than max batch size of %d. Either "+
+		return nil, errors.Errorf("Valuethreshold greater than max batch size of %d. Either "+
 			"reduce opt.ValueThreshold or increase opt.MaxTableSize.", opt.maxBatchSize)
 	}
 	if !(opt.ValueLogFileSize <= 2<<30 && opt.ValueLogFileSize >= 1<<20) {
-		return ErrValueLogSize
+		return nil, ErrValueLogSize
 	}
 	if !(opt.ValueLogLoadingMode == options.FileIO ||
 		opt.ValueLogLoadingMode == options.MemoryMap) {
-		return ErrInvalidLoadingMode
+		return nil, ErrInvalidLoadingMode
 	}
 
-	// Return error if badger is built without cgo and compression is set to ZSTD.
-	if opt.Compression == options.ZSTD && !y.CgoEnabled {
-		return y.ErrZstdCgo
-	}
 	// Keep L0 in memory if either KeepL0InMemory is set or if InMemory is set.
 	opt.KeepL0InMemory = opt.KeepL0InMemory || opt.InMemory
 
@@ -245,20 +238,6 @@ func checkAndSetOptions(opt *Options) error {
 		opt.Truncate = false
 		// Do not perform compaction in read only mode.
 		opt.CompactL0OnClose = false
-	}
-
-	needCache := (opt.Compression != options.None) || (len(opt.EncryptionKey) > 0)
-	if needCache && opt.BlockCacheSize == 0 {
-		opt.Warningf("BlockCacheSize should be set " +
-			"since compression/encryption are enabled")
-	}
-	return nil
-}
-
-// Open returns a new DB object.
-func Open(opt Options) (db *DB, err error) {
-	if err := checkAndSetOptions(&opt); err != nil {
-		return nil, err
 	}
 	var dirLockGuard, valueDirLockGuard *directoryLockGuard
 
@@ -331,14 +310,12 @@ func Open(opt Options) (db *DB, err error) {
 	}()
 
 	if opt.BlockCacheSize > 0 {
-		numInCache := opt.BlockCacheSize / int64(opt.BlockSize)
-
 		config := ristretto.Config{
-			NumCounters: numInCache * 8,
-			MaxCost:     opt.BlockCacheSize,
+			// Use 5% of cache memory for storing counters.
+			NumCounters: int64(float64(opt.BlockCacheSize) * 0.05 * 2),
+			MaxCost:     int64(float64(opt.BlockCacheSize) * 0.95),
 			BufferItems: 64,
 			Metrics:     true,
-			OnExit:      table.BlockEvictHandler,
 		}
 		db.blockCache, err = ristretto.NewCache(&config)
 		if err != nil {
@@ -347,13 +324,10 @@ func Open(opt Options) (db *DB, err error) {
 	}
 
 	if opt.IndexCacheSize > 0 {
-		// Index size is around 5% of the table size.
-		indexSz := int64(float64(opt.MaxTableSize) * 0.05)
-		numInCache := opt.IndexCacheSize / indexSz
-
 		config := ristretto.Config{
-			NumCounters: numInCache * 8,
-			MaxCost:     opt.IndexCacheSize,
+			// Use 5% of cache memory for storing counters.
+			NumCounters: int64(float64(opt.IndexCacheSize) * 0.05 * 2),
+			MaxCost:     int64(float64(opt.IndexCacheSize) * 0.95),
 			BufferItems: 64,
 			Metrics:     true,
 		}
@@ -379,7 +353,7 @@ func Open(opt Options) (db *DB, err error) {
 		return db, err
 	}
 	db.calculateSize()
-	db.closers.updateSize = z.NewCloser(1)
+	db.closers.updateSize = y.NewCloser(1)
 	go db.updateSize(db.closers.updateSize)
 	db.mt = skl.NewSkiplist(arenaSize(opt))
 
@@ -392,18 +366,28 @@ func Open(opt Options) (db *DB, err error) {
 	db.vlog.init(db)
 
 	if !opt.ReadOnly {
-		db.closers.compactors = z.NewCloser(1)
+		db.closers.compactors = y.NewCloser(1)
 		db.lc.startCompact(db.closers.compactors)
 
-		db.closers.memtable = z.NewCloser(1)
+		db.closers.memtable = y.NewCloser(1)
 		go func() {
 			_ = db.flushMemtable(db.closers.memtable) // Need levels controller to be up.
 		}()
 	}
-	vptr, version := db.getHead()
-	db.orc.nextTxnTs = version
 
-	replayCloser := z.NewCloser(1)
+	headKey := y.KeyWithTs(head, math.MaxUint64)
+	// Need to pass with timestamp, lsm get removes the last 8 bytes and compares key
+	vs, err := db.get(headKey)
+	if err != nil {
+		return db, errors.Wrap(err, "Retrieving head")
+	}
+	db.orc.nextTxnTs = vs.Version
+	var vptr valuePointer
+	if len(vs.Value) > 0 {
+		vptr.Decode(vs.Value)
+	}
+
+	replayCloser := y.NewCloser(1)
 	go db.doWrites(replayCloser)
 
 	if err = db.vlog.open(db, vptr, db.replayFunction()); err != nil {
@@ -420,69 +404,21 @@ func Open(opt Options) (db *DB, err error) {
 	db.orc.readMark.Done(db.orc.nextTxnTs)
 	db.orc.incrementNextTs()
 
-	db.closers.writes = z.NewCloser(1)
+	db.closers.writes = y.NewCloser(1)
 	go db.doWrites(db.closers.writes)
 
 	if !db.opt.InMemory {
-		db.closers.valueGC = z.NewCloser(1)
+		db.closers.valueGC = y.NewCloser(1)
 		go db.vlog.waitOnGC(db.closers.valueGC)
 	}
 
-	db.closers.pub = z.NewCloser(1)
+	db.closers.pub = y.NewCloser(1)
 	go db.pub.listenForUpdates(db.closers.pub)
 
 	valueDirLockGuard = nil
 	dirLockGuard = nil
 	manifestFile = nil
 	return db, nil
-}
-
-// getHead prints all the head pointer in the DB and return the max value.
-func (db *DB) getHead() (valuePointer, uint64) {
-	// This is a hack. If we use newTransaction(..) we'll end up in deadlock
-	// since txnmark is not initialized when this function is called.
-	txn := Txn{
-		db:     db,
-		readTs: math.MaxUint64, // Show all versions.
-	}
-	var vptr valuePointer
-	iopt := DefaultIteratorOptions
-	iopt.AllVersions = true
-	iopt.InternalAccess = true
-	// Do not prefetch values. This could cause a race condition since
-	// prefetching is done via goroutines.
-	iopt.PrefetchValues = false
-	iopt.Reverse = true
-
-	it := txn.NewKeyIterator(head, iopt)
-	defer it.Close()
-
-	it.Rewind()
-	if !it.Valid() {
-		db.opt.Infof("No head keys found")
-		return vptr, 0
-	}
-
-	var maxVersion uint64
-	db.opt.Infof("Found the following head pointers")
-	for ; it.Valid(); it.Next() {
-		item := it.Item()
-		err := item.Value(func(val []byte) error {
-			vptr.Decode(val)
-			db.opt.Infof("Fid: %d Len: %d Offset: %d Version: %d\n",
-				vptr.Fid, vptr.Len, vptr.Offset, item.Version())
-			return nil
-		})
-		// This shouldn't happen.
-		y.Check(err)
-		// We're iterating in the reverse order so the last item would be the
-		// one with the biggest version.
-		maxVersion = item.Version()
-	}
-	// If we have reached here it means there were some head key and so the
-	// version should never be zero.
-	y.AssertTrue(maxVersion != 0)
-	return vptr, maxVersion
 }
 
 // cleanup stops all the goroutines started by badger. This is used in open to
@@ -711,11 +647,13 @@ func (db *DB) getMemTables() ([]*skl.Skiplist, func()) {
 // that all versions of a key are always present in the same table from level 1, because compaction
 // can push any table down.
 //
-// Update(23/09/2020) - We have dropped the move key implementation. Earlier we
-// were inserting move keys to fix the invalid value pointers but we no longer
-// do that. For every get("fooX") call where X is the version, we will search
-// for "fooX" in all the levels of the LSM tree. This is expensive but it
-// removes the overhead of handling move keys completely.
+// Update (Sep 22, 2018): To maintain the above invariant, and to allow keys to be moved from one
+// value log to another (while reclaiming space during value log GC), we have logically moved this
+// need to write "old versions after new versions" to the badgerMove keyspace. Thus, for normal
+// gets, we can stop going down the LSM tree once we find any version of the key (note however that
+// we will ALWAYS skip versions with ts greater than the key version).  However, if that key has
+// been moved, then for the corresponding movekey, we'll look through all the levels of the tree
+// to ensure that we pick the highest version of the movekey present.
 func (db *DB) get(key []byte) (y.ValueStruct, error) {
 	if db.IsClosed() {
 		return y.ValueStruct{}, ErrDBClosed
@@ -723,8 +661,15 @@ func (db *DB) get(key []byte) (y.ValueStruct, error) {
 	tables, decr := db.getMemTables() // Lock should be released.
 	defer decr()
 
-	var maxVs y.ValueStruct
-	version := y.ParseTs(key)
+	var maxVs *y.ValueStruct
+	var version uint64
+	if bytes.HasPrefix(key, badgerMove) {
+		// If we are checking badgerMove key, we should look into all the
+		// levels, so we can pick up the newer versions, which might have been
+		// compacted down the tree.
+		maxVs = &y.ValueStruct{}
+		version = y.ParseTs(key)
+	}
 
 	y.NumGets.Add(1)
 	for i := 0; i < len(tables); i++ {
@@ -733,12 +678,13 @@ func (db *DB) get(key []byte) (y.ValueStruct, error) {
 		if vs.Meta == 0 && vs.Value == nil {
 			continue
 		}
-		// Found the required version of the key, return immediately.
-		if vs.Version == version {
+		// Found a version of the key. For user keyspace, return immediately. For move keyspace,
+		// continue iterating, unless we found a version == given key version.
+		if maxVs == nil || vs.Version == version {
 			return vs, nil
 		}
 		if maxVs.Version < vs.Version {
-			maxVs = vs
+			*maxVs = vs
 		}
 	}
 	return db.lc.get(key, maxVs, 0)
@@ -892,7 +838,7 @@ func (db *DB) sendToWriteCh(entries []*Entry) (*request, error) {
 	return req, nil
 }
 
-func (db *DB) doWrites(lc *z.Closer) {
+func (db *DB) doWrites(lc *y.Closer) {
 	defer lc.Done()
 	pendingCh := make(chan struct{}, 1)
 
@@ -1046,7 +992,6 @@ func buildL0Table(ft flushTask, bopts table.Options) []byte {
 	defer iter.Close()
 	b := table.NewTableBuilder(bopts)
 	defer b.Close()
-
 	var vp valuePointer
 	for iter.SeekToFirst(); iter.Valid(); iter.Next() {
 		if len(ft.dropPrefixes) > 0 && hasAnyPrefixes(iter.Key(), ft.dropPrefixes) {
@@ -1058,7 +1003,7 @@ func buildL0Table(ft flushTask, bopts table.Options) []byte {
 		}
 		b.Add(iter.Key(), iter.Value(), vp.Len)
 	}
-	return b.Finish(true)
+	return b.Finish()
 }
 
 type flushTask struct {
@@ -1153,7 +1098,7 @@ func (db *DB) handleFlushTask(ft flushTask) error {
 
 // flushMemtable must keep running until we send it an empty flushTask. If there
 // are errors during handling the flush task, we'll retry indefinitely.
-func (db *DB) flushMemtable(lc *z.Closer) error {
+func (db *DB) flushMemtable(lc *y.Closer) error {
 	defer lc.Done()
 
 	for ft := range db.flushChan {
@@ -1239,7 +1184,7 @@ func (db *DB) calculateSize() {
 	y.VlogSize.Set(db.opt.ValueDir, newInt(vlogSize))
 }
 
-func (db *DB) updateSize(lc *z.Closer) {
+func (db *DB) updateSize(lc *y.Closer) {
 	defer lc.Done()
 	if db.opt.InMemory {
 		return
@@ -1304,7 +1249,7 @@ func (db *DB) RunValueLogGC(discardRatio float64) error {
 	// Find head on disk
 	headKey := y.KeyWithTs(head, math.MaxUint64)
 	// Need to pass with timestamp, lsm get removes the last 8 bytes and compares key
-	val, err := db.lc.get(headKey, y.ValueStruct{}, startLevel)
+	val, err := db.lc.get(headKey, nil, startLevel)
 	if err != nil {
 		return errors.Wrap(err, "Retrieving head from on-disk LSM")
 	}
@@ -1458,81 +1403,15 @@ func (db *DB) Tables(withKeysCount bool) []TableInfo {
 // the DB.
 func (db *DB) KeySplits(prefix []byte) []string {
 	var splits []string
-	tables := db.Tables(false)
-
 	// We just want table ranges here and not keys count.
-	for _, ti := range tables {
+	for _, ti := range db.Tables(false) {
 		// We don't use ti.Left, because that has a tendency to store !badger
 		// keys.
 		if bytes.HasPrefix(ti.Right, prefix) {
 			splits = append(splits, string(ti.Right))
 		}
 	}
-
-	// If the number of splits is low, look at the offsets inside the
-	// tables to generate more splits.
-	if len(splits) < 32 {
-		numTables := len(tables)
-		if numTables == 0 {
-			numTables = 1
-		}
-		numPerTable := 32 / numTables
-		if numPerTable == 0 {
-			numPerTable = 1
-		}
-		splits = db.lc.keySplits(numPerTable, prefix)
-	}
-
-	// If the number of splits is still < 32, then look at the memtables.
-	if len(splits) < 32 {
-		maxPerSplit := 10000
-		mtSplits := func(mt *skl.Skiplist) {
-			count := 0
-			iter := mt.NewIterator()
-			for iter.SeekToFirst(); iter.Valid(); iter.Next() {
-				if count%maxPerSplit == 0 {
-					// Add a split every maxPerSplit keys.
-					if bytes.HasPrefix(iter.Key(), prefix) {
-						splits = append(splits, string(iter.Key()))
-					}
-				}
-				count += 1
-			}
-			_ = iter.Close()
-		}
-
-		db.Lock()
-		defer db.Unlock()
-		memtables := make([]*skl.Skiplist, 0)
-		memtables = append(memtables, db.imm...)
-		for _, mt := range memtables {
-			mtSplits(mt)
-		}
-		mtSplits(db.mt)
-	}
-
 	sort.Strings(splits)
-
-	// Limit the maximum number of splits returned by this function. We check against
-	// maxNumberSplits * 2 so that the jump variable has a value of at least two.
-	// Otherwise, the entire list would be returned without any reduction in size.
-	if len(splits) > maxNumSplits*2 {
-		newSplits := make([]string, 0)
-		jump := len(splits) / maxNumSplits
-		if jump < 2 {
-			jump = 2
-		}
-
-		for i := 0; i < len(splits); i += jump {
-			if i >= len(splits) {
-				i = len(splits) - 1
-			}
-			newSplits = append(newSplits, splits[i])
-		}
-
-		splits = newSplits
-	}
-
 	return splits
 }
 
@@ -1564,7 +1443,7 @@ func (db *DB) stopCompactions() {
 func (db *DB) startCompactions() {
 	// Resume compactions.
 	if db.closers.compactors != nil {
-		db.closers.compactors = z.NewCloser(1)
+		db.closers.compactors = y.NewCloser(1)
 		db.lc.startCompact(db.closers.compactors)
 	}
 }
@@ -1573,7 +1452,7 @@ func (db *DB) startMemoryFlush() {
 	// Start memory fluhser.
 	if db.closers.memtable != nil {
 		db.flushChan = make(chan flushTask, db.opt.NumMemtables)
-		db.closers.memtable = z.NewCloser(1)
+		db.closers.memtable = y.NewCloser(1)
 		go func() {
 			_ = db.flushMemtable(db.closers.memtable)
 		}()
@@ -1664,7 +1543,7 @@ func (db *DB) blockWrite() error {
 }
 
 func (db *DB) unblockWrite() {
-	db.closers.writes = z.NewCloser(1)
+	db.closers.writes = y.NewCloser(1)
 	go db.doWrites(db.closers.writes)
 
 	// Resume writes.
@@ -1832,7 +1711,7 @@ func (db *DB) Subscribe(ctx context.Context, cb func(kv *KVList) error, prefixes
 		return ErrNilCallback
 	}
 
-	c := z.NewCloser(1)
+	c := y.NewCloser(1)
 	recvCh, id := db.pub.newSubscriber(c, prefixes...)
 	slurp := func(batch *pb.KVList) error {
 		for {
@@ -1896,25 +1775,13 @@ func createDirs(opt Options) error {
 				return errors.Errorf("Cannot find directory %q for read-only open", path)
 			}
 			// Try to create the directory
-			err = os.MkdirAll(path, 0700)
+			err = os.Mkdir(path, 0700)
 			if err != nil {
 				return y.Wrapf(err, "Error Creating Dir: %q", path)
 			}
 		}
 	}
 	return nil
-}
-
-// GCVlog will GC all the .vlog files that have more than 50% stale data. GC is
-// an expensive process and the GCVlog call could take some time to finish.
-func (db *DB) GCVlog() error {
-	return db.vlog.cleanVlog()
-}
-
-// SampleVlog can be used to collect information about the amount of stale data
-// in all the vlog files.
-func (db *DB) SampleVlog() ([]sampleResult, error) {
-	return db.vlog.getDiscardStats()
 }
 
 // Stream the contents of this DB to a new DB with options outOptions that will be
@@ -1946,11 +1813,6 @@ func (db *DB) StreamDB(outOptions Options) error {
 		return errors.Wrapf(err, "cannot flush writer")
 	}
 	return nil
-}
-
-// Opts returns a copy of the DB options.
-func (db *DB) Opts() Options {
-	return db.opt
 }
 
 // MaxVersion returns the maximum commited version across all keys in the DB. It

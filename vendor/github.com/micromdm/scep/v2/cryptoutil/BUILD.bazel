@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cryptoutil.go",
+        "doc.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/micromdm/scep/v2/cryptoutil",
+    importpath = "github.com/micromdm/scep/v2/cryptoutil",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/pkg/errors:go_default_library"],
+)

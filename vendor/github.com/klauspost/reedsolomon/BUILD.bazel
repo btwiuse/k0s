@@ -27,5 +27,5 @@ go_library(
     importmap = "k0s.io/vendor/github.com/klauspost/reedsolomon",
     importpath = "github.com/klauspost/reedsolomon",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/klauspost/cpuid:go_default_library"],
+    deps = ["//vendor/github.com/klauspost/cpuid/v2:go_default_library"],
 )

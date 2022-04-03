@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["varint.go"],
+    srcs = [
+        "io.go",
+        "varint.go",
+    ],
     importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/quicvarint",
     importpath = "github.com/lucas-clemente/quic-go/quicvarint",
     visibility = ["//visibility:public"],

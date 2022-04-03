@@ -13,7 +13,6 @@ go_library(
     importpath = "google.golang.org/genproto/googleapis/api/expr/v1alpha1",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/google.golang.org/genproto/googleapis/rpc/status:go_default_library",
         "//vendor/google.golang.org/protobuf/reflect/protoreflect:go_default_library",
         "//vendor/google.golang.org/protobuf/runtime/protoimpl:go_default_library",

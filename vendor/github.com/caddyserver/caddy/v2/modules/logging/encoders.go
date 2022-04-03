@@ -135,6 +135,7 @@ func (SingleFieldEncoder) CaddyModule() caddy.ModuleInfo {
 
 // Provision sets up the encoder.
 func (se *SingleFieldEncoder) Provision(ctx caddy.Context) error {
+	caddy.Log().Named("caddy.logging.encoders.single_field").Warn("the 'single_field' encoder is deprecated and will be removed soon!")
 	if se.FallbackRaw != nil {
 		val, err := ctx.LoadModule(se, "FallbackRaw")
 		if err != nil {
@@ -307,6 +308,8 @@ func (lec *LogEncoderConfig) ZapcoreEncoderConfig() zapcore.EncoderConfig {
 			timeFormat = "2006/01/02 15:04:05.000"
 		case "wall_nano":
 			timeFormat = "2006/01/02 15:04:05.000000000"
+		case "common_log":
+			timeFormat = "02/Jan/2006:15:04:05 -0700"
 		}
 		timeFormatter = func(ts time.Time, encoder zapcore.PrimitiveArrayEncoder) {
 			encoder.AppendString(ts.UTC().Format(timeFormat))

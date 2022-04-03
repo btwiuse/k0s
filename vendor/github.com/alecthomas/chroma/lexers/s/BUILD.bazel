@@ -18,6 +18,7 @@ go_library(
         "sql.go",
         "squid.go",
         "stylus.go",
+        "svelte.go",
         "swift.go",
         "systemd.go",
         "systemverilog.go",
@@ -28,6 +29,8 @@ go_library(
     deps = [
         "//vendor/github.com/alecthomas/chroma:go_default_library",
         "//vendor/github.com/alecthomas/chroma/lexers/circular:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/h:go_default_library",
         "//vendor/github.com/alecthomas/chroma/lexers/internal:go_default_library",
+        "//vendor/github.com/alecthomas/chroma/lexers/t:go_default_library",
     ],
 )
