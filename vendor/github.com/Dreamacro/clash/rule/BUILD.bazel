@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "base.go",
+        "domain.go",
+        "domain_keyword.go",
+        "domain_suffix.go",
+        "final.go",
+        "geoip.go",
+        "ipcidr.go",
+        "parser.go",
+        "port.go",
+        "process.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/rule",
+    importpath = "github.com/Dreamacro/clash/rule",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/component/mmdb:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/constant:go_default_library",
+    ],
+)

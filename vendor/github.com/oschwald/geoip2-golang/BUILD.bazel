@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["reader.go"],
+    importmap = "k0s.io/vendor/github.com/oschwald/geoip2-golang",
+    importpath = "github.com/oschwald/geoip2-golang",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/oschwald/maxminddb-golang:go_default_library"],
+)

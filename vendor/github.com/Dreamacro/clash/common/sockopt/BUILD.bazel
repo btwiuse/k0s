@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "reuseaddr_linux.go",
+        "reuseaddr_other.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/common/sockopt",
+    importpath = "github.com/Dreamacro/clash/common/sockopt",
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bind_darwin.go",
+        "bind_linux.go",
+        "bind_others.go",
+        "dialer.go",
+        "mark_linux.go",
+        "mark_nonlinux.go",
+        "options.go",
+        "reuse_others.go",
+        "reuse_unix.go",
+        "reuse_windows.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/component/dialer",
+    importpath = "github.com/Dreamacro/clash/component/dialer",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/component/iface:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/component/resolver:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/log:go_default_library",
+        "//vendor/go.uber.org/atomic:go_default_library",
+        "//vendor/golang.org/x/sys/unix:go_default_library",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//vendor/golang.org/x/sys/windows:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

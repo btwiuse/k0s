@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["structure.go"],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/common/structure",
+    importpath = "github.com/Dreamacro/clash/common/structure",
+    visibility = ["//visibility:public"],
+)

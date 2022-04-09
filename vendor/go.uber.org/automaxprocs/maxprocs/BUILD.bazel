@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "maxprocs.go",
+        "version.go",
+    ],
+    importmap = "k0s.io/vendor/go.uber.org/automaxprocs/maxprocs",
+    importpath = "go.uber.org/automaxprocs/maxprocs",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/go.uber.org/automaxprocs/internal/runtime:go_default_library"],
+)

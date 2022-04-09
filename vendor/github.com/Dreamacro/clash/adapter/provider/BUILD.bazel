@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "fetcher.go",
+        "healthcheck.go",
+        "parser.go",
+        "provider.go",
+        "vehicle.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/adapter/provider",
+    importpath = "github.com/Dreamacro/clash/adapter/provider",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/adapter:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/common/batch:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/common/structure:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/component/dialer:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/constant:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/constant/provider:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/log:go_default_library",
+        "//vendor/go.uber.org/atomic:go_default_library",
+        "//vendor/gopkg.in/yaml.v2:go_default_library",
+    ],
+)

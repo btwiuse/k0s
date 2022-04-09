@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cache.go",
+        "lrucache.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/common/cache",
+    importpath = "github.com/Dreamacro/clash/common/cache",
+    visibility = ["//visibility:public"],
+)

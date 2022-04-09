@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cipher.go",
+        "pool.go",
+        "snell.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/transport/snell",
+    importpath = "github.com/Dreamacro/clash/transport/snell",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/common/pool:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/component/pool:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/transport/socks5:go_default_library",
+        "//vendor/github.com/Dreamacro/go-shadowsocks2/shadowaead:go_default_library",
+        "//vendor/golang.org/x/crypto/argon2:go_default_library",
+        "//vendor/golang.org/x/crypto/chacha20poly1305:go_default_library",
+    ],
+)

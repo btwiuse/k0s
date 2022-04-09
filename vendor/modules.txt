@@ -57,6 +57,73 @@ github.com/BurntSushi/toml
 github.com/DataDog/datadog-go/statsd
 # github.com/DataDog/zstd v1.4.5
 ## explicit
+# github.com/Dreamacro/clash v1.10.0
+## explicit; go 1.18
+github.com/Dreamacro/clash/adapter
+github.com/Dreamacro/clash/adapter/inbound
+github.com/Dreamacro/clash/adapter/outbound
+github.com/Dreamacro/clash/adapter/outboundgroup
+github.com/Dreamacro/clash/adapter/provider
+github.com/Dreamacro/clash/common/batch
+github.com/Dreamacro/clash/common/cache
+github.com/Dreamacro/clash/common/murmur3
+github.com/Dreamacro/clash/common/net
+github.com/Dreamacro/clash/common/observable
+github.com/Dreamacro/clash/common/picker
+github.com/Dreamacro/clash/common/pool
+github.com/Dreamacro/clash/common/queue
+github.com/Dreamacro/clash/common/singledo
+github.com/Dreamacro/clash/common/sockopt
+github.com/Dreamacro/clash/common/structure
+github.com/Dreamacro/clash/component/auth
+github.com/Dreamacro/clash/component/dhcp
+github.com/Dreamacro/clash/component/dialer
+github.com/Dreamacro/clash/component/fakeip
+github.com/Dreamacro/clash/component/iface
+github.com/Dreamacro/clash/component/mmdb
+github.com/Dreamacro/clash/component/nat
+github.com/Dreamacro/clash/component/pool
+github.com/Dreamacro/clash/component/process
+github.com/Dreamacro/clash/component/profile
+github.com/Dreamacro/clash/component/profile/cachefile
+github.com/Dreamacro/clash/component/resolver
+github.com/Dreamacro/clash/component/trie
+github.com/Dreamacro/clash/config
+github.com/Dreamacro/clash/constant
+github.com/Dreamacro/clash/constant/mime
+github.com/Dreamacro/clash/constant/provider
+github.com/Dreamacro/clash/context
+github.com/Dreamacro/clash/dns
+github.com/Dreamacro/clash/hub
+github.com/Dreamacro/clash/hub/executor
+github.com/Dreamacro/clash/hub/route
+github.com/Dreamacro/clash/listener
+github.com/Dreamacro/clash/listener/auth
+github.com/Dreamacro/clash/listener/http
+github.com/Dreamacro/clash/listener/mixed
+github.com/Dreamacro/clash/listener/redir
+github.com/Dreamacro/clash/listener/socks
+github.com/Dreamacro/clash/listener/tproxy
+github.com/Dreamacro/clash/log
+github.com/Dreamacro/clash/rule
+github.com/Dreamacro/clash/transport/gun
+github.com/Dreamacro/clash/transport/simple-obfs
+github.com/Dreamacro/clash/transport/snell
+github.com/Dreamacro/clash/transport/socks4
+github.com/Dreamacro/clash/transport/socks5
+github.com/Dreamacro/clash/transport/ssr/obfs
+github.com/Dreamacro/clash/transport/ssr/protocol
+github.com/Dreamacro/clash/transport/ssr/tools
+github.com/Dreamacro/clash/transport/trojan
+github.com/Dreamacro/clash/transport/v2ray-plugin
+github.com/Dreamacro/clash/transport/vmess
+github.com/Dreamacro/clash/tunnel
+github.com/Dreamacro/clash/tunnel/statistic
+# github.com/Dreamacro/go-shadowsocks2 v0.1.7
+## explicit; go 1.15
+github.com/Dreamacro/go-shadowsocks2/core
+github.com/Dreamacro/go-shadowsocks2/shadowaead
+github.com/Dreamacro/go-shadowsocks2/shadowstream
 # github.com/GeertJohan/go.rice v1.0.0
 ## explicit; go 1.12
 github.com/GeertJohan/go.rice
@@ -911,6 +978,15 @@ github.com/go-asn1-ber/asn1-ber
 # github.com/go-chi/chi v4.1.2+incompatible
 ## explicit
 github.com/go-chi/chi
+# github.com/go-chi/chi/v5 v5.0.7
+## explicit; go 1.14
+github.com/go-chi/chi/v5
+# github.com/go-chi/cors v1.2.0
+## explicit; go 1.14
+github.com/go-chi/cors
+# github.com/go-chi/render v1.0.1
+## explicit
+github.com/go-chi/render
 # github.com/go-gost/gosocks4 v0.0.1
 ## explicit
 github.com/go-gost/gosocks4
@@ -980,6 +1056,9 @@ github.com/godbus/dbus
 # github.com/godbus/dbus/v5 v5.0.4
 ## explicit; go 1.12
 github.com/godbus/dbus/v5
+# github.com/gofrs/uuid v4.2.0+incompatible
+## explicit
+github.com/gofrs/uuid
 # github.com/gogo/protobuf v1.3.2
 ## explicit; go 1.15
 github.com/gogo/protobuf/gogoproto
@@ -1130,7 +1209,7 @@ github.com/gorilla/handlers
 # github.com/gorilla/mux v1.8.0
 ## explicit; go 1.12
 github.com/gorilla/mux
-# github.com/gorilla/websocket v1.4.2
+# github.com/gorilla/websocket v1.5.0
 ## explicit; go 1.12
 github.com/gorilla/websocket
 # github.com/greenpau/caddy-auth-jwt v1.2.6
@@ -1256,6 +1335,12 @@ github.com/inconshreveable/mousetrap
 ## explicit; go 1.13
 github.com/infobloxopen/go-trees/iptree
 github.com/infobloxopen/go-trees/numtree
+# github.com/insomniacslk/dhcp v0.0.0-20220119180841-3c283ff8b7dd
+## explicit; go 1.13
+github.com/insomniacslk/dhcp/dhcpv4
+github.com/insomniacslk/dhcp/iana
+github.com/insomniacslk/dhcp/interfaces
+github.com/insomniacslk/dhcp/rfc1035label
 # github.com/jaypipes/ghw v0.7.0
 ## explicit; go 1.12
 github.com/jaypipes/ghw
@@ -1436,10 +1521,6 @@ github.com/lunixbochs/vtclean
 # github.com/lunny/tango v0.5.6
 ## explicit
 github.com/lunny/tango
-# github.com/magefile/mage v1.10.0
-## explicit; go 1.12
-github.com/magefile/mage/mg
-github.com/magefile/mage/sh
 # github.com/magiconair/properties v1.8.1
 ## explicit
 github.com/magiconair/properties
@@ -1500,7 +1581,7 @@ github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/mdlayher/genetlink v1.0.0
 ## explicit; go 1.13
 github.com/mdlayher/genetlink
-# github.com/mdlayher/netlink v1.1.0
+# github.com/mdlayher/netlink v1.1.1
 ## explicit; go 1.12
 github.com/mdlayher/netlink
 github.com/mdlayher/netlink/nlenc
@@ -1556,7 +1637,7 @@ github.com/mholt/certmagic
 github.com/micromdm/scep/v2/cryptoutil
 github.com/micromdm/scep/v2/cryptoutil/x509util
 github.com/micromdm/scep/v2/scep
-# github.com/miekg/dns v1.1.43
+# github.com/miekg/dns v1.1.47
 ## explicit; go 1.14
 github.com/miekg/dns
 # github.com/milosgajdos/tenus v0.0.3
@@ -1717,6 +1798,12 @@ github.com/openzipkin/zipkin-go/propagation
 github.com/openzipkin/zipkin-go/propagation/b3
 github.com/openzipkin/zipkin-go/reporter
 github.com/openzipkin/zipkin-go/reporter/http
+# github.com/oschwald/geoip2-golang v1.6.1
+## explicit; go 1.9
+github.com/oschwald/geoip2-golang
+# github.com/oschwald/maxminddb-golang v1.8.0
+## explicit; go 1.9
+github.com/oschwald/maxminddb-golang
 # github.com/p4gefau1t/trojan-go v0.8.2
 ## explicit; go 1.15
 github.com/p4gefau1t/trojan-go/api
@@ -1946,7 +2033,7 @@ github.com/shurcooL/sanitized_anchor_name
 # github.com/siebenmann/go-kstat v0.0.0-20200303194639-4e8294f9e9d5
 ## explicit
 github.com/siebenmann/go-kstat
-# github.com/sirupsen/logrus v1.8.0
+# github.com/sirupsen/logrus v1.8.1
 ## explicit; go 1.13
 github.com/sirupsen/logrus
 # github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
@@ -2032,7 +2119,7 @@ github.com/spf13/viper
 # github.com/stoewer/go-strcase v1.2.0
 ## explicit; go 1.11
 github.com/stoewer/go-strcase
-# github.com/stretchr/testify v1.7.0
+# github.com/stretchr/testify v1.7.1
 ## explicit; go 1.13
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
@@ -2117,6 +2204,11 @@ github.com/txthinking/socks5
 # github.com/txthinking/x v0.0.0-20200330144832-5ad2416896a9
 ## explicit
 github.com/txthinking/x
+# github.com/u-root/uio v0.0.0-20210528114334-82958018845c
+## explicit; go 1.15
+github.com/u-root/uio/rand
+github.com/u-root/uio/ubinary
+github.com/u-root/uio/uio
 # github.com/ulikunitz/xz v0.5.7
 ## explicit; go 1.12
 github.com/ulikunitz/xz
@@ -2370,9 +2462,14 @@ go.step.sm/crypto/x509util
 # go.step.sm/linkedca v0.5.0
 ## explicit; go 1.16
 go.step.sm/linkedca
-# go.uber.org/atomic v1.7.0
+# go.uber.org/atomic v1.9.0
 ## explicit; go 1.13
 go.uber.org/atomic
+# go.uber.org/automaxprocs v1.5.1
+## explicit; go 1.18
+go.uber.org/automaxprocs/internal/cgroups
+go.uber.org/automaxprocs/internal/runtime
+go.uber.org/automaxprocs/maxprocs
 # go.uber.org/multierr v1.6.0
 ## explicit; go 1.12
 go.uber.org/multierr
@@ -2384,9 +2481,11 @@ go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
-# golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3
+# golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd
 ## explicit; go 1.17
+golang.org/x/crypto/argon2
 golang.org/x/crypto/bcrypt
+golang.org/x/crypto/blake2b
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
 golang.org/x/crypto/chacha20
@@ -2396,7 +2495,6 @@ golang.org/x/crypto/cryptobyte/asn1
 golang.org/x/crypto/curve25519
 golang.org/x/crypto/curve25519/internal/field
 golang.org/x/crypto/ed25519
-golang.org/x/crypto/ed25519/internal/edwards25519
 golang.org/x/crypto/hkdf
 golang.org/x/crypto/internal/poly1305
 golang.org/x/crypto/internal/subtle
@@ -2429,7 +2527,7 @@ golang.org/x/image/tiff/lzw
 golang.org/x/mod/internal/lazyregexp
 golang.org/x/mod/module
 golang.org/x/mod/semver
-# golang.org/x/net v0.0.0-20211215060638-4ddde0e984e9
+# golang.org/x/net v0.0.0-20220225172249-27dd8689420f
 ## explicit; go 1.17
 golang.org/x/net/bpf
 golang.org/x/net/context
@@ -2449,6 +2547,7 @@ golang.org/x/net/internal/timeseries
 golang.org/x/net/ipv4
 golang.org/x/net/ipv6
 golang.org/x/net/proxy
+golang.org/x/net/publicsuffix
 golang.org/x/net/trace
 golang.org/x/net/webdav
 golang.org/x/net/webdav/internal/xml
@@ -2466,7 +2565,7 @@ golang.org/x/oauth2/jwt
 ## explicit
 golang.org/x/sync/errgroup
 golang.org/x/sync/singleflight
-# golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e
+# golang.org/x/sys v0.0.0-20220315194320-039c03cc5b86
 ## explicit; go 1.17
 golang.org/x/sys/cpu
 golang.org/x/sys/execabs
@@ -2475,7 +2574,7 @@ golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
-# golang.org/x/term v0.0.0-20210503060354-a79de5458b56
+# golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
 ## explicit; go 1.17
 golang.org/x/term
 # golang.org/x/text v0.3.7
@@ -2503,6 +2602,10 @@ golang.org/x/time/rate
 ## explicit; go 1.17
 golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/go/ast/inspector
+golang.org/x/tools/go/gcexportdata
+golang.org/x/tools/go/internal/gcimporter
+golang.org/x/tools/go/internal/packagesdriver
+golang.org/x/tools/go/packages
 golang.org/x/tools/imports
 golang.org/x/tools/internal/event
 golang.org/x/tools/internal/event/core
@@ -2512,7 +2615,9 @@ golang.org/x/tools/internal/fastwalk
 golang.org/x/tools/internal/gocommand
 golang.org/x/tools/internal/gopathwalk
 golang.org/x/tools/internal/imports
+golang.org/x/tools/internal/packagesinternal
 golang.org/x/tools/internal/typeparams
+golang.org/x/tools/internal/typesinternal
 # golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 ## explicit; go 1.11
 golang.org/x/xerrors

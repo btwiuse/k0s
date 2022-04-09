@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "manager.go",
+        "tracker.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/tunnel/statistic",
+    importpath = "github.com/Dreamacro/clash/tunnel/statistic",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/constant:go_default_library",
+        "//vendor/github.com/gofrs/uuid:go_default_library",
+        "//vendor/go.uber.org/atomic:go_default_library",
+    ],
+)

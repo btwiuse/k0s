@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["auth.go"],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/listener/auth",
+    importpath = "github.com/Dreamacro/clash/listener/auth",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/Dreamacro/clash/component/auth:go_default_library"],
+)

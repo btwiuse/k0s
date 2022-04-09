@@ -18,6 +18,7 @@ go_library(
         "edns.go",
         "format.go",
         "generate.go",
+        "hash.go",
         "labels.go",
         "listen_no_reuseport.go",
         "listen_reuseport.go",

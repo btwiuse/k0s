@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "auth_aes128_md5.go",
+        "auth_aes128_sha1.go",
+        "auth_chain_a.go",
+        "auth_chain_b.go",
+        "auth_sha1_v4.go",
+        "base.go",
+        "origin.go",
+        "packet.go",
+        "protocol.go",
+        "stream.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/transport/ssr/protocol",
+    importpath = "github.com/Dreamacro/clash/transport/ssr/protocol",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/common/pool:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/log:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/transport/ssr/tools:go_default_library",
+        "//vendor/github.com/Dreamacro/go-shadowsocks2/core:go_default_library",
+    ],
+)

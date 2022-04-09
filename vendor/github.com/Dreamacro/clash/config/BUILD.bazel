@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "initial.go",
+        "utils.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/config",
+    importpath = "github.com/Dreamacro/clash/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/adapter:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/adapter/outbound:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/adapter/outboundgroup:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/adapter/provider:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/common/structure:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/component/auth:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/component/fakeip:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/component/mmdb:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/component/trie:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/constant:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/constant/provider:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/dns:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/log:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/rule:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/tunnel:go_default_library",
+        "//vendor/gopkg.in/yaml.v2:go_default_library",
+    ],
+)

@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "aead.go",
+        "chunk.go",
+        "conn.go",
+        "h2.go",
+        "header.go",
+        "http.go",
+        "tls.go",
+        "user.go",
+        "vmess.go",
+        "websocket.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/transport/vmess",
+    importpath = "github.com/Dreamacro/clash/transport/vmess",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/common/pool:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/constant:go_default_library",
+        "//vendor/github.com/gofrs/uuid:go_default_library",
+        "//vendor/github.com/gorilla/websocket:go_default_library",
+        "//vendor/golang.org/x/crypto/chacha20poly1305:go_default_library",
+        "//vendor/golang.org/x/net/http2:go_default_library",
+    ],
+)

@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "murmur.go",
+        "murmur32.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/common/murmur3",
+    importpath = "github.com/Dreamacro/clash/common/murmur3",
+    visibility = ["//visibility:public"],
+)

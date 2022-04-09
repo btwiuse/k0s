@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "enhancer.go",
+        "resolver.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/component/resolver",
+    importpath = "github.com/Dreamacro/clash/component/resolver",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/Dreamacro/clash/component/trie:go_default_library"],
+)

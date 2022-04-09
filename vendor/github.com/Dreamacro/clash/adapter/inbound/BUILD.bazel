@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "http.go",
+        "https.go",
+        "packet.go",
+        "socket.go",
+        "util.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/adapter/inbound",
+    importpath = "github.com/Dreamacro/clash/adapter/inbound",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/constant:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/context:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/transport/socks5:go_default_library",
+    ],
+)

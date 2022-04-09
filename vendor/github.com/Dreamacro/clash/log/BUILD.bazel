@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "level.go",
+        "log.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/log",
+    importpath = "github.com/Dreamacro/clash/log",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/common/observable:go_default_library",
+        "//vendor/github.com/sirupsen/logrus:go_default_library",
+    ],
+)

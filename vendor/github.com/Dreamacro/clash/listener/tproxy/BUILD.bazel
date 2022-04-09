@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "packet.go",
+        "setsockopt_linux.go",
+        "setsockopt_other.go",
+        "tproxy.go",
+        "udp.go",
+        "udp_linux.go",
+        "udp_other.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/clash/listener/tproxy",
+    importpath = "github.com/Dreamacro/clash/listener/tproxy",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/Dreamacro/clash/adapter/inbound:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/common/pool:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/constant:go_default_library",
+        "//vendor/github.com/Dreamacro/clash/transport/socks5:go_default_library",
+    ],
+)

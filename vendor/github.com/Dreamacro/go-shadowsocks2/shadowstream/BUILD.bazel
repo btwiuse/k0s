@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cipher.go",
+        "doc.go",
+        "packet.go",
+        "stream.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/Dreamacro/go-shadowsocks2/shadowstream",
+    importpath = "github.com/Dreamacro/go-shadowsocks2/shadowstream",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/golang.org/x/crypto/chacha20:go_default_library"],
+)
