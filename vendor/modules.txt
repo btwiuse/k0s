@@ -3399,7 +3399,7 @@ k8s.io/utils/trace
 # modernc.org/httpfs v1.0.0
 ## explicit
 modernc.org/httpfs
-# nhooyr.io/websocket v1.8.6 => github.com/btwiuse/websocket v1.8.6
+# nhooyr.io/websocket v1.8.7
 ## explicit; go 1.13
 nhooyr.io/websocket
 nhooyr.io/websocket/internal/bpool
@@ -3573,4 +3573,3 @@ v2ray.com/core/transport/internet/udp
 # k8s.io/metrics => k8s.io/metrics v0.20.4
 # k8s.io/mount-utils => k8s.io/mount-utils v0.20.4
 # k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.20.4
-# nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6

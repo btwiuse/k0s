@@ -397,8 +397,6 @@ github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9 h1:gOLR+C34
 github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9/go.mod h1:d/lnnBGtvhkTmu4SATYV8nMDbobeZ81s/puSxGwufcA=
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882 h1:bO0cdWOtgJk7rlRCOObS/TqtbvAisBWSoWpmdJEOius=
 github.com/btwiuse/pretty v0.0.0-20190401073227-519ff4ea1882/go.mod h1:ylRP8/cdGCVHKukmdQkTjIkbVPykEIC8iGT54pOh/KA=
-github.com/btwiuse/websocket v1.8.6 h1:Vhtco9ZzTOgUTj3R+YMbUBERszZssZOoxRYldrUDWwc=
-github.com/btwiuse/websocket v1.8.6/go.mod h1:B70DZP8IakI65RVQ51MsWP/8jndNma26DVA/nFSCgW0=
 github.com/btwiuse/wetty v0.0.36 h1:MSMG+C1wR+bgG5xB2TRZK+5yxYiOmGwe44c/3gpaGT0=
 github.com/btwiuse/wetty v0.0.36/go.mod h1:P/xStKESkT1gJ/iCwfb+U7ValgeE1ltCU85wxzYxTDE=
 github.com/buger/jsonparser v0.0.0-20181115193947-bf1c66bbce23/go.mod h1:bbYlZJ7hK1yFx9hf58LP0zeX7UjIGs20ufpu3evjr+s=
@@ -3307,6 +3305,8 @@ mvdan.cc/unparam v0.0.0-20190209190245-fbb59629db34/go.mod h1:H6SUd1XjIs+qQCyskX
 mvdan.cc/unparam v0.0.0-20190720180237-d51796306d8f/go.mod h1:4G1h5nDURzA3bwVMZIVpwbkw+04kSxk3rAtzlimaUJw=
 mvdan.cc/unparam v0.0.0-20191111180625-960b1ec0f2c2/go.mod h1:rCqoQrfAmpTX/h2APczwM7UymU/uvaOluiVPIYCSY/k=
 mvdan.cc/unparam v0.0.0-20200501210554-b37ab49443f7/go.mod h1:HGC5lll35J70Y5v7vCGb9oLhHoScFwkHDJm/05RdSTc=
+nhooyr.io/websocket v1.8.7 h1:usjR2uOr/zjjkVMy0lW+PPohFok7PCow5sDjLgX4P4g=
+nhooyr.io/websocket v1.8.7/go.mod h1:B70DZP8IakI65RVQ51MsWP/8jndNma26DVA/nFSCgW0=
 pack.ag/amqp v0.11.2/go.mod h1:4/cbmt4EJXSKlG6LCfWHoqmN0uFdy5i/+YFz+fTfhV4=
 robpike.io/ivy v0.1.0 h1:oCFPKLI9pk0tRme8d9GXdXFUat+Mb5TzvJ5M2LCfc8Q=
 robpike.io/ivy v0.1.0/go.mod h1:6B/DGaft5rvYiF7MgCTiZAAvH5W7vtu0eS2BW77updo=

@@ -8256,9 +8256,8 @@ go_repository(
 go_repository(
     name = "io_nhooyr_websocket",
     importpath = "nhooyr.io/websocket",
-    replace = "github.com/btwiuse/websocket",
-    sum = "h1:Vhtco9ZzTOgUTj3R+YMbUBERszZssZOoxRYldrUDWwc=",
-    version = "v1.8.6",
+    sum = "h1:usjR2uOr/zjjkVMy0lW+PPohFok7PCow5sDjLgX4P4g=",
+    version = "v1.8.7",
 )
 
 go_repository(

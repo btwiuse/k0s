@@ -33,7 +33,6 @@ replace (
 	k8s.io/metrics => k8s.io/metrics v0.20.4
 	k8s.io/mount-utils => k8s.io/mount-utils v0.20.4
 	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.20.4
-	nhooyr.io/websocket => github.com/btwiuse/websocket v1.8.6
 )
 
 require (
@@ -147,7 +146,7 @@ require (
 	k8s.io/kube-state-metrics/v2 v2.0.0-00010101000000-000000000000
 	k8s.io/kubectl v0.20.4
 	modernc.org/httpfs v1.0.0
-	nhooyr.io/websocket v1.8.6
+	nhooyr.io/websocket v1.8.7
 	robpike.io/ivy v0.1.0
 	sigs.k8s.io/metrics-server v0.4.2
 	src.elv.sh v0.14.1-0.20210218105754-53593c3ab79f
