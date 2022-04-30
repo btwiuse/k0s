@@ -22,7 +22,6 @@ go_library(
         "//pkg/cli/agent:go_default_library",
         "//pkg/cli/bcrypt:go_default_library",
         "//pkg/cli/buildkite:go_default_library",
-        "//pkg/cli/caddy:go_default_library",
         "//pkg/cli/chassis:go_default_library",
         "//pkg/cli/client:go_default_library",
         "//pkg/cli/dohserver:go_default_library",
@@ -104,6 +103,7 @@ load("@rules_rust//rust:defs.bzl", "rust_binary")
 rust_binary(
     name = "k0s_rs",
     srcs = ["src/main.rs"],
+    edition = "2021",
     visibility = ["//visibility:public"],
     deps = [
         "//cargo:rand",
@@ -115,6 +115,7 @@ rust_binary(
 rust_binary(
     name = "hub_rs",
     srcs = ["src/hub.rs"],
+    edition = "2021",
     visibility = ["//visibility:public"],
     deps = [
         "//cargo:actix",
@@ -133,6 +134,7 @@ rust_binary(
 rust_binary(
     name = "k8s-controller",
     srcs = ["src/k8s-controller.rs"],
+    edition = "2021",
     visibility = ["//visibility:public"],
     deps = [
         "//cargo:serde",

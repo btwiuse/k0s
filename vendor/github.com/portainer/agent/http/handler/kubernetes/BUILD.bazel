@@ -4,7 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "handler.go",
-        "kubernetes_operation.go",
+        "kubernetes_deploy.go",
     ],
     importmap = "k0s.io/vendor/github.com/portainer/agent/http/handler/kubernetes",
     importpath = "github.com/portainer/agent/http/handler/kubernetes",
@@ -12,8 +12,10 @@ go_library(
     deps = [
         "//vendor/github.com/gorilla/mux:go_default_library",
         "//vendor/github.com/portainer/agent:go_default_library",
-        "//vendor/github.com/portainer/agent/http/proxy:go_default_library",
+        "//vendor/github.com/portainer/agent/exec:go_default_library",
         "//vendor/github.com/portainer/agent/http/security:go_default_library",
         "//vendor/github.com/portainer/libhttp/error:go_default_library",
+        "//vendor/github.com/portainer/libhttp/request:go_default_library",
+        "//vendor/github.com/portainer/libhttp/response:go_default_library",
     ],
 )

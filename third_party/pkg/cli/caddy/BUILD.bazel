@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importpath = "k0s.io/third_party/pkg/cli/caddy",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/module/hub:go_default_library",
+        "//pkg/plugin/agent:go_default_library",
+        "//pkg/plugin/hello:go_default_library",
+        "//vendor/github.com/caddyserver/caddy/v2/cmd:go_default_library",
+        "@com_github_abiosoft_caddy_json_schema//:go_default_library",
+        "@com_github_caddy_dns_alidns//:go_default_library",
+        "@com_github_caddy_dns_azure//:go_default_library",
+        "@com_github_caddy_dns_cloudflare//:go_default_library",
+        "@com_github_caddy_dns_digitalocean//:go_default_library",
+        "@com_github_caddy_dns_dnspod//:go_default_library",
+        "@com_github_caddy_dns_duckdns//:go_default_library",
+        "@com_github_caddy_dns_route53//:go_default_library",
+        "@com_github_caddy_dns_vultr//:go_default_library",
+        "@com_github_caddyserver_caddy_v2//modules/standard:go_default_library",
+        "@com_github_caddyserver_forwardproxy//:go_default_library",
+        "@com_github_casbin_caddy_authz_v2//:go_default_library",
+        "@com_github_freman_caddy2_reauth//:go_default_library",
+        "@com_github_greenpau_caddy_authorize//:go_default_library",
+        "@com_github_greenpau_caddy_trace//:go_default_library",
+        "@com_github_hairyhenderson_caddy_teapot_module//:go_default_library",
+        "@com_github_iamd3vil_caddy_yaml_adapter//:go_default_library",
+        "@com_github_mholt_caddy_l4//:go_default_library",
+        "@com_github_mholt_caddy_webdav//:go_default_library",
+    ],
+)

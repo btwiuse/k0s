@@ -13,7 +13,7 @@ import (
 )
 
 // GenerateCertsForHost generates a self-signed certificate for host and saves them at certPath and keyPath
-func GenerateCertsForHost(hostname, ip, certPath, keyPath string) error {
+func GenerateCertsForHost(hostname, ip, certPath, keyPath string, expiry time.Time) error {
 	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
 	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
 	if err != nil {
@@ -22,7 +22,7 @@ func GenerateCertsForHost(hostname, ip, certPath, keyPath string) error {
 
 	template := x509.Certificate{
 		SerialNumber:          serialNumber,
-		NotAfter:              time.Now().AddDate(1, 0, 0),
+		NotAfter:              expiry,
 		NotBefore:             time.Now(),
 		KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
 		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},

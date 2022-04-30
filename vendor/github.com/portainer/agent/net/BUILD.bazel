@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["lookup.go"],
+    srcs = [
+        "localIP.go",
+        "lookup.go",
+    ],
     importmap = "k0s.io/vendor/github.com/portainer/agent/net",
     importpath = "github.com/portainer/agent/net",
     visibility = ["//visibility:public"],

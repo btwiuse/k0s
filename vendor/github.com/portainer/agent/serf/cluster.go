@@ -47,7 +47,7 @@ func (service *ClusterService) Leave() {
 }
 
 // Create will create the agent configuration and automatically join the cluster.
-func (service *ClusterService) Create(advertiseAddr string, joinAddr []string) error {
+func (service *ClusterService) Create(advertiseAddr string, joinAddr []string, probeTimeout, probeInterval time.Duration) error {
 	filter := &logutils.LevelFilter{
 		Levels:   []logutils.LogLevel{"DEBUG", "INFO", "WARN", "ERROR"},
 		MinLevel: logutils.LogLevel("INFO"),
@@ -62,11 +62,20 @@ func (service *ClusterService) Create(advertiseAddr string, joinAddr []string) e
 	conf.LogOutput = filter
 	conf.MemberlistConfig.AdvertiseAddr = advertiseAddr
 
+	// These parameters should only be overriden if experiencing agent cluster instability
+	// Default memberlist values should work in most clustering use cases but some
+	// cluster/network topologies might cause the agent cluster to be unstable and
+	// seeing a lot of agent join/leave cluster events.
+	// There is no recommended value/range to be set here and instead it is recommended
+	// to experiment with different values if facing instability issues.
+	conf.MemberlistConfig.ProbeTimeout = probeTimeout
+	conf.MemberlistConfig.ProbeInterval = probeInterval
+
 	// Override default Serf configuration with Swarm/overlay sane defaults
 	conf.ReconnectInterval = 10 * time.Second
 	conf.ReconnectTimeout = 1 * time.Minute
 
-	log.Printf("[DEBUG] [cluster,serf] [advertise_address: %s] [join_address: %s]", advertiseAddr, joinAddr)
+	log.Printf("[DEBUG] [serf] [advertise_address: %s] [join_address: %s]", advertiseAddr, joinAddr)
 
 	cluster, err := serf.Create(conf)
 	if err != nil {
@@ -75,9 +84,9 @@ func (service *ClusterService) Create(advertiseAddr string, joinAddr []string) e
 
 	nodeCount, err := cluster.Join(joinAddr, true)
 	if err != nil {
-		log.Printf("[DEBUG] [cluster,serf] [message: Unable to join cluster] [error: %s]", err)
+		log.Printf("[DEBUG] [serf] [message: Unable to join cluster] [error: %s]", err)
 	}
-	log.Printf("[DEBUG] [cluster,serf] [contacted_nodes: %d]", nodeCount)
+	log.Printf("[DEBUG] [serf] [contacted_nodes: %d]", nodeCount)
 
 	service.cluster = cluster
 

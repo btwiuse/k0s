@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "ldap.go",
+        "main.go",
+    ],
+    importpath = "k0s.io/third_party/cmd/mnt-etcd",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//pkg/tunnel/listener:go_default_library",
+        "//vendor/github.com/btwiuse/etcd/v3/client/v3:go_default_library",
+        "//vendor/github.com/gorilla/handlers:go_default_library",
+        "@com_github_freman_caddy2_reauth//backends/ldap:go_default_library",
+        "@com_github_freman_caddy2_reauth//jsontypes:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "mnt-etcd",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

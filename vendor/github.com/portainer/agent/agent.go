@@ -1,5 +1,10 @@
 package agent
 
+import (
+	"context"
+	"time"
+)
+
 type (
 	// ClusterMember is the representation of an agent inside a cluster.
 	ClusterMember struct {
@@ -8,6 +13,13 @@ type (
 		NodeName   string
 		NodeRole   string
 		EdgeKeySet bool
+	}
+
+	// RegistryCredentials holds the credentials for a Docker registry.
+	RegistryCredentials struct {
+		ServerURL string
+		Username  string
+		Secret    string
 	}
 
 	// ContainerPlatform represent the platform on which the agent is running (Docker, Kubernetes)
@@ -28,9 +40,15 @@ type (
 
 	// EdgeStackConfig represent an Edge stack config
 	EdgeStackConfig struct {
-		Name        string
-		FileContent string
-		Prune       bool
+		Name                string
+		FileContent         string
+		RegistryCredentials []RegistryCredentials
+	}
+
+	// EdgeJobStatus represents an Edge job status
+	EdgeJobStatus struct {
+		JobID          int    `json:"JobID"`
+		LogFileContent string `json:"LogFileContent"`
 	}
 
 	// HostInfo is the representation of the collection of host information
@@ -52,19 +70,33 @@ type (
 
 	// Options are the options used to start an agent.
 	Options struct {
+		AssetsPath            string
 		AgentServerAddr       string
 		AgentServerPort       string
+		AgentSecurityShutdown time.Duration
 		ClusterAddress        string
-		HostManagementEnabled bool
+		ClusterProbeTimeout   time.Duration
+		ClusterProbeInterval  time.Duration
+		DataPath              string
 		SharedSecret          string
 		EdgeMode              bool
+		EdgeAsyncMode         bool
 		EdgeKey               string
 		EdgeID                string
-		EdgeServerAddr        string
-		EdgeServerPort        string
+		EdgeUIServerAddr      string
+		EdgeUIServerPort      string
 		EdgeInactivityTimeout string
 		EdgeInsecurePoll      bool
+		EdgeTunnel            bool
 		LogLevel              string
+		SSLCert               string
+		SSLKey                string
+		SSLCACert             string
+	}
+
+	NomadConfig struct {
+		NomadAddr  string
+		NomadToken string
 	}
 
 	// PciDevice is the representation of a physical pci device on a host
@@ -100,16 +132,16 @@ type (
 	// TunnelConfig contains all the required information for the agent to establish
 	// a reverse tunnel to a Portainer instance
 	TunnelConfig struct {
-		ServerAddr       string
-		ServerFingerpint string
-		RemotePort       string
-		LocalAddr        string
-		Credentials      string
+		ServerAddr        string
+		ServerFingerprint string
+		RemotePort        string
+		LocalAddr         string
+		Credentials       string
 	}
 
 	// ClusterService is used to manage a cluster of agents.
 	ClusterService interface {
-		Create(advertiseAddr string, joinAddr []string) error
+		Create(advertiseAddr string, joinAddr []string, probeTimeout, probeInterval time.Duration) error
 		Members() []ClusterMember
 		Leave()
 		GetMemberByRole(role DockerNodeRole) *ClusterMember
@@ -121,6 +153,7 @@ type (
 
 	// DigitalSignatureService is used to validate digital signatures.
 	DigitalSignatureService interface {
+		IsAssociated() bool
 		VerifySignature(signature, key string) (bool, error)
 	}
 
@@ -131,12 +164,9 @@ type (
 		GetServiceNameFromDockerEngine(containerName string) (string, error)
 	}
 
-	// DockerStackService is a service used to deploy and remove Docker stacks
-	DockerStackService interface {
-		Login() error
-		Logout() error
-		Deploy(name, stackFileContent string, prune bool) error
-		Remove(name string) error
+	Deployer interface {
+		Deploy(ctx context.Context, name string, filePaths []string, prune bool) error
+		Remove(ctx context.Context, name string, filePaths []string) error
 	}
 
 	// KubernetesInfoService is used to retrieve information from a Kubernetes environment.
@@ -160,6 +190,9 @@ type (
 	// Scheduler is used to manage schedules
 	Scheduler interface {
 		Schedule(schedules []Schedule) error
+		AddSchedule(schedule Schedule) error
+		RemoveSchedule(schedule Schedule) error
+		ProcessScheduleLogsCollection()
 	}
 
 	// SystemService is used to get info about the host
@@ -167,16 +200,11 @@ type (
 		GetDiskInfo() ([]PhysicalDisk, error)
 		GetPciDevices() ([]PciDevice, error)
 	}
-
-	// TLSService is used to create TLS certificates to use enable HTTPS.
-	TLSService interface {
-		GenerateCertsForHost(host string) error
-	}
 )
 
 const (
 	// Version represents the version of the agent.
-	Version = "2.0.0"
+	Version = "2.13.0"
 	// APIVersion represents the version of the agent's API.
 	APIVersion = "2"
 	// DefaultAgentAddr is the default address used by the Agent API server.
@@ -185,7 +213,9 @@ const (
 	DefaultAgentPort = "9001"
 	// DefaultLogLevel is the default logging level.
 	DefaultLogLevel = "INFO"
-	// DefaultEdgeSecurityShutdown is the default time after which the Edge server will shutdown if no key is specified
+	// DefaultAgentSecurityShutdown is the default time after which the API server will shut down if not associated with a Portainer instance
+	DefaultAgentSecurityShutdown = "72h"
+	// DefaultEdgeSecurityShutdown is the default time after which the Edge server will shut down if no key is specified
 	DefaultEdgeSecurityShutdown = 15
 	// DefaultEdgeServerAddr is the default address used by the Edge server.
 	DefaultEdgeServerAddr = "0.0.0.0"
@@ -199,6 +229,10 @@ const (
 	DefaultConfigCheckInterval = "5s"
 	// SupportedDockerAPIVersion is the minimum Docker API version supported by the agent.
 	SupportedDockerAPIVersion = "1.24"
+	// DefaultClusterProbeTimeout is the default member list ping probe timeout.
+	DefaultClusterProbeTimeout = "500ms"
+	// DefaultClusterProbeInterval is the interval for repeating failed node checks.
+	DefaultClusterProbeInterval = "1s"
 	// HTTPTargetHeaderName is the name of the header used to specify a target node.
 	HTTPTargetHeaderName = "X-PortainerAgent-Target"
 	// HTTPEdgeIdentifierHeaderName is the name of the header used to specify the Docker identifier associated to
@@ -218,6 +252,12 @@ const (
 	HTTPResponseAgentHeaderName = "Portainer-Agent"
 	// HTTPKubernetesSATokenHeaderName represent the name of the header containing a Kubernetes SA token
 	HTTPKubernetesSATokenHeaderName = "X-PortainerAgent-SA-Token"
+	// HTTPNomadTokenHeaderName represent the name of the header containing a Nomad token
+	HTTPNomadTokenHeaderName = "X-Nomad-Token"
+	// NomadTokenEnvVarName represent the name of environment variable of the Nomad token
+	NomadTokenEnvVarName = "NOMAD_TOKEN"
+	// NomadAddrEnvVarName represent the name of environment variable of the Nomad addr
+	NomadAddrEnvVarName = "NOMAD_ADDR"
 	// HTTPResponseAgentApiVersion is the name of the header that will have the
 	// Portainer Agent API Version.
 	HTTPResponseAgentApiVersion = "Portainer-Agent-API-Version"
@@ -235,18 +275,22 @@ const (
 	TLSKeyPath = "key.pem"
 	// HostRoot is the folder mapping to the underlying host filesystem that is mounted inside the container.
 	HostRoot = "/host"
-	// DataDirectory is the folder where the data associated to the agent is persisted.
-	DataDirectory = "/data"
+	// DefaultDataPath is the default folder where the data associated to the agent is persisted.
+	DefaultDataPath = "/data"
 	// ScheduleScriptDirectory is the folder where schedules are saved on the host
 	ScheduleScriptDirectory = "/opt/portainer/scripts"
 	// EdgeKeyFile is the name of the file used to persist the Edge key associated to the agent.
 	EdgeKeyFile = "agent_edge_key"
-	// DockerBinaryPath is the path of the docker binary
-	DockerBinaryPath = "/app"
+	// DefaultAssetsPath is the default path of the binaries
+	DefaultAssetsPath = "/app"
 	// EdgeStackFilesPath is the path where edge stack files are saved
 	EdgeStackFilesPath = "/tmp/edge_stacks"
 	// EdgeStackQueueSleepInterval is the interval used to check if there's an Edge stack to deploy
 	EdgeStackQueueSleepInterval = "5s"
+	// KubernetesServiceHost is the environment variable name of the kubernetes API server host
+	KubernetesServiceHost = "KUBERNETES_SERVICE_HOST"
+	// KubernetesServicePortHttps is the environment variable of the kubernetes API server https port
+	KubernetesServicePortHttps = "KUBERNETES_SERVICE_PORT_HTTPS"
 )
 
 const (
@@ -255,6 +299,10 @@ const (
 	PlatformDocker
 	// PlatformKubernetes represent the Kubernetes platform
 	PlatformKubernetes
+	// PlatformPodman represent the Podman platform (Standalone)
+	PlatformPodman
+	// PlatformNomad represent the Nomad platform (Standalone)
+	PlatformNomad
 )
 
 const (
@@ -271,4 +319,15 @@ const (
 	NodeRoleManager
 	// NodeRoleWorker represent a Docker swarm worker node role
 	NodeRoleWorker
+)
+
+const (
+	// TunnelStatusIdle represents an idle state for a tunnel connected to an Edge environment(endpoint).
+	TunnelStatusIdle string = "IDLE"
+	// TunnelStatusRequired represents a required state for a tunnel connected to an Edge environment(endpoint)
+	TunnelStatusRequired string = "REQUIRED"
+	// TunnelStatusActive represents an active state for a tunnel connected to an Edge environment(endpoint)
+	TunnelStatusActive string = "ACTIVE"
+	// TunnelStatusNoTunnel represents an async Edge environment(endpoint)
+	TunnelStatusNoTunnel string = "NOTUNNEL"
 )

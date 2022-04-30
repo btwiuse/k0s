@@ -16,7 +16,6 @@ go_library(
     deps = [
         "//vendor/github.com/asaskevich/govalidator:go_default_library",
         "//vendor/github.com/gorilla/mux:go_default_library",
-        "//vendor/github.com/portainer/agent:go_default_library",
         "//vendor/github.com/portainer/agent/filesystem:go_default_library",
         "//vendor/github.com/portainer/agent/http/proxy:go_default_library",
         "//vendor/github.com/portainer/agent/http/security:go_default_library",

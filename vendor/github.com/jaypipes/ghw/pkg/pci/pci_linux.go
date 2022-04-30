@@ -6,7 +6,6 @@
 package pci
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -16,11 +15,32 @@ import (
 
 	"github.com/jaypipes/ghw/pkg/context"
 	"github.com/jaypipes/ghw/pkg/linuxpath"
+	"github.com/jaypipes/ghw/pkg/option"
+	pciaddr "github.com/jaypipes/ghw/pkg/pci/address"
+	"github.com/jaypipes/ghw/pkg/topology"
 	"github.com/jaypipes/ghw/pkg/util"
 )
 
+const (
+	// found running `wc` against real linux systems
+	modAliasExpectedLength = 54
+)
+
 func (i *Info) load() error {
-	db, err := pcidb.New(pcidb.WithChroot(i.ctx.Chroot))
+	// when consuming snapshots - most notably, but not only, in tests,
+	// the context pkg forces the chroot value to the unpacked snapshot root.
+	// This is intentional, intentionally transparent and ghw is prepared to handle this case.
+	// However, `pcidb` is not. It doesn't know about ghw snaphots, nor it should.
+	// so we need to complicate things a bit. If the user explicitely supplied
+	// a chroot option, then we should honor it all across the stack, and passing down
+	// the chroot to pcidb is the right thing to do. If, however, the chroot was
+	// implcitely set by snapshot support, then this must be consumed by ghw only.
+	// In this case we should NOT pass it down to pcidb.
+	chroot := i.ctx.Chroot
+	if i.ctx.SnapshotPath != "" {
+		chroot = option.DefaultChroot
+	}
+	db, err := pcidb.New(pcidb.WithChroot(chroot))
 	if err != nil {
 		return err
 	}
@@ -31,28 +51,20 @@ func (i *Info) load() error {
 	return nil
 }
 
-func getDeviceModaliasPath(ctx *context.Context, address string) string {
+func getDeviceModaliasPath(ctx *context.Context, pciAddr *pciaddr.Address) string {
 	paths := linuxpath.New(ctx)
-	pciAddr := AddressFromString(address)
-	if pciAddr == nil {
-		return ""
-	}
 	return filepath.Join(
 		paths.SysBusPciDevices,
-		pciAddr.Domain+":"+pciAddr.Bus+":"+pciAddr.Slot+"."+pciAddr.Function,
+		pciAddr.String(),
 		"modalias",
 	)
 }
 
-func getDeviceRevision(ctx *context.Context, address string) string {
+func getDeviceRevision(ctx *context.Context, pciAddr *pciaddr.Address) string {
 	paths := linuxpath.New(ctx)
-	pciAddr := AddressFromString(address)
-	if pciAddr == nil {
-		return ""
-	}
 	revisionPath := filepath.Join(
 		paths.SysBusPciDevices,
-		pciAddr.Domain+":"+pciAddr.Bus+":"+pciAddr.Slot+"."+pciAddr.Function,
+		pciAddr.String(),
 		"revision",
 	)
 
@@ -63,7 +75,40 @@ func getDeviceRevision(ctx *context.Context, address string) string {
 	if err != nil {
 		return ""
 	}
-	return string(revision)
+	return strings.TrimSpace(string(revision))
+}
+
+func getDeviceNUMANode(ctx *context.Context, pciAddr *pciaddr.Address) *topology.Node {
+	paths := linuxpath.New(ctx)
+	numaNodePath := filepath.Join(paths.SysBusPciDevices, pciAddr.String(), "numa_node")
+
+	if _, err := os.Stat(numaNodePath); err != nil {
+		return nil
+	}
+
+	nodeIdx := util.SafeIntFromFile(ctx, numaNodePath)
+	if nodeIdx == -1 {
+		return nil
+	}
+
+	return &topology.Node{
+		ID: nodeIdx,
+	}
+}
+
+func getDeviceDriver(ctx *context.Context, pciAddr *pciaddr.Address) string {
+	paths := linuxpath.New(ctx)
+	driverPath := filepath.Join(paths.SysBusPciDevices, pciAddr.String(), "driver")
+
+	if _, err := os.Stat(driverPath); err != nil {
+		return ""
+	}
+
+	dest, err := os.Readlink(driverPath)
+	if err != nil {
+		return ""
+	}
+	return filepath.Base(dest)
 }
 
 type deviceModaliasInfo struct {
@@ -89,6 +134,13 @@ func parseModaliasFile(fp string) *deviceModaliasInfo {
 }
 
 func parseModaliasData(data string) *deviceModaliasInfo {
+	// extra sanity check to avoid segfaults. We actually expect
+	// the data to be exactly long `modAliasExpectedlength`, but
+	// we will happily ignore any extra data we don't know how to
+	// handle.
+	if len(data) < modAliasExpectedLength {
+		return nil
+	}
 	// The modalias file is an encoded file that looks like this:
 	//
 	// $ cat /sys/devices/pci0000\:00/0000\:00\:03.0/0000\:03\:00.0/modalias
@@ -248,21 +300,38 @@ func findPCIProgrammingInterface(
 }
 
 // GetDevice returns a pointer to a Device struct that describes the PCI
-// device at the requested address. If no such device could be found, returns
-// nil
+// device at the requested address. If no such device could be found, returns nil.
 func (info *Info) GetDevice(address string) *Device {
-	fp := getDeviceModaliasPath(info.ctx, address)
+	// check cached data first
+	if dev := info.lookupDevice(address); dev != nil {
+		return dev
+	}
+
+	pciAddr := pciaddr.FromString(address)
+	if pciAddr == nil {
+		info.ctx.Warn("error parsing the pci address %q", address)
+		return nil
+	}
+
+	// no cached data, let's get the information from system.
+	fp := getDeviceModaliasPath(info.ctx, pciAddr)
 	if fp == "" {
+		info.ctx.Warn("error finding modalias info for device %q", address)
 		return nil
 	}
 
 	modaliasInfo := parseModaliasFile(fp)
 	if modaliasInfo == nil {
+		info.ctx.Warn("error parsing modalias info for device %q", address)
 		return nil
 	}
 
 	device := info.getDeviceFromModaliasInfo(address, modaliasInfo)
-	device.Revision = getDeviceRevision(info.ctx, address)
+	device.Revision = getDeviceRevision(info.ctx, pciAddr)
+	if info.arch == topology.ARCHITECTURE_NUMA {
+		device.Node = getDeviceNUMANode(info.ctx, pciAddr)
+	}
+	device.Driver = getDeviceDriver(info.ctx, pciAddr)
 	return device
 }
 
@@ -328,7 +397,7 @@ func (info *Info) ListDevices() []*Device {
 	// address and append to the returned array.
 	links, err := ioutil.ReadDir(paths.SysBusPciDevices)
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "error: failed to read /sys/bus/pci/devices")
+		info.ctx.Warn("failed to read /sys/bus/pci/devices")
 		return nil
 	}
 	var dev *Device
@@ -336,7 +405,7 @@ func (info *Info) ListDevices() []*Device {
 		addr := link.Name()
 		dev = info.GetDevice(addr)
 		if dev == nil {
-			_, _ = fmt.Fprintf(os.Stderr, "error: failed to get device information for PCI address %s\n", addr)
+			info.ctx.Warn("failed to get device information for PCI address %s", addr)
 		} else {
 			devs = append(devs, dev)
 		}

@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["composebinary.go"],
+    importmap = "k0s.io/vendor/github.com/portainer/docker-compose-wrapper/compose/internal/composebinary",
+    importpath = "github.com/portainer/docker-compose-wrapper/compose/internal/composebinary",
+    visibility = ["//vendor/github.com/portainer/docker-compose-wrapper/compose:__subpackages__"],
+    deps = [
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/portainer/docker-compose-wrapper:go_default_library",
+        "//vendor/github.com/portainer/docker-compose-wrapper/compose/errors:go_default_library",
+        "//vendor/github.com/portainer/docker-compose-wrapper/compose/internal/utils:go_default_library",
+    ],
+)

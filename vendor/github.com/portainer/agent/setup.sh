@@ -1,27 +1,42 @@
 #!/usr/bin/env bash
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 PLATFORM=${1:-"linux"}
-ARCH=${2:-"x86_64"}
+ARCH=${2:-"amd64"}
 
 DOCKER_VERSION_LINUX="19.03.13"
 DOCKER_VERSION_WINDOWS="19-03-12"
 
-DOWNLOAD_FOLDER=".tmp/download"
+DOCKER_COMPOSE_VERSION_LINUX="1.27.4"
+DOCKER_COMPOSE_VERSION_WINDOWS="1.28.0"
+DOCKER_COMPOSE_PLUGIN_VERSION="2.0.0-rc.2"
+KUBECTL_VERSION="v1.18.0"
 
-rm -rf "${DOWNLOAD_FOLDER}"
-mkdir -pv "${DOWNLOAD_FOLDER}"
+DOCKER_VERSION=$DOCKER_VERSION_LINUX
+DOCKER_COMPOSE_VERSION=$DOCKER_COMPOSE_VERSION_LINUX
 
-echo "Downloading docker binaries for ${PLATFORM} ${ARCH}"
+mkdir -p dist/
 
-if [ "${PLATFORM}" == 'win' ]; then
-  wget -O "${DOWNLOAD_FOLDER}/docker-binaries.zip" "https://dockermsft.azureedge.net/dockercontainer/docker-${DOCKER_VERSION_WINDOWS}.zip"
-  unzip "${DOWNLOAD_FOLDER}/docker-binaries.zip" -d "${DOWNLOAD_FOLDER}"
-  mv "${DOWNLOAD_FOLDER}/docker/docker.exe" dist/
-  mv ${DOWNLOAD_FOLDER}/docker/*.dll dist/
-else
-  wget -O "${DOWNLOAD_FOLDER}/docker-binaries.tgz" "https://download.docker.com/${PLATFORM}/static/stable/${ARCH}/docker-${DOCKER_VERSION_LINUX}.tgz"
-  tar -xf "${DOWNLOAD_FOLDER}/docker-binaries.tgz" -C "${DOWNLOAD_FOLDER}"
-  mv "${DOWNLOAD_FOLDER}/docker/docker" dist/
+if [[ "$PLATFORM" == "windows" ]];
+then
+    DOCKER_VERSION=$DOCKER_VERSION_WINDOWS
+    DOCKER_COMPOSE_VERSION=$DOCKER_COMPOSE_VERSION_WINDOWS
 fi
 
-exit 0
+
+
+source ./build/download_docker_binary.sh
+source ./build/download_kubectl_binary.sh
+source ./build/download_docker_compose_binary.sh
+
+download_docker_binary "$PLATFORM" "$ARCH" "$DOCKER_VERSION"
+download_kubectl_binary "$PLATFORM" "$ARCH" "$KUBECTL_VERSION"
+
+if [ "$PLATFORM" == "linux" ] && [ "$ARCH" != "amd64" ] && [ "$ARCH" != "x86_64" ]; then
+    download_docker_compose_plugin "$PLATFORM" "$ARCH" "$DOCKER_COMPOSE_PLUGIN_VERSION"
+else
+    download_docker_compose_binary "$PLATFORM" "$ARCH" "$DOCKER_COMPOSE_VERSION"
+fi
+

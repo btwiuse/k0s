@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["driver.go"],
-    importmap = "k0s.io/vendor/github.com/freman/caddy2-reauth/failures",
-    importpath = "github.com/freman/caddy2-reauth/failures",
-    visibility = ["//visibility:public"],
-)

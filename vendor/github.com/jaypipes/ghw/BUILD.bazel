@@ -23,6 +23,7 @@ go_library(
         "//vendor/github.com/jaypipes/ghw/pkg/net:go_default_library",
         "//vendor/github.com/jaypipes/ghw/pkg/option:go_default_library",
         "//vendor/github.com/jaypipes/ghw/pkg/pci:go_default_library",
+        "//vendor/github.com/jaypipes/ghw/pkg/pci/address:go_default_library",
         "//vendor/github.com/jaypipes/ghw/pkg/product:go_default_library",
         "//vendor/github.com/jaypipes/ghw/pkg/topology:go_default_library",
     ],

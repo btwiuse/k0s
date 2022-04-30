@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["stack.go"],
+    importmap = "k0s.io/vendor/github.com/portainer/agent/edge/stack",
+    importpath = "github.com/portainer/agent/edge/stack",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/portainer/agent:go_default_library",
+        "//vendor/github.com/portainer/agent/edge/client:go_default_library",
+        "//vendor/github.com/portainer/agent/edge/yaml:go_default_library",
+        "//vendor/github.com/portainer/agent/exec:go_default_library",
+        "//vendor/github.com/portainer/agent/filesystem:go_default_library",
+        "//vendor/github.com/portainer/agent/nomad:go_default_library",
+    ],
+)

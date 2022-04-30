@@ -2,8 +2,19 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["stack.go"],
+    srcs = [
+        "docker_compose_stack.go",
+        "docker_swarm_stack.go",
+        "kubernetes_deploy.go",
+        "utils.go",
+    ],
     importmap = "k0s.io/vendor/github.com/portainer/agent/exec",
     importpath = "github.com/portainer/agent/exec",
     visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/portainer/agent:go_default_library",
+        "//vendor/github.com/portainer/docker-compose-wrapper:go_default_library",
+        "//vendor/github.com/portainer/docker-compose-wrapper/compose:go_default_library",
+    ],
 )

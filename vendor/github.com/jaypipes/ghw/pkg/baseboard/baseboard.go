@@ -7,8 +7,6 @@
 package baseboard
 
 import (
-	"fmt"
-
 	"github.com/jaypipes/ghw/pkg/context"
 	"github.com/jaypipes/ghw/pkg/marshal"
 	"github.com/jaypipes/ghw/pkg/option"
@@ -22,6 +20,7 @@ type Info struct {
 	SerialNumber string `json:"serial_number"`
 	Vendor       string `json:"vendor"`
 	Version      string `json:"version"`
+	Product      string `json:"product"`
 }
 
 func (i *Info) String() string {
@@ -38,13 +37,17 @@ func (i *Info) String() string {
 		versionStr = " version=" + i.Version
 	}
 
-	res := fmt.Sprintf(
-		"baseboard%s%s%s",
+	productStr := ""
+	if i.Product != "" {
+		productStr = " product=" + i.Product
+	}
+
+	return "baseboard" + util.ConcatStrings(
 		vendorStr,
 		serialStr,
 		versionStr,
+		productStr,
 	)
-	return res
 }
 
 // New returns a pointer to an Info struct containing information about the

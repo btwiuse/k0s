@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "logs.go",
+        "scheduler.go",
+        "scheduler_windows.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/portainer/agent/edge/scheduler",
+    importpath = "github.com/portainer/agent/edge/scheduler",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/portainer/agent:go_default_library",
+        "//vendor/github.com/portainer/agent/edge/client:go_default_library",
+        "//vendor/github.com/portainer/agent/filesystem:go_default_library",
+    ],
+)

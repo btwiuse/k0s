@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["nomad_deployer.go"],
+    importmap = "k0s.io/vendor/github.com/portainer/agent/nomad",
+    importpath = "github.com/portainer/agent/nomad",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/hashicorp/nomad/api:go_default_library",
+        "//vendor/github.com/pkg/errors:go_default_library",
+        "//vendor/github.com/portainer/agent/filesystem:go_default_library",
+    ],
+)

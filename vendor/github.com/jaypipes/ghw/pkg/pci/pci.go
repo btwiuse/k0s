@@ -9,22 +9,22 @@ package pci
 import (
 	"encoding/json"
 	"fmt"
-	"regexp"
-	"strings"
 
 	"github.com/jaypipes/pcidb"
 
 	"github.com/jaypipes/ghw/pkg/context"
 	"github.com/jaypipes/ghw/pkg/marshal"
 	"github.com/jaypipes/ghw/pkg/option"
+	pciaddr "github.com/jaypipes/ghw/pkg/pci/address"
+	"github.com/jaypipes/ghw/pkg/topology"
 	"github.com/jaypipes/ghw/pkg/util"
 )
 
-var (
-	regexAddress *regexp.Regexp = regexp.MustCompile(
-		`^(([0-9a-f]{0,4}):)?([0-9a-f]{2}):([0-9a-f]{2})\.([0-9a-f]{1})$`,
-	)
-)
+// backward compatibility, to be removed in 1.0.0
+type Address pciaddr.Address
+
+// backward compatibility, to be removed in 1.0.0
+var AddressFromString = pciaddr.FromString
 
 type Device struct {
 	// The PCI address of the device
@@ -39,6 +39,10 @@ type Device struct {
 	Subclass *pcidb.Subclass `json:"subclass"`
 	// optional programming interface
 	ProgrammingInterface *pcidb.ProgrammingInterface `json:"programming_interface"`
+	// Topology node that the PCI device is affined to. Will be nil if the
+	// architecture is not NUMA.
+	Node   *topology.Node `json:"node,omitempty"`
+	Driver string         `json:"driver"`
 }
 
 type devIdent struct {
@@ -47,6 +51,7 @@ type devIdent struct {
 }
 
 type devMarshallable struct {
+	Driver    string   `json:"driver"`
 	Address   string   `json:"address"`
 	Vendor    devIdent `json:"vendor"`
 	Product   devIdent `json:"product"`
@@ -63,6 +68,7 @@ type devMarshallable struct {
 // human-readable name of the vendor, product, class, etc.
 func (d *Device) MarshalJSON() ([]byte, error) {
 	dm := devMarshallable{
+		Driver:  d.Driver,
 		Address: d.Address,
 		Vendor: devIdent{
 			ID:   d.Vendor.ID,
@@ -107,8 +113,9 @@ func (d *Device) String() string {
 		className = d.Class.Name
 	}
 	return fmt.Sprintf(
-		"%s -> class: '%s' vendor: '%s' product: '%s'",
+		"%s -> driver: '%s' class: '%s' vendor: '%s' product: '%s'",
 		d.Address,
+		d.Driver,
 		className,
 		vendorName,
 		productName,
@@ -116,7 +123,8 @@ func (d *Device) String() string {
 }
 
 type Info struct {
-	ctx *context.Context
+	arch topology.Architecture
+	ctx  *context.Context
 	// All PCI devices on the host system
 	Devices []*Device
 	// hash of class ID -> class information
@@ -137,47 +145,51 @@ func (i *Info) String() string {
 	return fmt.Sprintf("PCI (%d devices)", len(i.Devices))
 }
 
-type Address struct {
-	Domain   string
-	Bus      string
-	Slot     string
-	Function string
-}
-
-// Given a string address, returns a complete Address struct, filled in with
-// domain, bus, slot and function components. The address string may either
-// be in $BUS:$SLOT.$FUNCTION (BSF) format or it can be a full PCI address
-// that includes the 4-digit $DOMAIN information as well:
-// $DOMAIN:$BUS:$SLOT.$FUNCTION.
-//
-// Returns "" if the address string wasn't a valid PCI address.
-func AddressFromString(address string) *Address {
-	addrLowered := strings.ToLower(address)
-	matches := regexAddress.FindStringSubmatch(addrLowered)
-	if len(matches) == 6 {
-		dom := "0000"
-		if matches[1] != "" {
-			dom = matches[2]
-		}
-		return &Address{
-			Domain:   dom,
-			Bus:      matches[3],
-			Slot:     matches[4],
-			Function: matches[5],
-		}
-	}
-	return nil
-}
-
 // New returns a pointer to an Info struct that contains information about the
 // PCI devices on the host system
 func New(opts ...*option.Option) (*Info, error) {
-	ctx := context.New(opts...)
-	info := &Info{ctx: ctx}
-	if err := ctx.Do(info.load); err != nil {
+	merged := option.Merge(opts...)
+	ctx := context.New(merged)
+	// by default we don't report NUMA information;
+	// we will only if are sure we are running on NUMA architecture
+	info := &Info{
+		arch: topology.ARCHITECTURE_SMP,
+		ctx:  ctx,
+	}
+
+	// we do this trick because we need to make sure ctx.Setup() gets
+	// a chance to run before any subordinate package is created reusing
+	// our context.
+	loadDetectingTopology := func() error {
+		topo, err := topology.New(context.WithContext(ctx))
+		if err == nil {
+			info.arch = topo.Architecture
+		} else {
+			ctx.Warn("error detecting system topology: %v", err)
+		}
+		return info.load()
+	}
+
+	var err error
+	if context.Exists(merged) {
+		err = loadDetectingTopology()
+	} else {
+		err = ctx.Do(loadDetectingTopology)
+	}
+	if err != nil {
 		return nil, err
 	}
 	return info, nil
+}
+
+// lookupDevice gets a device from cached data
+func (info *Info) lookupDevice(address string) *Device {
+	for _, dev := range info.Devices {
+		if dev.Address == address {
+			return dev
+		}
+	}
+	return nil
 }
 
 // simple private struct used to encapsulate PCI information in a top-level

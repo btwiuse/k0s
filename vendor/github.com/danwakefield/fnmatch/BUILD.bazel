@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["fnmatch.go"],
-    importmap = "k0s.io/vendor/github.com/danwakefield/fnmatch",
-    importpath = "github.com/danwakefield/fnmatch",
-    visibility = ["//visibility:public"],
-)

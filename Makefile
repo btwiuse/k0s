@@ -29,19 +29,10 @@ raze:             ## auto generate BUILD.bazel files from Cargo.toml
 gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ go mod tidy
 	@ go mod vendor
+	@ sed -i vendor/sigs.k8s.io/kustomize/pkg/transformers/config/factorycrd.go -e 's,github.com/go-openapi/spec,k8s.io/kube-openapi/pkg/validation/spec,g'
 	@ $(BAZEL) run //:gazelle -- update-repos --from_file=go.mod
-	@ $(BAZEL) run //:gazelle -- -exclude=vendor/golang.org/x/net/trace
-	# @ gazelle -exclude=vendor
-	# @ git checkout vendor/nhooyr.io/websocket
-	# @ cd vendor/google.golang.org/grpc && git grep -e 'importmap = "' | cut -d : -f -1 | sort -u | xargs -L1 -I@ sed -i @ -e 's,importmap = "k0s.io/vendor/,importmap = ",g'
-	# @ cd vendor/google.golang.org/protobuf && git grep -e 'importmap = "' | cut -d : -f -1 | sort -u | xargs -L1 -I@ sed -i @ -e 's,importmap = "k0s.io/vendor/,importmap = ",g'
-	# @ sed -i vendor/golang.org/x/net/trace/trace.go -e 's,func init(),func nop(),g'
-	@ sed -i vendor/github.com/google/cel-go/parser/gen/BUILD.bazel -e 's,//parser:__subpackages__,//visibility:public,g' # bazel visibility problem
-	@ sed -i vendor/github.com/antlr/antlr4/runtime/Go/antlr/dfa_state.go -e 's,%d:%s%s,%s:%s,g' # nogo format warning
-	@ sed -i vendor/github.com/antlr/antlr4/runtime/Go/antlr/lexer_atn_simulator.go -e 's,ACTION %s,ACTION %v,g' # nogo format warning
-	@ sed -i vendor/github.com/abiosoft/caddy-json-schema/interface.go -e '/ populate(/a \\tif s == nil { f.Type = "string"; return }' # https://github.com/abiosoft/caddy-json-schema/issues/2
-	@ sed -i vendor/sigs.k8s.io/kustomize/pkg/transformers/config/factorycrd.go -e 's,type myProperties map\[string\]spec.Schema,type myProperties = map\[string\]spec.Schema,g' # https://github.com/kubernetes-sigs/kustomize/pull/3444/files
-	@ git status vendor/
+	@ $(BAZEL) run //:gazelle
+	# @ git status vendor/
 
 bazel-build-android:            ## Build android binaries using bazel
 	$(BAZEL) run //:install_k0s --config=go_android_amd64 -- -g $(PWD)/bin/android/amd64

@@ -12,8 +12,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/github.com/gorilla/mux:go_default_library",
+        "//vendor/github.com/portainer/agent/edge:go_default_library",
         "//vendor/github.com/portainer/agent/http/security:go_default_library",
-        "//vendor/github.com/portainer/agent/internal/edge:go_default_library",
         "//vendor/github.com/portainer/libhttp/error:go_default_library",
         "//vendor/github.com/portainer/libhttp/request:go_default_library",
         "//vendor/github.com/portainer/libhttp/response:go_default_library",

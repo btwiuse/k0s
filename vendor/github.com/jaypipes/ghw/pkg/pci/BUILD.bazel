@@ -14,6 +14,8 @@ go_library(
         "//vendor/github.com/jaypipes/ghw/pkg/context:go_default_library",
         "//vendor/github.com/jaypipes/ghw/pkg/marshal:go_default_library",
         "//vendor/github.com/jaypipes/ghw/pkg/option:go_default_library",
+        "//vendor/github.com/jaypipes/ghw/pkg/pci/address:go_default_library",
+        "//vendor/github.com/jaypipes/ghw/pkg/topology:go_default_library",
         "//vendor/github.com/jaypipes/ghw/pkg/util:go_default_library",
         "//vendor/github.com/jaypipes/pcidb:go_default_library",
     ] + select({

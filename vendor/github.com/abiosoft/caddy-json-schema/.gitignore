@@ -1,7 +1,0 @@
-.vscode/
-caddy
-*caddy*.json
-*caddy*.yaml
-*caddy*.yml
-.DS_Store
-examples/

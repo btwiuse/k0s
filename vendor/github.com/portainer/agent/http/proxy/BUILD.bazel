@@ -9,6 +9,7 @@ go_library(
         "local.go",
         "local_namedpipe.go",
         "local_socket.go",
+        "nomad.go",
         "proxy.go",
         "response.go",
     ],

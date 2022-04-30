@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["moremath.go"],
-    importmap = "k0s.io/vendor/github.com/tetratelabs/wazero/internal/moremath",
-    importpath = "github.com/tetratelabs/wazero/internal/moremath",
-    visibility = ["//vendor/github.com/tetratelabs/wazero:__subpackages__"],
-)

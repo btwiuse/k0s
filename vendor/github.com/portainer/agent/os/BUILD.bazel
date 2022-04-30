@@ -10,5 +10,8 @@ go_library(
     importmap = "k0s.io/vendor/github.com/portainer/agent/os",
     importpath = "github.com/portainer/agent/os",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/portainer/agent:go_default_library"],
+    deps = [
+        "//vendor/github.com/portainer/agent:go_default_library",
+        "//vendor/gopkg.in/alecthomas/kingpin.v2:go_default_library",
+    ],
 )

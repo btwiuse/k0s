@@ -47,7 +47,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	handler, err := kproxy.NewHandler(staticDir, apiPrefix, staticPrefix, , clientConfig, keepalive)
+	handler, err := kproxy.NewHandler(staticDir, apiPrefix, staticPrefix, clientConfig, keepalive)
 	if err != nil {
 		log.Fatalln(err)
 	}

@@ -10,5 +10,5 @@ import (
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	log.Fatalln(agent.Run(os.Args[1:]))
+	log.Fatalln(goproxy.Run(os.Args[1:]))
 }

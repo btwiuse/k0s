@@ -21,14 +21,14 @@ import (
 	"strings"
 
 	"github.com/ghodss/yaml"
-	"github.com/go-openapi/spec"
+	"k8s.io/kube-openapi/pkg/validation/spec"
 	"github.com/pkg/errors"
 	"k8s.io/kube-openapi/pkg/common"
 	"sigs.k8s.io/kustomize/pkg/gvk"
 	"sigs.k8s.io/kustomize/pkg/ifc"
 )
 
-type myProperties = map[string]spec.Schema
+type myProperties map[string]spec.Schema
 type nameToApiMap map[string]common.OpenAPIDefinition
 
 // LoadConfigFromCRDs parse CRD schemas from paths into a TransformerConfig

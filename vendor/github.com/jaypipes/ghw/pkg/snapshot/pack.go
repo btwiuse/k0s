@@ -9,6 +9,7 @@ package snapshot
 import (
 	"archive/tar"
 	"compress/gzip"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -35,7 +36,7 @@ func OpenDestination(snapshotName string) (*os.File, error) {
 	var f *os.File
 	var err error
 
-	if _, err = os.Stat(snapshotName); os.IsNotExist(err) {
+	if _, err = os.Stat(snapshotName); errors.Is(err, os.ErrNotExist) {
 		if f, err = os.Create(snapshotName); err != nil {
 			return nil, err
 		}
@@ -71,11 +72,12 @@ func PackWithWriter(fw io.Writer, sourceRoot string) error {
 }
 
 func createSnapshot(tw *tar.Writer, buildDir string) error {
-	return filepath.Walk(buildDir, func(path string, fi os.FileInfo, err error) error {
+	return filepath.Walk(buildDir, func(path string, fi os.FileInfo, _ error) error {
 		if path == buildDir {
 			return nil
 		}
 		var link string
+		var err error
 
 		if fi.Mode()&os.ModeSymlink != 0 {
 			trace("processing symlink %s\n", path)

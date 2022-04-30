@@ -210,6 +210,10 @@ func diskPartitions(ctx *context.Context, paths *linuxpath.Paths, disk string) [
 }
 
 func diskPartUUID(ctx *context.Context, part string) string {
+	if !ctx.EnableTools {
+		ctx.Warn("EnableTools=false disables partition UUID detection.")
+		return ""
+	}
 	if !strings.HasPrefix(part, "/dev") {
 		part = "/dev/" + part
 	}
@@ -225,7 +229,7 @@ func diskPartUUID(ctx *context.Context, part string) string {
 		return ""
 	}
 
-	if out == nil || len(out) == 0 {
+	if len(out) == 0 {
 		return ""
 	}
 
@@ -245,10 +249,7 @@ func diskIsRemovable(paths *linuxpath.Paths, disk string) bool {
 		return false
 	}
 	removable := strings.TrimSpace(string(contents))
-	if removable == "1" {
-		return true
-	}
-	return false
+	return removable == "1"
 }
 
 func disks(ctx *context.Context, paths *linuxpath.Paths) []*Disk {
@@ -381,10 +382,10 @@ func partitionInfo(paths *linuxpath.Paths, part string) (string, string, bool) {
 		part = "/dev/" + part
 	}
 
-	// /etc/mtab entries for mounted partitions look like this:
+	// mount entries for mounted partitions look like this:
 	// /dev/sda6 / ext4 rw,relatime,errors=remount-ro,data=ordered 0 0
 	var r io.ReadCloser
-	r, err := os.Open(paths.EtcMtab)
+	r, err := os.Open(paths.ProcMounts)
 	if err != nil {
 		return "", "", true
 	}
@@ -393,7 +394,7 @@ func partitionInfo(paths *linuxpath.Paths, part string) (string, string, bool) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
-		entry := parseMtabEntry(line)
+		entry := parseMountEntry(line)
 		if entry == nil || entry.Partition != part {
 			continue
 		}
@@ -410,15 +411,15 @@ func partitionInfo(paths *linuxpath.Paths, part string) (string, string, bool) {
 	return "", "", true
 }
 
-type mtabEntry struct {
+type mountEntry struct {
 	Partition      string
 	Mountpoint     string
 	FilesystemType string
 	Options        []string
 }
 
-func parseMtabEntry(line string) *mtabEntry {
-	// /etc/mtab entries for mounted partitions look like this:
+func parseMountEntry(line string) *mountEntry {
+	// mount entries for mounted partitions look like this:
 	// /dev/sda6 / ext4 rw,relatime,errors=remount-ro,data=ordered 0 0
 	if line[0] != '/' {
 		return nil
@@ -430,7 +431,7 @@ func parseMtabEntry(line string) *mtabEntry {
 	}
 
 	// We do some special parsing of the mountpoint, which may contain space,
-	// tab and newline characters, encoded into the mtab entry line using their
+	// tab and newline characters, encoded into the mount entry line using their
 	// octal-to-string representations. From the GNU mtab man pages:
 	//
 	//   "Therefore these characters are encoded in the files and the getmntent
@@ -444,7 +445,7 @@ func parseMtabEntry(line string) *mtabEntry {
 	)
 	mp = r.Replace(mp)
 
-	res := &mtabEntry{
+	res := &mountEntry{
 		Partition:      fields[0],
 		Mountpoint:     mp,
 		FilesystemType: fields[2],
@@ -452,19 +453,4 @@ func parseMtabEntry(line string) *mtabEntry {
 	opts := strings.Split(fields[3], ",")
 	res.Options = opts
 	return res
-}
-
-func partitionMountPoint(paths *linuxpath.Paths, part string) string {
-	mp, _, _ := partitionInfo(paths, part)
-	return mp
-}
-
-func partitionType(paths *linuxpath.Paths, part string) string {
-	_, pt, _ := partitionInfo(paths, part)
-	return pt
-}
-
-func partitionIsReadOnly(paths *linuxpath.Paths, part string) bool {
-	_, _, ro := partitionInfo(paths, part)
-	return ro
 }

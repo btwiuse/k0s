@@ -1,26 +1,28 @@
 package handler
 
 import (
-	"errors"
 	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/portainer/agent"
+	"github.com/portainer/agent/edge"
+	"github.com/portainer/agent/exec"
 	httpagenthandler "github.com/portainer/agent/http/handler/agent"
 	"github.com/portainer/agent/http/handler/browse"
 	"github.com/portainer/agent/http/handler/docker"
+	"github.com/portainer/agent/http/handler/dockerhub"
 	"github.com/portainer/agent/http/handler/host"
 	"github.com/portainer/agent/http/handler/key"
 	"github.com/portainer/agent/http/handler/kubernetes"
+	"github.com/portainer/agent/http/handler/kubernetesproxy"
+	"github.com/portainer/agent/http/handler/nomadproxy"
 	"github.com/portainer/agent/http/handler/ping"
 	"github.com/portainer/agent/http/handler/websocket"
 	"github.com/portainer/agent/http/proxy"
 	"github.com/portainer/agent/http/security"
-	"github.com/portainer/agent/internal/edge"
 	kubecli "github.com/portainer/agent/kubernetes"
-	httperror "github.com/portainer/libhttp/error"
 )
 
 // Handler is the main handler of the application.
@@ -30,13 +32,14 @@ type Handler struct {
 	browseHandler          *browse.Handler
 	browseHandlerV1        *browse.Handler
 	dockerProxyHandler     *docker.Handler
+	dockerhubHandler       *dockerhub.Handler
 	keyHandler             *key.Handler
-	kubernetesProxyHandler *kubernetes.Handler
+	kubernetesHandler      *kubernetes.Handler
+	kubernetesProxyHandler *kubernetesproxy.Handler
+	nomadProxyHandler      *nomadproxy.Handler
 	webSocketHandler       *websocket.Handler
 	hostHandler            *host.Handler
 	pingHandler            *ping.Handler
-	securedProtocol        bool
-	edgeManager            *edge.Manager
 	containerPlatform      agent.ContainerPlatform
 }
 
@@ -47,9 +50,10 @@ type Config struct {
 	ClusterService       agent.ClusterService
 	SignatureService     agent.DigitalSignatureService
 	KubeClient           *kubecli.KubeClient
+	KubernetesDeployer   *exec.KubernetesDeployer
 	EdgeManager          *edge.Manager
 	RuntimeConfiguration *agent.RuntimeConfiguration
-	AgentOptions         *agent.Options
+	NomadConfig          agent.NomadConfig
 	Secured              bool
 	ContainerPlatform    agent.ContainerPlatform
 }
@@ -59,20 +63,21 @@ var dockerAPIVersionRegexp = regexp.MustCompile(`(/v[0-9]\.[0-9]*)?`)
 // NewHandler returns a pointer to a Handler.
 func NewHandler(config *Config) *Handler {
 	agentProxy := proxy.NewAgentProxy(config.ClusterService, config.RuntimeConfiguration, config.Secured)
-	notaryService := security.NewNotaryService(config.SignatureService, config.Secured)
+	notaryService := security.NewNotaryService(config.SignatureService, true)
 
 	return &Handler{
 		agentHandler:           httpagenthandler.NewHandler(config.ClusterService, notaryService),
-		browseHandler:          browse.NewHandler(agentProxy, notaryService, config.AgentOptions),
+		browseHandler:          browse.NewHandler(agentProxy, notaryService),
 		browseHandlerV1:        browse.NewHandlerV1(agentProxy, notaryService),
 		dockerProxyHandler:     docker.NewHandler(config.ClusterService, config.RuntimeConfiguration, notaryService, config.Secured),
+		dockerhubHandler:       dockerhub.NewHandler(notaryService),
 		keyHandler:             key.NewHandler(notaryService, config.EdgeManager),
-		kubernetesProxyHandler: kubernetes.NewHandler(notaryService),
+		kubernetesHandler:      kubernetes.NewHandler(notaryService, config.KubernetesDeployer),
+		kubernetesProxyHandler: kubernetesproxy.NewHandler(notaryService),
+		nomadProxyHandler:      nomadproxy.NewHandler(notaryService, config.NomadConfig),
 		webSocketHandler:       websocket.NewHandler(config.ClusterService, config.RuntimeConfiguration, notaryService, config.KubeClient),
 		hostHandler:            host.NewHandler(config.SystemService, agentProxy, notaryService),
 		pingHandler:            ping.NewHandler(),
-		securedProtocol:        config.Secured,
-		edgeManager:            config.EdgeManager,
 		containerPlatform:      config.ContainerPlatform,
 	}
 }
@@ -83,19 +88,17 @@ func (h *Handler) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	if !h.securedProtocol && !h.edgeManager.IsKeySet() {
-		httperror.WriteError(rw, http.StatusForbidden, "Unable to use the unsecured agent API without Edge key", errors.New("edge key not set"))
-		return
-	}
-
-	if h.edgeManager.IsEdgeModeEnabled() {
-		h.edgeManager.ResetActivityTimer()
-	}
-
 	request.URL.Path = dockerAPIVersionRegexp.ReplaceAllString(request.URL.Path, "")
 	rw.Header().Set(agent.HTTPResponseAgentHeaderName, agent.Version)
 	rw.Header().Set(agent.HTTPResponseAgentApiVersion, agent.APIVersion)
-	rw.Header().Set(agent.HTTPResponseAgentPlatform, strconv.Itoa(int(h.containerPlatform)))
+
+	// When the header is not set to PlatformDocker Portainer assumes the platform to be kubernetes.
+	// However, Portainer should handle podman agents the same way as docker agents.
+	agentPlatformIdentifier := h.containerPlatform
+	if h.containerPlatform == agent.PlatformPodman {
+		agentPlatformIdentifier = agent.PlatformDocker
+	}
+	rw.Header().Set(agent.HTTPResponseAgentPlatform, strconv.Itoa(int(agentPlatformIdentifier)))
 
 	switch {
 	case strings.HasPrefix(request.URL.Path, "/v1"):
@@ -114,6 +117,8 @@ func (h *Handler) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
 		h.webSocketHandler.ServeHTTP(rw, request)
 	case strings.HasPrefix(request.URL.Path, "/kubernetes"):
 		h.kubernetesProxyHandler.ServeHTTP(rw, request)
+	case strings.HasPrefix(request.URL.Path, "/nomad"):
+		h.nomadProxyHandler.ServeHTTP(rw, request)
 	case strings.HasPrefix(request.URL.Path, "/"):
 		h.dockerProxyHandler.ServeHTTP(rw, request)
 	}

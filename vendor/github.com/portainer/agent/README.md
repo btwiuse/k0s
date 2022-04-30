@@ -118,7 +118,7 @@ to access the Edge UI again.
 
 ### Edge key
 
-The Edge key is used by the agent to connect to a specific Portainer instance. It is encoded using base64 and contains the following information:
+The Edge key is used by the agent to connect to a specific Portainer instance. It is encoded using `base64` format (without the padding characters) and contains the following information:
 
 * Portainer instance API URL
 * Portainer instance tunnel server address
@@ -179,7 +179,8 @@ The following information is only relevant for an Agent that was not started in 
 By default, an agent will automatically generate its own set of TLS certificate and key. It will then use these to start the web
 server where the agent API is exposed. By using self-signed certificates, each agent client and proxy will skip the TLS server verification when executing a request against another agent.
 
-### Authentication
+## Authentication
+(Update Jul 28 2021: Authentication is enabled in Edge mode)
 
 Each request to an agent must include a digital signature in the `X-PortainerAgent-Signature` header encoded using the `base64` format (without the padding characters).
 
@@ -189,7 +190,7 @@ The following protocol is used between a Portainer instance and an agent:
 
 For each HTTP request made from the Portainer instance to the agent:
 
-1. The Portainer instance generates a signature using its private key. It encodes this signature in base64 and add it to the `X-PortainerAgent-Signature` header of the request
+1. The Portainer instance generates a signature using its private key. It encodes this signature in `base64` format (without the padding characters) and add it to the `X-PortainerAgent-Signature` header of the request
 2. The Portainer instance encodes its public key in hexadecimal and adds it the `X-PortainerAgent-PublicKey` header of the request
 
 
@@ -198,11 +199,11 @@ For each HTTP request received from the agent:
 1. The agent will check that the `X-PortainerAgent-PublicKey` and `X-PortainerAgent-Signature` headers are available in the request otherwise it returns a 403
 2. The agent will then trigger the signature verification process. If the signature is not valid it returns a 403
 
-#### Signature verification
+### Signature verification
 
 The signature verification process can follow two different paths based on how the agent was deployed.
 
-##### Default mode
+#### Default mode
 
 By default, the agent will wait for a valid request from a Portainer instance and automatically associate the first Portainer instance that communicates with it by registering the public key found in the `X-PortainerAgent-PublicKey` header inside memory.
 
@@ -212,7 +213,7 @@ Once a Portainer instance is registered by the agent, the agent will not try to 
 
 Finally, the agent uses the associated public key and a default message that is known by both entities to verify the signature available in the `X-PortainerAgent-Signature` header.
 
-##### Secret mode
+#### Secret mode
 
 When the `AGENT_SECRET` environment variable is set in the execution context of the agent (`-e AGENT_SECRET=mysecret` when started as a container for example), the digital signature verification process will be slightly different.
 
@@ -224,6 +225,8 @@ This mode will allow multiple instances of Portainer to connect to a single agen
 
 Note: Due to the fact that the agent will now decode and parse the public key associated to each request, this mode might be less performant than the default mode.
 
+If `AGENT_SECRET` isn't supplied, the agent will turn off after 3 days if not associated to any Portainer instance. This duration can be changed by supplying `AGENT_SECRET_TIMEOUT` environment variable in the format "20h2s" (https://pkg.go.dev/time#ParseDuration)
+
 ## Deployment options
 
 The behavior of the agent can be tuned via a set of mandatory and optional options available as environment variables:
@@ -233,6 +236,9 @@ we can leverage the internal Docker DNS to automatically join existing agents or
 * AGENT_HOST (*optional*): address on which the agent API will be exposed (default to `0.0.0.0`)
 * AGENT_PORT (*optional*): port on which the agent API will be exposed (default to `9001`)
 * AGENT_SECRET (*optional*): shared secret used in the signature verification process
+* AGENT_SECRET_TIMEOUT (*optional*): the duration after which the agent will be shutdown if not associated or secured by `AGENT_SECRET`. (defaults to `72h`)
+* AGENT_CLUSTER_PROBE_TIMEOUT (*optional*): timeout interval for receiving agent member probe responses (default to `500ms`, only change this setting if you know what you're doing)
+* AGENT_CLUSTER_PROBE_INTERVAL (*optional*): interval for repeating failed agent member probe (default to `1s`, only change this setting if you know what you're doing)
 * LOG_LEVEL (*optional*): defines the log output verbosity (default to `INFO`)
 * EDGE (*optional*): enable Edge mode. Disabled by default, set to `1` to enable it
 * EDGE_KEY (*optional*): specify an Edge key to use at startup
@@ -256,14 +262,19 @@ If you want to add any extra dependency:
 dep ensure -add github.com/foo/bar
 ```
 
-3. Run a local agent container:
+### 3. Run 
+
+- A local agent container:
 
 ```
 ./dev.sh local
 ```
 
-4. Run the agent container inside a Swarm cluster (requires https://github.com/deviantony/vagrant-swarm-cluster)
+- The agent container inside a Swarm cluster (requires https://github.com/deviantony/vagrant-swarm-cluster)
 
 ```
 ./dev.sh swarm
 ```
+
+- The dev script has more commands, you can see them by running `./dev.sh`
+

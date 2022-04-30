@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "edge.go",
+        "key.go",
+        "poll.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/portainer/agent/edge",
+    importpath = "github.com/portainer/agent/edge",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/mitchellh/mapstructure:go_default_library",
+        "//vendor/github.com/portainer/agent:go_default_library",
+        "//vendor/github.com/portainer/agent/chisel:go_default_library",
+        "//vendor/github.com/portainer/agent/edge/client:go_default_library",
+        "//vendor/github.com/portainer/agent/edge/scheduler:go_default_library",
+        "//vendor/github.com/portainer/agent/edge/stack:go_default_library",
+        "//vendor/github.com/portainer/agent/filesystem:go_default_library",
+        "//vendor/github.com/portainer/libcrypto:go_default_library",
+        "//vendor/github.com/portainer/portainer/api:go_default_library",
+    ],
+)
