@@ -1064,34 +1064,6 @@ go_repository(
 )
 
 go_repository(
-    name = "com_github_caddyserver_caddy_v2",
-    importpath = "github.com/caddyserver/caddy/v2",
-    sum = "h1:eRHzZ4l3X6Ag3kUt8nj5IxATprhqKq/wToP7OHlXWA0=",
-    version = "v2.5.0",
-)
-
-go_repository(
-    name = "com_github_caddyserver_certmagic",
-    importpath = "github.com/caddyserver/certmagic",
-    sum = "h1:rdSnjcUVJojmL4M0efJ+yHXErrrijS4YYg3FuwRdJkI=",
-    version = "v0.16.1",
-)
-
-go_repository(
-    name = "com_github_caddyserver_nginx_adapter",
-    importpath = "github.com/caddyserver/nginx-adapter",
-    sum = "h1:n3jhK8Tp51oN8V0lrcYhOPTOWOcgJsRRSGnQwP27NXU=",
-    version = "v0.0.3",
-)
-
-go_repository(
-    name = "com_github_caddyserver_ntlm_transport",
-    importpath = "github.com/caddyserver/ntlm-transport",
-    sum = "h1:E7CFpPD7vDOYfaX6qUrmP9r2VOzhCVExOSPM1J4fOyY=",
-    version = "v0.1.1-0.20200409193839-5d99ab17e974",
-)
-
-go_repository(
     name = "com_github_cenkalti_backoff_v4",
     importpath = "github.com/cenkalti/backoff/v4",
     sum = "h1:6Yo7N8UP2K6LWZnW94DLVSSrbobcWdVzAYOisuDPIFo=",
@@ -1694,42 +1666,6 @@ go_repository(
 )
 
 go_repository(
-    name = "com_github_greenpau_caddy_auth_jwt",
-    importpath = "github.com/greenpau/caddy-auth-jwt",
-    sum = "h1:CqM0yyAmLbD5vQvl5XaQkyMyq/AZnjk9ZneakxE8Xzo=",
-    version = "v1.2.6",
-)
-
-go_repository(
-    name = "com_github_greenpau_caddy_auth_portal",
-    importpath = "github.com/greenpau/caddy-auth-portal",
-    replace = "github.com/btwiuse/caddy-auth-portal",
-    sum = "h1:P2dbBIM00iljscsSxxKy1gbUCudvFlnbxymj1sdOswk=",
-    version = "v1.3.12-0.20210204101408-068c2618b417",
-)
-
-go_repository(
-    name = "com_github_greenpau_caddy_trace",
-    importpath = "github.com/greenpau/caddy-trace",
-    sum = "h1:Hi5vBKCzUS9XKjjy5TGzjr+tQef0NvPE+8lzVs3Uvsw=",
-    version = "v1.1.8",
-)
-
-go_repository(
-    name = "com_github_greenpau_go_identity",
-    importpath = "github.com/greenpau/go-identity",
-    sum = "h1:hK3FpEPkEjpruZ1n2QnybMcxG5EACBvqR7gCllgVnpU=",
-    version = "v1.1.6",
-)
-
-go_repository(
-    name = "com_github_greenpau_versioned",
-    importpath = "github.com/greenpau/versioned",
-    sum = "h1:2zvHamwlNITy2MXexYPsICm1sawPnCwRx7zB3VIjQRo=",
-    version = "v1.0.26",
-)
-
-go_repository(
     name = "com_github_h2non_parth",
     importpath = "github.com/h2non/parth",
     sum = "h1:2VTzZjLZBgl62/EtslCrtky5vbi9dd7HrQPQIx6wqiw=",
@@ -1751,17 +1687,10 @@ go_repository(
 )
 
 go_repository(
-    name = "com_github_iamd3vil_caddy_yaml_adapter",
-    importpath = "github.com/iamd3vil/caddy_yaml_adapter",
-    sum = "h1:5eTxtJy0pyxzY5a1N3bOap7JonTWkuRjrIEs9sK7ciE=",
-    version = "v0.0.0-20200503183711-d479c29b475a",
-)
-
-go_repository(
     name = "com_github_iancoleman_strcase",
     importpath = "github.com/iancoleman/strcase",
-    sum = "h1:05I4QRnGpI0m37iZQRuskXh+w77mr6Z41lwQzuHLwW0=",
-    version = "v0.2.0",
+    sum = "h1:dJBk1m2/qjL1twPLf68JND55vvivMupZ4wIzE8CTdBw=",
+    version = "v0.1.3",
 )
 
 go_repository(
@@ -2042,13 +1971,6 @@ go_repository(
     importpath = "github.com/mholt/acmez",
     sum = "h1:C8wsEBIUVi6e0DYoxqCcFuXtwc4AWXL/jgcDjF7mjVo=",
     version = "v1.0.2",
-)
-
-go_repository(
-    name = "com_github_mholt_caddy_webdav",
-    importpath = "github.com/mholt/caddy-webdav",
-    sum = "h1:ccjARF3ytF/kfU4CZK/GyFvjFpiOzEmMI5I00eR4zKQ=",
-    version = "v0.0.0-20210914165325-f7b67f8ca1e6",
 )
 
 go_repository(
@@ -2852,8 +2774,8 @@ go_repository(
 go_repository(
     name = "com_github_zenazn_goji",
     importpath = "github.com/zenazn/goji",
-    sum = "h1:mXV20Aj/BdWrlVzIn1kXFa+Tq62INlUi0cFFlztTaK0=",
-    version = "v0.9.1-0.20160507202103-64eb34159fe5",
+    sum = "h1:RSQQAbXGArQ0dIDEq+PI6WqN6if+5KHu6x2Cx/GXLTQ=",
+    version = "v0.9.0",
 )
 
 go_repository(
@@ -3057,76 +2979,6 @@ go_repository(
     importpath = "go.step.sm/crypto",
     sum = "h1:4mnZk21cSxyMGxsEpJwZKKvJvDu1PN09UVrWWFNUBdk=",
     version = "v0.16.1",
-)
-
-go_repository(
-    name = "com_github_caddyserver_caddy",
-    importpath = "github.com/caddyserver/caddy",
-    sum = "h1:5B1Hs0UF2x2tggr2X9jL2qOZtDXbIWQb9YLbmlxHSuM=",
-    version = "v1.0.5",
-)
-
-go_repository(
-    name = "com_github_casbin_caddy_authz",
-    importpath = "github.com/casbin/caddy-authz",
-    sum = "h1:8gr0V4XIKWAkrGz/QEuDGD0uGSVh2GeV+6s2AWhSS28=",
-    version = "v1.0.2",
-)
-
-go_repository(
-    name = "com_github_casbin_casbin",
-    importpath = "github.com/casbin/casbin",
-    sum = "h1:ucjbS5zTrmSLtH4XogqOG920Poe6QatdXtz1FEbApeM=",
-    version = "v1.9.1",
-)
-
-go_repository(
-    name = "com_github_cenkalti_backoff_v3",
-    importpath = "github.com/cenkalti/backoff/v3",
-    sum = "h1:ske+9nBpD9qZsTBoF41nW5L+AIuFBKMeze18XQ3eG1c=",
-    version = "v3.0.0",
-)
-
-go_repository(
-    name = "com_github_decker502_dnspod_go",
-    importpath = "github.com/decker502/dnspod-go",
-    sum = "h1:6dwhUFCYbC5bgpebLKn7PrI43e/5mn9tpUL9YcYCdTU=",
-    version = "v0.2.0",
-)
-
-go_repository(
-    name = "com_github_jimstudt_http_authentication",
-    importpath = "github.com/jimstudt/http-authentication",
-    sum = "h1:BcF8coBl0QFVhe8vAMMlD+CV8EISiu9MGKLoj6ZEyJA=",
-    version = "v0.0.0-20140401203705-3eca13d6893a",
-)
-
-go_repository(
-    name = "com_github_marten_seemann_chacha20",
-    importpath = "github.com/marten-seemann/chacha20",
-    sum = "h1:f40vqzzx+3GdOmzQoItkLX5WLvHgPgyYqFFIO5Gh4hQ=",
-    version = "v0.2.0",
-)
-
-go_repository(
-    name = "com_github_mholt_certmagic",
-    importpath = "github.com/mholt/certmagic",
-    sum = "h1:JOUiX9IAZbbgyjNP2GY6v/6lorH+9GkZsc7ktMpGCSo=",
-    version = "v0.8.3",
-)
-
-go_repository(
-    name = "in_gopkg_mcuadros_go_syslog_v2",
-    importpath = "gopkg.in/mcuadros/go-syslog.v2",
-    sum = "h1:60g8zx1BijSVSgLTzLCW9UC4/+i1Ih9jJ1DR5Tgp9vE=",
-    version = "v2.2.1",
-)
-
-go_repository(
-    name = "com_github_hairyhenderson_caddy_teapot_module",
-    importpath = "github.com/hairyhenderson/caddy-teapot-module",
-    sum = "h1:POfr7XzYFIUEzAR5/f1+LZ9sN33GqG7XyscWljyFu5Y=",
-    version = "v0.0.2",
 )
 
 go_repository(
@@ -8501,6 +8353,126 @@ go_repository(
     importpath = "github.com/xtaci/kcp-go/v5",
     sum = "h1:Pwn0aoeNSPF9dTS7IgiPXn0HEtaIlVb6y5UKWPsx8bI=",
     version = "v5.6.1",
+)
+
+go_repository(
+    name = "com_github_caddyserver_caddy",
+    importpath = "github.com/caddyserver/caddy",
+    sum = "h1:5B1Hs0UF2x2tggr2X9jL2qOZtDXbIWQb9YLbmlxHSuM=",
+    version = "v1.0.5",
+)
+
+go_repository(
+    name = "com_github_caddyserver_caddy_v2",
+    importpath = "github.com/caddyserver/caddy/v2",
+    sum = "h1:eRHzZ4l3X6Ag3kUt8nj5IxATprhqKq/wToP7OHlXWA0=",
+    version = "v2.5.0",
+)
+
+go_repository(
+    name = "com_github_caddyserver_certmagic",
+    importpath = "github.com/caddyserver/certmagic",
+    sum = "h1:rdSnjcUVJojmL4M0efJ+yHXErrrijS4YYg3FuwRdJkI=",
+    version = "v0.16.1",
+)
+
+go_repository(
+    name = "com_github_cenkalti_backoff_v3",
+    importpath = "github.com/cenkalti/backoff/v3",
+    sum = "h1:ske+9nBpD9qZsTBoF41nW5L+AIuFBKMeze18XQ3eG1c=",
+    version = "v3.0.0",
+)
+
+go_repository(
+    name = "com_github_decker502_dnspod_go",
+    importpath = "github.com/decker502/dnspod-go",
+    sum = "h1:6dwhUFCYbC5bgpebLKn7PrI43e/5mn9tpUL9YcYCdTU=",
+    version = "v0.2.0",
+)
+
+go_repository(
+    name = "com_github_greenpau_caddy_auth_jwt",
+    importpath = "github.com/greenpau/caddy-auth-jwt",
+    sum = "h1:CqM0yyAmLbD5vQvl5XaQkyMyq/AZnjk9ZneakxE8Xzo=",
+    version = "v1.2.6",
+)
+
+go_repository(
+    name = "com_github_greenpau_caddy_auth_portal",
+    importpath = "github.com/greenpau/caddy-auth-portal",
+    replace = "github.com/btwiuse/caddy-auth-portal",
+    sum = "h1:P2dbBIM00iljscsSxxKy1gbUCudvFlnbxymj1sdOswk=",
+    version = "v1.3.12-0.20210204101408-068c2618b417",
+)
+
+go_repository(
+    name = "com_github_greenpau_caddy_trace",
+    importpath = "github.com/greenpau/caddy-trace",
+    sum = "h1:Hi5vBKCzUS9XKjjy5TGzjr+tQef0NvPE+8lzVs3Uvsw=",
+    version = "v1.1.8",
+)
+
+go_repository(
+    name = "com_github_greenpau_go_identity",
+    importpath = "github.com/greenpau/go-identity",
+    sum = "h1:SnD/LrSIoH35VZk4IskHD1Zm9+cms4Iu+QfjxNNgnU4=",
+    version = "v1.0.19",
+)
+
+go_repository(
+    name = "com_github_greenpau_versioned",
+    importpath = "github.com/greenpau/versioned",
+    sum = "h1:ICqCoTG8Xv92BV+bKs52d86pDF/e0zhk3LLELsYMpl4=",
+    version = "v1.0.23",
+)
+
+go_repository(
+    name = "com_github_hairyhenderson_caddy_teapot_module",
+    importpath = "github.com/hairyhenderson/caddy-teapot-module",
+    sum = "h1:POfr7XzYFIUEzAR5/f1+LZ9sN33GqG7XyscWljyFu5Y=",
+    version = "v0.0.2",
+)
+
+go_repository(
+    name = "com_github_iamd3vil_caddy_yaml_adapter",
+    importpath = "github.com/iamd3vil/caddy_yaml_adapter",
+    sum = "h1:5eTxtJy0pyxzY5a1N3bOap7JonTWkuRjrIEs9sK7ciE=",
+    version = "v0.0.0-20200503183711-d479c29b475a",
+)
+
+go_repository(
+    name = "com_github_jimstudt_http_authentication",
+    importpath = "github.com/jimstudt/http-authentication",
+    sum = "h1:BcF8coBl0QFVhe8vAMMlD+CV8EISiu9MGKLoj6ZEyJA=",
+    version = "v0.0.0-20140401203705-3eca13d6893a",
+)
+
+go_repository(
+    name = "com_github_marten_seemann_chacha20",
+    importpath = "github.com/marten-seemann/chacha20",
+    sum = "h1:f40vqzzx+3GdOmzQoItkLX5WLvHgPgyYqFFIO5Gh4hQ=",
+    version = "v0.2.0",
+)
+
+go_repository(
+    name = "com_github_mholt_caddy_webdav",
+    importpath = "github.com/mholt/caddy-webdav",
+    sum = "h1:ccjARF3ytF/kfU4CZK/GyFvjFpiOzEmMI5I00eR4zKQ=",
+    version = "v0.0.0-20210914165325-f7b67f8ca1e6",
+)
+
+go_repository(
+    name = "com_github_mholt_certmagic",
+    importpath = "github.com/mholt/certmagic",
+    sum = "h1:JOUiX9IAZbbgyjNP2GY6v/6lorH+9GkZsc7ktMpGCSo=",
+    version = "v0.8.3",
+)
+
+go_repository(
+    name = "in_gopkg_mcuadros_go_syslog_v2",
+    importpath = "gopkg.in/mcuadros/go-syslog.v2",
+    sum = "h1:60g8zx1BijSVSgLTzLCW9UC4/+i1Ih9jJ1DR5Tgp9vE=",
+    version = "v2.2.1",
 )
 
 rules_proto_dependencies()

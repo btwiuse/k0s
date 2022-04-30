@@ -47,7 +47,6 @@ require (
 	github.com/btwiuse/pretty v0.0.0-20201017182805-a72bdf3093a3
 	github.com/btwiuse/wetty v0.0.36
 	github.com/buildkite/agent/v3 v3.0.0-00010101000000-000000000000
-	github.com/caddyserver/caddy/v2 v2.5.0
 	github.com/coredns/coredns v0.0.0-00010101000000-000000000000
 	github.com/cppforlife/go-cli-ui v0.0.0-20220428182907-73db60c7611a
 	github.com/creack/pty v1.1.18
@@ -151,7 +150,6 @@ require (
 	github.com/andybalholm/brotli v1.0.1 // indirect
 	github.com/armon/go-metrics v0.0.0-20190430140413-ec5e00d3c878 // indirect
 	github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5 // indirect
-	github.com/aryann/difflib v0.0.0-20210328193216-ff5ff6dc229b // indirect
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/asdine/storm v2.1.2+incompatible // indirect
 	github.com/aws/aws-sdk-go v1.37.10 // indirect
@@ -163,7 +161,6 @@ require (
 	github.com/buildkite/shellwords v0.0.0-20180315084142-c3f497d1e000 // indirect
 	github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3 // indirect
 	github.com/caddyserver/caddy v1.0.3 // indirect
-	github.com/caddyserver/certmagic v0.16.1 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
@@ -198,6 +195,7 @@ require (
 	github.com/dsoprea/go-exif/v3 v3.0.0-20201216222538-db167117f483 // indirect
 	github.com/dsoprea/go-logging v0.0.0-20200517223158-a10564966e9d // indirect
 	github.com/dsoprea/go-utility/v2 v2.0.0-20200717064901-2fccff4aa15e // indirect
+	github.com/dustin/go-humanize v1.0.1-0.20200219035652-afde56e7acac // indirect
 	github.com/ebfe/bcrypt_pbkdf v0.0.0-20140212075826-3c8d2dcb253a // indirect
 	github.com/elithrar/simple-scrypt v1.3.0 // indirect
 	github.com/ema/qdisc v0.0.0-20200603082823-62d0308e3e00 // indirect
@@ -299,7 +297,6 @@ require (
 	github.com/klauspost/reedsolomon v1.9.15 // indirect
 	github.com/koding/websocketproxy v0.0.0-20181220232114-7ed82d81a28c // indirect
 	github.com/kr/pty v1.1.8 // indirect
-	github.com/libdns/libdns v0.2.1 // indirect
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
 	github.com/lithammer/dedent v1.1.0 // indirect
 	github.com/lucas-clemente/quic-go v0.27.0 // indirect
@@ -308,7 +305,6 @@ require (
 	github.com/lunixbochs/struc v0.0.0-20200707160740-784aaebc1d40 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
-	github.com/marten-seemann/qpack v0.2.1 // indirect
 	github.com/marten-seemann/qtls-go1-16 v0.1.5 // indirect
 	github.com/marten-seemann/qtls-go1-17 v0.1.1 // indirect
 	github.com/marten-seemann/qtls-go1-18 v0.1.1 // indirect
@@ -322,7 +318,6 @@ require (
 	github.com/mdlayher/netlink v1.4.1 // indirect
 	github.com/mdlayher/socket v0.0.0-20210307095302-262dc9984e00 // indirect
 	github.com/mdlayher/wifi v0.0.0-20200527114002-84f0b9457fdd // indirect
-	github.com/mholt/acmez v1.0.2 // indirect
 	github.com/mholt/archiver/v3 v3.5.1 // indirect
 	github.com/mholt/certmagic v0.6.2-0.20190624175158-6a42ef9fe8c2 // indirect
 	github.com/milosgajdos/tenus v0.0.3 // indirect
