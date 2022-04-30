@@ -11,8 +11,6 @@ go_library(
         "field.go",
         "flag.go",
         "global.go",
-        "global_go112.go",
-        "global_prego112.go",
         "http_handler.go",
         "level.go",
         "logger.go",
@@ -29,6 +27,7 @@ go_library(
     deps = [
         "//vendor/go.uber.org/atomic:go_default_library",
         "//vendor/go.uber.org/multierr:go_default_library",
+        "//vendor/go.uber.org/zap/buffer:go_default_library",
         "//vendor/go.uber.org/zap/internal/bufferpool:go_default_library",
         "//vendor/go.uber.org/zap/zapcore:go_default_library",
     ],

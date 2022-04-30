@@ -13,7 +13,6 @@ go_library(
     importpath = "github.com/v2fly/v2ray-core/v4/proxy/vless",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/protocol:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/uuid:go_default_library",

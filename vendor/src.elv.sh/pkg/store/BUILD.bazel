@@ -17,5 +17,7 @@ go_library(
     deps = [
         "//vendor/go.etcd.io/bbolt:go_default_library",
         "//vendor/src.elv.sh/pkg/logutil:go_default_library",
+        "//vendor/src.elv.sh/pkg/store/storedefs:go_default_library",
+        "//vendor/src.elv.sh/pkg/testutil:go_default_library",
     ],
 )

@@ -5,7 +5,7 @@ go_library(
     srcs = [
         "account.go",
         "acmeclient.go",
-        "acmemanager.go",
+        "acmeissuer.go",
         "async.go",
         "cache.go",
         "certificates.go",

@@ -112,7 +112,7 @@ func (s *SysInfo) operatingSystem() string {
 	var r *regexp.Regexp
 	var release []byte
 
-	if pathname.DoesExist("/etc/os-release") {
+	if ok, _ := pathname.DoesExist("/etc/os-release"); ok {
 		if release, e = ioutil.ReadFile("/etc/os-release"); e != nil {
 			s.OS = ""
 			return s.OS

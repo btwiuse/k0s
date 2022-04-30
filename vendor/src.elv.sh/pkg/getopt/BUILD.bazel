@@ -9,4 +9,5 @@ go_library(
     importmap = "k0s.io/vendor/src.elv.sh/pkg/getopt",
     importpath = "src.elv.sh/pkg/getopt",
     visibility = ["//visibility:public"],
+    deps = ["//vendor/src.elv.sh/pkg/diag:go_default_library"],
 )

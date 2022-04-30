@@ -424,7 +424,9 @@ func NumberToInt(x Value) (Int, error) {
 // finiteFloatToInt converts f to an Int, truncating towards zero.
 // f must be finite.
 func finiteFloatToInt(f Float) Int {
-	if math.MinInt64 <= f && f <= math.MaxInt64 {
+	// We avoid '<= MaxInt64' so that both constants are exactly representable as floats.
+	// See https://github.com/google/starlark-go/issues/375.
+	if math.MinInt64 <= f && f < math.MaxInt64+1 {
 		// small values
 		return MakeInt64(int64(f))
 	}

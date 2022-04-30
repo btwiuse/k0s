@@ -7,11 +7,12 @@ import (
 	"sync"
 	"time"
 
+	"github.com/xtaci/smux"
+
 	"github.com/p4gefau1t/trojan-go/common"
 	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/log"
 	"github.com/p4gefau1t/trojan-go/tunnel"
-	"github.com/xtaci/smux"
 )
 
 type muxID uint32
@@ -27,7 +28,7 @@ type smuxClientInfo struct {
 	underlayConn   tunnel.Conn
 }
 
-//Client is a smux client
+// Client is a smux client
 type Client struct {
 	clientPoolLock sync.Mutex
 	clientPool     map[muxID]*smuxClientInfo
@@ -68,7 +69,7 @@ func (c *Client) cleanLoop() {
 					info.underlayConn.Close()
 					delete(c.clientPool, id)
 					log.Info("mux client", id, "is dead")
-				} else if info.client.NumStreams() == 0 && time.Now().Sub(info.lastActiveTime) > c.timeout {
+				} else if info.client.NumStreams() == 0 && time.Since(info.lastActiveTime) > c.timeout {
 					info.client.Close()
 					info.underlayConn.Close()
 					delete(c.clientPool, id)
@@ -113,8 +114,8 @@ func (c *Client) newMuxClient() (*smuxClientInfo, error) {
 	conn = newStickyConn(conn)
 
 	smuxConfig := smux.DefaultConfig()
-	//smuxConfig.KeepAliveDisabled = true
-	client, err := smux.Client(conn, smuxConfig)
+	// smuxConfig.KeepAliveDisabled = true
+	client, _ := smux.Client(conn, smuxConfig)
 	info := &smuxClientInfo{
 		client:         client,
 		underlayConn:   conn,

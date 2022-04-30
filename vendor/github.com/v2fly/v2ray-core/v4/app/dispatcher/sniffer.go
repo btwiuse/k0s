@@ -1,3 +1,4 @@
+//go:build !confonly
 // +build !confonly
 
 package dispatcher
@@ -39,7 +40,12 @@ func NewSniffer(ctx context.Context) *Sniffer {
 		},
 	}
 	if sniffer, err := newFakeDNSSniffer(ctx); err == nil {
+		others := ret.sniffer
 		ret.sniffer = append(ret.sniffer, sniffer)
+		fakeDNSThenOthers, err := newFakeDNSThenOthers(ctx, sniffer, others)
+		if err == nil {
+			ret.sniffer = append([]protocolSnifferWithMetadata{fakeDNSThenOthers}, ret.sniffer...)
+		}
 	}
 	return ret
 }
@@ -122,4 +128,8 @@ func (c compositeResult) ProtocolForDomainResult() string {
 
 type SnifferResultComposite interface {
 	ProtocolForDomainResult() string
+}
+
+type SnifferIsProtoSubsetOf interface {
+	IsProtoSubsetOf(protocolName string) bool
 }

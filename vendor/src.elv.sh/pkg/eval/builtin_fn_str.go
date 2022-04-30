@@ -1,13 +1,10 @@
 package eval
 
 import (
-	"bytes"
 	"errors"
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
-	"unicode/utf8"
 
 	"src.elv.sh/pkg/eval/vals"
 	"src.elv.sh/pkg/wcwidth"
@@ -18,7 +15,7 @@ import (
 // ErrInputOfEawkMustBeString is thrown when eawk gets a non-string input.
 var ErrInputOfEawkMustBeString = errors.New("input of eawk must be string")
 
-//elvdoc:fn &lt;s &lt;=s ==s !=s &gt;s &gt;=s
+//elvdoc:fn &lt;s &lt;=s ==s !=s &gt;s &gt;=s {#str-cmp}
 //
 // ```elvish
 // <s  $string... # less
@@ -60,42 +57,6 @@ var ErrInputOfEawkMustBeString = errors.New("input of eawk must be string")
 
 // TODO(xiaq): Document -override-wcswidth.
 
-//elvdoc:fn has-prefix
-//
-// ```elvish
-// has-prefix $string $prefix
-// ```
-//
-// Determine whether `$prefix` is a prefix of `$string`. Examples:
-//
-// ```elvish-transcript
-// ~> has-prefix lorem,ipsum lor
-// ▶ $true
-// ~> has-prefix lorem,ipsum foo
-// ▶ $false
-// ```
-//
-// This function is deprecated; use [str:has-prefix](str.html#strhas-prefix)
-// instead.
-
-//elvdoc:fn has-suffix
-//
-// ```elvish
-// has-suffix $string $suffix
-// ```
-//
-// Determine whether `$suffix` is a suffix of `$string`. Examples:
-//
-// ```elvish-transcript
-// ~> has-suffix a.html .txt
-// ▶ $false
-// ~> has-suffix a.html .html
-// ▶ $true
-// ```
-//
-// This function is deprecated; use [str:has-suffix](str.html#strhas-suffix)
-// instead.
-
 func init() {
 	addBuiltinFns(map[string]interface{}{
 		"<s":  func(a, b string) bool { return a < b },
@@ -107,15 +68,10 @@ func init() {
 
 		"to-string": toString,
 
-		"ord":  ord,
-		"chr":  chr,
 		"base": base,
 
 		"wcswidth":          wcwidth.Of,
 		"-override-wcwidth": wcwidth.Override,
-
-		"has-prefix": strings.HasPrefix,
-		"has-suffix": strings.HasSuffix,
 
 		"eawk": eawk,
 	})
@@ -136,74 +92,15 @@ func init() {
 // ▶ '[&k=v]'
 // ```
 
-func toString(fm *Frame, args ...interface{}) {
-	out := fm.OutputChan()
+func toString(fm *Frame, args ...interface{}) error {
+	out := fm.ValueOutput()
 	for _, a := range args {
-		out <- vals.ToString(a)
-	}
-}
-
-//elvdoc:fn ord
-//
-// ```elvish
-// ord $string
-// ```
-//
-// This function is deprecated; use [str:to-codepoints](str.html#strto-codepoints) instead.
-//
-// Output value of each codepoint in `$string`, in hexadecimal. Examples:
-//
-// ```elvish-transcript
-// ~> ord a
-// ▶ 0x61
-// ~> ord 你好
-// ▶ 0x4f60
-// ▶ 0x597d
-// ```
-//
-// The output format is subject to change.
-//
-// Etymology: [Python](https://docs.python.org/3/library/functions.html#ord).
-//
-// @cf chr
-
-func ord(fm *Frame, s string) {
-	out := fm.OutputChan()
-	for _, r := range s {
-		out <- "0x" + strconv.FormatInt(int64(r), 16)
-	}
-}
-
-//elvdoc:fn chr
-//
-// ```elvish
-// chr $number...
-// ```
-//
-// This function is deprecated; use [str:from-codepoints](str.html#strfrom-codepoints) instead.
-//
-// Outputs a string consisting of the given Unicode codepoints. Example:
-//
-// ```elvish-transcript
-// ~> chr 0x61
-// ▶ a
-// ~> chr 0x4f60 0x597d
-// ▶ 你好
-// ```
-//
-// Etymology: [Python](https://docs.python.org/3/library/functions.html#chr).
-//
-// @cf ord
-
-func chr(nums ...int) (string, error) {
-	var b bytes.Buffer
-	for _, num := range nums {
-		if !utf8.ValidRune(rune(num)) {
-			return "", fmt.Errorf("invalid codepoint: %d", num)
+		err := out.Put(vals.ToString(a))
+		if err != nil {
+			return err
 		}
-		b.WriteRune(rune(num))
 	}
-	return b.String(), nil
+	return nil
 }
 
 //elvdoc:fn base
@@ -239,9 +136,12 @@ func base(fm *Frame, b int, nums ...int) error {
 		return ErrBadBase
 	}
 
-	out := fm.OutputChan()
+	out := fm.ValueOutput()
 	for _, num := range nums {
-		out <- strconv.FormatInt(int64(num), b)
+		err := out.Put(strconv.FormatInt(int64(num), b))
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -251,19 +151,20 @@ var eawkWordSep = regexp.MustCompile("[ \t]+")
 //elvdoc:fn eawk
 //
 // ```elvish
-// eawk $f $input-list?
+// eawk $f $inputs?
 // ```
 //
-// For each input, call `$f` with the input followed by all its fields. The
-// function may call `break` and `continue`.
+// For each [value input](#value-inputs), calls `$f` with the input followed by
+// all its fields. A [`break`](./builtin.html#break) command will cause `eawk`
+// to stop processing inputs. A [`continue`](./builtin.html#continue) command
+// will exit $f, but is ignored by `eawk`.
 //
 // It should behave the same as the following functions:
 //
 // ```elvish
-// fn eawk [f @rest]{
-//   each [line]{
-//     @fields = (re:split '[ \t]+'
-//     (re:replace '^[ \t]+|[ \t]+$' '' $line))
+// fn eawk {|f @rest|
+//   each {|line|
+//     var @fields = (re:split '[ \t]+' (str:trim $line " \t"))
 //     $f $line $@fields
 //   } $@rest
 // }
@@ -273,12 +174,19 @@ var eawkWordSep = regexp.MustCompile("[ \t]+")
 // anonymous functions. Example:
 //
 // ```elvish-transcript
-// ~> echo ' lorem ipsum
-// 1 2' | awk '{ print $1 }'
+// ~> echo " lorem ipsum\n1 2" | awk '{ print $1 }'
 // lorem
 // 1
-// ~> echo ' lorem ipsum
-// 1 2' | eawk [line a b]{ put $a }
+// ~> echo " lorem ipsum\n1 2" | eawk {|line a b| put $a }
+// ▶ lorem
+// ▶ 1
+// ```
+//
+// **Note**: Since Elvish allows variable names consisting solely of digits, you
+// can also do the following:
+//
+// ```elvish-transcript
+// ~> echo " lorem ipsum\n1 2" | eawk {|0 1 2| put $1 }
 // ▶ lorem
 // ▶ 1
 // ```
@@ -301,7 +209,7 @@ func eawk(fm *Frame, f Callable, inputs Inputs) error {
 			args = append(args, field)
 		}
 
-		newFm := fm.fork("fn of eawk")
+		newFm := fm.Fork("fn of eawk")
 		// TODO: Close port 0 of newFm.
 		ex := f.Call(newFm, args, NoOpts)
 		newFm.Close()

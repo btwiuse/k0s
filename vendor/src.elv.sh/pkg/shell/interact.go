@@ -1,76 +1,95 @@
 package shell
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 
-	"github.com/xiaq/persistent/hashmap"
 	"src.elv.sh/pkg/cli"
-	"src.elv.sh/pkg/cli/term"
+	"src.elv.sh/pkg/daemon/daemondefs"
 	"src.elv.sh/pkg/diag"
 	"src.elv.sh/pkg/edit"
 	"src.elv.sh/pkg/eval"
-	"src.elv.sh/pkg/eval/vals"
-	"src.elv.sh/pkg/eval/vars"
+	"src.elv.sh/pkg/mods/daemon"
+	"src.elv.sh/pkg/mods/store"
 	"src.elv.sh/pkg/parse"
-	"src.elv.sh/pkg/prog"
+	"src.elv.sh/pkg/strutil"
 	"src.elv.sh/pkg/sys"
+	"src.elv.sh/pkg/ui"
 )
 
 // InteractiveRescueShell determines whether a panic results in a rescue shell
 // being launched. It should be set to false by interactive mode unit tests.
 var interactiveRescueShell bool = true
 
-// InteractConfig keeps configuration for the interactive mode.
-type InteractConfig struct {
-	SpawnDaemon bool
-	Paths       Paths
+// Configuration for the interactive mode.
+type interactCfg struct {
+	RC string
+
+	ActivateDaemon daemondefs.ActivateFunc
+	SpawnConfig    *daemondefs.SpawnConfig
 }
 
-// Interactive mode panic handler.
-func handlePanic() {
-	r := recover()
-	if r != nil {
-		println()
-		print(sys.DumpStack())
-		println()
-		fmt.Println(r)
-		println("\nExecing recovery shell /bin/sh")
-		syscall.Exec("/bin/sh", []string{"/bin/sh"}, os.Environ())
-	}
+// Interface satisfied by the line editor. Used for swapping out the editor with
+// minEditor when necessary.
+type editor interface {
+	ReadCode() (string, error)
+	RunAfterCommandHooks(src parse.Source, duration float64, err error)
 }
 
-// Interact runs an interactive shell session.
-func Interact(fds [3]*os.File, cfg *InteractConfig) {
+// Runs an interactive shell session.
+func interact(ev *eval.Evaler, fds [3]*os.File, cfg *interactCfg) {
 	if interactiveRescueShell {
 		defer handlePanic()
 	}
-	ev, cleanup := setupShell(fds, cfg.Paths, cfg.SpawnDaemon)
-	defer cleanup()
+
+	var daemonClient daemondefs.Client
+	if cfg.ActivateDaemon != nil && cfg.SpawnConfig != nil {
+		// TODO(xiaq): Connect to daemon and install daemon module
+		// asynchronously.
+		cl, err := cfg.ActivateDaemon(fds[2], cfg.SpawnConfig)
+		if err != nil {
+			fmt.Fprintln(fds[2], "Cannot connect to daemon:", err)
+			fmt.Fprintln(fds[2], "Daemon-related functions will likely not work.")
+		}
+		defer func() {
+			err := cl.Close()
+			if err != nil {
+				fmt.Fprintln(fds[2],
+					"warning: failed to close connection to daemon:", err)
+			}
+		}()
+		daemonClient = cl
+		// Even if error is not nil, we install daemon-related functionalities
+		// anyway. Daemon may eventually come online and become functional.
+		ev.AddBeforeExit(func() { cl.Close() })
+		ev.AddModule("store", store.Ns(cl))
+		ev.AddModule("daemon", daemon.Ns(cl))
+	}
 
 	// Build Editor.
 	var ed editor
 	if sys.IsATTY(fds[0]) {
-		newed := edit.NewEditor(cli.NewTTY(fds[0], fds[2]), ev, ev.DaemonClient())
-		ev.AddBuiltin(eval.NsBuilder{}.AddNs("edit", newed.Ns()).Ns())
+		newed := edit.NewEditor(cli.NewTTY(fds[0], fds[2]), ev, daemonClient)
+		ev.ExtendBuiltin(eval.BuildNs().AddNs("edit", newed))
+		ev.BgJobNotify = func(s string) { newed.Notify(ui.T(s)) }
 		ed = newed
 	} else {
 		ed = newMinEditor(fds[0], fds[2])
 	}
 
 	// Source rc.elv.
-	if cfg.Paths.Rc != "" {
-		err := sourceRC(fds, ev, cfg.Paths.Rc)
+	if cfg.RC != "" {
+		err := sourceRC(fds, ev, ed, cfg.RC)
 		if err != nil {
 			diag.ShowError(fds[2], err)
 		}
 	}
-
-	term.Sanitize(fds[0], fds[2])
 
 	cooldown := time.Second
 	cmdNum := 0
@@ -79,7 +98,6 @@ func Interact(fds [3]*os.File, cfg *InteractConfig) {
 		cmdNum++
 
 		line, err := ed.ReadCode()
-
 		if err == io.EOF {
 			break
 		} else if err != nil {
@@ -101,16 +119,34 @@ func Interact(fds [3]*os.File, cfg *InteractConfig) {
 		// No error; reset cooldown.
 		cooldown = time.Second
 
-		err = evalInTTY(ev, fds,
+		// Execute the command line only if it is not entirely whitespace. This keeps side-effects,
+		// such as executing `$edit:after-command` hooks, from occurring when we didn't actually
+		// evaluate any code entered by the user.
+		if strings.TrimSpace(line) == "" {
+			continue
+		}
+		err = evalInTTY(fds, ev, ed,
 			parse.Source{Name: fmt.Sprintf("[tty %v]", cmdNum), Code: line})
-		term.Sanitize(fds[0], fds[2])
 		if err != nil {
 			diag.ShowError(fds[2], err)
 		}
 	}
 }
 
-func sourceRC(fds [3]*os.File, ev *eval.Evaler, rcPath string) error {
+// Interactive mode panic handler.
+func handlePanic() {
+	r := recover()
+	if r != nil {
+		println()
+		print(sys.DumpStack())
+		println()
+		fmt.Println(r)
+		println("\nExecing recovery shell /bin/sh")
+		syscall.Exec("/bin/sh", []string{"/bin/sh"}, os.Environ())
+	}
+}
+
+func sourceRC(fds [3]*os.File, ev *eval.Evaler, ed editor, rcPath string) error {
 	absPath, err := filepath.Abs(rcPath)
 	if err != nil {
 		return fmt.Errorf("cannot get full path of rc.elv: %v", err)
@@ -122,50 +158,28 @@ func sourceRC(fds [3]*os.File, ev *eval.Evaler, rcPath string) error {
 		}
 		return err
 	}
-	err = evalInTTY(ev, fds, parse.Source{Name: absPath, Code: code, IsFile: true})
-	if err != nil {
-		return err
-	}
-	extraGlobal := extractExports(ev.Global(), fds[2])
-	if extraGlobal != nil {
-		ev.AddGlobal(extraGlobal)
-	}
-	return nil
+	return evalInTTY(fds, ev, ed, parse.Source{Name: absPath, Code: code, IsFile: true})
 }
 
-const exportsVarName = "-exports-"
+type minEditor struct {
+	in  *bufio.Reader
+	out io.Writer
+}
 
-// If the namespace contains a variable named exportsVarName, extract its values
-// into a namespace.
-func extractExports(ns *eval.Ns, stderr io.Writer) *eval.Ns {
-	value, ok := ns.Index(exportsVarName)
-	if !ok {
-		return nil
+func newMinEditor(in, out *os.File) *minEditor {
+	return &minEditor{bufio.NewReader(in), out}
+}
+
+func (ed *minEditor) RunAfterCommandHooks(src parse.Source, duration float64, err error) {
+	// no-op; minEditor doesn't support this hook.
+}
+
+func (ed *minEditor) ReadCode() (string, error) {
+	wd, err := os.Getwd()
+	if err != nil {
+		wd = "?"
 	}
-	if prog.DeprecationLevel >= 15 {
-		fmt.Fprintln(stderr,
-			"the $-exports- mechanism is deprecated; use edit:add-vars instead.")
-	}
-	exports, ok := value.(hashmap.Map)
-	if !ok {
-		fmt.Fprintf(stderr, "$%s is not map, ignored\n", exportsVarName)
-		return nil
-	}
-	nb := eval.NsBuilder{}
-	for it := exports.Iterator(); it.HasElem(); it.Next() {
-		k, v := it.Elem()
-		name, ok := k.(string)
-		if !ok {
-			fmt.Fprintf(stderr, "$%s[%s] is not string, ignored\n",
-				exportsVarName, vals.Repr(k, vals.NoPretty))
-			continue
-		}
-		if ns.HasName(name) {
-			fmt.Fprintf(stderr, "$%s already exists, ignored $%s[%s]\n",
-				name, exportsVarName, name)
-			continue
-		}
-		nb.Add(name, vars.FromInit(v))
-	}
-	return nb.Ns()
+	fmt.Fprintf(ed.out, "%s> ", wd)
+	line, err := ed.in.ReadString('\n')
+	return strutil.ChopLineEnding(line), err
 }

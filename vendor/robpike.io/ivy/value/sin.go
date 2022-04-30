@@ -4,18 +4,41 @@
 
 package value
 
-import "math/big"
+import (
+	"math/big"
+)
 
 func sin(c Context, v Value) Value {
+	if u, ok := v.(Complex); ok {
+		if !isZero(u.imag) {
+			return complexSin(c, u)
+		}
+		v = u.real
+	}
 	return evalFloatFunc(c, v, floatSin)
 }
 
 func cos(c Context, v Value) Value {
+	if u, ok := v.(Complex); ok {
+		if !isZero(u.imag) {
+			return complexCos(c, u)
+		}
+		v = u.real
+	}
 	return evalFloatFunc(c, v, floatCos)
 }
 
 func tan(c Context, v Value) Value {
-	x := floatSelf(c, v).(BigFloat).Float
+	if u, ok := v.(Complex); ok {
+		if !isZero(u.imag) {
+			return complexTan(c, u)
+		}
+		v = u.real
+	}
+	x := floatSelf(c, v).Float
+	if x.IsInf() {
+		Errorf("tangent of infinity")
+	}
 	negate := false
 	if x.Sign() < 0 {
 		x.Neg(x)
@@ -36,6 +59,9 @@ func tan(c Context, v Value) Value {
 
 // floatSin computes sin(x) using argument reduction and a Taylor series.
 func floatSin(c Context, x *big.Float) *big.Float {
+	if x.IsInf() {
+		Errorf("sine of infinity")
+	}
 	negate := false
 	if x.Sign() < 0 {
 		x.Neg(x)
@@ -58,6 +84,9 @@ func floatSin(c Context, x *big.Float) *big.Float {
 
 // floatCos computes cos(x) using argument reduction and a Taylor series.
 func floatCos(c Context, x *big.Float) *big.Float {
+	if x.IsInf() {
+		Errorf("cosine of infinity")
+	}
 	twoPiReduce(c, x)
 
 	// cos(x) = 1 - x²/2! + x⁴/4! - ...
@@ -125,4 +154,48 @@ func twoPiReduce(c Context, x *big.Float) {
 	for x.Cmp(twoPi) >= 0 {
 		x.Sub(x, twoPi)
 	}
+}
+
+func complexSin(c Context, v Complex) Value {
+	// Use the formula: sin(x+yi) = sin(x)cosh(y) + i cos(x)sinh(y)
+	x := floatSelf(c, v.real).Float
+	y := floatSelf(c, v.imag).Float
+	sinX := floatSin(c, x)
+	coshY := floatCosh(c, y)
+	cosX := floatCos(c, x)
+	sinhY := floatSinh(c, y)
+	lhs := sinX.Mul(sinX, coshY)
+	rhs := cosX.Mul(cosX, sinhY)
+	return newComplex(BigFloat{lhs}, BigFloat{rhs}).shrink()
+}
+
+func complexCos(c Context, v Complex) Value {
+	// Use the formula: cos(x+yi) = cos(x)cosh(y) + i sin(x)sinh(y)
+	x := floatSelf(c, v.real).Float
+	y := floatSelf(c, v.imag).Float
+	cosX := floatCos(c, x)
+	coshY := floatCosh(c, y)
+	sinX := floatSin(c, x)
+	sinhY := floatSinh(c, y)
+	lhs := cosX.Mul(cosX, coshY)
+	rhs := sinX.Mul(sinX, sinhY)
+	return newComplex(BigFloat{lhs}, BigFloat{rhs.Neg(rhs)}).shrink()
+}
+
+func complexTan(c Context, v Complex) Value {
+	// Use the formula: tan(x+yi) = (sin(2x) + i sinh (2y))/(cos(2x) + cosh(2y))
+	x := floatSelf(c, v.real).Float
+	y := floatSelf(c, v.imag).Float
+	// Double them - all the arguments are 2X.
+	x.Mul(x, floatTwo)
+	y.Mul(y, floatTwo)
+	sin2X := floatSin(c, x)
+	sinh2Y := floatSinh(c, y)
+	cos2X := floatCos(c, x)
+	cosh2Y := floatCosh(c, y)
+	den := cos2X.Add(cos2X, cosh2Y)
+	if den.Sign() == 0 {
+		Errorf("tangent is infinite")
+	}
+	return newComplex(BigFloat{sin2X.Quo(sin2X, den)}, BigFloat{sinh2Y.Quo(sinh2Y, den)}).shrink()
 }

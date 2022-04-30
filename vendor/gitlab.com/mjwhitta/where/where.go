@@ -43,7 +43,9 @@ func Is(cmd string) string {
 		for _, ext := range exts {
 			fullpath = filepath.Join(dir, cmd+ext)
 
-			if pathname.DoesExist(fullpath) {
+			if ok, e := pathname.DoesExist(fullpath); e != nil {
+				continue // Not accessible
+			} else if ok {
 				cache.Put(cmd, pathname.ExpandPath(fullpath))
 				cached, _ = cache.Get(cmd)
 				return cached.(string)

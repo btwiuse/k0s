@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build !nosoftnet
 // +build !nosoftnet
 
 package collector
@@ -19,7 +20,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/procfs"
 )
@@ -72,7 +73,7 @@ func NewSoftnetCollector(logger log.Logger) (Collector, error) {
 func (c *softnetCollector) Update(ch chan<- prometheus.Metric) error {
 	stats, err := c.fs.NetSoftnetStat()
 	if err != nil {
-		return fmt.Errorf("could not get softnet statistics: %s", err)
+		return fmt.Errorf("could not get softnet statistics: %w", err)
 	}
 
 	for cpuNumber, cpuStats := range stats {

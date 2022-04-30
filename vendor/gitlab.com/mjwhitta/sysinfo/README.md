@@ -45,7 +45,7 @@ import (
 )
 
 func main() {
-	fmt.Println(sysinfo.New())
+    fmt.Println(sysinfo.New())
 }
 ```
 

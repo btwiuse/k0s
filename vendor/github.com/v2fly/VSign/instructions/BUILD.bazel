@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "instructions.go",
+        "packing.go",
+        "unpacking.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/VSign/instructions",
+    importpath = "github.com/v2fly/VSign/instructions",
+    visibility = ["//visibility:public"],
+)

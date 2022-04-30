@@ -19,6 +19,8 @@ type compiler struct {
 	scopes []*staticNs
 	// Sources of captured variables.
 	captures []*staticUpNs
+	// Pragmas tied to scopes.
+	pragmas []*scopePragma
 	// Destination of warning messages. This is currently only used for
 	// deprecation messages.
 	warn io.Writer
@@ -28,21 +30,15 @@ type compiler struct {
 	srcMeta parse.Source
 }
 
-type capture struct {
-	name string
-	// If true, the captured variable is from the immediate outer level scope,
-	// i.e. the local scope the lambda is evaluated in. Otherwise the captured
-	// variable is from a more outer level, i.e. the upvalue scope the lambda is
-	// evaluated in.
-	local bool
-	// Index to the captured variable.
-	index int
+type scopePragma struct {
+	unknownCommandIsExternal bool
 }
 
 func compile(b, g *staticNs, tree parse.Tree, w io.Writer) (op nsOp, err error) {
 	g = g.clone()
 	cp := &compiler{
 		b, []*staticNs{g}, []*staticUpNs{new(staticUpNs)},
+		[]*scopePragma{{unknownCommandIsExternal: true}},
 		w, newDeprecationRegistry(), tree.Source}
 	defer func() {
 		r := recover()
@@ -68,18 +64,19 @@ type nsOp struct {
 // Prepares the local namespace, and returns the namespace and a function for
 // executing the inner effectOp. Mutates fm.local.
 func (op nsOp) prepare(fm *Frame) (*Ns, func() Exception) {
-	if len(op.template.names) > len(fm.local.names) {
-		n := len(op.template.names)
-		newLocal := &Ns{make([]vars.Var, n), op.template.names, op.template.deleted}
+	if len(op.template.infos) > len(fm.local.infos) {
+		n := len(op.template.infos)
+		newLocal := &Ns{make([]vars.Var, n), op.template.infos}
 		copy(newLocal.slots, fm.local.slots)
-		for i := len(fm.local.names); i < n; i++ {
-			newLocal.slots[i] = MakeVarFromName(newLocal.names[i])
+		for i := len(fm.local.infos); i < n; i++ {
+			// TODO: Take readOnly into account too
+			newLocal.slots[i] = MakeVarFromName(newLocal.infos[i].name)
 		}
 		fm.local = newLocal
 	} else {
-		// If no new has been created, there might still be some existing
-		// variables deleted.
-		fm.local = &Ns{fm.local.slots, fm.local.names, op.template.deleted}
+		// If no new variable has been created, there might still be some
+		// existing variables deleted.
+		fm.local = &Ns{fm.local.slots, op.template.infos}
 	}
 	return fm.local, func() Exception { return op.inner.exec(fm) }
 }
@@ -102,8 +99,13 @@ func GetCompilationError(e interface{}) *diag.Error {
 	}
 	return nil
 }
+
 func (cp *compiler) thisScope() *staticNs {
 	return cp.scopes[len(cp.scopes)-1]
+}
+
+func (cp *compiler) currentPragma() *scopePragma {
+	return cp.pragmas[len(cp.pragmas)-1]
 }
 
 func (cp *compiler) pushScope() (*staticNs, *staticUpNs) {
@@ -111,6 +113,8 @@ func (cp *compiler) pushScope() (*staticNs, *staticUpNs) {
 	up := new(staticUpNs)
 	cp.scopes = append(cp.scopes, sc)
 	cp.captures = append(cp.captures, up)
+	currentPragmaCopy := *cp.currentPragma()
+	cp.pragmas = append(cp.pragmas, &currentPragmaCopy)
 	return sc, up
 }
 
@@ -119,38 +123,19 @@ func (cp *compiler) popScope() {
 	cp.scopes = cp.scopes[:len(cp.scopes)-1]
 	cp.captures[len(cp.captures)-1] = nil
 	cp.captures = cp.captures[:len(cp.captures)-1]
+	cp.pragmas[len(cp.pragmas)-1] = nil
+	cp.pragmas = cp.pragmas[:len(cp.pragmas)-1]
 }
 
 func (cp *compiler) checkDeprecatedBuiltin(name string, r diag.Ranger) {
 	msg := ""
-	minLevel := 15
+	minLevel := 18
+	// There is no builtin deprecated for 0.18.x yet. But this function is
+	// only called for builtins that actually exist, so no harm checking for a
+	// non-existent command here.
 	switch name {
-	case "-source~":
-		msg = `the "source" command is deprecated; use "eval" instead`
-	case "ord~":
-		msg = `the "ord" command is deprecated; use "str:to-codepoints" instead`
-	case "chr~":
-		msg = `the "chr" command is deprecated; use "str:from-codepoints" instead`
-	case "has-prefix~":
-		msg = `the "has-prefix" command is deprecated; use "str:has-prefix" instead`
-	case "has-suffix~":
-		msg = `the "has-suffix" command is deprecated; use "str:has-suffix" instead`
-	case "esleep~":
-		msg = `the "esleep" command is deprecated; use "sleep" instead`
-	case "eval-symlinks~":
-		msg = `the "eval-symlinks" command is deprecated; use "path:eval-symlinks" instead`
-	case "path-abs~":
-		msg = `the "path-abs" command is deprecated; use "path:abs" instead`
-	case "path-base~":
-		msg = `the "path-base" command is deprecated; use "path:base" instead`
-	case "path-clean~":
-		msg = `the "path-clean" command is deprecated; use "path:clean" instead`
-	case "path-dir~":
-		msg = `the "path-dir" command is deprecated; use "path:dir" instead`
-	case "path-ext~":
-		msg = `the "path-ext" command is deprecated; use "path:ext" instead`
-	case "-is-dir~":
-		msg = `the "-is-dir" command is deprecated; use "path:is-dir" instead`
+	case "deprecated-builtin~":
+		msg = `the "deprecated-builtin" command is deprecated; use "new-builtin" instead`
 	default:
 		return
 	}

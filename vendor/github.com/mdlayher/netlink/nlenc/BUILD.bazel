@@ -4,11 +4,11 @@ go_library(
     name = "go_default_library",
     srcs = [
         "doc.go",
-        "endian.go",
         "int.go",
         "string.go",
     ],
     importmap = "k0s.io/vendor/github.com/mdlayher/netlink/nlenc",
     importpath = "github.com/mdlayher/netlink/nlenc",
     visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/josharian/native:go_default_library"],
 )

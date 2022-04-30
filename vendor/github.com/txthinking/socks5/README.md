@@ -1,12 +1,18 @@
 ## socks5
 
+[中文](README_ZH.md)
+
 [![Go Report Card](https://goreportcard.com/badge/github.com/txthinking/socks5)](https://goreportcard.com/report/github.com/txthinking/socks5)
 [![GoDoc](https://godoc.org/github.com/txthinking/socks5?status.svg)](https://godoc.org/github.com/txthinking/socks5)
+[![Donate](https://img.shields.io/badge/Support-Donate-ff69b4.svg)](https://github.com/sponsors/txthinking)
+[![Slack](https://img.shields.io/badge/Join-Slack-ff69b4.svg)](https://docs.google.com/forms/d/e/1FAIpQLSdzMwPtDue3QoezXSKfhW88BXp57wkbDXnLaqokJqLeSWP9vQ/viewform)
 
 SOCKS Protocol Version 5 Library.
 
 Full TCP/UDP and IPv4/IPv6 support.
 Goals: KISS, less is more, small API, code is like the original protocol.
+
+❤️ A project by [txthinking.com](https://www.txthinking.com)
 
 ### Install
 ```
@@ -52,7 +58,7 @@ $ go get github.com/txthinking/socks5
 
 ### Advanced API
 
-**Server**. You can process client's request by yourself after reading *Request from client. Also, here is a advanced interfaces.
+**Server**. You can process client's request by yourself after reading **Request** from client. Also, here is a advanced interfaces.
 
 * `type Server struct`
 * `type Handler interface`
@@ -62,7 +68,7 @@ $ go get github.com/txthinking/socks5
 Example:
 
 ```
-s, _ := NewClassicServer(addr, ip, username, password, tcpTimeout, tcpDeadline, udpDeadline, udpSessionTime)
+s, _ := NewClassicServer(addr, ip, username, password, tcpTimeout, udpTimeout)
 s.ListenAndServe(Handler)
 ```
 
@@ -76,10 +82,15 @@ s.ListenAndServe(Handler)
 Example:
 
 ```
-c, _ := socks5.NewClient(server, username, password, tcpTimeout, tcpDeadline, udpDeadline)
+c, _ := socks5.NewClient(server, username, password, tcpTimeout, udpTimeout)
 conn, _ := c.Dial(network, addr)
 ```
 
 ### Users:
 
  * Brook [https://github.com/txthinking/brook](https://github.com/txthinking/brook)
+ * Shiliew [https://www.shiliew.com](https://www.shiliew.com)
+
+## License
+
+Licensed under The MIT License

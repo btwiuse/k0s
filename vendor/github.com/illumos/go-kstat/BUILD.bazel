@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "doc.go",
+        "kstat_solaris.go",
+        "raw_solaris.go",
+        "types_solaris_amd64.go",
+    ],
+    cgo = True,
+    clinkopts = select({
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "-lkstat",
+        ],
+        "//conditions:default": [],
+    }),
+    importmap = "k0s.io/vendor/github.com/illumos/go-kstat",
+    importpath = "github.com/illumos/go-kstat",
+    visibility = ["//visibility:public"],
+)

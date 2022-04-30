@@ -15,6 +15,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/src.elv.sh/pkg/env:go_default_library",
+        "//vendor/src.elv.sh/pkg/fsutil:go_default_library",
         "//vendor/src.elv.sh/pkg/testutil:go_default_library",
     ],
 )

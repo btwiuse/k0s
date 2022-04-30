@@ -2,9 +2,10 @@ package vals
 
 import (
 	"math"
+	"math/big"
 	"reflect"
 
-	"github.com/xiaq/persistent/hash"
+	"src.elv.sh/pkg/persistent/hash"
 )
 
 // Hasher wraps the Hash method.
@@ -24,6 +25,16 @@ func Hash(v interface{}) uint32 {
 			return 1
 		}
 		return 0
+	case int:
+		return hash.UIntPtr(uintptr(v))
+	case *big.Int:
+		h := hash.DJBCombine(hash.DJBInit, uint32(v.Sign()))
+		for _, word := range v.Bits() {
+			h = hash.DJBCombine(h, hash.UIntPtr(uintptr(word)))
+		}
+		return h
+	case *big.Rat:
+		return hash.DJB(Hash(v.Num()), Hash(v.Denom()))
 	case float64:
 		return hash.UInt64(math.Float64bits(v))
 	case string:

@@ -7,12 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/p4gefau1t/trojan-go/config"
-
 	// MySQL Driver
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/p4gefau1t/trojan-go/common"
+	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/log"
 	"github.com/p4gefau1t/trojan-go/statistic"
 	"github.com/p4gefau1t/trojan-go/statistic/memory"
@@ -30,7 +29,7 @@ type Authenticator struct {
 func (a *Authenticator) updater() {
 	for {
 		for _, user := range a.ListUsers() {
-			//swap upload and download for users
+			// swap upload and download for users
 			hash := user.Hash()
 			sent, recv := user.ResetTraffic()
 
@@ -47,9 +46,9 @@ func (a *Authenticator) updater() {
 		}
 		log.Info("buffered data has been written into the database")
 
-		//update memory
+		// update memory
 		rows, err := a.db.Query("SELECT password,quota,download,upload FROM users")
-		if err != nil {
+		if err != nil || rows.Err() != nil {
 			log.Error(common.NewError("failed to pull data from the database").Base(err))
 			time.Sleep(a.updateDuration)
 			continue

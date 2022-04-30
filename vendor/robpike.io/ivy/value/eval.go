@@ -5,6 +5,8 @@
 package value
 
 import (
+	"math/big"
+	"runtime"
 	"strings"
 )
 
@@ -16,12 +18,13 @@ const (
 	bigIntType
 	bigRatType
 	bigFloatType
+	complexType
 	vectorType
 	matrixType
 	numType
 )
 
-var typeName = [...]string{"int", "char", "big int", "rational", "float", "vector", "matrix"}
+var typeName = [...]string{"int", "char", "big int", "rational", "float", "complex", "vector", "matrix"}
 
 func (t valueType) String() string {
 	return typeName[t]
@@ -57,7 +60,7 @@ type binaryFn func(Context, Value, Value) Value
 type binaryOp struct {
 	name        string
 	elementwise bool // whether the operation applies elementwise to vectors and matrices
-	whichType   func(a, b valueType) valueType
+	whichType   func(a, b valueType) (valueType, valueType)
 	fn          [numType]binaryFn
 }
 
@@ -73,6 +76,8 @@ func whichType(v Value) valueType {
 		return bigRatType
 	case BigFloat:
 		return bigFloatType
+	case Complex:
+		return complexType
 	case Vector:
 		return vectorType
 	case *Matrix:
@@ -91,21 +96,21 @@ func (op *binaryOp) EvalBinary(c Context, u, v Value) Value {
 		}
 		return op.fn[0](c, u, v)
 	}
-	which := op.whichType(whichType(u), whichType(v))
+	whichU, whichV := op.whichType(whichType(u), whichType(v))
 	conf := c.Config()
-	u = u.toType(conf, which)
-	v = v.toType(conf, which)
-	fn := op.fn[which]
+	u = u.toType(op.name, conf, whichU)
+	v = v.toType(op.name, conf, whichV)
+	fn := op.fn[whichV]
 	if fn == nil {
 		if op.elementwise {
-			switch which {
+			switch whichV {
 			case vectorType:
 				return binaryVectorOp(c, u, op.name, v)
 			case matrixType:
 				return binaryMatrixOp(c, u, op.name, v)
 			}
 		}
-		Errorf("binary %s not implemented on type %s", op.name, which)
+		Errorf("binary %s not implemented on type %s", op.name, whichV)
 	}
 	return fn(c, u, v)
 }
@@ -118,13 +123,86 @@ func Product(c Context, u Value, op string, v Value) Value {
 	dot := strings.IndexByte(op, '.')
 	left := op[:dot]
 	right := op[dot+1:]
-	which := atLeastVectorType(whichType(u), whichType(v))
-	u = u.toType(c.Config(), which)
-	v = v.toType(c.Config(), which)
+	which, _ := atLeastVectorType(whichType(u), whichType(v))
+	u = u.toType(op, c.Config(), which)
+	v = v.toType(op, c.Config(), which)
 	if left == "o" {
 		return outerProduct(c, u, right, v)
 	}
 	return innerProduct(c, u, left, right, v)
+}
+
+// safeBinary reports whether the binary operator op is safe to parallelize.
+func safeBinary(op string) bool {
+	// ? uses the random number generator,
+	// which maintains global state.
+	return BinaryOps[op] != nil && op != "?"
+}
+
+// safeUnary reports whether the unary operator op is safe to parallelize.
+func safeUnary(op string) bool {
+	// ? uses the random number generator,
+	// which maintains global state.
+	return UnaryOps[op] != nil && op != "?"
+}
+
+// knownAssoc reports whether the binary op is known to be associative.
+func knownAssoc(op string) bool {
+	switch op {
+	case "+", "*", "min", "max", "or", "and", "xor", "|", "&", "^":
+		return true
+	}
+	return false
+}
+
+var pforMinWork = 100
+
+func MaxParallelismForTesting() {
+	pforMinWork = 1
+}
+
+// pfor is a conditionally parallel for loop from 0 to n.
+// If ok is true and the work is big enough,
+// pfor calls f(lo, hi) for ranges [lo, hi) that collectively tile [0, n)
+// and for which (hi-lo)*size is at least roughly pforMinWork.
+// Otherwise, pfor calls f(0, n).
+func pfor(ok bool, size, n int, f func(lo, hi int)) {
+	var p int
+	if ok {
+		p = runtime.GOMAXPROCS(-1)
+		if p == 1 || n <= 1 || n*size < pforMinWork*2 {
+			ok = false
+		}
+	}
+	if !ok {
+		f(0, n)
+		return
+	}
+	p *= 4 // evens out lopsided work splits
+	if q := n * size / pforMinWork; q < p {
+		p = q
+	}
+	c := make(chan interface{}, p)
+	for i := 0; i < p; i++ {
+		lo, hi := i*n/p, (i+1)*n/p
+		go func() {
+			defer sendRecover(c)
+			f(lo, hi)
+		}()
+	}
+	var err interface{}
+	for i := 0; i < p; i++ {
+		if e := <-c; e != nil {
+			err = e
+		}
+	}
+	if err != nil {
+		panic(err)
+	}
+}
+
+func sendRecover(c chan<- interface{}) {
+	c <- recover()
 }
 
 // inner product computes an inner product such as "+.*".
@@ -134,45 +212,45 @@ func innerProduct(c Context, u Value, left, right string, v Value) Value {
 	case Vector:
 		v := v.(Vector)
 		u.sameLength(v)
-		var x Value
-		for k, e := range u {
-			tmp := c.EvalBinary(e, right, v[k])
-			if k == 0 {
-				x = tmp
-			} else {
-				x = c.EvalBinary(x, left, tmp)
-			}
+		n := len(u)
+		if n == 0 {
+			Errorf("empty inner product")
+		}
+		x := c.EvalBinary(u[n-1], right, v[n-1])
+		for k := n - 2; k >= 0; k-- {
+			x = c.EvalBinary(c.EvalBinary(u[k], right, v[k]), left, x)
 		}
 		return x
 	case *Matrix:
 		// Say we're doing +.*
 		// result[i,j] = +/(u[row i] * v[column j])
-		// Number of columns of u must be the number of rows of v.
-		// The result is has shape (urows, vcols).
+		// Number of columns of u must be the number of rows of v: (-1 take rho u) == (1 take rho v)
+		// The result is has shape (-1 drop rho u), (1 drop rho v)
 		v := v.(*Matrix)
-		if u.Rank() != 2 || v.Rank() != 2 {
-			Errorf("can't do inner product on shape %s times %s", NewIntVector(u.shape), NewIntVector(v.shape))
+		if u.Rank() < 1 || v.Rank() < 1 || u.shape[len(u.shape)-1] != v.shape[0] {
+			Errorf("inner product: mismatched shapes %s and %s", NewIntVector(u.shape), NewIntVector(v.shape))
 		}
-		urows := u.shape[0]
-		ucols := u.shape[1]
-		vrows := v.shape[0]
-		vcols := v.shape[1]
-		if vrows != ucols {
-			Errorf("inner product; column count of left (%d) not equal to row count on right (%d)", ucols, vrows)
-		}
-		data := make(Vector, urows*vcols)
-		shape := []int{urows, vcols}
-		i := 0
-		for urow := 0; urow < urows; urow++ {
-			for vcol := 0; vcol < vcols; vcol++ {
-				acc := c.EvalBinary(u.data[urow*ucols], right, v.data[vcol])
-				for vrow := 1; vrow < vrows; vrow++ {
-					acc = c.EvalBinary(acc, left, c.EvalBinary(u.data[urow*ucols+vrow], right, v.data[vrow*vcols+vcol]))
+		n := v.shape[0]
+		vstride := len(v.data) / n
+		data := make(Vector, len(u.data)/n*vstride)
+		pfor(safeBinary(left) && safeBinary(right), 1, len(data), func(lo, hi int) {
+			for x := lo; x < hi; x++ {
+				i := x / vstride * n
+				j := x % vstride
+				acc := c.EvalBinary(u.data[i+n-1], right, v.data[j+(n-1)*vstride])
+				for k := n - 2; k >= 0; k-- {
+					acc = c.EvalBinary(c.EvalBinary(u.data[i+k], right, v.data[j+k*vstride]), left, acc)
 				}
-				data[i] = acc
-				i++
+				data[x] = acc
 			}
+		})
+		rank := len(u.shape) + len(v.shape) - 2
+		if rank == 1 {
+			return data
 		}
+		shape := make([]int, rank)
+		copy(shape, u.shape[:len(u.shape)-1])
+		copy(shape[len(u.shape)-1:], v.shape[1:])
 		return NewMatrix(shape, data)
 	}
 	Errorf("can't do inner product on %s", whichType(u))
@@ -189,13 +267,11 @@ func outerProduct(c Context, u Value, op string, v Value) Value {
 			shape: []int{len(u), len(v)},
 			data:  NewVector(make(Vector, len(u)*len(v))),
 		}
-		index := 0
-		for _, vu := range u {
-			for _, vv := range v {
-				m.data[index] = c.EvalBinary(vu, op, vv)
-				index++
+		pfor(safeBinary(op), 1, len(m.data), func(lo, hi int) {
+			for x := lo; x < hi; x++ {
+				m.data[x] = c.EvalBinary(u[x/len(v)], op, v[x%len(v)])
 			}
-		}
+		})
 		return &m // TODO: Shrink?
 	case *Matrix:
 		v := v.(*Matrix)
@@ -203,13 +279,13 @@ func outerProduct(c Context, u Value, op string, v Value) Value {
 			shape: append(u.Shape(), v.Shape()...),
 			data:  NewVector(make(Vector, len(u.Data())*len(v.Data()))),
 		}
-		index := 0
-		for _, vu := range u.Data() {
-			for _, vv := range v.Data() {
-				m.data[index] = c.EvalBinary(vu, op, vv)
-				index++
+		vdata := v.Data()
+		udata := u.Data()
+		pfor(safeBinary(op), 1, len(m.data), func(lo, hi int) {
+			for x := lo; x < hi; x++ {
+				m.data[x] = c.EvalBinary(udata[x/len(vdata)], op, vdata[x%len(vdata)])
 			}
-		}
+		})
 		return &m // TODO: Shrink?
 	}
 	Errorf("can't do outer product on %s", whichType(u))
@@ -221,7 +297,7 @@ func Reduce(c Context, op string, v Value) Value {
 	// We must be right associative; that is the grammar.
 	// -/1 2 3 == 1-2-3 is 1-(2-3) not (1-2)-3. Answer: 2.
 	switch v := v.(type) {
-	case Int, BigInt, BigRat:
+	case Int, BigInt, BigRat, BigFloat, Complex:
 		return v
 	case Vector:
 		if len(v) == 0 {
@@ -242,18 +318,19 @@ func Reduce(c Context, op string, v Value) Value {
 		}
 		shape := v.shape[:v.Rank()-1]
 		data := make(Vector, size(shape))
-		index := 0
-		for i := range data {
-			pos := index + stride - 1
-			acc := v.data[pos]
-			pos--
-			for i := 1; i < stride; i++ {
-				acc = c.EvalBinary(v.data[pos], op, acc)
+		pfor(safeBinary(op), stride, len(data), func(lo, hi int) {
+			for i := lo; i < hi; i++ {
+				index := stride * i
+				pos := index + stride - 1
+				acc := v.data[pos]
 				pos--
+				for j := 1; j < stride; j++ {
+					acc = c.EvalBinary(v.data[pos], op, acc)
+					pos--
+				}
+				data[i] = acc
 			}
-			data[i] = acc
-			index += stride
-		}
+		})
 		if len(shape) == 1 { // TODO: Matrix.shrink()?
 			return NewVector(data)
 		}
@@ -268,18 +345,24 @@ func Reduce(c Context, op string, v Value) Value {
 // We must be right associative; that is the grammar.
 func Scan(c Context, op string, v Value) Value {
 	switch v := v.(type) {
-	case Int, BigInt, BigRat:
+	case Int, BigInt, BigRat, BigFloat, Complex:
 		return v
 	case Vector:
 		if len(v) == 0 {
 			return v
 		}
 		values := make(Vector, len(v))
-		acc := v[0]
-		values[0] = acc
-		// TODO: This is n^2.
-		for i := 1; i < len(v); i++ {
-			values[i] = Reduce(c, op, v[:i+1])
+		// This is fundamentally O(n²) in the general case.
+		// We make it O(n) for known associative ops.
+		values[0] = v[0]
+		if knownAssoc(op) {
+			for i := 1; i < len(v); i++ {
+				values[i] = c.EvalBinary(values[i-1], op, v[i])
+			}
+		} else {
+			for i := 1; i < len(v); i++ {
+				values[i] = Reduce(c, op, v[:i+1])
+			}
 		}
 		return NewVector(values)
 	case *Matrix:
@@ -291,21 +374,28 @@ func Scan(c Context, op string, v Value) Value {
 			Errorf("shape for matrix is degenerate: %s", NewIntVector(v.shape))
 		}
 		data := make(Vector, len(v.data))
-		index := 0
 		nrows := 1
 		for i := 0; i < v.Rank()-1; i++ {
 			// Guaranteed by NewMatrix not to overflow.
 			nrows *= v.shape[i]
 		}
-		for i := 0; i < nrows; i++ {
-			acc := v.data[index]
-			data[index] = acc
-			// TODO: This is n^2.
-			for j := 1; j < stride; j++ {
-				data[index+j] = Reduce(c, op, v.data[index:index+j+1])
+		pfor(safeBinary(op), stride, nrows, func(lo, hi int) {
+			for i := lo; i < hi; i++ {
+				index := i * stride
+				// This is fundamentally O(n²) in the general case.
+				// We make it O(n) for known associative ops.
+				data[index] = v.data[index]
+				if knownAssoc(op) {
+					for j := 1; j < stride; j++ {
+						data[index+j] = c.EvalBinary(data[index+j-1], op, v.data[index+j])
+					}
+				} else {
+					for j := 1; j < stride; j++ {
+						data[index+j] = Reduce(c, op, v.data[index:index+j+1])
+					}
+				}
 			}
-			index += stride
-		}
+		})
 		return NewMatrix(v.shape, data)
 	}
 	Errorf("can't do scan on %s", whichType(v))
@@ -316,9 +406,11 @@ func Scan(c Context, op string, v Value) Value {
 func unaryVectorOp(c Context, op string, i Value) Value {
 	u := i.(Vector)
 	n := make([]Value, len(u))
-	for k := range u {
-		n[k] = c.EvalUnary(op, u[k])
-	}
+	pfor(safeUnary(op), 1, len(n), func(lo, hi int) {
+		for k := lo; k < hi; k++ {
+			n[k] = c.EvalUnary(op, u[k])
+		}
+	})
 	return NewVector(n)
 }
 
@@ -326,9 +418,11 @@ func unaryVectorOp(c Context, op string, i Value) Value {
 func unaryMatrixOp(c Context, op string, i Value) Value {
 	u := i.(*Matrix)
 	n := make([]Value, len(u.data))
-	for k := range u.data {
-		n[k] = c.EvalUnary(op, u.data[k])
-	}
+	pfor(safeUnary(op), 1, len(n), func(lo, hi int) {
+		for k := lo; k < hi; k++ {
+			n[k] = c.EvalUnary(op, u.data[k])
+		}
+	})
 	return NewMatrix(u.shape, NewVector(n))
 }
 
@@ -337,23 +431,29 @@ func binaryVectorOp(c Context, i Value, op string, j Value) Value {
 	u, v := i.(Vector), j.(Vector)
 	if len(u) == 1 {
 		n := make([]Value, len(v))
-		for k := range v {
-			n[k] = c.EvalBinary(u[0], op, v[k])
-		}
+		pfor(safeBinary(op), 1, len(n), func(lo, hi int) {
+			for k := lo; k < hi; k++ {
+				n[k] = c.EvalBinary(u[0], op, v[k])
+			}
+		})
 		return NewVector(n)
 	}
 	if len(v) == 1 {
 		n := make([]Value, len(u))
-		for k := range u {
-			n[k] = c.EvalBinary(u[k], op, v[0])
-		}
+		pfor(safeBinary(op), 1, len(n), func(lo, hi int) {
+			for k := lo; k < hi; k++ {
+				n[k] = c.EvalBinary(u[k], op, v[0])
+			}
+		})
 		return NewVector(n)
 	}
 	u.sameLength(v)
 	n := make([]Value, len(u))
-	for k := range u {
-		n[k] = c.EvalBinary(u[k], op, v[k])
-	}
+	pfor(safeBinary(op), 1, len(n), func(lo, hi int) {
+		for k := lo; k < hi; k++ {
+			n[k] = c.EvalBinary(u[k], op, v[k])
+		}
+	})
 	return NewVector(n)
 }
 
@@ -362,53 +462,54 @@ func binaryMatrixOp(c Context, i Value, op string, j Value) Value {
 	u, v := i.(*Matrix), j.(*Matrix)
 	shape := u.shape
 	var n []Value
+
 	// One or the other may be a scalar in disguise.
 	switch {
 	case isScalar(u):
 		// Scalar op Matrix.
 		shape = v.shape
 		n = make([]Value, len(v.data))
-		for k := range v.data {
-			n[k] = c.EvalBinary(u.data[0], op, v.data[k])
-		}
+		pfor(safeBinary(op), 1, len(n), func(lo, hi int) {
+			for k := lo; k < hi; k++ {
+				n[k] = c.EvalBinary(u.data[0], op, v.data[k])
+			}
+		})
 	case isScalar(v):
 		// Matrix op Scalar.
 		n = make([]Value, len(u.data))
-		for k := range u.data {
-			n[k] = c.EvalBinary(u.data[k], op, v.data[0])
-		}
+		pfor(safeBinary(op), 1, len(n), func(lo, hi int) {
+			for k := lo; k < hi; k++ {
+				n[k] = c.EvalBinary(u.data[k], op, v.data[0])
+			}
+		})
 	case isVector(u, v.shape):
 		// Vector op Matrix.
 		shape = v.shape
 		n = make([]Value, len(v.data))
 		dim := u.shape[0]
-		index := 0
-		for k := range v.data {
-			n[k] = c.EvalBinary(u.data[index], op, v.data[k])
-			index++
-			if index >= dim {
-				index = 0
+		pfor(safeBinary(op), 1, len(n), func(lo, hi int) {
+			for k := lo; k < hi; k++ {
+				n[k] = c.EvalBinary(u.data[k%dim], op, v.data[k])
 			}
-		}
+		})
 	case isVector(v, u.shape):
-		// Vector op Matrix.
+		// Matrix op Vector.
 		n = make([]Value, len(u.data))
 		dim := v.shape[0]
-		index := 0
-		for k := range u.data {
-			n[k] = c.EvalBinary(v.data[index], op, u.data[k])
-			index++
-			if index >= dim {
-				index = 0
+		pfor(safeBinary(op), 1, len(n), func(lo, hi int) {
+			for k := lo; k < hi; k++ {
+				n[k] = c.EvalBinary(u.data[k], op, v.data[k%dim])
 			}
-		}
+		})
 	default:
 		// Matrix op Matrix.
 		u.sameShape(v)
 		n = make([]Value, len(u.data))
-		for k := range u.data {
-			n[k] = c.EvalBinary(u.data[k], op, v.data[k])
-		}
+		pfor(safeBinary(op), 1, len(n), func(lo, hi int) {
+			for k := lo; k < hi; k++ {
+				n[k] = c.EvalBinary(u.data[k], op, v.data[k])
+			}
+		})
 	}
 	return NewMatrix(shape, NewVector(n))
 }
@@ -435,4 +536,127 @@ func isVector(u *Matrix, shape []int) bool {
 		}
 	}
 	return true
+}
+
+// isZero reports whether u is a numeric zero.
+func isZero(v Value) bool {
+	switch v := v.(type) {
+	case Int:
+		return v == 0
+	case BigInt:
+		return v.Sign() == 0
+	case BigRat:
+		return v.Sign() == 0
+	case BigFloat:
+		return v.Sign() == 0
+	case Complex:
+		return isZero(v.real) && isZero(v.imag)
+	}
+	return false
+}
+
+// isNegative reports whether u is negative
+func isNegative(v Value) bool {
+	switch v := v.(type) {
+	case Int:
+		return v < 0
+	case BigInt:
+		return v.Sign() < 0
+	case BigRat:
+		return v.Sign() < 0
+	case BigFloat:
+		return v.Sign() < 0
+	case Complex:
+		return false
+	}
+	return false
+}
+
+// compare returns -1, 0, 1 according to whether v is less than,
+// equal to, or greater than i.
+func compare(v Value, i int) int {
+	switch v := v.(type) {
+	case Int:
+		i := Int(i)
+		switch {
+		case v < i:
+			return -1
+		case v == i:
+			return 0
+		}
+		return 1
+	case BigInt:
+		r := big.NewInt(int64(i))
+		return -r.Sub(r, v.Int).Sign()
+	case BigRat:
+		r := big.NewRat(int64(i), 1)
+		return -r.Sub(r, v.Rat).Sign()
+	case BigFloat:
+		r := big.NewFloat(float64(i))
+		return -r.Sub(r, v.Float).Sign()
+	case Complex:
+		return -1
+	}
+	return -1
+}
+
+// isTrue reports whether v represents boolean truth. If v is not
+// a scalar, an error results.
+func isTrue(fnName string, v Value) bool {
+	switch i := v.(type) {
+	case Char:
+		return i != 0
+	case Int:
+		return i != 0
+	case BigInt:
+		return true // If it's a BigInt, it can't be 0 - that's an Int.
+	case BigRat:
+		return true // If it's a BigRat, it can't be 0 - that's an Int.
+	case BigFloat:
+		return i.Float.Sign() != 0
+	case Complex:
+		return !isZero(v)
+	default:
+		Errorf("invalid expression %s for conditional inside %q", v, fnName)
+		return false
+	}
+}
+
+// emod is a restricted form of Euclidean integer modulus.
+// Used by encode, and only works for integers.
+func emod(op string, c Context, a, b Value) Value {
+	if z, ok := b.(Int); ok && z == 0 {
+		return a
+	}
+	aa := a.toType(op, c.Config(), bigIntType)
+	bb := b.toType(op, c.Config(), bigIntType)
+	return binaryBigIntOp(aa, (*big.Int).Mod, bb)
+}
+
+// ediv is a restricted form of Euclidean integer division.
+// Used by encode, and only works for integers.
+func ediv(op string, c Context, a, b Value) Value {
+	if z, ok := b.(Int); ok && z == 0 {
+		return a
+	}
+	aa := a.toType(op, c.Config(), bigIntType)
+	bb := b.toType(op, c.Config(), bigIntType)
+	return binaryBigIntOp(aa, (*big.Int).Div, bb)
+}
+
+// EvalFunctionBody evaluates the list of expressions inside a function,
+// possibly with conditionals that generate an early return.
+func EvalFunctionBody(context Context, fnName string, body []Expr) Value {
+	var v Value
+	for _, e := range body {
+		if d, ok := e.(Decomposable); ok && d.Operator() == ":" {
+			left, right := d.Operands()
+			if isTrue(fnName, left.Eval(context)) {
+				return right.Eval(context)
+			}
+			continue
+		}
+		v = e.Eval(context)
+	}
+	return v
 }

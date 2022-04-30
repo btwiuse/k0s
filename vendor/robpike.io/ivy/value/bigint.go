@@ -113,12 +113,6 @@ func (i BigInt) floatString(verb byte, prec int) string {
 	return ""
 }
 
-var (
-	bigIntTen     = big.NewInt(10)
-	bigIntBillion = big.NewInt(1e9)
-	MaxBigInt63   = big.NewInt(int64(^uint64(0) >> 1))
-)
-
 // eExponent returns the exponent to use to display i in 1.23e+04 format.
 func eExponent(x *big.Int) int {
 	if x.Sign() < 0 {
@@ -144,7 +138,7 @@ func (i BigInt) Inner() Value {
 	return i
 }
 
-func (i BigInt) toType(conf *config.Config, which valueType) Value {
+func (i BigInt) toType(op string, conf *config.Config, which valueType) Value {
 	switch which {
 	case bigIntType:
 		return i
@@ -154,12 +148,14 @@ func (i BigInt) toType(conf *config.Config, which valueType) Value {
 	case bigFloatType:
 		f := new(big.Float).SetPrec(conf.FloatPrec()).SetInt(i.Int)
 		return BigFloat{f}
+	case complexType:
+		return newComplex(i, Int(0))
 	case vectorType:
 		return NewVector([]Value{i})
 	case matrixType:
 		return NewMatrix([]int{1}, []Value{i})
 	}
-	Errorf("cannot convert big int to %s", which)
+	Errorf("%s: cannot convert big int to %s", op, which)
 	return nil
 }
 

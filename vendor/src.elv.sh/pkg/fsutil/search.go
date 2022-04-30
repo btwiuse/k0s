@@ -1,7 +1,6 @@
 package fsutil
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,35 +15,34 @@ func DontSearch(exe string) bool {
 		strings.ContainsRune(exe, '/')
 }
 
-// IsExecutable determines whether path refers to an executable file.
-func IsExecutable(path string) bool {
-	fi, err := os.Stat(path)
-	if err != nil {
-		return false
-	}
-	fm := fi.Mode()
-	return !fm.IsDir() && (fm&0111 != 0)
+// IsExecutable returns whether the FileInfo refers to an executable file.
+//
+// This is determined by permission bits on UNIX, and by file name on Windows.
+func IsExecutable(stat os.FileInfo) bool {
+	return isExecutable(stat)
 }
 
-// EachExternal calls f for each name that can resolve to an external command.
+// EachExternal calls f for each executable file found while scanning the directories of $E:PATH.
 //
-// BUG: EachExternal may generate the same command multiple command it it
-// appears in multiple directories in PATH.
-//
-// BUG: EachExternal doesn't work on Windows since it relies on the execution
-// permission bit, which doesn't exist on Windows.
+// NOTE: EachExternal may generate the same command multiple times; once for each time it appears in
+// $E:PATH. That is, no deduplication of the files found by scanning $E:PATH is performed.
 func EachExternal(f func(string)) {
 	for _, dir := range searchPaths() {
-		// TODO(xiaq): Ignore error.
-		infos, _ := ioutil.ReadDir(dir)
-		for _, info := range infos {
-			if !info.IsDir() && (info.Mode()&0111 != 0) {
-				f(info.Name())
+		files, err := os.ReadDir(dir)
+		if err != nil {
+			// In practice this rarely happens. There isn't much we can reasonably do when it does
+			// happen other than silently ignore the invalid directory.
+			continue
+		}
+		for _, file := range files {
+			stat, err := file.Info()
+			if err == nil && IsExecutable(stat) {
+				f(stat.Name())
 			}
 		}
 	}
 }
 
 func searchPaths() []string {
-	return strings.Split(os.Getenv(env.PATH), ":")
+	return strings.Split(os.Getenv(env.PATH), string(filepath.ListSeparator))
 }

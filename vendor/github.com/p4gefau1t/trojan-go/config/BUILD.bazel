@@ -6,5 +6,5 @@ go_library(
     importmap = "k0s.io/vendor/github.com/p4gefau1t/trojan-go/config",
     importpath = "github.com/p4gefau1t/trojan-go/config",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/gopkg.in/yaml.v2:go_default_library"],
+    deps = ["//vendor/gopkg.in/yaml.v3:go_default_library"],
 )

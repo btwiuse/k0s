@@ -18,5 +18,7 @@ go_library(
         "//vendor/github.com/v2fly/v2ray-core/v4/common/net:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/protocol:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/proxy/vless:go_default_library",
+        "//vendor/google.golang.org/protobuf/reflect/protoreflect:go_default_library",
+        "//vendor/google.golang.org/protobuf/runtime/protoimpl:go_default_library",
     ],
 )

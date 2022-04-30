@@ -11,17 +11,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build solaris
-// +build !nocpu
+//go:build solaris && !nocpu
+// +build solaris,!nocpu
 
 package collector
 
 import (
 	"strconv"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
+	"github.com/illumos/go-kstat"
 	"github.com/prometheus/client_golang/prometheus"
-	kstat "github.com/siebenmann/go-kstat"
 )
 
 // #include <unistd.h>

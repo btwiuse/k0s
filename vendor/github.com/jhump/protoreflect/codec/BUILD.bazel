@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "codec.go",
+        "decode_fields.go",
+        "doc.go",
+        "encode_fields.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/jhump/protoreflect/codec",
+    importpath = "github.com/jhump/protoreflect/codec",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/github.com/golang/protobuf/protoc-gen-go/descriptor:go_default_library",
+        "//vendor/github.com/jhump/protoreflect/desc:go_default_library",
+        "//vendor/github.com/jhump/protoreflect/internal/codec:go_default_library",
+    ],
+)

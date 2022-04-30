@@ -4,17 +4,18 @@ import (
 	"bytes"
 	"context"
 	"net"
+	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/p4gefau1t/trojan-go/api"
-	"github.com/p4gefau1t/trojan-go/config"
-	"github.com/p4gefau1t/trojan-go/statistic/memory"
-	"github.com/p4gefau1t/trojan-go/tunnel/mux"
-
 	"github.com/p4gefau1t/trojan-go/common"
+	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/log"
 	"github.com/p4gefau1t/trojan-go/statistic"
+	"github.com/p4gefau1t/trojan-go/statistic/memory"
 	"github.com/p4gefau1t/trojan-go/tunnel"
+	"github.com/p4gefau1t/trojan-go/tunnel/mux"
 )
 
 const (
@@ -28,11 +29,17 @@ const (
 )
 
 type OutboundConn struct {
-	metadata      *tunnel.Metadata
-	sent          uint64
-	recv          uint64
-	user          statistic.User
-	headerWritten bool
+	// WARNING: do not change the order of these fields.
+	// 64-bit fields that use `sync/atomic` package functions
+	// must be 64-bit aligned on 32-bit systems.
+	// Reference: https://github.com/golang/go/issues/599
+	// Solution: https://github.com/golang/go/issues/11891#issuecomment-433623786
+	sent uint64
+	recv uint64
+
+	metadata          *tunnel.Metadata
+	user              statistic.User
+	headerWrittenOnce sync.Once
 	net.Conn
 }
 
@@ -40,8 +47,10 @@ func (c *OutboundConn) Metadata() *tunnel.Metadata {
 	return c.metadata
 }
 
-func (c *OutboundConn) WriteHeader(payload []byte) error {
-	if !c.headerWritten {
+func (c *OutboundConn) WriteHeader(payload []byte) (bool, error) {
+	var err error
+	written := false
+	c.headerWrittenOnce.Do(func() {
 		hash := c.user.Hash()
 		buf := bytes.NewBuffer(make([]byte, 0, MaxPacketSize))
 		crlf := []byte{0x0d, 0x0a}
@@ -52,36 +61,37 @@ func (c *OutboundConn) WriteHeader(payload []byte) error {
 		if payload != nil {
 			buf.Write(payload)
 		}
-		_, err := c.Conn.Write(buf.Bytes())
-		c.headerWritten = true
-		return err
-	}
-	return common.NewError("trojan header has been written")
+		_, err = c.Conn.Write(buf.Bytes())
+		if err == nil {
+			written = true
+		}
+	})
+	return written, err
 }
 
 func (c *OutboundConn) Write(p []byte) (int, error) {
-	if !c.headerWritten {
-		err := c.WriteHeader(p)
-		if err != nil {
-			return 0, common.NewError("trojan failed to flush header with payload").Base(err)
-		}
+	written, err := c.WriteHeader(p)
+	if err != nil {
+		return 0, common.NewError("trojan failed to flush header with payload").Base(err)
+	}
+	if written {
 		return len(p), nil
 	}
 	n, err := c.Conn.Write(p)
 	c.user.AddTraffic(n, 0)
-	c.sent += uint64(n)
+	atomic.AddUint64(&c.sent, uint64(n))
 	return n, err
 }
 
 func (c *OutboundConn) Read(p []byte) (int, error) {
 	n, err := c.Conn.Read(p)
 	c.user.AddTraffic(0, n)
-	c.recv += uint64(n)
+	atomic.AddUint64(&c.recv, uint64(n))
 	return n, err
 }
 
 func (c *OutboundConn) Close() error {
-	log.Info("connection to", c.metadata, "closed", "sent:", common.HumanFriendlyTraffic(c.sent), "recv:", common.HumanFriendlyTraffic(c.recv))
+	log.Info("connection to", c.metadata, "closed", "sent:", common.HumanFriendlyTraffic(atomic.LoadUint64(&c.sent)), "recv:", common.HumanFriendlyTraffic(atomic.LoadUint64(&c.recv)))
 	return c.Conn.Close()
 }
 

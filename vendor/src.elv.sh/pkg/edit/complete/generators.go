@@ -2,7 +2,6 @@ package complete
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,6 +10,7 @@ import (
 	"src.elv.sh/pkg/eval"
 	"src.elv.sh/pkg/eval/vals"
 	"src.elv.sh/pkg/fsutil"
+	"src.elv.sh/pkg/parse"
 	"src.elv.sh/pkg/ui"
 )
 
@@ -36,6 +36,28 @@ func GenerateForSudo(cfg Config, args []string) ([]RawItem, error) {
 }
 
 // Internal generators, used from completers.
+
+func generateArgs(args []string, cfg Config) ([]RawItem, error) {
+	switch args[0] {
+	case "set", "tmp":
+		for _, arg := range args[1:] {
+			if arg == "=" {
+				return nil, nil
+			}
+		}
+		seed := args[len(args)-1]
+		sigil, qname := eval.SplitSigil(seed)
+		ns, _ := eval.SplitIncompleteQNameNs(qname)
+		var items []RawItem
+		cfg.PureEvaler.EachVariableInNs(ns, func(varname string) {
+			items = append(items, noQuoteItem(sigil+parse.QuoteVariableName(ns+varname)))
+		})
+		return items, nil
+	}
+
+	items, err := cfg.ArgGenerator(args)
+	return items, err
+}
 
 func generateExternalCommands(seed string, ev PureEvaler) ([]RawItem, error) {
 	if fsutil.DontSearch(seed) {
@@ -80,8 +102,6 @@ func generateCommands(seed string, ev PureEvaler) ([]RawItem, error) {
 					ns + varname[:len(varname)-len(eval.FnSuffix)])
 			case strings.HasSuffix(varname, eval.NsSuffix):
 				addPlainItem(ns + varname)
-			default:
-				cands = append(cands, noQuoteItem(ns+varname+" = "))
 			}
 		})
 	}
@@ -98,7 +118,7 @@ func generateFileNames(seed string, onlyExecutable bool) ([]RawItem, error) {
 		dirToRead = "."
 	}
 
-	infos, err := ioutil.ReadDir(dirToRead)
+	files, err := os.ReadDir(dirToRead)
 	if err != nil {
 		return nil, fmt.Errorf("cannot list directory %s: %v", dirToRead, err)
 	}
@@ -106,8 +126,12 @@ func generateFileNames(seed string, onlyExecutable bool) ([]RawItem, error) {
 	lsColor := lscolors.GetColorist()
 
 	// Make candidates out of elements that match the file component.
-	for _, info := range infos {
-		name := info.Name()
+	for _, file := range files {
+		name := file.Name()
+		stat, err := file.Info()
+		if err != nil {
+			continue
+		}
 		// Show dot files iff file part of pattern starts with dot, and vice
 		// versa.
 		if dotfile(fileprefix) != dotfile(name) {
@@ -115,7 +139,7 @@ func generateFileNames(seed string, onlyExecutable bool) ([]RawItem, error) {
 		}
 		// Only accept searchable directories and executable files if
 		// executableOnly is true.
-		if onlyExecutable && (info.Mode()&0111) == 0 {
+		if onlyExecutable && (stat.Mode()&0111) == 0 {
 			continue
 		}
 
@@ -125,22 +149,21 @@ func generateFileNames(seed string, onlyExecutable bool) ([]RawItem, error) {
 		// Will be set to an empty space for non-directories
 		suffix := " "
 
-		if info.IsDir() {
+		if stat.IsDir() {
 			full += pathSeparator
 			suffix = ""
-		} else if info.Mode()&os.ModeSymlink != 0 {
+		} else if stat.Mode()&os.ModeSymlink != 0 {
 			stat, err := os.Stat(full)
-			if err == nil && stat.IsDir() {
-				// Symlink to directory.
+			if err == nil && stat.IsDir() { // symlink to directory
 				full += pathSeparator
 				suffix = ""
 			}
 		}
 
 		items = append(items, ComplexItem{
-			Stem:         full,
-			CodeSuffix:   suffix,
-			DisplayStyle: ui.StyleFromSGR(lsColor.GetStyle(full)),
+			Stem:       full,
+			CodeSuffix: suffix,
+			Display:    ui.T(full, ui.StylingFromSGR(lsColor.GetStyle(full))),
 		})
 	}
 

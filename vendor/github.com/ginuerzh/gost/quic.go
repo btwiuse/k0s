@@ -18,7 +18,7 @@ import (
 
 type quicSession struct {
 	conn    net.Conn
-	session quic.Session
+	session quic.Connection
 }
 
 func (session *quicSession) GetConn() (*quicConn, error) {
@@ -238,7 +238,7 @@ func (l *quicListener) listenLoop() {
 	}
 }
 
-func (l *quicListener) sessionLoop(session quic.Session) {
+func (l *quicListener) sessionLoop(session quic.Connection) {
 	log.Logf("[quic] %s <-> %s", session.RemoteAddr(), session.LocalAddr())
 	defer log.Logf("[quic] %s >-< %s", session.RemoteAddr(), session.LocalAddr())
 

@@ -14,6 +14,7 @@ go_library(
     importpath = "github.com/caddyserver/caddy/v2/cmd",
     visibility = ["//visibility:public"],
     deps = [
+        "//vendor/github.com/aryann/difflib:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/caddyconfig:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/caddyconfig/caddyfile:go_default_library",

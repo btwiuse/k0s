@@ -3,6 +3,8 @@
 <a href="https://www.buymeacoffee.com/mjwhitta">🍪 Buy me a cookie</a>
 
 [![Go Report Card](https://goreportcard.com/badge/gitlab.com/mjwhitta/pathname)](https://goreportcard.com/report/gitlab.com/mjwhitta/pathname)
+[![Pipeline](https://gitlab.com/mjwhitta/pathname/badges/master/pipeline.svg)](https://gitlab.com/mjwhitta/pathname/-/pipelines/latest)
+[![Coverage](https://gitlab.com/mjwhitta/pathname/badges/master/coverage.svg)](https://gitlab.com/mjwhitta/pathname)
 
 ## What is this?
 
@@ -33,10 +35,15 @@ import (
 )
 
 func main() {
-    if pathname.DoesExist("~/bin") {
+    if ok, e := pathname.DoesExist("~/bin"); e != nil {
+        panic(e)
+    } else if ok {
         fmt.Println(pathname.ExpandPath("~/bin"))
     }
-    if pathname.DoesExist("~user/bin") {
+
+    if ok, e := pathname.DoesExist("~user/bin"); e != nil {
+        panic(e)
+    } else if ok {
         fmt.Println(pathname.Dirname("~user/bin"))
         fmt.Println(pathname.Basename("~user/bin"))
     }

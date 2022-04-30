@@ -7,135 +7,85 @@ package prog
 // interface.
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"io"
 	"os"
-	"runtime/pprof"
 
 	"src.elv.sh/pkg/logutil"
 )
 
-// Default port on which the web interface runs. The number is chosen because it
-// resembles "elvi".
-const defaultWebPort = 3171
-
 // DeprecationLevel is a global flag that controls which deprecations to show.
 // If its value is X, Elvish shows deprecations that should be shown for version
 // 0.X.
-var DeprecationLevel = 15
+var DeprecationLevel = 18
 
-// SetDeprecationLevel sets ShowDeprecations to the given value, and returns a
-// function to restore the old value.
-func SetDeprecationLevel(level int) func() {
-	save := DeprecationLevel
-	DeprecationLevel = level
-	return func() { DeprecationLevel = save }
+// Program represents a subprogram.
+type Program interface {
+	RegisterFlags(fs *FlagSet)
+	// Run runs the subprogram.
+	Run(fds [3]*os.File, args []string) error
 }
 
-// Flags keeps command-line flags.
-type Flags struct {
-	Log, CPUProfile string
-
-	Help, Version, BuildInfo, JSON bool
-
-	CodeInArg, CompileOnly, NoRc bool
-
-	Web  bool
-	Port int
-
-	Daemon bool
-	Forked int
-
-	Bin, DB, Sock string
-}
-
-func newFlagSet(stderr io.Writer, f *Flags) *flag.FlagSet {
-	fs := flag.NewFlagSet("elvish", flag.ContinueOnError)
-	fs.SetOutput(stderr)
-	fs.Usage = func() { usage(stderr, fs) }
-
-	fs.StringVar(&f.Log, "log", "", "a file to write debug log to except for the daemon")
-	fs.StringVar(&f.CPUProfile, "cpuprofile", "", "write cpu profile to file")
-
-	fs.BoolVar(&f.Help, "help", false, "show usage help and quit")
-	fs.BoolVar(&f.Version, "version", false, "show version and quit")
-	fs.BoolVar(&f.BuildInfo, "buildinfo", false, "show build info and quit")
-	fs.BoolVar(&f.JSON, "json", false, "show output in JSON. Useful with -buildinfo.")
-
-	fs.BoolVar(&f.CodeInArg, "c", false, "take first argument as code to execute")
-	fs.BoolVar(&f.CompileOnly, "compileonly", false, "Parse/Compile but do not execute")
-	fs.BoolVar(&f.NoRc, "norc", false, "run elvish without invoking rc.elv")
-
-	fs.BoolVar(&f.Web, "web", false, "run backend of web interface")
-	fs.IntVar(&f.Port, "port", defaultWebPort, "the port of the web backend")
-
-	fs.BoolVar(&f.Daemon, "daemon", false, "run daemon instead of shell")
-
-	fs.StringVar(&f.Bin, "bin", "", "path to the elvish binary")
-	fs.StringVar(&f.DB, "db", "", "path to the database")
-	fs.StringVar(&f.Sock, "sock", "", "path to the daemon socket")
-
-	fs.IntVar(&DeprecationLevel, "deprecation-level", DeprecationLevel, "show warnings for all features deprecated as of version 0.X")
-
-	return fs
-}
-
-func usage(out io.Writer, f *flag.FlagSet) {
-	fmt.Fprintln(out, "Usage: elvish [flags] [script]")
+func usage(out io.Writer, fs *flag.FlagSet) {
+	fmt.Fprintln(out, "Usage: elvish [flags] [script] [args]")
 	fmt.Fprintln(out, "Supported flags:")
-	f.PrintDefaults()
+	fs.SetOutput(out)
+	fs.PrintDefaults()
 }
 
 // Run parses command-line flags and runs the first applicable subprogram. It
 // returns the exit status of the program.
-func Run(fds [3]*os.File, args []string, programs ...Program) int {
-	f := &Flags{}
-	fs := newFlagSet(fds[2], f)
+func Run(fds [3]*os.File, args []string, p Program) int {
+	fs := flag.NewFlagSet("elvish", flag.ContinueOnError)
+	// Error and usage will be printed explicitly.
+	fs.SetOutput(io.Discard)
+
+	var log string
+	var help bool
+	fs.StringVar(&log, "log", "",
+		"Path to a file to write debug logs")
+	fs.BoolVar(&help, "help", false,
+		"Show usage help and quit")
+	fs.IntVar(&DeprecationLevel, "deprecation-level", DeprecationLevel,
+		"Show warnings for all features deprecated as of version 0.X")
+
+	p.RegisterFlags(&FlagSet{FlagSet: fs})
+
 	err := fs.Parse(args[1:])
 	if err != nil {
-		// Error and usage messages are already shown.
+		if err == flag.ErrHelp {
+			// (*flag.FlagSet).Parse returns ErrHelp when -h or -help was
+			// requested but *not* defined. Elvish defines -help, but not -h; so
+			// this means that -h has been requested. Handle this by printing
+			// the same message as an undefined flag.
+			fmt.Fprintln(fds[2], "flag provided but not defined: -h")
+		} else {
+			fmt.Fprintln(fds[2], err)
+		}
+		usage(fds[2], fs)
 		return 2
 	}
 
-	// Handle flags common to all subprograms.
-	if f.CPUProfile != "" {
-		f, err := os.Create(f.CPUProfile)
-		if err != nil {
-			fmt.Fprintln(fds[2], "Warning: cannot create CPU profile:", err)
-			fmt.Fprintln(fds[2], "Continuing without CPU profiling.")
-		} else {
-			pprof.StartCPUProfile(f)
-			defer pprof.StopCPUProfile()
-		}
-	}
-
-	if f.Daemon {
-		// We expect our stdout file handle is open on a unique log file for the daemon to write its
-		// log messages. See daemon.Spawn() in pkg/daemon.
-		logutil.SetOutput(fds[1])
-	} else if f.Log != "" {
-		err = logutil.SetOutputFile(f.Log)
+	if log != "" {
+		err = logutil.SetOutputFile(log)
 		if err != nil {
 			fmt.Fprintln(fds[2], err)
 		}
 	}
 
-	if f.Help {
-		fs.SetOutput(fds[1])
+	if help {
 		usage(fds[1], fs)
 		return 0
 	}
 
-	p := findProgram(f, programs)
-	if p == nil {
-		fmt.Fprintln(fds[2], "program bug: no suitable subprogram")
-		return 2
-	}
-
-	err = p.Run(fds, f, fs.Args())
+	err = p.Run(fds, fs.Args())
 	if err == nil {
 		return 0
+	}
+	if err == ErrNextProgram {
+		err = errNoSuitableSubprogram
 	}
 	if msg := err.Error(); msg != "" {
 		fmt.Fprintln(fds[2], msg)
@@ -149,17 +99,40 @@ func Run(fds [3]*os.File, args []string, programs ...Program) int {
 	return 2
 }
 
-func findProgram(f *Flags, programs []Program) Program {
-	for _, program := range programs {
-		if program.ShouldRun(f) {
-			return program
-		}
-	}
-	return nil
+// Composite returns a Program that tries each of the given programs,
+// terminating at the first one that doesn't return NotSuitable().
+func Composite(programs ...Program) Program {
+	return composite(programs)
 }
 
-// BadUsage returns an error that may be returned by Program.Main, which
-// requests the main program to print out a message, the usage information and
+type composite []Program
+
+func (cp composite) RegisterFlags(f *FlagSet) {
+	for _, p := range cp {
+		p.RegisterFlags(f)
+	}
+}
+
+func (cp composite) Run(fds [3]*os.File, args []string) error {
+	for _, p := range cp {
+		err := p.Run(fds, args)
+		if err != ErrNextProgram {
+			return err
+		}
+	}
+	// If we have reached here, all subprograms have returned ErrNextProgram
+	return ErrNextProgram
+}
+
+var errNoSuitableSubprogram = errors.New("internal error: no suitable subprogram")
+
+// ErrNextProgram is a special error that may be returned by Program.Run that
+// is part of a Composite program, indicating that the next program should be
+// tried.
+var ErrNextProgram = errors.New("next program")
+
+// BadUsage returns a special error that may be returned by Program.Run. It
+// causes the main function to print out a message, the usage information and
 // exit with 2.
 func BadUsage(msg string) error { return badUsageError{msg} }
 
@@ -167,8 +140,9 @@ type badUsageError struct{ msg string }
 
 func (e badUsageError) Error() string { return e.msg }
 
-// Exit returns an error that may be returned by Program.Main, which requests the
-// main program to exit with the given code. If the exit code is 0, it returns nil.
+// Exit returns a special error that may be returned by Program.Run. It causes
+// the main function to exit with the given code without printing any error
+// messages. Exit(0) returns nil.
 func Exit(exit int) error {
 	if exit == 0 {
 		return nil
@@ -179,11 +153,3 @@ func Exit(exit int) error {
 type exitError struct{ exit int }
 
 func (e exitError) Error() string { return "" }
-
-// Program represents a subprogram.
-type Program interface {
-	// ShouldRun returns whether the subprogram should run.
-	ShouldRun(f *Flags) bool
-	// Run runs the subprogram.
-	Run(fds [3]*os.File, f *Flags, args []string) error
-}

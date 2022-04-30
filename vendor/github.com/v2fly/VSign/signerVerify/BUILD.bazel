@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "VerifyFiles.go",
+        "basic.go",
+        "client.go",
+        "clientSignatureCheck.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/VSign/signerVerify",
+    importpath = "github.com/v2fly/VSign/signerVerify",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/VSign/insmgr:go_default_library",
+        "//vendor/github.com/v2fly/VSign/instimp:go_default_library",
+        "//vendor/github.com/v2fly/VSign/instructions:go_default_library",
+        "//vendor/github.com/v2fly/VSign/sign:go_default_library",
+        "//vendor/github.com/v2fly/VSign/v2signkey:go_default_library",
+    ],
+)

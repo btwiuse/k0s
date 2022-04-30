@@ -30,6 +30,52 @@ import (
 // The package's fully qualified name.
 const fqdn = "github.com/Azure/azure-sdk-for-go/services/dns/mgmt/2018-05-01/dns"
 
+// RecordType enumerates the values for record type.
+type RecordType string
+
+const (
+	// A ...
+	A RecordType = "A"
+	// AAAA ...
+	AAAA RecordType = "AAAA"
+	// CAA ...
+	CAA RecordType = "CAA"
+	// CNAME ...
+	CNAME RecordType = "CNAME"
+	// MX ...
+	MX RecordType = "MX"
+	// NS ...
+	NS RecordType = "NS"
+	// PTR ...
+	PTR RecordType = "PTR"
+	// SOA ...
+	SOA RecordType = "SOA"
+	// SRV ...
+	SRV RecordType = "SRV"
+	// TXT ...
+	TXT RecordType = "TXT"
+)
+
+// PossibleRecordTypeValues returns an array of possible values for the RecordType const type.
+func PossibleRecordTypeValues() []RecordType {
+	return []RecordType{A, AAAA, CAA, CNAME, MX, NS, PTR, SOA, SRV, TXT}
+}
+
+// ZoneType enumerates the values for zone type.
+type ZoneType string
+
+const (
+	// Private ...
+	Private ZoneType = "Private"
+	// Public ...
+	Public ZoneType = "Public"
+)
+
+// PossibleZoneTypeValues returns an array of possible values for the ZoneType const type.
+func PossibleZoneTypeValues() []ZoneType {
+	return []ZoneType{Private, Public}
+}
+
 // AaaaRecord an AAAA record.
 type AaaaRecord struct {
 	// Ipv6Address - The IPv6 address of this AAAA record.
@@ -52,21 +98,21 @@ type CaaRecord struct {
 	Value *string `json:"value,omitempty"`
 }
 
-// CloudError an error response from the service.
+// CloudError an error message
 type CloudError struct {
-	// Error - Cloud error body.
+	// Error - The error message body
 	Error *CloudErrorBody `json:"error,omitempty"`
 }
 
-// CloudErrorBody an error response from the service.
+// CloudErrorBody the body of an error message
 type CloudErrorBody struct {
-	// Code - An identifier for the error. Codes are invariant and are intended to be consumed programmatically.
+	// Code - The error code
 	Code *string `json:"code,omitempty"`
-	// Message - A message describing the error, intended to be suitable for display in a user interface.
+	// Message - A description of what caused the error
 	Message *string `json:"message,omitempty"`
-	// Target - The target of the particular error. For example, the name of the property in error.
+	// Target - The target resource of the error message
 	Target *string `json:"target,omitempty"`
-	// Details - A list of additional details about the error.
+	// Details - Extra error information
 	Details *[]CloudErrorBody `json:"details,omitempty"`
 }
 
@@ -192,15 +238,6 @@ type RecordSetListResult struct {
 	NextLink *string `json:"nextLink,omitempty"`
 }
 
-// MarshalJSON is the custom marshaler for RecordSetListResult.
-func (rslr RecordSetListResult) MarshalJSON() ([]byte, error) {
-	objectMap := make(map[string]interface{})
-	if rslr.Value != nil {
-		objectMap["value"] = rslr.Value
-	}
-	return json.Marshal(objectMap)
-}
-
 // RecordSetListResultIterator provides access to a complete listing of RecordSet values.
 type RecordSetListResultIterator struct {
 	i    int
@@ -269,15 +306,10 @@ func (rslr RecordSetListResult) IsEmpty() bool {
 	return rslr.Value == nil || len(*rslr.Value) == 0
 }
 
-// hasNextLink returns true if the NextLink is not empty.
-func (rslr RecordSetListResult) hasNextLink() bool {
-	return rslr.NextLink != nil && len(*rslr.NextLink) != 0
-}
-
 // recordSetListResultPreparer prepares a request to retrieve the next set of results.
 // It returns nil if no more results exist.
 func (rslr RecordSetListResult) recordSetListResultPreparer(ctx context.Context) (*http.Request, error) {
-	if !rslr.hasNextLink() {
+	if rslr.NextLink == nil || len(to.String(rslr.NextLink)) < 1 {
 		return nil, nil
 	}
 	return autorest.Prepare((&http.Request{}).WithContext(ctx),
@@ -305,16 +337,11 @@ func (page *RecordSetListResultPage) NextWithContext(ctx context.Context) (err e
 			tracing.EndSpan(ctx, sc, err)
 		}()
 	}
-	for {
-		next, err := page.fn(ctx, page.rslr)
-		if err != nil {
-			return err
-		}
-		page.rslr = next
-		if !next.hasNextLink() || !next.IsEmpty() {
-			break
-		}
+	next, err := page.fn(ctx, page.rslr)
+	if err != nil {
+		return err
 	}
+	page.rslr = next
 	return nil
 }
 
@@ -344,11 +371,8 @@ func (page RecordSetListResultPage) Values() []RecordSet {
 }
 
 // Creates a new instance of the RecordSetListResultPage type.
-func NewRecordSetListResultPage(cur RecordSetListResult, getNextPage func(context.Context, RecordSetListResult) (RecordSetListResult, error)) RecordSetListResultPage {
-	return RecordSetListResultPage{
-		fn:   getNextPage,
-		rslr: cur,
-	}
+func NewRecordSetListResultPage(getNextPage func(context.Context, RecordSetListResult) (RecordSetListResult, error)) RecordSetListResultPage {
+	return RecordSetListResultPage{fn: getNextPage}
 }
 
 // RecordSetProperties represents the properties of the records in the record set.
@@ -728,15 +752,6 @@ type ZoneListResult struct {
 	NextLink *string `json:"nextLink,omitempty"`
 }
 
-// MarshalJSON is the custom marshaler for ZoneListResult.
-func (zlr ZoneListResult) MarshalJSON() ([]byte, error) {
-	objectMap := make(map[string]interface{})
-	if zlr.Value != nil {
-		objectMap["value"] = zlr.Value
-	}
-	return json.Marshal(objectMap)
-}
-
 // ZoneListResultIterator provides access to a complete listing of Zone values.
 type ZoneListResultIterator struct {
 	i    int
@@ -805,15 +820,10 @@ func (zlr ZoneListResult) IsEmpty() bool {
 	return zlr.Value == nil || len(*zlr.Value) == 0
 }
 
-// hasNextLink returns true if the NextLink is not empty.
-func (zlr ZoneListResult) hasNextLink() bool {
-	return zlr.NextLink != nil && len(*zlr.NextLink) != 0
-}
-
 // zoneListResultPreparer prepares a request to retrieve the next set of results.
 // It returns nil if no more results exist.
 func (zlr ZoneListResult) zoneListResultPreparer(ctx context.Context) (*http.Request, error) {
-	if !zlr.hasNextLink() {
+	if zlr.NextLink == nil || len(to.String(zlr.NextLink)) < 1 {
 		return nil, nil
 	}
 	return autorest.Prepare((&http.Request{}).WithContext(ctx),
@@ -841,16 +851,11 @@ func (page *ZoneListResultPage) NextWithContext(ctx context.Context) (err error)
 			tracing.EndSpan(ctx, sc, err)
 		}()
 	}
-	for {
-		next, err := page.fn(ctx, page.zlr)
-		if err != nil {
-			return err
-		}
-		page.zlr = next
-		if !next.hasNextLink() || !next.IsEmpty() {
-			break
-		}
+	next, err := page.fn(ctx, page.zlr)
+	if err != nil {
+		return err
 	}
+	page.zlr = next
 	return nil
 }
 
@@ -880,19 +885,14 @@ func (page ZoneListResultPage) Values() []Zone {
 }
 
 // Creates a new instance of the ZoneListResultPage type.
-func NewZoneListResultPage(cur ZoneListResult, getNextPage func(context.Context, ZoneListResult) (ZoneListResult, error)) ZoneListResultPage {
-	return ZoneListResultPage{
-		fn:  getNextPage,
-		zlr: cur,
-	}
+func NewZoneListResultPage(getNextPage func(context.Context, ZoneListResult) (ZoneListResult, error)) ZoneListResultPage {
+	return ZoneListResultPage{fn: getNextPage}
 }
 
 // ZoneProperties represents the properties of the zone.
 type ZoneProperties struct {
 	// MaxNumberOfRecordSets - READ-ONLY; The maximum number of record sets that can be created in this DNS zone.  This is a read-only property and any attempt to set this value will be ignored.
 	MaxNumberOfRecordSets *int64 `json:"maxNumberOfRecordSets,omitempty"`
-	// MaxNumberOfRecordsPerRecordSet - READ-ONLY; The maximum number of records per record set that can be created in this DNS zone.  This is a read-only property and any attempt to set this value will be ignored.
-	MaxNumberOfRecordsPerRecordSet *int64 `json:"maxNumberOfRecordsPerRecordSet,omitempty"`
 	// NumberOfRecordSets - READ-ONLY; The current number of record sets in this DNS zone.  This is a read-only property and any attempt to set this value will be ignored.
 	NumberOfRecordSets *int64 `json:"numberOfRecordSets,omitempty"`
 	// NameServers - READ-ONLY; The name servers for this DNS zone. This is a read-only property and any attempt to set this value will be ignored.
@@ -905,27 +905,26 @@ type ZoneProperties struct {
 	ResolutionVirtualNetworks *[]SubResource `json:"resolutionVirtualNetworks,omitempty"`
 }
 
-// MarshalJSON is the custom marshaler for ZoneProperties.
-func (zp ZoneProperties) MarshalJSON() ([]byte, error) {
-	objectMap := make(map[string]interface{})
-	if zp.ZoneType != "" {
-		objectMap["zoneType"] = zp.ZoneType
-	}
-	if zp.RegistrationVirtualNetworks != nil {
-		objectMap["registrationVirtualNetworks"] = zp.RegistrationVirtualNetworks
-	}
-	if zp.ResolutionVirtualNetworks != nil {
-		objectMap["resolutionVirtualNetworks"] = zp.ResolutionVirtualNetworks
-	}
-	return json.Marshal(objectMap)
-}
-
 // ZonesDeleteFuture an abstraction for monitoring and retrieving the results of a long-running operation.
 type ZonesDeleteFuture struct {
-	azure.FutureAPI
-	// Result returns the result of the asynchronous operation.
-	// If the operation has not completed it will return an error.
-	Result func(ZonesClient) (autorest.Response, error)
+	azure.Future
+}
+
+// Result returns the result of the asynchronous operation.
+// If the operation has not completed it will return an error.
+func (future *ZonesDeleteFuture) Result(client ZonesClient) (ar autorest.Response, err error) {
+	var done bool
+	done, err = future.DoneWithContext(context.Background(), client)
+	if err != nil {
+		err = autorest.NewErrorWithError(err, "dns.ZonesDeleteFuture", "Result", future.Response(), "Polling failure")
+		return
+	}
+	if !done {
+		err = azure.NewAsyncOpIncompleteError("dns.ZonesDeleteFuture")
+		return
+	}
+	ar.Response = future.Response()
+	return
 }
 
 // ZoneUpdate describes a request to update a DNS zone.

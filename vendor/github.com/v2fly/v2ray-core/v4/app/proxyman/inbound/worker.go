@@ -153,6 +153,11 @@ type udpConn struct {
 	done             *done.Instance
 	uplink           stats.Counter
 	downlink         stats.Counter
+	inactive         bool
+}
+
+func (c *udpConn) setInactive() {
+	c.inactive = true
 }
 
 func (c *udpConn) updateActivity() {
@@ -315,7 +320,11 @@ func (w *udpWorker) callback(b *buf.Buffer, source net.Destination, originalDest
 				newError("connection ends").Base(err).WriteToLog(session.ExportIDToError(ctx))
 			}
 			conn.Close()
-			w.removeConn(id)
+			// conn not removed by checker TODO may be lock worker here is better
+			if !conn.inactive {
+				conn.setInactive()
+				w.removeConn(id)
+			}
 		}()
 	}
 }
@@ -344,7 +353,10 @@ func (w *udpWorker) clean() error {
 
 	for addr, conn := range w.activeConn {
 		if nowSec-atomic.LoadInt64(&conn.lastActivityTime) > 8 { // TODO Timeout too small
-			delete(w.activeConn, addr)
+			if !conn.inactive {
+				conn.setInactive()
+				delete(w.activeConn, addr)
+			}
 			conn.Close()
 		}
 	}
@@ -465,6 +477,7 @@ func (w *dsWorker) Proxy() proxy.Inbound {
 func (w *dsWorker) Port() net.Port {
 	return net.Port(0)
 }
+
 func (w *dsWorker) Start() error {
 	ctx := context.Background()
 	hub, err := internet.ListenUnix(ctx, w.address, w.stream, func(conn internet.Connection) {

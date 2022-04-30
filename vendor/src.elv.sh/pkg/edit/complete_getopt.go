@@ -6,11 +6,11 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/xiaq/persistent/hashmap"
 	"src.elv.sh/pkg/eval"
 	"src.elv.sh/pkg/eval/vals"
 	"src.elv.sh/pkg/getopt"
 	"src.elv.sh/pkg/parse"
+	"src.elv.sh/pkg/ui"
 )
 
 //elvdoc:fn complete-getopt
@@ -63,12 +63,12 @@ import (
 // Example:
 //
 // ```elvish-transcript
-// ~> fn complete [@args]{
+// ~> fn complete {|@args|
 //      opt-specs = [ [&short=a &long=all &desc="Show all"]
 //                    [&short=n &desc="Set name" &arg-required=$true
-//                     &completer= [_]{ put name1 name2 }] ]
-//      arg-handlers = [ [_]{ put first1 first2 }
-//                       [_]{ put second1 second2 } ... ]
+//                     &completer= {|_| put name1 name2 }] ]
+//      arg-handlers = [ {|_| put first1 first2 }
+//                       {|_| put second1 second2 } ... ]
 //      edit:complete-getopt $args $opt-specs $arg-handlers
 //    }
 // ~> complete ''
@@ -91,6 +91,8 @@ import (
 // ▶ second1
 // ▶ second2
 // ```
+//
+// @cf flag:parse-getopt
 
 func completeGetopt(fm *eval.Frame, vArgs, vOpts, vArgHandlers interface{}) error {
 	args, err := parseGetoptArgs(vArgs)
@@ -106,39 +108,38 @@ func completeGetopt(fm *eval.Frame, vArgs, vOpts, vArgHandlers interface{}) erro
 		return err
 	}
 
-	// TODO(xiaq): Make the Config field configurable
-	g := getopt.Getopt{Options: opts.opts, Config: getopt.GNUGetoptLong}
-	_, parsedArgs, ctx := g.Parse(args)
+	// TODO: Make the Config field configurable
+	_, parsedArgs, ctx := getopt.Complete(args, opts.opts, getopt.GNU)
 
-	out := fm.OutputChan()
-	putShortOpt := func(opt *getopt.Option) {
+	out := fm.ValueOutput()
+	putShortOpt := func(opt *getopt.OptionSpec) error {
 		c := complexItem{Stem: "-" + string(opt.Short)}
 		if d, ok := opts.desc[opt]; ok {
 			if e, ok := opts.argDesc[opt]; ok {
-				c.Display = c.Stem + " " + e + " (" + d + ")"
+				c.Display = ui.T(c.Stem + " " + e + " (" + d + ")")
 			} else {
-				c.Display = c.Stem + " (" + d + ")"
+				c.Display = ui.T(c.Stem + " (" + d + ")")
 			}
 		}
-		out <- c
+		return out.Put(c)
 	}
-	putLongOpt := func(opt *getopt.Option) {
+	putLongOpt := func(opt *getopt.OptionSpec) error {
 		c := complexItem{Stem: "--" + opt.Long}
 		if d, ok := opts.desc[opt]; ok {
 			if e, ok := opts.argDesc[opt]; ok {
-				c.Display = c.Stem + " " + e + " (" + d + ")"
+				c.Display = ui.T(c.Stem + " " + e + " (" + d + ")")
 			} else {
-				c.Display = c.Stem + " (" + d + ")"
+				c.Display = ui.T(c.Stem + " (" + d + ")")
 			}
 		}
-		out <- c
+		return out.Put(c)
 	}
-	call := func(fn eval.Callable, args ...interface{}) {
-		fn.Call(fm, args, eval.NoOpts)
+	call := func(fn eval.Callable, args ...interface{}) error {
+		return fn.Call(fm, args, eval.NoOpts)
 	}
 
 	switch ctx.Type {
-	case getopt.NewOptionOrArgument, getopt.Argument:
+	case getopt.OptionOrArgument, getopt.Argument:
 		// Find argument handler.
 		var argHandler eval.Callable
 		if len(parsedArgs) < len(argHandlers) {
@@ -147,42 +148,47 @@ func completeGetopt(fm *eval.Frame, vArgs, vOpts, vArgHandlers interface{}) erro
 			argHandler = argHandlers[len(argHandlers)-1]
 		}
 		if argHandler != nil {
-			call(argHandler, ctx.Text)
-		} else {
-			// TODO(xiaq): Notify that there is no suitable argument completer.
+			return call(argHandler, ctx.Text)
 		}
-	case getopt.NewOption:
+		// TODO(xiaq): Notify that there is no suitable argument completer.
+	case getopt.AnyOption:
 		for _, opt := range opts.opts {
 			if opt.Short != 0 {
-				putShortOpt(opt)
+				err := putShortOpt(opt)
+				if err != nil {
+					return err
+				}
 			}
 			if opt.Long != "" {
-				putLongOpt(opt)
-			}
-		}
-	case getopt.NewLongOption:
-		for _, opt := range opts.opts {
-			if opt.Long != "" {
-				putLongOpt(opt)
+				err := putLongOpt(opt)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	case getopt.LongOption:
 		for _, opt := range opts.opts {
-			if strings.HasPrefix(opt.Long, ctx.Text) {
-				putLongOpt(opt)
+			if opt.Long != "" && strings.HasPrefix(opt.Long, ctx.Text) {
+				err := putLongOpt(opt)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	case getopt.ChainShortOption:
 		for _, opt := range opts.opts {
 			if opt.Short != 0 {
 				// TODO(xiaq): Loses chained options.
-				putShortOpt(opt)
+				err := putShortOpt(opt)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	case getopt.OptionArgument:
-		gen := opts.argGenerator[ctx.Option.Option]
+		gen := opts.argGenerator[ctx.Option.Spec]
 		if gen != nil {
-			call(gen, ctx.Option.Argument)
+			return call(gen, ctx.Option.Argument)
 		}
 	}
 	return nil
@@ -209,26 +215,26 @@ func parseGetoptArgs(v interface{}) ([]string, error) {
 }
 
 type parsedOptSpecs struct {
-	opts         []*getopt.Option
-	desc         map[*getopt.Option]string
-	argDesc      map[*getopt.Option]string
-	argGenerator map[*getopt.Option]eval.Callable
+	opts         []*getopt.OptionSpec
+	desc         map[*getopt.OptionSpec]string
+	argDesc      map[*getopt.OptionSpec]string
+	argGenerator map[*getopt.OptionSpec]eval.Callable
 }
 
 func parseGetoptOptSpecs(v interface{}) (parsedOptSpecs, error) {
 	result := parsedOptSpecs{
-		nil, map[*getopt.Option]string{},
-		map[*getopt.Option]string{}, map[*getopt.Option]eval.Callable{}}
+		nil, map[*getopt.OptionSpec]string{},
+		map[*getopt.OptionSpec]string{}, map[*getopt.OptionSpec]eval.Callable{}}
 
 	var err error
 	errIterate := vals.Iterate(v, func(v interface{}) bool {
-		m, ok := v.(hashmap.Map)
+		m, ok := v.(vals.Map)
 		if !ok {
 			err = fmt.Errorf("opt should be map, got %s", vals.Kind(v))
 			return false
 		}
 
-		opt := &getopt.Option{}
+		opt := &getopt.OptionSpec{}
 
 		getStringField := func(k string) (string, bool, error) {
 			v, ok := m.Index(k)
@@ -268,8 +274,7 @@ func parseGetoptOptSpecs(v interface{}) (parsedOptSpecs, error) {
 			r, size := utf8.DecodeRuneInString(s)
 			if r == utf8.RuneError || size != len(s) {
 				err = fmt.Errorf(
-					"short option should be exactly one rune, got %v",
-					parse.Quote(s))
+					"short should be exactly one rune, got %v", parse.Quote(s))
 				return false
 			}
 			opt.Short = r
@@ -305,9 +310,9 @@ func parseGetoptOptSpecs(v interface{}) (parsedOptSpecs, error) {
 				"opt cannot have both arg-required and arg-optional")
 			return false
 		case argRequired:
-			opt.HasArg = getopt.RequiredArgument
+			opt.Arity = getopt.RequiredArgument
 		case argOptional:
-			opt.HasArg = getopt.OptionalArgument
+			opt.Arity = getopt.OptionalArgument
 		}
 
 		if s, ok, errGet := getStringField("desc"); ok {

@@ -40,14 +40,38 @@ func NewFileSystem(files map[string]string, modTime time.Time) *FileSystem {
 func (f *FileSystem) Open(name string) (fi http.File, err error) {
 	if strings.HasSuffix(name, "/") {
 		dir := make([]string, 0) // Must be non-nil.
+		m := map[string]struct{}{}
+		ok := false
 		for k := range f.files {
 			if strings.HasPrefix(k, name) {
+				ok = true
 				k = k[len(name):]
-				dir = append(dir, strings.Split(k, "/")[0])
+				parts := strings.Split(k, "/")
+				name := parts[0]
+				if name == "" {
+					continue
+				}
+
+				switch {
+				case len(parts) == 1: // file
+					dir = append(dir, name)
+				default: // dir
+					if _, ok := m[name]; ok {
+						break
+					}
+
+					m[name] = struct{}{}
+					dir = append(dir, name+"/")
+				}
 			}
-			sort.Strings(dir)
-			return &file{name: name, dir: dir, mode: os.ModeDir}, nil
 		}
+		if !ok {
+			return nil, fmt.Errorf("no such directory: %q", name)
+		}
+
+		sort.Strings(dir)
+		//fmt.Printf("%q -> %v %v\n", name, len(dir), dir) //TODO-
+		return &file{FileSystem: f, name: name, dir: dir, mode: os.ModeDir}, nil
 	}
 
 	s, ok := f.files[name]
@@ -68,7 +92,7 @@ type file struct {
 }
 
 func (f *file) Close() (err error)               { return nil }
-func (f *file) IsDir() (r bool)                  { return f.dir != nil }
+func (f *file) IsDir() (r bool)                  { return strings.HasSuffix(f.name, "/") }
 func (f *file) Mode() (r os.FileMode)            { return f.mode }
 func (f *file) ModTime() (r time.Time)           { return f.modTime }
 func (f *file) Name() (r string)                 { return f.name }
@@ -77,7 +101,7 @@ func (f *file) Stat() (r os.FileInfo, err error) { return f, nil }
 func (f *file) Sys() (r interface{})             { return nil }
 
 func (f *file) Read(b []byte) (n int, err error) {
-	if int(f.off) >= len(f.s) {
+	if f.off >= int64(len(f.s)) {
 		return 0, io.EOF
 	}
 
@@ -88,22 +112,23 @@ func (f *file) Read(b []byte) (n int, err error) {
 
 func (f *file) Readdir(count int) (r []os.FileInfo, err error) {
 	for _, fn := range f.dir {
-		name := path.Join(f.name, fn)
-		s, ok := f.files[name]
-		if !ok {
-			continue
-		}
-
-		r = append(r, &file{name: name, s: s})
 		count--
 		if count == 0 {
 			break
 		}
+
+		name := path.Join(f.name, fn)
+		if strings.HasSuffix(fn, "/") {
+			name += "/"
+		}
+		s := f.files[name]
+		r = append(r, &file{name: name, s: s})
 	}
 	return r, err
 }
 
 func (f *file) Seek(offset int64, whence int) (r int64, err error) {
+	off := f.off
 	switch whence {
 	case os.SEEK_SET:
 		f.off = offset
@@ -112,8 +137,9 @@ func (f *file) Seek(offset int64, whence int) (r int64, err error) {
 	case os.SEEK_END:
 		f.off = int64(len(f.s)) + offset
 	}
-	if f.off < 0 || f.off >= int64(len(f.s)) {
-		err = fmt.Errorf("invalid offset")
+	if f.off < 0 || f.off > int64(len(f.s)) {
+		err = fmt.Errorf("invalid offset (%#x/%#x, whence %v)", f.off, len(f.s), whence)
+		f.off = off
 	}
 	return f.off, err
 }

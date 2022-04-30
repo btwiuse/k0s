@@ -8,6 +8,8 @@ go_library(
         "gethome.go",
         "getwd.go",
         "search.go",
+        "search_unix.go",
+        "search_windows.go",
     ],
     importmap = "k0s.io/vendor/src.elv.sh/pkg/fsutil",
     importpath = "src.elv.sh/pkg/fsutil",

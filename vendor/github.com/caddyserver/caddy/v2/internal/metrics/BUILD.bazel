@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["metrics.go"],
+    importmap = "k0s.io/vendor/github.com/caddyserver/caddy/v2/internal/metrics",
+    importpath = "github.com/caddyserver/caddy/v2/internal/metrics",
+    visibility = ["//vendor/github.com/caddyserver/caddy/v2:__subpackages__"],
+)

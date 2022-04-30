@@ -44,6 +44,7 @@ func init() {
 // ▶ /home/elf/show-src.elv
 // ▶ "put (src)[name code is-file]\n"
 // ▶ $true
+// ```
 //
 // Note: this builtin always returns information of the source of the function
 // calling `src`. Consider the following example:
@@ -83,14 +84,14 @@ func _gc() {
 //
 // This is only useful for debug purposes.
 
-func _stack(fm *Frame) {
-	out := fm.OutputFile()
+func _stack(fm *Frame) error {
 	// TODO(xiaq): Dup with main.go.
 	buf := make([]byte, 1024)
 	for runtime.Stack(buf, true) == cap(buf) {
 		buf = make([]byte, cap(buf)*2)
 	}
-	out.Write(buf)
+	_, err := fm.ByteOutput().Write(buf)
+	return err
 }
 
 //elvdoc:fn -log

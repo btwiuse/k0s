@@ -4,6 +4,7 @@ import (
 	"context"
 	"runtime"
 	"syscall"
+	"time"
 
 	"github.com/pires/go-proxyproto"
 
@@ -11,9 +12,7 @@ import (
 	"github.com/v2fly/v2ray-core/v4/common/session"
 )
 
-var (
-	effectiveListener = DefaultListener{}
-)
+var effectiveListener = DefaultListener{}
 
 type controller func(network, address string, fd uintptr) error
 
@@ -51,6 +50,9 @@ func (dl *DefaultListener) Listen(ctx context.Context, addr net.Addr, sockopt *S
 		network = addr.Network()
 		address = addr.String()
 		lc.Control = getControlFunc(ctx, sockopt, dl.controllers)
+		if sockopt != nil && sockopt.TcpKeepAliveIdle != 0 {
+			lc.KeepAlive = time.Duration(-1)
+		}
 	case *net.UnixAddr:
 		lc.Control = nil
 		network = addr.Network()

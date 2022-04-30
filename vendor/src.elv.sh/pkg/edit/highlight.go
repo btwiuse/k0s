@@ -49,10 +49,6 @@ func hasCommand(ev *eval.Evaler, cmd string) bool {
 		}
 	case first == "e:":
 		return hasExternalCommand(rest)
-	case first == "builtin:":
-		if hasFn(ev.Builtin(), rest) {
-			return true
-		}
 	default:
 		// Qualified name. Find the top-level module first.
 		if hasQualifiedFn(ev, first, rest) {
@@ -104,7 +100,7 @@ func hasFn(ns *eval.Ns, name string) bool {
 
 func isDirOrExecutable(fname string) bool {
 	stat, err := os.Stat(fname)
-	return err == nil && (stat.IsDir() || stat.Mode()&0111 != 0)
+	return err == nil && (stat.IsDir() || fsutil.IsExecutable(stat))
 }
 
 func hasExternalCommand(cmd string) bool {

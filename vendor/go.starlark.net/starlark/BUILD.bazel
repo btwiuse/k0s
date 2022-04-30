@@ -58,12 +58,6 @@ go_library(
         "@io_bazel_rules_go//go/platform:netbsd_arm64": [
             "//vendor/golang.org/x/sys/unix:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:openbsd_amd64": [
-            "//vendor/golang.org/x/sys/unix:go_default_library",
-        ],
-        "@io_bazel_rules_go//go/platform:openbsd_arm64": [
-            "//vendor/golang.org/x/sys/unix:go_default_library",
-        ],
         "@io_bazel_rules_go//go/platform:solaris_amd64": [
             "//vendor/golang.org/x/sys/unix:go_default_library",
         ],

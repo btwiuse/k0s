@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "filehashcollector.go",
+        "mgr.go",
+        "outputMgr.go",
+        "parse.go",
+        "sorter.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/VSign/insmgr",
+    importpath = "github.com/v2fly/VSign/insmgr",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/v2fly/VSign/instructions:go_default_library"],
+)

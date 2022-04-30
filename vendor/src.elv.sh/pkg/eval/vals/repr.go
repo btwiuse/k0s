@@ -3,13 +3,12 @@ package vals
 import (
 	"fmt"
 	"math"
+	"math/big"
 	"reflect"
+	"strconv"
 
 	"src.elv.sh/pkg/parse"
 )
-
-// NoPretty can be passed to Repr to suppress pretty-printing.
-const NoPretty = math.MinInt32
 
 // Reprer wraps the Repr method.
 type Reprer interface {
@@ -25,12 +24,19 @@ type Reprer interface {
 	Repr(indent int) string
 }
 
-// Repr returns the representation for a value, a string that is preferably (but
-// not necessarily) an Elvish expression that evaluates to the argument. If
-// indent >= 0, the representation is pretty-printed. It is implemented for the
-// builtin types nil, bool and string, the File, List and Map types, StructMap
-// types, and types satisfying the Reprer interface. For other types, it uses
-// fmt.Sprint with the format "<unknown %v>".
+// ReprPlain is like Repr, but without pretty-printing.
+func ReprPlain(v interface{}) string {
+	// TODO: Change to math.MinInt when Go 1.17 is required.
+	return Repr(v, math.MinInt32)
+}
+
+// Repr returns the representation for a value, a string that is preferably
+// (but not necessarily) an Elvish expression that evaluates to the argument.
+// The representation is pretty-printed, using indent as the initial level of
+// indentation. It is implemented for the builtin types nil, bool and string,
+// the File, List and Map types, StructMap types, and types satisfying the
+// Reprer interface. For other types, it uses fmt.Sprint with the format
+// "<unknown %v>".
 func Repr(v interface{}, indent int) string {
 	switch v := v.(type) {
 	case nil:
@@ -42,8 +48,14 @@ func Repr(v interface{}, indent int) string {
 		return "$false"
 	case string:
 		return parse.Quote(v)
+	case int:
+		return "(num " + strconv.Itoa(v) + ")"
+	case *big.Int:
+		return "(num " + v.String() + ")"
+	case *big.Rat:
+		return "(num " + v.String() + ")"
 	case float64:
-		return "(float64 " + formatFloat64(v) + ")"
+		return "(num " + formatFloat64(v) + ")"
 	case Reprer:
 		return v.Repr(indent)
 	case File:

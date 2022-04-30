@@ -207,7 +207,13 @@ func (s *SysInfo) ram() string {
 	tmp = s.exec(
 		"powershell",
 		"-c",
-		"(Get-Counter '\\Memory\\Available Bytes').CounterSamples.CookedValue",
+		strings.Join(
+			[]string{
+				"(Get-Counter '\\Memory\\Available",
+				"Bytes').CounterSamples.CookedValue",
+			},
+			" ",
+		),
 	)
 	if avail, e = strconv.Atoi(tmp); e != nil {
 		return s.RAM
@@ -216,7 +222,13 @@ func (s *SysInfo) ram() string {
 	tmp = s.exec(
 		"powershell",
 		"-c",
-		"(gcim Win32_PhysicalMemory | measure -Property capacity -Sum).Sum",
+		strings.Join(
+			[]string{
+				"(gcim Win32_PhysicalMemory | measure -Property",
+				"capacity -Sum).Sum",
+			},
+			" ",
+		),
 	)
 	if total, e = strconv.Atoi(tmp); e != nil {
 		return s.RAM

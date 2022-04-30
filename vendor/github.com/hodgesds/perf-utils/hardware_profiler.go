@@ -1,8 +1,11 @@
+//go:build linux
 // +build linux
 
 package perf
 
 import (
+	"fmt"
+
 	"go.uber.org/multierr"
 	"golang.org/x/sys/unix"
 )
@@ -13,62 +16,93 @@ type hardwareProfiler struct {
 }
 
 // NewHardwareProfiler returns a new hardware profiler.
-func NewHardwareProfiler(pid, cpu int, opts ...int) HardwareProfiler {
+func NewHardwareProfiler(pid, cpu int, opts ...int) (HardwareProfiler, error) {
+	var e error
 	profilers := map[int]Profiler{}
 
 	cpuCycleProfiler, err := NewCPUCycleProfiler(pid, cpu, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup CPU cycle profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[unix.PERF_COUNT_HW_CPU_CYCLES] = cpuCycleProfiler
 	}
 
 	instrProfiler, err := NewInstrProfiler(pid, cpu, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to CPU setup instruction profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[unix.PERF_COUNT_HW_INSTRUCTIONS] = instrProfiler
 	}
 
 	cacheRefProfiler, err := NewCacheRefProfiler(pid, cpu, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup cache ref profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[unix.PERF_COUNT_HW_CACHE_REFERENCES] = cacheRefProfiler
 	}
 
 	cacheMissesProfiler, err := NewCacheMissesProfiler(pid, cpu, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup cache misses profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[unix.PERF_COUNT_HW_CACHE_MISSES] = cacheMissesProfiler
 	}
 
 	branchInstrProfiler, err := NewBranchInstrProfiler(pid, cpu, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup branch instruction profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[unix.PERF_COUNT_HW_BRANCH_INSTRUCTIONS] = branchInstrProfiler
 	}
 
 	branchMissesProfiler, err := NewBranchMissesProfiler(pid, cpu, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup branch miss profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[unix.PERF_COUNT_HW_BRANCH_MISSES] = branchMissesProfiler
 	}
 
 	busCyclesProfiler, err := NewBusCyclesProfiler(pid, cpu, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup bus cycles profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[unix.PERF_COUNT_HW_BUS_CYCLES] = busCyclesProfiler
 	}
 
 	stalledCyclesFrontProfiler, err := NewStalledCyclesFrontProfiler(pid, cpu, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup stalled fronted cycles profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[unix.PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] = stalledCyclesFrontProfiler
 	}
 
 	stalledCyclesBackProfiler, err := NewStalledCyclesBackProfiler(pid, cpu, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup stalled backend cycles profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[unix.PERF_COUNT_HW_STALLED_CYCLES_BACKEND] = stalledCyclesBackProfiler
 	}
 
 	refCPUCyclesProfiler, err := NewRefCPUCyclesProfiler(pid, cpu, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup ref CPU cycles profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[unix.PERF_COUNT_HW_REF_CPU_CYCLES] = refCPUCyclesProfiler
 	}
 
 	return &hardwareProfiler{
 		profilers: profilers,
-	}
+	}, e
 }
 
 // Start is used to start the HardwareProfiler.

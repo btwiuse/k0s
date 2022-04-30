@@ -2,7 +2,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["prog.go"],
+    srcs = [
+        "flags.go",
+        "prog.go",
+    ],
     importmap = "k0s.io/vendor/src.elv.sh/pkg/prog",
     importpath = "src.elv.sh/pkg/prog",
     visibility = ["//visibility:public"],

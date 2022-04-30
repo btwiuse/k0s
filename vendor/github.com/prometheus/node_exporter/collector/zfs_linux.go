@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build !nozfs
 // +build !nozfs
 
 package collector
@@ -24,7 +25,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-kit/kit/log/level"
+	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -40,6 +41,8 @@ const (
 	// kstatDataUlong  = "6"
 	// kstatDataString = "7"
 )
+
+var zfsPoolStatesName = []string{"online", "degraded", "faulted", "offline", "removed", "unavail"}
 
 func (c *zfsCollector) openProcFile(path string) (*os.File, error) {
 	file, err := os.Open(procFilePath(path))
@@ -97,14 +100,10 @@ func (c *zfsCollector) updatePoolStats(ch chan<- prometheus.Metric) error {
 		return err
 	}
 
-	if zpoolObjsetPaths == nil {
-		return nil
-	}
-
 	for _, zpoolPath := range zpoolObjsetPaths {
 		file, err := os.Open(zpoolPath)
 		if err != nil {
-			// this file should exist, but there is a race where an exporting pool can remove the files -- ok to ignore
+			// This file should exist, but there is a race where an exporting pool can remove the files. Ok to ignore.
 			level.Debug(c.logger).Log("msg", "Cannot open file for reading", "path", zpoolPath)
 			return errZFSNotAvailable
 		}
@@ -117,6 +116,35 @@ func (c *zfsCollector) updatePoolStats(ch chan<- prometheus.Metric) error {
 			return err
 		}
 	}
+
+	zpoolStatePaths, err := filepath.Glob(procFilePath(filepath.Join(c.linuxProcpathBase, c.linuxZpoolStatePath)))
+	if err != nil {
+		return err
+	}
+
+	if zpoolStatePaths == nil {
+		level.Debug(c.logger).Log("msg", "No pool state files found")
+		return nil
+	}
+
+	for _, zpoolPath := range zpoolStatePaths {
+		file, err := os.Open(zpoolPath)
+		if err != nil {
+			// This file should exist, but there is a race where an exporting pool can remove the files. Ok to ignore.
+			level.Debug(c.logger).Log("msg", "Cannot open file for reading", "path", zpoolPath)
+			return errZFSNotAvailable
+		}
+
+		err = c.parsePoolStateFile(file, zpoolPath, func(poolName string, stateName string, isActive uint64) {
+			ch <- c.constPoolStateMetric(poolName, stateName, isActive)
+		})
+
+		file.Close()
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -187,7 +215,7 @@ func (c *zfsCollector) parsePoolProcfsFile(reader io.Reader, zpoolPath string, h
 
 			value, err := strconv.ParseUint(line[i], 10, 64)
 			if err != nil {
-				return fmt.Errorf("could not parse expected integer value for %q: %v", key, err)
+				return fmt.Errorf("could not parse expected integer value for %q: %w", key, err)
 			}
 			handler(zpoolName, zfsSysctl(key), value)
 		}
@@ -234,4 +262,36 @@ func (c *zfsCollector) parsePoolObjsetFile(reader io.Reader, zpoolPath string, h
 	}
 
 	return scanner.Err()
+}
+
+func (c *zfsCollector) parsePoolStateFile(reader io.Reader, zpoolPath string, handler func(string, string, uint64)) error {
+	scanner := bufio.NewScanner(reader)
+	scanner.Scan()
+
+	actualStateName, err := scanner.Text(), scanner.Err()
+	if err != nil {
+		return err
+	}
+
+	actualStateName = strings.ToLower(actualStateName)
+
+	zpoolPathElements := strings.Split(zpoolPath, "/")
+	pathLen := len(zpoolPathElements)
+	if pathLen < 2 {
+		return fmt.Errorf("zpool path did not return at least two elements")
+	}
+
+	zpoolName := zpoolPathElements[pathLen-2]
+
+	for _, stateName := range zfsPoolStatesName {
+		isActive := uint64(0)
+
+		if actualStateName == stateName {
+			isActive = 1
+		}
+
+		handler(zpoolName, stateName, isActive)
+	}
+
+	return nil
 }

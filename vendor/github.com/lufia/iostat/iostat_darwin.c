@@ -15,7 +15,7 @@ static int getdrivestat(io_registry_entry_t d, DriveStats *stat);
 static int fillstat(io_registry_entry_t d, DriveStats *stat);
 
 int
-readdrivestat(DriveStats a[], int n)
+lufia_iostat_v1_readdrivestat(DriveStats a[], int n)
 {
 	mach_port_t port;
 	CFMutableDictionaryRef match;
@@ -134,7 +134,7 @@ fillstat(io_registry_entry_t d, DriveStats *stat)
 }
 
 int
-readcpustat(CPUStats *stats)
+lufia_iostat_v1_readcpustat(CPUStats *stats)
 {
 	mach_port_t port;
 	host_cpu_load_info_data_t load;

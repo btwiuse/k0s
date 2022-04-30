@@ -10,12 +10,26 @@ import "robpike.io/ivy/config"
 // between parse and value.
 
 // Expr is the interface for a parsed expression.
+// Also implemented by Value.
 type Expr interface {
 	// ProgString returns the unambiguous representation of the
 	// expression to be used in program source.
 	ProgString() string
 
 	Eval(Context) Value
+}
+
+// Decomposable allows one to pull apart a parsed expression.
+// Only implemented by Expr types that need to be decomposed
+// in function evaluation.
+type Decomposable interface {
+	// Operator returns the operator, or "" for a singleton.
+	Operator() string
+
+	// Operands returns the left and right operands, or nil if absent.
+	// For singletons, both will be nil, but ProgString can
+	// give the underlying name or value.
+	Operands() (left, right Expr)
 }
 
 // UnaryOp is the interface implemented by a simple unary operator.
@@ -36,13 +50,17 @@ type Context interface {
 	// Lookup returns the configuration state for evaluation.
 	Config() *config.Config
 
-	// Lookup returns the value of a symbol.
-	Lookup(name string) Value
+	// Local returns the value of the i'th local variable.
+	Local(i int) Value
 
-	// Assign assigns the variable the value. The variable must
-	// be defined either in the current function or globally.
-	// Inside a function, new variables become locals.
-	Assign(name string, value Value)
+	// AssignLocal assigns to the i'th local variable.
+	AssignLocal(i int, value Value)
+
+	// Global returns the value of the named global variable.
+	Global(name string) Value
+
+	// AssignGlobal assigns to the named global variable.
+	AssignGlobal(name string, value Value)
 
 	// Eval evaluates a list of expressions.
 	Eval(exprs []Expr) []Value

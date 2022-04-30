@@ -276,6 +276,10 @@ func (s *SysInfo) getIPs() map[string][]string {
 				continue
 			}
 
+			if strings.HasPrefix(iface.Name, "docker") {
+				continue
+			}
+
 			s.ips[iface.Name] = append(
 				s.ips[iface.Name],
 				addr.String(),

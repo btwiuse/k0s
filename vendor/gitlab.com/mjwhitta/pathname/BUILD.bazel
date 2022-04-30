@@ -9,4 +9,5 @@ go_library(
     importmap = "k0s.io/vendor/gitlab.com/mjwhitta/pathname",
     importpath = "gitlab.com/mjwhitta/pathname",
     visibility = ["//visibility:public"],
+    deps = ["//vendor/gitlab.com/mjwhitta/errors:go_default_library"],
 )

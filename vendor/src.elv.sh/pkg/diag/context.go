@@ -49,6 +49,10 @@ var (
 	culpritPlaceHolder = "^"
 )
 
+func (c *Context) RelevantString() string {
+	return c.Source[c.From:c.To]
+}
+
 func (c *Context) showInfo() *rangeShowInfo {
 	if c.savedShowInfo != nil {
 		return c.savedShowInfo

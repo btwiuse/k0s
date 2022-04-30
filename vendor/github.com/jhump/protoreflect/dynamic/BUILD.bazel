@@ -1,0 +1,37 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "binary.go",
+        "doc.go",
+        "dynamic_message.go",
+        "equal.go",
+        "extension.go",
+        "extension_registry.go",
+        "indent.go",
+        "json.go",
+        "maps_1.11.go",
+        "maps_1.12.go",
+        "merge.go",
+        "message_factory.go",
+        "text.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/jhump/protoreflect/dynamic",
+    importpath = "github.com/jhump/protoreflect/dynamic",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/jsonpb:go_default_library",
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/github.com/golang/protobuf/protoc-gen-go/descriptor:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/any:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/duration:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/empty:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/struct:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/timestamp:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/wrappers:go_default_library",
+        "//vendor/github.com/jhump/protoreflect/codec:go_default_library",
+        "//vendor/github.com/jhump/protoreflect/desc:go_default_library",
+        "//vendor/github.com/jhump/protoreflect/internal:go_default_library",
+    ],
+)

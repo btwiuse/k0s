@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "errors.generated.go",
+        "standard.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/infra/conf/geodata/standard",
+    importpath = "github.com/v2fly/v2ray-core/v4/infra/conf/geodata/standard",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/v2ray-core/v4/app/router:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/platform/filesystem:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/infra/conf/geodata:go_default_library",
+        "//vendor/google.golang.org/protobuf/proto:go_default_library",
+    ],
+)

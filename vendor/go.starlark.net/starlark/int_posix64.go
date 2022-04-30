@@ -1,5 +1,5 @@
-//+build linux darwin dragonfly freebsd netbsd openbsd solaris
-//+build amd64 arm64,!darwin mips64x ppc64x
+//+build linux darwin dragonfly freebsd netbsd solaris
+//+build amd64 arm64,!darwin mips64x ppc64x loong64
 
 package starlark
 
@@ -17,6 +17,16 @@ package starlark
 // TODO(golang.org/issue/38485): darwin,arm64 may refer to macOS in the future.
 // Update this when there are distinct GOOS values for macOS, iOS, and other Apple
 // operating systems on arm64.
+//
+// This optimization is disabled on OpenBSD, because its default
+// ulimit for virtual memory is a measly GB or so.
+
+// An alternative approach to this optimization would be to embed the
+// int32 values in pointers using odd values, which can be distinguished
+// from (even) *big.Int pointers. However, the Go runtime does not allow
+// user programs to manufacture pointers to arbitrary locations such as
+// within the zero page, or non-span, non-mmap, non-stack locations,
+// and it may panic if it encounters them; see Issue #382.
 
 import (
 	"log"

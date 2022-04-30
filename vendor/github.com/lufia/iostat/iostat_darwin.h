@@ -32,5 +32,5 @@ struct CPUStats {
 	natural_t idle;
 };
 
-extern int readdrivestat(DriveStats a[], int n);
-extern int readcpustat(CPUStats *cpu);
+extern int lufia_iostat_v1_readdrivestat(DriveStats a[], int n);
+extern int lufia_iostat_v1_readcpustat(CPUStats *cpu);

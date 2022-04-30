@@ -11,6 +11,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/github.com/disintegration/imaging:go_default_library",
+        "//vendor/github.com/dsoprea/go-exif/v3:go_default_library",
+        "//vendor/github.com/dsoprea/go-exif/v3/common:go_default_library",
         "//vendor/github.com/marusama/semaphore/v2:go_default_library",
     ],
 )

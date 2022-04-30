@@ -9,13 +9,14 @@ package parse // import "robpike.io/ivy/parse"
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
-	"os/exec"
-	"path/filepath"
 	"sort"
 	"strings"
 
 	"robpike.io/ivy/config"
+	"robpike.io/ivy/demo"
+	"robpike.io/ivy/exec"
 	"robpike.io/ivy/scan"
 	"robpike.io/ivy/value"
 )
@@ -106,27 +107,39 @@ Switch:
 			break
 		}
 		str := strings.ToLower(strings.TrimSpace(tok.Text))
+		// Section headers are used to separate the help output.
+		const (
+			unary     = "Unary operators"
+			binary    = "Binary operators"
+			axis      = "Operators and axis indicator"
+			convert   = "Type-converting operations"
+			constant  = "Pre-defined constants"
+			char      = "Character data"
+			operators = "User-defined operators"
+			special   = "Special commands"
+			end       = "$$EOF$$"
+		)
 		switch str {
 		case "help":
 			p.helpOverview()
-		case "intro":
-			p.printHelpBlock("", "Unary operators")
-		case "unary":
-			p.printHelpBlock("Unary operators", "Binary operators")
-		case "binary":
-			p.printHelpBlock("Binary operators", "Operators and axis indicator")
+		case "intro", "introduction":
+			p.printHelpBlock("", unary)
+		case "unary", "monadic":
+			p.printHelpBlock(unary, binary)
+		case "binary", "dyadic":
+			p.printHelpBlock(binary, axis)
 		case "axis":
-			p.printHelpBlock("Operators and axis indicator", "Type-converting operations")
-		case "type", "types", "conversion", "conversions":
-			p.printHelpBlock("Type-converting operations", "Pre-defined constants")
-		case "constant":
-			p.printHelpBlock("Pre-defined constants", "Character data")
+			p.printHelpBlock(axis, convert)
+		case "type", "types", "conversion", "conversions", "convert":
+			p.printHelpBlock(convert, constant)
+		case "constant", "constants":
+			p.printHelpBlock(constant, char)
 		case "char", "character":
-			p.printHelpBlock("Character data", "User-defined operators")
-		case "op", "ops", "operator":
-			p.printHelpBlock("User-defined operators", "Special commands")
+			p.printHelpBlock(char, operators)
+		case "op", "ops", "operator", "operators":
+			p.printHelpBlock(operators, special)
 		case "special":
-			p.printHelpBlock("Special commands", "$$EOF$$")
+			p.printHelpBlock(special, end)
 		case "about":
 			p.next()
 			tok = p.next()
@@ -146,7 +159,7 @@ Switch:
 			break Switch
 		}
 		base := p.nextDecimalNumber()
-		if base != 0 && (base < 2 || 36 < base) {
+		if base != 0 && (base < 2 || 16 < base) {
 			p.errorf("illegal base %d", base)
 		}
 		switch text {
@@ -185,14 +198,17 @@ Switch:
 		}
 	case "demo":
 		p.need(scan.EOF)
-		cmd := exec.Command("go", "run", pathTo("demo.go"))
-		cmd.Stdin = os.Stdin
-		cmd.Stdout = conf.Output()
-		cmd.Stdout = conf.ErrOutput()
-		err := cmd.Run()
+		if conf.Mobile() {
+			p.Printf("For a demo on mobile platforms, use the Demo button in the UI.\n")
+			break
+		}
+		// Use a default configuration.
+		var conf config.Config
+		err := demo.Run(os.Stdin, DemoRunner(os.Stdin, conf.Output()), conf.Output())
 		if err != nil {
 			p.errorf("%v", err)
 		}
+		p.Println("Demo finished")
 	case "format":
 		if p.peek().Type == scan.EOF {
 			p.Printf("%q\n", conf.Format())
@@ -219,6 +235,13 @@ Switch:
 		}
 		max := p.nextDecimalNumber()
 		conf.SetMaxDigits(uint(max))
+	case "maxstack":
+		if p.peek().Type == scan.EOF {
+			p.Printf("%d\n", conf.MaxStack())
+			break Switch
+		}
+		max := p.nextDecimalNumber()
+		conf.SetMaxStack(uint(max))
 	case "op", "ops": // We keep forgetting whether it's a plural or not.
 		if p.peek().Type == scan.EOF {
 			var unary, binary []string
@@ -226,7 +249,7 @@ Switch:
 				if def.IsBinary {
 					binary = append(binary, def.Name)
 				} else {
-					unary = append(binary, def.Name)
+					unary = append(unary, def.Name)
 				}
 			}
 			sort.Strings(unary)
@@ -288,7 +311,7 @@ Switch:
 		}
 		conf.SetPrompt(p.getString())
 	case "save":
-		// Must restore ibase, obase for safe.
+		// Must restore ibase, obase for save.
 		conf.SetBase(ibase, obase)
 		if p.peek().Type == scan.EOF {
 			save(p.context, defaultFile)
@@ -321,6 +344,41 @@ var runDepth = 0
 
 // runFromFile executes the contents of the named file.
 func (p *Parser) runFromFile(context value.Context, name string) {
+	fd, err := os.Open(name)
+	if err != nil {
+		p.errorf("%s", err)
+	}
+	p.runFromReader(context, name, fd, true)
+}
+
+// runFromReader executes the contents of the io.Reader, identified by name.
+func (p *Parser) runFromReader(context value.Context, name string, reader io.Reader, stopOnError bool) {
+	runDepth++
+	if runDepth > 10 {
+		p.errorf("invocations of %q nested too deep", name)
+	}
+	defer func() {
+		runDepth--
+		err := recover()
+		if err == nil {
+			return
+		}
+		if err, ok := err.(value.Error); ok {
+			fmt.Fprintf(p.context.Config().ErrOutput(), "%s%s\n", p.Loc(), err)
+			return
+		}
+		panic(err)
+	}()
+	scanner := scan.New(context, name, bufio.NewReader(reader))
+	parser := NewParser(name, scanner, p.context)
+	for parser.runUntilError(name) != io.EOF {
+		if stopOnError {
+			break
+		}
+	}
+}
+
+func (p *Parser) runUntilError(name string) error {
 	runDepth++
 	if runDepth > 10 {
 		p.errorf("get %q nested too deep", name)
@@ -337,15 +395,8 @@ func (p *Parser) runFromFile(context value.Context, name string) {
 		}
 		panic(err)
 	}()
-	fd, err := os.Open(name)
-	if err != nil {
-		p.errorf("%s", err)
-	}
-	scanner := scan.New(context, name, bufio.NewReader(fd))
-	parser := NewParser(name, scanner, p.context)
-	out := p.context.Config().Output()
 	for {
-		exprs, ok := parser.Line()
+		exprs, ok := p.Line()
 		for _, expr := range exprs {
 			val := expr.Eval(p.context)
 			if val == nil {
@@ -354,31 +405,44 @@ func (p *Parser) runFromFile(context value.Context, name string) {
 			if _, ok := val.(Assignment); ok {
 				continue
 			}
-			fmt.Fprintf(out, "%v\n", val.Sprint(context.Config()))
+			p.context.AssignGlobal("_", val)
+			fmt.Fprintf(p.context.Config().Output(), "%v\n", val.Sprint(p.context.Config()))
 		}
 		if !ok {
-			return
+			return io.EOF
 		}
 	}
 }
 
-func exists(file string) bool {
-	info, err := os.Stat(file)
-	return err == nil && !info.IsDir()
+// A simple way to connect the user's input to the interpreter.
+// Sending one byte at a time is slow but very easy, and
+// it's just for a demo.
+type demoIO chan byte
+
+func (dio demoIO) Write(b []byte) (int, error) {
+	for _, c := range b {
+		dio <- c
+	}
+	return len(b), nil
 }
 
-func pathTo(file string) string {
-	if exists(file) {
-		return file
-	}
-	for _, dir := range filepath.SplitList(os.Getenv("GOPATH")) {
-		if dir == "" {
-			continue
-		}
-		name := filepath.Join(dir, "src", "robpike.io", "ivy", "demo", file)
-		if exists(name) {
-			return name
+func (dio demoIO) Read(b []byte) (int, error) {
+	for i := range b {
+		b[i] = <-dio
+		if b[i] == '\n' {
+			return i + 1, nil
 		}
 	}
-	return file // We'll get an error when we try to open it.
+	return len(b), nil
+}
+
+func DemoRunner(userInput io.Reader, userOutput io.Writer) io.Writer {
+	conf := &config.Config{}
+	conf.SetOutput(userOutput)
+	conf.SetRandomSeed(0)
+	context := exec.NewContext(conf)
+	dio := demoIO(make(chan byte, 1000))
+	parser := NewParser("demo", nil, context) // Only needed for error prints in runFromReader.
+	go parser.runFromReader(context, "demo", dio, false)
+	return dio
 }

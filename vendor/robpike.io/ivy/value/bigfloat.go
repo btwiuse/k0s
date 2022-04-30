@@ -135,16 +135,18 @@ func (f BigFloat) Inner() Value {
 	return f
 }
 
-func (f BigFloat) toType(conf *config.Config, which valueType) Value {
+func (f BigFloat) toType(op string, conf *config.Config, which valueType) Value {
 	switch which {
 	case bigFloatType:
 		return f
+	case complexType:
+		return newComplex(f, Int(0))
 	case vectorType:
 		return NewVector([]Value{f})
 	case matrixType:
 		return NewMatrix([]int{1}, []Value{f})
 	}
-	Errorf("cannot convert float to %s", which)
+	Errorf("%s: cannot convert float to %s", op, which)
 	return nil
 }
 

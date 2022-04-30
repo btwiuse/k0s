@@ -43,11 +43,15 @@ type Config struct {
 	random      *rand.Rand
 	maxBits     uint          // Maximum length of an integer; 0 means no limit.
 	maxDigits   uint          // Above this size, ints print in floating format.
+	maxStack    uint          // Maximum call stack depth.
 	floatPrec   uint          // Length of mantissa of a BigFloat.
-	cpuTime     time.Duration // Elapsed time of last interactive command.
+	realTime    time.Duration // Elapsed time of last interactive command.
+	userTime    time.Duration // User time of last interactive command.
+	sysTime     time.Duration // System time of last interactive command.
 	// Bases: 0 means C-like, base 10 with 07 for octal and 0xa for hex.
 	inputBase  int
 	outputBase int
+	mobile     bool // Running on a mobile platform.
 }
 
 func (c *Config) init() {
@@ -56,11 +60,14 @@ func (c *Config) init() {
 		c.errOutput = os.Stderr
 		c.origin = 1
 		c.seed = time.Now().UnixNano()
+		c.bigOrigin = big.NewInt(1)
 		c.source = rand.NewSource(c.seed)
 		c.random = rand.New(c.source)
 		c.maxBits = 1e6
 		c.maxDigits = 1e4
+		c.maxStack = 1e5
 		c.floatPrec = 256
+		c.mobile = false
 	}
 }
 
@@ -230,6 +237,18 @@ func (c *Config) SetMaxDigits(digits uint) {
 	c.maxDigits = digits
 }
 
+// MaxStack returns the maximum call stack depth.
+func (c *Config) MaxStack() uint {
+	c.init()
+	return c.maxStack
+}
+
+// SetMaxStack sets the maximum call stack depth.
+func (c *Config) SetMaxStack(depth uint) {
+	c.init()
+	c.maxStack = depth
+}
+
 // FloatPrec returns the floating-point precision in bits.
 // The exponent size is fixed by math/big.
 func (c *Config) FloatPrec() uint {
@@ -247,34 +266,55 @@ func (c *Config) SetFloatPrec(prec uint) {
 }
 
 // CPUTime returns the duration of the last interactive operation.
-func (c *Config) CPUTime() time.Duration {
+func (c *Config) CPUTime() (real, user, sys time.Duration) {
 	c.init()
-	return c.cpuTime
+	return c.realTime, c.userTime, c.sysTime
 }
 
 // SetCPUTime sets the duration of the last interactive operation.
-func (c *Config) SetCPUTime(d time.Duration) {
+func (c *Config) SetCPUTime(real, user, sys time.Duration) {
 	c.init()
-	c.cpuTime = d
+	c.realTime = real
+	c.userTime = user
+	c.sysTime = sys
 }
 
-// PrintCPUTime returns a nicely formatted version of the CPU time, with 3 decimal
-// places in whatever unit best fits. The default String method for Duration prints too
-// many decimals.
+// PrintCPUTime returns a nicely formatted version of the CPU time.
 func (c *Config) PrintCPUTime() string {
-	d := c.cpuTime
+	if c.userTime == 0 && c.sysTime == 0 {
+		return printDuration(c.realTime)
+	}
+	return fmt.Sprintf("%s (%s user, %s sys)", printDuration(c.realTime), printDuration(c.userTime), printDuration(c.sysTime))
+}
+
+// printDuration returns a nice formatting of the duration d,
+// with 3 decimal places in whatever unit best fits, but
+// if all the decimals are zero, drop them.
+// The Duration.String method never rounds and is too noisy.
+func printDuration(d time.Duration) string {
 	switch {
 	case d > time.Minute:
 		m := int(d.Minutes())
 		s := int(d.Seconds()) - 60*m
 		return fmt.Sprintf("%dm%02ds", m, s)
 	case d > time.Second:
-		return fmt.Sprintf("%.3fs", d.Seconds())
+		return formatDuration(d.Seconds(), "s")
 	case d > time.Millisecond:
-		return fmt.Sprintf("%.3fms", float64(d.Nanoseconds())/1e6)
+		return formatDuration(float64(d.Nanoseconds())/1e6, "ms")
 	default:
-		return fmt.Sprintf("%.3fµs", float64(d.Nanoseconds())/1e3)
+		return formatDuration(float64(d.Nanoseconds())/1e3, "µs")
 	}
+}
+
+// formatDuration returns a neatly formatted duration, omitting
+// an all-zero decimal sequence, which is common for small values.
+func formatDuration(d float64, units string) string {
+	s := fmt.Sprintf("%.3f", d)
+	if strings.HasSuffix(s, ".000") {
+		s = s[:len(s)-4]
+	}
+	return s + units
+	
 }
 
 // Base returns the input and output bases.
@@ -297,4 +337,15 @@ func (c *Config) SetBase(inputBase, outputBase int) {
 	c.init()
 	c.inputBase = inputBase
 	c.outputBase = outputBase
+}
+
+// Mobile reports whether we are running on a mobile platform.
+func (c *Config) Mobile() bool {
+	return c.mobile
+}
+
+// SetMobile sets the Mobile bit as specified.
+func (c *Config) SetMobile(mobile bool) {
+	c.init()
+	c.mobile = mobile
 }

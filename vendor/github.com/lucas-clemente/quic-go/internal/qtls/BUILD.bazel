@@ -7,6 +7,7 @@ go_library(
         "go117.go",
         "go118.go",
         "go119.go",
+        "go_oldversion.go",
     ],
     importmap = "k0s.io/vendor/github.com/lucas-clemente/quic-go/internal/qtls",
     importpath = "github.com/lucas-clemente/quic-go/internal/qtls",

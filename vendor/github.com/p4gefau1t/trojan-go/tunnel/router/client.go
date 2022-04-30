@@ -2,26 +2,27 @@ package router
 
 import (
 	"context"
-	"io/ioutil"
 	"net"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 
-	"github.com/golang/protobuf/proto"
+	v2router "github.com/v2fly/v2ray-core/v4/app/router"
+
 	"github.com/p4gefau1t/trojan-go/common"
+	"github.com/p4gefau1t/trojan-go/common/geodata"
 	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/log"
 	"github.com/p4gefau1t/trojan-go/tunnel"
 	"github.com/p4gefau1t/trojan-go/tunnel/freedom"
 	"github.com/p4gefau1t/trojan-go/tunnel/transport"
-	v2router "v2ray.com/core/app/router"
 )
 
 const (
-	Proxy  = 0
+	Block  = 0
 	Bypass = 1
-	Block  = 2
+	Proxy  = 2
 )
 
 const (
@@ -38,7 +39,7 @@ func matchDomain(list []*v2router.Domain, target string) bool {
 		case v2router.Domain_Full:
 			domain := d.GetValue()
 			if domain == target {
-				log.Trace("domain:", target, "hit domain(full) rule:", domain)
+				log.Tracef("domain %s hit domain(full) rule: %s", target, domain)
 				return true
 			}
 		case v2router.Domain_Domain:
@@ -46,14 +47,14 @@ func matchDomain(list []*v2router.Domain, target string) bool {
 			if strings.HasSuffix(target, domain) {
 				idx := strings.Index(target, domain)
 				if idx == 0 || target[idx-1] == '.' {
-					log.Trace("domain:", target, "hit domain rule:", domain)
+					log.Tracef("domain %s hit domain rule: %s", target, domain)
 					return true
 				}
 			}
 		case v2router.Domain_Plain:
-			//keyword
+			// keyword
 			if strings.Contains(target, d.GetValue()) {
-				log.Trace("domain:", target, "hit keyword rule:", d.GetValue())
+				log.Tracef("domain %s hit keyword rule: %s", target, d.GetValue())
 				return true
 			}
 		case v2router.Domain_Regex:
@@ -63,11 +64,11 @@ func matchDomain(list []*v2router.Domain, target string) bool {
 				return false
 			}
 			if matched {
-				log.Trace("domain:", target, "hit regex rule:", d.GetValue())
+				log.Tracef("domain %s hit regex rule: %s", target, d.GetValue())
 				return true
 			}
 		default:
-			log.Debug("unknown rule type:" + d.GetType().String())
+			log.Debug("unknown rule type:", d.GetType().String())
 		}
 	}
 	return false
@@ -84,11 +85,11 @@ func matchIP(list []*v2router.CIDR, target net.IP) bool {
 		n := int(c.GetPrefix())
 		mask := net.CIDRMask(n, 8*len)
 		cidrIP := net.IP(c.GetIp())
-		if cidrIP.To4() != nil { //IPv4 CIDR
+		if cidrIP.To4() != nil { // IPv4 CIDR
 			if isIPv6 {
 				continue
 			}
-		} else { //IPv6 CIDR
+		} else { // IPv6 CIDR
 			if !isIPv6 {
 				continue
 			}
@@ -130,45 +131,40 @@ type Client struct {
 }
 
 func (c *Client) Route(address *tunnel.Address) int {
-	policy := -1
-	var err error
-	if c.domainStrategy == IPOnDemand {
-		address, err = newIPAddress(address)
-		if err != nil {
-			return c.defaultPolicy
-		}
-	}
 	if address.AddressType == tunnel.DomainName {
-		for i := 0; i < 3; i++ {
+		if c.domainStrategy == IPOnDemand {
+			resolvedIP, err := newIPAddress(address)
+			if err == nil {
+				for i := Block; i <= Proxy; i++ {
+					if matchIP(c.cidrs[i], resolvedIP.IP) {
+						return i
+					}
+				}
+			}
+		}
+		for i := Block; i <= Proxy; i++ {
 			if matchDomain(c.domains[i], address.DomainName) {
-				policy = i
-				break
+				return i
+			}
+		}
+		if c.domainStrategy == IPIfNonMatch {
+			resolvedIP, err := newIPAddress(address)
+			if err == nil {
+				for i := Block; i <= Proxy; i++ {
+					if matchIP(c.cidrs[i], resolvedIP.IP) {
+						return i
+					}
+				}
 			}
 		}
 	} else {
-		for i := 0; i < 3; i++ {
+		for i := Block; i <= Proxy; i++ {
 			if matchIP(c.cidrs[i], address.IP) {
-				policy = i
-				break
+				return i
 			}
 		}
 	}
-	if policy == -1 && c.domainStrategy == IPIfNonMatch {
-		address, err = newIPAddress(address)
-		if err != nil {
-			return c.defaultPolicy
-		}
-		for i := 0; i < 3; i++ {
-			if matchIP(c.cidrs[i], address.IP) {
-				policy = i
-				break
-			}
-		}
-	}
-	if policy == -1 {
-		policy = c.defaultPolicy
-	}
-	return policy
+	return c.defaultPolicy
 }
 
 func (c *Client) DialConn(address *tunnel.Address, overlay tunnel.Tunnel) (tunnel.Conn, error) {
@@ -226,32 +222,49 @@ func loadCode(cfg *Config, prefix string) []codeInfo {
 	codes := []codeInfo{}
 	for _, s := range cfg.Router.Proxy {
 		if strings.HasPrefix(s, prefix) {
-			codes = append(codes, codeInfo{
-				code:     s[len(prefix):],
-				strategy: Proxy,
-			})
+			if left := s[len(prefix):]; len(left) > 0 {
+				codes = append(codes, codeInfo{
+					code:     left,
+					strategy: Proxy,
+				})
+			} else {
+				log.Warn("invalid empty rule:", s)
+			}
 		}
 	}
 	for _, s := range cfg.Router.Bypass {
 		if strings.HasPrefix(s, prefix) {
-			codes = append(codes, codeInfo{
-				code:     s[len(prefix):],
-				strategy: Bypass,
-			})
+			if left := s[len(prefix):]; len(left) > 0 {
+				codes = append(codes, codeInfo{
+					code:     left,
+					strategy: Bypass,
+				})
+			} else {
+				log.Warn("invalid empty rule:", s)
+			}
 		}
 	}
 	for _, s := range cfg.Router.Block {
 		if strings.HasPrefix(s, prefix) {
-			codes = append(codes, codeInfo{
-				code:     s[len(prefix):],
-				strategy: Block,
-			})
+			if left := s[len(prefix):]; len(left) > 0 {
+				codes = append(codes, codeInfo{
+					code:     left,
+					strategy: Block,
+				})
+			} else {
+				log.Warn("invalid empty rule:", s)
+			}
 		}
 	}
 	return codes
 }
 
 func NewClient(ctx context.Context, underlay tunnel.Client) (*Client, error) {
+	m1 := runtime.MemStats{}
+	m2 := runtime.MemStats{}
+	m3 := runtime.MemStats{}
+	m4 := runtime.MemStats{}
+
 	cfg := config.FromContext(ctx, Name).(*Config)
 	var cancel context.CancelFunc
 	ctx, cancel = context.WithCancel(ctx)
@@ -270,94 +283,128 @@ func NewClient(ctx context.Context, underlay tunnel.Client) (*Client, error) {
 		ctx:      ctx,
 		cancel:   cancel,
 	}
-	switch cfg.Router.DomainStrategy {
-	case "as_is", "as-is":
+	switch strings.ToLower(cfg.Router.DomainStrategy) {
+	case "as_is", "as-is", "asis":
 		client.domainStrategy = AsIs
-	case "ip_if_non_match", "ip-if-non-match":
+	case "ip_if_non_match", "ip-if-non-match", "ipifnonmatch":
 		client.domainStrategy = IPIfNonMatch
-	case "ip_on_demand", "ip-on-demand":
+	case "ip_on_demand", "ip-on-demand", "ipondemand":
 		client.domainStrategy = IPOnDemand
 	default:
 		return nil, common.NewError("unknown strategy: " + cfg.Router.DomainStrategy)
 	}
 
-	switch cfg.Router.DefaultPolicy {
+	switch strings.ToLower(cfg.Router.DefaultPolicy) {
 	case "proxy":
 		client.defaultPolicy = Proxy
 	case "bypass":
 		client.defaultPolicy = Bypass
 	case "block":
 		client.defaultPolicy = Block
+	default:
 		return nil, common.NewError("unknown strategy: " + cfg.Router.DomainStrategy)
 	}
 
-	geoipData, err := ioutil.ReadFile(cfg.Router.GeoIPFilename)
-	if err != nil {
-		log.Warn(err)
-	} else {
-		geoip := new(v2router.GeoIPList)
-		if err := proto.Unmarshal(geoipData, geoip); err != nil {
-			return nil, err
+	runtime.ReadMemStats(&m1)
+
+	geodataLoader := geodata.NewGeodataLoader()
+
+	ipCode := loadCode(cfg, "geoip:")
+	for _, c := range ipCode {
+		code := c.code
+		cidrs, err := geodataLoader.LoadIP(cfg.Router.GeoIPFilename, code)
+		if err != nil {
+			log.Error(err)
+		} else {
+			log.Infof("geoip:%s loaded", code)
+			client.cidrs[c.strategy] = append(client.cidrs[c.strategy], cidrs...)
 		}
-		ipCode := loadCode(cfg, "geoip:")
-		for _, c := range ipCode {
-			c.code = strings.ToUpper(c.code)
+	}
+
+	runtime.ReadMemStats(&m2)
+
+	siteCode := loadCode(cfg, "geosite:")
+	for _, c := range siteCode {
+		code := c.code
+		attrWanted := ""
+		// Test if user wants domains that have an attribute
+		if attrIdx := strings.Index(code, "@"); attrIdx > 0 {
+			if !strings.HasSuffix(code, "@") {
+				code = c.code[:attrIdx]
+				attrWanted = c.code[attrIdx+1:]
+			} else { // "geosite:google@" is invalid
+				log.Warnf("geosite:%s invalid", code)
+				continue
+			}
+		} else if attrIdx == 0 { // "geosite:@cn" is invalid
+			log.Warnf("geosite:%s invalid", code)
+			continue
+		}
+
+		domainList, err := geodataLoader.LoadSite(cfg.Router.GeoSiteFilename, code)
+		if err != nil {
+			log.Error(err)
+		} else {
 			found := false
-			for _, e := range geoip.GetEntry() {
-				code := e.GetCountryCode()
-				if c.code == code {
-					client.cidrs[c.strategy] = append(client.cidrs[c.strategy], e.GetCidr()...)
-					found = true
-					break
+			if attrWanted != "" {
+				for _, domain := range domainList {
+					for _, attr := range domain.GetAttribute() {
+						if strings.EqualFold(attrWanted, attr.GetKey()) {
+							client.domains[c.strategy] = append(client.domains[c.strategy], domain)
+							found = true
+						}
+					}
 				}
+			} else {
+				client.domains[c.strategy] = append(client.domains[c.strategy], domainList...)
+				found = true
 			}
 			if found {
-				log.Info("geoip info", c, "loaded")
+				log.Infof("geosite:%s loaded", c.code)
 			} else {
-				log.Warn("geoip info", c, "not found")
+				log.Errorf("geosite:%s not found", c.code)
 			}
 		}
 	}
 
-	geositeData, err := ioutil.ReadFile(cfg.Router.GeoSiteFilename)
-	if err != nil {
-		log.Warn(err)
-	} else {
-		geosite := new(v2router.GeoSiteList)
-		if err := proto.Unmarshal(geositeData, geosite); err != nil {
-			return nil, err
-		}
-		siteCode := loadCode(cfg, "geosite:")
-		for _, c := range siteCode {
-			c.code = strings.ToUpper(c.code)
-			found := false
-			for _, e := range geosite.GetEntry() {
-				code := e.GetCountryCode()
-				if c.code == code {
-					client.domains[c.strategy] = append(client.domains[c.strategy], e.GetDomain()...)
-					found = true
-					break
-				}
-			}
-			if found {
-				log.Info("geosite info", c, "loaded")
-			} else {
-				log.Warn("geosite info", c, "not found")
-			}
-		}
-	}
+	runtime.ReadMemStats(&m3)
 
 	domainInfo := loadCode(cfg, "domain:")
 	for _, info := range domainInfo {
 		client.domains[info.strategy] = append(client.domains[info.strategy], &v2router.Domain{
 			Type:      v2router.Domain_Domain,
-			Value:     info.code,
+			Value:     strings.ToLower(info.code),
+			Attribute: nil,
+		})
+	}
+
+	keywordInfo := loadCode(cfg, "keyword:")
+	for _, info := range keywordInfo {
+		client.domains[info.strategy] = append(client.domains[info.strategy], &v2router.Domain{
+			Type:      v2router.Domain_Plain,
+			Value:     strings.ToLower(info.code),
 			Attribute: nil,
 		})
 	}
 
 	regexInfo := loadCode(cfg, "regex:")
 	for _, info := range regexInfo {
+		if _, err := regexp.Compile(info.code); err != nil {
+			return nil, common.NewError("invalid regular expression: " + info.code).Base(err)
+		}
+		client.domains[info.strategy] = append(client.domains[info.strategy], &v2router.Domain{
+			Type:      v2router.Domain_Regex,
+			Value:     info.code,
+			Attribute: nil,
+		})
+	}
+
+	// Just for compatibility with V2Ray rule type `regexp`
+	regexpInfo := loadCode(cfg, "regexp:")
+	for _, info := range regexpInfo {
+		if _, err := regexp.Compile(info.code); err != nil {
+			return nil, common.NewError("invalid regular expression: " + info.code).Base(err)
+		}
 		client.domains[info.strategy] = append(client.domains[info.strategy], &v2router.Domain{
 			Type:      v2router.Domain_Regex,
 			Value:     info.code,
@@ -368,8 +415,8 @@ func NewClient(ctx context.Context, underlay tunnel.Client) (*Client, error) {
 	fullInfo := loadCode(cfg, "full:")
 	for _, info := range fullInfo {
 		client.domains[info.strategy] = append(client.domains[info.strategy], &v2router.Domain{
-			Type:      v2router.Domain_Regex,
-			Value:     info.code,
+			Type:      v2router.Domain_Full,
+			Value:     strings.ToLower(info.code),
 			Attribute: nil,
 		})
 	}
@@ -378,11 +425,11 @@ func NewClient(ctx context.Context, underlay tunnel.Client) (*Client, error) {
 	for _, info := range cidrInfo {
 		tmp := strings.Split(info.code, "/")
 		if len(tmp) != 2 {
-			return nil, common.NewError("invalid cidr:" + info.code)
+			return nil, common.NewError("invalid cidr: " + info.code)
 		}
 		ip := net.ParseIP(tmp[0])
 		if ip == nil {
-			return nil, common.NewError("invalid cidr ip:" + info.code)
+			return nil, common.NewError("invalid cidr ip: " + info.code)
 		}
 		prefix, err := strconv.ParseInt(tmp[1], 10, 32)
 		if err != nil {
@@ -395,5 +442,13 @@ func NewClient(ctx context.Context, underlay tunnel.Client) (*Client, error) {
 	}
 
 	log.Info("router client created")
+
+	runtime.ReadMemStats(&m4)
+
+	log.Debugf("GeoIP rules -> Alloc: %s; TotalAlloc: %s", common.HumanFriendlyTraffic(m2.Alloc-m1.Alloc), common.HumanFriendlyTraffic(m2.TotalAlloc-m1.TotalAlloc))
+	log.Debugf("GeoSite rules -> Alloc: %s; TotalAlloc: %s", common.HumanFriendlyTraffic(m3.Alloc-m2.Alloc), common.HumanFriendlyTraffic(m3.TotalAlloc-m2.TotalAlloc))
+	log.Debugf("Plaintext rules -> Alloc: %s; TotalAlloc: %s", common.HumanFriendlyTraffic(m4.Alloc-m3.Alloc), common.HumanFriendlyTraffic(m4.TotalAlloc-m3.TotalAlloc))
+	log.Debugf("Total(router) -> Alloc: %s; TotalAlloc: %s", common.HumanFriendlyTraffic(m4.Alloc-m1.Alloc), common.HumanFriendlyTraffic(m4.TotalAlloc-m1.TotalAlloc))
+
 	return client, nil
 }

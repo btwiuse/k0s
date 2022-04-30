@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build !noarp
 // +build !noarp
 
 package collector
@@ -22,7 +23,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -84,7 +85,7 @@ func parseARPEntries(data io.Reader) (map[string]uint32, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("failed to parse ARP info: %s", err)
+		return nil, fmt.Errorf("failed to parse ARP info: %w", err)
 	}
 
 	return entries, nil
@@ -93,7 +94,7 @@ func parseARPEntries(data io.Reader) (map[string]uint32, error) {
 func (c *arpCollector) Update(ch chan<- prometheus.Metric) error {
 	entries, err := getARPEntries()
 	if err != nil {
-		return fmt.Errorf("could not get ARP entries: %s", err)
+		return fmt.Errorf("could not get ARP entries: %w", err)
 	}
 
 	for device, entryCount := range entries {

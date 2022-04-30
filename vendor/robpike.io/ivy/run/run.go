@@ -8,8 +8,10 @@
 package run // import "robpike.io/ivy/run"
 
 import (
+	"bytes"
 	"fmt"
 	"io"
+	"math/big"
 	"strings"
 	"time"
 
@@ -28,8 +30,16 @@ func init() {
 func IvyEval(context value.Context, str string) value.Value {
 	scanner := scan.New(context, "<ivy>", strings.NewReader(str))
 	parser := parse.NewParser("<ivy>", scanner, context)
-	return eval(parser, context)
+	v := eval(parser, context)
+	if v == nil {
+		v = value.NewIntVector([]int{}) // Must return something, so make it an empty vector.
+	}
+	return v
 }
+
+// cpuTime reports user and system time.
+// It is replaced by system-specific files, like time_unix.go.
+var cpuTime = func() (user, sys time.Duration) { return 0, 0 }
 
 // Run runs the parser/evaluator until EOF or error.
 // The return value says whether we completed without error. If the return
@@ -47,7 +57,11 @@ func Run(p *parse.Parser, context value.Context, interactive bool) (success bool
 		if err == nil {
 			return
 		}
-		if err, ok := err.(value.Error); ok {
+		_, ok := err.(value.Error)
+		if !ok {
+			_, ok = err.(big.ErrNaN) // Floating point error from math/big.
+		}
+		if ok {
 			fmt.Fprintf(conf.ErrOutput(), "%s%s\n", p.Loc(), err)
 			if interactive {
 				fmt.Fprintln(writer)
@@ -66,21 +80,25 @@ func Run(p *parse.Parser, context value.Context, interactive bool) (success bool
 		if exprs != nil {
 			if interactive {
 				start := time.Now()
+				user, sys := cpuTime()
 				values = context.Eval(exprs)
-				conf.SetCPUTime(time.Since(start))
+				user2, sys2 := cpuTime()
+				conf.SetCPUTime(time.Since(start), user2-user, sys2-sys)
 			} else {
 				values = context.Eval(exprs)
 			}
 		}
 		if printValues(conf, writer, values) {
-			context.Assign("_", values[len(values)-1])
+			context.AssignGlobal("_", values[len(values)-1])
 		}
 		if !ok {
 			return true
 		}
 		if interactive {
-			if exprs != nil && conf.Debug("cpu") && conf.CPUTime() != 0 {
-				fmt.Printf("(%s)\n", conf.PrintCPUTime())
+			if exprs != nil && conf.Debug("cpu") {
+				if real, _, _ := conf.CPUTime(); real != 0 {
+					fmt.Printf("(%s)\n", conf.PrintCPUTime())
+				}
 			}
 			fmt.Fprintln(writer)
 		}
@@ -146,4 +164,25 @@ func printValues(conf *config.Config, writer io.Writer, values []value.Value) bo
 		fmt.Fprintln(writer)
 	}
 	return printed
+}
+
+// Ivy evaluates the input string, appending standard output
+// and error output to the provided buffers, which it does by
+// calling context.Config.SetOutput and SetError.
+// If execution caused errors, they will be returned concatenated
+// together in the error value returned.
+func Ivy(context value.Context, expr string, stdout, stderr *bytes.Buffer) {
+	if !strings.HasSuffix(expr, "\n") {
+		expr += "\n"
+	}
+	reader := strings.NewReader(expr)
+
+	scanner := scan.New(context, " ", reader)
+	parser := parse.NewParser(" ", scanner, context)
+
+	conf := context.Config()
+	conf.SetOutput(stdout)
+	conf.SetErrOutput(stderr)
+	for !Run(parser, context, false) {
+	}
 }

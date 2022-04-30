@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["byte.go"],
-    importmap = "k0s.io/vendor/v2ray.com/core/common/bitmask",
-    importpath = "v2ray.com/core/common/bitmask",
-    visibility = ["//visibility:public"],
-)

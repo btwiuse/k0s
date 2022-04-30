@@ -9,7 +9,10 @@ My util library
 $ go get github.com/txthinking/x
 ```
 
-License
----
+## Author
+
+A project by [txthinking](https://www.txthinking.com)
+
+## License
 
 Licensed under The MIT License

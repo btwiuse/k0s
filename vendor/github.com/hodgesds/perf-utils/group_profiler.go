@@ -1,3 +1,4 @@
+//go:build linux
 // +build linux
 
 package perf
@@ -99,7 +100,7 @@ func (p *groupProfiler) Start() error {
 	if len(p.fds) == 0 {
 		return ErrNoLeader
 	}
-	return unix.IoctlSetInt(p.fds[0], unix.PERF_EVENT_IOC_ENABLE, 0)
+	return unix.IoctlSetInt(p.fds[0], unix.PERF_EVENT_IOC_ENABLE, unix.PERF_IOC_FLAG_GROUP)
 }
 
 // Reset is used to reset the GroupProfiler.
@@ -107,7 +108,7 @@ func (p *groupProfiler) Reset() error {
 	if len(p.fds) == 0 {
 		return ErrNoLeader
 	}
-	return unix.IoctlSetInt(p.fds[0], unix.PERF_EVENT_IOC_RESET, 0)
+	return unix.IoctlSetInt(p.fds[0], unix.PERF_EVENT_IOC_RESET, unix.PERF_IOC_FLAG_GROUP)
 }
 
 // Stop is used to stop the GroupProfiler.
@@ -115,7 +116,7 @@ func (p *groupProfiler) Stop() error {
 	if len(p.fds) == 0 {
 		return ErrNoLeader
 	}
-	return unix.IoctlSetInt(p.fds[0], unix.PERF_EVENT_IOC_DISABLE, 0)
+	return unix.IoctlSetInt(p.fds[0], unix.PERF_EVENT_IOC_DISABLE, unix.PERF_IOC_FLAG_GROUP)
 }
 
 // Close is used to close the GroupProfiler.

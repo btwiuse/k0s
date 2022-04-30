@@ -21,9 +21,12 @@ go_library(
     importpath = "github.com/caddyserver/caddy/v2",
     visibility = ["//visibility:public"],
     deps = [
+        "//vendor/github.com/caddyserver/caddy/v2/internal/metrics:go_default_library",
         "//vendor/github.com/caddyserver/caddy/v2/notify:go_default_library",
         "//vendor/github.com/caddyserver/certmagic:go_default_library",
         "//vendor/github.com/google/uuid:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go:go_default_library",
+        "//vendor/github.com/lucas-clemente/quic-go/http3:go_default_library",
         "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
         "//vendor/github.com/prometheus/client_golang/prometheus/collectors:go_default_library",
         "//vendor/github.com/prometheus/client_golang/prometheus/promauto:go_default_library",

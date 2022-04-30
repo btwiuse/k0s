@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["json.go"],
+    importmap = "k0s.io/vendor/go.starlark.net/lib/json",
+    importpath = "go.starlark.net/lib/json",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/go.starlark.net/starlark:go_default_library",
+        "//vendor/go.starlark.net/starlarkstruct:go_default_library",
+    ],
+)

@@ -1,7 +1,5 @@
 package hilighter
 
-//go:generate ./scripts/generate_go_funcs
-
 import "regexp"
 
 // Colors maps color names to color codes
@@ -90,7 +88,7 @@ var Modes = map[string]string{
 }
 
 // Version is the package version
-const Version = "1.9.2"
+const Version = "1.10.1"
 
 // Various regular expressions
 var allCodes = regexp.MustCompile(`\x1b\[([0-9;]*m|K)`)

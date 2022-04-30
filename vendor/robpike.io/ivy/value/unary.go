@@ -60,6 +60,17 @@ func self(c Context, v Value) Value {
 	return v
 }
 
+func returnZero(c Context, v Value) Value {
+	return Int(0)
+}
+
+func realPhase(c Context, v Value) Value {
+	if isNegative(v) {
+		return BigFloat{newFloat(c).Set(floatPi)}
+	}
+	return Int(0)
+}
+
 // vectorSelf promotes v to type Vector.
 // v must be a scalar.
 func vectorSelf(c Context, v Value) Value {
@@ -72,21 +83,26 @@ func vectorSelf(c Context, v Value) Value {
 	return NewVector([]Value{v})
 }
 
+// floatValueSelf promotes v to type BigFloat, and wraps it as a value.
+func floatValueSelf(c Context, v Value) Value {
+	return floatSelf(c, v)
+}
+
 // floatSelf promotes v to type BigFloat.
-func floatSelf(c Context, v Value) Value {
+func floatSelf(c Context, v Value) BigFloat {
 	conf := c.Config()
 	switch v := v.(type) {
 	case Int:
-		return v.toType(conf, bigFloatType)
+		return v.toType("float", conf, bigFloatType).(BigFloat)
 	case BigInt:
-		return v.toType(conf, bigFloatType)
+		return v.toType("float", conf, bigFloatType).(BigFloat)
 	case BigRat:
-		return v.toType(conf, bigFloatType)
+		return v.toType("float", conf, bigFloatType).(BigFloat)
 	case BigFloat:
 		return v
 	}
 	Errorf("internal error: floatSelf of non-number")
-	return nil
+	panic("unreached")
 }
 
 // text returns a vector of Chars holding the string representation
@@ -100,7 +116,7 @@ func text(c Context, v Value) Value {
 	return NewVector(elem)
 }
 
-// Implemented in main, handled as a func to avoid a dependency loop.
+// Implemented in package run, handled as a func to avoid a dependency loop.
 var IvyEval func(context Context, s string) Value
 
 var UnaryOps = make(map[string]UnaryOp)
@@ -140,12 +156,37 @@ func init() {
 		},
 
 		{
+			name:        "j",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType: func(c Context, v Value) Value {
+					return newComplex(Int(0), v)
+				},
+				bigIntType: func(c Context, v Value) Value {
+					return newComplex(Int(0), v)
+				},
+				bigRatType: func(c Context, v Value) Value {
+					return newComplex(Int(0), v)
+				},
+				bigFloatType: func(c Context, v Value) Value {
+					return newComplex(Int(0), v)
+				},
+				complexType: func(c Context, v Value) Value {
+					// Multiply by i.
+					u := v.(Complex)
+					return newComplex(c.EvalUnary("-", u.imag), u.real)
+				},
+			},
+		},
+
+		{
 			name: "+",
 			fn: [numType]unaryFn{
 				intType:      self,
 				bigIntType:   self,
 				bigRatType:   self,
 				bigFloatType: self,
+				complexType:  self,
 				vectorType:   self,
 				matrixType:   self,
 			},
@@ -167,6 +208,9 @@ func init() {
 				bigFloatType: func(c Context, v Value) Value {
 					return unaryBigFloatOp(c, bigFloatWrap((*big.Float).Neg), v)
 				},
+				complexType: func(c Context, v Value) Value {
+					return v.(Complex).neg(c)
+				},
 			},
 		},
 
@@ -186,7 +230,7 @@ func init() {
 				bigIntType: func(c Context, v Value) Value {
 					// Zero division cannot happen for unary.
 					return BigRat{
-						Rat: big.NewRat(0, 1).SetFrac(bigOne.Int, v.(BigInt).Int),
+						Rat: big.NewRat(0, 1).SetFrac(bigIntOne.Int, v.(BigInt).Int),
 					}.shrink()
 				},
 				bigRatType: func(c Context, v Value) Value {
@@ -203,6 +247,9 @@ func init() {
 					return BigFloat{
 						Float: one.Quo(one, f.Float),
 					}.shrink()
+				},
+				complexType: func(c Context, v Value) Value {
+					return v.(Complex).recip(c)
 				},
 			},
 		},
@@ -252,7 +299,7 @@ func init() {
 				},
 				bigIntType: func(c Context, v Value) Value {
 					// Lots of ways to do this, here's one.
-					return BigInt{Int: bigInt64(0).Xor(v.(BigInt).Int, bigMinusOne.Int)}.shrink()
+					return BigInt{Int: bigInt64(0).Xor(v.(BigInt).Int, bigIntMinusOne.Int)}.shrink()
 				},
 			},
 		},
@@ -285,6 +332,12 @@ func init() {
 					}
 					return zero
 				},
+				complexType: func(c Context, v Value) Value {
+					if isZero(v) {
+						return one
+					}
+					return zero
+				},
 			},
 		},
 
@@ -307,6 +360,51 @@ func init() {
 				},
 				bigFloatType: func(c Context, v Value) Value {
 					return unaryBigFloatOp(c, bigFloatWrap((*big.Float).Abs), v)
+				},
+				complexType: func(c Context, v Value) Value {
+					return v.(Complex).abs(c)
+				},
+			},
+		},
+
+		{
+			name:        "real",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType:      self,
+				bigIntType:   self,
+				bigRatType:   self,
+				bigFloatType: self,
+				complexType: func(c Context, v Value) Value {
+					return v.(Complex).real
+				},
+			},
+		},
+
+		{
+			name:        "imag",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType:      returnZero,
+				bigIntType:   returnZero,
+				bigRatType:   returnZero,
+				bigFloatType: returnZero,
+				complexType: func(c Context, v Value) Value {
+					return v.(Complex).imag
+				},
+			},
+		},
+
+		{
+			name:        "phase",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType:      realPhase,
+				bigIntType:   realPhase,
+				bigRatType:   realPhase,
+				bigFloatType: realPhase,
+				complexType: func(c Context, v Value) Value {
+					return v.(Complex).phase(c)
 				},
 			},
 		},
@@ -332,7 +430,7 @@ func init() {
 					z := bigInt64(0)
 					z.Quo(i.Num(), i.Denom())
 					if !positive {
-						z.Add(z.Int, bigOne.Int)
+						z.Add(z.Int, bigIntOne.Int)
 						z.Neg(z.Int)
 					}
 					return z.shrink()
@@ -347,7 +445,7 @@ func init() {
 					case big.Exact, big.Below:
 						// Done.
 					case big.Above:
-						i.Sub(i, bigOne.Int)
+						i.Sub(i, bigIntOne.Int)
 					}
 					return BigInt{i}.shrink()
 				},
@@ -375,7 +473,7 @@ func init() {
 					z := bigInt64(0)
 					z.Quo(i.Num(), i.Denom())
 					if positive {
-						z.Add(z.Int, bigOne.Int)
+						z.Add(z.Int, bigIntOne.Int)
 					} else {
 						z.Neg(z.Int)
 					}
@@ -391,7 +489,7 @@ func init() {
 					case big.Exact, big.Above:
 						// Done
 					case big.Below:
-						i.Add(i, bigOne.Int)
+						i.Add(i, bigIntOne.Int)
 					}
 					return BigInt{i}.shrink()
 				},
@@ -436,6 +534,9 @@ func init() {
 				bigFloatType: func(c Context, v Value) Value {
 					return Int(0)
 				},
+				complexType: func(c Context, v Value) Value {
+					return Int(0)
+				},
 				vectorType: func(c Context, v Value) Value {
 					return Int(len(v.(Vector)))
 				},
@@ -453,6 +554,7 @@ func init() {
 				bigIntType:   vectorSelf,
 				bigRatType:   vectorSelf,
 				bigFloatType: vectorSelf,
+				complexType:  vectorSelf,
 				vectorType:   self,
 				matrixType: func(c Context, v Value) Value {
 					return v.(*Matrix).data.Copy()
@@ -469,10 +571,10 @@ func init() {
 				bigRatType:   self,
 				bigFloatType: self,
 				vectorType: func(c Context, v Value) Value {
-					if c == nil {
-						panic("NIL IN gradeUP")
-					}
 					return v.(Vector).grade(c)
+				},
+				matrixType: func(c Context, v Value) Value {
+					return v.(*Matrix).grade(c)
 				},
 			},
 		},
@@ -486,11 +588,10 @@ func init() {
 				bigRatType:   self,
 				bigFloatType: self,
 				vectorType: func(c Context, v Value) Value {
-					x := v.(Vector).grade(c)
-					for i, j := 0, len(x)-1; i < j; i, j = i+1, j-1 {
-						x[i], x[j] = x[j], x[i]
-					}
-					return x
+					return v.(Vector).grade(c).reverse()
+				},
+				matrixType: func(c Context, v Value) Value {
+					return v.(*Matrix).grade(c).reverse()
 				},
 			},
 		},
@@ -503,12 +604,9 @@ func init() {
 				bigIntType:   self,
 				bigRatType:   self,
 				bigFloatType: self,
+				complexType:  self,
 				vectorType: func(c Context, v Value) Value {
-					x := v.(Vector).Copy()
-					for i, j := 0, len(x)-1; i < j; i, j = i+1, j-1 {
-						x[i], x[j] = x[j], x[i]
-					}
-					return x
+					return v.(Vector).reverse()
 				},
 				matrixType: func(c Context, v Value) Value {
 					m := v.(*Matrix).Copy()
@@ -539,8 +637,9 @@ func init() {
 				bigIntType:   self,
 				bigRatType:   self,
 				bigFloatType: self,
+				complexType:  self,
 				vectorType: func(c Context, v Value) Value {
-					return c.EvalUnary("rot", v)
+					return v.(Vector).reverse()
 				},
 				matrixType: func(c Context, v Value) Value {
 					m := v.(*Matrix).Copy()
@@ -575,6 +674,7 @@ func init() {
 				bigIntType:   self,
 				bigRatType:   self,
 				bigFloatType: self,
+				complexType:  self,
 				vectorType: func(c Context, v Value) Value {
 					return v.(Vector).Copy()
 				},
@@ -583,19 +683,8 @@ func init() {
 					if m.Rank() == 1 {
 						Errorf("transp: matrix is vector")
 					}
-					return m.transpose()
+					return m.transpose(c)
 				},
-			},
-		},
-
-		{
-			name:        "cos",
-			elementwise: true,
-			fn: [numType]unaryFn{
-				intType:      func(c Context, v Value) Value { return cos(c, v) },
-				bigIntType:   func(c Context, v Value) Value { return cos(c, v) },
-				bigRatType:   func(c Context, v Value) Value { return cos(c, v) },
-				bigFloatType: func(c Context, v Value) Value { return cos(c, v) },
 			},
 		},
 
@@ -607,6 +696,19 @@ func init() {
 				bigIntType:   func(c Context, v Value) Value { return logn(c, v) },
 				bigRatType:   func(c Context, v Value) Value { return logn(c, v) },
 				bigFloatType: func(c Context, v Value) Value { return logn(c, v) },
+				complexType:  func(c Context, v Value) Value { return logn(c, v) },
+			},
+		},
+
+		{
+			name:        "cos",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType:      func(c Context, v Value) Value { return cos(c, v) },
+				bigIntType:   func(c Context, v Value) Value { return cos(c, v) },
+				bigRatType:   func(c Context, v Value) Value { return cos(c, v) },
+				bigFloatType: func(c Context, v Value) Value { return cos(c, v) },
+				complexType:  func(c Context, v Value) Value { return cos(c, v) },
 			},
 		},
 
@@ -618,6 +720,7 @@ func init() {
 				bigIntType:   func(c Context, v Value) Value { return sin(c, v) },
 				bigRatType:   func(c Context, v Value) Value { return sin(c, v) },
 				bigFloatType: func(c Context, v Value) Value { return sin(c, v) },
+				complexType:  func(c Context, v Value) Value { return sin(c, v) },
 			},
 		},
 
@@ -629,6 +732,7 @@ func init() {
 				bigIntType:   func(c Context, v Value) Value { return tan(c, v) },
 				bigRatType:   func(c Context, v Value) Value { return tan(c, v) },
 				bigFloatType: func(c Context, v Value) Value { return tan(c, v) },
+				complexType:  func(c Context, v Value) Value { return tan(c, v) },
 			},
 		},
 
@@ -640,6 +744,7 @@ func init() {
 				bigIntType:   func(c Context, v Value) Value { return asin(c, v) },
 				bigRatType:   func(c Context, v Value) Value { return asin(c, v) },
 				bigFloatType: func(c Context, v Value) Value { return asin(c, v) },
+				complexType:  func(c Context, v Value) Value { return asin(c, v) },
 			},
 		},
 
@@ -651,6 +756,7 @@ func init() {
 				bigIntType:   func(c Context, v Value) Value { return acos(c, v) },
 				bigRatType:   func(c Context, v Value) Value { return acos(c, v) },
 				bigFloatType: func(c Context, v Value) Value { return acos(c, v) },
+				complexType:  func(c Context, v Value) Value { return acos(c, v) },
 			},
 		},
 
@@ -662,6 +768,7 @@ func init() {
 				bigIntType:   func(c Context, v Value) Value { return atan(c, v) },
 				bigRatType:   func(c Context, v Value) Value { return atan(c, v) },
 				bigFloatType: func(c Context, v Value) Value { return atan(c, v) },
+				complexType:  func(c Context, v Value) Value { return atan(c, v) },
 			},
 		},
 
@@ -673,6 +780,79 @@ func init() {
 				bigIntType:   func(c Context, v Value) Value { return exp(c, v) },
 				bigRatType:   func(c Context, v Value) Value { return exp(c, v) },
 				bigFloatType: func(c Context, v Value) Value { return exp(c, v) },
+				complexType:  func(c Context, v Value) Value { return exp(c, v) },
+			},
+		},
+
+		{
+			name:        "sinh",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType:      func(c Context, v Value) Value { return sinh(c, v) },
+				bigIntType:   func(c Context, v Value) Value { return sinh(c, v) },
+				bigRatType:   func(c Context, v Value) Value { return sinh(c, v) },
+				bigFloatType: func(c Context, v Value) Value { return sinh(c, v) },
+				complexType:  func(c Context, v Value) Value { return sinh(c, v) },
+			},
+		},
+
+		{
+			name:        "cosh",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType:      func(c Context, v Value) Value { return cosh(c, v) },
+				bigIntType:   func(c Context, v Value) Value { return cosh(c, v) },
+				bigRatType:   func(c Context, v Value) Value { return cosh(c, v) },
+				bigFloatType: func(c Context, v Value) Value { return cosh(c, v) },
+				complexType:  func(c Context, v Value) Value { return cosh(c, v) },
+			},
+		},
+
+		{
+			name:        "asinh",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType:      func(c Context, v Value) Value { return asinh(c, v) },
+				bigIntType:   func(c Context, v Value) Value { return asinh(c, v) },
+				bigRatType:   func(c Context, v Value) Value { return asinh(c, v) },
+				bigFloatType: func(c Context, v Value) Value { return asinh(c, v) },
+				complexType:  func(c Context, v Value) Value { return asinh(c, v) },
+			},
+		},
+
+		{
+			name:        "acosh",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType:      func(c Context, v Value) Value { return acosh(c, v) },
+				bigIntType:   func(c Context, v Value) Value { return acosh(c, v) },
+				bigRatType:   func(c Context, v Value) Value { return acosh(c, v) },
+				bigFloatType: func(c Context, v Value) Value { return acosh(c, v) },
+				complexType:  func(c Context, v Value) Value { return acosh(c, v) },
+			},
+		},
+
+		{
+			name:        "atanh",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType:      func(c Context, v Value) Value { return atanh(c, v) },
+				bigIntType:   func(c Context, v Value) Value { return atanh(c, v) },
+				bigRatType:   func(c Context, v Value) Value { return atanh(c, v) },
+				bigFloatType: func(c Context, v Value) Value { return atanh(c, v) },
+				complexType:  func(c Context, v Value) Value { return atanh(c, v) },
+			},
+		},
+
+		{
+			name:        "tanh",
+			elementwise: true,
+			fn: [numType]unaryFn{
+				intType:      func(c Context, v Value) Value { return tanh(c, v) },
+				bigIntType:   func(c Context, v Value) Value { return tanh(c, v) },
+				bigRatType:   func(c Context, v Value) Value { return tanh(c, v) },
+				bigFloatType: func(c Context, v Value) Value { return tanh(c, v) },
+				complexType:  func(c Context, v Value) Value { return tanh(c, v) },
 			},
 		},
 
@@ -684,6 +864,7 @@ func init() {
 				bigIntType:   func(c Context, v Value) Value { return sqrt(c, v) },
 				bigRatType:   func(c Context, v Value) Value { return sqrt(c, v) },
 				bigFloatType: func(c Context, v Value) Value { return sqrt(c, v) },
+				complexType:  func(c Context, v Value) Value { return sqrt(c, v) },
 			},
 		},
 
@@ -710,6 +891,7 @@ func init() {
 				bigIntType:   func(c Context, v Value) Value { return text(c, v) },
 				bigRatType:   func(c Context, v Value) Value { return text(c, v) },
 				bigFloatType: func(c Context, v Value) Value { return text(c, v) },
+				complexType:  func(c Context, v Value) Value { return text(c, v) },
 				vectorType:   func(c Context, v Value) Value { return text(c, v) },
 				matrixType:   func(c Context, v Value) Value { return text(c, v) },
 			},
@@ -736,10 +918,14 @@ func init() {
 			name:        "float",
 			elementwise: true,
 			fn: [numType]unaryFn{
-				intType:      floatSelf,
-				bigIntType:   floatSelf,
-				bigRatType:   floatSelf,
-				bigFloatType: floatSelf,
+				intType:      floatValueSelf,
+				bigIntType:   floatValueSelf,
+				bigRatType:   floatValueSelf,
+				bigFloatType: floatValueSelf,
+				complexType: func(c Context, v Value) Value {
+					u := v.(Complex)
+					return newComplex(floatValueSelf(c, u.real), floatValueSelf(c, u.imag))
+				},
 			},
 		},
 	}

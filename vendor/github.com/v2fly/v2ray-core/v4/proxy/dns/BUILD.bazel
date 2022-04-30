@@ -11,7 +11,6 @@ go_library(
     importpath = "github.com/v2fly/v2ray-core/v4/proxy/dns",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/buf:go_default_library",
@@ -19,8 +18,10 @@ go_library(
         "//vendor/github.com/v2fly/v2ray-core/v4/common/net:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/protocol/dns:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/session:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/signal:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/task:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/features/dns:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/features/policy:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/transport:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/transport/internet:go_default_library",
         "//vendor/golang.org/x/net/dns/dnsmessage:go_default_library",

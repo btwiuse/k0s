@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"io"
 
+	"google.golang.org/grpc"
+
 	"github.com/p4gefau1t/trojan-go/api/service"
 	"github.com/p4gefau1t/trojan-go/common"
 	"github.com/p4gefau1t/trojan-go/log"
 	"github.com/p4gefau1t/trojan-go/option"
-	"google.golang.org/grpc"
 )
 
 type apiController struct {
@@ -104,13 +105,15 @@ func (o *apiController) setUsers(apiClient service.TrojanServerServiceClient) er
 			},
 		},
 	}
-	if *o.add {
+
+	switch {
+	case *o.add:
 		req.Operation = service.SetUsersRequest_Add
-	} else if *o.modify {
+	case *o.modify:
 		req.Operation = service.SetUsersRequest_Modify
-	} else if *o.delete {
+	case *o.delete:
 		req.Operation = service.SetUsersRequest_Delete
-	} else {
+	default:
 		return common.NewError("Invalid operation")
 	}
 

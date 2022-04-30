@@ -39,7 +39,7 @@ func (r *Metadata) WriteTo(w io.Writer) error {
 	if err := r.Address.WriteTo(buf); err != nil {
 		return err
 	}
-	//use tcp by default
+	// use tcp by default
 	r.Address.NetworkType = "tcp"
 	_, err := w.Write(buf.Bytes())
 	return err
@@ -116,21 +116,21 @@ func NewAddressFromHostPort(network string, host string, port int) *Address {
 		if ip.To4() != nil {
 			return &Address{
 				IP:          ip,
-				Port:        int(port),
+				Port:        port,
 				AddressType: IPv4,
 				NetworkType: network,
 			}
 		}
 		return &Address{
 			IP:          ip,
-			Port:        int(port),
+			Port:        port,
 			AddressType: IPv6,
 			NetworkType: network,
 		}
 	}
 	return &Address{
 		DomainName:  host,
-		Port:        int(port),
+		Port:        port,
 		AddressType: DomainName,
 		NetworkType: network,
 	}
@@ -171,7 +171,7 @@ func (a *Address) ReadFrom(r io.Reader) error {
 		if err != nil {
 			return common.NewError("failed to read domain name")
 		}
-		//the fucking browser uses IP as a domain name sometimes
+		// the fucking browser uses IP as a domain name sometimes
 		host := buf[0:length]
 		if ip := net.ParseIP(string(host)); ip != nil {
 			a.IP = ip
@@ -192,6 +192,9 @@ func (a *Address) ReadFrom(r io.Reader) error {
 
 func (a *Address) WriteTo(w io.Writer) error {
 	_, err := w.Write([]byte{byte(a.AddressType)})
+	if err != nil {
+		return err
+	}
 	switch a.AddressType {
 	case DomainName:
 		w.Write([]byte{byte(len(a.DomainName))})

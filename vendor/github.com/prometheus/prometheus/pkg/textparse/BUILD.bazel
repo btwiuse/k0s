@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "interface.go",
+        "openmetricslex.l.go",
+        "openmetricsparse.go",
+        "promlex.l.go",
+        "promparse.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/prometheus/prometheus/pkg/textparse",
+    importpath = "github.com/prometheus/prometheus/pkg/textparse",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/prometheus/prometheus/pkg/labels:go_default_library",
+        "//vendor/github.com/prometheus/prometheus/pkg/value:go_default_library",
+    ],
+)

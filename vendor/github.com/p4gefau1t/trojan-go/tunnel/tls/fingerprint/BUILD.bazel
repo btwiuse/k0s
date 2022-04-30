@@ -6,9 +6,5 @@ go_library(
     importmap = "k0s.io/vendor/github.com/p4gefau1t/trojan-go/tunnel/tls/fingerprint",
     importpath = "github.com/p4gefau1t/trojan-go/tunnel/tls/fingerprint",
     visibility = ["//visibility:public"],
-    deps = [
-        "//vendor/github.com/p4gefau1t/trojan-go/common:go_default_library",
-        "//vendor/github.com/p4gefau1t/trojan-go/log:go_default_library",
-        "//vendor/github.com/refraction-networking/utls:go_default_library",
-    ],
+    deps = ["//vendor/github.com/p4gefau1t/trojan-go/log:go_default_library"],
 )

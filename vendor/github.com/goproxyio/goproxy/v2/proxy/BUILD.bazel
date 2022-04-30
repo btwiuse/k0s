@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "metrics.go",
         "router.go",
         "server.go",
     ],
@@ -12,6 +13,7 @@ go_library(
     deps = [
         "//vendor/github.com/goproxyio/goproxy/v2/renameio:go_default_library",
         "//vendor/github.com/goproxyio/goproxy/v2/sumdb:go_default_library",
+        "//vendor/github.com/prometheus/client_golang/prometheus:go_default_library",
         "//vendor/golang.org/x/mod/module:go_default_library",
     ],
 )

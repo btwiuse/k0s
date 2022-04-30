@@ -77,8 +77,7 @@ type CommandFactory interface {
 	Unmarshal(data []byte) (interface{}, error)
 }
 
-type CommandSwitchAccountFactory struct {
-}
+type CommandSwitchAccountFactory struct{}
 
 func (f *CommandSwitchAccountFactory) Marshal(command interface{}, writer io.Writer) error {
 	cmd, ok := command.(*protocol.CommandSwitchAccount)
@@ -140,7 +139,7 @@ func (f *CommandSwitchAccountFactory) Unmarshal(data []byte) (interface{}, error
 	}
 	cmd.Level = uint32(data[levelStart])
 	timeStart := levelStart + 1
-	if len(data) < timeStart {
+	if len(data) < timeStart+1 {
 		return nil, newError("insufficient length.")
 	}
 	cmd.ValidMin = data[timeStart]

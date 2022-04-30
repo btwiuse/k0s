@@ -16,8 +16,8 @@ go_library(
     importpath = "src.elv.sh/pkg/eval/vars",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/xiaq/persistent/vector:go_default_library",
         "//vendor/src.elv.sh/pkg/diag:go_default_library",
+        "//vendor/src.elv.sh/pkg/eval/errs:go_default_library",
         "//vendor/src.elv.sh/pkg/eval/vals:go_default_library",
     ],
 )

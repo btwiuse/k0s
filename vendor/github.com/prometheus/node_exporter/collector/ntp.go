@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build !nontp
 // +build !nontp
 
 package collector
@@ -22,7 +23,7 @@ import (
 	"time"
 
 	"github.com/beevik/ntp"
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 	"github.com/prometheus/client_golang/prometheus"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -125,7 +126,7 @@ func (c *ntpCollector) Update(ch chan<- prometheus.Metric) error {
 		Timeout: time.Second, // default `ntpdate` timeout
 	})
 	if err != nil {
-		return fmt.Errorf("couldn't get SNTP reply: %s", err)
+		return fmt.Errorf("couldn't get SNTP reply: %w", err)
 	}
 
 	ch <- c.stratum.mustNewConstMetric(float64(resp.Stratum))

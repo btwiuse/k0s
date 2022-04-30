@@ -1,10 +1,10 @@
+//go:build !confonly
 // +build !confonly
 
 package trojan
 
 import (
 	"context"
-	"crypto/tls"
 	"io"
 	"strconv"
 	"time"
@@ -24,6 +24,7 @@ import (
 	"github.com/v2fly/v2ray-core/v4/features/policy"
 	"github.com/v2fly/v2ray-core/v4/features/routing"
 	"github.com/v2fly/v2ray-core/v4/transport/internet"
+	"github.com/v2fly/v2ray-core/v4/transport/internet/tls"
 	"github.com/v2fly/v2ray-core/v4/transport/internet/udp"
 )
 
@@ -275,7 +276,7 @@ func (s *Server) handleConnection(ctx context.Context, sessionPolicy policy.Sess
 		return nil
 	}
 
-	var requestDonePost = task.OnSuccess(requestDone, task.Close(link.Writer))
+	requestDonePost := task.OnSuccess(requestDone, task.Close(link.Writer))
 	if err := task.Run(ctx, requestDonePost, responseDone); err != nil {
 		common.Must(common.Interrupt(link.Reader))
 		common.Must(common.Interrupt(link.Writer))

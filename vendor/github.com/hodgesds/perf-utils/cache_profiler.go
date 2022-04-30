@@ -1,8 +1,11 @@
+//go:build linux
 // +build linux
 
 package perf
 
 import (
+	"fmt"
+
 	"go.uber.org/multierr"
 	"golang.org/x/sys/unix"
 )
@@ -16,6 +19,8 @@ const (
 	L1DataWriteHit = (unix.PERF_COUNT_HW_CACHE_L1D) | (unix.PERF_COUNT_HW_CACHE_OP_WRITE << 8) | (unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16)
 	// L1InstrReadMiss is a constant...
 	L1InstrReadMiss = (unix.PERF_COUNT_HW_CACHE_L1I) | (unix.PERF_COUNT_HW_CACHE_OP_READ << 8) | (unix.PERF_COUNT_HW_CACHE_RESULT_MISS << 16)
+	// L1InstrReadHit is a constant...
+	L1InstrReadHit = (unix.PERF_COUNT_HW_CACHE_L1I) | (unix.PERF_COUNT_HW_CACHE_OP_READ << 8) | (unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16)
 
 	// LLReadHit is a constant...
 	LLReadHit = (unix.PERF_COUNT_HW_CACHE_LL) | (unix.PERF_COUNT_HW_CACHE_OP_READ << 8) | (unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16)
@@ -61,36 +66,59 @@ type cacheProfiler struct {
 }
 
 // NewCacheProfiler returns a new cache profiler.
-func NewCacheProfiler(pid, cpu int, opts ...int) CacheProfiler {
+func NewCacheProfiler(pid, cpu int, opts ...int) (CacheProfiler, error) {
 	profilers := map[int]Profiler{}
+	var e error
 
 	// L1 data
 	op := unix.PERF_COUNT_HW_CACHE_OP_READ
 	result := unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
 	l1dataReadHit, err := NewL1DataProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup L1 data read hit profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[L1DataReadHit] = l1dataReadHit
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_MISS
 	l1dataReadMiss, err := NewL1DataProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup L1 data read miss profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[L1DataReadMiss] = l1dataReadMiss
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_WRITE
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
 	l1dataWriteHit, err := NewL1DataProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup L1 data write profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[L1DataWriteHit] = l1dataWriteHit
 	}
 
 	// L1 instruction
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
+	result = unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
+	l1instrReadHit, err := NewL1InstrProfiler(pid, cpu, op, result, opts...)
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup L1 instruction read hit profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
+		profilers[L1InstrReadHit] = l1instrReadHit
+	}
+
+	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_MISS
 	l1InstrReadMiss, err := NewL1InstrProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup L1 instruction read miss profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[L1InstrReadMiss] = l1InstrReadMiss
 	}
 
@@ -98,28 +126,40 @@ func NewCacheProfiler(pid, cpu int, opts ...int) CacheProfiler {
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
 	llReadHit, err := NewLLCacheProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup last level read hit profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[LLReadHit] = llReadHit
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_MISS
 	llReadMiss, err := NewLLCacheProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup last level read miss profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[LLReadMiss] = llReadMiss
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_WRITE
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
 	llWriteHit, err := NewLLCacheProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup last level write hit profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[LLWriteHit] = llWriteHit
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_WRITE
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_MISS
 	llWriteMiss, err := NewLLCacheProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf("Failed to setup last level write miss profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[LLWriteMiss] = llWriteMiss
 	}
 
@@ -127,28 +167,38 @@ func NewCacheProfiler(pid, cpu int, opts ...int) CacheProfiler {
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
 	dTLBReadHit, err := NewDataTLBProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e, fmt.Errorf("Failed to setup dTLB read hit profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[DataTLBReadHit] = dTLBReadHit
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_MISS
 	dTLBReadMiss, err := NewDataTLBProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e, fmt.Errorf(
+			"Failed to setup dTLB read miss profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[DataTLBReadMiss] = dTLBReadMiss
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_WRITE
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
 	dTLBWriteHit, err := NewDataTLBProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e, fmt.Errorf(
+			"Failed to setup dTLB write hit profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[DataTLBWriteHit] = dTLBWriteHit
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_WRITE
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_MISS
 	dTLBWriteMiss, err := NewDataTLBProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e, fmt.Errorf("Failed to setup dTLB write miss profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[DataTLBWriteMiss] = dTLBWriteMiss
 	}
 
@@ -156,14 +206,20 @@ func NewCacheProfiler(pid, cpu int, opts ...int) CacheProfiler {
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
 	iTLBReadHit, err := NewInstrTLBProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf(
+				"Failed to setup iTLB read hit profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[InstrTLBReadHit] = iTLBReadHit
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_MISS
 	iTLBReadMiss, err := NewInstrTLBProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e, fmt.Errorf("Failed to setup iTLB read miss profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[InstrTLBReadMiss] = iTLBReadMiss
 	}
 
@@ -171,14 +227,22 @@ func NewCacheProfiler(pid, cpu int, opts ...int) CacheProfiler {
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
 	bpuReadHit, err := NewBPUProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf(
+				"Failed to setup BPU read hit profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[BPUReadHit] = bpuReadHit
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_MISS
 	bpuReadMiss, err := NewBPUProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf(
+				"Failed to setup BPU read miss profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[BPUReadMiss] = bpuReadMiss
 	}
 
@@ -186,34 +250,28 @@ func NewCacheProfiler(pid, cpu int, opts ...int) CacheProfiler {
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
 	nodeReadHit, err := NewNodeCacheProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf(
+				"Failed to setup node cache read hit profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[NodeCacheReadHit] = nodeReadHit
 	}
 
 	op = unix.PERF_COUNT_HW_CACHE_OP_READ
 	result = unix.PERF_COUNT_HW_CACHE_RESULT_MISS
 	nodeReadMiss, err := NewNodeCacheProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
+	if err != nil {
+		e = multierr.Append(e,
+			fmt.Errorf(
+				"Failed to setup node cache read miss profiler: pid (%d) cpu (%d) %q", pid, cpu, err))
+	} else {
 		profilers[NodeCacheReadMiss] = nodeReadMiss
-	}
-
-	op = unix.PERF_COUNT_HW_CACHE_OP_WRITE
-	result = unix.PERF_COUNT_HW_CACHE_RESULT_ACCESS
-	nodeWriteHit, err := NewNodeCacheProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
-		profilers[NodeCacheWriteHit] = nodeWriteHit
-	}
-
-	op = unix.PERF_COUNT_HW_CACHE_OP_WRITE
-	result = unix.PERF_COUNT_HW_CACHE_RESULT_MISS
-	nodeWriteMiss, err := NewNodeCacheProfiler(pid, cpu, op, result, opts...)
-	if err == nil {
-		profilers[NodeCacheWriteMiss] = nodeWriteMiss
 	}
 
 	return &cacheProfiler{
 		profilers: profilers,
-	}
+	}, e
 }
 
 // Start is used to start the CacheProfiler, it will return an error if no

@@ -12,7 +12,6 @@ go_library(
     importpath = "github.com/v2fly/v2ray-core/v4/common/log",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/platform:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/serial:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/signal/done:go_default_library",

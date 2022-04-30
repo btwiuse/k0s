@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "embedded.go",
+        "embeddedhash.go",
+        "errors.generated.go",
+        "file.go",
+        "securedload.go",
+        "verify.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/v2fly/v2ray-core/v4/common/platform/securedload",
+    importpath = "github.com/v2fly/v2ray-core/v4/common/platform/securedload",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/v2fly/VSign/insmgr:go_default_library",
+        "//vendor/github.com/v2fly/VSign/signerVerify:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/platform:go_default_library",
+        "//vendor/github.com/v2fly/v2ray-core/v4/common/platform/filesystem:go_default_library",
+    ],
+)

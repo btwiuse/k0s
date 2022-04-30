@@ -12,6 +12,7 @@ import (
 	"io"
 	"os"
 	"sort"
+	"strings"
 
 	"robpike.io/ivy/config"
 	"robpike.io/ivy/exec"
@@ -100,11 +101,16 @@ func save(c *exec.Context, file string) {
 			}
 		}
 		printed[def] = true
-		fmt.Fprintln(out, fn) // TODO: Does this need conf?
+		s := fn.String()
+		if strings.Contains(s, "\n") {
+			// Multiline def must end in blank line.
+			s += "\n"
+		}
+		fmt.Fprintln(out, s)
 	}
 
 	// Global variables.
-	syms := c.Stack[0]
+	syms := c.Globals
 	if len(syms) > 0 {
 		// Set the base strictly to 10 for output.
 		fmt.Fprintf(out, "# Set base 10 for parsing numbers.\n)base 10\n")
@@ -175,6 +181,11 @@ func put(conf *config.Config, out io.Writer, val value.Value) {
 		// Probably not important but it would be nice to fix it.
 		digits := int(float64(val.Prec()) * 0.301029995664) // 10 log 2.
 		fmt.Fprintf(out, "%.*g", digits+1, val.Float)       // Add another digit to be sure.
+	case value.Complex:
+		real, imag := val.Components()
+		put(conf, out, real)
+		fmt.Fprintf(out, "j")
+		put(conf, out, imag)
 	case value.Vector:
 		if val.AllChars() {
 			fmt.Fprintf(out, "%q", val.Sprint(conf))

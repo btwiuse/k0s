@@ -1,5 +1,9 @@
 package vars
 
+import (
+	"src.elv.sh/pkg/eval/errs"
+)
+
 type callback struct {
 	set func(interface{}) error
 	get func() interface{}
@@ -26,7 +30,7 @@ func FromGet(get func() interface{}) Var {
 }
 
 func (cv roCallback) Set(interface{}) error {
-	return ErrSetReadOnlyVar
+	return errs.SetReadOnlyVar{}
 }
 
 func (cv roCallback) Get() interface{} {

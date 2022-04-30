@@ -9,6 +9,8 @@ go_library(
         "fs_utils.go",
         "group_profiler.go",
         "hardware_profiler.go",
+        "msr.go",
+        "pmu.go",
         "process_profile.go",
         "software_profiler.go",
         "utils.go",

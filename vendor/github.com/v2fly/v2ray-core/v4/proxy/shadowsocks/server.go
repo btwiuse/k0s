@@ -1,3 +1,4 @@
+//go:build !confonly
 // +build !confonly
 
 package shadowsocks
@@ -222,7 +223,7 @@ func (s *Server) handleConnection(ctx context.Context, conn internet.Connection,
 		return nil
 	}
 
-	var requestDoneAndCloseWriter = task.OnSuccess(requestDone, task.Close(link.Writer))
+	requestDoneAndCloseWriter := task.OnSuccess(requestDone, task.Close(link.Writer))
 	if err := task.Run(ctx, requestDoneAndCloseWriter, responseDone); err != nil {
 		common.Interrupt(link.Reader)
 		common.Interrupt(link.Writer)

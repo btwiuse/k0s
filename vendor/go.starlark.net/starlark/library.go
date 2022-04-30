@@ -39,6 +39,7 @@ func init() {
 		"None":      None,
 		"True":      True,
 		"False":     False,
+		"abs":       NewBuiltin("abs", abs),
 		"any":       NewBuiltin("any", any),
 		"all":       NewBuiltin("all", all),
 		"bool":      NewBuiltin("bool", bool_),
@@ -122,6 +123,8 @@ var (
 		"lower":          NewBuiltin("lower", string_lower),
 		"lstrip":         NewBuiltin("lstrip", string_strip), // sic
 		"partition":      NewBuiltin("partition", string_partition),
+		"removeprefix":   NewBuiltin("removeprefix", string_removefix),
+		"removesuffix":   NewBuiltin("removesuffix", string_removefix),
 		"replace":        NewBuiltin("replace", string_replace),
 		"rfind":          NewBuiltin("rfind", string_rfind),
 		"rindex":         NewBuiltin("rindex", string_rindex),
@@ -159,6 +162,25 @@ func builtinAttrNames(methods map[string]*Builtin) []string {
 }
 
 // ---- built-in functions ----
+
+// https://github.com/google/starlark-go/blob/master/doc/spec.md#abs
+func abs(thread *Thread, _ *Builtin, args Tuple, kwargs []Tuple) (Value, error) {
+	var x Value
+	if err := UnpackPositionalArgs("abs", args, kwargs, 1, &x); err != nil {
+		return nil, err
+	}
+	switch x := x.(type) {
+	case Float:
+		return Float(math.Abs(float64(x))), nil
+	case Int:
+		if x.Sign() >= 0 {
+			return x, nil
+		}
+		return zero.Sub(x), nil
+	default:
+		return nil, fmt.Errorf("got %s, want int or float", x.Type())
+	}
+}
 
 // https://github.com/google/starlark-go/blob/master/doc/spec.md#all
 func all(thread *Thread, _ *Builtin, args Tuple, kwargs []Tuple) (Value, error) {
@@ -1867,6 +1889,22 @@ func string_partition(_ *Thread, b *Builtin, args Tuple, kwargs []Tuple) (Value,
 		tuple = append(tuple, String(recv[:i]), String(sep), String(recv[i+len(sep):]))
 	}
 	return tuple, nil
+}
+
+// https://github.com/google/starlark-go/blob/master/doc/spec.md#string·removeprefix
+// https://github.com/google/starlark-go/blob/master/doc/spec.md#string·removesuffix
+func string_removefix(_ *Thread, b *Builtin, args Tuple, kwargs []Tuple) (Value, error) {
+	recv := string(b.Receiver().(String))
+	var fix string
+	if err := UnpackPositionalArgs(b.Name(), args, kwargs, 1, &fix); err != nil {
+		return nil, err
+	}
+	if b.name[len("remove")] == 'p' {
+		recv = strings.TrimPrefix(recv, fix)
+	} else {
+		recv = strings.TrimSuffix(recv, fix)
+	}
+	return String(recv), nil
 }
 
 // https://github.com/google/starlark-go/blob/master/doc/spec.md#string·replace

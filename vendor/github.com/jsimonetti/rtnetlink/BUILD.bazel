@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "address.go",
+        "conn.go",
+        "doc.go",
+        "endian.go",
+        "link.go",
+        "neigh.go",
+        "route.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/jsimonetti/rtnetlink",
+    importpath = "github.com/jsimonetti/rtnetlink",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jsimonetti/rtnetlink/internal/unix:go_default_library",
+        "//vendor/github.com/mdlayher/netlink:go_default_library",
+        "//vendor/github.com/mdlayher/netlink/nlenc:go_default_library",
+    ],
+)

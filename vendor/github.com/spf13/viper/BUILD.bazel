@@ -6,6 +6,8 @@ go_library(
         "flags.go",
         "util.go",
         "viper.go",
+        "watch.go",
+        "watch_wasm.go",
     ],
     importmap = "k0s.io/vendor/github.com/spf13/viper",
     importpath = "github.com/spf13/viper",

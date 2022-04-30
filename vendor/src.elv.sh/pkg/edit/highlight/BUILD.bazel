@@ -13,8 +13,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/src.elv.sh/pkg/diag:go_default_library",
-        "//vendor/src.elv.sh/pkg/eval:go_default_library",
         "//vendor/src.elv.sh/pkg/parse:go_default_library",
+        "//vendor/src.elv.sh/pkg/parse/cmpd:go_default_library",
         "//vendor/src.elv.sh/pkg/ui:go_default_library",
     ],
 )

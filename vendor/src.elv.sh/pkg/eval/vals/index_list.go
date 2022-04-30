@@ -55,12 +55,8 @@ func adjustAndCheckIndex(i, n int, includeN bool) (int, error) {
 // the converted structure.
 func ConvertListIndex(rawIndex interface{}, n int) (*ListIndex, error) {
 	switch rawIndex := rawIndex.(type) {
-	case float64:
-		index := int(rawIndex)
-		if rawIndex != float64(index) {
-			return nil, errIndexMustBeInteger
-		}
-		index, err := adjustAndCheckIndex(index, n, false)
+	case int:
+		index, err := adjustAndCheckIndex(rawIndex, n, false)
 		if err != nil {
 			return nil, err
 		}
@@ -88,12 +84,12 @@ func ConvertListIndex(rawIndex interface{}, n int) (*ListIndex, error) {
 			if j < i {
 				if j0 < 0 {
 					return nil, errs.OutOfRange{
-						What:     "negative slice upper index here",
+						What:     "negative slice upper index",
 						ValidLow: strconv.Itoa(i - n), ValidHigh: "-1",
 						Actual: strconv.Itoa(j0)}
 				}
 				return nil, errs.OutOfRange{
-					What:     "slice upper index here",
+					What:     "slice upper index",
 					ValidLow: strconv.Itoa(i), ValidHigh: strconv.Itoa(n),
 					Actual: strconv.Itoa(j0)}
 			}
@@ -119,7 +115,7 @@ func parseIndexString(s string, n int) (slice bool, i int, j int, err error) {
 	if low == "" {
 		i = 0
 	} else {
-		i, err = atoi(low, n)
+		i, err = atoi(low, n+1)
 		if err != nil {
 			return false, 0, 0, err
 		}
@@ -127,11 +123,12 @@ func parseIndexString(s string, n int) (slice bool, i int, j int, err error) {
 	if high == "" {
 		j = n
 	} else {
-		j, err = atoi(high, n)
+		j, err = atoi(high, n+1)
 		if err != nil {
 			return false, 0, 0, err
 		}
 		if sep == "..=" {
+			// TODO: Handle j == MaxInt-1
 			j++
 		}
 	}
@@ -140,9 +137,6 @@ func parseIndexString(s string, n int) (slice bool, i int, j int, err error) {
 }
 
 func splitIndexString(s string) (low, sep, high string) {
-	if i := strings.IndexRune(s, ':'); i >= 0 {
-		return s[:i], ":", s[i+1:]
-	}
 	if i := strings.Index(s, "..="); i >= 0 {
 		return s[:i], "..=", s[i+3:]
 	}
@@ -170,12 +164,12 @@ func atoi(a string, n int) (int, error) {
 
 func posIndexOutOfRange(index string, n int) errs.OutOfRange {
 	return errs.OutOfRange{
-		What:     "index here",
+		What:     "index",
 		ValidLow: "0", ValidHigh: strconv.Itoa(n - 1), Actual: index}
 }
 
 func negIndexOutOfRange(index string, n int) errs.OutOfRange {
 	return errs.OutOfRange{
-		What:     "negative index here",
+		What:     "negative index",
 		ValidLow: strconv.Itoa(-n), ValidHigh: "-1", Actual: index}
 }

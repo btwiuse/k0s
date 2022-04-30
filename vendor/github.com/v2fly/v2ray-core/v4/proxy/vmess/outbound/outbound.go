@@ -1,3 +1,4 @@
+//go:build !confonly
 // +build !confonly
 
 package outbound
@@ -6,6 +7,9 @@ package outbound
 
 import (
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
+	"hash/crc64"
 	"time"
 
 	core "github.com/v2fly/v2ray-core/v4"
@@ -116,6 +120,10 @@ func (h *Handler) Process(ctx context.Context, link *transport.Link, dialer inte
 		request.Option.Clear(protocol.RequestOptionChunkMasking)
 	}
 
+	if account.AuthenticatedLengthExperiment {
+		request.Option.Set(protocol.RequestOptionAuthenticatedLength)
+	}
+
 	input := link.Reader
 	output := link.Writer
 
@@ -124,7 +132,12 @@ func (h *Handler) Process(ctx context.Context, link *transport.Link, dialer inte
 		isAEAD = true
 	}
 
-	session := encoding.NewClientSession(ctx, isAEAD, protocol.DefaultIDHash)
+	hashkdf := hmac.New(sha256.New, []byte("VMessBF"))
+	hashkdf.Write(account.ID.Bytes())
+
+	behaviorSeed := crc64.Checksum(hashkdf.Sum(nil), crc64.MakeTable(crc64.ISO))
+
+	session := encoding.NewClientSession(ctx, isAEAD, protocol.DefaultIDHash, int64(behaviorSeed))
 	sessionPolicy := h.policyManager.ForLevel(request.User.Level)
 
 	ctx, cancel := context.WithCancel(ctx)
@@ -151,7 +164,7 @@ func (h *Handler) Process(ctx context.Context, link *transport.Link, dialer inte
 			return err
 		}
 
-		if request.Option.Has(protocol.RequestOptionChunkStream) {
+		if request.Option.Has(protocol.RequestOptionChunkStream) && !account.NoTerminationSignal {
 			if err := bodyWriter.WriteMultiBuffer(buf.MultiBuffer{}); err != nil {
 				return err
 			}
@@ -175,7 +188,7 @@ func (h *Handler) Process(ctx context.Context, link *transport.Link, dialer inte
 		return buf.Copy(bodyReader, output, buf.UpdateActivity(timer))
 	}
 
-	var responseDonePost = task.OnSuccess(responseDone, task.Close(output))
+	responseDonePost := task.OnSuccess(responseDone, task.Close(output))
 	if err := task.Run(ctx, requestDone, responseDonePost); err != nil {
 		return newError("connection ends").Base(err)
 	}

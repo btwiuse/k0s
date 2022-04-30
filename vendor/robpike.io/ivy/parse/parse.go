@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"robpike.io/ivy/exec"
 	"robpike.io/ivy/scan"
@@ -23,6 +24,10 @@ func tree(e interface{}) string {
 		return fmt.Sprintf("<bigint %s>", e)
 	case value.BigRat:
 		return fmt.Sprintf("<rat %s>", e)
+	case value.BigFloat:
+		return fmt.Sprintf("<float %s>", e)
+	case value.Complex:
+		return fmt.Sprintf("<complex %s>", e)
 	case sliceExpr:
 		s := "<"
 		for i, x := range e {
@@ -33,16 +38,24 @@ func tree(e interface{}) string {
 		}
 		s += ">"
 		return s
-	case variableExpr:
+	case *variableExpr:
 		return fmt.Sprintf("<var %s>", e.name)
 	case *unary:
 		return fmt.Sprintf("(%s %s)", e.op, tree(e.right))
 	case *binary:
-		// Special case for [].
-		if e.op == "[]" {
-			return fmt.Sprintf("(%s[%s])", tree(e.left), tree(e.right))
-		}
 		return fmt.Sprintf("(%s %s %s)", tree(e.left), e.op, tree(e.right))
+	case conditional:
+		return tree(e.binary)
+	case *index:
+		s := fmt.Sprintf("(%s[", tree(e.left))
+		for i, v := range e.right {
+			if i > 0 {
+				s += "; "
+			}
+			s += tree(v)
+		}
+		s += "])"
+		return s
 	case []value.Expr:
 		if len(e) == 1 {
 			return tree(e[0])
@@ -66,15 +79,12 @@ type sliceExpr []value.Expr
 
 func (s sliceExpr) Eval(context value.Context) value.Value {
 	v := make([]value.Value, len(s))
-	// First do all assignments. These two vectors are legal.
-	// y (y=3) and (y=3) y.
-	for i, x := range s {
-		if bin, ok := x.(*binary); ok && bin.op == "=" {
-			s[i] = x.Eval(context)
-		}
-	}
-	for i, x := range s {
-		elem := x.Eval(context)
+	// Evaluate right to left, as is the usual rule.
+	// This also means things like
+	//	x=1000; x + x=2
+	// (yielding 4) work.
+	for i := len(s) - 1; i >= 0; i-- {
+		elem := s[i].Eval(context)
 		// Each element must be a singleton.
 		if !isScalar(elem) {
 			value.Errorf("vector element must be scalar; have %s", elem)
@@ -145,29 +155,41 @@ func (s sliceExpr) allChars() bool {
 
 // variableExpr identifies a variable to be looked up and evaluated.
 type variableExpr struct {
-	name string
+	name  string
+	local int // local index, or 0 for global
 }
 
-func (e variableExpr) Eval(context value.Context) value.Value {
-	v := context.Lookup(e.name)
+func (e *variableExpr) Eval(context value.Context) value.Value {
+	var v value.Value
+	if e.local >= 1 {
+		v = context.Local(e.local)
+	} else {
+		v = context.Global(e.name)
+	}
 	if v == nil {
-		value.Errorf("undefined variable %q", e.name)
+		kind := "global"
+		if e.local >= 1 {
+			kind = "local"
+		}
+		value.Errorf("undefined %s variable %q", kind, e.name)
 	}
 	return v
 }
 
-func (e variableExpr) ProgString() string {
+func (e *variableExpr) ProgString() string {
 	return e.name
 }
 
 // isCompound reports whether the item is a non-trivial expression tree, one that
 // may require parentheses around it when printed to maintain correct evaluation order.
 func isCompound(x interface{}) bool {
-	switch x.(type) {
-	case value.Char, value.Int, value.BigInt, value.BigRat, value.BigFloat, value.Vector, value.Matrix:
+	switch x := x.(type) {
+	case value.Char, value.Int, value.BigInt, value.BigRat, value.BigFloat, value.Complex, value.Vector, value.Matrix:
 		return false
-	case sliceExpr, variableExpr:
+	case sliceExpr, *variableExpr:
 		return false
+	case *index:
+		return isCompound(x.left)
 	default:
 		return true
 	}
@@ -199,10 +221,6 @@ func (b *binary) ProgString() string {
 	} else {
 		left = b.left.ProgString()
 	}
-	// Special case for indexing.
-	if b.op == "[]" {
-		return fmt.Sprintf("%s[%s]", left, b.right.ProgString())
-	}
 	return fmt.Sprintf("%s %s %s", left, b.op, b.right.ProgString())
 }
 
@@ -213,6 +231,51 @@ func (b *binary) Eval(context value.Context) value.Value {
 	rhs := b.right.Eval(context).Inner()
 	lhs := b.left.Eval(context)
 	return context.EvalBinary(lhs, b.op, rhs)
+}
+
+type index struct {
+	op    string
+	left  value.Expr
+	right []value.Expr
+}
+
+func (x *index) ProgString() string {
+	var s strings.Builder
+	if isCompound(x.left) {
+		s.WriteString("(")
+		s.WriteString(x.left.ProgString())
+		s.WriteString(")")
+	} else {
+		s.WriteString(x.left.ProgString())
+	}
+	s.WriteString("[")
+	for i, v := range x.right {
+		if i > 0 {
+			s.WriteString("; ")
+		}
+		s.WriteString(v.ProgString())
+	}
+	s.WriteString("]")
+	return s.String()
+}
+
+func (x *index) Eval(context value.Context) value.Value {
+	return value.Index(context, x, x.left, x.right)
+}
+
+// conditional is a conditional executor: expression ":" expression
+type conditional struct {
+	*binary // Implements Expr through embedding.
+}
+
+var _ = value.Decomposable(conditional{})
+
+func (c conditional) Operator() string {
+	return ":"
+}
+
+func (c conditional) Operands() (left, right value.Expr) {
+	return c.left, c.right
 }
 
 // Parser stores the state for the ivy parser.
@@ -355,10 +418,19 @@ func (p *Parser) expressionList() ([]value.Expr, bool) {
 }
 
 // statementList:
-//	expr
-//	expr ';' expr
+//	expr [':' expr] [';' statementList]
 func (p *Parser) statementList() ([]value.Expr, bool) {
 	expr := p.expr()
+	if expr != nil && p.peek().Type == scan.Colon {
+		tok := p.next()
+		expr = conditional{
+			&binary{
+				left:  expr,
+				op:    tok.Text,
+				right: p.expr(),
+			},
+		}
+	}
 	var exprs []value.Expr
 	if expr != nil {
 		exprs = []value.Expr{expr}
@@ -378,13 +450,10 @@ func (p *Parser) statementList() ([]value.Expr, bool) {
 //	operand binop expr
 func (p *Parser) expr() value.Expr {
 	tok := p.next()
-	if p.peek().Type == scan.Assign && tok.Type != scan.Identifier {
-		p.errorf("cannot assign to %s", tok)
-	}
 	expr := p.operand(tok, true)
 	tok = p.peek()
 	switch tok.Type {
-	case scan.EOF, scan.RightParen, scan.RightBrack, scan.Semicolon:
+	case scan.EOF, scan.RightParen, scan.RightBrack, scan.Semicolon, scan.Colon:
 		return expr
 	case scan.Identifier:
 		if p.context.DefinedBinary(tok.Text) {
@@ -398,13 +467,7 @@ func (p *Parser) expr() value.Expr {
 	case scan.Assign:
 		p.next()
 		switch lhs := expr.(type) {
-		case variableExpr:
-			return &binary{
-				left:  lhs,
-				op:    tok.Text,
-				right: p.expr(),
-			}
-		case *binary:
+		case *variableExpr, *index:
 			return &binary{
 				left:  lhs,
 				op:    tok.Text,
@@ -448,7 +511,7 @@ func (p *Parser) operand(tok scan.Token, indexOK bool) value.Expr {
 			break
 		}
 		fallthrough
-	case scan.Number, scan.Rational, scan.String, scan.LeftParen:
+	case scan.Number, scan.Rational, scan.Complex, scan.String, scan.LeftParen:
 		expr = p.numberOrVector(tok)
 	default:
 		p.errorf("unexpected %s", tok)
@@ -466,15 +529,18 @@ func (p *Parser) operand(tok scan.Token, indexOK bool) value.Expr {
 func (p *Parser) index(expr value.Expr) value.Expr {
 	for p.peek().Type == scan.LeftBrack {
 		p.next()
-		index := p.expr()
+		list := []value.Expr{p.expr()}
 		tok := p.next()
+		for tok.Type == scan.Semicolon {
+			list = append(list, p.expr())
+			tok = p.next()
+		}
 		if tok.Type != scan.RightBrack {
 			p.errorf("expected right bracket, found %s", tok)
 		}
-		expr = &binary{
-			op:    "[]",
+		expr = &index{
 			left:  expr,
-			right: index,
+			right: list,
 		}
 	}
 	return expr
@@ -495,7 +561,7 @@ func (p *Parser) number(tok scan.Token) (expr value.Expr, str string) {
 		expr = p.variable(text)
 	case scan.String:
 		str = value.ParseString(text)
-	case scan.Number, scan.Rational:
+	case scan.Number, scan.Rational, scan.Complex:
 		expr, err = value.Parse(p.context.Config(), text)
 	case scan.LeftParen:
 		expr = p.expr()
@@ -519,7 +585,7 @@ func (p *Parser) numberOrVector(tok scan.Token) value.Expr {
 	expr, str := p.number(tok)
 	done := true
 	switch p.peek().Type {
-	case scan.Number, scan.Rational, scan.String, scan.Identifier, scan.LeftParen:
+	case scan.Number, scan.Rational, scan.Complex, scan.String, scan.Identifier, scan.LeftParen:
 		// Further vector elements follow.
 		done = false
 	}
@@ -542,7 +608,7 @@ func (p *Parser) numberOrVector(tok scan.Token) value.Expr {
 					break Loop
 				}
 				fallthrough
-			case scan.Number, scan.Rational, scan.String:
+			case scan.Number, scan.Rational, scan.Complex, scan.String:
 				expr, str = p.number(p.next())
 				if expr == nil {
 					// Must be a string.
@@ -565,8 +631,8 @@ func isScalar(v value.Value) bool {
 	return v.Rank() == 0
 }
 
-func (p *Parser) variable(name string) variableExpr {
-	return variableExpr{
+func (p *Parser) variable(name string) *variableExpr {
+	return &variableExpr{
 		name: name,
 	}
 }

@@ -1,10 +1,13 @@
 package pathname
 
 import (
+	"io/fs"
 	"os"
 	"os/user"
 	"path/filepath"
 	"strings"
+
+	"gitlab.com/mjwhitta/errors"
 )
 
 // Basename wraps filepath.Base(path str).
@@ -17,16 +20,21 @@ func Dirname(path string) string {
 	return filepath.Dir(ExpandPath(path))
 }
 
-// DoesExist returns true if the specified path exists on disk, false
-// otherwise.
-func DoesExist(path string) bool {
-	if _, err := os.Stat(ExpandPath(path)); err == nil {
-		return true
-	} else if os.IsNotExist(err) {
-		return false
-	} else {
-		panic(err)
+// DoesExist returns whether or not the file exists on disk. An error
+// is returned, if the path is not accessible.
+func DoesExist(path string) (bool, error) {
+	var e error
+
+	if _, e = os.Stat(ExpandPath(path)); e == nil {
+		return true, nil
+	} else if os.IsNotExist(e) {
+		return false, nil
 	}
+
+	e = e.(*fs.PathError).Err
+	e = errors.Newf("path %s not accesssible: %w", path, e)
+
+	return false, e
 }
 
 // ExpandPath will expand the specified path accounting for ~ or ~user

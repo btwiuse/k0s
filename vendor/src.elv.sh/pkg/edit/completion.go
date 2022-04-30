@@ -4,20 +4,24 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"reflect"
 	"strings"
 	"sync"
 	"unicode/utf8"
 
-	"github.com/xiaq/persistent/hash"
 	"src.elv.sh/pkg/cli"
-	"src.elv.sh/pkg/cli/mode"
+	"src.elv.sh/pkg/cli/modes"
 	"src.elv.sh/pkg/cli/tk"
 	"src.elv.sh/pkg/edit/complete"
 	"src.elv.sh/pkg/eval"
+	"src.elv.sh/pkg/eval/errs"
 	"src.elv.sh/pkg/eval/vals"
+	"src.elv.sh/pkg/eval/vars"
 	"src.elv.sh/pkg/fsutil"
 	"src.elv.sh/pkg/parse"
+	"src.elv.sh/pkg/persistent/hash"
 	"src.elv.sh/pkg/strutil"
+	"src.elv.sh/pkg/ui"
 )
 
 //elvdoc:var completion:arg-completer
@@ -87,21 +91,29 @@ import (
 
 type complexCandidateOpts struct {
 	CodeSuffix string
-	Display    string
+	Display    interface{}
 }
 
 func (*complexCandidateOpts) SetDefaultOptions() {}
 
-func complexCandidate(fm *eval.Frame, opts complexCandidateOpts, stem string) complexItem {
-	display := opts.Display
-	if display == "" {
-		display = stem
+func complexCandidate(fm *eval.Frame, opts complexCandidateOpts, stem string) (complexItem, error) {
+	var display ui.Text
+	switch displayOpt := opts.Display.(type) {
+	case nil:
+		// Leave display = nil
+	case string:
+		display = ui.T(displayOpt)
+	case ui.Text:
+		display = displayOpt
+	default:
+		return complexItem{}, errs.BadValue{What: "&display",
+			Valid: "string or styled", Actual: vals.ReprPlain(displayOpt)}
 	}
 	return complexItem{
 		Stem:       stem,
 		CodeSuffix: opts.CodeSuffix,
 		Display:    display,
-	}
+	}, nil
 }
 
 //elvdoc:fn match-prefix
@@ -117,8 +129,8 @@ func complexCandidate(fm *eval.Frame, opts complexCandidateOpts, stem string) co
 //
 // ```elvish
 // use str
-// fn match-prefix [seed @input]{
-//   each [x]{ str:has-prefix (to-string $x) $seed } $@input
+// fn match-prefix {|seed @input|
+//   each {|x| str:has-prefix (to-string $x) $seed } $@input
 // }
 // ```
 
@@ -145,8 +157,8 @@ func complexCandidate(fm *eval.Frame, opts complexCandidateOpts, stem string) co
 //
 // ```elvish
 // use str
-// fn match-substr [seed @input]{
-//   each [x]{ str:has-contains (to-string $x) $seed } $@input
+// fn match-substr {|seed @input|
+//   each {|x| str:has-contains (to-string $x) $seed } $@input
 // }
 // ```
 
@@ -160,11 +172,15 @@ func complexCandidate(fm *eval.Frame, opts complexCandidateOpts, stem string) co
 // prefix and that prefix starts with the seed, inserts the prefix instead.
 
 func completionStart(app cli.App, bindings tk.Bindings, cfg complete.Config, smart bool) {
-	buf := app.CodeArea().CopyState().Buffer
+	codeArea, ok := focusedCodeArea(app)
+	if !ok {
+		return
+	}
+	buf := codeArea.CopyState().Buffer
 	result, err := complete.Complete(
 		complete.CodeBuffer{Content: buf.Content, Dot: buf.Dot}, cfg)
 	if err != nil {
-		app.Notify(err.Error())
+		app.Notify(modes.ErrorText(err))
 		return
 	}
 	if smart {
@@ -181,7 +197,7 @@ func completionStart(app cli.App, bindings tk.Bindings, cfg complete.Config, sma
 		}
 		if prefix != "" {
 			insertedPrefix := false
-			app.CodeArea().MutateState(func(s *tk.CodeAreaState) {
+			codeArea.MutateState(func(s *tk.CodeAreaState) {
 				rep := s.Buffer.Content[result.Replace.From:result.Replace.To]
 				if len(prefix) > len(rep) && strings.HasPrefix(prefix, rep) {
 					s.Pending = tk.PendingCode{
@@ -196,14 +212,15 @@ func completionStart(app cli.App, bindings tk.Bindings, cfg complete.Config, sma
 			}
 		}
 	}
-	w, err := mode.NewCompletion(app, mode.CompletionSpec{
+	w, err := modes.NewCompletion(app, modes.CompletionSpec{
 		Name: result.Name, Replace: result.Replace, Items: result.Items,
-		Bindings: bindings})
+		Filter: filterSpec, Bindings: bindings,
+	})
 	if w != nil {
-		app.SetAddon(w, false)
+		app.PushAddon(w)
 	}
 	if err != nil {
-		app.Notify(err.Error())
+		app.Notify(modes.ErrorText(err))
 	}
 }
 
@@ -218,7 +235,7 @@ func initCompletion(ed *Editor, ev *eval.Evaler, nb eval.NsBuilder) {
 	argGeneratorMapVar := newMapVar(vals.EmptyMap)
 	cfg := func() complete.Config {
 		return complete.Config{
-			PureEvaler: pureEvaler{ev},
+			PureEvaler: PureEvaler(ev),
 			Filterer: adaptMatcherMap(
 				ed, ev, matcherMapVar.Get().(vals.Map)),
 			ArgGenerator: adaptArgGeneratorMap(
@@ -228,7 +245,7 @@ func initCompletion(ed *Editor, ev *eval.Evaler, nb eval.NsBuilder) {
 	generateForSudo := func(args []string) ([]complete.RawItem, error) {
 		return complete.GenerateForSudo(cfg(), args)
 	}
-	nb.AddGoFns("<edit>", map[string]interface{}{
+	nb.AddGoFns(map[string]interface{}{
 		"complete-filename": wrapArgGenerator(complete.GenerateFileNames),
 		"complete-getopt":   completeGetopt,
 		"complete-sudo":     wrapArgGenerator(generateForSudo),
@@ -239,21 +256,23 @@ func initCompletion(ed *Editor, ev *eval.Evaler, nb eval.NsBuilder) {
 	})
 	app := ed.app
 	nb.AddNs("completion",
-		eval.NsBuilder{
-			"arg-completer": argGeneratorMapVar,
-			"binding":       bindingVar,
-			"matcher":       matcherMapVar,
-		}.AddGoFns("<edit:completion>:", map[string]interface{}{
-			"accept":      func() { listingAccept(app) },
-			"smart-start": func() { completionStart(app, bindings, cfg(), true) },
-			"start":       func() { completionStart(app, bindings, cfg(), false) },
-			"up":          func() { listingUp(app) },
-			"down":        func() { listingDown(app) },
-			"up-cycle":    func() { listingUpCycle(app) },
-			"down-cycle":  func() { listingDownCycle(app) },
-			"left":        func() { listingLeft(app) },
-			"right":       func() { listingRight(app) },
-		}).Ns())
+		eval.BuildNsNamed("edit:completion").
+			AddVars(map[string]vars.Var{
+				"arg-completer": argGeneratorMapVar,
+				"binding":       bindingVar,
+				"matcher":       matcherMapVar,
+			}).
+			AddGoFns(map[string]interface{}{
+				"accept":      func() { listingAccept(app) },
+				"smart-start": func() { completionStart(app, bindings, cfg(), true) },
+				"start":       func() { completionStart(app, bindings, cfg(), false) },
+				"up":          func() { listingUp(app) },
+				"down":        func() { listingDown(app) },
+				"up-cycle":    func() { listingUpCycle(app) },
+				"down-cycle":  func() { listingDownCycle(app) },
+				"left":        func() { listingLeft(app) },
+				"right":       func() { listingRight(app) },
+			}))
 }
 
 // A wrapper type implementing Elvish value methods.
@@ -280,21 +299,21 @@ func (c complexItem) Kind() string { return "map" }
 func (c complexItem) Equal(a interface{}) bool {
 	rhs, ok := a.(complexItem)
 	return ok && c.Stem == rhs.Stem &&
-		c.CodeSuffix == rhs.CodeSuffix && c.Display == rhs.Display
+		c.CodeSuffix == rhs.CodeSuffix && reflect.DeepEqual(c.Display, rhs.Display)
 }
 
 func (c complexItem) Hash() uint32 {
 	h := hash.DJBInit
 	h = hash.DJBCombine(h, hash.String(c.Stem))
 	h = hash.DJBCombine(h, hash.String(c.CodeSuffix))
-	h = hash.DJBCombine(h, hash.String(c.Display))
+	// TODO: Add c.Display
 	return h
 }
 
 func (c complexItem) Repr(indent int) string {
 	// TODO(xiaq): Pretty-print when indent >= 0
 	return fmt.Sprintf("(edit:complex-candidate %s &code-suffix=%s &display=%s)",
-		parse.Quote(c.Stem), parse.Quote(c.CodeSuffix), parse.Quote(c.Display))
+		parse.Quote(c.Stem), parse.Quote(c.CodeSuffix), vals.Repr(c.Display, indent+1))
 }
 
 type wrappedArgGenerator func(*eval.Frame, ...string) error
@@ -307,15 +326,20 @@ func wrapArgGenerator(gen complete.ArgGenerator) wrappedArgGenerator {
 		if err != nil {
 			return err
 		}
-		ch := fm.OutputChan()
+		out := fm.ValueOutput()
 		for _, rawItem := range rawItems {
+			var v interface{}
 			switch rawItem := rawItem.(type) {
 			case complete.ComplexItem:
-				ch <- complexItem(rawItem)
+				v = complexItem(rawItem)
 			case complete.PlainItem:
-				ch <- string(rawItem)
+				v = string(rawItem)
 			default:
-				ch <- rawItem
+				v = rawItem
+			}
+			err := out.Put(v)
+			if err != nil {
+				return err
 			}
 		}
 		return nil
@@ -355,23 +379,31 @@ type matcherOpts struct {
 
 func (*matcherOpts) SetDefaultOptions() {}
 
-type wrappedMatcher func(fm *eval.Frame, opts matcherOpts, seed string, inputs eval.Inputs)
+type wrappedMatcher func(fm *eval.Frame, opts matcherOpts, seed string, inputs eval.Inputs) error
 
 func wrapMatcher(m matcher) wrappedMatcher {
-	return func(fm *eval.Frame, opts matcherOpts, seed string, inputs eval.Inputs) {
-		out := fm.OutputChan()
+	return func(fm *eval.Frame, opts matcherOpts, seed string, inputs eval.Inputs) error {
+		out := fm.ValueOutput()
+		var errOut error
 		if opts.IgnoreCase || (opts.SmartCase && seed == strings.ToLower(seed)) {
 			if opts.IgnoreCase {
 				seed = strings.ToLower(seed)
 			}
 			inputs(func(v interface{}) {
-				out <- m(strings.ToLower(vals.ToString(v)), seed)
+				if errOut != nil {
+					return
+				}
+				errOut = out.Put(m(strings.ToLower(vals.ToString(v)), seed))
 			})
 		} else {
 			inputs(func(v interface{}) {
-				out <- m(vals.ToString(v), seed)
+				if errOut != nil {
+					return
+				}
+				errOut = out.Put(m(vals.ToString(v), seed))
 			})
 		}
+		return errOut
 	}
 }
 
@@ -510,6 +542,9 @@ func lookupFn(m vals.Map, ctxName string) (eval.Callable, bool) {
 }
 
 type pureEvaler struct{ ev *eval.Evaler }
+
+// PureEvaler returns a complete.PureEvaler from an eval.Evaler.
+func PureEvaler(ev *eval.Evaler) complete.PureEvaler { return pureEvaler{ev} }
 
 func (pureEvaler) EachExternal(f func(string)) { fsutil.EachExternal(f) }
 

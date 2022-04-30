@@ -6,6 +6,7 @@
 package buildinfo
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"runtime"
@@ -15,38 +16,72 @@ import (
 
 // Version identifies the version of Elvish. On development commits, it
 // identifies the next release.
-const Version = "v0.16.0"
+const Version = "0.18.0"
 
-// VersionSuffix is appended to Version in the output of "elvish -version" and
-// "elvish -buildinfo" to build the full version string. This can be overriden
-// when building Elvish; see PACKAGING.md for details.
-var VersionSuffix = "-dev.unknown"
+// VersionSuffix is appended to Version to build the full version string. It is public so it can be
+// overridden when building Elvish; see PACKAGING.md for details.
+var VersionSuffix = ""
 
 // Reproducible identifies whether the build is reproducible. This can be
-// overriden when building Elvish; see PACKAGING.md for details.
+// overridden when building Elvish; see PACKAGING.md for details.
 var Reproducible = "false"
 
+// Type contains all the build information fields.
+type Type struct {
+	Version      string `json:"version"`
+	Reproducible bool   `json:"reproducible"`
+	GoVersion    string `json:"goversion"`
+}
+
+func (Type) IsStructMap() {}
+
+// Value contains all the build information.
+var Value = Type{
+	Version:      Version + VersionSuffix,
+	Reproducible: Reproducible == "true",
+	GoVersion:    runtime.Version(),
+}
+
 // Program is the buildinfo subprogram.
-var Program prog.Program = program{}
+type Program struct {
+	version, buildinfo bool
+	json               *bool
+}
 
-type program struct{}
+func (p *Program) RegisterFlags(fs *prog.FlagSet) {
+	fs.BoolVar(&p.version, "version", false,
+		"Output the Elvish version and quit")
+	fs.BoolVar(&p.buildinfo, "buildinfo", false,
+		"Output information about the Elvish build and quit")
+	p.json = fs.JSON()
+}
 
-func (program) ShouldRun(f *prog.Flags) bool { return f.Version || f.BuildInfo }
-
-func (program) Run(fds [3]*os.File, f *prog.Flags, _ []string) error {
-	fullVersion := Version + VersionSuffix
-	if f.Version {
-		fmt.Fprintln(fds[1], fullVersion)
-		return nil
-	}
-	if f.JSON {
-		fmt.Fprintf(fds[1],
-			`{"version":%s,"goversion":%s,"reproducible":%v}`+"\n",
-			quoteJSON(fullVersion), quoteJSON(runtime.Version()), Reproducible)
-	} else {
-		fmt.Fprintln(fds[1], "Version:", fullVersion)
-		fmt.Fprintln(fds[1], "Go version:", runtime.Version())
-		fmt.Fprintln(fds[1], "Reproducible build:", Reproducible)
+func (p *Program) Run(fds [3]*os.File, _ []string) error {
+	switch {
+	case p.buildinfo:
+		if *p.json {
+			fmt.Fprintln(fds[1], mustToJSON(Value))
+		} else {
+			fmt.Fprintln(fds[1], "Version:", Value.Version)
+			fmt.Fprintln(fds[1], "Go version:", Value.GoVersion)
+			fmt.Fprintln(fds[1], "Reproducible build:", Value.Reproducible)
+		}
+	case p.version:
+		if *p.json {
+			fmt.Fprintln(fds[1], mustToJSON(Value.Version))
+		} else {
+			fmt.Fprintln(fds[1], Value.Version)
+		}
+	default:
+		return prog.ErrNextProgram
 	}
 	return nil
+}
+
+func mustToJSON(v interface{}) string {
+	b, err := json.Marshal(v)
+	if err != nil {
+		panic(err)
+	}
+	return string(b)
 }

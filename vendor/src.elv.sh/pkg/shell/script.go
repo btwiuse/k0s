@@ -4,30 +4,24 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"unicode/utf8"
 
 	"src.elv.sh/pkg/diag"
+	"src.elv.sh/pkg/eval"
 	"src.elv.sh/pkg/parse"
 )
 
-// ScriptConfig keeps configuration for the script mode.
-type ScriptConfig struct {
-	SpawnDaemon bool
-	Paths       Paths
-
+// Configuration for the script mode.
+type scriptCfg struct {
 	Cmd         bool
 	CompileOnly bool
 	JSON        bool
 }
 
-// Script executes a shell script.
-func Script(fds [3]*os.File, args []string, cfg *ScriptConfig) int {
-	ev, cleanup := setupShell(fds, cfg.Paths, cfg.SpawnDaemon)
-	defer cleanup()
-
+// Executes a shell script.
+func script(ev *eval.Evaler, fds [3]*os.File, args []string, cfg *scriptCfg) int {
 	arg0 := args[0]
 	ev.SetArgs(args[1:])
 
@@ -67,7 +61,7 @@ func Script(fds [3]*os.File, args []string, cfg *ScriptConfig) int {
 			return 2
 		}
 	} else {
-		err := evalInTTY(ev, fds, src)
+		err := evalInTTY(fds, ev, nil, src)
 		if err != nil {
 			diag.ShowError(fds[2], err)
 			return 2
@@ -80,7 +74,7 @@ func Script(fds [3]*os.File, args []string, cfg *ScriptConfig) int {
 var errSourceNotUTF8 = errors.New("source is not UTF-8")
 
 func readFileUTF8(fname string) (string, error) {
-	bytes, err := ioutil.ReadFile(fname)
+	bytes, err := os.ReadFile(fname)
 	if err != nil {
 		return "", err
 	}

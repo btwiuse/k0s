@@ -40,6 +40,8 @@ func errToStatus(err error) int {
 		return http.StatusForbidden
 	case errors.Is(err, libErrors.ErrInvalidRequestParams):
 		return http.StatusBadRequest
+	case errors.Is(err, libErrors.ErrRootUserDeletion):
+		return http.StatusForbidden
 	default:
 		return http.StatusInternalServerError
 	}
@@ -54,11 +56,13 @@ func stripPrefix(prefix string, h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		p := strings.TrimPrefix(r.URL.Path, prefix)
+		rp := strings.TrimPrefix(r.URL.RawPath, prefix)
 		r2 := new(http.Request)
 		*r2 = *r
 		r2.URL = new(url.URL)
 		*r2.URL = *r.URL
 		r2.URL.Path = p
+		r2.URL.RawPath = rp
 		h.ServeHTTP(w, r2)
 	})
 }

@@ -6,4 +6,5 @@ go_library(
     importmap = "k0s.io/vendor/src.elv.sh/pkg/eval/errs",
     importpath = "src.elv.sh/pkg/eval/errs",
     visibility = ["//visibility:public"],
+    deps = ["//vendor/src.elv.sh/pkg/parse:go_default_library"],
 )

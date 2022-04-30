@@ -103,15 +103,15 @@ func handlePingbackConn(conn net.Conn, expect []byte) error {
 	return nil
 }
 
-// loadConfig loads the config from configFile and adapts it
+// LoadConfig loads the config from configFile and adapts it
 // using adapterName. If adapterName is specified, configFile
 // must be also. If no configFile is specified, it tries
 // loading a default config file. The lack of a config file is
 // not treated as an error, but false will be returned if
 // there is no config available. It prints any warnings to stderr,
 // and returns the resulting JSON config bytes along with
-// whether a config file was loaded or not.
-func loadConfig(configFile, adapterName string) ([]byte, string, error) {
+// the name of the loaded config file (if any).
+func LoadConfig(configFile, adapterName string) ([]byte, string, error) {
 	// specifying an adapter without a config file is ambiguous
 	if adapterName != "" && configFile == "" {
 		return nil, "", fmt.Errorf("cannot adapt config without config file (use --config)")
@@ -262,7 +262,7 @@ func watchConfigFile(filename, adapterName string) {
 		lastModified = info.ModTime()
 
 		// load the contents of the file
-		config, _, err := loadConfig(filename, adapterName)
+		config, _, err := LoadConfig(filename, adapterName)
 		if err != nil {
 			logger().Error("unable to load latest config", zap.Error(err))
 			continue
@@ -368,42 +368,68 @@ func loadEnvFromFile(envFile string) error {
 	return nil
 }
 
+// parseEnvFile parses an env file from KEY=VALUE format.
+// It's pretty naive. Limited value quotation is supported,
+// but variable and command expansions are not supported.
 func parseEnvFile(envInput io.Reader) (map[string]string, error) {
 	envMap := make(map[string]string)
 
 	scanner := bufio.NewScanner(envInput)
-	var line string
-	lineNumber := 0
+	var lineNumber int
 
 	for scanner.Scan() {
-		line = strings.TrimSpace(scanner.Text())
+		line := strings.TrimSpace(scanner.Text())
 		lineNumber++
 
-		// skip lines starting with comment
-		if strings.HasPrefix(line, "#") {
+		// skip empty lines and lines starting with comment
+		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
 
-		// skip empty line
-		if len(line) == 0 {
-			continue
-		}
-
+		// split line into key and value
 		fields := strings.SplitN(line, "=", 2)
 		if len(fields) != 2 {
 			return nil, fmt.Errorf("can't parse line %d; line should be in KEY=VALUE format", lineNumber)
 		}
+		key, val := fields[0], fields[1]
 
-		if strings.Contains(fields[0], " ") {
-			return nil, fmt.Errorf("bad key on line %d: contains whitespace", lineNumber)
-		}
+		// sometimes keys are prefixed by "export " so file can be sourced in bash; ignore it here
+		key = strings.TrimPrefix(key, "export ")
 
-		key := fields[0]
-		val := fields[1]
-
+		// validate key and value
 		if key == "" {
 			return nil, fmt.Errorf("missing or empty key on line %d", lineNumber)
 		}
+		if strings.Contains(key, " ") {
+			return nil, fmt.Errorf("invalid key on line %d: contains whitespace: %s", lineNumber, key)
+		}
+		if strings.HasPrefix(val, " ") || strings.HasPrefix(val, "\t") {
+			return nil, fmt.Errorf("invalid value on line %d: whitespace before value: '%s'", lineNumber, val)
+		}
+
+		// remove any trailing comment after value
+		if commentStart := strings.Index(val, "#"); commentStart > 0 {
+			before := val[commentStart-1]
+			if before == '\t' || before == ' ' {
+				val = strings.TrimRight(val[:commentStart], " \t")
+			}
+		}
+
+		// quoted value: support newlines
+		if strings.HasPrefix(val, `"`) {
+			for !(strings.HasSuffix(line, `"`) && !strings.HasSuffix(line, `\"`)) {
+				val = strings.ReplaceAll(val, `\"`, `"`)
+				if !scanner.Scan() {
+					break
+				}
+				lineNumber++
+				line = strings.ReplaceAll(scanner.Text(), `\"`, `"`)
+				val += "\n" + line
+			}
+			val = strings.TrimPrefix(val, `"`)
+			val = strings.TrimSuffix(val, `"`)
+		}
+
 		envMap[key] = val
 	}
 

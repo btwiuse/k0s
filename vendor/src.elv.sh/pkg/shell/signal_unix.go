@@ -1,16 +1,18 @@
+//go:build !windows && !plan9
 // +build !windows,!plan9
 
 package shell
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"syscall"
 
 	"src.elv.sh/pkg/sys"
 )
 
-func handleSignal(sig os.Signal, stderr *os.File) {
+func handleSignal(sig os.Signal, stderr io.Writer) {
 	switch sig {
 	case syscall.SIGHUP:
 		syscall.Kill(0, syscall.SIGHUP)

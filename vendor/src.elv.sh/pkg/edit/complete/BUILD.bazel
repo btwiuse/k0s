@@ -7,7 +7,7 @@ go_library(
         "completers.go",
         "filterers.go",
         "generators.go",
-        "node_utils.go",
+        "node_path.go",
         "raw_item.go",
     ],
     importmap = "k0s.io/vendor/src.elv.sh/pkg/edit/complete",
@@ -15,13 +15,12 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/src.elv.sh/pkg/cli/lscolors:go_default_library",
-        "//vendor/src.elv.sh/pkg/cli/mode:go_default_library",
+        "//vendor/src.elv.sh/pkg/cli/modes:go_default_library",
         "//vendor/src.elv.sh/pkg/diag:go_default_library",
         "//vendor/src.elv.sh/pkg/eval:go_default_library",
         "//vendor/src.elv.sh/pkg/eval/vals:go_default_library",
         "//vendor/src.elv.sh/pkg/fsutil:go_default_library",
         "//vendor/src.elv.sh/pkg/parse:go_default_library",
-        "//vendor/src.elv.sh/pkg/parse/parseutil:go_default_library",
         "//vendor/src.elv.sh/pkg/ui:go_default_library",
     ],
 )

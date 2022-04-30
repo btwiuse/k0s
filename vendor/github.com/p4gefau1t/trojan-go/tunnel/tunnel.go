@@ -37,7 +37,7 @@ type ConnListener interface {
 }
 
 // PacketListener accept UDP packet stream
-// We don't have any tunnel based on packet streams, so AcceptPacket will always recieve a real PacketConn
+// We don't have any tunnel based on packet streams, so AcceptPacket will always receive a real PacketConn
 type PacketListener interface {
 	AcceptPacket(Tunnel) (PacketConn, error)
 }
@@ -85,5 +85,5 @@ func GetTunnel(name string) (Tunnel, error) {
 	if t, ok := tunnels[name]; ok {
 		return t, nil
 	}
-	return nil, common.NewError("unknown tunnel name " + string(name))
+	return nil, common.NewError("unknown tunnel name " + name)
 }

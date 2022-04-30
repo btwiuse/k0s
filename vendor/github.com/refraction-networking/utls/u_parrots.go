@@ -602,7 +602,7 @@ func (uconn *UConn) ApplyPreset(p *ClientHelloSpec) error {
 	for i := range uconn.greaseSeed {
 		uconn.greaseSeed[i] = binary.LittleEndian.Uint16(grease_bytes[2*i : 2*i+2])
 	}
-	if uconn.greaseSeed[ssl_grease_extension1] == uconn.greaseSeed[ssl_grease_extension2] {
+	if GetBoringGREASEValue(uconn.greaseSeed, ssl_grease_extension1) == GetBoringGREASEValue(uconn.greaseSeed, ssl_grease_extension2) {
 		uconn.greaseSeed[ssl_grease_extension2] ^= 0x1010
 	}
 
@@ -616,6 +616,9 @@ func (uconn *UConn) ApplyPreset(p *ClientHelloSpec) error {
 	uconn.GetSessionID = p.GetSessionID
 	uconn.Extensions = make([]TLSExtension, len(p.Extensions))
 	copy(uconn.Extensions, p.Extensions)
+
+	// Check whether NPN extension actually exists
+	var haveNPN bool
 
 	// reGrease, and point things to each other
 	for _, e := range uconn.Extensions {
@@ -681,8 +684,15 @@ func (uconn *UConn) ApplyPreset(p *ClientHelloSpec) error {
 					ext.Versions[i] = GetBoringGREASEValue(uconn.greaseSeed, ssl_grease_version)
 				}
 			}
+		case *NPNExtension:
+			haveNPN = true
 		}
 	}
+
+	// The default golang behavior in makeClientHello always sets NextProtoNeg if NextProtos is set,
+	// but NextProtos is also used by ALPN and our spec nmay not actually have a NPN extension
+	hello.NextProtoNeg = haveNPN
+
 	return nil
 }
 

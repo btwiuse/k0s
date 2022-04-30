@@ -11,6 +11,7 @@ import (
 	"github.com/v2fly/v2ray-core/v4/app/proxyman"
 	"github.com/v2fly/v2ray-core/v4/app/stats"
 	"github.com/v2fly/v2ray-core/v4/common/serial"
+	"github.com/v2fly/v2ray-core/v4/infra/conf/cfgcommon"
 )
 
 var (
@@ -58,9 +59,9 @@ func toProtocolList(s []string) ([]proxyman.KnownProtocols, error) {
 }
 
 type SniffingConfig struct {
-	Enabled      bool        `json:"enabled"`
-	DestOverride *StringList `json:"destOverride"`
-	MetadataOnly bool        `json:"metadataOnly"`
+	Enabled      bool                  `json:"enabled"`
+	DestOverride *cfgcommon.StringList `json:"destOverride"`
+	MetadataOnly bool                  `json:"metadataOnly"`
 }
 
 // Build implements Buildable.
@@ -75,6 +76,8 @@ func (c *SniffingConfig) Build() (*proxyman.SniffingConfig, error) {
 				p = append(p, "tls")
 			case "fakedns":
 				p = append(p, "fakedns")
+			case "fakedns+others":
+				p = append(p, "fakedns+others")
 			default:
 				return nil, newError("unknown protocol: ", domainOverride)
 			}
@@ -146,13 +149,13 @@ func (c *InboundDetourAllocationConfig) Build() (*proxyman.AllocationStrategy, e
 
 type InboundDetourConfig struct {
 	Protocol       string                         `json:"protocol"`
-	PortRange      *PortRange                     `json:"port"`
-	ListenOn       *Address                       `json:"listen"`
+	PortRange      *cfgcommon.PortRange           `json:"port"`
+	ListenOn       *cfgcommon.Address             `json:"listen"`
 	Settings       *json.RawMessage               `json:"settings"`
 	Tag            string                         `json:"tag"`
 	Allocation     *InboundDetourAllocationConfig `json:"allocate"`
 	StreamSetting  *StreamConfig                  `json:"streamSettings"`
-	DomainOverride *StringList                    `json:"domainOverride"`
+	DomainOverride *cfgcommon.StringList          `json:"domainOverride"`
 	SniffingConfig *SniffingConfig                `json:"sniffing"`
 }
 
@@ -251,13 +254,13 @@ func (c *InboundDetourConfig) Build() (*core.InboundHandlerConfig, error) {
 }
 
 type OutboundDetourConfig struct {
-	Protocol      string           `json:"protocol"`
-	SendThrough   *Address         `json:"sendThrough"`
-	Tag           string           `json:"tag"`
-	Settings      *json.RawMessage `json:"settings"`
-	StreamSetting *StreamConfig    `json:"streamSettings"`
-	ProxySettings *ProxyConfig     `json:"proxySettings"`
-	MuxSettings   *MuxConfig       `json:"mux"`
+	Protocol      string             `json:"protocol"`
+	SendThrough   *cfgcommon.Address `json:"sendThrough"`
+	Tag           string             `json:"tag"`
+	Settings      *json.RawMessage   `json:"settings"`
+	StreamSetting *StreamConfig      `json:"streamSettings"`
+	ProxySettings *ProxyConfig       `json:"proxySettings"`
+	MuxSettings   *MuxConfig         `json:"mux"`
 }
 
 // Build implements Buildable.
@@ -341,17 +344,21 @@ type Config struct {
 	// and should not be used.
 	OutboundDetours []OutboundDetourConfig `json:"outboundDetour"`
 
-	LogConfig       *LogConfig             `json:"log"`
-	RouterConfig    *RouterConfig          `json:"routing"`
-	DNSConfig       *DNSConfig             `json:"dns"`
-	InboundConfigs  []InboundDetourConfig  `json:"inbounds"`
-	OutboundConfigs []OutboundDetourConfig `json:"outbounds"`
-	Transport       *TransportConfig       `json:"transport"`
-	Policy          *PolicyConfig          `json:"policy"`
-	API             *APIConfig             `json:"api"`
-	Stats           *StatsConfig           `json:"stats"`
-	Reverse         *ReverseConfig         `json:"reverse"`
-	FakeDNS         *FakeDNSConfig         `json:"fakeDns"`
+	LogConfig        *LogConfig              `json:"log"`
+	RouterConfig     *RouterConfig           `json:"routing"`
+	DNSConfig        *DNSConfig              `json:"dns"`
+	InboundConfigs   []InboundDetourConfig   `json:"inbounds"`
+	OutboundConfigs  []OutboundDetourConfig  `json:"outbounds"`
+	Transport        *TransportConfig        `json:"transport"`
+	Policy           *PolicyConfig           `json:"policy"`
+	API              *APIConfig              `json:"api"`
+	Stats            *StatsConfig            `json:"stats"`
+	Reverse          *ReverseConfig          `json:"reverse"`
+	FakeDNS          *FakeDNSConfig          `json:"fakeDns"`
+	BrowserForwarder *BrowserForwarderConfig `json:"browserForwarder"`
+	Observatory      *ObservatoryConfig      `json:"observatory"`
+
+	Services map[string]*json.RawMessage `json:"services"`
 }
 
 func (c *Config) findInboundTag(tag string) int {
@@ -407,6 +414,14 @@ func (c *Config) Override(o *Config, fn string) {
 
 	if o.FakeDNS != nil {
 		c.FakeDNS = o.FakeDNS
+	}
+
+	if o.BrowserForwarder != nil {
+		c.BrowserForwarder = o.BrowserForwarder
+	}
+
+	if o.Observatory != nil {
+		c.Observatory = o.Observatory
 	}
 
 	// deprecated attrs... keep them for now
@@ -558,6 +573,35 @@ func (c *Config) Build() (*core.Config, error) {
 		config.App = append(config.App, serial.ToTypedMessage(r))
 	}
 
+	if c.BrowserForwarder != nil {
+		r, err := c.BrowserForwarder.Build()
+		if err != nil {
+			return nil, err
+		}
+		config.App = append(config.App, serial.ToTypedMessage(r))
+	}
+
+	if c.Observatory != nil {
+		r, err := c.Observatory.Build()
+		if err != nil {
+			return nil, err
+		}
+		config.App = append(config.App, serial.ToTypedMessage(r))
+	}
+
+	// Load Additional Services that do not have a json translator
+
+	if msg, err := c.BuildServices(c.Services); err != nil {
+		developererr := newError("Loading a V2Ray Features as a service is intended for developers only. " +
+			"This is used for developers to prototype new features or for an advanced client to use special features in V2Ray," +
+			" instead of allowing end user to enable it without special tool and knowledge.")
+		sb := strings.Builder{}
+		return nil, newError("Cannot load service").Base(developererr).Base(err).Base(newError(sb.String()))
+	} else { // nolint: golint
+		// Using a else here is required to keep msg in scope
+		config.App = append(config.App, msg...)
+	}
+
 	var inbounds []InboundDetourConfig
 
 	if c.InboundConfig != nil {
@@ -574,7 +618,7 @@ func (c *Config) Build() (*core.Config, error) {
 
 	// Backward compatibility.
 	if len(inbounds) > 0 && inbounds[0].PortRange == nil && c.Port > 0 {
-		inbounds[0].PortRange = &PortRange{
+		inbounds[0].PortRange = &cfgcommon.PortRange{
 			From: uint32(c.Port),
 			To:   uint32(c.Port),
 		}

@@ -11,6 +11,7 @@ go_library(
         "cpu_mips64le.go",
         "cpu_mipsle.go",
         "cpu_ppc64x.go",
+        "cpu_riscv64.go",
         "cpu_s390x.go",
         "cpu_x86.go",
         "cpu_x86.s",

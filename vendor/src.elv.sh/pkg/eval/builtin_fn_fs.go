@@ -1,52 +1,19 @@
 package eval
 
 import (
-	"errors"
-	"os"
-	"path/filepath"
-
+	"src.elv.sh/pkg/eval/errs"
 	"src.elv.sh/pkg/fsutil"
-	"src.elv.sh/pkg/store"
 )
 
 // Filesystem commands.
 
-// ErrStoreNotConnected is thrown by dir-history when the store is not connected.
-var ErrStoreNotConnected = errors.New("store not connected")
-
-//elvdoc:fn path-\*
-//
-// ```elvish
-// path-abs $path
-// path-base $path
-// path-clean $path
-// path-dir $path
-// path-ext $path
-// ```
-//
-// See [godoc of path/filepath](https://godoc.org/path/filepath). Go errors are
-// turned into exceptions.
-//
-// These functions are deprecated. Use the equivalent functions in the
-// [path:](path.html) module.
-
 func init() {
 	addBuiltinFns(map[string]interface{}{
 		// Directory
-		"cd":          cd,
-		"dir-history": dirs,
+		"cd": cd,
 
 		// Path
-		"path-abs":      filepath.Abs,
-		"path-base":     filepath.Base,
-		"path-clean":    filepath.Clean,
-		"path-dir":      filepath.Dir,
-		"path-ext":      filepath.Ext,
-		"eval-symlinks": filepath.EvalSymlinks,
-		"tilde-abbr":    tildeAbbr,
-
-		// File types
-		"-is-dir": isDir,
+		"tilde-abbr": tildeAbbr,
 	})
 }
 
@@ -76,49 +43,10 @@ func cd(fm *Frame, args ...string) error {
 	case 1:
 		dir = args[0]
 	default:
-		return ErrArgs
+		return errs.ArityMismatch{What: "arguments", ValidLow: 0, ValidHigh: 1, Actual: len(args)}
 	}
 
 	return fm.Evaler.Chdir(dir)
-}
-
-//elvdoc:fn dir-history
-//
-// ```elvish
-// dir-history
-// ```
-//
-// Return a list containing the directory history. Each element is a map with two
-// keys: `path` and `score`. The list is sorted by descending score.
-//
-// Example:
-//
-// ```elvish-transcript
-// ~> dir-history | take 1
-// ▶ [&path=/Users/foo/.elvish &score=96.79928]
-// ```
-
-type dirHistoryEntry struct {
-	Path  string
-	Score float64
-}
-
-func (dirHistoryEntry) IsStructMap() {}
-
-func dirs(fm *Frame) error {
-	daemon := fm.Evaler.DaemonClient()
-	if daemon == nil {
-		return ErrStoreNotConnected
-	}
-	dirs, err := daemon.Dirs(store.NoBlacklist)
-	if err != nil {
-		return err
-	}
-	out := fm.OutputChan()
-	for _, dir := range dirs {
-		out <- dirHistoryEntry{dir.Path, dir.Score}
-	}
-	return nil
 }
 
 //elvdoc:fn tilde-abbr
@@ -143,9 +71,4 @@ func dirs(fm *Frame) error {
 
 func tildeAbbr(path string) string {
 	return fsutil.TildeAbbr(path)
-}
-
-func isDir(path string) bool {
-	fi, err := os.Stat(path)
-	return err == nil && fi.Mode().IsDir()
 }

@@ -3,6 +3,7 @@ package adapter
 import (
 	"context"
 	"net"
+	"sync"
 
 	"github.com/p4gefau1t/trojan-go/common"
 	"github.com/p4gefau1t/trojan-go/config"
@@ -18,6 +19,7 @@ type Server struct {
 	udpListener net.PacketConn
 	socksConn   chan tunnel.Conn
 	httpConn    chan tunnel.Conn
+	socksLock   sync.RWMutex
 	nextSocks   bool
 	ctx         context.Context
 	cancel      context.CancelFunc
@@ -45,12 +47,15 @@ func (s *Server) acceptConnLoop() {
 			log.Error(common.NewError("failed to detect proxy protocol type").Base(err))
 			continue
 		}
+		s.socksLock.RLock()
 		if buf[0] == 5 && s.nextSocks {
+			s.socksLock.RUnlock()
 			log.Debug("socks5 connection")
 			s.socksConn <- &freedom.Conn{
 				Conn: rewindConn,
 			}
 		} else {
+			s.socksLock.RUnlock()
 			log.Debug("http connection")
 			s.httpConn <- &freedom.Conn{
 				Conn: rewindConn,
@@ -68,7 +73,9 @@ func (s *Server) AcceptConn(overlay tunnel.Tunnel) (tunnel.Conn, error) {
 			return nil, common.NewError("adapter closed")
 		}
 	} else if _, ok := overlay.(*socks.Tunnel); ok {
+		s.socksLock.Lock()
 		s.nextSocks = true
+		s.socksLock.Unlock()
 		select {
 		case conn := <-s.socksConn:
 			return conn, nil
@@ -100,10 +107,12 @@ func NewServer(ctx context.Context, _ tunnel.Server) (*Server, error) {
 	addr := tunnel.NewAddressFromHostPort("tcp", cfg.LocalHost, cfg.LocalPort)
 	tcpListener, err := net.Listen("tcp", addr.String())
 	if err != nil {
+		cancel()
 		return nil, common.NewError("adapter failed to create tcp listener").Base(err)
 	}
 	udpListener, err := net.ListenPacket("udp", addr.String())
 	if err != nil {
+		cancel()
 		return nil, common.NewError("adapter failed to create tcp listener").Base(err)
 	}
 	server := &Server{

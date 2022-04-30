@@ -20,6 +20,7 @@ go_library(
         "tls.go",
         "u_common.go",
         "u_conn.go",
+        "u_fingerprinter.go",
         "u_parrots.go",
         "u_prng.go",
         "u_public.go",

@@ -1,16 +1,17 @@
 package eval
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
-	"os"
 	"strconv"
 	"strings"
 
 	"src.elv.sh/pkg/diag"
+	"src.elv.sh/pkg/eval/errs"
 	"src.elv.sh/pkg/eval/vals"
+	"src.elv.sh/pkg/parse"
 	"src.elv.sh/pkg/strutil"
 )
 
@@ -19,7 +20,8 @@ import (
 func init() {
 	addBuiltinFns(map[string]interface{}{
 		// Value output
-		"put": put,
+		"put":    put,
+		"repeat": repeat,
 
 		// Bytes input
 		"read-upto": readUpto,
@@ -43,20 +45,15 @@ func init() {
 		"only-values": onlyValues,
 
 		// Bytes to value
-		"slurp":      slurp,
-		"from-lines": fromLines,
-		"from-json":  fromJSON,
+		"slurp":           slurp,
+		"from-lines":      fromLines,
+		"from-json":       fromJSON,
+		"from-terminated": fromTerminated,
 
 		// Value to bytes
-		"to-lines": toLines,
-		"to-json":  toJSON,
-
-		// File and pipe
-		"fopen":   fopen,
-		"fclose":  fclose,
-		"pipe":    pipe,
-		"prclose": prclose,
-		"pwclose": pwclose,
+		"to-lines":      toLines,
+		"to-json":       toJSON,
+		"to-terminated": toTerminated,
 	})
 }
 
@@ -80,28 +77,65 @@ func init() {
 // ▶ <closure 0xc4202607e0>
 // ```
 //
+// **Note**: It is almost never necessary to use `put (...)` - just write the
+// `...` part. For example, `put (eq a b)` is the equivalent to just `eq a b`.
+//
 // Etymology: Various languages, in particular
 // [C](https://manpages.debian.org/stretch/manpages-dev/puts.3.en.html) and
 // [Ruby](https://ruby-doc.org/core-2.2.2/IO.html#method-i-puts) as `puts`.
 
-func put(fm *Frame, args ...interface{}) {
-	out := fm.OutputChan()
+func put(fm *Frame, args ...interface{}) error {
+	out := fm.ValueOutput()
 	for _, a := range args {
-		out <- a
+		err := out.Put(a)
+		if err != nil {
+			return err
+		}
 	}
+	return nil
+}
+
+//elvdoc:fn repeat
+//
+// ```elvish
+// repeat $n $value
+// ```
+//
+// Output `$value` for `$n` times. Example:
+//
+// ```elvish-transcript
+// ~> repeat 0 lorem
+// ~> repeat 4 NAN
+// ▶ NAN
+// ▶ NAN
+// ▶ NAN
+// ▶ NAN
+// ```
+//
+// Etymology: [Clojure](https://clojuredocs.org/clojure.core/repeat).
+
+func repeat(fm *Frame, n int, v interface{}) error {
+	out := fm.ValueOutput()
+	for i := 0; i < n; i++ {
+		err := out.Put(v)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 //elvdoc:fn read-upto
 //
 // ```elvish
-// read-upto $delim
+// read-upto $terminator
 // ```
 //
-// Reads byte input until `$delim` or end-of-file is encountered, and outputs
-// the part of the input read as a string value. The output contains the
-// trailing `$delim`, unless `read-upto` terminated at end-of-file.
+// Reads byte input until `$terminator` or end-of-file is encountered. It outputs the part of the
+// input read as a string value. The output contains the trailing `$terminator`, unless `read-upto`
+// terminated at end-of-file.
 //
-// The `$delim` argument must be a single rune in the ASCII range.
+// The `$terminator` must be a single ASCII character such as `"\x00"` (NUL).
 //
 // Examples:
 //
@@ -116,9 +150,9 @@ func put(fm *Frame, args ...interface{}) {
 // ▶ foobar
 // ```
 
-func readUpto(fm *Frame, last string) (string, error) {
-	if len(last) != 1 {
-		return "", ErrArgs
+func readUpto(fm *Frame, terminator string) (string, error) {
+	if err := checkTerminator(terminator); err != nil {
+		return "", err
 	}
 	in := fm.InputFile()
 	var buf []byte
@@ -132,11 +166,19 @@ func readUpto(fm *Frame, last string) (string, error) {
 			return "", err
 		}
 		buf = append(buf, b[0])
-		if b[0] == last[0] {
+		if b[0] == terminator[0] {
 			break
 		}
 	}
 	return string(buf), nil
+}
+
+func checkTerminator(s string) error {
+	if len(s) != 1 || s[0] > 127 {
+		return errs.BadValue{What: "terminator",
+			Valid: "a single ASCII character", Actual: parse.Quote(s)}
+	}
+	return nil
 }
 
 //elvdoc:fn read-line
@@ -187,14 +229,21 @@ type printOpts struct{ Sep string }
 
 func (o *printOpts) SetDefaultOptions() { o.Sep = " " }
 
-func print(fm *Frame, opts printOpts, args ...interface{}) {
-	out := fm.OutputFile()
+func print(fm *Frame, opts printOpts, args ...interface{}) error {
+	out := fm.ByteOutput()
 	for i, arg := range args {
 		if i > 0 {
-			out.WriteString(opts.Sep)
+			_, err := out.WriteString(opts.Sep)
+			if err != nil {
+				return err
+			}
 		}
-		out.WriteString(vals.ToString(arg))
+		_, err := out.WriteString(vals.ToString(arg))
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 //elvdoc:fn printf
@@ -203,10 +252,13 @@ func print(fm *Frame, opts printOpts, args ...interface{}) {
 // printf $template $value...
 // ```
 //
-// Prints values to the byte stream according to a template.
+// Prints values to the byte stream according to a template. If you need to inject the output into
+// the value stream use this pattern: `printf .... | slurp`. That ensures that any newlines in the
+// output of `printf` do not cause its output to be broken into multiple values, thus eliminating
+// the newlines, which will occur if you do `put (printf ....)`.
 //
-// Like [`print`](#print), this command does not add an implicit newline; use
-// an explicit `"\n"` in the formatting template instead.
+// Like [`print`](#print), this command does not add an implicit newline; include an explicit `"\n"`
+// in the formatting template instead. For example, `printf "%.1f\n" (/ 10.0 3)`.
 //
 // See Go's [`fmt`](https://golang.org/pkg/fmt/#hdr-Printing) package for
 // details about the formatting verbs and the various flags that modify the
@@ -272,13 +324,14 @@ func print(fm *Frame, opts printOpts, args ...interface{}) {
 //
 // @cf print echo pprint repr
 
-func printf(fm *Frame, template string, args ...interface{}) {
+func printf(fm *Frame, template string, args ...interface{}) error {
 	wrappedArgs := make([]interface{}, len(args))
 	for i, arg := range args {
 		wrappedArgs[i] = formatter{arg}
 	}
 
-	fmt.Fprintf(fm.OutputFile(), template, wrappedArgs...)
+	_, err := fmt.Fprintf(fm.ByteOutput(), template, wrappedArgs...)
+	return err
 }
 
 type formatter struct {
@@ -292,11 +345,11 @@ func (f formatter) Format(state fmt.State, r rune) {
 		writeFmt(state, 's', vals.ToString(wrapped))
 	case 'q':
 		// TODO: Support using the precision flag to specify indentation.
-		writeFmt(state, 's', vals.Repr(wrapped, vals.NoPretty))
+		writeFmt(state, 's', vals.ReprPlain(wrapped))
 	case 'v':
 		var s string
 		if state.Flag('#') {
-			s = vals.Repr(wrapped, vals.NoPretty)
+			s = vals.ReprPlain(wrapped)
 		} else {
 			s = vals.ToString(wrapped)
 		}
@@ -372,9 +425,13 @@ func writeFmt(state fmt.State, v rune, val interface{}) {
 //
 // Etymology: Bourne sh.
 
-func echo(fm *Frame, opts printOpts, args ...interface{}) {
-	print(fm, opts, args...)
-	fm.OutputFile().WriteString("\n")
+func echo(fm *Frame, opts printOpts, args ...interface{}) error {
+	err := print(fm, opts, args...)
+	if err != nil {
+		return err
+	}
+	_, err = fm.ByteOutput().WriteString("\n")
+	return err
 }
 
 //elvdoc:fn pprint
@@ -404,12 +461,19 @@ func echo(fm *Frame, opts printOpts, args ...interface{}) {
 //
 // @cf repr
 
-func pprint(fm *Frame, args ...interface{}) {
-	out := fm.OutputFile()
+func pprint(fm *Frame, args ...interface{}) error {
+	out := fm.ByteOutput()
 	for _, arg := range args {
-		out.WriteString(vals.Repr(arg, 0))
-		out.WriteString("\n")
+		_, err := out.WriteString(vals.Repr(arg, 0))
+		if err != nil {
+			return err
+		}
+		_, err = out.WriteString("\n")
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 //elvdoc:fn repr
@@ -430,15 +494,22 @@ func pprint(fm *Frame, args ...interface{}) {
 //
 // Etymology: [Python](https://docs.python.org/3/library/functions.html#repr).
 
-func repr(fm *Frame, args ...interface{}) {
-	out := fm.OutputFile()
+func repr(fm *Frame, args ...interface{}) error {
+	out := fm.ByteOutput()
 	for i, arg := range args {
 		if i > 0 {
-			out.WriteString(" ")
+			_, err := out.WriteString(" ")
+			if err != nil {
+				return err
+			}
 		}
-		out.WriteString(vals.Repr(arg, vals.NoPretty))
+		_, err := out.WriteString(vals.ReprPlain(arg))
+		if err != nil {
+			return err
+		}
 	}
-	out.WriteString("\n")
+	_, err := out.WriteString("\n")
+	return err
 }
 
 //elvdoc:fn show
@@ -456,18 +527,21 @@ func repr(fm *Frame, args ...interface{}) {
 // Example:
 //
 // ```elvish-transcript
-// ~> e = ?(fail lorem-ipsum)
+// ~> var e = ?(fail lorem-ipsum)
 // ~> show $e
 // Exception: lorem-ipsum
-// [tty 3], line 1: e = ?(fail lorem-ipsum)
+// [tty 3], line 1: var e = ?(fail lorem-ipsum)
 // ```
 
-func show(fm *Frame, v diag.Shower) {
-	fm.OutputFile().WriteString(v.Show(""))
-	fm.OutputFile().WriteString("\n")
+func show(fm *Frame, v diag.Shower) error {
+	out := fm.ByteOutput()
+	_, err := out.WriteString(v.Show(""))
+	if err != nil {
+		return err
+	}
+	_, err = out.WriteString("\n")
+	return err
 }
-
-const bytesReadBufferSize = 512
 
 //elvdoc:fn only-bytes
 //
@@ -495,22 +569,8 @@ func onlyBytes(fm *Frame) error {
 	// Make sure the goroutine has finished before returning.
 	defer func() { <-valuesDone }()
 
-	// Forward bytes.
-	buf := make([]byte, bytesReadBufferSize)
-	for {
-		nr, errRead := fm.InputFile().Read(buf[:])
-		if nr > 0 {
-			// Even when there are write errors, we will continue reading. So we
-			// ignore the error.
-			fm.OutputFile().Write(buf[:nr])
-		}
-		if errRead != nil {
-			if errRead == io.EOF {
-				return nil
-			}
-			return errRead
-		}
-	}
+	_, err := io.Copy(fm.ByteOutput(), fm.InputFile())
+	return err
 }
 
 //elvdoc:fn only-values
@@ -529,29 +589,30 @@ func onlyBytes(fm *Frame) error {
 // ```
 
 func onlyValues(fm *Frame) error {
-	// Forward values in a goroutine.
-	valuesDone := make(chan struct{})
+	// Discard bytes in a goroutine.
+	bytesDone := make(chan struct{})
 	go func() {
-		for v := range fm.InputChan() {
-			fm.OutputChan() <- v
-		}
-		close(valuesDone)
+		// Ignore the error
+		_, _ = io.Copy(blackholeWriter{}, fm.InputFile())
+		close(bytesDone)
 	}()
-	// Make sure the goroutine has finished before returning.
-	defer func() { <-valuesDone }()
+	// Wait for the goroutine to finish before returning.
+	defer func() { <-bytesDone }()
 
-	// Discard bytes.
-	buf := make([]byte, bytesReadBufferSize)
-	for {
-		_, errRead := fm.InputFile().Read(buf[:])
-		if errRead != nil {
-			if errRead == io.EOF {
-				return nil
-			}
-			return errRead
+	// Forward values.
+	out := fm.ValueOutput()
+	for v := range fm.InputChan() {
+		err := out.Put(v)
+		if err != nil {
+			return err
 		}
 	}
+	return nil
 }
+
+type blackholeWriter struct{}
+
+func (blackholeWriter) Write(p []byte) (int, error) { return len(p), nil }
 
 //elvdoc:fn slurp
 //
@@ -573,7 +634,7 @@ func onlyValues(fm *Frame) error {
 // [`File::Slurp`](http://search.cpan.org/~uri/File-Slurp-9999.19/lib/File/Slurp.pm).
 
 func slurp(fm *Frame) (string, error) {
-	b, err := ioutil.ReadAll(fm.InputFile())
+	b, err := io.ReadAll(fm.InputFile())
 	return string(b), err
 }
 
@@ -594,10 +655,26 @@ func slurp(fm *Frame) (string, error) {
 // ▶ a
 // ```
 //
-// @cf to-lines
+// @cf from-terminated read-upto to-lines
 
-func fromLines(fm *Frame) {
-	linesToChan(fm.InputFile(), fm.OutputChan())
+func fromLines(fm *Frame) error {
+	filein := bufio.NewReader(fm.InputFile())
+	out := fm.ValueOutput()
+	for {
+		line, err := filein.ReadString('\n')
+		if line != "" {
+			err := out.Put(strutil.ChopLineEnding(line))
+			if err != nil {
+				return err
+			}
+		}
+		if err != nil {
+			if err != io.EOF {
+				return err
+			}
+			return nil
+		}
+	}
 }
 
 //elvdoc:fn from-json
@@ -607,8 +684,12 @@ func fromLines(fm *Frame) {
 // ```
 //
 // Takes bytes stdin, parses it as JSON and puts the result on structured stdout.
-// The input can contain multiple JSONs, which can, but do not have to, be
-// separated with whitespaces.
+// The input can contain multiple JSONs, and whitespace between them are ignored.
+//
+// Note that JSON's only number type corresponds to Elvish's floating-point
+// number type, and is always considered [inexact](language.html#exactness).
+// It may be necessary to coerce JSON numbers to exact numbers using
+// [exact-num](#exact-num).
 //
 // Examples:
 //
@@ -635,7 +716,7 @@ func fromLines(fm *Frame) {
 
 func fromJSON(fm *Frame) error {
 	in := fm.InputFile()
-	out := fm.OutputChan()
+	out := fm.ValueOutput()
 
 	dec := json.NewDecoder(in)
 	for {
@@ -651,7 +732,10 @@ func fromJSON(fm *Frame) error {
 		if err != nil {
 			return err
 		}
-		out <- converted
+		err = out.Put(converted)
+		if err != nil {
+			return err
+		}
 	}
 }
 
@@ -669,7 +753,7 @@ func fromJSONInterface(v interface{}) (interface{}, error) {
 			if err != nil {
 				return nil, err
 			}
-			vec = vec.Cons(converted)
+			vec = vec.Conj(converted)
 		}
 		return vec, nil
 	case map[string]interface{}:
@@ -687,14 +771,64 @@ func fromJSONInterface(v interface{}) (interface{}, error) {
 	}
 }
 
+//elvdoc:fn from-terminated
+//
+// ```elvish
+// from-terminated $terminator
+// ```
+//
+// Splits byte input into lines at each `$terminator` character, and writes
+// them to the value output. If the byte input ends with `$terminator`, it is
+// dropped. Value input is ignored.
+//
+// The `$terminator` must be a single ASCII character such as `"\x00"` (NUL).
+//
+// ```elvish-transcript
+// ~> { echo a; echo b } | from-terminated "\x00"
+// ▶ "a\nb\n"
+// ~> print "a\x00b" | from-terminated "\x00"
+// ▶ a
+// ▶ b
+// ~> print "a\x00b\x00" | from-terminated "\x00"
+// ▶ a
+// ▶ b
+// ```
+//
+// @cf from-lines read-upto to-terminated
+
+func fromTerminated(fm *Frame, terminator string) error {
+	if err := checkTerminator(terminator); err != nil {
+		return err
+	}
+
+	filein := bufio.NewReader(fm.InputFile())
+	out := fm.ValueOutput()
+	for {
+		line, err := filein.ReadString(terminator[0])
+		if line != "" {
+			err := out.Put(strutil.ChopTerminator(line, terminator[0]))
+			if err != nil {
+				return err
+			}
+		}
+		if err != nil {
+			if err != io.EOF {
+				logger.Println("error on reading:", err)
+				return err
+			}
+			return nil
+		}
+	}
+}
+
 //elvdoc:fn to-lines
 //
 // ```elvish
-// to-lines $input?
+// to-lines $inputs?
 // ```
 //
-// Writes each value input to a separate line in the byte output. Byte input is
-// ignored.
+// Writes each [value input](#value-inputs) to a separate line in the byte
+// output. Byte input is ignored.
 //
 // ```elvish-transcript
 // ~> put a b | to-lines
@@ -708,14 +842,59 @@ func fromJSONInterface(v interface{}) (interface{}, error) {
 // a
 // ```
 //
-// @cf from-lines
+// @cf from-lines to-terminated
 
-func toLines(fm *Frame, inputs Inputs) {
-	out := fm.OutputFile()
+func toLines(fm *Frame, inputs Inputs) error {
+	out := fm.ByteOutput()
+	var errOut error
 
 	inputs(func(v interface{}) {
-		fmt.Fprintln(out, vals.ToString(v))
+		if errOut != nil {
+			return
+		}
+		// TODO: Don't ignore the error.
+		_, errOut = fmt.Fprintln(out, vals.ToString(v))
 	})
+	return errOut
+}
+
+//elvdoc:fn to-terminated
+//
+// ```elvish
+// to-terminated $terminator $inputs?
+// ```
+//
+// Writes each [value input](#value-inputs) to the byte output with the
+// specified terminator character. Byte input is ignored. This behavior is
+// useful, for example, when feeding output into a program that accepts NUL
+// terminated lines to avoid ambiguities if the values contains newline
+// characters.
+//
+// The `$terminator` must be a single ASCII character such as `"\x00"` (NUL).
+//
+// ```elvish-transcript
+// ~> put a b | to-terminated "\x00" | slurp
+// ▶ "a\x00b\x00"
+// ~> to-terminated "\x00" [a b] | slurp
+// ▶ "a\x00b\x00"
+// ```
+//
+// @cf from-terminated to-lines
+
+func toTerminated(fm *Frame, terminator string, inputs Inputs) error {
+	if err := checkTerminator(terminator); err != nil {
+		return err
+	}
+
+	out := fm.ByteOutput()
+	var errOut error
+	inputs(func(v interface{}) {
+		if errOut != nil {
+			return
+		}
+		_, errOut = fmt.Fprint(out, vals.ToString(v), terminator)
+	})
+	return errOut
 }
 
 //elvdoc:fn to-json
@@ -738,7 +917,7 @@ func toLines(fm *Frame, inputs Inputs) {
 // @cf from-json
 
 func toJSON(fm *Frame, inputs Inputs) error {
-	encoder := json.NewEncoder(fm.OutputFile())
+	encoder := json.NewEncoder(fm.ByteOutput())
 
 	var errEncode error
 	inputs(func(v interface{}) {
@@ -748,112 +927,4 @@ func toJSON(fm *Frame, inputs Inputs) error {
 		errEncode = encoder.Encode(v)
 	})
 	return errEncode
-}
-
-//elvdoc:fn fopen
-//
-// ```elvish
-// fopen $filename
-// ```
-//
-// Open a file. Currently, `fopen` only supports opening a file for reading. File
-// must be closed with `fclose` explicitly. Example:
-//
-// ```elvish-transcript
-// ~> cat a.txt
-// This is
-// a file.
-// ~> f = (fopen a.txt)
-// ~> cat < $f
-// This is
-// a file.
-// ~> fclose $f
-// ```
-//
-// @cf fclose
-
-func fopen(name string) (vals.File, error) {
-	// TODO support opening files for writing etc as well.
-	return os.Open(name)
-}
-
-//elvdoc:fn fclose
-//
-// ```elvish
-// fclose $file
-// ```
-//
-// Close a file opened with `fopen`.
-//
-// @cf fopen
-
-func fclose(f vals.File) error {
-	return f.Close()
-}
-
-//elvdoc:fn pipe
-//
-// ```elvish
-// pipe
-// ```
-//
-// Create a new Unix pipe that can be used in redirections.
-//
-// A pipe contains both the read FD and the write FD. When redirecting command
-// input to a pipe with `<`, the read FD is used. When redirecting command output
-// to a pipe with `>`, the write FD is used. It is not supported to redirect both
-// input and output with `<>` to a pipe.
-//
-// Pipes have an OS-dependent buffer, so writing to a pipe without an active reader
-// does not necessarily block. Pipes **must** be explicitly closed with `prclose`
-// and `pwclose`.
-//
-// Putting values into pipes will cause those values to be discarded.
-//
-// Examples (assuming the pipe has a large enough buffer):
-//
-// ```elvish-transcript
-// ~> p = (pipe)
-// ~> echo 'lorem ipsum' > $p
-// ~> head -n1 < $p
-// lorem ipsum
-// ~> put 'lorem ipsum' > $p
-// ~> head -n1 < $p
-// # blocks
-// # $p should be closed with prclose and pwclose afterwards
-// ```
-//
-// @cf prclose pwclose
-
-func pipe() (vals.Pipe, error) {
-	r, w, err := os.Pipe()
-	return vals.NewPipe(r, w), err
-}
-
-//elvdoc:fn prclose
-//
-// ```elvish
-// prclose $pipe
-// ```
-//
-// Close the read end of a pipe.
-//
-// @cf pwclose pipe
-
-func prclose(p vals.Pipe) error {
-	return p.ReadEnd.Close()
-}
-
-//elvdoc:fn pwclose
-//
-// ```elvish
-// pwclose $pipe
-// ```
-//
-// Close the write end of a pipe.
-//
-// @cf prclose pipe
-
-func pwclose(p vals.Pipe) error {
-	return p.WriteEnd.Close()
 }

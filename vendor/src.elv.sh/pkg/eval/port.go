@@ -2,11 +2,13 @@ package eval
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
 	"sync"
 
+	"src.elv.sh/pkg/eval/errs"
 	"src.elv.sh/pkg/eval/vals"
 	"src.elv.sh/pkg/strutil"
 )
@@ -17,11 +19,35 @@ type Port struct {
 	Chan      chan interface{}
 	closeFile bool
 	closeChan bool
+
+	// The following two fields are populated as an additional control
+	// mechanism for output ports. When no more value should be send on Chan,
+	// chanSendError is populated and chanSendStop is closed. This is used for
+	// both detection of reader termination (see readerGone below) and closed
+	// ports.
+	sendStop  chan struct{}
+	sendError *error
+
+	// Only populated in output ports writing to another command in a pipeline.
+	// When the reading end of the pipe exits, it stores 1 in readerGone. This
+	// is used to check if an external command killed by SIGPIPE is caused by
+	// the termination of the reader of the pipe.
+	readerGone *int32
 }
+
+// ErrNoValueOutput is thrown when writing to a pipe without a value output
+// component.
+var ErrNoValueOutput = errors.New("port has no value output")
+
+// A closed channel, suitable as a value for Port.sendStop when there is no
+// reader to start with.
+var closedSendStop = make(chan struct{})
+
+func init() { close(closedSendStop) }
 
 // Returns a copy of the Port with the Close* flags unset.
 func (p *Port) fork() *Port {
-	return &Port{p.File, p.Chan, false, false}
+	return &Port{p.File, p.Chan, false, false, p.sendStop, p.sendError, p.readerGone}
 }
 
 // Closes a Port.
@@ -53,6 +79,9 @@ var (
 	// DummyOutputPort is a port made up from DevNull and BlackholeChan,
 	// suitable as a placeholder output port.
 	DummyOutputPort = &Port{File: DevNull, Chan: BlackholeChan}
+
+	// DummyPorts contains 3 dummy ports, suitable as stdin, stdout and stderr.
+	DummyPorts = []*Port{DummyInputPort, DummyOutputPort, DummyOutputPort}
 )
 
 func getClosedChan() chan interface{} {
@@ -203,7 +232,7 @@ func FilePort(f *os.File, valuePrefix string) (*Port, func()) {
 	go func() {
 		for v := range ch {
 			f.WriteString(valuePrefix)
-			f.WriteString(vals.Repr(v, vals.NoPretty))
+			f.WriteString(vals.ReprPlain(v))
 			f.WriteString("\n")
 		}
 		close(relayDone)
@@ -229,4 +258,63 @@ func PortsFromFiles(files [3]*os.File, prefix string) ([]*Port, func()) {
 		cleanup1()
 		cleanup2()
 	}
+}
+
+// ValueOutput defines the interface through which builtin commands access the
+// value output.
+//
+// The value output is backed by two channels, one for writing output, another
+// for the back-chanel signal that the reader of the channel has gone.
+type ValueOutput interface {
+	// Outputs a value. Returns errs.ReaderGone if the reader is gone.
+	Put(v interface{}) error
+}
+
+type valueOutput struct {
+	data      chan<- interface{}
+	sendStop  <-chan struct{}
+	sendError *error
+}
+
+func (vo valueOutput) Put(v interface{}) error {
+	select {
+	case vo.data <- v:
+		return nil
+	case <-vo.sendStop:
+		return *vo.sendError
+	}
+}
+
+// ByteOutput defines the interface through which builtin commands access the
+// byte output.
+//
+// It is a thin wrapper around the underlying *os.File value, only exposing
+// the necessary methods for writing bytes and strings, and converting any
+// syscall.EPIPE errors to errs.ReaderGone.
+type ByteOutput interface {
+	io.Writer
+	io.StringWriter
+}
+
+type byteOutput struct {
+	f *os.File
+}
+
+func (bo byteOutput) Write(p []byte) (int, error) {
+	n, err := bo.f.Write(p)
+	return n, convertReaderGone(err)
+}
+
+func (bo byteOutput) WriteString(s string) (int, error) {
+	n, err := bo.f.WriteString(s)
+	return n, convertReaderGone(err)
+}
+
+func convertReaderGone(err error) error {
+	if pathErr, ok := err.(*os.PathError); ok {
+		if pathErr.Err == epipe {
+			return errs.ReaderGone{}
+		}
+	}
+	return err
 }

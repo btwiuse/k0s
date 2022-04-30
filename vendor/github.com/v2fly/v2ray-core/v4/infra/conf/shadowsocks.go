@@ -7,6 +7,7 @@ import (
 
 	"github.com/v2fly/v2ray-core/v4/common/protocol"
 	"github.com/v2fly/v2ray-core/v4/common/serial"
+	"github.com/v2fly/v2ray-core/v4/infra/conf/cfgcommon"
 	"github.com/v2fly/v2ray-core/v4/proxy/shadowsocks"
 )
 
@@ -26,12 +27,13 @@ func cipherFromString(c string) shadowsocks.CipherType {
 }
 
 type ShadowsocksServerConfig struct {
-	Cipher      string       `json:"method"`
-	Password    string       `json:"password"`
-	UDP         bool         `json:"udp"`
-	Level       byte         `json:"level"`
-	Email       string       `json:"email"`
-	NetworkList *NetworkList `json:"network"`
+	Cipher      string                 `json:"method"`
+	Password    string                 `json:"password"`
+	UDP         bool                   `json:"udp"`
+	Level       byte                   `json:"level"`
+	Email       string                 `json:"email"`
+	NetworkList *cfgcommon.NetworkList `json:"network"`
+	IVCheck     bool                   `json:"ivCheck"`
 }
 
 func (v *ShadowsocksServerConfig) Build() (proto.Message, error) {
@@ -44,6 +46,7 @@ func (v *ShadowsocksServerConfig) Build() (proto.Message, error) {
 	}
 	account := &shadowsocks.Account{
 		Password: v.Password,
+		IvCheck:  v.IVCheck,
 	}
 	account.CipherType = cipherFromString(v.Cipher)
 	if account.CipherType == shadowsocks.CipherType_UNKNOWN {
@@ -60,13 +63,14 @@ func (v *ShadowsocksServerConfig) Build() (proto.Message, error) {
 }
 
 type ShadowsocksServerTarget struct {
-	Address  *Address `json:"address"`
-	Port     uint16   `json:"port"`
-	Cipher   string   `json:"method"`
-	Password string   `json:"password"`
-	Email    string   `json:"email"`
-	Ota      bool     `json:"ota"`
-	Level    byte     `json:"level"`
+	Address  *cfgcommon.Address `json:"address"`
+	Port     uint16             `json:"port"`
+	Cipher   string             `json:"method"`
+	Password string             `json:"password"`
+	Email    string             `json:"email"`
+	Ota      bool               `json:"ota"`
+	Level    byte               `json:"level"`
+	IVCheck  bool               `json:"ivCheck"`
 }
 
 type ShadowsocksClientConfig struct {
@@ -98,6 +102,8 @@ func (v *ShadowsocksClientConfig) Build() (proto.Message, error) {
 		if account.CipherType == shadowsocks.CipherType_UNKNOWN {
 			return nil, newError("unknown cipher method: ", server.Cipher)
 		}
+
+		account.IvCheck = server.IVCheck
 
 		ss := &protocol.ServerEndpoint{
 			Address: server.Address.Build(),

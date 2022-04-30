@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build !noperf
 // +build !noperf
 
 package collector
@@ -21,8 +22,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
 	"github.com/hodgesds/perf-utils"
 	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/sys/unix"
@@ -159,13 +160,14 @@ func (c *perfTracepointCollector) update(ch chan<- prometheus.Metric) error {
 
 // updateCPU is used to update metrics per CPU profiler.
 func (c *perfTracepointCollector) updateCPU(cpu int, ch chan<- prometheus.Metric) error {
-	cpuStr := fmt.Sprintf("%d", cpu)
 	profiler := c.profilers[cpu]
 	p, err := profiler.Profile()
 	if err != nil {
 		level.Error(c.logger).Log("msg", "Failed to collect tracepoint profile", "err", err)
 		return err
 	}
+
+	cpuid := strconv.Itoa(cpu)
 
 	for i, value := range p.Values {
 		// Get the Desc from the ordered group value.
@@ -175,7 +177,7 @@ func (c *perfTracepointCollector) updateCPU(cpu int, ch chan<- prometheus.Metric
 			c.descs[descKeySlice[0]][descKeySlice[1]],
 			prometheus.CounterValue,
 			float64(value),
-			cpuStr,
+			cpuid,
 		)
 	}
 	return nil
@@ -284,21 +286,30 @@ func NewPerfCollector(logger log.Logger) (Collector, error) {
 	for _, cpu := range cpus {
 		// Use -1 to profile all processes on the CPU, see:
 		// man perf_event_open
-		hwProf := perf.NewHardwareProfiler(-1, cpu)
+		hwProf, err := perf.NewHardwareProfiler(-1, cpu)
+		if err != nil {
+			return nil, err
+		}
 		if err := hwProf.Start(); err != nil {
 			return nil, err
 		}
 		collector.perfHwProfilers[cpu] = &hwProf
 		collector.hwProfilerCPUMap[&hwProf] = cpu
 
-		swProf := perf.NewSoftwareProfiler(-1, cpu)
+		swProf, err := perf.NewSoftwareProfiler(-1, cpu)
+		if err != nil {
+			return nil, err
+		}
 		if err := swProf.Start(); err != nil {
 			return nil, err
 		}
 		collector.perfSwProfilers[cpu] = &swProf
 		collector.swProfilerCPUMap[&swProf] = cpu
 
-		cacheProf := perf.NewCacheProfiler(-1, cpu)
+		cacheProf, err := perf.NewCacheProfiler(-1, cpu)
+		if err != nil {
+			return nil, err
+		}
 		if err := cacheProf.Start(); err != nil {
 			return nil, err
 		}
@@ -574,8 +585,6 @@ func (c *perfCollector) Update(ch chan<- prometheus.Metric) error {
 
 func (c *perfCollector) updateHardwareStats(ch chan<- prometheus.Metric) error {
 	for _, profiler := range c.perfHwProfilers {
-		cpuid := c.hwProfilerCPUMap[profiler]
-		cpuStr := strconv.Itoa(cpuid)
 		hwProfile, err := (*profiler).Profile()
 		if err != nil {
 			return err
@@ -584,11 +593,13 @@ func (c *perfCollector) updateHardwareStats(ch chan<- prometheus.Metric) error {
 			continue
 		}
 
+		cpuid := strconv.Itoa(c.hwProfilerCPUMap[profiler])
+
 		if hwProfile.CPUCycles != nil {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cpucycles_total"],
 				prometheus.CounterValue, float64(*hwProfile.CPUCycles),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -596,7 +607,7 @@ func (c *perfCollector) updateHardwareStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["instructions_total"],
 				prometheus.CounterValue, float64(*hwProfile.Instructions),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -604,7 +615,7 @@ func (c *perfCollector) updateHardwareStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["branch_instructions_total"],
 				prometheus.CounterValue, float64(*hwProfile.BranchInstr),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -612,7 +623,7 @@ func (c *perfCollector) updateHardwareStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["branch_misses_total"],
 				prometheus.CounterValue, float64(*hwProfile.BranchMisses),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -620,7 +631,7 @@ func (c *perfCollector) updateHardwareStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_refs_total"],
 				prometheus.CounterValue, float64(*hwProfile.CacheRefs),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -628,7 +639,7 @@ func (c *perfCollector) updateHardwareStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_misses_total"],
 				prometheus.CounterValue, float64(*hwProfile.CacheMisses),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -636,7 +647,7 @@ func (c *perfCollector) updateHardwareStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["ref_cpucycles_total"],
 				prometheus.CounterValue, float64(*hwProfile.RefCPUCycles),
-				cpuStr,
+				cpuid,
 			)
 		}
 	}
@@ -646,8 +657,6 @@ func (c *perfCollector) updateHardwareStats(ch chan<- prometheus.Metric) error {
 
 func (c *perfCollector) updateSoftwareStats(ch chan<- prometheus.Metric) error {
 	for _, profiler := range c.perfSwProfilers {
-		cpuid := c.swProfilerCPUMap[profiler]
-		cpuStr := fmt.Sprintf("%d", cpuid)
 		swProfile, err := (*profiler).Profile()
 		if err != nil {
 			return err
@@ -656,11 +665,13 @@ func (c *perfCollector) updateSoftwareStats(ch chan<- prometheus.Metric) error {
 			continue
 		}
 
+		cpuid := strconv.Itoa(c.swProfilerCPUMap[profiler])
+
 		if swProfile.PageFaults != nil {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["page_faults_total"],
 				prometheus.CounterValue, float64(*swProfile.PageFaults),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -668,7 +679,7 @@ func (c *perfCollector) updateSoftwareStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["context_switches_total"],
 				prometheus.CounterValue, float64(*swProfile.ContextSwitches),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -676,7 +687,7 @@ func (c *perfCollector) updateSoftwareStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cpu_migrations_total"],
 				prometheus.CounterValue, float64(*swProfile.CPUMigrations),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -684,7 +695,7 @@ func (c *perfCollector) updateSoftwareStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["minor_faults_total"],
 				prometheus.CounterValue, float64(*swProfile.MinorPageFaults),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -692,7 +703,7 @@ func (c *perfCollector) updateSoftwareStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["major_faults_total"],
 				prometheus.CounterValue, float64(*swProfile.MajorPageFaults),
-				cpuStr,
+				cpuid,
 			)
 		}
 	}
@@ -702,8 +713,6 @@ func (c *perfCollector) updateSoftwareStats(ch chan<- prometheus.Metric) error {
 
 func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 	for _, profiler := range c.perfCacheProfilers {
-		cpuid := c.cacheProfilerCPUMap[profiler]
-		cpuStr := fmt.Sprintf("%d", cpuid)
 		cacheProfile, err := (*profiler).Profile()
 		if err != nil {
 			return err
@@ -712,11 +721,13 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			continue
 		}
 
+		cpuid := strconv.Itoa(c.cacheProfilerCPUMap[profiler])
+
 		if cacheProfile.L1DataReadHit != nil {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_l1d_read_hits_total"],
 				prometheus.CounterValue, float64(*cacheProfile.L1DataReadHit),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -724,7 +735,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_l1d_read_misses_total"],
 				prometheus.CounterValue, float64(*cacheProfile.L1DataReadMiss),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -732,7 +743,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_l1d_write_hits_total"],
 				prometheus.CounterValue, float64(*cacheProfile.L1DataWriteHit),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -740,7 +751,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_l1_instr_read_misses_total"],
 				prometheus.CounterValue, float64(*cacheProfile.L1InstrReadMiss),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -748,7 +759,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_tlb_instr_read_hits_total"],
 				prometheus.CounterValue, float64(*cacheProfile.InstrTLBReadHit),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -756,7 +767,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_tlb_instr_read_misses_total"],
 				prometheus.CounterValue, float64(*cacheProfile.InstrTLBReadMiss),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -764,7 +775,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_ll_read_hits_total"],
 				prometheus.CounterValue, float64(*cacheProfile.LastLevelReadHit),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -772,7 +783,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_ll_read_misses_total"],
 				prometheus.CounterValue, float64(*cacheProfile.LastLevelReadMiss),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -780,7 +791,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_ll_write_hits_total"],
 				prometheus.CounterValue, float64(*cacheProfile.LastLevelWriteHit),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -788,7 +799,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_ll_write_misses_total"],
 				prometheus.CounterValue, float64(*cacheProfile.LastLevelWriteMiss),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -796,7 +807,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_bpu_read_hits_total"],
 				prometheus.CounterValue, float64(*cacheProfile.BPUReadHit),
-				cpuStr,
+				cpuid,
 			)
 		}
 
@@ -804,7 +815,7 @@ func (c *perfCollector) updateCacheStats(ch chan<- prometheus.Metric) error {
 			ch <- prometheus.MustNewConstMetric(
 				c.desc["cache_bpu_read_misses_total"],
 				prometheus.CounterValue, float64(*cacheProfile.BPUReadMiss),
-				cpuStr,
+				cpuid,
 			)
 		}
 	}

@@ -16,6 +16,7 @@ go_library(
         "encode_go.go",
         "encodeblock_amd64.go",
         "encodeblock_amd64.s",
+        "index.go",
         "s2.go",
     ],
     importmap = "k0s.io/vendor/github.com/klauspost/compress/s2",

@@ -1,0 +1,27 @@
+image: golang:latest
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  REPO_NAME: gitlab.com/mjwhitta/pathname
+
+stages:
+  - build
+  - test
+
+before_script:
+  - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
+  - ln -fsv $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
+  - cd $GOPATH/src/$REPO_NAME
+
+build_certify:
+  artifacts:
+    paths:
+      - build/
+  script:
+    - make
+  stage: build
+
+unit_tests:
+  script:
+    - make cover
+  stage: test

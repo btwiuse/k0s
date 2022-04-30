@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build !noloadavg
 // +build !noloadavg
 
 package collector
@@ -45,7 +46,7 @@ func parseLoad(data string) (loads []float64, err error) {
 	for i, load := range parts[0:3] {
 		loads[i], err = strconv.ParseFloat(load, 64)
 		if err != nil {
-			return nil, fmt.Errorf("could not parse load '%s': %s", load, err)
+			return nil, fmt.Errorf("could not parse load '%s': %w", load, err)
 		}
 	}
 	return loads, nil

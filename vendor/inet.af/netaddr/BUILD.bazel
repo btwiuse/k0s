@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "ipset.go",
+        "mask6.go",
+        "netaddr.go",
+        "uint128.go",
+    ],
+    importmap = "k0s.io/vendor/inet.af/netaddr",
+    importpath = "inet.af/netaddr",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/go4.org/intern:go_default_library"],
+)

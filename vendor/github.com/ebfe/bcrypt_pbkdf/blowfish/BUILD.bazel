@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "block.go",
+        "cipher.go",
+        "const.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/ebfe/bcrypt_pbkdf/blowfish",
+    importpath = "github.com/ebfe/bcrypt_pbkdf/blowfish",
+    visibility = ["//visibility:public"],
+)

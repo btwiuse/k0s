@@ -21,6 +21,7 @@ go_library(
         "sockopt_other.go",
         "sockopt_windows.go",
         "system_dialer.go",
+        "system_dns_android.go",
         "system_listener.go",
         "tcp_hub.go",
     ],
@@ -28,7 +29,6 @@ go_library(
     importpath = "github.com/v2fly/v2ray-core/v4/transport/internet",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/pires/go-proxyproto:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/errors:go_default_library",

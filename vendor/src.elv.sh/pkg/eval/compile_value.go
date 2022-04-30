@@ -145,22 +145,20 @@ func doTilde(v interface{}) (interface{}, error) {
 	switch v := v.(type) {
 	case string:
 		s := v
+		// TODO: Make this correct on Windows.
 		i := strings.Index(s, "/")
 		var uname, rest string
 		if i == -1 {
 			uname = s
 		} else {
 			uname = s[:i]
-			rest = s[i+1:]
+			rest = s[i:]
 		}
 		dir, err := fsutil.GetHome(uname)
 		if err != nil {
 			return nil, err
 		}
-		// We do not use path.Join, as it removes trailing slashes.
-		//
-		// TODO(xiaq): Make this correct on Windows.
-		return dir + "/" + rest, nil
+		return dir + rest, nil
 	case globPattern:
 		if len(v.Segments) == 0 {
 			return nil, ErrBadglobPattern
@@ -208,10 +206,10 @@ func (cp *compiler) arrayOps(ns []*parse.Array) []valuesOp {
 }
 
 func (cp *compiler) indexingOp(n *parse.Indexing) valuesOp {
-	if len(n.Indicies) == 0 {
+	if len(n.Indices) == 0 {
 		return cp.primaryOp(n.Head)
 	}
-	return &indexingOp{n.Range(), cp.primaryOp(n.Head), cp.arrayOps(n.Indicies)}
+	return &indexingOp{n.Range(), cp.primaryOp(n.Head), cp.arrayOps(n.Indices)}
 }
 
 func (cp *compiler) indexingOps(ns []*parse.Indexing) []valuesOp {
@@ -244,12 +242,6 @@ func (op *indexingOp) exec(fm *Frame) ([]interface{}, Exception) {
 				result, err := vals.Index(v, index)
 				if err != nil {
 					return nil, fm.errorp(op, err)
-				}
-				// Check the legacy low:high slice syntax deprecated since 0.15.
-				deprecation := vals.CheckDeprecatedIndex(v, index)
-				if deprecation != "" {
-					ctx := diag.NewContext(fm.srcMeta.Name, fm.srcMeta.Code, indexOp)
-					fm.Deprecate(deprecation, ctx, 15)
 				}
 				newvs = append(newvs, result)
 			}
@@ -341,7 +333,7 @@ func (op listOp) exec(fm *Frame) ([]interface{}, Exception) {
 			return nil, exc
 		}
 		for _, moreValue := range moreValues {
-			list = list.Cons(moreValue)
+			list = list.Conj(moreValue)
 		}
 	}
 	return []interface{}{list}, nil
@@ -386,7 +378,7 @@ func (cp *compiler) lambda(n *parse.Primary) valuesOp {
 		// Argument list.
 		argNames = make([]string, len(n.Elements))
 		for i, arg := range n.Elements {
-			ref := mustString(cp, arg, "argument name must be literal string")
+			ref := stringLiteralOrError(cp, arg, "argument name")
 			sigil, qname := SplitSigil(ref)
 			name, rest := SplitQName(qname)
 			if rest != "" {
@@ -408,7 +400,7 @@ func (cp *compiler) lambda(n *parse.Primary) valuesOp {
 		optNames = make([]string, len(n.MapPairs))
 		optDefaultOps = make([]valuesOp, len(n.MapPairs))
 		for i, opt := range n.MapPairs {
-			qname := mustString(cp, opt.Key, "option name must be literal string")
+			qname := stringLiteralOrError(cp, opt.Key, "option name")
 			name, rest := SplitQName(qname)
 			if rest != "" {
 				cp.errorpf(opt.Key, "option name must be unqualified")
@@ -432,9 +424,9 @@ func (cp *compiler) lambda(n *parse.Primary) valuesOp {
 	for _, optName := range optNames {
 		local.add(optName)
 	}
-	scopeSizeInit := len(local.names)
+	scopeSizeInit := len(local.infos)
 	chunkOp := cp.chunkOp(n.Chunk)
-	newLocal := local.names[scopeSizeInit:]
+	newLocal := local.infos[scopeSizeInit:]
 	cp.popScope()
 
 	return &lambdaOp{n.Range(), argNames, restArg, optNames, optDefaultOps, newLocal, capture, chunkOp, cp.srcMeta}
@@ -446,7 +438,7 @@ type lambdaOp struct {
 	restArg       int
 	optNames      []string
 	optDefaultOps []valuesOp
-	newLocal      []string
+	newLocal      []staticVarInfo
 	capture       *staticUpNs
 	subop         effectOp
 	srcMeta       parse.Source
@@ -454,14 +446,15 @@ type lambdaOp struct {
 
 func (op *lambdaOp) exec(fm *Frame) ([]interface{}, Exception) {
 	capture := &Ns{
-		make([]vars.Var, len(op.capture.names)),
-		op.capture.names,
-		make([]bool, len(op.capture.names))}
-	for i := range op.capture.names {
-		if op.capture.local[i] {
-			capture.slots[i] = fm.local.slots[op.capture.index[i]]
+		make([]vars.Var, len(op.capture.infos)),
+		make([]staticVarInfo, len(op.capture.infos))}
+	for i, info := range op.capture.infos {
+		if info.local {
+			capture.slots[i] = fm.local.slots[info.index]
+			capture.infos[i] = fm.local.infos[info.index]
 		} else {
-			capture.slots[i] = fm.up.slots[op.capture.index[i]]
+			capture.slots[i] = fm.up.slots[info.index]
+			capture.infos[i] = fm.up.infos[info.index]
 		}
 	}
 	optDefaults := make([]interface{}, len(op.optDefaultOps))
@@ -472,7 +465,7 @@ func (op *lambdaOp) exec(fm *Frame) ([]interface{}, Exception) {
 		}
 		optDefaults[i] = defaultValue
 	}
-	return []interface{}{&closure{op.argNames, op.restArg, op.optNames, optDefaults, op.subop, op.newLocal, capture, op.srcMeta, op.Range()}}, nil
+	return []interface{}{&Closure{op.argNames, op.restArg, op.optNames, optDefaults, op.srcMeta, op.Range(), op.subop, op.newLocal, capture}}, nil
 }
 
 type mapOp struct {
@@ -581,8 +574,8 @@ func evalForValue(fm *Frame, op valuesOp, what string) (interface{}, Exception) 
 		return nil, exc
 	}
 	if len(values) != 1 {
-		return nil, fm.errorp(op, errs.ArityMismatch{
-			What: what, ValidLow: 1, ValidHigh: 1, Actual: len(values)})
+		return nil, fm.errorp(op, errs.ArityMismatch{What: what,
+			ValidLow: 1, ValidHigh: 1, Actual: len(values)})
 	}
 	return values[0], nil
 }

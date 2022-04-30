@@ -7,6 +7,7 @@ import (
 
 	"github.com/v2fly/v2ray-core/v4/common/protocol"
 	"github.com/v2fly/v2ray-core/v4/common/serial"
+	"github.com/v2fly/v2ray-core/v4/infra/conf/cfgcommon"
 	"github.com/v2fly/v2ray-core/v4/proxy/http"
 )
 
@@ -47,10 +48,11 @@ func (c *HTTPServerConfig) Build() (proto.Message, error) {
 }
 
 type HTTPRemoteConfig struct {
-	Address *Address          `json:"address"`
-	Port    uint16            `json:"port"`
-	Users   []json.RawMessage `json:"users"`
+	Address *cfgcommon.Address `json:"address"`
+	Port    uint16             `json:"port"`
+	Users   []json.RawMessage  `json:"users"`
 }
+
 type HTTPClientConfig struct {
 	Servers []*HTTPRemoteConfig `json:"servers"`
 }

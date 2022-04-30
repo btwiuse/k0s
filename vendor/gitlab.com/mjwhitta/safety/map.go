@@ -27,11 +27,12 @@ func (m *Map) Clear() {
 
 // Delete will delete a map entry and return the deleted entry.
 func (m *Map) Delete(k interface{}) (v interface{}) {
+	var ok bool
+
 	m.Lock()
 	defer m.Unlock()
 
-	if _, ok := m.themap[k]; ok {
-		v = m.themap[k]
+	if v, ok = m.themap[k]; ok {
 		delete(m.themap, k)
 	}
 
@@ -43,9 +44,7 @@ func (m *Map) Get(k interface{}) (v interface{}, ok bool) {
 	m.RLock()
 	defer m.RUnlock()
 
-	if _, ok = m.themap[k]; ok {
-		v = m.themap[k]
-	}
+	v, ok = m.themap[k]
 
 	return
 }
@@ -63,12 +62,26 @@ func (m *Map) Keys() (keys []interface{}) {
 	return
 }
 
-// Put will put a new entry into the map.
+// Put will store a key/value pair.
 func (m *Map) Put(k interface{}, v interface{}) {
 	m.Lock()
 	defer m.Unlock()
 
 	m.themap[k] = v
+}
+
+// PutIfNew will store a key/value pair, so long as the key doesn't
+// already exist.
+func (m *Map) PutIfNew(k interface{}, v interface{}) bool {
+	m.Lock()
+	defer m.Unlock()
+
+	if _, ok := m.themap[k]; !ok {
+		m.themap[k] = v
+		return true
+	}
+
+	return false
 }
 
 // Range will loop over the map and run the specified function for

@@ -7,10 +7,10 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/xiaq/persistent/hash"
 	"src.elv.sh/pkg/diag"
 	"src.elv.sh/pkg/eval/vals"
 	"src.elv.sh/pkg/parse"
+	"src.elv.sh/pkg/persistent/hash"
 )
 
 // Exception represents exceptions. It is both a Value accessible to Elvish
@@ -45,16 +45,6 @@ type exception struct {
 type StackTrace struct {
 	Head *diag.Context
 	Next *StackTrace
-}
-
-// MakeStackTrace creates a new StackTrace from the given Context entries, using
-// the first entry as the head.
-func MakeStackTrace(entries ...*diag.Context) *StackTrace {
-	var s *StackTrace
-	for i := len(entries) - 1; i >= 0; i-- {
-		s = &StackTrace{Head: entries[i], Next: s}
-	}
-	return s
 }
 
 // Reason returns the Reason field if err is an Exception. Otherwise it returns
@@ -221,7 +211,7 @@ func (f peFields) Type() string { return "pipeline" }
 func (f peFields) Exceptions() vals.List {
 	li := vals.EmptyList
 	for _, exc := range f.pe.Errors {
-		li = li.Cons(exc)
+		li = li.Conj(exc)
 	}
 	return li
 }

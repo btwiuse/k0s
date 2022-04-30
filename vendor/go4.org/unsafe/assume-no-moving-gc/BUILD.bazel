@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "assume-no-moving-gc.go",
+        "untested.go",
+    ],
+    importmap = "k0s.io/vendor/go4.org/unsafe/assume-no-moving-gc",
+    importpath = "go4.org/unsafe/assume-no-moving-gc",
+    visibility = ["//visibility:public"],
+)

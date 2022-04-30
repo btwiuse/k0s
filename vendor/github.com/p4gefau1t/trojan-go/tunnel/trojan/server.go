@@ -5,25 +5,31 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"sync/atomic"
 
 	"github.com/p4gefau1t/trojan-go/api"
-	"github.com/p4gefau1t/trojan-go/statistic/memory"
-	"github.com/p4gefau1t/trojan-go/statistic/mysql"
-
 	"github.com/p4gefau1t/trojan-go/common"
 	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/log"
 	"github.com/p4gefau1t/trojan-go/redirector"
 	"github.com/p4gefau1t/trojan-go/statistic"
+	"github.com/p4gefau1t/trojan-go/statistic/memory"
+	"github.com/p4gefau1t/trojan-go/statistic/mysql"
 	"github.com/p4gefau1t/trojan-go/tunnel"
 	"github.com/p4gefau1t/trojan-go/tunnel/mux"
 )
 
 // InboundConn is a trojan inbound connection
 type InboundConn struct {
+	// WARNING: do not change the order of these fields.
+	// 64-bit fields that use `sync/atomic` package functions
+	// must be 64-bit aligned on 32-bit systems.
+	// Reference: https://github.com/golang/go/issues/599
+	// Solution: https://github.com/golang/go/issues/11891#issuecomment-433623786
+	sent uint64
+	recv uint64
+
 	net.Conn
-	sent     uint64
-	recv     uint64
 	auth     statistic.Authenticator
 	user     statistic.User
 	hash     string
@@ -37,20 +43,21 @@ func (c *InboundConn) Metadata() *tunnel.Metadata {
 
 func (c *InboundConn) Write(p []byte) (int, error) {
 	n, err := c.Conn.Write(p)
-	c.sent += uint64(n)
+	atomic.AddUint64(&c.sent, uint64(n))
 	c.user.AddTraffic(n, 0)
 	return n, err
 }
 
 func (c *InboundConn) Read(p []byte) (int, error) {
 	n, err := c.Conn.Read(p)
-	c.recv += uint64(n)
+	atomic.AddUint64(&c.recv, uint64(n))
 	c.user.AddTraffic(0, n)
 	return n, err
 }
 
 func (c *InboundConn) Close() error {
-	log.Info("user", c.hash, "from", c.Conn.RemoteAddr(), "tunneling to", c.metadata.Address, "closed", "sent:", common.HumanFriendlyTraffic(c.sent), "recv:", common.HumanFriendlyTraffic(c.recv))
+	log.Info("user", c.hash, "from", c.Conn.RemoteAddr(), "tunneling to", c.metadata.Address, "closed",
+		"sent:", common.HumanFriendlyTraffic(atomic.LoadUint64(&c.sent)), "recv:", common.HumanFriendlyTraffic(atomic.LoadUint64(&c.recv)))
 	c.user.DelIP(c.ip)
 	return c.Conn.Close()
 }
@@ -152,8 +159,14 @@ func (s *Server) acceptLoop() {
 			rewindConn.StopBuffering()
 			switch inboundConn.metadata.Command {
 			case Connect:
-				s.connChan <- inboundConn
-				log.Debug("normal trojan connection")
+				if inboundConn.metadata.DomainName == "MUX_CONN" {
+					s.muxChan <- inboundConn
+					log.Debug("mux(r) connection")
+				} else {
+					s.connChan <- inboundConn
+					log.Debug("normal trojan connection")
+				}
+
 			case Associate:
 				s.packetChan <- &PacketConn{
 					Conn: inboundConn,

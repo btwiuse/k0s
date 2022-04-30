@@ -71,7 +71,6 @@ func (p *Proxy) relayConnLoop() {
 					copyConn := func(a, b net.Conn) {
 						_, err := io.Copy(a, b)
 						errChan <- err
-						return
 					}
 					go copyConn(inbound, outbound)
 					go copyConn(outbound, inbound)
@@ -127,7 +126,7 @@ func (p *Proxy) relayPacketLoop() {
 								errChan <- nil
 								return
 							}
-							n, err = b.WriteWithMetadata(buf[:n], metadata)
+							_, err = b.WriteWithMetadata(buf[:n], metadata)
 							if err != nil {
 								errChan <- err
 								return
@@ -173,12 +172,12 @@ func NewProxyFromConfigData(data []byte, isJSON bool) (*Proxy, error) {
 	ctx := context.WithValue(context.Background(), Name+"_ID", rand.Int())
 	var err error
 	if isJSON {
-		ctx, err = config.WithJSONConfig(context.Background(), data)
+		ctx, err = config.WithJSONConfig(ctx, data)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		ctx, err = config.WithYAMLConfig(context.Background(), data)
+		ctx, err = config.WithYAMLConfig(ctx, data)
 		if err != nil {
 			return nil, err
 		}
@@ -190,7 +189,7 @@ func NewProxyFromConfigData(data []byte, isJSON bool) (*Proxy, error) {
 	}
 	log.SetLogLevel(log.LogLevel(cfg.LogLevel))
 	if cfg.LogFile != "" {
-		file, err := os.OpenFile(cfg.LogFile, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+		file, err := os.OpenFile(cfg.LogFile, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
 		if err != nil {
 			return nil, common.NewError("failed to open log file").Base(err)
 		}

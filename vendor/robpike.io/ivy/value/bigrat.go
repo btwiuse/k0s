@@ -19,7 +19,7 @@ type BigRat struct {
 
 // The input is known to be in floating-point syntax.
 // If there's a slash, the parsing is done in Parse().
-func setBigRatFromFloatString(_ *config.Config, s string) (br BigRat, err error) {
+func setBigRatFromFloatString(s string) (br BigRat, err error) {
 	// Be safe: Verify that it is floating-point, because otherwise
 	// we need to honor ibase.
 	if !strings.ContainsAny(s, ".eE") {
@@ -119,9 +119,6 @@ func (r BigRat) floatString(verb byte, prec int) string {
 	return ""
 }
 
-var bigRatTen = big.NewRat(10, 1)
-var bigRatBillion = big.NewRat(1e9, 1)
-
 // ratExponent returns the power of ten that x would display in scientific notation.
 func ratExponent(x *big.Rat) int {
 	if x.Sign() < 0 {
@@ -174,19 +171,21 @@ func (r BigRat) Inner() Value {
 	return r
 }
 
-func (r BigRat) toType(conf *config.Config, which valueType) Value {
+func (r BigRat) toType(op string, conf *config.Config, which valueType) Value {
 	switch which {
 	case bigRatType:
 		return r
 	case bigFloatType:
 		f := new(big.Float).SetPrec(conf.FloatPrec()).SetRat(r.Rat)
 		return BigFloat{f}
+	case complexType:
+		return newComplex(r, Int(0))
 	case vectorType:
 		return NewVector([]Value{r})
 	case matrixType:
 		return NewMatrix([]int{1, 1}, []Value{r})
 	}
-	Errorf("cannot convert rational to %s", which)
+	Errorf("%s: cannot convert rational to %s", op, which)
 	return nil
 }
 

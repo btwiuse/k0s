@@ -6,16 +6,12 @@ import (
 	"log"
 	"os"
 	"sync"
-	"time"
 
 	"golang.org/x/sys/windows"
-	"src.elv.sh/pkg/sys"
+
+	"src.elv.sh/pkg/sys/ewindows"
 	"src.elv.sh/pkg/ui"
 )
-
-// TODO(xiaq): Put here to make edit package build on Windows. Refactor so
-// that isn't needed?
-const DefaultSeqTimeout = 10 * time.Millisecond
 
 type reader struct {
 	console   windows.Handle
@@ -42,7 +38,7 @@ func (r *reader) ReadEvent() (Event, error) {
 	defer r.mutex.Unlock()
 	handles := []windows.Handle{r.console, r.stopEvent}
 	for {
-		triggered, _, err := sys.WaitForMultipleObjects(handles, false, sys.INFINITE)
+		triggered, _, err := ewindows.WaitForMultipleObjects(handles, false, ewindows.INFINITE)
 		if err != nil {
 			return nil, err
 		}
@@ -50,8 +46,8 @@ func (r *reader) ReadEvent() (Event, error) {
 			return nil, ErrStopped
 		}
 
-		var buf [1]sys.InputRecord
-		nr, err := sys.ReadConsoleInput(r.console, buf[:])
+		var buf [1]ewindows.InputRecord
+		nr, err := ewindows.ReadConsoleInput(r.console, buf[:])
 		if nr == 0 {
 			return nil, io.ErrNoProgress
 		}
@@ -113,28 +109,39 @@ const (
 	shift     = 0x10
 )
 
-// convertEvent converts the native sys.InputEvent type to a suitable Event
-// type. It returns nil if the event should be ignored.
-func convertEvent(event sys.InputEvent) Event {
+// Converts the native ewindows.InputEvent type to a suitable Event type. It returns
+// nil if the event should be ignored.
+func convertEvent(event ewindows.InputEvent) Event {
 	switch event := event.(type) {
-	case *sys.KeyEvent:
+	case *ewindows.KeyEvent:
 		if event.BKeyDown == 0 {
 			// Ignore keyup events.
 			return nil
 		}
 		r := rune(event.UChar[0]) + rune(event.UChar[1])<<8
 		filteredMod := event.DwControlKeyState & (leftAlt | leftCtrl | rightAlt | rightCtrl | shift)
-		if filteredMod == 0 {
-			// No modifier
-			// TODO: Deal with surrogate pairs
-			if 0x20 <= r && r != 0x7f {
+		if r >= 0x20 && r != 0x7f {
+			// This key inputs a character. The flags present in
+			// DwControlKeyState might indicate modifier keys that are needed to
+			// input this character (e.g. the Shift key when inputting 'A'), or
+			// modifier keys that are pressed in addition (e.g. the Alt key when
+			// pressing Alt-A). There doesn't seem to be an easy way to tell
+			// which is the case, so we rely on heuristics derived from
+			// real-world observations.
+			if filteredMod == 0 {
+				// TODO: Handle surrogate pairs
 				return KeyEvent(ui.Key{Rune: r})
-			}
-		} else if filteredMod == shift {
-			// If only the shift is held down, we try and see if this is a
-			// non-functional key by looking if the rune generated is a
-			// printable ASCII character.
-			if 0x20 <= r && r < 0x7f {
+			} else if filteredMod == shift {
+				// A lone Shift seems to be always part of the character.
+				return KeyEvent(ui.Key{Rune: r})
+			} else if filteredMod == leftCtrl|rightAlt || filteredMod == leftCtrl|rightAlt|shift {
+				// The combination leftCtrl|rightAlt is used to represent AltGr.
+				// Furthermore, when the actual left Ctrl and right Alt are used
+				// together, the UChar field seems to be always 0; so if we are
+				// here, we can actually be sure that it's AltGr.
+				//
+				// Some characters require AltGr+Shift to input, such as the
+				// upper-case sharp S on a German keyboard.
 				return KeyEvent(ui.Key{Rune: r})
 			}
 		}
@@ -151,8 +158,6 @@ func convertEvent(event sys.InputEvent) Event {
 			return nil
 		}
 		return KeyEvent(ui.Key{Rune: r, Mod: mod})
-	//case *sys.MouseEvent:
-	//case *sys.WindowBufferSizeEvent:
 	default:
 		// Other events are ignored.
 		return nil

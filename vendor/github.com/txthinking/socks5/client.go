@@ -8,49 +8,66 @@ import (
 
 // Client is socks5 client wrapper
 type Client struct {
-	Server        string
-	UserName      string
-	Password      string
+	Server   string
+	UserName string
+	Password string
+	// On cmd UDP, let server control the tcp and udp connection relationship
 	TCPConn       *net.TCPConn
 	UDPConn       *net.UDPConn
 	RemoteAddress net.Addr
-	TCPDeadline   int
 	TCPTimeout    int
-	UDPDeadline   int
+	UDPTimeout    int
+	// HijackServerUDPAddr can let client control which server UDP address to connect to after sending request,
+	// In most cases, you should ignore this, according to the standard server will return the address in reply,
+	// More: https://github.com/txthinking/socks5/pull/8.
+	HijackServerUDPAddr func(*Reply) (*net.UDPAddr, error)
 }
 
 // This is just create a client, you need to use Dial to create conn
-func NewClient(addr, username, password string, tcpTimeout, tcpDeadline, udpDeadline int) (*Client, error) {
+func NewClient(addr, username, password string, tcpTimeout, udpTimeout int) (*Client, error) {
 	c := &Client{
-		Server:      addr,
-		UserName:    username,
-		Password:    password,
-		TCPTimeout:  tcpTimeout,
-		TCPDeadline: tcpDeadline,
-		UDPDeadline: udpDeadline,
+		Server:     addr,
+		UserName:   username,
+		Password:   password,
+		TCPTimeout: tcpTimeout,
+		UDPTimeout: udpTimeout,
 	}
 	return c, nil
 }
 
 func (c *Client) Dial(network, addr string) (net.Conn, error) {
+	return c.DialWithLocalAddr(network, "", addr, nil)
+}
+
+func (c *Client) DialWithLocalAddr(network, src, dst string, remoteAddr net.Addr) (net.Conn, error) {
 	c = &Client{
-		Server:      c.Server,
-		UserName:    c.UserName,
-		Password:    c.Password,
-		TCPTimeout:  c.TCPTimeout,
-		TCPDeadline: c.TCPDeadline,
-		UDPDeadline: c.UDPDeadline,
+		Server:              c.Server,
+		UserName:            c.UserName,
+		Password:            c.Password,
+		TCPTimeout:          c.TCPTimeout,
+		UDPTimeout:          c.UDPTimeout,
+		RemoteAddress:       remoteAddr,
+		HijackServerUDPAddr: c.HijackServerUDPAddr,
 	}
+	var err error
 	if network == "tcp" {
-		var err error
-		c.RemoteAddress, err = net.ResolveTCPAddr("tcp", addr)
-		if err != nil {
+		if c.RemoteAddress == nil {
+			c.RemoteAddress, err = net.ResolveTCPAddr("tcp", dst)
+			if err != nil {
+				return nil, err
+			}
+		}
+		var la *net.TCPAddr
+		if src != "" {
+			la, err = net.ResolveTCPAddr("tcp", src)
+			if err != nil {
+				return nil, err
+			}
+		}
+		if err := c.Negotiate(la); err != nil {
 			return nil, err
 		}
-		if err := c.Negotiate(); err != nil {
-			return nil, err
-		}
-		a, h, p, err := ParseAddress(addr)
+		a, h, p, err := ParseAddress(dst)
 		if err != nil {
 			return nil, err
 		}
@@ -63,37 +80,67 @@ func (c *Client) Dial(network, addr string) (net.Conn, error) {
 		return c, nil
 	}
 	if network == "udp" {
-		var err error
-		c.RemoteAddress, err = net.ResolveUDPAddr("udp", addr)
-		if err != nil {
-			return nil, err
+		if c.RemoteAddress == nil {
+			c.RemoteAddress, err = net.ResolveUDPAddr("udp", dst)
+			if err != nil {
+				return nil, err
+			}
 		}
-		if err := c.Negotiate(); err != nil {
+		var la *net.TCPAddr
+		if src != "" {
+			la, err = net.ResolveTCPAddr("tcp", src)
+			if err != nil {
+				return nil, err
+			}
+		}
+		if err := c.Negotiate(la); err != nil {
 			return nil, err
 		}
 
-		// TODO support local udp addr
-		a, h, p, err := ParseAddress(addr)
+		var laddr *net.UDPAddr
+		if src != "" {
+			laddr, err = net.ResolveUDPAddr("udp", src)
+			if err != nil {
+				return nil, err
+			}
+		}
+		if src == "" {
+			laddr = &net.UDPAddr{
+				IP:   c.TCPConn.LocalAddr().(*net.TCPAddr).IP,
+				Port: c.TCPConn.LocalAddr().(*net.TCPAddr).Port,
+				Zone: c.TCPConn.LocalAddr().(*net.TCPAddr).Zone,
+			}
+		}
+		a, h, p, err := ParseAddress(laddr.String())
 		if err != nil {
 			return nil, err
 		}
-		if a == ATYPIPv4 || a == ATYPDomain {
-			a = ATYPIPv4
-			h = net.IPv4zero
-		}
-		if a == ATYPIPv6 {
-			h = net.IPv6zero
-		}
-		p = []byte{0x00, 0x00}
 		rp, err := c.Request(NewRequest(CmdUDP, a, h, p))
 		if err != nil {
 			return nil, err
 		}
-		tmp, err := Dial.Dial("udp", rp.Address())
+		var raddr *net.UDPAddr
+		if c.HijackServerUDPAddr == nil {
+			raddr, err = net.ResolveUDPAddr("udp", rp.Address())
+			if err != nil {
+				return nil, err
+			}
+		}
+		if c.HijackServerUDPAddr != nil {
+			raddr, err = c.HijackServerUDPAddr(rp)
+			if err != nil {
+				return nil, err
+			}
+		}
+		c.UDPConn, err = Dial.DialUDP("udp", laddr, raddr)
 		if err != nil {
 			return nil, err
 		}
-		c.UDPConn = tmp.(*net.UDPConn)
+		if c.UDPTimeout != 0 {
+			if err := c.UDPConn.SetDeadline(time.Now().Add(time.Duration(c.UDPTimeout) * time.Second)); err != nil {
+				return nil, err
+			}
+		}
 		return c, nil
 	}
 	return nil, errors.New("unsupport network")
@@ -103,17 +150,13 @@ func (c *Client) Read(b []byte) (int, error) {
 	if c.UDPConn == nil {
 		return c.TCPConn.Read(b)
 	}
-	b1 := make([]byte, 65535)
-	n, err := c.UDPConn.Read(b1)
+	n, err := c.UDPConn.Read(b)
 	if err != nil {
 		return 0, err
 	}
-	d, err := NewDatagramFromBytes(b1[0:n])
+	d, err := NewDatagramFromBytes(b[0:n])
 	if err != nil {
 		return 0, err
-	}
-	if len(b) < len(d.Data) {
-		return 0, errors.New("b too small")
 	}
 	n = copy(b, d.Data)
 	return n, nil
@@ -146,7 +189,9 @@ func (c *Client) Close() error {
 	if c.UDPConn == nil {
 		return c.TCPConn.Close()
 	}
-	c.TCPConn.Close()
+	if c.TCPConn != nil {
+		c.TCPConn.Close()
+	}
 	return c.UDPConn.Close()
 }
 
@@ -182,18 +227,16 @@ func (c *Client) SetWriteDeadline(t time.Time) error {
 	return c.UDPConn.SetWriteDeadline(t)
 }
 
-func (c *Client) Negotiate() error {
-	con, err := Dial.Dial("tcp", c.Server)
+func (c *Client) Negotiate(laddr *net.TCPAddr) error {
+	raddr, err := net.ResolveTCPAddr("tcp", c.Server)
 	if err != nil {
 		return err
 	}
-	c.TCPConn = con.(*net.TCPConn)
-	if c.TCPTimeout != 0 {
-		if err := c.TCPConn.SetKeepAlivePeriod(time.Duration(c.TCPTimeout) * time.Second); err != nil {
-			return err
-		}
+	c.TCPConn, err = Dial.DialTCP("tcp", laddr, raddr)
+	if err != nil {
+		return err
 	}
-	if c.TCPDeadline != 0 {
+	if c.TCPTimeout != 0 {
 		if err := c.TCPConn.SetDeadline(time.Now().Add(time.Duration(c.TCPTimeout) * time.Second)); err != nil {
 			return err
 		}

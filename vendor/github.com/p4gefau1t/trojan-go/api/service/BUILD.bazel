@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "api.pb.go",
+        "api_grpc.pb.go",
         "client.go",
         "config.go",
         "server.go",
@@ -12,7 +13,6 @@ go_library(
     importpath = "github.com/p4gefau1t/trojan-go/api/service",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/p4gefau1t/trojan-go/api:go_default_library",
         "//vendor/github.com/p4gefau1t/trojan-go/common:go_default_library",
         "//vendor/github.com/p4gefau1t/trojan-go/config:go_default_library",

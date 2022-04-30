@@ -17,6 +17,15 @@ type StorageBackend interface {
 	DeleteByUsername(string) error
 }
 
+type Store interface {
+	Get(baseScope string, id interface{}) (user *User, err error)
+	Gets(baseScope string) ([]*User, error)
+	Update(user *User, fields ...string) error
+	Save(user *User) error
+	Delete(id interface{}) error
+	LastUpdate(id uint) int64
+}
+
 // Storage is a users storage.
 type Storage struct {
 	back    StorageBackend
@@ -54,7 +63,7 @@ func (s *Storage) Gets(baseScope string) ([]*User, error) {
 	}
 
 	for _, user := range users {
-		if err := user.Clean(baseScope); err != nil { //nolint:shadow
+		if err := user.Clean(baseScope); err != nil { //nolint:govet
 			return nil, err
 		}
 	}
@@ -92,17 +101,25 @@ func (s *Storage) Save(user *User) error {
 // Delete allows you to delete a user by its name or username. The provided
 // id must be a string for username lookup or a uint for id lookup. If id
 // is neither, a ErrInvalidDataType will be returned.
-func (s *Storage) Delete(id interface{}) (err error) {
+func (s *Storage) Delete(id interface{}) error {
 	switch id := id.(type) {
 	case string:
-		err = s.back.DeleteByUsername(id)
+		user, err := s.back.GetBy(id)
+		if err != nil {
+			return err
+		}
+		if user.ID == 1 {
+			return errors.ErrRootUserDeletion
+		}
+		return s.back.DeleteByUsername(id)
 	case uint:
-		err = s.back.DeleteByID(id)
+		if id == 1 {
+			return errors.ErrRootUserDeletion
+		}
+		return s.back.DeleteByID(id)
 	default:
-		err = errors.ErrInvalidDataType
+		return errors.ErrInvalidDataType
 	}
-
-	return
 }
 
 // LastUpdate gets the timestamp for the last update of an user.

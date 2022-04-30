@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/xiaq/persistent/hash"
+	"src.elv.sh/pkg/persistent/hash"
 )
 
 // Pipe wraps a pair of pointers to os.File that are the two ends of the same
@@ -13,7 +13,7 @@ type Pipe struct {
 	ReadEnd, WriteEnd *os.File
 }
 
-var _ interface{} = Pipe{}
+var _ PseudoStructMap = Pipe{}
 
 // NewPipe creates a new Pipe value.
 func NewPipe(r, w *os.File) Pipe {
@@ -34,7 +34,7 @@ func (p Pipe) Equal(rhs interface{}) bool {
 	return Equal(p.ReadEnd, q.ReadEnd) && Equal(p.WriteEnd, q.WriteEnd)
 }
 
-// Hash calculates the hash based on the two consituent files.
+// Hash calculates the hash based on the two constituent files.
 func (p Pipe) Hash() uint32 {
 	return hash.DJB(Hash(p.ReadEnd), Hash(p.WriteEnd))
 }
@@ -44,3 +44,12 @@ func (p Pipe) Hash() uint32 {
 func (p Pipe) Repr(int) string {
 	return fmt.Sprintf("<pipe{%v %v}>", p.ReadEnd.Fd(), p.WriteEnd.Fd())
 }
+
+// Fields returns fields of the Pipe value.
+func (p Pipe) Fields() StructMap {
+	return pipeFields{p.ReadEnd, p.WriteEnd}
+}
+
+type pipeFields struct{ R, W *os.File }
+
+func (pipeFields) IsStructMap() {}

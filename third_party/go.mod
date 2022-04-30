@@ -5,7 +5,7 @@ go 1.18
 replace (
 	github.com/buildkite/agent/v3 => github.com/btwiuse/agent/v3 v3.27.1-0.20210217080418-ae42a28eefa7
 	github.com/coredns/coredns => github.com/btwiuse/coredns v1.8.4
-	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220402134819-e159aace1eaa
+	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220430110229-7bf437d68fdb
 	github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
 	k8s.io/api => k8s.io/api v0.20.4
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.20.4
@@ -59,7 +59,6 @@ require (
 	github.com/google/cadvisor v0.39.0
 	github.com/gorilla/handlers v1.5.1
 	github.com/greenpau/caddy-auth-jwt v1.2.6
-	github.com/greenpau/caddy-auth-portal v1.4.39
 	github.com/greenpau/caddy-authorize v1.3.24
 	github.com/greenpau/caddy-trace v1.1.8
 	github.com/hairyhenderson/caddy-teapot-module v0.0.2
@@ -68,6 +67,12 @@ require (
 	github.com/mholt/caddy-webdav v0.0.0-20210914165325-f7b67f8ca1e6
 	github.com/tetratelabs/wazero v0.0.0-20220430041858-abd1c79f3335
 	k0s.io v0.0.14
+)
+
+require (
+	github.com/templexxx/cpu v0.0.7 // indirect
+	github.com/templexxx/xorsimd v0.4.1 // indirect
+	github.com/xtaci/kcp-go/v5 v5.6.1 // indirect
 )
 
 require (
@@ -117,7 +122,6 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/asdine/storm v2.1.2+incompatible // indirect
 	github.com/aws/aws-sdk-go v1.41.14 // indirect
-	github.com/beevik/etree v1.1.0 // indirect
 	github.com/beevik/ntp v0.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
@@ -148,8 +152,6 @@ require (
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/creack/pty v1.1.11 // indirect
-	github.com/crewjam/httperr v0.0.0-20190612203328-a946449404da // indirect
-	github.com/crewjam/saml v0.4.5 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.2 // indirect
 	github.com/daaku/go.zipexe v1.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -202,7 +204,6 @@ require (
 	github.com/go-gost/relay v0.1.1-0.20211123134818-8ef7fd81ffd7 // indirect
 	github.com/go-gost/tls-dissector v0.0.2-0.20211125135007-2b5d5bd9c07e // indirect
 	github.com/go-kit/kit v0.10.0 // indirect
-	github.com/go-ldap/ldap v3.0.3+incompatible // indirect
 	github.com/go-ldap/ldap/v3 v3.4.1 // indirect
 	github.com/go-log/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.0 // indirect
@@ -235,8 +236,6 @@ require (
 	github.com/goproxyio/windows v0.0.0-20191126033816-f4a809841617 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/greenpau/go-identity v1.1.6 // indirect
-	github.com/greenpau/versioned v1.0.26 // indirect
 	github.com/gregjones/httpcache v0.0.0-20180305231024-9cad4c3443a7 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -275,7 +274,7 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/karrick/godirwalk v1.16.1 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
-	github.com/klauspost/cpuid v1.3.0 // indirect
+	github.com/klauspost/cpuid v1.3.1 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.11 // indirect
 	github.com/klauspost/reedsolomon v1.9.15 // indirect
 	github.com/kr/pty v1.1.8 // indirect
@@ -291,7 +290,7 @@ require (
 	github.com/libdns/vultr v0.0.0-20211122184636-cd4cb5c12e51 // indirect
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
 	github.com/lithammer/dedent v1.1.0 // indirect
-	github.com/lucas-clemente/quic-go v0.26.0 // indirect
+	github.com/lucas-clemente/quic-go v0.27.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.0.2 // indirect
 	github.com/lufia/iostat v1.1.0 // indirect
 	github.com/lunny/tango v0.5.6 // indirect
@@ -305,7 +304,6 @@ require (
 	github.com/maruel/natural v0.0.0-20180416170133-dbcb3e2e8cf1 // indirect
 	github.com/marusama/semaphore/v2 v2.4.1 // indirect
 	github.com/mastercactapus/proxyprotocol v0.0.3 // indirect
-	github.com/mattermost/xml-roundtrip-validator v0.0.0-20201213122252-bcd7e1b9601e // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/mattn/go-runewidth v0.0.10 // indirect
@@ -377,7 +375,6 @@ require (
 	github.com/robfig/cron/v3 v3.0.0 // indirect
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/rs/xid v1.2.1 // indirect
-	github.com/russellhaering/goxmldsig v1.1.0 // indirect
 	github.com/russross/blackfriday v1.5.2 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
@@ -389,7 +386,6 @@ require (
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/siebenmann/go-kstat v0.0.0-20200303194639-4e8294f9e9d5 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
-	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e // indirect
 	github.com/slackhq/nebula v1.5.2 // indirect
 	github.com/smallstep/certificates v0.19.0 // indirect
 	github.com/smallstep/cli v0.18.0 // indirect
@@ -408,8 +404,6 @@ require (
 	github.com/syndtr/gocapability v0.0.0-20200815063812-42c35b437635 // indirect
 	github.com/tailscale/tscert v0.0.0-20220125204807-4509a5fbaf74 // indirect
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86 // indirect
-	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
-	github.com/templexxx/xor v0.0.0-20191217153810-f85b25db303b // indirect
 	github.com/tinylib/msgp v1.1.2 // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
@@ -423,7 +417,6 @@ require (
 	github.com/vultr/govultr/v2 v2.11.0 // indirect
 	github.com/willf/bitset v1.1.11 // indirect
 	github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8 // indirect
-	github.com/xtaci/kcp-go v5.4.20+incompatible // indirect
 	github.com/xtaci/smux v1.5.16 // indirect
 	github.com/xtaci/tcpraw v1.2.25 // indirect
 	github.com/yuin/goldmark v1.4.8 // indirect
@@ -454,17 +447,17 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
-	golang.org/x/crypto v0.0.0-20220210151621-f4118a5b28e2 // indirect
+	golang.org/x/crypto v0.0.0-20220321153916-2c7772ba3064 // indirect
 	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
-	golang.org/x/mod v0.5.1 // indirect
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
+	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
+	golang.org/x/net v0.0.0-20220325170049-de3da57026de // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
+	golang.org/x/sys v0.0.0-20220325203850-36772127a21f // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b // indirect
 	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
-	golang.org/x/tools v0.1.8 // indirect
+	golang.org/x/tools v0.1.10 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gomodules.xyz/jsonpatch/v3 v3.0.1 // indirect
 	gomodules.xyz/orderedmap v0.1.0 // indirect
@@ -475,7 +468,6 @@ require (
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/DataDog/dd-trace-go.v1 v1.28.0 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
-	gopkg.in/asn1-ber.v1 v1.0.0-20181015200546-f715ec2f112d // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.56.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
@@ -491,7 +483,7 @@ require (
 	k8s.io/client-go v0.20.4 // indirect
 	k8s.io/component-base v0.20.4 // indirect
 	k8s.io/component-helpers v0.20.4 // indirect
-	k8s.io/klog/v2 v2.60.1
+	k8s.io/klog/v2 v2.60.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20201113171705-d219536bb9fd // indirect
 	k8s.io/kube-state-metrics/v2 v2.4.2 // indirect
 	k8s.io/kubectl v0.20.4 // indirect

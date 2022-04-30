@@ -32,21 +32,21 @@ const (
 	Error             // error occurred; value is text of error
 	Newline
 	// Interesting things
-	Assign         // '='
-	Char           // printable ASCII character; grab bag for comma etc.
-	GreaterOrEqual // '>='
-	Identifier     // alphanumeric identifier
-	LeftBrack      // '['
-	LeftParen      // '('
-	Number         // simple number
-	Operator       // known operator
-	Op             // "op", operator definition keyword
-	Rational       // rational number like 2/3
-	RightBrack     // ']'
-	RightParen     // ')'
-	Semicolon      // ';'
-	Space          // run of spaces separating
-	String         // quoted string (includes quotes)
+	Assign     // '='
+	Char       // printable ASCII character; grab bag for comma etc.
+	Identifier // alphanumeric identifier
+	LeftBrack  // '['
+	LeftParen  // '('
+	Number     // simple number
+	Operator   // known operator
+	Op         // "op", operator definition keyword
+	Rational   // rational number like 2/3
+	Complex    // complex number like 3j2
+	RightBrack // ']'
+	RightParen // ')'
+	Semicolon  // ';'
+	String     // quoted string (includes quotes)
+	Colon      // ':'
 )
 
 func (i Token) String() string {
@@ -68,18 +68,20 @@ type stateFn func(*Scanner) stateFn
 
 // Scanner holds the state of the scanner.
 type Scanner struct {
-	tokens  chan Token // channel of scanned items
-	context value.Context
-	r       io.ByteReader
-	done    bool
-	name    string // the name of the input; used only for error reports
-	buf     []byte
-	input   string  // the line of text being scanned.
-	state   stateFn // the next lexing function to enter
-	line    int     // line number in input
-	pos     int     // current position in the input
-	start   int     // start position of this item
-	width   int     // width of last rune read from input
+	context   value.Context
+	r         io.ByteReader
+	done      bool
+	name      string  // the name of the input; used only for error reports
+	buf       []byte  // I/O buffer, re-used.
+	input     string  // the line of text being scanned.
+	lastRune  rune    // most recent return from next()
+	lastWidth int     // size of that rune
+	readOK    bool    // allow reading of a new line of input
+	state     stateFn // the next lexing function to enter
+	line      int     // line number in input
+	pos       int     // current position in the input
+	start     int     // start position of this item
+	token     Token
 }
 
 // loadLine reads the next line of input and stores it in (appends it to) the input.
@@ -93,74 +95,86 @@ func (l *Scanner) loadLine() {
 			l.done = true
 			break
 		}
-		if c != '\r' {
+		if c != '\r' { // There will never be a \r in l.input.
 			l.buf = append(l.buf, c)
 		}
 		if c == '\n' {
 			break
 		}
 	}
-	l.input = l.input[l.start:l.pos] + string(l.buf)
-	l.pos -= l.start
-	l.start = 0
+	// Reset to beginning of input buffer if there is nothing pending.
+	if l.start == l.pos {
+		l.input = string(l.buf)
+		l.start = 0
+		l.pos = 0
+	} else {
+		l.input += string(l.buf)
+	}
+}
+
+// readRune reads the next rune from the input.
+func (l *Scanner) readRune() (rune, int) {
+	if !l.done && l.pos == len(l.input) {
+		if !l.readOK { // Token did not end before newline.
+			l.errorf("incomplete token")
+			return '\n', 1
+		}
+		l.loadLine()
+	}
+	if len(l.input) == l.pos {
+		return eof, 0
+	}
+	return utf8.DecodeRuneInString(l.input[l.pos:])
 }
 
 // next returns the next rune in the input.
 func (l *Scanner) next() rune {
-	if !l.done && l.pos == len(l.input) {
-		l.loadLine()
-	}
-	if len(l.input) == l.pos {
-		l.width = 0
-		return eof
-	}
-	r, w := utf8.DecodeRuneInString(l.input[l.pos:])
-	l.width = w
-	l.pos += l.width
-	return r
+	l.lastRune, l.lastWidth = l.readRune()
+	l.pos += l.lastWidth
+	return l.lastRune
 }
 
 // peek returns but does not consume the next rune in the input.
 func (l *Scanner) peek() rune {
-	r := l.next()
-	l.backup()
+	r, _ := l.readRune()
 	return r
 }
 
 // peek2 returns the next two runes ahead, but does not consume anything.
 func (l *Scanner) peek2() (rune, rune) {
 	pos := l.pos
-	width := l.width
 	r1 := l.next()
 	r2 := l.next()
 	l.pos = pos
-	l.width = width
 	return r1, r2
 }
 
-// backup steps back one rune. Can only be called once per call of next.
+// backup steps back one rune. Should only be called once per call of next.
 func (l *Scanner) backup() {
-	l.pos -= l.width
+	if l.lastRune == eof {
+		return
+	}
+	if l.pos == l.start {
+		l.errorf("internal error: backup at start of input")
+	}
+	if l.pos > l.start { // TODO can't happen?
+		l.pos -= l.lastWidth
+	}
 }
 
-//  passes an item back to the client.
-func (l *Scanner) emit(t Type) {
+// emit passes an item back to the client.
+func (l *Scanner) emit(t Type) stateFn {
 	if t == Newline {
 		l.line++
 	}
-	s := l.input[l.start:l.pos]
+	text := l.input[l.start:l.pos]
 	config := l.context.Config()
 	if config.Debug("tokens") {
-		fmt.Fprintf(config.Output(), "%s:%d: emit %s\n", l.name, l.line, Token{t, l.line, s})
+		fmt.Fprintf(config.Output(), "%s:%d: emit %s\n", l.name, l.line, Token{t, l.line, text})
 	}
-	l.tokens <- Token{t, l.line, s}
+	l.token = Token{t, l.line, text}
 	l.start = l.pos
-	l.width = 0
-}
-
-// ignore skips over the pending input before this point.
-func (l *Scanner) ignore() {
-	l.start = l.pos
+	return nil
 }
 
 // accept consumes the next rune if it's from the valid set.
@@ -179,49 +193,39 @@ func (l *Scanner) acceptRun(valid string) {
 	l.backup()
 }
 
-// errorf returns an error token, replaces the input line with a
-// newline (so the next token will be a newline, skipping the
-// rest of the current line), and continues to scan.
+// errorf returns an error token and empties the input.
 func (l *Scanner) errorf(format string, args ...interface{}) stateFn {
-	l.tokens <- Token{Error, l.start, fmt.Sprintf(format, args...)}
+	l.token = Token{Error, l.start, fmt.Sprintf(format, args...)}
 	l.start = 0
 	l.pos = 0
-	l.input = "\n"
-	return lexAny
+	l.input = l.input[:0]
+	return nil
 }
 
-// New creates a new scanner for the input string.
+// New creates and returns a new scanner.
 func New(context value.Context, name string, r io.ByteReader) *Scanner {
 	l := &Scanner{
 		r:       r,
 		name:    name,
 		line:    1,
-		tokens:  make(chan Token, 2), // We need a little room to save tokens.
 		context: context,
-		state:   lexAny,
 	}
 	return l
 }
 
 // Next returns the next token.
 func (l *Scanner) Next() Token {
-	// The lexer is concurrent but we don't want it to run in parallel
-	// with the rest of the interpreter, so we only run the state machine
-	// when we need a token.
-	for l.state != nil {
-		select {
-		case tok := <-l.tokens:
-			return tok
-		default:
-			// Run the machine
-			l.state = l.state(l)
+	l.readOK = true
+	l.lastRune = eof
+	l.lastWidth = 0
+	l.token = Token{EOF, l.pos, "EOF"}
+	state := lexAny
+	for {
+		state = state(l)
+		if state == nil {
+			return l.token
 		}
 	}
-	if l.tokens != nil {
-		close(l.tokens)
-		l.tokens = nil
-	}
-	return Token{EOF, l.pos, "EOF"}
 }
 
 // state functions
@@ -238,9 +242,9 @@ func lexComment(l *Scanner) stateFn {
 		l.pos = len(l.input)
 		l.start = l.pos - 1
 		// Emitting newline also advances l.line.
-		l.emit(Newline) // TODO: pass comments up?
+		return l.emit(Newline)
 	}
-	return lexSpace
+	return lexAny
 }
 
 // lexAny scans non-space items.
@@ -248,33 +252,29 @@ func lexAny(l *Scanner) stateFn {
 	switch r := l.next(); {
 	case r == eof:
 		return nil
-	case r == '\n': // TODO: \r
-		l.emit(Newline)
-		return lexAny
+	case r == '\n':
+		return l.emit(Newline)
 	case r == ';':
-		l.emit(Semicolon)
-		return lexAny
+		return l.emit(Semicolon)
 	case r == '#':
 		return lexComment
 	case isSpace(r):
 		return lexSpace
-	case r == '"':
+	case r == '\'' || r == '"':
+		l.backup() // So lexQuote can read the quote character.
 		return lexQuote
 	case r == '`':
 		return lexRawQuote
-	case r == '\'':
-		return lexChar
-	case r == '-':
+	case r == '-' || r == '+':
 		// It's an operator if it's preceded immediately (no spaces) by an operand, which is
 		// an identifier, an indexed expression, or a parenthesized expression.
 		// Otherwise it could be a signed number.
 		if l.start > 0 {
 			rr, _ := utf8.DecodeLastRuneInString(l.input[:l.start])
 			if isAlphaNumeric(rr) || rr == ')' || rr == ']' {
-				l.emit(Operator)
-				return lexAny
+				return lexOperator
 			}
-			// Ugly corner case: inner product starting with '-'.
+			// Ugly corner case: inner product starting with '-' or '+'.
 			if r1, r2 := l.peek2(); r1 == '.' && !l.isNumeral(r2) {
 				return lexOperator
 			}
@@ -282,11 +282,10 @@ func lexAny(l *Scanner) stateFn {
 		fallthrough
 	case r == '.' || '0' <= r && r <= '9':
 		l.backup()
-		return lexNumber
+		return lexComplex
 	case r == '=':
 		if l.peek() != '=' {
-			l.emit(Assign)
-			return lexAny
+			return l.emit(Assign)
 		}
 		l.next()
 		fallthrough // for ==
@@ -298,20 +297,17 @@ func lexAny(l *Scanner) stateFn {
 		l.backup()
 		return lexIdentifier
 	case r == '[':
-		l.emit(LeftBrack)
-		return lexAny
+		return l.emit(LeftBrack)
+	case r == ':':
+		return l.emit(Colon)
 	case r == ']':
-		l.emit(RightBrack)
-		return lexAny
+		return l.emit(RightBrack)
 	case r == '(':
-		l.emit(LeftParen)
-		return lexAny
+		return l.emit(LeftParen)
 	case r == ')':
-		l.emit(RightParen)
-		return lexAny
+		return l.emit(RightParen)
 	case r <= unicode.MaxASCII && unicode.IsPrint(r):
-		l.emit(Char)
-		return lexAny
+		return l.emit(Char)
 	default:
 		return l.errorf("unrecognized character: %#U", r)
 	}
@@ -323,7 +319,8 @@ func lexSpace(l *Scanner) stateFn {
 	for isSpace(l.peek()) {
 		l.next()
 	}
-	l.ignore()
+	// Skips over the pending input.
+	l.start = l.pos
 	return lexAny
 }
 
@@ -331,34 +328,27 @@ func lexSpace(l *Scanner) stateFn {
 // If the input base is greater than 10, some identifiers
 // are actually numbers. We handle this here.
 func lexIdentifier(l *Scanner) stateFn {
-Loop:
-	for {
-		switch r := l.next(); {
-		case isAlphaNumeric(r):
-			// absorb.
-		default:
-			l.backup()
-			if !l.atTerminator() {
-				return l.errorf("bad character %#U", r)
-			}
-			// Some identifiers are operators.
-			word := l.input[l.start:l.pos]
-			switch {
-			case word == "o" && l.peek() == '.':
-				return lexOperator
-			case exec.Predefined(word) || l.context.UserDefined(word, true):
-				return lexOperator
-			case word == "op":
-				l.emit(Op)
-			case isAllDigits(word, l.context.Config().InputBase()):
-				l.emit(Number)
-			default:
-				l.emit(Identifier)
-			}
-			break Loop
-		}
+	for isAlphaNumeric(l.peek()) {
+		l.next()
 	}
-	return lexAny
+	if !l.atTerminator() {
+		return l.errorf("bad character %#U", l.next())
+	}
+	// Some identifiers are operators.
+	word := l.input[l.start:l.pos]
+	switch {
+	case word == "op":
+		return l.emit(Op)
+	case word == "o" && l.peek() == '.':
+		return lexOperator
+	case l.defined(word):
+		return lexOperator
+	case isAllDigits(word, l.context.Config().InputBase()):
+		// Mistake: back up and scan it as a number.
+		l.pos = l.start
+		return lexComplex
+	}
+	return l.emit(Identifier)
 }
 
 // lexOperator completes scanning an operator. We have already accepted the + or
@@ -379,10 +369,9 @@ func lexOperator(l *Scanner) stateFn {
 			l.next()               // Accept the '.'.
 			if isDigit(l.peek()) { // Is a number after all, as in 3*.7. Back up.
 				l.backup()
-				l.emit(Operator) // Up to but not including the period.
-				return lexNumber // We know it starts ".7".
+				return l.emit(Operator) // Up to but not including the period.
 			}
-			startRight := l.pos
+			prevPos := l.pos
 			r := l.next()
 			switch {
 			case l.isOperator(r):
@@ -394,106 +383,104 @@ func lexOperator(l *Scanner) stateFn {
 				if !l.atTerminator() {
 					return l.errorf("bad character %#U", r)
 				}
-				word := l.input[startRight:l.pos]
-				if !exec.Predefined(word) && !l.context.UserDefined(word, true) {
+				word := l.input[prevPos:l.pos]
+				if !l.defined(word) {
 					return l.errorf("%s not an operator", word)
 				}
 			}
 		}
 	}
 	if isIdentifier(l.input[l.start:l.pos]) {
-		l.emit(Identifier)
-	} else {
-		l.emit(Operator)
+		return l.emit(Identifier)
 	}
-	return lexSpace
+	return l.emit(Operator)
 }
 
 // atTerminator reports whether the input is at valid termination character to
-// appear after an identifier.
+// appear after an identifier or number element.
 func (l *Scanner) atTerminator() bool {
 	r := l.peek()
 	if r == eof || isSpace(r) || isEndOfLine(r) || unicode.IsPunct(r) || unicode.IsSymbol(r) {
 		return true
 	}
 	// It could be a compound operator like o.*. Ugly!
-	if r == 'o' && strings.HasPrefix(l.input[l.pos:], "o.") {
-		return true
+	if l.pos < len(l.input) {
+		r1, r2 := l.peek2()
+		if r1 == 'o' && r2 == '.' {
+			return true
+		}
 	}
 	return false
 }
 
-// lexChar scans a character constant. The initial quote is already
-// scanned. Syntax checking is done by the parser.
-func lexChar(l *Scanner) stateFn {
-Loop:
-	for {
-		switch l.next() {
-		case '\\':
-			if r := l.next(); r != eof && r != '\n' {
-				break
-			}
-			fallthrough
-		case eof, '\n':
-			return l.errorf("unterminated character constant")
-		case '\'':
-			break Loop
-		}
+func lexComplex(l *Scanner) stateFn {
+	ok, fn := acceptNumber(l, true)
+	if !ok {
+		return fn
 	}
-	l.emit(String)
-	return lexAny
+	if !l.accept("j") {
+		return l.emit(Number)
+	}
+	ok, _ = acceptNumber(l, true)
+	if !ok {
+		return l.errorf("bad complex number syntax: %s", l.input[l.start:l.pos])
+	}
+	return l.emit(Number)
 }
 
-// lexNumber scans a number: decimal, octal, hex, float, or imaginary. This
+// acceptNumber scans a number: decimal, octal, hex, float. This
 // isn't a perfect number scanner - for instance it accepts "." and "0x0.2"
 // and "089" - but when it's wrong the input is invalid and the parser (via
-// strconv) will notice.
-func lexNumber(l *Scanner) stateFn {
+// strconv) will notice. The realPart boolean says whether this might be
+// the first half of a complex number, permitting a 'j' afterwards. If it's
+// false, we've just seen a 'j' and we need another number.
+// It returns the next lex function to run.
+func acceptNumber(l *Scanner, realPart bool) (bool, stateFn) {
 	// Optional leading sign.
-	if l.accept("-") {
+	if l.accept("+-") && realPart {
 		// Might not be a number.
 		r := l.peek()
 		// Might be a scan or reduction.
 		if r == '/' || r == '\\' {
 			l.next()
-			l.emit(Operator)
-			return lexAny
+			return false, l.emit(Operator)
 		}
 		if r != '.' && !l.isNumeral(r) {
-			l.emit(Operator)
-			return lexAny
+			return false, lexOperator
 		}
 	}
-	if !l.scanNumber(true) {
-		return l.errorf("bad number syntax: %s", l.input[l.start:l.pos])
+	if !l.scanNumber(true, realPart) {
+		l.errorf("bad number syntax: %s", l.input[l.start:l.pos])
+		return false, lexAny
 	}
 	r := l.peek()
 	if r != '/' {
-		l.emit(Number)
-		return lexAny
+		return true, lexAny
 	}
 	// Might be a rational.
 	l.accept("/")
 
-	if r := l.peek(); r != '.' && !l.isNumeral(r) {
-		// Oops, not a number. Hack!
-		l.pos-- // back up before '/'
-		l.emit(Number)
-		l.accept("/")
-		l.emit(Operator)
-		return lexAny
+	if realPart {
+		if r := l.peek(); r != '.' && !l.isNumeral(r) {
+			// Oops, not a rational. Back up!
+			l.pos--
+			return true, lexOperator
+		}
 	}
-	if !l.scanNumber(false) {
-		return l.errorf("bad number syntax: %s", l.input[l.start:l.pos])
+	// Note: No signs here. 1/-2 is (1 / -2) not (-1/2). This differs from 'j' but feels right;
+	// you don't write 1/-2 for -1/2. The sign should be first.
+	if !l.scanNumber(false, realPart) {
+		l.errorf("bad number syntax: %s", l.input[l.start:l.pos])
+		return false, lexAny
 	}
 	if l.peek() == '.' {
-		return l.errorf("bad number syntax: %s", l.input[l.start:l.pos+1])
+		l.errorf("bad number syntax: %s", l.input[l.start:l.pos+1])
+		return false, lexAny
 	}
-	l.emit(Rational)
-	return lexAny
+	return true, lexAny
 }
 
-func (l *Scanner) scanNumber(followingSlashOK bool) bool {
+func (l *Scanner) scanNumber(followingSlashOK, followingJOK bool) bool {
 	base := l.context.Config().InputBase()
 	digits := digitsForBase(base)
 	// If base 0, acccept octal for 0 or hex for 0x or 0X.
@@ -516,7 +503,10 @@ func (l *Scanner) scanNumber(followingSlashOK bool) bool {
 	if followingSlashOK && r == '/' {
 		return true
 	}
-	// Next thing mustn't be alphanumeric except possibly an o for outer product (3o.+2).
+	if followingJOK && r == 'j' {
+		return true
+	}
+	// Next thing mustn't be alphanumeric except possibly an o for outer product (3o.+2) or a complex.
 	if r != 'o' && isAlphaNumeric(r) {
 		l.next()
 		return false
@@ -558,8 +548,9 @@ func digitsForBase(base int) string {
 }
 
 // lexQuote scans a quoted string.
+// The next character is the quote.
 func lexQuote(l *Scanner) stateFn {
-Loop:
+	quote := l.next()
 	for {
 		switch l.next() {
 		case '\\':
@@ -569,27 +560,24 @@ Loop:
 			fallthrough
 		case eof, '\n':
 			return l.errorf("unterminated quoted string")
-		case '"':
-			break Loop
+		case quote:
+			return l.emit(String)
 		}
 	}
-	l.emit(String)
-	return lexAny
+
 }
 
 // lexRawQuote scans a raw quoted string.
 func lexRawQuote(l *Scanner) stateFn {
-Loop:
 	for {
+		l.readOK = true // Here we do accept a newline mid-token.
 		switch l.next() {
 		case eof:
 			return l.errorf("unterminated raw quoted string")
 		case '`':
-			break Loop
+			return l.emit(String)
 		}
 	}
-	l.emit(String)
-	return lexAny
 }
 
 // isSpace reports whether r is a space character.
@@ -599,12 +587,12 @@ func isSpace(r rune) bool {
 
 // isEndOfLine reports whether r is an end-of-line (really end-of-statement) character.
 func isEndOfLine(r rune) bool {
-	return r == '\r' || r == '\n' || r == ';'
+	return r == '\n' || r == ';'
 }
 
-// isIdentifier reports whether the string is a valid identifier.
+// isIdentifier reports whether the slice is a valid identifier.
 func isIdentifier(s string) bool {
-	if s == "_" {
+	if len(s) == 1 && s[0] == '_' {
 		return false // Special symbol; can't redefine.
 	}
 	first := true
@@ -653,11 +641,17 @@ func (l *Scanner) isNumeral(r rune) bool {
 	return false
 }
 
-// isAllDigits reports whether s consists of digits in the specified base.
+// isAllDigits reports whether s consists of digits in the specified base,
+// includig possibly one 'j'.
 func isAllDigits(s string, base int) bool {
 	top := 'a' + rune(base-10) - 1
 	TOP := 'A' + rune(base-10) - 1
+	sawJ := false
 	for _, c := range s {
+		if c == 'j' && !sawJ {
+			sawJ = true
+			continue
+		}
 		if '0' <= c && c <= '9' {
 			continue
 		}
@@ -706,4 +700,9 @@ func (l *Scanner) isOperator(r rune) bool {
 		return false
 	}
 	return true
+}
+
+// defined reports whether the argument has been defined as a variable or operator.
+func (l *Scanner) defined(word string) bool {
+	return exec.Predefined(word) || l.context.UserDefined(word, true)
 }

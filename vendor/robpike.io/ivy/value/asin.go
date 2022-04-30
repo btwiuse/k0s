@@ -4,17 +4,47 @@
 
 package value
 
-import "math/big"
+import (
+	"math/big"
+)
 
 func asin(c Context, v Value) Value {
+	if u, ok := v.(Complex); ok {
+		if !isZero(u.imag) || !inArcRealDomain(u.real) {
+			return complexAsin(c, u)
+		}
+		v = u.real
+	} else if !inArcRealDomain(v) {
+		return complexAsin(c, newComplex(v, zero))
+	}
 	return evalFloatFunc(c, v, floatAsin)
 }
 
 func acos(c Context, v Value) Value {
+	if u, ok := v.(Complex); ok {
+		if !isZero(u.imag) || !inArcRealDomain(u.real) {
+			return complexAcos(c, u)
+		}
+		v = u.real
+	} else if !inArcRealDomain(v) {
+		return complexAcos(c, newComplex(v, zero))
+	}
 	return evalFloatFunc(c, v, floatAcos)
 }
 
+// inArcRealDomain reports whether the argument is between -1 and +1,
+// the valid domain for real arcsin and arccos.
+func inArcRealDomain(x Value) bool {
+	return compare(x, -1) >= 0 && compare(x, 1) <= 0
+}
+
 func atan(c Context, v Value) Value {
+	if u, ok := v.(Complex); ok {
+		if !isZero(u.imag) {
+			return complexAtan(c, u)
+		}
+		v = u.real
+	}
 	return evalFloatFunc(c, v, floatAtan)
 }
 
@@ -58,7 +88,7 @@ func floatAtan(c Context, x *big.Float) *big.Float {
 		return z.Neg(z)
 	}
 
-	// The series converge very slowly near 1. atan 1.00001 takes over a million
+	// The series converges very slowly near 1. atan 1.00001 takes over a million
 	// iterations at the default precision. But there is hope, an Euler identity:
 	//	atan(x) = atan(y) + atan((x-y)/(1+xy))
 	// Note that y is a free variable. If x is near 1, we can use this formula
@@ -153,4 +183,28 @@ func floatAtanLarge(c Context, x *big.Float) *big.Float {
 	}
 
 	return z
+}
+
+func complexAsin(c Context, v Complex) Complex {
+	// Use the formula: asin(v) = -i * log(sqrt(1-v²) + i*v)
+	x := newComplex(one, zero)
+	x = complexSqrt(c, x.sub(c, v.mul(c, v)))
+	i := newComplex(zero, one)
+	x = x.add(c, i.mul(c, v))
+	x = complexLog(c, x)
+	return newComplex(zero, minusOne).mul(c, x)
+}
+
+func complexAcos(c Context, v Complex) Value {
+	// Use the formula: acos(v) = π/2 - asin(v)
+	piBy2 := newComplex(BigFloat{newFloat(c).Set(floatPiBy2)}, BigFloat{floatZero})
+	return piBy2.sub(c, complexAsin(c, v))
+}
+
+func complexAtan(c Context, v Complex) Value {
+	// Use the formula: atan(v) = 1/2i * log((1-v)/(1+v))
+	i := newComplex(zero, one)
+	res := i.sub(c, v).div(c, i.add(c, v))
+	res = complexLog(c, res)
+	return res.mul(c, minusOneOverTwoI)
 }

@@ -5,17 +5,22 @@ package eval
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"math/rand"
 	"net"
-	"strconv"
+	"os"
 	"sync"
 	"time"
 	"unicode/utf8"
 
 	"src.elv.sh/pkg/diag"
+	"src.elv.sh/pkg/eval/errs"
 	"src.elv.sh/pkg/eval/vals"
 	"src.elv.sh/pkg/parse"
+)
+
+var (
+	ErrNegativeSleepDuration = errors.New("sleep duration must be >= zero")
+	ErrInvalidSleepDuration  = errors.New("invalid sleep duration")
 )
 
 // Builtins that have not been put into their own groups go here.
@@ -26,18 +31,17 @@ func init() {
 		"kind-of":    kindOf,
 		"constantly": constantly,
 
+		// Introspection
+		"call":    call,
 		"resolve": resolve,
-
 		"eval":    eval,
 		"use-mod": useMod,
-		"-source": source,
 
 		"deprecate": deprecate,
 
 		// Time
-		"esleep": sleep,
-		"sleep":  sleep,
-		"time":   timeCmd,
+		"sleep": sleep,
+		"time":  timeCmd,
 
 		"-ifaddrs": _ifaddrs,
 	})
@@ -86,11 +90,15 @@ func nop(opts RawOptions, args ...interface{}) {
 //
 // The terminology and definition of "kind" is subject to change.
 
-func kindOf(fm *Frame, args ...interface{}) {
-	out := fm.OutputChan()
+func kindOf(fm *Frame, args ...interface{}) error {
+	out := fm.ValueOutput()
 	for _, a := range args {
-		out <- vals.Kind(a)
+		err := out.Put(vals.Kind(a))
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 //elvdoc:fn constantly
@@ -103,25 +111,26 @@ func kindOf(fm *Frame, args ...interface{}) {
 // Examples:
 //
 // ```elvish-transcript
-// ~> f=(constantly lorem ipsum)
+// ~> var f = (constantly lorem ipsum)
 // ~> $f
 // ▶ lorem
 // ▶ ipsum
 // ```
 //
-// The above example is actually equivalent to simply `f = []{ put lorem ipsum }`;
+// The above example is equivalent to simply `var f = { put lorem ipsum }`;
 // it is most useful when the argument is **not** a literal value, e.g.
 //
 // ```elvish-transcript
-// ~> f = (constantly (uname))
+// ~> var f = (constantly (uname))
 // ~> $f
 // ▶ Darwin
 // ~> $f
 // ▶ Darwin
 // ```
 //
-// The above code only calls `uname` once, while if you do `f = []{ put (uname) }`,
-// every time you invoke `$f`, `uname` will be called.
+// The above code only calls `uname` once when defining `$f`. In contrast, if
+// `$f` is defined as `var f = { put (uname) }`, every time you invoke `$f`,
+// `uname` will be called.
 //
 // Etymology: [Clojure](https://clojuredocs.org/clojure.core/constantly).
 
@@ -129,13 +138,54 @@ func constantly(args ...interface{}) Callable {
 	// TODO(xiaq): Repr of this function is not right.
 	return NewGoFn(
 		"created by constantly",
-		func(fm *Frame) {
-			out := fm.OutputChan()
+		func(fm *Frame) error {
+			out := fm.ValueOutput()
 			for _, v := range args {
-				out <- v
+				err := out.Put(v)
+				if err != nil {
+					return err
+				}
 			}
+			return nil
 		},
 	)
+}
+
+//elvdoc:fn call
+//
+// ```elvish
+// call $fn $args $opts
+// ```
+//
+// Calls `$fn` with `$args` as the arguments, and `$opts` as the option. Useful
+// for calling a function with dynamic option keys.
+//
+// Example:
+//
+// ```elvish-transcript
+// ~> var f = {|a &k1=v1 &k2=v2| put $a $k1 $k2 }
+// ~> call $f [foo] [&k1=bar]
+// ▶ foo
+// ▶ bar
+// ▶ v2
+// ```
+
+func call(fm *Frame, fn Callable, argsVal vals.List, optsVal vals.Map) error {
+	args := make([]interface{}, 0, argsVal.Len())
+	for it := argsVal.Iterator(); it.HasElem(); it.Next() {
+		args = append(args, it.Elem())
+	}
+	opts := make(map[string]interface{}, optsVal.Len())
+	for it := optsVal.Iterator(); it.HasElem(); it.Next() {
+		k, v := it.Elem()
+		ks, ok := k.(string)
+		if !ok {
+			return errs.BadValue{What: "option key",
+				Valid: "string", Actual: vals.Kind(k)}
+		}
+		opts[ks] = v
+	}
+	return fn.Call(fm.Fork("-call"), args, opts)
 }
 
 //elvdoc:fn resolve
@@ -197,10 +247,10 @@ func resolve(fm *Frame, head string) string {
 // ```elvish-transcript
 // ~> eval 'put x'
 // ▶ x
-// ~> x = foo
+// ~> var x = foo
 // ~> eval 'put $x'
 // ▶ foo
-// ~> ns = (ns [&x=bar])
+// ~> var ns = (ns [&x=bar])
 // ~> eval &ns=$ns 'put $x'
 // ▶ bar
 // ```
@@ -208,8 +258,8 @@ func resolve(fm *Frame, head string) string {
 // Examples that modify existing variables:
 //
 // ```elvish-transcript
-// ~> y = foo
-// ~> eval 'y = bar'
+// ~> var y = foo
+// ~> eval 'set y = bar'
 // ~> put $y
 // ▶ bar
 // ```
@@ -217,14 +267,29 @@ func resolve(fm *Frame, head string) string {
 // Examples that creates new variables and uses the callback to access it:
 //
 // ```elvish-transcript
-// ~> eval 'z = lorem'
+// ~> eval 'var z = lorem'
 // ~> put $z
 // compilation error: variable $z not found
 // [ttz 2], line 1: put $z
-// ~> saved-ns = $nil
-// ~> eval &on-end=[ns]{ saved-ns = $ns } 'z = lorem'
+// ~> var saved-ns = $nil
+// ~> eval &on-end={|ns| set saved-ns = $ns } 'var z = lorem'
 // ~> put $saved-ns[z]
 // ▶ lorem
+// ```
+//
+// Note that when using variables from an outer scope, only those
+// that have been referenced are captured as upvalues (see [closure
+// semantics](language.html#closure-semantics)) and thus accessible to `eval`:
+//
+// ```elvish-transcript
+// ~> var a b
+// ~> fn f {|code| nop $a; eval $code }
+// ~> f 'echo $a'
+// $nil
+// ~> f 'echo $b'
+// Exception: compilation error: variable $b not found
+// [eval 2], line 1: echo $b
+// Traceback: [... omitted ...]
 // ```
 
 type evalOpts struct {
@@ -244,7 +309,7 @@ func eval(fm *Frame, opts evalOpts, code string) error {
 	// nil as the second argument.
 	newNs, exc := fm.Eval(src, nil, ns)
 	if opts.OnEnd != nil {
-		newFm := fm.fork("on-end callback of eval")
+		newFm := fm.Fork("on-end callback of eval")
 		errCb := opts.OnEnd.Call(newFm, []interface{}{newNs}, NoOpts)
 		if exc == nil {
 			return errCb
@@ -280,7 +345,7 @@ func nextEvalCount() int {
 // Examples:
 //
 // ```elvish-transcript
-// ~> echo 'x = value' > a.elv
+// ~> echo 'var x = value' > a.elv
 // ~> put (use-mod ./a)[x]
 // ▶ value
 // ```
@@ -289,29 +354,8 @@ func useMod(fm *Frame, spec string) (*Ns, error) {
 	return use(fm, spec, nil)
 }
 
-//elvdoc:fn -source
-//
-// ```elvish
-// -source $filename
-// ```
-//
-// Equivalent to `eval (slurp <$filename)`. Deprecated.
-
-func source(fm *Frame, fname string) error {
-	code, err := readFileUTF8(fname)
-	if err != nil {
-		return err
-	}
-	src := parse.Source{Name: fname, Code: code, IsFile: true}
-	// Amalgamate the up and local scope into a new scope to use as the global
-	// scope to evaluate the code in.
-	ns := CombineNs(fm.up, fm.local)
-	_, exc := fm.Eval(src, nil, ns)
-	return exc
-}
-
 func readFileUTF8(fname string) (string, error) {
-	bytes, err := ioutil.ReadFile(fname)
+	bytes, err := os.ReadFile(fname)
 	if err != nil {
 		return "", err
 	}
@@ -387,7 +431,7 @@ var TimeAfter = func(fm *Frame, d time.Duration) <-chan time.Time {
 // contexts that might be executing in parallel as a consequence of a command
 // such as [`peach`](#peach).
 //
-// A duration can be a simple [number](../language.html#number) (with optional
+// A duration can be a simple [number](language.html#number) (with optional
 // fractional value) without an explicit unit suffix, with an implicit unit of
 // seconds.
 //
@@ -416,27 +460,26 @@ var TimeAfter = func(fm *Frame, d time.Duration) <-chan time.Time {
 // ```
 
 func sleep(fm *Frame, duration interface{}) error {
+	var f float64
 	var d time.Duration
 
-	switch duration := duration.(type) {
-	case float64:
-		d = time.Duration(float64(time.Second) * duration)
-	case string:
-		f, err := strconv.ParseFloat(duration, 64)
-		if err == nil { // it's a simple number assumed to have units == seconds
-			d = time.Duration(float64(time.Second) * f)
-		} else {
+	if err := vals.ScanToGo(duration, &f); err == nil {
+		d = time.Duration(f * float64(time.Second))
+	} else {
+		// See if it is a duration string rather than a simple number.
+		switch duration := duration.(type) {
+		case string:
 			d, err = time.ParseDuration(duration)
 			if err != nil {
-				return errors.New("invalid sleep duration")
+				return ErrInvalidSleepDuration
 			}
+		default:
+			return ErrInvalidSleepDuration
 		}
-	default:
-		return errors.New("invalid sleep duration")
 	}
 
 	if d < 0 {
-		return fmt.Errorf("sleep duration must be >= zero")
+		return ErrNegativeSleepDuration
 	}
 
 	select {
@@ -470,11 +513,11 @@ func sleep(fm *Frame, duration interface{}) error {
 // 1.006060647s
 // ~> time { sleep 0.01 }
 // 1.288977ms
-// ~> t = ''
-// ~> time &on-end=[x]{ t = $x } { sleep 1 }
+// ~> var t = ''
+// ~> time &on-end={|x| set t = $x } { sleep 1 }
 // ~> put $t
 // ▶ (float64 1.000925004)
-// ~> time &on-end=[x]{ t = $x } { sleep 0.01 }
+// ~> time &on-end={|x| set t = $x } { sleep 0.01 }
 // ~> put $t
 // ▶ (float64 0.011030208)
 // ```
@@ -490,13 +533,16 @@ func timeCmd(fm *Frame, opts timeOpt, f Callable) error {
 
 	dt := t1.Sub(t0)
 	if opts.OnEnd != nil {
-		newFm := fm.fork("on-end callback of time")
+		newFm := fm.Fork("on-end callback of time")
 		errCb := opts.OnEnd.Call(newFm, []interface{}{dt.Seconds()}, NoOpts)
 		if err == nil {
 			err = errCb
 		}
 	} else {
-		fmt.Fprintln(fm.OutputFile(), dt)
+		_, errWrite := fmt.Fprintln(fm.ByteOutput(), dt)
+		if err == nil {
+			err = errWrite
+		}
 	}
 
 	return err
@@ -517,9 +563,12 @@ func _ifaddrs(fm *Frame) error {
 	if err != nil {
 		return err
 	}
-	out := fm.OutputChan()
+	out := fm.ValueOutput()
 	for _, addr := range addrs {
-		out <- addr.String()
+		err := out.Put(addr.String())
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

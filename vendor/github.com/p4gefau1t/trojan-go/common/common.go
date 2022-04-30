@@ -3,9 +3,10 @@ package common
 import (
 	"crypto/sha256"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/p4gefau1t/trojan-go/log"
 )
 
 type Runnable interface {
@@ -30,4 +31,19 @@ func GetProgramDir() string {
 		log.Fatal(err)
 	}
 	return dir
+}
+
+func GetAssetLocation(file string) string {
+	if filepath.IsAbs(file) {
+		return file
+	}
+	if loc := os.Getenv("TROJAN_GO_LOCATION_ASSET"); loc != "" {
+		absPath, err := filepath.Abs(loc)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Debugf("env set: TROJAN_GO_LOCATION_ASSET=%s", absPath)
+		return filepath.Join(absPath, file)
+	}
+	return filepath.Join(GetProgramDir(), file)
 }

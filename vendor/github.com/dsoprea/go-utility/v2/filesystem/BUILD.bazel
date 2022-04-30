@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "bounceback.go",
+        "boundedreadwriteseekcloser.go",
+        "boundedreadwriteseeker.go",
+        "calculate_seek.go",
+        "common.go",
+        "copy_bytes_between_positions.go",
+        "does_exist.go",
+        "graceful_copy.go",
+        "list_files.go",
+        "progress_wrapper.go",
+        "read_counter.go",
+        "readseeker_to_readerat.go",
+        "readwriteseekcloser.go",
+        "seekable_buffer.go",
+        "simplefileinfo.go",
+        "utility.go",
+        "write_counter.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/dsoprea/go-utility/v2/filesystem",
+    importpath = "github.com/dsoprea/go-utility/v2/filesystem",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/dsoprea/go-logging:go_default_library"],
+)

@@ -5,6 +5,8 @@
 
 RunnerGroup is like [sync.WaitGroup](https://pkg.go.dev/sync?tab=doc#WaitGroup), the diffrence is if one task stops, all will be stopped.
 
+❤️ A project by [txthinking.com](https://www.txthinking.com)
+
 ### Install
 
     $ go get github.com/txthinking/runnergroup
@@ -57,3 +59,7 @@ func Example() {
 }
 
 ```
+
+## License
+
+Licensed under The MIT License

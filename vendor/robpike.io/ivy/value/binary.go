@@ -5,7 +5,9 @@
 package value
 
 import (
+	"math"
 	"math/big"
+	"sort"
 )
 
 // Binary operators.
@@ -13,18 +15,23 @@ import (
 // To avoid initialization cycles when we refer to the ops from inside
 // themselves, we use an init function to initialize the ops.
 
+// noPromoteType leaves the types as they are.
+func noPromoteType(t1, t2 valueType) (valueType, valueType) {
+	return t1, t2
+}
+
 // binaryArithType returns the maximum of the two types,
 // so the smaller value is appropriately up-converted.
-func binaryArithType(t1, t2 valueType) valueType {
+func binaryArithType(t1, t2 valueType) (valueType, valueType) {
 	if t1 > t2 {
-		return t1
+		return t1, t1
 	}
-	return t2
+	return t2, t2
 }
 
 // divType is like binaryArithType but never returns smaller than BigInt,
 // because the only implementation of exponentiation we have is in big.Int.
-func divType(t1, t2 valueType) valueType {
+func divType(t1, t2 valueType) (valueType, valueType) {
 	if t1 == intType {
 		t1 = bigIntType
 	}
@@ -32,7 +39,7 @@ func divType(t1, t2 valueType) valueType {
 }
 
 // rationalType promotes scalars to rationals so we can do rational division.
-func rationalType(t1, t2 valueType) valueType {
+func rationalType(t1, t2 valueType) (valueType, valueType) {
 	if t1 < bigRatType {
 		t1 = bigRatType
 	}
@@ -40,11 +47,25 @@ func rationalType(t1, t2 valueType) valueType {
 }
 
 // atLeastVectorType promotes both arguments to at least vectors.
-func atLeastVectorType(t1, t2 valueType) valueType {
+func atLeastVectorType(t1, t2 valueType) (valueType, valueType) {
 	if t1 < matrixType && t2 < matrixType {
-		return vectorType
+		return vectorType, vectorType
 	}
-	return matrixType
+	return matrixType, matrixType
+}
+
+// vectorAndMatrixType promotes the left arg to vector and the right arg to matrix.
+func vectorAndMatrixType(t1, t2 valueType) (valueType, valueType) {
+	return vectorType, matrixType
+}
+
+// vectorAndAtLeastVectorType promotes the left arg to vector
+// and the right arg to at least vector.
+func vectorAndAtLeastVectorType(t1, t2 valueType) (valueType, valueType) {
+	if t2 < vectorType {
+		t2 = vectorType
+	}
+	return vectorType, t2
 }
 
 // shiftCount converts x to an unsigned integer.
@@ -92,12 +113,13 @@ func binaryBigFloatOp(c Context, u Value, op func(*big.Float, *big.Float, *big.F
 // Also we need a context (really a config); see the bigIntExpOp function below.
 // We know this is not 0**negative.
 func bigIntExp(c Context, i, j, k *big.Int) *big.Int {
-	if j.Cmp(bigOne.Int) == 0 || j.Sign() == 0 {
+	if j.Cmp(bigIntOne.Int) == 0 || j.Sign() == 0 {
 		return i.Set(j)
 	}
 	// -1ⁿ is just parity.
-	if j.Cmp(bigMinusOne.Int) == 0 {
-		if k.And(k, bigOne.Int).Int64() == 0 {
+	if j.Cmp(bigIntMinusOne.Int) == 0 {
+		var x big.Int
+		if x.And(k, bigIntOne.Int).Int64() == 0 {
 			return i.Neg(j)
 		}
 		return i.Set(j)
@@ -112,7 +134,7 @@ func bigIntExp(c Context, i, j, k *big.Int) *big.Int {
 		exp = -exp
 	}
 	// "2" is just shift. math/big should do this, really.
-	if j.Cmp(bigTwo.Int) == 0 && exp >= 0 {
+	if j.Cmp(bigIntTwo.Int) == 0 && exp >= 0 {
 		return i.Lsh(big.NewInt(1), uint(exp))
 	}
 	mustFit(c.Config(), int64(j.BitLen())*exp)
@@ -148,25 +170,51 @@ func toBool(t Value) bool {
 		return t.Sign() != 0
 	case BigFloat:
 		return t.Sign() != 0
+	case Complex:
+		return !isZero(t.real) || !isZero(t.imag)
 	}
 	Errorf("cannot convert %T to bool", t)
 	panic("not reached")
 }
 
-var (
-	zero        = Int(0)
-	one         = Int(1)
-	minusOne    = Int(-1)
-	bigZero     = bigInt64(0)
-	bigOne      = bigInt64(1)
-	bigTwo      = bigInt64(2)
-	bigMinusOne = bigInt64(-1)
-)
+// andBool is like toBool but handles vectors by and'ing the values together.
+// The results are known to be Ints, as they come from comparison operations.
+func andBool(t Value) bool {
+	if v, ok := t.(Vector); ok {
+		for _, x := range v {
+			if x == Int(0) {
+				return false
+			}
+		}
+		return true
+	}
+	return t.(Int) == one
+}
 
 var BinaryOps = make(map[string]BinaryOp)
 
 func init() {
 	var ops = []*binaryOp{
+		{
+			name:        "j",
+			elementwise: true,
+			whichType:   binaryArithType,
+			fn: [numType]binaryFn{
+				intType: func(c Context, u, v Value) Value {
+					return newComplex(u, v)
+				},
+				bigIntType: func(c Context, u, v Value) Value {
+					return newComplex(u, v)
+				},
+				bigRatType: func(c Context, u, v Value) Value {
+					return newComplex(u, v)
+				},
+				bigFloatType: func(c Context, u, v Value) Value {
+					return newComplex(u, v)
+				},
+			},
+		},
+
 		{
 			name:        "+",
 			elementwise: true,
@@ -185,6 +233,9 @@ func init() {
 				},
 				bigFloatType: func(c Context, u, v Value) Value {
 					return binaryBigFloatOp(c, u, (*big.Float).Add, v)
+				},
+				complexType: func(c Context, u, v Value) Value {
+					return u.(Complex).add(c, v.(Complex))
 				},
 			},
 		},
@@ -208,6 +259,9 @@ func init() {
 				bigFloatType: func(c Context, u, v Value) Value {
 					return binaryBigFloatOp(c, u, (*big.Float).Sub, v)
 				},
+				complexType: func(c Context, u, v Value) Value {
+					return u.(Complex).sub(c, v.(Complex))
+				},
 			},
 		},
 
@@ -229,6 +283,9 @@ func init() {
 				bigFloatType: func(c Context, u, v Value) Value {
 					return binaryBigFloatOp(c, u, (*big.Float).Mul, v)
 				},
+				complexType: func(c Context, u, v Value) Value {
+					return u.(Complex).mul(c, v.(Complex))
+				},
 			},
 		},
 
@@ -245,6 +302,9 @@ func init() {
 				},
 				bigFloatType: func(c Context, u, v Value) Value {
 					return binaryBigFloatOp(c, u, (*big.Float).Quo, v)
+				},
+				complexType: func(c Context, u, v Value) Value {
+					return u.(Complex).div(c, v.(Complex))
 				},
 			},
 		},
@@ -266,8 +326,9 @@ func init() {
 					}
 					return binaryBigIntOp(u, (*big.Int).Quo, v) // Go-like division.
 				},
-				bigRatType:   nil, // Not defined for rationals. Use div.
+				bigRatType:   nil, // Not defined for rationals.
 				bigFloatType: nil,
+				complexType:  nil,
 			},
 		},
 
@@ -290,6 +351,7 @@ func init() {
 				},
 				bigRatType:   nil, // Not defined for rationals. Use mod.
 				bigFloatType: nil,
+				complexType:  nil,
 			},
 		},
 
@@ -306,6 +368,7 @@ func init() {
 				},
 				bigRatType:   nil, // Not defined for rationals. Use div.
 				bigFloatType: nil,
+				complexType:  nil,
 			},
 		},
 
@@ -322,6 +385,7 @@ func init() {
 				},
 				bigRatType:   nil, // Not defined for rationals. Use mod.
 				bigFloatType: nil,
+				complexType:  nil,
 			},
 		},
 
@@ -338,11 +402,14 @@ func init() {
 						if u.(BigInt).Sign() == 0 {
 							Errorf("negative exponent of zero")
 						}
-						v = c.EvalUnary("abs", v).toType(c.Config(), bigIntType)
+						if isNegative(v) {
+							// Need the absolute value.
+							v = BigInt{big.NewInt(0).Neg(v.(BigInt).Int)}
+						}
 						return c.EvalUnary("/", binaryBigIntOp(u, bigIntExpOp(c), v))
 					}
 					x := u.(BigInt).Int
-					if x.Cmp(bigOne.Int) == 0 || x.Sign() == 0 {
+					if x.Cmp(bigIntOne.Int) == 0 || x.Sign() == 0 {
 						return u
 					}
 					return binaryBigIntOp(u, bigIntExpOp(c), v)
@@ -359,7 +426,7 @@ func init() {
 							Errorf("negative exponent of zero")
 						}
 						positive = false
-						rexp = c.EvalUnary("-", v).toType(c.Config(), bigRatType).(BigRat)
+						rexp = c.EvalUnary("-", v).toType("**", c.Config(), bigRatType).(BigRat)
 					}
 					if !rexp.IsInt() {
 						// Lift to float.
@@ -380,6 +447,7 @@ func init() {
 					return z.shrink()
 				},
 				bigFloatType: func(c Context, u, v Value) Value { return power(c, u, v) },
+				complexType:  func(c Context, u, v Value) Value { return power(c, u, v) },
 			},
 		},
 
@@ -392,6 +460,7 @@ func init() {
 				bigIntType:   logBaseU,
 				bigRatType:   logBaseU,
 				bigFloatType: logBaseU,
+				complexType:  logBaseU,
 			},
 		},
 
@@ -404,10 +473,10 @@ func init() {
 					a := int64(u.(Int))
 					b := int64(v.(Int))
 					if a == 0 || b == 0 || a == b {
-						return bigOne
+						return one
 					}
 					if a < 0 || b < 0 || a > b {
-						return bigZero
+						return zero
 					}
 					aFac := factorial(a)
 					bFac := factorial(b)
@@ -514,6 +583,13 @@ func init() {
 					i, j := u.(BigFloat), v.(BigFloat)
 					return toInt(i.Cmp(j.Float) == 0)
 				},
+				complexType: func(c Context, u, v Value) Value {
+					i, j := u.(Complex), v.(Complex)
+					if c.EvalBinary(i.real, "==", j.real) == Int(0) {
+						return Int(0)
+					}
+					return c.EvalBinary(i.imag, "==", j.imag)
+				},
 			},
 		},
 
@@ -539,6 +615,13 @@ func init() {
 				bigFloatType: func(c Context, u, v Value) Value {
 					i, j := u.(BigFloat), v.(BigFloat)
 					return toInt(i.Cmp(j.Float) != 0)
+				},
+				complexType: func(c Context, u, v Value) Value {
+					i, j := u.(Complex), v.(Complex)
+					if c.EvalBinary(i.real, "!=", j.real) == Int(1) {
+						return Int(1)
+					}
+					return c.EvalBinary(i.imag, "!=", j.imag)
 				},
 			},
 		},
@@ -667,6 +750,9 @@ func init() {
 				bigFloatType: func(c Context, u, v Value) Value {
 					return toInt(toBool(u) && toBool(v))
 				},
+				complexType: func(c Context, u, v Value) Value {
+					return toInt(toBool(u) && toBool(v))
+				},
 			},
 		},
 
@@ -688,6 +774,9 @@ func init() {
 					return toInt(toBool(u) || toBool(v))
 				},
 				bigFloatType: func(c Context, u, v Value) Value {
+					return toInt(toBool(u) || toBool(v))
+				},
+				complexType: func(c Context, u, v Value) Value {
 					return toInt(toBool(u) || toBool(v))
 				},
 			},
@@ -713,6 +802,9 @@ func init() {
 				bigFloatType: func(c Context, u, v Value) Value {
 					return toInt(toBool(u) != toBool(v))
 				},
+				complexType: func(c Context, u, v Value) Value {
+					return toInt(toBool(u) != toBool(v))
+				},
 			},
 		},
 
@@ -736,6 +828,9 @@ func init() {
 				bigFloatType: func(c Context, u, v Value) Value {
 					return toInt(!(toBool(u) && toBool(v)))
 				},
+				complexType: func(c Context, u, v Value) Value {
+					return toInt(!(toBool(u) && toBool(v)))
+				},
 			},
 		},
 
@@ -757,6 +852,9 @@ func init() {
 					return toInt(!(toBool(u) || toBool(v)))
 				},
 				bigFloatType: func(c Context, u, v Value) Value {
+					return toInt(!(toBool(u) || toBool(v)))
+				},
+				complexType: func(c Context, u, v Value) Value {
 					return toInt(!(toBool(u) || toBool(v)))
 				},
 			},
@@ -789,7 +887,7 @@ func init() {
 
 		{
 			name:      "decode",
-			whichType: atLeastVectorType,
+			whichType: vectorAndAtLeastVectorType,
 			fn: [numType]binaryFn{
 				vectorType: func(c Context, u, v Value) Value {
 					// A decode B is the result of polyomial B at x=A.
@@ -822,12 +920,49 @@ func init() {
 					}
 					return nil
 				},
+				matrixType: func(c Context, u, v Value) Value {
+					A, B := u.(Vector), v.(*Matrix)
+					if len(A) != 1 && B.shape[0] != 1 && len(A) != B.shape[0] {
+						Errorf("decode of length %d and shape %s", len(A), NewIntVector(B.shape))
+					}
+					shape := B.shape[1:]
+					elems := make([]Value, len(B.data)/B.shape[0])
+					get := func(v Vector, i int) Value {
+						if len(v) == 1 {
+							return v[0]
+						}
+						return v[i]
+					}
+					n := len(A)
+					if B.shape[0] > n {
+						n = B.shape[0]
+					}
+					pfor(true, n, len(elems), func(lo, hi int) {
+						for j := lo; j < hi; j++ {
+							result := Value(Int(0))
+							prod := Value(Int(1))
+							for i := n - 1; i >= 0; i-- {
+								Bslice := B.data
+								if B.shape[0] > 1 {
+									Bslice = B.data[i*len(elems) : (i+1)*len(elems)]
+								}
+								result = c.EvalBinary(result, "+", c.EvalBinary(prod, "*", Bslice[j]))
+								prod = c.EvalBinary(prod, "*", get(A, i))
+							}
+							elems[j] = result
+						}
+					})
+					if len(shape) == 1 {
+						return NewVector(elems)
+					}
+					return NewMatrix(shape, elems)
+				},
 			},
 		},
 
 		{
 			name:      "encode",
-			whichType: atLeastVectorType,
+			whichType: vectorAndAtLeastVectorType,
 			fn: [numType]binaryFn{
 				vectorType: func(c Context, u, v Value) Value {
 					// A encode B is a matrix of len(A) rows and len(B) columns.
@@ -838,22 +973,11 @@ func init() {
 					// 1 0 1
 					// If they are negative the answers disagree with APL because
 					// of how modulo arithmetic works.
-					mod := func(b, a Value) Value {
-						if z, ok := a.(Int); ok && z == 0 {
-							return b
-						}
-						return c.EvalBinary(b, "mod", a)
-					}
-					div := func(b, a Value) Value {
-						if z, ok := a.(Int); ok && z == 0 {
-							return b
-						}
-						return c.EvalBinary(b, "div", a)
-					}
+					const op = "encode"
 					A, B := u.(Vector), v.(Vector)
 					// Scalar.
 					if len(A) == 1 && len(B) == 1 {
-						return mod(B[0], A[0])
+						return emod(op, c, B[0], A[0])
 					}
 					// Vector.
 					if len(B) == 1 {
@@ -862,8 +986,8 @@ func init() {
 						b := B[0]
 						for i := len(A) - 1; i >= 0; i-- {
 							a := A[i]
-							elems[i] = mod(b, a)
-							b = div(b, a)
+							elems[i] = emod(op, c, b, a)
+							b = ediv(op, c, b, a)
 						}
 						return NewVector(elems)
 					}
@@ -872,7 +996,7 @@ func init() {
 						elems := make([]Value, len(B))
 						a := A[0]
 						for i := range B {
-							elems[i] = mod(B[i], a)
+							elems[i] = emod(op, c, B[i], a)
 						}
 						return NewVector(elems)
 					}
@@ -882,14 +1006,33 @@ func init() {
 					// 1 0 1
 					elems := make([]Value, len(A)*len(B))
 					shape := []int{len(A), len(B)}
-					for j := range B {
-						b := B[j]
-						for i := len(A) - 1; i >= 0; i-- {
-							a := A[i]
-							elems[j+i*len(B)] = mod(b, a)
-							b = div(b, a)
+					pfor(true, len(A), len(B), func(lo, hi int) {
+						for j := lo; j < hi; j++ {
+							b := B[j]
+							for i := len(A) - 1; i >= 0; i-- {
+								a := A[i]
+								elems[j+i*len(B)] = emod(op, c, b, a)
+								b = ediv(op, c, b, a)
+							}
 						}
-					}
+					})
+					return NewMatrix(shape, elems)
+				},
+				matrixType: func(c Context, u, v Value) Value {
+					A, B := u.(Vector), v.(*Matrix)
+					elems := make([]Value, len(A)*len(B.data))
+					shape := append([]int{len(A)}, B.Shape()...)
+					const op = "encode"
+					pfor(true, len(A), len(B.data), func(lo, hi int) {
+						for j := lo; j < hi; j++ {
+							b := B.data[j]
+							for i := len(A) - 1; i >= 0; i-- {
+								a := A[i]
+								elems[j+i*len(B.data)] = emod(op, c, b, a)
+								b = ediv(op, c, b, a)
+							}
+						}
+					})
 					return NewMatrix(shape, elems)
 				},
 			},
@@ -901,105 +1044,15 @@ func init() {
 			whichType: atLeastVectorType,
 			fn: [numType]binaryFn{
 				vectorType: func(c Context, u, v Value) Value {
-					return membership(c, u.(Vector), v.(Vector))
+					return NewVector(membership(c, u.(Vector), v.(Vector))).shrink()
 				},
 				matrixType: func(c Context, u, v Value) Value {
-					return membership(c, u.(*Matrix).data, v.(*Matrix).data)
-				},
-			},
-		},
-
-		{
-			name:      "[]",
-			whichType: binaryArithType,
-			fn: [numType]binaryFn{
-				vectorType: func(c Context, u, v Value) Value {
-					// A[B]: The successive elements of A with indexes elements of B.
-					A, B := u.(Vector), v.(Vector)
-					values := make([]Value, len(B))
-					origin := Int(c.Config().Origin())
-					for i, b := range B {
-						x, ok := b.(Int)
-						if !ok {
-							Errorf("index must be integer")
-						}
-						x -= origin
-						if x < 0 || Int(len(A)) <= x {
-							Errorf("index %d out of range", x+origin)
-						}
-						values[i] = A[x]
+					m := u.(*Matrix)
+					data := membership(c, m.data, v.(*Matrix).data)
+					if m.Rank() <= 1 {
+						return NewVector(data).shrink()
 					}
-					if len(values) == 1 {
-						return values[0]
-					}
-					return NewVector(values).shrink()
-				},
-				matrixType: func(c Context, u, v Value) Value {
-					// A[B]: The successive elements of A with indexes given by elements of B.
-					A, mB := u.(*Matrix), v.(*Matrix)
-					B := mB.data
-					origin := Int(c.Config().Origin())
-
-					switch mB.Rank() {
-					case 1:
-					case 0:
-						Errorf("bad index rank %d", mB.Rank())
-					default:
-						if A.Rank() != 1 {
-							Errorf("bad index rank %d", mB.Rank())
-						}
-						// We are indexing a vector by an interesting shape.
-						// Special generalization not in APL: If the LHS is vector-like,
-						// the return value has the shape of the RHS. We could
-						// generalize more, but that's hard.
-						values := make(Vector, len(B))
-						for i, b := range B {
-							x, ok := b.(Int)
-							if !ok {
-								Errorf("index must be integer")
-							}
-							x -= origin
-							if x < 0 || Int(A.shape[0]) <= x {
-								Errorf("index %d out of range (shape %s)", x+origin, NewIntVector(A.shape))
-							}
-							values[i] = A.data[x]
-						}
-						newShape := make([]int, mB.Rank())
-						copy(newShape, mB.shape)
-						return NewMatrix(newShape, values)
-					}
-
-					ElemSize := Int(A.ElemSize())
-					values := make(Vector, 0, ElemSize*Int(len(B)))
-					for _, b := range B {
-						x, ok := b.(Int)
-						if !ok {
-							Errorf("index must be integer")
-						}
-						x -= origin
-						if x < 0 || Int(A.shape[0]) <= x {
-							Errorf("index %d out of range (shape %s)", x+origin, NewIntVector(A.shape))
-						}
-						start := ElemSize * x
-						values = append(values, A.data[start:start+ElemSize]...)
-					}
-					if len(B) == 1 {
-						// Special considerations. The result might need type reduction.
-						// TODO: Should this be Matrix.shrink?
-						// TODO: In some cases, can get a scalar.
-						// Is the result a vector?
-						if A.Rank() == 2 {
-							return values
-						}
-						// Matrix of one less degree.
-						newShape := make([]int, A.Rank()-1)
-						copy(newShape, A.shape[1:])
-						return NewMatrix(newShape, values)
-					}
-					newShape := make([]int, A.Rank())
-					copy(newShape, A.shape)
-					newShape[0] = len(B)
-					return NewMatrix(newShape, values)
+					return NewMatrix(m.shape, data)
 				},
 			},
 		},
@@ -1011,20 +1064,63 @@ func init() {
 				vectorType: func(c Context, u, v Value) Value {
 					// A⍳B: The location (index) of B in A; 0 if not found. (APL does 1+⌈/⍳⍴A)
 					A, B := u.(Vector), v.(Vector)
-					indices := make([]Value, len(B))
-					// TODO: This is n^2.
+					type indexed struct {
+						v     Value
+						index int
+					}
 					origin := c.Config().Origin()
-				Outer:
-					for i, b := range B {
-						for j, a := range A {
-							if toBool(c.EvalBinary(a, "==", b)) {
-								indices[i] = Int(j + origin)
-								continue Outer
+					sortedA := make([]indexed, len(A))
+					for i, a := range A {
+						sortedA[i] = indexed{a, i + origin}
+					}
+					sort.Slice(sortedA, func(i, j int) bool {
+						return c.EvalBinary(sortedA[i].v, "<", sortedA[j].v) == Int(1)
+					})
+					indices := make([]Value, len(B))
+					work := 2 * (1 + int(math.Log2(float64(len(A)))))
+					pfor(true, work, len(B), func(lo, hi int) {
+						for i := lo; i < hi; i++ {
+							b := B[i]
+							indices[i] = Int(origin - 1)
+							pos := sort.Search(len(sortedA), func(j int) bool {
+								return c.EvalBinary(sortedA[j].v, ">=", b) == Int(1)
+							})
+							if pos < len(sortedA) && c.EvalBinary(sortedA[pos].v, "==", b) == Int(1) {
+								indices[i] = Int(sortedA[pos].index)
 							}
 						}
-						indices[i] = zero
-					}
+					})
 					return NewVector(indices)
+				},
+				matrixType: func(c Context, u, v Value) Value {
+					A, B := u.(*Matrix), v.(*Matrix)
+					origin := c.Config().Origin()
+					if A.Rank()-1 > B.Rank() || !sameShape(A.shape[1:], B.shape[B.Rank()-(A.Rank()-1):]) {
+						Errorf("iota: mismatched shapes %s and %s", NewIntVector(A.shape), NewIntVector(B.shape))
+					}
+					// TODO: This is n^2. Use an algorithm similar to the Vector case, or perhaps use hashing.
+					// However, one of the n's is the dimension of a matrix, so it is likely to be small.
+					shape := B.shape[:B.Rank()-(A.Rank()-1)]
+					if len(shape) == 0 {
+						shape = []int{1}
+					}
+					n := len(A.data) / A.shape[0] // elements in each comparison
+					indices := make([]Value, len(B.data)/n)
+					pfor(true, n, len(B.data)/n, func(lo, hi int) {
+						for i := lo; i < hi; i++ {
+							indices[i] = Int(origin - 1)
+							for j := 0; j < len(A.data); j += n {
+								if andBool(c.EvalBinary(A.data[j:j+n], "==", B.data[i*n:(i+1)*n])) {
+									indices[i] = Int(j/n + origin)
+									break
+								}
+							}
+						}
+					})
+					if len(shape) == 1 {
+						return NewVector(indices)
+					}
+					return NewMatrix(shape, indices)
 				},
 			},
 		},
@@ -1134,32 +1230,19 @@ func init() {
 			whichType: atLeastVectorType,
 			fn: [numType]binaryFn{
 				vectorType: func(c Context, u, v Value) Value {
-					return append(u.(Vector), v.(Vector)...)
+					uu := u.(Vector)
+					uu = uu[:len(uu):len(uu)]
+					return append(uu, v.(Vector)...)
 				},
 				matrixType: func(c Context, u, v Value) Value {
-					A := u.(*Matrix)
-					B := v.(*Matrix)
-					if A.Rank() == 0 || B.Rank() == 0 {
-						Errorf("empty matrix for ,")
-					}
-					if A.Rank() != B.Rank()+1 || A.ElemSize() != B.Size() {
-						Errorf("catenate rank mismatch: %s != %s", NewIntVector(A.shape[1:]), NewIntVector(B.shape))
-					}
-					ElemSize := A.ElemSize()
-					newShape := make([]int, A.Rank())
-					copy(newShape, A.shape)
-					newData := make(Vector, len(A.data), int64(len(A.data))+ElemSize)
-					copy(newData, A.data)
-					newData = append(newData, B.data...)
-					newShape[0] = newShape[0] + 1
-					return NewMatrix(newShape, newData)
+					return u.(*Matrix).catenate(v.(*Matrix))
 				},
 			},
 		},
 
 		{
 			name:      "take",
-			whichType: atLeastVectorType,
+			whichType: vectorAndAtLeastVectorType,
 			fn: [numType]binaryFn{
 				vectorType: func(c Context, u, v Value) Value {
 					const bad = Error("bad count for take")
@@ -1178,23 +1261,26 @@ func init() {
 						if -n > len {
 							panic(bad)
 						}
-						i = i[len+n : len]
+						i = i[len+n : len : len]
 					case n == 0:
 						return NewVector(nil)
 					case n > 0:
 						if n > len {
 							panic(bad)
 						}
-						i = i[0:n]
+						i = i[0:n:n]
 					}
 					return i
+				},
+				matrixType: func(c Context, u, v Value) Value {
+					return v.(*Matrix).take(c, u.(Vector))
 				},
 			},
 		},
 
 		{
 			name:      "drop",
-			whichType: atLeastVectorType,
+			whichType: vectorAndAtLeastVectorType,
 			fn: [numType]binaryFn{
 				vectorType: func(c Context, u, v Value) Value {
 					const bad = Error("bad count for drop")
@@ -1222,6 +1308,9 @@ func init() {
 						i = i[n:]
 					}
 					return i
+				},
+				matrixType: func(c Context, u, v Value) Value {
+					return v.(*Matrix).drop(c, u.(Vector))
 				},
 			},
 		},
@@ -1297,7 +1386,7 @@ func init() {
 					for _, x := range i {
 						y, ok := x.(Int)
 						if !ok {
-							Errorf("left operand of fill must be small integers")
+							Errorf("fill: left operand must be small integers")
 						}
 						switch {
 						case y == 0:
@@ -1346,7 +1435,7 @@ func init() {
 
 		{
 			name:      "sel",
-			whichType: atLeastVectorType,
+			whichType: vectorAndAtLeastVectorType,
 			fn: [numType]binaryFn{
 				vectorType: func(c Context, u, v Value) Value {
 					i := u.(Vector)
@@ -1359,7 +1448,7 @@ func init() {
 					for _, x := range i {
 						y, ok := x.(Int)
 						if !ok {
-							Errorf("left operand of sel must be small integers")
+							Errorf("sel: left operand must be small integers")
 						}
 						if y < 0 {
 							count -= int64(y)
@@ -1394,6 +1483,23 @@ func init() {
 						}
 					}
 					return NewVector(result)
+				},
+				matrixType: func(c Context, u, v Value) Value {
+					return v.(*Matrix).sel(c, u.(Vector))
+				},
+			},
+		},
+
+		{
+			name:      "transp",
+			whichType: vectorAndMatrixType,
+			fn: [numType]binaryFn{
+				matrixType: func(c Context, u, v Value) Value {
+					m := v.(*Matrix).binaryTranspose(c, u.(Vector))
+					if m.Rank() <= 1 {
+						return m.Data()
+					}
+					return m
 				},
 			},
 		},

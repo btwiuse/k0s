@@ -11,6 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:build !nohwmon
 // +build !nohwmon
 
 package collector
@@ -24,8 +25,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/sys/unix"
 )
@@ -348,7 +349,7 @@ func (c *hwMonCollector) hwmonName(dir string) (string, error) {
 	// However the path of the device has to be stable:
 	// - /sys/devices/<bus>/<device>
 	// Some hardware monitors have a "name" file that exports a human
-	// readbale name that can be used.
+	// readable name that can be used.
 
 	// human readable names would be bat0 or coretemp, while a path string
 	// could be platform_applesmc.768
@@ -424,7 +425,7 @@ func (c *hwMonCollector) Update(ch chan<- prometheus.Metric) error {
 
 	hwmonFiles, err := ioutil.ReadDir(hwmonPathName)
 	if err != nil {
-		if os.IsNotExist(err) {
+		if errors.Is(err, os.ErrNotExist) {
 			level.Debug(c.logger).Log("msg", "hwmon collector metrics are not available for this system")
 			return ErrNoData
 		}

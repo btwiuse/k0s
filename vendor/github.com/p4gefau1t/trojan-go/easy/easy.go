@@ -6,10 +6,9 @@ import (
 	"net"
 	"strconv"
 
-	"github.com/p4gefau1t/trojan-go/option"
-
 	"github.com/p4gefau1t/trojan-go/common"
 	"github.com/p4gefau1t/trojan-go/log"
+	"github.com/p4gefau1t/trojan-go/option"
 	"github.com/p4gefau1t/trojan-go/proxy"
 )
 
@@ -102,7 +101,6 @@ func (o *easy) Handle() error {
 		if err := proxy.Run(); err != nil {
 			log.Fatal(err)
 		}
-
 	} else if *o.server {
 		if *o.remote == "" {
 			log.Warn("server remote addr is unspecified, using 127.0.0.1:80")

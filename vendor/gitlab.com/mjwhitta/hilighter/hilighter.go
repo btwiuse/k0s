@@ -1,7 +1,6 @@
 package hilighter
 
 import (
-	"errors"
 	"image/color"
 	"math"
 	"runtime"
@@ -163,6 +162,7 @@ func HexToXterm256(hex string) string {
 func Hilight(code string, str string) string {
 	var clr string
 	var hasKey bool
+	var match []string
 	var matches [][]string
 	var width int
 
@@ -182,27 +182,41 @@ func Hilight(code string, str string) string {
 		default:
 			// Check if hex color code
 			matches = hexCode.FindAllStringSubmatch(code, -1)
-			for _, match := range matches {
+			if len(matches) > 0 {
+				match = matches[0]
+
 				clr = HexToXterm256(match[2])
 				if strings.HasPrefix(code, "on_") {
 					clr = "on_" + clr
 				}
+
 				return colorize(clr, str)
 			}
 
 			// Check if wrap
 			matches = wrap.FindAllStringSubmatch(code, -1)
-			for _, match := range matches {
+			if len(matches) > 0 {
+				match = matches[0]
+
 				// Determine wrap width, default to 80
 				width = 80
 				if len(match) == 3 && len(match[2]) > 0 {
 					width, _ = strconv.Atoi(match[2])
 				}
+
 				return Wrap(width, str)
 			}
 
 			// Otherwise panic
-			panic(errors.New("Invalid color or mode: " + code))
+			// panic(
+			//     fmt.Errorf(
+			//         "hilighter: invalid color or mode: %s",
+			//         code,
+			//     ),
+			// )
+
+			// Scratch that, just do nothing
+			return str
 		}
 	}
 }

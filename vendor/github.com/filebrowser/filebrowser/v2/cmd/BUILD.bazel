@@ -40,6 +40,7 @@ go_library(
         "//vendor/github.com/filebrowser/filebrowser/v2/auth:go_default_library",
         "//vendor/github.com/filebrowser/filebrowser/v2/diskcache:go_default_library",
         "//vendor/github.com/filebrowser/filebrowser/v2/errors:go_default_library",
+        "//vendor/github.com/filebrowser/filebrowser/v2/frontend:go_default_library",
         "//vendor/github.com/filebrowser/filebrowser/v2/http:go_default_library",
         "//vendor/github.com/filebrowser/filebrowser/v2/img:go_default_library",
         "//vendor/github.com/filebrowser/filebrowser/v2/rules:go_default_library",

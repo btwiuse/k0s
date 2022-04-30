@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["daemon.go"],
+    importmap = "k0s.io/vendor/src.elv.sh/pkg/mods/daemon",
+    importpath = "src.elv.sh/pkg/mods/daemon",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/src.elv.sh/pkg/daemon/daemondefs:go_default_library",
+        "//vendor/src.elv.sh/pkg/eval:go_default_library",
+        "//vendor/src.elv.sh/pkg/eval/vars:go_default_library",
+    ],
+)

@@ -16,7 +16,6 @@ go_library(
     importpath = "github.com/v2fly/v2ray-core/v4/transport/internet/quic",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/lucas-clemente/quic-go:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common:go_default_library",
         "//vendor/github.com/v2fly/v2ray-core/v4/common/buf:go_default_library",

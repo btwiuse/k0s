@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "configs.go",
+        "interface.go",
+    ],
+    importmap = "k0s.io/vendor/sigs.k8s.io/metrics-server/pkg/scraper/client",
+    importpath = "sigs.k8s.io/metrics-server/pkg/scraper/client",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/k8s.io/api/core/v1:go_default_library",
+        "//vendor/k8s.io/client-go/rest:go_default_library",
+        "//vendor/sigs.k8s.io/metrics-server/pkg/storage:go_default_library",
+    ],
+)

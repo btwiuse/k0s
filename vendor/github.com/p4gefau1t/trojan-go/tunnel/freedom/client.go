@@ -4,11 +4,12 @@ import (
 	"context"
 	"net"
 
+	"github.com/txthinking/socks5"
+	"golang.org/x/net/proxy"
+
 	"github.com/p4gefau1t/trojan-go/common"
 	"github.com/p4gefau1t/trojan-go/config"
 	"github.com/p4gefau1t/trojan-go/tunnel"
-	"github.com/txthinking/socks5"
-	"golang.org/x/net/proxy"
 )
 
 type Client struct {
@@ -64,9 +65,9 @@ func (c *Client) DialConn(addr *tunnel.Address, _ tunnel.Tunnel) (tunnel.Conn, e
 
 func (c *Client) DialPacket(tunnel.Tunnel) (tunnel.PacketConn, error) {
 	if c.forwardProxy {
-		socksClient, err := socks5.NewClient(c.proxyAddr.String(), c.username, c.password, 0, 0, 0)
+		socksClient, err := socks5.NewClient(c.proxyAddr.String(), c.username, c.password, 0, 0)
 		common.Must(err)
-		if err := socksClient.Negotiate(); err != nil {
+		if err := socksClient.Negotiate(&net.TCPAddr{}); err != nil {
 			return nil, common.NewError("freedom failed to negotiate socks").Base(err)
 		}
 		a, addr, port, err := socks5.ParseAddress("1.1.1.1:53") // useless address

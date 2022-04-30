@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"sync/atomic"
 
 	"src.elv.sh/pkg/diag"
 	"src.elv.sh/pkg/eval/errs"
@@ -11,6 +12,7 @@ import (
 	"src.elv.sh/pkg/eval/vars"
 	"src.elv.sh/pkg/fsutil"
 	"src.elv.sh/pkg/parse"
+	"src.elv.sh/pkg/parse/cmpd"
 )
 
 // An operation with some side effects.
@@ -70,15 +72,10 @@ func (op *pipelineOp) exec(fm *Frame) Exception {
 	}
 
 	if op.bg {
-		fm = fm.fork("background job" + op.source)
+		fm = fm.Fork("background job" + op.source)
 		fm.intCh = nil
 		fm.background = true
 		fm.Evaler.addNumBgJobs(1)
-
-		if fm.Evaler.Editor() != nil {
-			// TODO: Redirect output in interactive mode so that the line
-			// editor does not get messed up.
-		}
 	}
 
 	nforms := len(op.subops)
@@ -91,12 +88,13 @@ func (op *pipelineOp) exec(fm *Frame) Exception {
 
 	// For each form, create a dedicated evalCtx and run asynchronously
 	for i, formOp := range op.subops {
-		hasChanInput := i > 0
-		newFm := fm.fork("[form op]")
-		if i > 0 {
+		newFm := fm.Fork("[form op]")
+		inputIsPipe := i > 0
+		outputIsPipe := i < nforms-1
+		if inputIsPipe {
 			newFm.ports[0] = nextIn
 		}
-		if i < nforms-1 {
+		if outputIsPipe {
 			// Each internal port pair consists of a (byte) pipe pair and a
 			// channel.
 			// os.Pipe sets O_CLOEXEC, which is what we want.
@@ -105,29 +103,38 @@ func (op *pipelineOp) exec(fm *Frame) Exception {
 				return fm.errorpf(op, "failed to create pipe: %s", e)
 			}
 			ch := make(chan interface{}, pipelineChanBufferSize)
+			sendStop := make(chan struct{})
+			sendError := new(error)
+			readerGone := new(int32)
 			newFm.ports[1] = &Port{
-				File: writer, Chan: ch, closeFile: true, closeChan: true}
+				File: writer, Chan: ch,
+				closeFile: true, closeChan: true,
+				sendStop: sendStop, sendError: sendError, readerGone: readerGone}
 			nextIn = &Port{
-				File: reader, Chan: ch, closeFile: true, closeChan: false}
+				File: reader, Chan: ch,
+				closeFile: true, closeChan: false,
+				// Store in input port for ease of retrieval later
+				sendStop: sendStop, sendError: sendError, readerGone: readerGone}
 		}
-		thisOp := formOp
-		thisExc := &excs[i]
-		go func() {
-			exc := thisOp.exec(newFm)
+		f := func(formOp effectOp, pexc *Exception) {
+			exc := formOp.exec(newFm)
+			if exc != nil && !(outputIsPipe && isReaderGone(exc)) {
+				*pexc = exc
+			}
+			if inputIsPipe {
+				input := newFm.ports[0]
+				*input.sendError = errs.ReaderGone{}
+				close(input.sendStop)
+				atomic.StoreInt32(input.readerGone, 1)
+			}
 			newFm.Close()
-			if exc != nil {
-				*thisExc = exc
-			}
 			wg.Done()
-			if hasChanInput {
-				// If the command has channel input, drain it. This
-				// mitigates the effect of erroneous pipelines like
-				// "range 100 | cat"; without draining the pipeline will
-				// lock up.
-				for range newFm.InputChan() {
-				}
-			}
-		}()
+		}
+		if i == nforms-1 && !op.bg {
+			f(formOp, &excs[i])
+		} else {
+			go f(formOp, &excs[i])
+		}
 	}
 
 	if op.bg {
@@ -135,17 +142,14 @@ func (op *pipelineOp) exec(fm *Frame) Exception {
 		go func() {
 			wg.Wait()
 			fm.Evaler.addNumBgJobs(-1)
-			msg := "job " + op.source + " finished"
-			err := MakePipelineError(excs)
-			if err != nil {
-				msg += ", errors = " + err.Error()
-			}
-			if fm.Evaler.getNotifyBgJobSuccess() || err != nil {
-				editor := fm.Evaler.Editor()
-				if editor != nil {
-					editor.Notify("%s", msg)
-				} else {
-					fm.ErrorFile().WriteString(msg + "\n")
+			if notify := fm.Evaler.BgJobNotify; notify != nil {
+				msg := "job " + op.source + " finished"
+				err := MakePipelineError(excs)
+				if err != nil {
+					msg += ", errors = " + err.Error()
+				}
+				if fm.Evaler.getNotifyBgJobSuccess() || err != nil {
+					notify(msg)
 				}
 			}
 		}()
@@ -155,19 +159,26 @@ func (op *pipelineOp) exec(fm *Frame) Exception {
 	return fm.errorp(op, MakePipelineError(excs))
 }
 
+func isReaderGone(exc Exception) bool {
+	_, ok := exc.Reason().(errs.ReaderGone)
+	return ok
+}
+
 func (cp *compiler) formOp(n *parse.Form) effectOp {
 	var tempLValues []lvalue
 	var assignmentOps []effectOp
 	if len(n.Assignments) > 0 {
-		assignmentOps = cp.assignmentOps(n.Assignments)
 		if n.Head == nil {
-			// Using the syntax of temporary assignment for non-temporary
-			// assignment. Still supported as of 0.15 but deprecated.
-			cp.deprecate(n, `using the syntax of temporary assignment for non-temporary assignment is deprecated; use "var" or "set" instead`, 15)
-			return seqOp{assignmentOps}
+			cp.errorpf(n, `using the syntax of temporary assignment for non-temporary assignment is no longer supported; use "var" or "set" instead`)
+			return nopOp{}
+		} else {
+			as := n.Assignments
+			cp.deprecate(diag.MixedRanging(as[0], as[len(as)-1]),
+				`the legacy temporary assignment syntax is deprecated; use "tmp" instead`, 18)
 		}
+		assignmentOps = cp.assignmentOps(n.Assignments)
 		for _, a := range n.Assignments {
-			lvalues := cp.parseIndexingLValue(a.Left)
+			lvalues := cp.parseIndexingLValue(a.Left, setLValue|newLValue)
 			tempLValues = append(tempLValues, lvalues.lvalues...)
 		}
 		logger.Println("temporary assignment of", len(n.Assignments), "pairs")
@@ -186,7 +197,7 @@ func (cp *compiler) formBody(n *parse.Form) formBody {
 	}
 
 	// Determine if this form is a special command.
-	if head, ok := oneString(n.Head); ok {
+	if head, ok := cmpd.StringLiteral(n.Head); ok {
 		special, _ := resolveCmdHeadInternally(cp, head, n.Head)
 		if special != nil {
 			specialOp := special(cp, n)
@@ -194,36 +205,16 @@ func (cp *compiler) formBody(n *parse.Form) formBody {
 		}
 	}
 
-	// Determine if the form is a legacy assignment form, by looking for an
-	// argument whose source is a literal "=".
-	for i, arg := range n.Args {
-		if parse.SourceText(arg) == "=" {
-			lhsNodes := make([]*parse.Compound, i+1)
-			lhsNodes[0] = n.Head
-			copy(lhsNodes[1:], n.Args[:i])
-			lhs := cp.parseCompoundLValues(lhsNodes)
-
-			rhsOps := cp.compoundOps(n.Args[i+1:])
-			var rhsRange diag.Ranging
-			if len(rhsOps) > 0 {
-				rhsRange = diag.MixedRanging(rhsOps[0], rhsOps[len(rhsOps)-1])
-			} else {
-				rhsRange = diag.PointRanging(n.Range().To)
-			}
-			rhs := seqValuesOp{rhsRange, rhsOps}
-
-			return formBody{assignOp: &assignOp{n.Range(), lhs, rhs}}
-		}
-	}
-
 	var headOp valuesOp
-	if head, ok := oneString(n.Head); ok {
+	if head, ok := cmpd.StringLiteral(n.Head); ok {
 		// Head is a literal string: resolve to function or external (special
 		// commands are already handled above).
 		if _, fnRef := resolveCmdHeadInternally(cp, head, n.Head); fnRef != nil {
 			headOp = variableOp{n.Head.Range(), false, head + FnSuffix, fnRef}
-		} else {
+		} else if cp.currentPragma().unknownCommandIsExternal || fsutil.DontSearch(head) {
 			headOp = literalValues(n.Head, NewExternalCmd(head))
+		} else {
+			cp.errorpf(n.Head, "unknown command disallowed by current pragma")
 		}
 	} else {
 		// Head is not a literal string: evaluate as a normal expression.
@@ -395,7 +386,7 @@ func evalForCommand(fm *Frame, op valuesOp, what string) (Callable, error) {
 	return nil, fm.errorp(op, errs.BadValue{
 		What:   what,
 		Valid:  "callable or string containing slash",
-		Actual: vals.Kind(value)})
+		Actual: vals.ReprPlain(value)})
 }
 
 func allTrue(vs []interface{}) bool {
@@ -408,9 +399,9 @@ func allTrue(vs []interface{}) bool {
 }
 
 func (cp *compiler) assignmentOp(n *parse.Assignment) effectOp {
-	lhs := cp.parseIndexingLValue(n.Left)
+	lhs := cp.parseIndexingLValue(n.Left, setLValue|newLValue)
 	rhs := cp.compoundOp(n.Right)
-	return &assignOp{n.Range(), lhs, rhs}
+	return &assignOp{n.Range(), lhs, rhs, false}
 }
 
 func (cp *compiler) assignmentOps(ns []*parse.Assignment) []effectOp {
@@ -419,16 +410,6 @@ func (cp *compiler) assignmentOps(ns []*parse.Assignment) []effectOp {
 		ops[i] = cp.assignmentOp(n)
 	}
 	return ops
-}
-
-func (cp *compiler) literal(n *parse.Primary, msg string) string {
-	switch n.Type {
-	case parse.Bareword, parse.SingleQuoted, parse.DoubleQuoted:
-		return n.Value
-	default:
-		cp.errorpf(n, msg)
-		return ""
-	}
 }
 
 const defaultFileRedirPerm = 0644
@@ -479,24 +460,9 @@ type redirOp struct {
 	flag    int
 }
 
-type invalidFD struct{ fd int }
+type InvalidFD struct{ FD int }
 
-func (err invalidFD) Error() string { return fmt.Sprintf("invalid fd: %d", err.fd) }
-
-// Returns a suitable dummy value for the channel part of the port when
-// redirecting from or to a file, so that the read and write attempts fail
-// silently (instead of blocking or panicking).
-//
-// TODO: Instead of letting read and write attempts fail silently, consider
-// raising an exception instead.
-func chanForFileRedir(mode parse.RedirMode) chan interface{} {
-	if mode == parse.Read {
-		// ClosedChan produces no values when reading.
-		return ClosedChan
-	}
-	// BlackholeChan discards all values written to it.
-	return BlackholeChan
-}
+func (err InvalidFD) Error() string { return fmt.Sprintf("invalid fd: %d", err.FD) }
 
 func (op *redirOp) exec(fm *Frame) Exception {
 	var dst int
@@ -530,9 +496,11 @@ func (op *redirOp) exec(fm *Frame) Exception {
 		switch {
 		case src == -1:
 			// close
-			fm.ports[dst] = &Port{}
+			fm.ports[dst] = &Port{
+				// Ensure that writing to value output throws an exception
+				sendStop: closedSendStop, sendError: &ErrNoValueOutput}
 		case src >= len(fm.ports) || fm.ports[src] == nil:
-			return fm.errorp(op, invalidFD{src})
+			return fm.errorp(op, InvalidFD{FD: src})
 		default:
 			fm.ports[dst] = fm.ports[src].fork()
 		}
@@ -546,11 +514,11 @@ func (op *redirOp) exec(fm *Frame) Exception {
 	case string:
 		f, err := os.OpenFile(src, op.flag, defaultFileRedirPerm)
 		if err != nil {
-			return fm.errorpf(op, "failed to open file %s: %s", vals.Repr(src, vals.NoPretty), err)
+			return fm.errorpf(op, "failed to open file %s: %s", vals.ReprPlain(src), err)
 		}
-		fm.ports[dst] = &Port{File: f, closeFile: true, Chan: chanForFileRedir(op.mode)}
+		fm.ports[dst] = fileRedirPort(op.mode, f, true)
 	case vals.File:
-		fm.ports[dst] = &Port{File: src, closeFile: false, Chan: chanForFileRedir(op.mode)}
+		fm.ports[dst] = fileRedirPort(op.mode, src, false)
 	case vals.Pipe:
 		var f *os.File
 		switch op.mode {
@@ -561,13 +529,31 @@ func (op *redirOp) exec(fm *Frame) Exception {
 		default:
 			return fm.errorpf(op, "can only use < or > with pipes")
 		}
-		fm.ports[dst] = &Port{File: f, closeFile: false, Chan: chanForFileRedir(op.mode)}
+		fm.ports[dst] = fileRedirPort(op.mode, f, false)
 	default:
 		return fm.errorp(op.srcOp, errs.BadValue{
 			What:  "redirection source",
 			Valid: "string, file or pipe", Actual: vals.Kind(src)})
 	}
 	return nil
+}
+
+// Creates a port that only have a file component, populating the
+// channel-related fields with suitable values depending on the redirection
+// mode.
+func fileRedirPort(mode parse.RedirMode, f *os.File, closeFile bool) *Port {
+	if mode == parse.Read {
+		return &Port{
+			File: f, closeFile: closeFile,
+			// ClosedChan produces no values when reading.
+			Chan: ClosedChan,
+		}
+	}
+	return &Port{
+		File: f, closeFile: closeFile,
+		// Throws errValueOutputIsClosed when writing.
+		Chan: nil, sendStop: closedSendStop, sendError: &ErrNoValueOutput,
+	}
 }
 
 // Makes the size of *ports at least n, adding nil's if necessary.
@@ -604,7 +590,7 @@ func evalForFd(fm *Frame, op valuesOp, closeOK bool, what string) (int, error) {
 		valid = "fd name or number or '-'"
 	}
 	return -1, fm.errorp(op, errs.BadValue{
-		What: what, Valid: valid, Actual: vals.Repr(value, vals.NoPretty)})
+		What: what, Valid: valid, Actual: vals.ReprPlain(value)})
 }
 
 type seqOp struct{ subops []effectOp }

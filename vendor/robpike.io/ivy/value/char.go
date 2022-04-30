@@ -22,6 +22,10 @@ func (c Char) Rank() int {
 	return 0
 }
 
+func (c Char) shrink() Value {
+	return c
+}
+
 func (c Char) Sprint(conf *config.Config) string {
 	// We ignore the format - chars are always textual.
 	// TODO: What about escapes?
@@ -40,7 +44,7 @@ func (c Char) Inner() Value {
 	return c
 }
 
-func (c Char) toType(conf *config.Config, which valueType) Value {
+func (c Char) toType(op string, conf *config.Config, which valueType) Value {
 	switch which {
 	case charType:
 		return c
@@ -49,7 +53,7 @@ func (c Char) toType(conf *config.Config, which valueType) Value {
 	case matrixType:
 		return NewMatrix([]int{1}, []Value{c})
 	}
-	Errorf("cannot convert %s to char", which)
+	Errorf("%s: cannot convert char to %s", op, which)
 	return nil
 }
 

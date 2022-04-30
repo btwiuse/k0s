@@ -36,10 +36,13 @@ func newLoop(conf *config.Config, name string, x *big.Float, itersPerBit uint) *
 
 // done reports whether the loop is done. If it does not converge
 // after the maximum number of iterations, it errors out.
+// It will not return before doing at least 3 iterations. Some
+// series (such as exp(-1) hit zero along the way.
 func (l *loop) done(z *big.Float) bool {
+	const minIterations = 3
 	l.delta.Sub(l.prevZ, z)
 	sign := l.delta.Sign()
-	if sign == 0 {
+	if sign == 0 && l.i >= minIterations {
 		return true
 	}
 	if sign < 0 {
@@ -49,12 +52,13 @@ func (l *loop) done(z *big.Float) bool {
 	// represented with the given precision.
 	var eps big.Float
 	eps.SetMantExp(eps.SetUint64(1), z.MantExp(nil)-int(z.Prec()))
-	if l.delta.Cmp(&eps) <= 0 {
+	if l.delta.Cmp(&eps) <= 0 && l.i >= minIterations {
 		return true
 	}
 	l.i++
 	if l.i == l.maxIterations {
-		// Users should never see this.
+		// Users should never see this, but they sometimes do.
+		// TODO: Find a better termination condition.
 		Errorf("%s %s: did not converge after %d iterations; prev,last result %s,%s delta %s", l.name, BigFloat{l.arg}, l.maxIterations, BigFloat{z}, BigFloat{l.prevZ}, BigFloat{l.delta})
 	}
 	l.prevZ.Set(z)

@@ -6,5 +6,5 @@ go_library(
     importmap = "k0s.io/vendor/src.elv.sh/pkg/daemon/internal/api",
     importpath = "src.elv.sh/pkg/daemon/internal/api",
     visibility = ["//vendor/src.elv.sh/pkg/daemon:__subpackages__"],
-    deps = ["//vendor/src.elv.sh/pkg/store:go_default_library"],
+    deps = ["//vendor/src.elv.sh/pkg/store/storedefs:go_default_library"],
 )

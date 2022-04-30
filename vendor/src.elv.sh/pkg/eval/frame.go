@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"src.elv.sh/pkg/diag"
+	"src.elv.sh/pkg/eval/errs"
 	"src.elv.sh/pkg/parse"
 	"src.elv.sh/pkg/prog"
 	"src.elv.sh/pkg/strutil"
@@ -22,6 +23,7 @@ type Frame struct {
 	srcMeta parse.Source
 
 	local, up *Ns
+	defers    *[]func(*Frame) Exception
 
 	intCh <-chan struct{}
 	ports []*Port
@@ -54,7 +56,7 @@ func (fm *Frame) PrepareEval(src parse.Source, r diag.Ranger, ns *Ns) (*Ns, func
 		traceback = fm.addTraceback(r)
 	}
 	newFm := &Frame{
-		fm.Evaler, src, local, new(Ns), fm.intCh, fm.ports, traceback, fm.background}
+		fm.Evaler, src, local, new(Ns), nil, fm.intCh, fm.ports, traceback, fm.background}
 	op, err := compile(newFm.Evaler.Builtin().static(), local.static(), tree, fm.ErrorFile())
 	if err != nil {
 		return nil, nil, err
@@ -94,14 +96,15 @@ func (fm *Frame) InputFile() *os.File {
 	return fm.ports[0].File
 }
 
-// OutputChan returns a channel onto which output can be written.
-func (fm *Frame) OutputChan() chan<- interface{} {
-	return fm.ports[1].Chan
+// ValueOutput returns a handle for writing value outputs.
+func (fm *Frame) ValueOutput() ValueOutput {
+	p := fm.ports[1]
+	return valueOutput{p.Chan, p.sendStop, p.sendError}
 }
 
-// OutputFile returns a file onto which output can be written.
-func (fm *Frame) OutputFile() *os.File {
-	return fm.ports[1].File
+// ByteOutput returns a handle for writing byte outputs.
+func (fm *Frame) ByteOutput() ByteOutput {
+	return byteOutput{fm.ports[1].File}
 }
 
 // ErrorFile returns a file onto which error messages can be written.
@@ -111,22 +114,22 @@ func (fm *Frame) ErrorFile() *os.File {
 
 // IterateInputs calls the passed function for each input element.
 func (fm *Frame) IterateInputs(f func(interface{})) {
-	var w sync.WaitGroup
+	var wg sync.WaitGroup
 	inputs := make(chan interface{})
 
-	w.Add(2)
+	wg.Add(2)
 	go func() {
 		linesToChan(fm.InputFile(), inputs)
-		w.Done()
+		wg.Done()
 	}()
 	go func() {
 		for v := range fm.ports[0].Chan {
 			inputs <- v
 		}
-		w.Done()
+		wg.Done()
 	}()
 	go func() {
-		w.Wait()
+		wg.Wait()
 		close(inputs)
 	}()
 
@@ -151,9 +154,9 @@ func linesToChan(r io.Reader, ch chan<- interface{}) {
 	}
 }
 
-// fork returns a modified copy of ec. The ports are forked, and the name is
+// Fork returns a modified copy of fm. The ports are forked, and the name is
 // changed to the given value. Other fields are copied shallowly.
-func (fm *Frame) fork(name string) *Frame {
+func (fm *Frame) Fork(name string) *Frame {
 	newPorts := make([]*Port, len(fm.ports))
 	for i, p := range fm.ports {
 		if p != nil {
@@ -162,7 +165,7 @@ func (fm *Frame) fork(name string) *Frame {
 	}
 	return &Frame{
 		fm.Evaler, fm.srcMeta,
-		fm.local, fm.up,
+		fm.local, fm.up, fm.defers,
 		fm.intCh, newPorts,
 		fm.traceback, fm.background,
 	}
@@ -170,7 +173,7 @@ func (fm *Frame) fork(name string) *Frame {
 
 // A shorthand for forking a frame and setting the output port.
 func (fm *Frame) forkWithOutput(name string, p *Port) *Frame {
-	newFm := fm.fork(name)
+	newFm := fm.Fork(name)
 	newFm.ports[1] = p
 	return newFm
 }
@@ -211,10 +214,11 @@ func (fm *Frame) errorp(r diag.Ranger, e error) Exception {
 	case Exception:
 		return e
 	default:
-		return &exception{e, &StackTrace{
-			Head: diag.NewContext(fm.srcMeta.Name, fm.srcMeta.Code, r.Range()),
-			Next: fm.traceback,
-		}}
+		ctx := diag.NewContext(fm.srcMeta.Name, fm.srcMeta.Code, r)
+		if _, ok := e.(errs.SetReadOnlyVar); ok {
+			e = errs.SetReadOnlyVar{VarName: ctx.RelevantString()}
+		}
+		return &exception{e, &StackTrace{Head: ctx, Next: fm.traceback}}
 	}
 }
 
@@ -237,4 +241,21 @@ func (fm *Frame) Deprecate(msg string, ctx *diag.Context, minLevel int) {
 		err := diag.Error{Type: "deprecation", Message: msg, Context: *ctx}
 		fm.ErrorFile().WriteString(err.Show("") + "\n")
 	}
+}
+
+func (fm *Frame) addDefer(f func(*Frame) Exception) {
+	*fm.defers = append(*fm.defers, f)
+}
+
+func (fm *Frame) runDefers() Exception {
+	var exc Exception
+	defers := *fm.defers
+	for i := len(defers) - 1; i >= 0; i-- {
+		exc2 := defers[i](fm)
+		// TODO: Combine exc and exc2 if both are not nil
+		if exc2 != nil && exc == nil {
+			exc = exc2
+		}
+	}
+	return exc
 }

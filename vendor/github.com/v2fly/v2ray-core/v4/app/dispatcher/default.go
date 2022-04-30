@@ -1,3 +1,4 @@
+//go:build !confonly
 // +build !confonly
 
 package dispatcher
@@ -26,9 +27,7 @@ import (
 	"github.com/v2fly/v2ray-core/v4/transport/pipe"
 )
 
-var (
-	errSniffingTimeout = newError("timeout on sniffing")
-)
+var errSniffingTimeout = newError("timeout on sniffing")
 
 type cachedReader struct {
 	sync.Mutex
@@ -185,6 +184,11 @@ func shouldOverride(result SniffResult, domainOverride []string) bool {
 	for _, p := range domainOverride {
 		if strings.HasPrefix(protocolString, p) {
 			return true
+		}
+		if resultSubset, ok := result.(SnifferIsProtoSubsetOf); ok {
+			if resultSubset.IsProtoSubsetOf(p) {
+				return true
+			}
 		}
 	}
 	return false
