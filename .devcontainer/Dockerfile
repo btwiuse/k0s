@@ -9,8 +9,8 @@ ARG NODE_VERSION="none"
 RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
 
 # [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends vim tmux build-essential patch
 
 # [Optional] Uncomment the next lines to use go get to install anything else you need
 # USER vscode
@@ -18,3 +18,12 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 
 # [Optional] Uncomment this line to install global node packages.
 # RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
+
+ENV PATH="${PATH}:/asdf/.asdf/shims:/asdf/.asdf/bin"
+
+RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git $HOME/.asdf && \
+    echo '. $HOME/.asdf/asdf.sh' >> $HOME/.bashrc && \
+    echo '. $HOME/.asdf/asdf.sh' >> $HOME/.profile
+
+ENV ANDROID_BAZEL_NDK=True
+ENV GOWORK=off
