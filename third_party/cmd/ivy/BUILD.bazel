@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["ivy.go"],
+    importpath = "k0s.io/third_party/cmd/ivy",
+    visibility = ["//visibility:private"],
+    deps = [
+        "@io_robpike_ivy//config:go_default_library",
+        "@io_robpike_ivy//exec:go_default_library",
+        "@io_robpike_ivy//parse:go_default_library",
+        "@io_robpike_ivy//run:go_default_library",
+        "@io_robpike_ivy//scan:go_default_library",
+        "@io_robpike_ivy//value:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "ivy",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

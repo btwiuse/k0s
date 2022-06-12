@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["stdin.go"],
-    importmap = "k0s.io/vendor/github.com/buildkite/agent/v3/stdin",
-    importpath = "github.com/buildkite/agent/v3/stdin",
-    visibility = ["//visibility:public"],
-)

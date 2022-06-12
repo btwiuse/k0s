@@ -10,45 +10,21 @@ import (
 	match "github.com/alexpantyukhin/go-pattern-match"
 
 	"k0s.io/pkg/cli/agent"
-	"k0s.io/pkg/cli/bcrypt"
-	"k0s.io/pkg/cli/buildkite"
 	"k0s.io/pkg/cli/chassis"
 	"k0s.io/pkg/cli/client"
 	"k0s.io/pkg/cli/miniclient"
-	"k0s.io/pkg/cli/dohserver"
-	"k0s.io/pkg/cli/filebrowser"
-	"k0s.io/pkg/cli/gitd"
-	"k0s.io/pkg/cli/goproxy"
-	"k0s.io/pkg/cli/gos"
-	"k0s.io/pkg/cli/gost"
 	"k0s.io/pkg/cli/hub"
-	"k0s.io/pkg/cli/k16s"
-	"k0s.io/pkg/cli/kubectl"
 	"k0s.io/pkg/cli/mnt"
-	"k0s.io/pkg/cli/trojan"
-	"k0s.io/pkg/cli/webproc"
 )
 
 var cmdRun = map[string]func([]string) error{
-	"dohserver":       dohserver.Run,
-	"bcrypt":          bcrypt.Run,
-	"k16s":            k16s.Run,
-	"kubectl":         kubectl.Run,
 	"mnt":             mnt.Run,
-	"webproc":         webproc.Run,
-	"trojan":          trojan.Run,
-	"goproxy":         goproxy.Run,
-	"gos":             gos.Run,
-	"buildkite-agent": buildkite.Run,
 	"chassis":         chassis.Run,
 	"client":          client.Run,
 	"miniclient":      miniclient.Run,
 	"hub":             hub.Run,
 	"hub2":            hub.Run2,
 	"agent":           agent.Run,
-	"gitd":            gitd.Run,
-	"gost":            gost.Main,
-	"filebrowser":     filebrowser.Run,
 }
 
 func main() {

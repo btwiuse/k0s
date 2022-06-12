@@ -14,7 +14,6 @@ go_library(
     deps = [
         "//pkg:go_default_library",
         "//pkg/api:go_default_library",
-        "//pkg/exporter:go_default_library",
         "//pkg/hub:go_default_library",
         "//pkg/hub/agent:go_default_library",
         "//pkg/hub/agent/info:go_default_library",
@@ -25,6 +24,7 @@ go_library(
         "//vendor/github.com/btwiuse/pretty:go_default_library",
         "//vendor/github.com/btwiuse/wetty/pkg/assets:go_default_library",
         "//vendor/github.com/gorilla/mux:go_default_library",
+        "//vendor/k0s.io/pkg/exporter:go_default_library",
         "//vendor/modernc.org/httpfs:go_default_library",
         "//vendor/nhooyr.io/websocket:go_default_library",
     ],

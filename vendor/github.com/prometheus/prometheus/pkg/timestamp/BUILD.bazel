@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["timestamp.go"],
-    importmap = "k0s.io/vendor/github.com/prometheus/prometheus/pkg/timestamp",
-    importpath = "github.com/prometheus/prometheus/pkg/timestamp",
-    visibility = ["//visibility:public"],
-)

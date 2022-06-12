@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["handler.go"],
-    importmap = "k0s.io/vendor/github.com/goproxyio/goproxy/v2/sumdb",
-    importpath = "github.com/goproxyio/goproxy/v2/sumdb",
-    visibility = ["//visibility:public"],
-)
