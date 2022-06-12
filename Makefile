@@ -1,4 +1,4 @@
-.PHONY: build
+.PHONY: build trust
 
 NAME     := k0s
 PACKAGE  := github.com/btwiuse/$(NAME)
@@ -13,6 +13,10 @@ SHELL    := bash
 BAZEL    := $(shell ./tools/which_bazel)
 
 default: help
+
+trust:
+	chown -R root:root .
+	git config --global --add safe.directory .
 
 fonts:
 	@ mkdir -p fonts/ pkg/fonts/; cp /usr/share/figlet/fonts/standard.flf fonts/
@@ -123,10 +127,6 @@ build-android:  ## Build android binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
 		android/{armv6,armv7,arm64,amd64,386}
 
-build-linux-arm: ## Build linux arm binaries
-	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-		linux/{armv6,armv7,arm64}
-
 build-bsd-arm:  	## Build bsd arm binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
 	  freebsd/{armv7,armv6} # ,arm64
@@ -137,7 +137,15 @@ build-bsd:  	## Build bsd binaries
 
 build-linux:  	## Build linux binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-	  linux/{amd64,386} linux/{{mips{,64},ppc64}{,le},s390x}
+	  linux/{amd64,386}
+
+build-linux-arm: ## Build linux arm binaries
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+	  linux/{armv6,armv7,arm64}
+
+build-linux-others:  	## Build linux binaries
+	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
+	  linux/{{mips{,64},ppc64}{,le},s390x}
 
 build-windows:  ## Build windows binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
@@ -156,9 +164,9 @@ scratch-build-all:      ## Build binary for every supported platform ignoring bu
 	  linux/{{mips{,64},ppc64}{,le},s390x}
 
 release:        ## Build and upload binaries for all supported platforms
-	@ mkdir -p bin/; git -C bin/ init
-	@ make build
-	@ pushd bin; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
+	# mkdir -p bin/; git -C bin/ init
+	# make build
+	# pushd bin; tree -L 1 -H '.' --noreport --charset utf-8 > index.html; popd
 	@ .ci/release-latest.sh
 
 dist:           ## Build and make an dist image TODO: android builder image

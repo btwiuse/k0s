@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/github/license/btwiuse/k0s?color=%23000&style=flat-round)](https://github.com/btwiuse/k0s/blob/master/LICENSE)
 [![DockerHub](https://img.shields.io/docker/pulls/btwiuse/k0s.svg)](https://hub.docker.com/r/btwiuse/k0s)
 
-[![Build status](https://badge.buildkite.com/f3f7346665b5f0ed5f49503300bddc4ca02bb5b88ba081ed46.svg)](https://buildkite.com/btwiuse/k0s)
+[![Github Actions Build](https://github.com/btwiuse/k0s/actions/workflows/build.yml/badge.svg)](https://github.com/btwiuse/k0s/actions/workflows/build.yml)
 [![Github](https://github.com/btwiuse/k0s/workflows/Test/badge.svg)](https://github.com/btwiuse/k0s/actions)
 [![codecov](https://codecov.io/gh/btwiuse/k0s/branch/master/graph/badge.svg)](https://codecov.io/gh/btwiuse/k0s)
 [![Go Report Card](https://goreportcard.com/badge/github.com/btwiuse/k0s)](https://goreportcard.com/report/github.com/btwiuse/k0s)
