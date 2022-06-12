@@ -144,7 +144,14 @@ func (c Combo) Env() []string {
 	//
 	// windows/arm doesn't work yet
 	case Combo{OS: "windows", ARCH: "arm"}:
-		envs = append(envs, "CGO_ENABLED=1")
+		if c == DefaultCombo {
+			break
+		}
+		envs = append(envs,
+			"CXX=clang++",
+			"CC=clang",
+		)
+	case Combo{OS: "windows", ARCH: "arm64"}:
 		if c == DefaultCombo {
 			break
 		}
@@ -153,7 +160,6 @@ func (c Combo) Env() []string {
 			"CC=clang",
 		)
 	case Combo{OS: "windows", ARCH: "386"}:
-		envs = append(envs, "CGO_ENABLED=1")
 		if c == DefaultCombo {
 			break
 		}
@@ -162,7 +168,6 @@ func (c Combo) Env() []string {
 			"CC=i686-w64-mingw32-gcc",
 		)
 	case Combo{OS: "windows", ARCH: "amd64"}:
-		envs = append(envs, "CGO_ENABLED=1")
 		if c == DefaultCombo {
 			break
 		}
