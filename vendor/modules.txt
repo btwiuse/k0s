@@ -713,7 +713,7 @@ github.com/gdamore/tcell/terminfo/x/xterm_kitty
 # github.com/ghodss/yaml v1.0.0
 ## explicit
 github.com/ghodss/yaml
-# github.com/ginuerzh/gost v0.0.0-20220419120216-f94293b45444 => github.com/btwiuse/gost v0.0.0-20220430110229-7bf437d68fdb
+# github.com/ginuerzh/gost v0.0.0-20220419120216-f94293b45444 => github.com/btwiuse/gost v0.0.0-20220612132545-645105c99159
 ## explicit; go 1.17
 github.com/ginuerzh/gost
 # github.com/go-acme/lego v2.5.0+incompatible
@@ -755,7 +755,7 @@ github.com/go-gost/gosocks5
 # github.com/go-gost/relay v0.1.1-0.20211123134818-8ef7fd81ffd7
 ## explicit; go 1.16
 github.com/go-gost/relay
-# github.com/go-gost/tls-dissector v0.0.2-0.20211125135007-2b5d5bd9c07e
+# github.com/go-gost/tls-dissector v0.0.2-0.20220408131628-aac992c27451
 ## explicit; go 1.17
 github.com/go-gost/tls-dissector
 # github.com/go-kit/log v0.2.0
@@ -2957,7 +2957,7 @@ src.elv.sh/pkg/ui
 src.elv.sh/pkg/wcwidth
 # github.com/buildkite/agent/v3 => github.com/btwiuse/agent/v3 v3.27.1-0.20210217080418-ae42a28eefa7
 # github.com/coredns/coredns => github.com/btwiuse/coredns v1.8.4
-# github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220430110229-7bf437d68fdb
+# github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220612132545-645105c99159
 # github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
 # k8s.io/api => k8s.io/api v0.20.4
 # k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.20.4

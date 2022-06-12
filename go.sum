@@ -313,8 +313,8 @@ github.com/btwiuse/etcd/v3 v3.4.15 h1:v4A+SAVIB5KvGVS7mDyU8ls3uwlgiNCfazwDL/nK1G
 github.com/btwiuse/etcd/v3 v3.4.15/go.mod h1:hXk6w/Y6FRCA0J4NEb54ElKCqqAyeXqJn+vQaMwLLOs=
 github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0 h1:RamJoBgLnq2tsdeXwKc/+ytJ30rftG+MBDreHGFWpSw=
 github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0/go.mod h1:HemNeMkO+h/A3mRCi9Sr2x3aEzE1sc0nUUl3Eg539hU=
-github.com/btwiuse/gost v0.0.0-20220430110229-7bf437d68fdb h1:z71l9MRGQmnoFQ1qUTv2lfUlVlgdbTdDbSEKLEN/+OQ=
-github.com/btwiuse/gost v0.0.0-20220430110229-7bf437d68fdb/go.mod h1:p0t88zSR7VZEAUgc1TTfLYrRCXtg+yZLrFs+COIsODM=
+github.com/btwiuse/gost v0.0.0-20220612132545-645105c99159 h1:6hvhWArHvm9mBWjM7OcUExNf4buPk7GKu6LGPfLv37Q=
+github.com/btwiuse/gost v0.0.0-20220612132545-645105c99159/go.mod h1:vkqHIorbIgTCmF0tmOAQOzRMRsMh5xVS81w/muFFyEo=
 github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9 h1:gOLR+C34lEfYf3VaQoeX+ekL+gv70qi4O/4Au/YznNE=
 github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9/go.mod h1:d/lnnBGtvhkTmu4SATYV8nMDbobeZ81s/puSxGwufcA=
 github.com/btwiuse/pretty v0.0.0-20201017182805-a72bdf3093a3 h1:9gByUaL1XTCtnT0m0+9UrOie1QOQiWJ3FAHeg3C/+Es=
@@ -712,8 +712,8 @@ github.com/go-gost/gosocks5 v0.3.0 h1:Hkmp9YDRBSCJd7xywW6dBPT6B9aQTkuWd+3WCheJiJ
 github.com/go-gost/gosocks5 v0.3.0/go.mod h1:1G6I7HP7VFVxveGkoK8mnprnJqSqJjdcASKsdUn4Pp4=
 github.com/go-gost/relay v0.1.1-0.20211123134818-8ef7fd81ffd7 h1:itaaJhQJ19kUXEB4Igb0EbY8m+1Py2AaNNSBds/9gk4=
 github.com/go-gost/relay v0.1.1-0.20211123134818-8ef7fd81ffd7/go.mod h1:lcX+23LCQ3khIeASBo+tJ/WbwXFO32/N5YN6ucuYTG8=
-github.com/go-gost/tls-dissector v0.0.2-0.20211125135007-2b5d5bd9c07e h1:73NGqAs22ey3wJkIYVD/ACEoovuIuOlEzQTEoqrO5+U=
-github.com/go-gost/tls-dissector v0.0.2-0.20211125135007-2b5d5bd9c07e/go.mod h1:/9QfdewqmHdaE362Hv5nDaSWLx3pCmtD870d6GaquXs=
+github.com/go-gost/tls-dissector v0.0.2-0.20220408131628-aac992c27451 h1:xj8gUZGYO3nb5+6Bjw9+tsFkA9sYynrOvDvvC4uDV2I=
+github.com/go-gost/tls-dissector v0.0.2-0.20220408131628-aac992c27451/go.mod h1:/9QfdewqmHdaE362Hv5nDaSWLx3pCmtD870d6GaquXs=
 github.com/go-ini/ini v1.25.4/go.mod h1:ByCAeIL28uOIIG0E3PJtZPDL8WnHpFKFOtgjp+3Ies8=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
 github.com/go-kit/kit v0.9.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=

@@ -6692,8 +6692,8 @@ go_repository(
 go_repository(
     name = "com_github_go_gost_tls_dissector",
     importpath = "github.com/go-gost/tls-dissector",
-    sum = "h1:73NGqAs22ey3wJkIYVD/ACEoovuIuOlEzQTEoqrO5+U=",
-    version = "v0.0.2-0.20211125135007-2b5d5bd9c07e",
+    sum = "h1:xj8gUZGYO3nb5+6Bjw9+tsFkA9sYynrOvDvvC4uDV2I=",
+    version = "v0.0.2-0.20220408131628-aac992c27451",
 )
 
 go_repository(
@@ -10545,8 +10545,8 @@ go_repository(
     name = "com_github_ginuerzh_gost",
     importpath = "github.com/ginuerzh/gost",
     replace = "github.com/btwiuse/gost",
-    sum = "h1:z71l9MRGQmnoFQ1qUTv2lfUlVlgdbTdDbSEKLEN/+OQ=",
-    version = "v0.0.0-20220430110229-7bf437d68fdb",
+    sum = "h1:6hvhWArHvm9mBWjM7OcUExNf4buPk7GKu6LGPfLv37Q=",
+    version = "v0.0.0-20220612132545-645105c99159",
 )
 
 go_repository(
