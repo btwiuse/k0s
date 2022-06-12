@@ -709,6 +709,7 @@ gopkg.in/yaml.v3
 # k0s.io/pkg/exporter v0.0.0-00010101000000-000000000000 => ./pkg/exporter
 ## explicit; go 1.18
 k0s.io/pkg/exporter
+k0s.io/pkg/exporter/env
 # modernc.org/httpfs v1.0.6
 ## explicit; go 1.15
 modernc.org/httpfs

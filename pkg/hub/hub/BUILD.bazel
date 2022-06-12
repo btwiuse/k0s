@@ -23,7 +23,6 @@ go_library(
         "//pkg/wrap:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
         "//vendor/github.com/btwiuse/wetty/pkg/assets:go_default_library",
-        "//vendor/github.com/gorilla/handlers:go_default_library",
         "//vendor/github.com/gorilla/mux:go_default_library",
         "//vendor/k0s.io/pkg/exporter:go_default_library",
         "//vendor/modernc.org/httpfs:go_default_library",

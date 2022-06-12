@@ -5,7 +5,9 @@ go_library(
     srcs = [
         "agent.go",
         "lys.go",
+        "plugin_envserver.go",
         "plugin_fileserver.go",
+        "plugin_metricsserver.go",
         "plugin_pingserver.go",
         "plugin_redirectserver.go",
         "plugin_socks5server.go",
@@ -27,5 +29,7 @@ go_library(
         "//vendor/github.com/btwiuse/pretty:go_default_library",
         "//vendor/github.com/ginuerzh/gost:go_default_library",
         "//vendor/golang.org/x/sync/errgroup:go_default_library",
+        "//vendor/k0s.io/pkg/exporter:go_default_library",
+        "//vendor/k0s.io/pkg/exporter/env:go_default_library",
     ],
 )
