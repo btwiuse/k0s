@@ -165,7 +165,7 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 
 func (h *hub) handleVersion(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(pretty.JSONString(h.GetConfig().GetVersion())))
+	w.Write([]byte(pretty.JSONStringLine(h.GetConfig().GetVersion())))
 }
 
 func contains(set []string, e string) bool {
@@ -214,7 +214,7 @@ func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 		agents = allAgents
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(pretty.JSONString(agents)))
+	w.Write([]byte(pretty.JSONStringLine(agents)))
 }
 
 func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
@@ -230,7 +230,7 @@ func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 
 	watchInterval := time.Second
 	for {
-		_, err := conn.Write([]byte(pretty.JSONString(h.GetAgents())))
+		_, err := conn.Write([]byte(pretty.JSONStringLine(h.GetAgents())))
 		if err != nil {
 			log.Println("agents watch:", err)
 			break

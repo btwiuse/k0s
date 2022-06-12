@@ -84,8 +84,8 @@ github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0 h1:RamJoBgLnq2tsdeXwK
 github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0/go.mod h1:HemNeMkO+h/A3mRCi9Sr2x3aEzE1sc0nUUl3Eg539hU=
 github.com/btwiuse/gost v0.0.0-20220612132545-645105c99159 h1:6hvhWArHvm9mBWjM7OcUExNf4buPk7GKu6LGPfLv37Q=
 github.com/btwiuse/gost v0.0.0-20220612132545-645105c99159/go.mod h1:vkqHIorbIgTCmF0tmOAQOzRMRsMh5xVS81w/muFFyEo=
-github.com/btwiuse/pretty v0.0.0-20201017182805-a72bdf3093a3 h1:9gByUaL1XTCtnT0m0+9UrOie1QOQiWJ3FAHeg3C/+Es=
-github.com/btwiuse/pretty v0.0.0-20201017182805-a72bdf3093a3/go.mod h1:5KwDnoYjFRSqbx1S3tQmC8BpVoI7C0jKb1j5CX7syQk=
+github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895 h1:pa8rkKHu9kz1hQ/ArHHpIRVlTE+VzWO0TSRQ2PkTySs=
+github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895/go.mod h1:RpNI4eGHGp4R40EP8T5fY1aZNOSQjr4GHoB8T3yBTrQ=
 github.com/btwiuse/wetty v0.0.36 h1:MSMG+C1wR+bgG5xB2TRZK+5yxYiOmGwe44c/3gpaGT0=
 github.com/btwiuse/wetty v0.0.36/go.mod h1:P/xStKESkT1gJ/iCwfb+U7ValgeE1ltCU85wxzYxTDE=
 github.com/buger/jsonparser v0.0.0-20181115193947-bf1c66bbce23/go.mod h1:bbYlZJ7hK1yFx9hf58LP0zeX7UjIGs20ufpu3evjr+s=

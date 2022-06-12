@@ -49,7 +49,7 @@ func (v *version) GetBuildDate() string  { return v.BuildDate }
 func (v *version) GetVersion() string    { return v.Version }
 func (v *version) GetGoVersion() string  { return v.GoVersion }
 func (v *version) YAMLString() string    { return pretty.YAMLString(v) }
-func (v *version) JsonString() string    { return pretty.JsonString(v) }
+func (v *version) JsonString() string    { return pretty.JsonStringLine(v) }
 
 func Decode(data []byte) (pkg.Version, error) {
 	v := &version{}

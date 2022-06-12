@@ -84,7 +84,7 @@ func (ag *agent) Accept(tun api.Tunnel) (net.Conn, error) {
 func (ag *agent) AgentRegister(conn net.Conn) (types.RPC, error) {
 	agentInfo := ag.Config.String()
 	if ag.Config.GetVerbose() {
-		log.Print(pretty.JSONString(ag.Config))
+		log.Print(pretty.JSONStringLine(ag.Config))
 	}
 	_, err := io.WriteString(conn, agentInfo)
 	if err != nil {

@@ -373,7 +373,7 @@ func printHubVersion(c client.Config) {
 }
 
 func (c *config) String() string {
-	return pretty.JsonString(c)
+	return pretty.JsonStringLine(c)
 }
 
 /*

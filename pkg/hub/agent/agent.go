@@ -42,7 +42,7 @@ func NewAgent(rpc hub.RPC, info hub.AgentInfo) hub.Agent {
 }
 
 func (ag *agent) MarshalJSON() ([]byte, error) {
-	return []byte(pretty.JSONString(ag.AgentInfo)), nil
+	return []byte(pretty.JSONStringLine(ag.AgentInfo)), nil
 }
 
 type agent struct {

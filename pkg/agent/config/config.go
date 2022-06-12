@@ -441,7 +441,7 @@ func printHubVersion(c agent.Config) {
 }
 
 func (c *Config) String() string {
-	return pretty.JsonString(c)
+	return pretty.JsonStringLine(c)
 }
 
 func Decode(data []byte) (agent.Info, error) {

@@ -43,7 +43,6 @@ func ToRPC(conn net.Conn) types.RPC {
 func (rpc *YS) register() {
 	rpc.Scan()
 	cmd := rpc.Text()
-	// log.Println(cmd)
 
 	ifo, err := info.Decode([]byte(cmd))
 	if err != nil {

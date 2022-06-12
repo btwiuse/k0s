@@ -26,13 +26,13 @@ func (e *Event) UnmarshalJSON(buf []byte) error {
 	return nil
 }
 
-func (e *ResizeEvent) String() string { return pretty.JsonString(e) }
+func (e *ResizeEvent) String() string { return pretty.JsonStringLine(e) }
 func (e *InputEvent) String() string {
-	return pretty.JsonString([]interface{}{&e.Time, &e.Type, &e.Data})
+	return pretty.JsonStringLine([]interface{}{&e.Time, &e.Type, &e.Data})
 }
 func (e *OutputEvent) String() string {
-	return pretty.JsonString([]interface{}{&e.Time, &e.Type, &e.Data})
+	return pretty.JsonStringLine([]interface{}{&e.Time, &e.Type, &e.Data})
 }
 func (e *PingEvent) String() string {
-	return pretty.JsonString([]interface{}{&e.Time, &e.Type, &e.Data})
+	return pretty.JsonStringLine([]interface{}{&e.Time, &e.Type, &e.Data})
 }

@@ -8605,8 +8605,8 @@ go_repository(
 go_repository(
     name = "com_github_btwiuse_pretty",
     importpath = "github.com/btwiuse/pretty",
-    sum = "h1:9gByUaL1XTCtnT0m0+9UrOie1QOQiWJ3FAHeg3C/+Es=",
-    version = "v0.0.0-20201017182805-a72bdf3093a3",
+    sum = "h1:pa8rkKHu9kz1hQ/ArHHpIRVlTE+VzWO0TSRQ2PkTySs=",
+    version = "v0.0.0-20220605073556-820155689895",
 )
 
 go_repository(

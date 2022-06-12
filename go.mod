@@ -14,13 +14,13 @@ require (
 	github.com/abiosoft/ishell v2.0.0+incompatible
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
-	github.com/btwiuse/pretty v0.0.0-20201017182805-a72bdf3093a3
+	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895
 	github.com/btwiuse/wetty v0.0.36
 	github.com/creack/pty v1.1.18
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/docker/docker v20.10.17+incompatible
 	github.com/gdamore/tcell v1.4.0
-	github.com/ginuerzh/gost v0.0.0-20210206051340-8dd4d8d9a123
+	github.com/ginuerzh/gost v0.0.0-00010101000000-000000000000
 	github.com/golang/protobuf v1.5.2
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/handlers v1.5.1
