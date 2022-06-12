@@ -14,10 +14,6 @@ BAZEL    := $(shell ./tools/which_bazel)
 
 default: help
 
-trust:
-	chown -R root:root .
-	git config --global --add safe.directory .
-
 fonts:
 	@ mkdir -p fonts/ pkg/fonts/; cp /usr/share/figlet/fonts/standard.flf fonts/
 	@ assets -d fonts/ -package fonts -o ./pkg/fonts/standard.go -map Fonts

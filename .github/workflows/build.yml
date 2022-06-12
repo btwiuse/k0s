@@ -90,7 +90,7 @@ jobs:
       uses: docker://techknowlogick/xgo:latest
       with:
         entrypoint: bash
-        args: -c "make trust build-linux"
+        args: -c "chown -R root:root .; make build-linux"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -121,7 +121,7 @@ jobs:
       uses: docker://techknowlogick/xgo:latest
       with:
         entrypoint: bash
-        args: -c "make trust build-linux-arm"
+        args: -c "chown -R root:root .; make build-linux-arm"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -151,7 +151,7 @@ jobs:
       uses: docker://techknowlogick/xgo:latest
       with:
         entrypoint: bash
-        args: -c "make trust build-linux-others"
+        args: -c "chown -R root:root .; make build-linux-others"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -181,7 +181,7 @@ jobs:
       uses: docker://techknowlogick/xgo:latest
       with:
         entrypoint: bash
-        args: -c "make trust build-windows"
+        args: -c "chown -R root:root .; make build-windows"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -211,7 +211,7 @@ jobs:
       uses: docker://techknowlogick/xgo:latest
       with:
         entrypoint: bash
-        args: -c "make trust build-darwin"
+        args: -c "chown -R root:root .; make build-darwin"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -241,7 +241,7 @@ jobs:
       uses: docker://techknowlogick/xgo:latest
       with:
         entrypoint: bash
-        args: -c "make trust build-bsd"
+        args: -c "chown -R root:root .; make build-bsd"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -279,7 +279,7 @@ jobs:
       uses: docker://techknowlogick/xgo:latest
       with:
         entrypoint: bash
-        args: -c "make trust bazel-build-android"
+        args: -c "chown -R root:root .; make bazel-build-android"
       env:
         ANDROID_NDK_BAZEL: True
         TEST_TMPDIR: /github/workspace/.cache/bazel
@@ -360,7 +360,7 @@ jobs:
       uses: docker://techknowlogick/xgo:latest
       with:
         entrypoint: bash
-        args: -c "make trust release"
+        args: -c "chown -R root:root .; make release"
 
     - name: Create Release
       id: upload-release-asset
