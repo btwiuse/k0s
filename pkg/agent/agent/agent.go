@@ -16,8 +16,11 @@ import (
 	"k0s.io/pkg/api"
 )
 
+type TunnelFn = func(types.Config) chan net.Conn
+
 var (
-	_ types.Agent = (*agent)(nil)
+	_       types.Agent             = (*agent)(nil)
+	Tunnels map[api.Tunnel]TunnelFn = map[api.Tunnel]TunnelFn{}
 )
 
 type agent struct {
@@ -33,35 +36,28 @@ type agent struct {
 
 func NewAgent(c types.Config) types.Agent {
 	var (
-		eg, _ = errgroup.WithContext(context.Background())
-		id    = c.GetID()
-		name  = c.GetName()
-		shell = "bash"
+		eg, _   = errgroup.WithContext(context.Background())
+		id      = c.GetID()
+		name    = c.GetName()
+		shell   = "bash"
+		tunnels = map[api.Tunnel]chan net.Conn{}
 	)
 
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
 	}
 
+	for k, v := range Tunnels {
+		tunnels[k] = v(c)
+	}
+
 	return &agent{
-		Group:  eg,
-		Config: c,
-		Dialer: dialer.New(c),
-		Tunnels: map[api.Tunnel]chan net.Conn{
-			api.FS:         StartFileServer(c),
-			api.Socks5:     StartSocks5Server(c),
-			api.Redir:      StartRedirectServer(c),
-			api.Metrics:    StartMetricsServer(c),
-			api.Terminal:   StartTerminalServer(c),
-			api.Ping:       StartPingServer(c),
-			api.Version:    StartVersionServer(c),
-			api.K16s:       StartK16sServer(c),
-			api.Doh:        StartDohServer(c),
-			api.Env:        StartEnvServer(c),
-			api.TerminalV2: StartTerminalV2Server(c),
-		},
-		id:   id,
-		name: name,
+		Group:   eg,
+		Config:  c,
+		Dialer:  dialer.New(c),
+		Tunnels: tunnels,
+		id:      id,
+		name:    name,
 	}
 }
 

@@ -1,3 +1,5 @@
+// +build ignore
+
 package agent
 
 import (
@@ -6,9 +8,12 @@ import (
 	"net/http"
 
 	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/api"
 	"k0s.io/pkg/dohserver"
 	"k0s.io/pkg/middleware"
 )
+
+func init() { Tunnels[api.Doh] = StartDohServer }
 
 func newDohHandler() (http.Handler, error) {
 	confPath := "doh-server.conf"

@@ -6,7 +6,10 @@ import (
 
 	"github.com/ginuerzh/gost"
 	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/api"
 )
+
+func init() { Tunnels[api.Socks5] = StartSocks5Server }
 
 func StartSocks5Server(c types.Config) chan net.Conn {
 	socks5Listener := NewLys()

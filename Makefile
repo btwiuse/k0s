@@ -30,6 +30,7 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ go mod tidy
 	@ go mod vendor
 	@ sed -i vendor/sigs.k8s.io/kustomize/pkg/transformers/config/factorycrd.go -e 's,github.com/go-openapi/spec,k8s.io/kube-openapi/pkg/validation/spec,g'
+	@ rm vendor/sigs.k8s.io/kustomize/pkg/transformers/config/factorycrd.goe || true
 	@ $(BAZEL) run //:gazelle -- update-repos --from_file=go.mod
 	@ $(BAZEL) run //:gazelle
 	# @ git status vendor/

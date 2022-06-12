@@ -6,10 +6,13 @@ import (
 
 	types "k0s.io/pkg/agent"
 	"k0s.io/pkg/agent/tty"
-	"k0s.io/pkg/asciitransport"
+	"k0s.io/pkg/api"
+	asciitransport "k0s.io/pkg/asciitransport/v2"
 )
 
-func StartTerminalServer(c types.Config) chan net.Conn {
+func init() { Tunnels[api.TerminalV2] = StartTerminalV2Server }
+
+func StartTerminalV2Server(c types.Config) chan net.Conn {
 	var (
 		cmd              []string = c.GetCmd()
 		ro               bool     = c.GetReadOnly()
@@ -17,11 +20,11 @@ func StartTerminalServer(c types.Config) chan net.Conn {
 		terminalListener          = NewLys()
 	)
 	_ = ro
-	go serveTerminal(terminalListener, fac)
+	go serveTerminalV2(terminalListener, fac)
 	return terminalListener.Conns
 }
 
-func serveTerminal(ln net.Listener, fac types.TtyFactory) {
+func serveTerminalV2(ln net.Listener, fac types.TtyFactory) {
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
@@ -38,27 +41,17 @@ func serveTerminal(ln net.Listener, fac types.TtyFactory) {
 			opts := []asciitransport.Opt{
 				asciitransport.WithReader(term),
 				asciitransport.WithWriter(term),
-			}
-			server := asciitransport.Server(conn, opts...)
-			// send
-			// case output:
-
-			// recv
-			go func() {
-				for {
-					var (
-						re   = <-server.ResizeEvent()
-						rows = int(re.Height)
-						cols = int(re.Width)
-					)
-					err := term.Resize(rows, cols)
+				asciitransport.WithResizeHook(func(w, h uint16) {
+					err := term.Resize(int(w), int(h))
 					if err != nil {
 						log.Println(err)
-						break
 					}
-				}
-				server.Close()
-			}()
+				}),
+			}
+			server := asciitransport.Server(conn, opts...)
+			println("new server")
+			<-server.Done()
+			println("done")
 		}()
 	}
 }

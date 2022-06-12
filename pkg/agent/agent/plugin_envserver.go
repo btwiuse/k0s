@@ -5,9 +5,12 @@ import (
 	"net/http"
 
 	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/api"
 	"k0s.io/pkg/exporter/env"
 	"k0s.io/pkg/middleware"
 )
+
+func init() { Tunnels[api.Env] = StartEnvServer }
 
 func StartEnvServer(c types.Config) chan net.Conn {
 	var (

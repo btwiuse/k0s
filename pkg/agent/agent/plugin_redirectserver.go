@@ -5,7 +5,10 @@ import (
 
 	"github.com/ginuerzh/gost"
 	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/api"
 )
+
+func init() { Tunnels[api.Redir] = StartRedirectServer }
 
 func StartRedirectServer(c types.Config) chan net.Conn {
 	redirectListener := NewLys()
