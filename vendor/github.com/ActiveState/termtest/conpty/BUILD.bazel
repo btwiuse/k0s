@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "conpty_windows.go",
+        "doc.go",
+        "exec_windows.go",
+        "syscall_windows.go",
+        "term_other.go",
+        "term_windows.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/ActiveState/termtest/conpty",
+    importpath = "github.com/ActiveState/termtest/conpty",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//vendor/github.com/Azure/go-ansiterm/winterm:go_default_library",
+            "//vendor/golang.org/x/sys/windows:go_default_library",
+        ],
+        "//conditions:default": [],
+    }),
+)

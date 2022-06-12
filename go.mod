@@ -8,6 +8,7 @@ replace (
 )
 
 require (
+	github.com/ActiveState/termtest/conpty v0.5.0
 	github.com/BurntSushi/toml v1.1.0
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abbot/go-http-auth v0.4.0
@@ -28,7 +29,6 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
 	github.com/json-iterator/go v1.1.12
-	github.com/liamg/aminal v0.9.0
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
 	github.com/mattn/go-isatty v0.0.14
 	github.com/mattn/go-runewidth v0.0.13
@@ -52,8 +52,8 @@ require (
 
 require (
 	git.torproject.org/pluggable-transports/goptlib.git v1.2.0 // indirect
+	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
 	github.com/LiamHaworth/go-tproxy v0.0.0-20190726054950-ef7efd7f24ed // indirect
-	github.com/MaxRis/w32 v0.0.0-20180517000239-4f5cfb03fabf // indirect
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
@@ -95,7 +95,6 @@ require (
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.11 // indirect
 	github.com/klauspost/reedsolomon v1.9.15 // indirect
-	github.com/kr/pty v1.1.8 // indirect
 	github.com/lucas-clemente/quic-go v0.27.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/lufia/iostat v1.2.0 // indirect

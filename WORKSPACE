@@ -8475,6 +8475,13 @@ go_repository(
     version = "v2.2.1",
 )
 
+go_repository(
+    name = "com_github_activestate_termtest_conpty",
+    importpath = "github.com/ActiveState/termtest/conpty",
+    sum = "h1:JLUe6YDs4Jw4xNPCU+8VwTpniYOGeKzQg4SM2YHQNA8=",
+    version = "v0.5.0",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
