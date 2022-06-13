@@ -356,11 +356,8 @@ jobs:
         name: bazel-build-android
         path: ./bin/
 
-    - name: make release
-      uses: docker://techknowlogick/xgo:latest
-      with:
-        entrypoint: bash
-        args: -c "chown -R root:root .; make release"
+    - run: make release
+      name: make release
 
     - name: Create Release
       id: upload-release-asset
