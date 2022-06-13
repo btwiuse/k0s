@@ -9,7 +9,7 @@ import (
 
 	asciitransport "k0s.io/pkg/asciitransport/v2"
 	"k0s.io/pkg/console"
-	"k0s.io/pkg/localcmd"
+	"k0s.io/pkg/agent/tty/factory"
 	"k0s.io/pkg/uuid"
 )
 
@@ -19,8 +19,8 @@ var (
 
 func server() {
 	var (
-		factory = &localcmd.Factory{[]string{"bash"}}
-		term, _ = factory.New()
+		fac = factory.New([]string{"bash"})
+		term, _ = fac.MakeTty()
 		opts    = []asciitransport.Opt{
 			asciitransport.WithReader(term),
 			asciitransport.WithWriter(term),

@@ -4,7 +4,7 @@ import (
 	"log"
 	"strings"
 
-	"k0s.io/pkg/wetty"
+	"k0s.io/third_party/pkg/wetty"
 )
 
 func Run(args []string) error {

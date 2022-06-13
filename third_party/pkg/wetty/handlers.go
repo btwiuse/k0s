@@ -11,9 +11,9 @@ import (
 
 	"github.com/btwiuse/wetty/pkg/assets"
 	asciitransport "k0s.io/pkg/asciitransport/v2"
-	"k0s.io/pkg/localcmd"
+	"k0s.io/third_party/pkg/localcmd"
 	"k0s.io/pkg/utils"
-	"k0s.io/pkg/wetty/wetty"
+	"k0s.io/third_party/pkg/wetty/wetty"
 )
 
 func (server *Server) setupHandlers(pathPrefix string) http.Handler {

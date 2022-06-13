@@ -12,7 +12,7 @@ import (
 	"k0s.io/pkg/console"
 	"k0s.io/pkg/utils"
 	"k0s.io/pkg/uuid"
-	"k0s.io/pkg/wetty/wetty"
+	"k0s.io/third_party/pkg/wetty/wetty"
 )
 
 func dial(p string) (conn net.Conn, err error) {

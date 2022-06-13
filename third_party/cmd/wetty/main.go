@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"k0s.io/pkg/cli/wetty"
+	"k0s.io/third_party/pkg/cli/wetty"
 )
 
 func main() {
