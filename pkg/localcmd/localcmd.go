@@ -10,7 +10,7 @@ import (
 	"unsafe"
 
 	"github.com/creack/pty"
-        "golang.org/x/text/encoding/unicode"
+	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
 )
 

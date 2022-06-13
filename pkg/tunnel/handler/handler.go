@@ -63,15 +63,15 @@ func manageHub(next http.Handler) http.Handler {
 			io.WriteString(w, "<h1>Management Console</h1>\n")
 			io.WriteString(w, "<h2>Registered Mounts</h2>\n")
 			defaultTunnelMux.mu.RLock()
-            entries := []string{}
+			entries := []string{}
 			for p, e := range defaultTunnelMux.m {
-                entries = append(entries, fmt.Sprintf("<p><a href=\"%s\">%s</a> => %s</p>\n", p, p, e.from))
+				entries = append(entries, fmt.Sprintf("<p><a href=\"%s\">%s</a> => %s</p>\n", p, p, e.from))
 			}
-            // TODO: sort entries instead of templated strings
-            sort.Strings(entries)
-            for _, entry := range entries {
+			// TODO: sort entries instead of templated strings
+			sort.Strings(entries)
+			for _, entry := range entries {
 				io.WriteString(w, entry)
-            }
+			}
 			defaultTunnelMux.mu.RUnlock()
 			io.WriteString(w, "<h2>Debug Info</h2>\n")
 			io.WriteString(w, fmt.Sprintf("<p><a href=\"%s\">%s</a></p>\n", "/_/", "/_/"))
@@ -125,7 +125,7 @@ func gc(id string, pattern string, conn net.Conn) {
 
 var defaultTunnelMux = &tunnelMux{
 	mu: &sync.RWMutex{},
-	m: make(map[string]muxEntry),
+	m:  make(map[string]muxEntry),
 
 	Conns:       make(map[string]net.Conn),
 	TunnelConns: make(map[string]net.Conn),

@@ -1,5 +1,5 @@
-// +build !nhooyr
-// +build !raw
+//go:build !nhooyr && !raw
+// +build !nhooyr,!raw
 
 package dialer
 

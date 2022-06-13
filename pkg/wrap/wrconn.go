@@ -1,10 +1,10 @@
 package wrap
 
 import (
-    "net"
-    "net/http"
+	"net"
+	"net/http"
 )
 
 func Wrconn(w http.ResponseWriter, r *http.Request) (net.Conn, error) {
-    return wrconn(w, r)
+	return wrconn(w, r)
 }

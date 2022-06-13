@@ -23,8 +23,8 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	"k8s.io/client-go/tools/clientcmd"
 
-	"k8s.io/kube-state-metrics/v2/pkg/version"
 	"k8s.io/klog/v2"
+	"k8s.io/kube-state-metrics/v2/pkg/version"
 )
 
 func createKubeClient(apiserver string, kubeconfig string) (clientset.Interface, vpaclientset.Interface, error) {

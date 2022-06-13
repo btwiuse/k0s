@@ -32,24 +32,24 @@ import (
 	"k8s.io/kube-state-metrics/v2/pkg/options"
 )
 
-func opt(args []string) *options.Options{
-        osargs := os.Args
-        os.Args = append([]string{"k16s"}, args...)
-        opts := options.NewOptions()
-        opts.AddFlags()
-        opts.Parse()
+func opt(args []string) *options.Options {
+	osargs := os.Args
+	os.Args = append([]string{"k16s"}, args...)
+	opts := options.NewOptions()
+	opts.AddFlags()
+	opts.Parse()
 
-        opts.Kubeconfig      = os.Getenv("KUBECONFIG")
+	opts.Kubeconfig = os.Getenv("KUBECONFIG")
 
-        os.Args = osargs
-        return opts
+	os.Args = osargs
+	return opts
 }
 
 func buildStore(opts *options.Options, kubeClient clientset.Interface, vpaClient vpaclientset.Interface) *store.Builder {
 	storeBuilder := store.NewBuilder()
 
-        ksmMetricsRegistry := prometheus.NewRegistry()
-        storeBuilder.WithMetrics(ksmMetricsRegistry)
+	ksmMetricsRegistry := prometheus.NewRegistry()
+	storeBuilder.WithMetrics(ksmMetricsRegistry)
 
 	var resources []string = options.DefaultResources.AsSlice()
 

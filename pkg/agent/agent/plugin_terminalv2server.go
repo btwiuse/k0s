@@ -5,7 +5,7 @@ import (
 	"net"
 
 	types "k0s.io/pkg/agent"
-	"k0s.io/pkg/agent/tty"
+	"k0s.io/pkg/agent/tty/factory"
 	"k0s.io/pkg/api"
 	asciitransport "k0s.io/pkg/asciitransport/v2"
 )
@@ -16,7 +16,7 @@ func StartTerminalV2Server(c types.Config) chan net.Conn {
 	var (
 		cmd              []string = c.GetCmd()
 		ro               bool     = c.GetReadOnly()
-		fac                       = tty.NewFactory(cmd)
+		fac                       = factory.New(cmd)
 		terminalListener          = NewLys()
 	)
 	_ = ro

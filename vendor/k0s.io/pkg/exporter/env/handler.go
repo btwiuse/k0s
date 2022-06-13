@@ -44,12 +44,12 @@ func handleEnv(w http.ResponseWriter, r *http.Request) {
 	// io.WriteString(w, envURL)
 
 	/*
-	u, err := url.Parse(envURL)
-	if err != nil {
-		// bad request or internal server error ?
-		http.NotFoundHandler().ServeHTTP(w, r)
-		return
-	}
+		u, err := url.Parse(envURL)
+		if err != nil {
+			// bad request or internal server error ?
+			http.NotFoundHandler().ServeHTTP(w, r)
+			return
+		}
 	*/
 	// proxy := httputil.NewSingleHostReverseProxy(u)
 	// proxy.ServeHTTP(w, r)

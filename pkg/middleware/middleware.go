@@ -21,7 +21,7 @@ var (
 			next.ServeHTTP(w, r)
 		}))
 	}
-    AllowAllCorsMiddleware = func(next http.Handler) http.Handler {
-        return cors.AllowAll().Handler(next)
-    }
+	AllowAllCorsMiddleware = func(next http.Handler) http.Handler {
+		return cors.AllowAll().Handler(next)
+	}
 )

@@ -1,3 +1,4 @@
+//go:build (freebsd || openbsd || netbsd) && !windows && !darwin && !linux
 // +build freebsd openbsd netbsd
 // +build !windows
 // +build !darwin

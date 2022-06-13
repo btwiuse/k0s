@@ -1,3 +1,4 @@
+//go:build !nhooyr
 // +build !nhooyr
 
 package wrap

@@ -1,3 +1,4 @@
+//go:build string
 // +build string
 
 package main
