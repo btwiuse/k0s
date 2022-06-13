@@ -1,10 +1,10 @@
 package config
 
 func (c *Config) getCmd() []string {
-	shell := "cmd"
+	shell := `C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe`
 	args := []string{shell}
 	if c.Cmd == "" {
 		return args
 	}
-	return append(args, "/c", c.Cmd)
+	return append(args, "-Command", c.Cmd)
 }
