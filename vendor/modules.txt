@@ -1,3 +1,6 @@
+# code.gitea.io/sdk/gitea v0.13.2
+## explicit; go 1.12
+code.gitea.io/sdk/gitea
 # git.torproject.org/pluggable-transports/goptlib.git v1.2.0
 ## explicit; go 1.11
 git.torproject.org/pluggable-transports/goptlib.git
@@ -15,6 +18,9 @@ github.com/BurntSushi/toml/internal
 # github.com/LiamHaworth/go-tproxy v0.0.0-20190726054950-ef7efd7f24ed
 ## explicit
 github.com/LiamHaworth/go-tproxy
+# github.com/Masterminds/semver/v3 v3.1.0
+## explicit; go 1.12
+github.com/Masterminds/semver/v3
 # github.com/VojtechVitek/yaml-cli v0.0.5
 ## explicit
 github.com/VojtechVitek/yaml-cli
@@ -78,6 +84,10 @@ github.com/coreos/go-systemd/dbus
 # github.com/creack/pty v1.1.18
 ## explicit; go 1.13
 github.com/creack/pty
+# github.com/creativeprojects/go-selfupdate v0.6.1
+## explicit; go 1.13
+github.com/creativeprojects/go-selfupdate
+github.com/creativeprojects/go-selfupdate/update
 # github.com/dchest/siphash v1.2.2
 ## explicit
 github.com/dchest/siphash
@@ -228,6 +238,12 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
+# github.com/google/go-github/v30 v30.1.0
+## explicit; go 1.13
+github.com/google/go-github/v30/github
+# github.com/google/go-querystring v1.0.0
+## explicit
+github.com/google/go-querystring/query
 # github.com/google/gopacket v1.1.19
 ## explicit; go 1.12
 github.com/google/gopacket
@@ -247,6 +263,9 @@ github.com/gorilla/websocket
 # github.com/hashicorp/go-envparse v0.0.0-20200406174449-d9cfd743a15e
 ## explicit
 github.com/hashicorp/go-envparse
+# github.com/hashicorp/go-version v1.2.1
+## explicit
+github.com/hashicorp/go-version
 # github.com/hodgesds/perf-utils v0.4.0
 ## explicit; go 1.14
 github.com/hodgesds/perf-utils
@@ -460,6 +479,12 @@ github.com/templexxx/xorsimd
 # github.com/tjfoc/gmsm v1.4.1
 ## explicit; go 1.14
 github.com/tjfoc/gmsm/sm4
+# github.com/ulikunitz/xz v0.5.8
+## explicit; go 1.12
+github.com/ulikunitz/xz
+github.com/ulikunitz/xz/internal/hash
+github.com/ulikunitz/xz/internal/xlog
+github.com/ulikunitz/xz/lzma
 # github.com/xtaci/kcp-go/v5 v5.6.1
 ## explicit; go 1.13
 github.com/xtaci/kcp-go/v5
@@ -521,6 +546,12 @@ golang.org/x/crypto/hkdf
 golang.org/x/crypto/internal/poly1305
 golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/nacl/secretbox
+golang.org/x/crypto/openpgp
+golang.org/x/crypto/openpgp/armor
+golang.org/x/crypto/openpgp/elgamal
+golang.org/x/crypto/openpgp/errors
+golang.org/x/crypto/openpgp/packet
+golang.org/x/crypto/openpgp/s2k
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/salsa20
 golang.org/x/crypto/salsa20/salsa
@@ -539,6 +570,7 @@ golang.org/x/mod/semver
 ## explicit; go 1.17
 golang.org/x/net/bpf
 golang.org/x/net/context
+golang.org/x/net/context/ctxhttp
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
@@ -549,6 +581,10 @@ golang.org/x/net/internal/timeseries
 golang.org/x/net/ipv4
 golang.org/x/net/ipv6
 golang.org/x/net/trace
+# golang.org/x/oauth2 v0.0.0-20220223155221-ee480838109b
+## explicit; go 1.11
+golang.org/x/oauth2
+golang.org/x/oauth2/internal
 # golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 ## explicit
 golang.org/x/sync/errgroup
@@ -605,6 +641,15 @@ golang.org/x/tools/internal/typesinternal
 ## explicit; go 1.11
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
+# google.golang.org/appengine v1.6.7
+## explicit; go 1.11
+google.golang.org/appengine/internal
+google.golang.org/appengine/internal/base
+google.golang.org/appengine/internal/datastore
+google.golang.org/appengine/internal/log
+google.golang.org/appengine/internal/remote_api
+google.golang.org/appengine/internal/urlfetch
+google.golang.org/appengine/urlfetch
 # google.golang.org/genproto v0.0.0-20220222213610-43724f9ea8cf
 ## explicit; go 1.15
 google.golang.org/genproto/googleapis/rpc/status

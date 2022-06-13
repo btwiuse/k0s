@@ -3397,8 +3397,8 @@ go_repository(
 go_repository(
     name = "com_github_ulikunitz_xz",
     importpath = "github.com/ulikunitz/xz",
-    sum = "h1:YvTNdFzX6+W5m9msiYg/zpkSURPPtOlzbqYjrFn7Yt4=",
-    version = "v0.5.7",
+    sum = "h1:ERv8V6GKqVi23rgu5cj9pVfVzJbOqAY2Ntl88O6c2nQ=",
+    version = "v0.5.8",
 )
 
 go_repository(
@@ -5418,8 +5418,8 @@ go_repository(
 go_repository(
     name = "io_gitea_code_sdk_gitea",
     importpath = "code.gitea.io/sdk/gitea",
-    sum = "h1:hvDCz4wtFvo7rf5Ebj8tGd4aJ4wLPKX3BKFX9Dk1Pgs=",
-    version = "v0.12.0",
+    sum = "h1:wAnT/J7Z62q3fJXbgnecoaOBh8CM1Qq0/DakWxiv4yA=",
+    version = "v0.13.2",
 )
 
 go_repository(
@@ -8482,6 +8482,20 @@ go_repository(
     version = "v0.5.0",
 )
 
+go_repository(
+    name = "com_github_creativeprojects_go_selfupdate",
+    importpath = "github.com/creativeprojects/go-selfupdate",
+    sum = "h1:H+wSRrXJ8FbXRcIuN3u1fy7rO2Q03XURhEEcrSXRnxU=",
+    version = "v0.6.1",
+)
+
+go_repository(
+    name = "com_github_google_go_github_v30",
+    importpath = "github.com/google/go-github/v30",
+    sum = "h1:VLDx+UolQICEOKu2m4uAoMti1SxuEBAl7RSEG16L+Oo=",
+    version = "v30.1.0",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -9879,8 +9893,8 @@ go_repository(
 go_repository(
     name = "com_github_hashicorp_go_version",
     importpath = "github.com/hashicorp/go-version",
-    sum = "h1:3vNe/fWF5CBgRIguda1meWhsZHy3m8gCJ5wx+dIzX/E=",
-    version = "v1.2.0",
+    sum = "h1:zEfKbn2+PDgroKdiOzqiE8rsmLqU2uwi5PB5pBJ3TkI=",
+    version = "v1.2.1",
 )
 
 go_repository(
