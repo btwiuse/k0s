@@ -19,7 +19,7 @@ jobs:
         go-version: ^1.18.3
 
     - name: Setup Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           ~/.cache/go-build
@@ -80,7 +80,7 @@ jobs:
         submodules: recursive
 
     - name: Setup Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           .cache/go-build
@@ -111,7 +111,7 @@ jobs:
         submodules: recursive
 
     - name: Setup Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           .cache/go-build
@@ -141,7 +141,7 @@ jobs:
         submodules: recursive
 
     - name: Setup Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           .cache/go-build
@@ -171,7 +171,7 @@ jobs:
         submodules: recursive
 
     - name: Setup Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           .cache/go-build
@@ -201,7 +201,7 @@ jobs:
         submodules: recursive
 
     - name: Setup Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           .cache/go-build
@@ -231,7 +231,7 @@ jobs:
         submodules: recursive
 
     - name: Setup Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           .cache/go-build
@@ -261,7 +261,7 @@ jobs:
         submodules: recursive
 
     - name: Setup Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           .cache/bazel/
