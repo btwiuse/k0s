@@ -48,10 +48,10 @@ bazel-build-android:            ## Build android binaries using bazel
 	# $(BAZEL) build //:k0s --config=go_android_arm64
 
 bazel-build-windows:            ## Build windows binaries using bazel
-	$(BAZEL) run //:install_k0s --config=go_win64 -- -g $(PWD)/bin/windows/amd64
-	$(BAZEL) run //:install_k0s --config=go_win32 -- -g $(PWD)/bin/windows/386
-	$(BAZEL) run //:install_k0s --config=go_win32 -- -g $(PWD)/bin/windows/armv7
-	$(BAZEL) run //:install_k0s --config=go_win64 -- -g $(PWD)/bin/windows/arm64
+	$(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin/windows/amd64
+	$(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin/windows/386
+	$(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin/windows/armv7
+	$(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin/windows/arm64
 	# $(BAZEL) build //:k0s --config=go_win32
 	# $(BAZEL) build //:k0s --config=go_win64
 
@@ -147,7 +147,7 @@ build-linux-others:  	## Build linux binaries
 
 build-windows:  ## Build windows binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-		windows/{386,amd64,arm,arm64}
+		windows/{386,amd64,armv7,arm64}
 
 build-darwin:   ## Build darwin binaries
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" \

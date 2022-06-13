@@ -142,39 +142,6 @@ func (c Combo) Env() []string {
 	//  \ V  V /| | | | | (_| | (_) \ V  V /\__ \
 	//   \_/\_/ |_|_| |_|\__,_|\___/ \_/\_/ |___/
 	//
-	// windows/arm doesn't work yet
-	case Combo{OS: "windows", ARCH: "arm"}:
-		if c == DefaultCombo {
-			break
-		}
-		envs = append(envs,
-			"CXX=clang++",
-			"CC=clang",
-		)
-	case Combo{OS: "windows", ARCH: "arm64"}:
-		if c == DefaultCombo {
-			break
-		}
-		envs = append(envs,
-			"CXX=clang++",
-			"CC=clang",
-		)
-	case Combo{OS: "windows", ARCH: "386"}:
-		if c == DefaultCombo {
-			break
-		}
-		envs = append(envs,
-			"CXX=i686-w64-mingw32-g++",
-			"CC=i686-w64-mingw32-gcc",
-		)
-	case Combo{OS: "windows", ARCH: "amd64"}:
-		if c == DefaultCombo {
-			break
-		}
-		envs = append(envs,
-			"CXX=x86_64-w64-mingw32-g++",
-			"CC=x86_64-w64-mingw32-gcc",
-		)
 
 	//  _ _
 	// | (_)_ __  _   ___  __
