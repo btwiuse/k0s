@@ -15,8 +15,9 @@ import (
 )
 
 func Agent(hub string) {
+	_ = uuid.New()
 	c := &config.Config{
-		ID:  uuid.New(),
+		ID:  "undefined", //uuid.New(),
 		Hub: hub,
 		/*
 			Htpasswd: map[string]string{
