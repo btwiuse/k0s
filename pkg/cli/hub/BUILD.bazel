@@ -11,6 +11,7 @@ go_library(
     deps = [
         "//pkg/hub/config:go_default_library",
         "//pkg/hub/hub:go_default_library",
+        "//pkg/hub/self:go_default_library",
         "//pkg/tunnel/listener:go_default_library",
     ],
 )

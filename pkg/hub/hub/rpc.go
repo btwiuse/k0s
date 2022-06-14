@@ -78,7 +78,6 @@ func (rpc *YS) plumbing() {
 	}()
 	for rpc.Scan() {
 		cmd := rpc.Text()
-		// log.Println(cmd)
 		switch {
 		case cmd == "PONG":
 			// infinite ping/pong loop
