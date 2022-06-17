@@ -13,6 +13,8 @@ import (
 type Opt func(at *AsciiTransport)
 
 type AsciiTransport struct {
+	cmd       string
+	env       map[string]string
 	conn      io.ReadWriteCloser
 	quit      chan struct{}
 	closeonce *sync.Once
@@ -104,6 +106,8 @@ func (c *AsciiTransport) Resize(height, width uint) {
 		Version: 2,
 		Width:   width,
 		Height:  height,
+		Command: c.cmd,
+		Env: c.env,
 	}
 	c.rech <- ie
 }

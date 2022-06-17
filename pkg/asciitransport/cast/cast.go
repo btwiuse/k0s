@@ -71,13 +71,7 @@ type Header struct {
 	// asciinema command.
 	//
 	// ps.: the official asciinema client only captures `SHELL` and `TERM`.
-	Env struct {
-		// Shell corresponds to the captured SHELL environment variable.
-		Shell string `json:"SHELL,omitempty"`
-
-		// Term corresponds to the captured TERM environment variable.
-		Term string `json:"TERM,omitempty"`
-	} `json:"env,omitempty"`
+	Env map[string]string `json:"env,omitempty"`
 }
 
 // Event represents terminal inputs that get recorded by asciinema.
