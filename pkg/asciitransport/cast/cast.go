@@ -45,7 +45,7 @@ type Header struct {
 
 	// Command corresponds to the name of the command that was
 	// recorded.
-	Command string `json:"command,omitempty"`
+	Command []string `json:"command,omitempty"`
 
 	// Theme describes the color theme of the recorded terminal.
 	Theme struct {

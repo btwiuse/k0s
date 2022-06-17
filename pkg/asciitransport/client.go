@@ -17,18 +17,18 @@ type AsciiTransportClient interface {
 
 func Client(conn io.ReadWriteCloser, opts ...Opt) AsciiTransportClient {
 	at := &AsciiTransport{
-		conn:      conn,
-		quit:      make(chan struct{}),
-		closeonce: &sync.Once{},
-		start:     time.Now(),
-		iech:      make(chan *InputEvent),
-		oech:      make(chan *OutputEvent),
-		rech:      make(chan *ResizeEvent),
-		isClient:  true,
+		conn:       conn,
+		quit:       make(chan struct{}),
+		closeonce:  &sync.Once{},
+		start:      time.Now(),
+		iech:       make(chan *InputEvent),
+		oech:       make(chan *OutputEvent),
+		rech:       make(chan *ResizeEvent),
+		isClient:   true,
+		readerOnce: &sync.Once{},
+		writerOnce: &sync.Once{},
 	}
-	for _, opt := range opts {
-		opt(at)
-	}
+	at.ApplyOpts(opts...)
 	pr, pw := io.Pipe()
 	go func() {
 		io.Copy(pw, conn)

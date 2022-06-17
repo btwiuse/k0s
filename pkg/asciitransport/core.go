@@ -13,20 +13,22 @@ import (
 type Opt func(at *AsciiTransport)
 
 type AsciiTransport struct {
-	cmd       string
-	env       map[string]string
-	conn      io.ReadWriteCloser
-	quit      chan struct{}
-	closeonce *sync.Once
-	start     time.Time
-	logger    Logger
-	iech      chan *InputEvent
-	oech      chan *OutputEvent
-	rech      chan *ResizeEvent
-	isClient  bool
-	reader    io.Reader
-	writer    io.Writer
-	resizer   Resizer
+	cmd        []string
+	env        map[string]string
+	conn       io.ReadWriteCloser
+	quit       chan struct{}
+	closeonce  *sync.Once
+	start      time.Time
+	logger     Logger
+	iech       chan *InputEvent
+	oech       chan *OutputEvent
+	rech       chan *ResizeEvent
+	isClient   bool
+	reader     io.Reader
+	writer     io.Writer
+	resizer    Resizer
+	readerOnce *sync.Once
+	writerOnce *sync.Once
 }
 
 type Resizer interface {
@@ -107,7 +109,7 @@ func (c *AsciiTransport) Resize(height, width uint) {
 		Width:   width,
 		Height:  height,
 		Command: c.cmd,
-		Env: c.env,
+		Env:     c.env,
 	}
 	c.rech <- ie
 }
@@ -185,24 +187,43 @@ func (c *AsciiTransport) goWriteConn(w io.Writer) {
 	if c.isClient {
 		go c.clientInput2Server(w)
 		go c.clientResize2Server(w)
-
-		if c.reader != nil {
-			go c.clientInputFromReader()
-		}
-
-		if c.writer != nil {
-			go c.clientOutputToWriter()
-		}
 	} else {
 		go c.serverOutput2Client(w)
 		go c.serverOutputPing2Client(w)
+	}
+}
 
+func (at *AsciiTransport) ApplyOpts(opts ...Opt) {
+	for _, opt := range opts {
+		opt(at)
+	}
+	at.handleReaderWriterOnce()
+}
+
+func (c *AsciiTransport) handleReaderWriterOnce() {
+	if c.isClient {
 		if c.reader != nil {
-			go c.serverOutputFromReader()
+			c.readerOnce.Do(func() {
+				go c.clientInputFromReader()
+			})
 		}
 
 		if c.writer != nil {
-			go c.serverInputToWriter()
+			c.writerOnce.Do(func() {
+				go c.clientOutputToWriter()
+			})
+		}
+	} else {
+		if c.reader != nil {
+			c.readerOnce.Do(func() {
+				go c.serverOutputFromReader()
+			})
+		}
+
+		if c.writer != nil {
+			c.writerOnce.Do(func() {
+				go c.serverInputToWriter()
+			})
 		}
 	}
 }

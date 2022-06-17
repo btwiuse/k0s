@@ -90,7 +90,7 @@ func main() {
 		asciitransport.WithLogger(logfile),
 		asciitransport.WithReader(os.Stdin),
 		asciitransport.WithWriter(os.Stdout),
-		asciitransport.WithCommand("neofetch"),
+		asciitransport.WithCommand([]string{"neofetch"}),
 		asciitransport.WithEnv(map[string]string{
 			"NEW": "Zealand",
 		}),

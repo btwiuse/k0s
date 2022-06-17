@@ -20,3 +20,7 @@ type factory struct {
 func (f *factory) MakeTty() (agent.Tty, error) {
 	return tty.New(f.args)
 }
+
+func (f *factory) MakeTtyCmd(c []string) (agent.Tty, error) {
+	return tty.New(c)
+}

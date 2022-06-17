@@ -1,6 +1,6 @@
 package asciitransport
 
-func WithCommand(c string) Opt {
+func WithCommand(c []string) Opt {
 	return func(at *AsciiTransport) {
 		at.cmd = c
 	}

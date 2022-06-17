@@ -13,22 +13,23 @@ type AsciiTransportServer interface {
 	OutputFrom(io.Reader) error
 	Done() <-chan struct{}
 	Close() error
+	ApplyOpts(...Opt)
 }
 
 func Server(conn io.ReadWriteCloser, opts ...Opt) AsciiTransportServer {
 	at := &AsciiTransport{
-		conn:      conn,
-		quit:      make(chan struct{}),
-		closeonce: &sync.Once{},
-		start:     time.Now(),
-		iech:      make(chan *InputEvent),
-		oech:      make(chan *OutputEvent),
-		rech:      make(chan *ResizeEvent),
-		isClient:  false,
+		conn:       conn,
+		quit:       make(chan struct{}),
+		closeonce:  &sync.Once{},
+		start:      time.Now(),
+		iech:       make(chan *InputEvent),
+		oech:       make(chan *OutputEvent),
+		rech:       make(chan *ResizeEvent),
+		isClient:   false,
+		readerOnce: &sync.Once{},
+		writerOnce: &sync.Once{},
 	}
-	for _, opt := range opts {
-		opt(at)
-	}
+	at.ApplyOpts(opts...)
 	pr, pw := io.Pipe()
 	go func() {
 		io.Copy(pw, conn)

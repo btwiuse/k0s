@@ -3,6 +3,7 @@ package agent
 import (
 	"log"
 	"net"
+	"sync"
 
 	types "k0s.io/pkg/agent"
 	"k0s.io/pkg/agent/tty/factory"
@@ -14,17 +15,18 @@ func init() { Tunnels[api.Terminal] = StartTerminalServer }
 
 func StartTerminalServer(c types.Config) chan net.Conn {
 	var (
-		cmd              []string = c.GetCmd()
 		ro               bool     = c.GetReadOnly()
-		fac                       = factory.New(cmd)
+		defaultCmd       []string = c.GetCmd()
 		terminalListener          = NewLys()
 	)
 	_ = ro
-	go serveTerminal(terminalListener, fac)
+	go serveTerminal(terminalListener, defaultCmd)
 	return terminalListener.Conns
 }
 
-func serveTerminal(ln net.Listener, fac types.TtyFactory) {
+func serveTerminal(ln net.Listener, defaultCmd []string) {
+	var fac types.TtyFactory = factory.New(defaultCmd)
+
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
@@ -32,17 +34,13 @@ func serveTerminal(ln net.Listener, fac types.TtyFactory) {
 			continue
 		}
 		go func() {
-			term, err := fac.MakeTty()
-			if err != nil {
-				log.Println(err)
-				return
-			}
+			var (
+				tryCommandOnce = &sync.Once{}
+				cmdCh          = make(chan []string, 1)
+				resizeCh       = make(chan struct{ rows, cols int }, 4)
+			)
 
-			opts := []asciitransport.Opt{
-				asciitransport.WithReader(term),
-				asciitransport.WithWriter(term),
-			}
-			server := asciitransport.Server(conn, opts...)
+			server := asciitransport.Server(conn)
 			// send
 			// case output:
 
@@ -54,14 +52,39 @@ func serveTerminal(ln net.Listener, fac types.TtyFactory) {
 						rows = int(re.Height)
 						cols = int(re.Width)
 					)
-					err := term.Resize(rows, cols)
-					if err != nil {
-						log.Println(err)
-						break
-					}
+					tryCommandOnce.Do(func() {
+						cmdCh <- re.Command
+					})
+					resizeCh <- struct{ rows, cols int }{rows, cols}
 				}
 				server.Close()
 			}()
+
+			cmd := <-cmdCh
+
+			if len(cmd) == 0 {
+				cmd = defaultCmd
+			}
+
+			term, err := fac.MakeTtyCmd(cmd)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			go func() {
+				re := <-resizeCh
+				err := term.Resize(re.rows, re.cols)
+				if err != nil {
+					log.Println(err)
+				}
+			}()
+
+			opts := []asciitransport.Opt{
+				asciitransport.WithReader(term),
+				asciitransport.WithWriter(term),
+			}
+			server.ApplyOpts(opts...)
 		}()
 	}
 }
