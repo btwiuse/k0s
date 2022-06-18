@@ -37,6 +37,7 @@ func serveTerminal(ln net.Listener, defaultCmd []string) {
 			var (
 				tryCommandOnce = &sync.Once{}
 				cmdCh          = make(chan []string, 1)
+				envCh          = make(chan map[string]string, 1)
 				resizeCh       = make(chan struct{ rows, cols int }, 4)
 			)
 
@@ -54,6 +55,7 @@ func serveTerminal(ln net.Listener, defaultCmd []string) {
 					)
 					tryCommandOnce.Do(func() {
 						cmdCh <- re.Command
+						envCh <- re.Env
 					})
 					resizeCh <- struct{ rows, cols int }{rows, cols}
 				}
@@ -61,12 +63,13 @@ func serveTerminal(ln net.Listener, defaultCmd []string) {
 			}()
 
 			cmd := <-cmdCh
+			env := <-envCh
 
 			if len(cmd) == 0 {
 				cmd = defaultCmd
 			}
 
-			term, err := fac.MakeTtyCmd(cmd)
+			term, err := fac.MakeTtyEnv(cmd, env)
 			if err != nil {
 				log.Println(err)
 				return

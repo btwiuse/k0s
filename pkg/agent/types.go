@@ -84,6 +84,7 @@ type TunnelListener interface {
 type TtyFactory interface {
 	MakeTty() (Tty, error)
 	MakeTtyCmd([]string) (Tty, error)
+	MakeTtyEnv([]string, map[string]string) (Tty, error)
 }
 
 type Tty interface {

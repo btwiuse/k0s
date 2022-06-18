@@ -67,8 +67,13 @@ func (t *term) Resize(rows, cols int) error {
 }
 
 func New(args []string) (agent.Tty, error) {
+	return NewEnv(args, map[string]string{})
+}
+
+func NewEnv(args []string, env map[string]string) (agent.Tty, error) {
+	envArray := append([]string{"TERM=xterm"}, map2arr(env)...)
 	cmd := exec.Command(args[0], args[1:]...)
-	cmd.Env = append(os.Environ(), "TERM=xterm")
+	cmd.Env = append(os.Environ(), envArray...)
 
 	pty, err := pty.Start(cmd)
 	if err != nil {

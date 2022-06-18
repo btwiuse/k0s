@@ -53,13 +53,18 @@ func (t *term) Resize(rows, cols int) error {
 }
 
 func New(args []string) (agent.Tty, error) {
+	return NewEnv(args, map[string]string{})
+}
+
+func NewEnv(args []string, env map[string]string) (agent.Tty, error) {
 	cpty, err := conpty.New(80, 24)
 	if err != nil {
 		return nil, err
 	}
 
+	envArray := append([]string{"TERM=xterm"}, map2arr(env)...)
 	attr := &syscall.ProcAttr{
-		Env: append(os.Environ(), "TERM=xterm"),
+		Env: append(os.Environ(), envArray...),
 	}
 
 	pid, _, err := cpty.Spawn(args[0], args[1:], attr)
