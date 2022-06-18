@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["handler.go"],
+    importmap = "k0s.io/vendor/github.com/jpillora/go-echo-server/handler",
+    importpath = "github.com/jpillora/go-echo-server/handler",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/jpillora/go-echo-server/filecache:go_default_library",
+        "//vendor/github.com/jpillora/requestlog:go_default_library",
+        "//vendor/golang.org/x/net/websocket:go_default_library",
+    ],
+)

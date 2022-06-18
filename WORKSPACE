@@ -8496,6 +8496,13 @@ go_repository(
     version = "v30.1.0",
 )
 
+go_repository(
+    name = "com_github_jpillora_go_echo_server",
+    importpath = "github.com/jpillora/go-echo-server",
+    sum = "h1:NXP4foXo1U0oMCrjMTmiG1v6PoHxVhQpb9lEK9xe0zw=",
+    version = "v0.5.0",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()

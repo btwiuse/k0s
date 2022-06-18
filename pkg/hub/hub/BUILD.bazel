@@ -24,6 +24,7 @@ go_library(
         "//vendor/github.com/btwiuse/pretty:go_default_library",
         "//vendor/github.com/btwiuse/wetty/pkg/assets:go_default_library",
         "//vendor/github.com/gorilla/mux:go_default_library",
+        "//vendor/github.com/jpillora/go-echo-server/handler:go_default_library",
         "//vendor/k0s.io/pkg/exporter:go_default_library",
         "//vendor/modernc.org/httpfs:go_default_library",
         "//vendor/nhooyr.io/websocket:go_default_library",

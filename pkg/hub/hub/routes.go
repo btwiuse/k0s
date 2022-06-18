@@ -21,6 +21,7 @@ import (
 	"k0s.io/pkg/wrap"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
+	echo "github.com/jpillora/go-echo-server/handler"
 )
 
 var (
@@ -140,6 +141,16 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	// hl -> net.Conn -> ln
 	// hl: conventionally a consumer of net.Conn, but it's role here is producer
 	r.Handle("/rpc", hl).Methods("GET")
+
+	// dev helper
+	r.Handle("/echo", echo.New(echo.Config{})).Methods(
+		http.MethodGet,
+		http.MethodPut,
+		http.MethodPatch,
+		http.MethodDelete,
+		http.MethodOptions,
+		http.MethodPost,
+	)
 
 	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
 	// alternative websocket implementation:
