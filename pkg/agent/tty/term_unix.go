@@ -30,6 +30,7 @@ type term struct {
 func (t *term) Close() error {
 	if t.process != nil {
 		t.process.Signal(syscall.SIGINT)
+		t.process.Kill()
 	}
 	for {
 		select {

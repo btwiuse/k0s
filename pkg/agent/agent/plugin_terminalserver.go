@@ -88,6 +88,9 @@ func serveTerminal(ln net.Listener, defaultCmd []string) {
 				asciitransport.WithWriter(term),
 			}
 			server.ApplyOpts(opts...)
+
+			<-server.Done()
+			term.Close()
 		}()
 	}
 }
