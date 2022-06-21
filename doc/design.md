@@ -1,4 +1,5 @@
 Architecture:
+
 ```
 (1) Session ----- NodeAgent ---\         /--- (1) Browser
                 /               \       /
@@ -8,17 +9,20 @@ Architecture:
 ```
 
 GOAL:
-- [DONE] control http client from server 
+
+- [DONE] control http client from server
 - [DONE] switch between connected clients
-- [DONE] stream client command output    
+- [DONE] stream client command output
 
 Requirements:
-- [DONE] HTTP(S)  ->  TCP                     
-- [DONE] TCP      ->  RPC
-- [DONE] TCP      ->  gRPC
-- [DONE] gRPC    <=>  Websocket
+
+- [DONE] HTTP(S) -> TCP
+- [DONE] TCP -> RPC
+- [DONE] TCP -> gRPC
+- [DONE] gRPC <=> Websocket
 
 Similar stuff:
+
 - https://en.wikipedia.org/wiki/TCP_Gender_Changer
 - https://github.com/rancher/remotedialer
 - https://github.com/rofl0r/nat-tunnel
@@ -26,6 +30,7 @@ Similar stuff:
 - https://github.com/peoples-cloud/pc
 
 Potential use cases:
+
 - distcc agent (cpu/io intensive)
 - anonymous proxy endpoint (io intensive)
 - crypto mining worker (cpu intensive)
@@ -34,6 +39,7 @@ Potential use cases:
 - podman/buildah/skopeo build log streaming with dind (Docker in Docker)
 
 References:
+
 - https://en.wikipedia.org/wiki/Botnet
 - https://www.malwaretech.com/2013/12/peer-to-peer-botnets-for-beginners.html
 - https://umbrella.cisco.com/blog/2014/05/23/cnc-botnet-english/

@@ -7,7 +7,6 @@ go_library(
         "lys.go",
         "plugin_envserver.go",
         "plugin_fileserver.go",
-        "plugin_jsonlserver.go",
         "plugin_metricsserver.go",
         "plugin_pingserver.go",
         "plugin_redirectserver.go",

@@ -2,7 +2,7 @@
 
 const WS_URL = `ws://localhost:8000/api/rpc`;
 
-const ID = `abcd` // Math.random();
+const ID = `abcd`; // Math.random();
 
 const WS_URL_ID = `ws://localhost:8000/api/jsonl?id=${ID}`;
 
@@ -31,21 +31,21 @@ const HEADER = JSON.stringify({
   "tags": [],
   "meta": META,
   "version": VERSION,
-})+'\n';
+}) + "\n";
 
 // new websocket connection
 let ws = new WebSocket(WS_URL);
 
 ws.binaryType = "arraybuffer";
 
-const encoder = new TextEncoder()
-const decoder = new TextDecoder()
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
 
 // register as agent
 ws.onopen = () => {
-  console.log('sending HEADER', HEADER)
+  console.log("sending HEADER", HEADER);
   ws.send(encoder.encode(HEADER));
-  console.log('sent HEADER')
+  console.log("sent HEADER");
 };
 
 ws.onclose = (e) => {
@@ -62,13 +62,13 @@ ws.onmessage = (e) => {
   if (cmd == "JSONL\n") {
     console.log(WS_URL_ID);
     let conn = new WebSocket(WS_URL_ID);
-    conn.binaryType = 'text';
+    conn.binaryType = "text";
     conn.onmessage = async (e) => {
       let data = await e.data.text();
       console.log("recv", data);
-      conn.send(encoder.encode(`${data.length}\n`))
+      conn.send(encoder.encode(`${data.length}\n`));
       // let recv = decoder.decode(e.data)
       // console.log("recv", recv);
-    }
+    };
   }
 };
