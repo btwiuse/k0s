@@ -19,6 +19,7 @@ const (
 	Doh
 	Env
 	TerminalV2
+	Jsonl
 
 	MaxTunnel // number of tunnels
 )
@@ -36,6 +37,7 @@ var tunnelNames = []string{
 	"DOH",
 	"ENV",
 	"TERMINALV2",
+	"JSONL",
 }
 
 func (tun Tunnel) String() string {

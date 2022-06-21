@@ -1,0 +1,22 @@
+{
+  "id": "f9f564e5-8363-4ce3-b0b6-4970d657ebe5",
+  "name": "peaceful_banzai",
+  "tags": [],
+  "meta": {
+    "os": "linux",
+    "pwd": "/home/aaron",
+    "arch": "amd64",
+    "distro": "linux",
+    "username": "aaron",
+    "hostname": "i7-6700k"
+  },
+  "version": {
+    "GitCommit": "e040989acfeeebcbab79b1825222df08138c749b",
+    "GitState": "dirty",
+    "GitBranch": "master",
+    "GitSummary": "release-75-20220614-5-ge040989ac-dirty",
+    "BuildDate": "2022-06-20T05:31:29Z",
+    "Version": "v0.0.15",
+    "GoVersion": "go1.18.3"
+  }
+}

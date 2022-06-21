@@ -10,7 +10,11 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var up = &websocket.Upgrader{}
+var up = &websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
 
 func wrconn(w http.ResponseWriter, r *http.Request) (net.Conn, error) {
 	wsconn, err := up.Upgrade(w, r, nil)

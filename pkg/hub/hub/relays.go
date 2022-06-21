@@ -154,6 +154,26 @@ func dohRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
+func jsonlRelay(ag types.Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		wsc, err := websocket.Accept(w, r, &websocket.AcceptOptions{
+			InsecureSkipVerify: true,
+		})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
+		defer wsconn.Close()
+
+		conn := ag.NewTunnel(api.Jsonl)
+		defer conn.Close()
+
+		go io.Copy(conn, wsconn)
+		io.Copy(wsconn, conn)
+	}
+}
+
 func envRelay(ag types.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
