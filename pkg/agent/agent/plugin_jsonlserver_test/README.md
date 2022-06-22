@@ -39,3 +39,6 @@ foo
 hello world
 12
 ```
+
+websocat --binary
+'wss://btwiuse-k0s-44wpv764f6qr-8000.githubpreview.dev/api/agent/abcd/jsonl'

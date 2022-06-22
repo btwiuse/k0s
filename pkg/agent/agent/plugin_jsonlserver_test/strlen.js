@@ -1,18 +1,22 @@
 //#!/usr/bin/env -S deno run -A
 
-const WS_URL = `ws://localhost:8000/api/rpc`;
+// ws://127.0.0.1:8000
+
+const BASE = `wss://btwiuse-k0s-44wpv764f6qr-8000.githubpreview.dev`;
+
+const WS_URL = `${BASE}/api/rpc`;
 
 const ID = `abcd`; // Math.random();
 
-const WS_URL_ID = `ws://localhost:8000/api/jsonl?id=${ID}`;
+const WS_URL_ID = `${BASE}/api/jsonl?id=${ID}`;
 
 const META = {
-  "os": "linux",
-  "pwd": "/home/aaron",
-  "arch": "amd64",
-  "distro": "linux",
-  "username": "aaron",
-  "hostname": "i7-6700k",
+  "os": "web",
+  "pwd": window.location?.pathname || "/dev/null",
+  "arch": "js",
+  "distro": "js",
+  "username": "webuser",
+  "hostname": window.location?.hostname || "unknown",
 };
 
 const VERSION = {
@@ -62,7 +66,7 @@ ws.onmessage = (e) => {
   if (cmd == "JSONL\n") {
     console.log(WS_URL_ID);
     let conn = new WebSocket(WS_URL_ID);
-    conn.binaryType = "text";
+    conn.binaryType = "blob";
     conn.onmessage = async (e) => {
       let data = await e.data.text();
       console.log("recv", data);
