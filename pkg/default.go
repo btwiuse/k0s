@@ -1,7 +1,7 @@
 package pkg
 
 const (
-	DEFAULT_HUB_ADDRESS = "https://hub.k0s.io"
+	DEFAULT_HUB_ADDRESS = "https://k0s.herokuapp.com"
 
 	REDIR_PROXY_PORT  = ":1081"
 	SOCKS5_PROXY_PORT = ":1080"

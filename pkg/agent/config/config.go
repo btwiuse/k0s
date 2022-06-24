@@ -227,7 +227,7 @@ func SetInfo(ifo agent.Info) Opt {
 
 func (c *Config) GetHost() string {
 	if c.uri == nil {
-		return "hub.k0s.io"
+		return "k0s.herokuapp.com"
 	}
 	host := c.uri.Hostname()
 	if host == "" {
