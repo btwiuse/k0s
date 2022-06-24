@@ -1,6 +1,6 @@
 # 🕸️ k0s
 
-kubotnetes, pronounced like 'chaos'
+kubotnetes, botnet as a service, pronounced like 'chaos'
 
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white)](https://pkg.go.dev/k0s.io?tab=doc)
 [![Go 1.18+](https://img.shields.io/github/go-mod/go-version/btwiuse/k0s)](https://golang.org/dl/)
