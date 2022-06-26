@@ -1,8 +1,11 @@
 package agent
 
 import (
+	"fmt"
 	"log"
 	"net"
+	"os"
+	"os/exec"
 	"sync"
 
 	types "k0s.io/pkg/agent"
@@ -20,14 +23,14 @@ func StartTerminalServer(c types.Config) chan net.Conn {
 		terminalListener          = NewLys()
 	)
 	_ = ro
-	go serveTerminal(terminalListener, defaultCmd)
+	go serveTerminal(terminalListener, defaultCmd, c)
 	return terminalListener.Conns
 }
 
-func serveTerminal(ln net.Listener, defaultCmd []string) {
+func serveTerminal(ln net.Listener, defaultCmd []string, c types.Config) {
 	var fac types.TtyFactory = factory.New(defaultCmd)
 
-	for {
+	for nth := 1; ; nth++ {
 		conn, err := ln.Accept()
 		if err != nil {
 			log.Println(err)
@@ -83,9 +86,19 @@ func serveTerminal(ln net.Listener, defaultCmd []string) {
 				}
 			}()
 
+			logname := fmt.Sprintf("/tmp/%s-%d.log", c.GetID(), nth)
+			logfile, err := os.Create(logname)
+			if err == nil {
+				defer func() {
+					exec.Command("dkg-push", logname).Run()
+					log.Println("log written to", logname)
+				}()
+			}
+
 			opts := []asciitransport.Opt{
 				asciitransport.WithReader(term),
 				asciitransport.WithWriter(term),
+				asciitransport.WithLogger(logfile),
 			}
 			server.ApplyOpts(opts...)
 
