@@ -3,7 +3,7 @@ module k0s.io
 go 1.18
 
 replace (
-	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220612132545-645105c99159
+	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb
 	k0s.io/pkg/exporter => ./pkg/exporter
 )
 
@@ -40,7 +40,7 @@ require (
 	github.com/rs/cors v1.8.2
 	gitlab.com/mjwhitta/sysinfo v1.4.6
 	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f
-	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4
+	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20220610221304-9f5ed59c137d
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b
@@ -106,12 +106,13 @@ require (
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.11 // indirect
 	github.com/klauspost/reedsolomon v1.9.15 // indirect
-	github.com/lucas-clemente/quic-go v0.27.0 // indirect
+	github.com/lucas-clemente/quic-go v0.28.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/lufia/iostat v1.2.0 // indirect
 	github.com/marten-seemann/qtls-go1-16 v0.1.5 // indirect
-	github.com/marten-seemann/qtls-go1-17 v0.1.1 // indirect
-	github.com/marten-seemann/qtls-go1-18 v0.1.1 // indirect
+	github.com/marten-seemann/qtls-go1-17 v0.1.2 // indirect
+	github.com/marten-seemann/qtls-go1-18 v0.1.2 // indirect
+	github.com/marten-seemann/qtls-go1-19 v0.1.0-beta.1 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mattn/go-xmlrpc v0.0.3 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect

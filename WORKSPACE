@@ -39,7 +39,7 @@ go_rules_dependencies()
 
 go_register_toolchains(
     nogo = "@//:nogo",
-    version = "1.18.3",
+    version = "1.19rc1",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
@@ -92,7 +92,7 @@ load("@rules_rust//rust:repositories.bzl", "rust_repositories")
 # )
 rust_repositories(
     edition = "2021",
-    iso_date = "2022-06-02",
+    iso_date = "2022-07-06",
     version = "nightly",
 )
 
@@ -6552,8 +6552,8 @@ go_repository(
 go_repository(
     name = "com_github_marten_seemann_qtls_go1_17",
     importpath = "github.com/marten-seemann/qtls-go1-17",
-    sum = "h1:DQjHPq+aOzUeh9/lixAGunn6rIOQyWChPSI4+hgW7jc=",
-    version = "v0.1.1",
+    sum = "h1:JADBlm0LYiVbuSySCHeY863dNkcpMmDR7s0bLKJeYlQ=",
+    version = "v0.1.2",
 )
 
 go_repository(
@@ -6699,8 +6699,8 @@ go_repository(
 go_repository(
     name = "com_github_marten_seemann_qtls_go1_18",
     importpath = "github.com/marten-seemann/qtls-go1-18",
-    sum = "h1:qp7p7XXUFL7fpBvSS1sWD+uSqPvzNQK43DH+/qEkj0Y=",
-    version = "v0.1.1",
+    sum = "h1:JH6jmzbduz0ITVQ7ShevK10Av5+jBEKAHMntXmIV7kM=",
+    version = "v0.1.2",
 )
 
 go_repository(
@@ -8503,6 +8503,13 @@ go_repository(
     version = "v0.5.0",
 )
 
+go_repository(
+    name = "com_github_marten_seemann_qtls_go1_19",
+    importpath = "github.com/marten-seemann/qtls-go1-19",
+    sum = "h1:7m/WlWcSROrcK5NxuXaxYD32BZqe/LEEnBrWcH/cOqQ=",
+    version = "v0.1.0-beta.1",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -9452,8 +9459,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_net",
     importpath = "golang.org/x/net",
-    sum = "h1:HVyaeDAYux4pnY+D/SiwmLOR36ewZ4iGQIIrtnuCjFA=",
-    version = "v0.0.0-20220425223048-2871e0cb64e4",
+    sum = "h1:TsQ7F31D3bUCLeqPT0u+yjp1guoArKaNKmCr22PYgTQ=",
+    version = "v0.0.0-20220624214902-1bab6f366d9e",
 )
 
 go_repository(
@@ -10643,8 +10650,8 @@ go_repository(
 go_repository(
     name = "com_github_lucas_clemente_quic_go",
     importpath = "github.com/lucas-clemente/quic-go",
-    sum = "h1:v6WY87q9zD4dKASbG8hy/LpzAVNzEQzw8sEIeloJsc4=",
-    version = "v0.27.0",
+    sum = "h1:9eXVRgIkMQQyiyorz/dAaOYIx3TFzXsIFkNFz4cxuJM=",
+    version = "v0.28.0",
 )
 
 go_repository(
