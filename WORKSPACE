@@ -30,7 +30,7 @@ git_repository(
     # commit = "2a0e3a07e9ed9aa9b7afd1a222638ba52166e52d",
     branch = "master",
     remote = "https://github.com/bazelbuild/rules_go.git",
-    # tag = "v0.24.3",
+    # tag = "v0.32.0",
 )
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
@@ -9417,15 +9417,15 @@ go_repository(
 go_repository(
     name = "org_golang_google_genproto",
     importpath = "google.golang.org/genproto",
-    sum = "h1:SVYXkUz2yZS9FWb2Gm8ivSlbNQzL2Z/NpPKE3RG2jWk=",
-    version = "v0.0.0-20220222213610-43724f9ea8cf",
+    sum = "h1:7YDGQC/0sigNGzsEWyb9s72jTxlFdwVEYNJHbfQ+Dtg=",
+    version = "v0.0.0-20220706185917-7780775163c4",
 )
 
 go_repository(
     name = "org_golang_google_grpc",
     importpath = "google.golang.org/grpc",
-    sum = "h1:oCjezcn6g6A75TGoKYBPgKmVBLexhYLM6MebdrPApP8=",
-    version = "v1.46.0",
+    sum = "h1:9n77onPX5F3qfFCqjy9dhn8PbNQsIKeVU04J9G7umt8=",
+    version = "v1.47.0",
 )
 
 go_repository(
@@ -9480,8 +9480,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_sys",
     importpath = "golang.org/x/sys",
-    sum = "h1:Zu/JngovGLVi6t2J3nmAf3AoTDwuzw85YZ3b9o4yU7s=",
-    version = "v0.0.0-20220610221304-9f5ed59c137d",
+    sum = "h1:CsOuNlbOuf0mzxJIefr6Q4uAUetRUwZE4qt7VfzP+xo=",
+    version = "v0.0.0-20220704084225-05e143d24a9e",
 )
 
 go_repository(
@@ -9508,8 +9508,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_xerrors",
     importpath = "golang.org/x/xerrors",
-    sum = "h1:go1bK/D/BFZV2I8cIQd1NKEZ+0owSTG1fDTci4IqFcE=",
-    version = "v0.0.0-20200804184101-5ec99f83aff1",
+    sum = "h1:uF6paiQQebLeSXkrTqHqz0MXhXXS1KgF41eUdBNvxK0=",
+    version = "v0.0.0-20220609144429-65e65417b02f",
 )
 
 go_repository(
