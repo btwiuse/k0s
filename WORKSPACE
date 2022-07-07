@@ -80,17 +80,7 @@ load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_regi
 
 rules_rust_dependencies()
 
-rust_register_toolchains()
-
-load("@rules_rust//rust:repositories.bzl", "rust_repositories")
-
-# https://bazelbuild.github.io/rules_rust/
-# rust_repositories(
-#     edition = "2018",
-#     rustfmt_version = "1.50.0",
-#     version = "1.50.0",
-# )
-rust_repositories(
+rust_register_toolchains(
     edition = "2021",
     iso_date = "2022-07-06",
     version = "nightly",

@@ -1,6 +1,6 @@
 
-[source.crates-io]
-replace-with = "vendored-sources"
+# [source.crates-io]
+# replace-with = "vendored-sources"
 
-[source.vendored-sources]
-directory = "cargo/vendor"
+# [source.vendored-sources]
+# directory = "cargo/vendor"

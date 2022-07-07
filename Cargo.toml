@@ -1,16 +1,18 @@
 [package]
 name = "k0s"
-version = "0.0.3"
+version = "0.0.4"
 authors = ["btwiuse <btwiuse@gmail.com>"]
 license = "MIT"
 description = "aggregate your personal infrastructure"
 repository = "https://github.com/btwiuse/k0s"
 edition = "2021"
+readme = ".github/README.md"
 
 include = [
     "src/*.rs",
     "cargo/**/*",
     "Cargo.toml",
+    ".github/README.md",
 ]
 
 [profile.release]
@@ -83,4 +85,4 @@ targets = [
 # The two acceptable options are "Remote" and "Vendored" which
 # is used to idnicate whether the user is using a non-vendored or
 # vendored set of dependencies.
-genmode = "Vendored"
+genmode = "Remote"

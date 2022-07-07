@@ -1,0 +1,88 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # Apache-2.0 from expression "Apache-2.0"
+])
+
+# Generated Targets
+
+rust_library(
+    name = "kube",
+    srcs = glob(["**/*.rs"]),
+    aliases = {
+        "@raze__dirs_next__2_0_0//:dirs_next": "dirs",
+    },
+    crate_features = [
+        "default",
+        "derive",
+        "kube-derive",
+        "native-tls",
+        "openssl",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2018",
+    proc_macro_deps = [
+        "@raze__kube_derive__0_47_0//:kube_derive",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=kube",
+        "manual",
+    ],
+    version = "0.47.0",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__Inflector__0_11_4//:Inflector",
+        "@raze__base64__0_13_0//:base64",
+        "@raze__bytes__1_1_0//:bytes",
+        "@raze__chrono__0_4_19//:chrono",
+        "@raze__dirs_next__2_0_0//:dirs_next",
+        "@raze__either__1_7_0//:either",
+        "@raze__futures__0_3_21//:futures",
+        "@raze__futures_util__0_3_21//:futures_util",
+        "@raze__http__0_2_8//:http",
+        "@raze__jsonpath_lib__0_2_6//:jsonpath_lib",
+        "@raze__k8s_openapi__0_10_0//:k8s_openapi",
+        "@raze__log__0_4_17//:log",
+        "@raze__openssl__0_10_40//:openssl",
+        "@raze__pem__0_8_3//:pem",
+        "@raze__reqwest__0_11_11//:reqwest",
+        "@raze__serde__1_0_138//:serde",
+        "@raze__serde_json__1_0_82//:serde_json",
+        "@raze__serde_yaml__0_8_24//:serde_yaml",
+        "@raze__static_assertions__1_1_0//:static_assertions",
+        "@raze__thiserror__1_0_31//:thiserror",
+        "@raze__time__0_2_27//:time",
+        "@raze__tokio__1_19_2//:tokio",
+        "@raze__url__2_2_2//:url",
+    ],
+)

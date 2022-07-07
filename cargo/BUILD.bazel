@@ -14,7 +14,7 @@ licenses([
 # Aliased targets
 alias(
     name = "actix",
-    actual = "//cargo/vendor/actix-0.13.0:actix",
+    actual = "@raze__actix__0_13_0//:actix",
     tags = [
         "cargo-raze",
         "manual",
@@ -23,7 +23,7 @@ alias(
 
 alias(
     name = "actix_http",
-    actual = "//cargo/vendor/actix-http-3.0.4:actix_http",
+    actual = "@raze__actix_http__3_2_1//:actix_http",
     tags = [
         "cargo-raze",
         "manual",
@@ -32,7 +32,7 @@ alias(
 
 alias(
     name = "actix_rt",
-    actual = "//cargo/vendor/actix-rt-2.7.0:actix_rt",
+    actual = "@raze__actix_rt__2_7_0//:actix_rt",
     tags = [
         "cargo-raze",
         "manual",
@@ -41,7 +41,7 @@ alias(
 
 alias(
     name = "actix_web",
-    actual = "//cargo/vendor/actix-web-4.0.1:actix_web",
+    actual = "@raze__actix_web__4_1_0//:actix_web",
     tags = [
         "cargo-raze",
         "manual",
@@ -50,7 +50,7 @@ alias(
 
 alias(
     name = "actix_web_actors",
-    actual = "//cargo/vendor/actix-web-actors-4.1.0:actix_web_actors",
+    actual = "@raze__actix_web_actors__4_1_0//:actix_web_actors",
     tags = [
         "cargo-raze",
         "manual",
@@ -59,7 +59,7 @@ alias(
 
 alias(
     name = "bytes",
-    actual = "//cargo/vendor/bytes-1.1.0:bytes",
+    actual = "@raze__bytes__1_1_0//:bytes",
     tags = [
         "cargo-raze",
         "manual",
@@ -68,7 +68,7 @@ alias(
 
 alias(
     name = "futures",
-    actual = "//cargo/vendor/futures-0.3.16:futures",
+    actual = "@raze__futures__0_3_21//:futures",
     tags = [
         "cargo-raze",
         "manual",
@@ -77,7 +77,7 @@ alias(
 
 alias(
     name = "k8s_openapi",
-    actual = "//cargo/vendor/k8s-openapi-0.10.0:k8s_openapi",
+    actual = "@raze__k8s_openapi__0_10_0//:k8s_openapi",
     tags = [
         "cargo-raze",
         "manual",
@@ -86,7 +86,7 @@ alias(
 
 alias(
     name = "kube",
-    actual = "//cargo/vendor/kube-0.47.0:kube",
+    actual = "@raze__kube__0_47_0//:kube",
     tags = [
         "cargo-raze",
         "manual",
@@ -95,7 +95,7 @@ alias(
 
 alias(
     name = "kube_runtime",
-    actual = "//cargo/vendor/kube-runtime-0.47.0:kube_runtime",
+    actual = "@raze__kube_runtime__0_47_0//:kube_runtime",
     tags = [
         "cargo-raze",
         "manual",
@@ -104,7 +104,7 @@ alias(
 
 alias(
     name = "log",
-    actual = "//cargo/vendor/log-0.4.14:log",
+    actual = "@raze__log__0_4_17//:log",
     tags = [
         "cargo-raze",
         "manual",
@@ -113,7 +113,7 @@ alias(
 
 alias(
     name = "rand",
-    actual = "//cargo/vendor/rand-0.8.4:rand",
+    actual = "@raze__rand__0_8_5//:rand",
     tags = [
         "cargo-raze",
         "manual",
@@ -122,7 +122,7 @@ alias(
 
 alias(
     name = "schemars",
-    actual = "//cargo/vendor/schemars-0.8.3:schemars",
+    actual = "@raze__schemars__0_8_10//:schemars",
     tags = [
         "cargo-raze",
         "manual",
@@ -131,7 +131,7 @@ alias(
 
 alias(
     name = "serde",
-    actual = "//cargo/vendor/serde-1.0.130:serde",
+    actual = "@raze__serde__1_0_138//:serde",
     tags = [
         "cargo-raze",
         "manual",
@@ -140,7 +140,7 @@ alias(
 
 alias(
     name = "serde_json",
-    actual = "//cargo/vendor/serde_json-1.0.67:serde_json",
+    actual = "@raze__serde_json__1_0_82//:serde_json",
     tags = [
         "cargo-raze",
         "manual",
@@ -149,7 +149,7 @@ alias(
 
 alias(
     name = "simple_logger",
-    actual = "//cargo/vendor/simple_logger-2.1.0:simple_logger",
+    actual = "@raze__simple_logger__2_2_0//:simple_logger",
     tags = [
         "cargo-raze",
         "manual",
@@ -158,9 +158,27 @@ alias(
 
 alias(
     name = "tokio",
-    actual = "//cargo/vendor/tokio-0.2.25:tokio",
+    actual = "@raze__tokio__0_2_25//:tokio",
     tags = [
         "cargo-raze",
         "manual",
     ],
+)
+
+# Export file for Stardoc support
+exports_files(
+    glob([
+        "**/*.bazel",
+        "**/*.bzl",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob([
+        "**/*.bazel",
+        "**/*.bzl",
+    ]),
+    visibility = ["//visibility:public"],
 )
