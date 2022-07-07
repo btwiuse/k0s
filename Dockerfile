@@ -5,7 +5,7 @@
 # WORKDIR /k0s.io
 # RUN make bazel-build
 
-FROM golang:1.19-rc AS builder-go
+FROM btwiuse/golang:1.19rc1 AS builder-go
 COPY . /k0s.io
 WORKDIR /k0s.io
 RUN make build
