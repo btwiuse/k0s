@@ -1,6 +1,6 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' go
+RUN pacman -Syu --noconfirm --overwrite='*' go gopls docker
 
 ENV PATH="${PATH}:/asdf/.asdf/shims:/asdf/.asdf/bin"
 
