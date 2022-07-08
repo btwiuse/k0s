@@ -19,11 +19,9 @@ func Agent(hub string) {
 	c := &config.Config{
 		ID:  "undefined", //uuid.New(),
 		Hub: hub,
-		/*
-			Htpasswd: map[string]string{
-				"aaron": "$2a$10$WbZm/thAZI/f/QrcJn6V4OS.I61V2cLnOV.z7uXxtjHY8tZkTacLm",
-			},
-		*/
+		Htpasswd: map[string]string{
+			"aaron": "$2a$10$WbZm/thAZI/f/QrcJn6V4OS.I61V2cLnOV.z7uXxtjHY8tZkTacLm",
+		},
 		Tags: []string{
 			"os.Args = " + strings.Join(os.Args, " "),
 			// "os.Env = " + strings.Join(os.Environ(), ":"),
