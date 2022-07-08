@@ -252,6 +252,7 @@ jobs:
         path: bin/
 
   bazel-build-android:
+    if: ${{ '2 + 2'  == '5' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -302,7 +303,7 @@ jobs:
     - build-windows
     - build-darwin
     - build-bsd
-    - bazel-build-android
+  # - bazel-build-android
     steps:
     - name: Get current date
       id: date
@@ -350,11 +351,11 @@ jobs:
         name: build-bsd
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
-      name: download artifact bazel-build-android
-      with:
-        name: bazel-build-android
-        path: ./bin/
+  # - uses: actions/download-artifact@v2
+  #   name: download artifact bazel-build-android
+  #   with:
+  #     name: bazel-build-android
+  #     path: ./bin/
 
     - run: make release
       name: make release
