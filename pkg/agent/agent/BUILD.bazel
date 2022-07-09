@@ -22,7 +22,6 @@ go_library(
         "//pkg/api:go_default_library",
         "//pkg/asciitransport:go_default_library",
         "//pkg/asciitransport/v2:go_default_library",
-        "//pkg/middleware:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
         "//vendor/github.com/ginuerzh/gost:go_default_library",
         "//vendor/golang.org/x/sync/errgroup:go_default_library",
@@ -31,5 +30,6 @@ go_library(
         "//vendor/k0s.io/pkg/agent/tty/factory:go_default_library",
         "//vendor/k0s.io/pkg/exporter:go_default_library",
         "//vendor/k0s.io/pkg/exporter/env:go_default_library",
+        "//vendor/k0s.io/pkg/middleware:go_default_library",
     ],
 )

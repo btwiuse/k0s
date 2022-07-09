@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/client/wsdialer",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/client:go_default_library",
+        "//vendor/k0s.io/pkg/client:go_default_library",
         "//vendor/nhooyr.io/websocket:go_default_library",
     ],
 )

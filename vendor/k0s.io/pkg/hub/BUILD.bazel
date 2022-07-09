@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["types.go"],
+    importmap = "k0s.io/vendor/k0s.io/pkg/hub",
+    importpath = "k0s.io/pkg/hub",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg:go_default_library",
+        "//pkg/api:go_default_library",
+    ],
+)

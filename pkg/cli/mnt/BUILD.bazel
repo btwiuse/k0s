@@ -7,6 +7,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/reverseproxy:go_default_library",
-        "//pkg/tunnel/listener:go_default_library",
+        "//vendor/k0s.io/pkg/tunnel/listener:go_default_library",
     ],
 )

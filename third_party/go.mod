@@ -9,8 +9,18 @@ replace (
 	github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
 	k0s.io => ../
 	k0s.io/pkg/agent => ../pkg/agent
+	k0s.io/pkg/cli => ../pkg/cli
+	k0s.io/pkg/client => ../pkg/client
 	k0s.io/pkg/exporter => ../pkg/exporter
+	k0s.io/pkg/fzf => ../pkg/fzf
+	k0s.io/pkg/gitd => ../pkg/gitd
+	k0s.io/pkg/hub => ../pkg/hub
+	k0s.io/pkg/middleware => ../pkg/middleware
 	k0s.io/pkg/rng => ../pkg/rng
+	k0s.io/pkg/simple => ../pkg/simple
+	k0s.io/pkg/tunnel => ../pkg/tunnel
+	k0s.io/pkg/uuid => ../pkg/uuid
+	k0s.io/pkg/wrap => ../pkg/wrap
 	k8s.io/api => k8s.io/api v0.20.4
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.20.4
 	k8s.io/apimachinery => k8s.io/apimachinery v0.20.4
@@ -103,8 +113,12 @@ require (
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b
 	k0s.io v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/agent v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/cli v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/exporter v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/gitd v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/rng v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/tunnel v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/uuid v0.0.0-00010101000000-000000000000
 	k8s.io/api v0.22.5
 	k8s.io/apimachinery v0.22.5
 	k8s.io/apiserver v0.22.5
@@ -545,7 +559,7 @@ require (
 	golang.org/x/net v0.0.0-20220706163947-c90051bbdb60 // indirect
 	golang.org/x/oauth2 v0.0.0-20220223155221-ee480838109b // indirect
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f // indirect
-	golang.org/x/sys v0.0.0-20220704084225-05e143d24a9e // indirect
+	golang.org/x/sys v0.0.0-20220708085239-5a0f0661e09d // indirect
 	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
 	golang.org/x/tools v0.1.10 // indirect
@@ -567,6 +581,12 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/plist v1.0.0 // indirect
+	k0s.io/pkg/client v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/fzf v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/hub v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/middleware v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/simple v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/wrap v0.0.0-00010101000000-000000000000 // indirect
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.11.0 // indirect
 	k8s.io/cli-runtime v0.20.4 // indirect
 	k8s.io/component-helpers v0.20.4 // indirect

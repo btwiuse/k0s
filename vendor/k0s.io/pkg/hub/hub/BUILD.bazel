@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "manager.go",
+        "relays.go",
+        "req2conn.go",
+        "routes.go",
+        "rpc.go",
+    ],
+    importmap = "k0s.io/vendor/k0s.io/pkg/hub/hub",
+    importpath = "k0s.io/pkg/hub/hub",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg:go_default_library",
+        "//pkg/api:go_default_library",
+        "//pkg/manager:go_default_library",
+        "//vendor/github.com/btwiuse/pretty:go_default_library",
+        "//vendor/github.com/btwiuse/wetty/pkg/assets:go_default_library",
+        "//vendor/github.com/gorilla/mux:go_default_library",
+        "//vendor/github.com/jpillora/go-echo-server/handler:go_default_library",
+        "//vendor/k0s.io/pkg/exporter:go_default_library",
+        "//vendor/k0s.io/pkg/hub:go_default_library",
+        "//vendor/k0s.io/pkg/hub/agent:go_default_library",
+        "//vendor/k0s.io/pkg/hub/agent/info:go_default_library",
+        "//vendor/k0s.io/pkg/middleware:go_default_library",
+        "//vendor/k0s.io/pkg/rng:go_default_library",
+        "//vendor/k0s.io/pkg/wrap:go_default_library",
+        "//vendor/modernc.org/httpfs:go_default_library",
+        "//vendor/nhooyr.io/websocket:go_default_library",
+    ],
+)

@@ -3,8 +3,18 @@ go 1.19
 use (
 	.
 	./pkg/agent
+	./pkg/cli
+	./pkg/client
 	./pkg/exporter
+	./pkg/fzf
+	./pkg/gitd
+	./pkg/hub
+	./pkg/middleware
 	./pkg/rng
+	./pkg/simple
+	./pkg/tunnel
+	./pkg/uuid
+	./pkg/wrap
 	./third_party
 )
 

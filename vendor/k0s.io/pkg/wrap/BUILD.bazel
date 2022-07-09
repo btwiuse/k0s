@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "connaddr.go",
+        "hijack.go",
+        "netconn_gorilla.go",
+        "wrconn.go",
+        "wrconn_gorilla.go",
+    ],
+    importmap = "k0s.io/vendor/k0s.io/pkg/wrap",
+    importpath = "k0s.io/pkg/wrap",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/gorilla/websocket:go_default_library"],
+)

@@ -9,9 +9,9 @@ go_library(
     importpath = "k0s.io/pkg/cli/hub",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/hub/config:go_default_library",
-        "//pkg/hub/hub:go_default_library",
-        "//pkg/hub/self:go_default_library",
-        "//pkg/tunnel/listener:go_default_library",
+        "//vendor/k0s.io/pkg/hub/config:go_default_library",
+        "//vendor/k0s.io/pkg/hub/hub:go_default_library",
+        "//vendor/k0s.io/pkg/hub/self:go_default_library",
+        "//vendor/k0s.io/pkg/tunnel/listener:go_default_library",
     ],
 )

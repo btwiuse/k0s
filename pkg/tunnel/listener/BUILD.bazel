@@ -10,7 +10,7 @@ go_library(
     importpath = "k0s.io/pkg/tunnel/listener",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/tunnel:go_default_library",
+        "//vendor/k0s.io/pkg/tunnel:go_default_library",
         "//vendor/nhooyr.io/websocket:go_default_library",
     ],
 )

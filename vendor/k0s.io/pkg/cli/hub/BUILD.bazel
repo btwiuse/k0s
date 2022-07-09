@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "hub.go",
+        "hub2.go",
+    ],
+    importmap = "k0s.io/vendor/k0s.io/pkg/cli/hub",
+    importpath = "k0s.io/pkg/cli/hub",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/k0s.io/pkg/hub/config:go_default_library",
+        "//vendor/k0s.io/pkg/hub/hub:go_default_library",
+        "//vendor/k0s.io/pkg/hub/self:go_default_library",
+        "//vendor/k0s.io/pkg/tunnel/listener:go_default_library",
+    ],
+)

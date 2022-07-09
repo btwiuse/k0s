@@ -552,7 +552,7 @@ go.uber.org/atomic
 # go.uber.org/multierr v1.7.0
 ## explicit; go 1.14
 go.uber.org/multierr
-# golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f
+# golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 ## explicit; go 1.17
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
@@ -611,7 +611,7 @@ golang.org/x/oauth2/internal
 # golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 ## explicit
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.0.0-20220704084225-05e143d24a9e
+# golang.org/x/sys v0.0.0-20220708085239-5a0f0661e09d
 ## explicit; go 1.17
 golang.org/x/sys/cpu
 golang.org/x/sys/execabs
@@ -781,13 +781,59 @@ k0s.io/pkg/agent/dialer
 k0s.io/pkg/agent/info
 k0s.io/pkg/agent/tty
 k0s.io/pkg/agent/tty/factory
+# k0s.io/pkg/cli v0.0.0-00010101000000-000000000000 => ./pkg/cli
+## explicit; go 1.19
+k0s.io/pkg/cli/agent
+k0s.io/pkg/cli/chassis
+k0s.io/pkg/cli/client
+k0s.io/pkg/cli/hub
+k0s.io/pkg/cli/miniclient
+k0s.io/pkg/cli/mnt
+k0s.io/pkg/cli/upgrade
+# k0s.io/pkg/client v0.0.0-00010101000000-000000000000 => ./pkg/client
+## explicit; go 1.19
+k0s.io/pkg/client
+k0s.io/pkg/client/client
+k0s.io/pkg/client/config
+k0s.io/pkg/client/wsdialer
 # k0s.io/pkg/exporter v0.0.0-00010101000000-000000000000 => ./pkg/exporter
 ## explicit; go 1.19
 k0s.io/pkg/exporter
 k0s.io/pkg/exporter/env
+# k0s.io/pkg/fzf v0.0.0-00010101000000-000000000000 => ./pkg/fzf
+## explicit; go 1.19
+k0s.io/pkg/fzf
+k0s.io/pkg/fzf/algo
+k0s.io/pkg/fzf/tui
+k0s.io/pkg/fzf/util
+# k0s.io/pkg/hub v0.0.0-00010101000000-000000000000 => ./pkg/hub
+## explicit; go 1.19
+k0s.io/pkg/hub
+k0s.io/pkg/hub/agent
+k0s.io/pkg/hub/agent/info
+k0s.io/pkg/hub/config
+k0s.io/pkg/hub/hub
+k0s.io/pkg/hub/self
+# k0s.io/pkg/middleware v0.0.0-00010101000000-000000000000 => ./pkg/middleware
+## explicit; go 1.19
+k0s.io/pkg/middleware
 # k0s.io/pkg/rng v0.0.0-00010101000000-000000000000 => ./pkg/rng
 ## explicit; go 1.19
 k0s.io/pkg/rng
+# k0s.io/pkg/simple v0.0.0-00010101000000-000000000000 => ./pkg/simple
+## explicit; go 1.19
+k0s.io/pkg/simple/listener
+# k0s.io/pkg/tunnel v0.0.0-00010101000000-000000000000 => ./pkg/tunnel
+## explicit; go 1.19
+k0s.io/pkg/tunnel
+k0s.io/pkg/tunnel/handler
+k0s.io/pkg/tunnel/listener
+# k0s.io/pkg/uuid v0.0.0-00010101000000-000000000000 => ./pkg/uuid
+## explicit; go 1.19
+k0s.io/pkg/uuid
+# k0s.io/pkg/wrap v0.0.0-00010101000000-000000000000 => ./pkg/wrap
+## explicit; go 1.19
+k0s.io/pkg/wrap
 # modernc.org/httpfs v1.0.6
 ## explicit; go 1.15
 modernc.org/httpfs
@@ -800,5 +846,15 @@ nhooyr.io/websocket/internal/wsjs
 nhooyr.io/websocket/internal/xsync
 # github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb
 # k0s.io/pkg/agent => ./pkg/agent
+# k0s.io/pkg/cli => ./pkg/cli
+# k0s.io/pkg/client => ./pkg/client
 # k0s.io/pkg/exporter => ./pkg/exporter
+# k0s.io/pkg/fzf => ./pkg/fzf
+# k0s.io/pkg/gitd => ./pkg/gitd
+# k0s.io/pkg/hub => ./pkg/hub
+# k0s.io/pkg/middleware => ./pkg/middleware
 # k0s.io/pkg/rng => ./pkg/rng
+# k0s.io/pkg/simple => ./pkg/simple
+# k0s.io/pkg/tunnel => ./pkg/tunnel
+# k0s.io/pkg/uuid => ./pkg/uuid
+# k0s.io/pkg/wrap => ./pkg/wrap

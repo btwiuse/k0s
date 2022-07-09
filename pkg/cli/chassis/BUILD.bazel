@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/cli/chassis",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/simple/listener:go_default_library",
-        "//pkg/tunnel/handler:go_default_library",
+        "//vendor/k0s.io/pkg/simple/listener:go_default_library",
+        "//vendor/k0s.io/pkg/tunnel/handler:go_default_library",
     ],
 )

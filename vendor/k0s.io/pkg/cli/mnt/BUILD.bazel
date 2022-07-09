@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["mnt.go"],
+    importmap = "k0s.io/vendor/k0s.io/pkg/cli/mnt",
+    importpath = "k0s.io/pkg/cli/mnt",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/reverseproxy:go_default_library",
+        "//vendor/k0s.io/pkg/tunnel/listener:go_default_library",
+    ],
+)

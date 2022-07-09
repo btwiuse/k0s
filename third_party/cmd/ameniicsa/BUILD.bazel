@@ -8,8 +8,8 @@ go_library(
     deps = [
         "//pkg/asciitransport/v2:go_default_library",
         "//pkg/console:go_default_library",
-        "//pkg/uuid:go_default_library",
         "//vendor/k0s.io/pkg/agent/tty/factory:go_default_library",
+        "//vendor/k0s.io/pkg/uuid:go_default_library",
     ],
 )
 

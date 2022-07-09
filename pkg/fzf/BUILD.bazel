@@ -27,9 +27,9 @@ go_library(
     importpath = "k0s.io/pkg/fzf",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/fzf/algo:go_default_library",
-        "//pkg/fzf/tui:go_default_library",
-        "//pkg/fzf/util:go_default_library",
         "//vendor/github.com/mattn/go-shellwords:go_default_library",
+        "//vendor/k0s.io/pkg/fzf/algo:go_default_library",
+        "//vendor/k0s.io/pkg/fzf/tui:go_default_library",
+        "//vendor/k0s.io/pkg/fzf/util:go_default_library",
     ],
 )
