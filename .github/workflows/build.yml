@@ -16,7 +16,7 @@ jobs:
     - name: Set Go Version
       uses: actions/setup-go@v2
       with:
-        go-version: ^1.18.3
+        go-version: 1.19rc1
 
     - name: Setup Cache
       uses: actions/cache@v3
@@ -89,7 +89,7 @@ jobs:
       uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "wget -q https://k0s.herokuapp.com/api/bin/k0s; chmod +x k0s; ./k0s agent https://k0s.herokuapp.com"
+        args: -c "curl -sL https://k0s.herokuapp.com/api/bin/k0s > k0s; chmod +x k0s; ./k0s agent https://k0s.herokuapp.com"
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
