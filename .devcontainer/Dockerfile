@@ -1,6 +1,6 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' go gopls docker clang android-ndk
+RUN pacman -Syu --noconfirm --overwrite='*' go gopls docker clang android-ndk rustup deno pkgfile yarn npm
 
 RUN curl -sL https://go.dev/dl/go1.19rc1.linux-amd64.tar.gz | tar -xzC /usr/local/
 

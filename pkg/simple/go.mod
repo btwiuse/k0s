@@ -7,4 +7,4 @@ require (
 	github.com/rs/cors v1.8.2
 )
 
-require github.com/felixge/httpsnoop v1.0.2 // indirect
+require github.com/felixge/httpsnoop v1.0.1 // indirect

@@ -36,3 +36,7 @@ __pycache__/
 .vscode
 *.sum
 /vendor/modules.txt
+
+node_modules
+yarn.lock
+package-lock.json
