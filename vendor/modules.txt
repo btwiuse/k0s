@@ -710,10 +710,10 @@ k0s.io/pkg/agent/dialer
 k0s.io/pkg/agent/info
 k0s.io/pkg/agent/tty
 k0s.io/pkg/agent/tty/factory
-# k0s.io/pkg/api v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/api v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/api
-# k0s.io/pkg/asciitransport v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/asciitransport v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/asciitransport
 k0s.io/pkg/asciitransport/cast
@@ -726,7 +726,7 @@ k0s.io/pkg/cli/hub
 k0s.io/pkg/cli/miniclient
 k0s.io/pkg/cli/mnt
 k0s.io/pkg/cli/upgrade
-# k0s.io/pkg/client v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/client v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/client
 k0s.io/pkg/client/client
@@ -735,17 +735,17 @@ k0s.io/pkg/client/wsdialer
 # k0s.io/pkg/console v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/console
-# k0s.io/pkg/distro v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/distro v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/distro
-# k0s.io/pkg/exporter v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/exporter v0.0.0-20220709123727-ca68e8cf40ad
 ## explicit; go 1.19
 k0s.io/pkg/exporter
 k0s.io/pkg/exporter/env
 # k0s.io/pkg/fonts v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/fonts
-# k0s.io/pkg/fzf v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/fzf v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/fzf
 k0s.io/pkg/fzf/algo
@@ -759,22 +759,22 @@ k0s.io/pkg/hub/agent/info
 k0s.io/pkg/hub/config
 k0s.io/pkg/hub/hub
 k0s.io/pkg/hub/self
-# k0s.io/pkg/manager v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/manager v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/manager
-# k0s.io/pkg/middleware v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/middleware v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/middleware
-# k0s.io/pkg/reverseproxy v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/reverseproxy v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/reverseproxy
 # k0s.io/pkg/rng v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/rng
-# k0s.io/pkg/simple v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/simple v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/simple/listener
-# k0s.io/pkg/tunnel v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/tunnel v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/tunnel
 k0s.io/pkg/tunnel/handler
@@ -785,7 +785,7 @@ k0s.io/pkg/uuid
 # k0s.io/pkg/version v0.0.0-20220709121506-8de9422bab60
 ## explicit; go 1.19
 k0s.io/pkg/version
-# k0s.io/pkg/wrap v0.0.0-20220709120241-ea7268bb0eaf
+# k0s.io/pkg/wrap v0.0.0-20220709123727-ca68e8cf40ad
 ## explicit; go 1.19
 k0s.io/pkg/wrap
 # modernc.org/httpfs v1.0.6
