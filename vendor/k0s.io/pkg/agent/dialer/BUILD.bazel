@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "dialer.go",
+        "dialer_gorilla.go",
+    ],
+    importmap = "k0s.io/vendor/k0s.io/pkg/agent/dialer",
+    importpath = "k0s.io/pkg/agent/dialer",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/wrap:go_default_library",
+        "//vendor/github.com/gorilla/websocket:go_default_library",
+        "//vendor/k0s.io/pkg/agent:go_default_library",
+    ],
+)

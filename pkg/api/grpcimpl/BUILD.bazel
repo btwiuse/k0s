@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/api/grpcimpl",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/agent:go_default_library",
         "//pkg/api:go_default_library",
+        "//vendor/k0s.io/pkg/agent:go_default_library",
     ],
 )

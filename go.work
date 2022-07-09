@@ -1,9 +1,10 @@
-go 1.18
+go 1.19
 
 use (
 	.
 	./pkg/exporter
+	./pkg/agent
 	./third_party
 )
 
-replace github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220612132545-645105c99159
+replace github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb

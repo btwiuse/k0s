@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "agent.go",
+        "lys.go",
+        "plugin_envserver.go",
+        "plugin_fileserver.go",
+        "plugin_metricsserver.go",
+        "plugin_pingserver.go",
+        "plugin_redirectserver.go",
+        "plugin_socks5server.go",
+        "plugin_terminalserver.go",
+        "plugin_terminalv2server.go",
+        "plugin_versionserver.go",
+        "rpc.go",
+    ],
+    importmap = "k0s.io/vendor/k0s.io/pkg/agent/agent",
+    importpath = "k0s.io/pkg/agent/agent",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/api:go_default_library",
+        "//pkg/asciitransport:go_default_library",
+        "//pkg/asciitransport/v2:go_default_library",
+        "//pkg/middleware:go_default_library",
+        "//vendor/github.com/btwiuse/pretty:go_default_library",
+        "//vendor/github.com/ginuerzh/gost:go_default_library",
+        "//vendor/golang.org/x/sync/errgroup:go_default_library",
+        "//vendor/k0s.io/pkg/agent:go_default_library",
+        "//vendor/k0s.io/pkg/agent/dialer:go_default_library",
+        "//vendor/k0s.io/pkg/agent/tty/factory:go_default_library",
+        "//vendor/k0s.io/pkg/exporter:go_default_library",
+        "//vendor/k0s.io/pkg/exporter/env:go_default_library",
+    ],
+)
