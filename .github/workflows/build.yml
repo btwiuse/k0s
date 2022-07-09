@@ -3,38 +3,6 @@ name: build
 on: [push]
 
 jobs:
-  build:
-    if: ${{ '2 + 2'  == '5' }}
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-        submodules: recursive
-
-    - name: Set Go Version
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.19rc1
-
-    - name: Setup Cache
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cache/go-build
-        key: ${{ runner.os }}-build
-
-    - run: make build
-      name: make build
-
-    - name: archive artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: build
-        path: bin/
-
   btwiuse-host:
     runs-on: ubuntu-latest
     steps:
@@ -288,7 +256,7 @@ jobs:
       uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c ". ~/.bashrc; make build-android"
+        args: -c ". /etc/profile.d/android-ndk.sh; export PATH=${ANDROID_NDK}/toolchains/llvm/prebuilt/linux-x86_64/bin:${PATH}; make build-android"
       env:
         GOCACHE: /github/workspace/.cache/go-build
         HOME: /home/btwiuse
@@ -298,49 +266,6 @@ jobs:
       with:
         name: build-android
         path: bin/
-
-  bazel-build-android:
-    if: ${{ '2 + 2'  == '5' }}
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-        submodules: recursive
-
-    - name: Setup Cache
-      uses: actions/cache@v3
-      with:
-        path: |
-          .cache/bazel/
-        key: ${{ runner.os }}-bazel-build-android
-
-    - name: Fix Bazel Cache Permission
-      run: |
-        mkdir -p .cache/bazel/
-        ls -la .cache/
-        ls -la .cache/bazel/
-        sudo chown -R root .cache/bazel
-        ls -la .cache/bazel/
-
-    - name: make bazel-build-android
-      uses: docker://techknowlogick/xgo:latest
-      with:
-        entrypoint: bash
-        args: -c "chown -R root:root .; make bazel-build-android"
-      env:
-        ANDROID_NDK_BAZEL: True
-        TEST_TMPDIR: /github/workspace/.cache/bazel
-
-    - name: archive artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: bazel-build-android
-        path: bin/
-
-    - name: Fix Bazel Cache Permission
-      run: sudo chmod -R a+rwx .cache/bazel
 
   release:
     runs-on: ubuntu-latest
@@ -352,7 +277,6 @@ jobs:
     - build-darwin
     - build-bsd
     - build-android
-  # - bazel-build-android
     steps:
     - name: Get current date
       id: date
@@ -400,11 +324,11 @@ jobs:
         name: build-bsd
         path: ./bin/
 
-  # - uses: actions/download-artifact@v2
-  #   name: download artifact bazel-build-android
-  #   with:
-  #     name: bazel-build-android
-  #     path: ./bin/
+    - uses: actions/download-artifact@v2
+      name: download artifact build-android
+      with:
+        name: build-android
+        path: ./bin/
 
     - run: make release
       name: make release
@@ -492,9 +416,9 @@ jobs:
         path: ./bin/
 
     - uses: actions/download-artifact@v2
-      name: download artifact bazel-build-android
+      name: download artifact build-android
       with:
-        name: bazel-build-android
+        name: build-android
         path: ./bin/
 
     - name: debug
