@@ -10,4 +10,10 @@ RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git $HOME/.asdf && \
 
 ENV ANDROID_BAZEL_NDK=True
 
-ENV PATH=${PATH}:/go/bin
+ENV PATH=/usr/local/go/bin:go/bin:/home/btwiuse/bin/go/bin:${PATH}
+
+ENV CGO_ENABLED=0
+
+RUN curl -sL https://go.dev/dl/go1.19rc1.linux-amd64.tar.gz | tar -xzC /usr/local/
+
+# asdf install golang 1.19rc1
