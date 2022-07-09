@@ -10,11 +10,11 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/utils:go_default_library",
+        "//third_party/pkg/asciitransport/v2:go_default_library",
         "//third_party/pkg/localcmd:go_default_library",
         "//third_party/pkg/wetty/wetty:go_default_library",
         "//vendor/github.com/btwiuse/wetty/pkg/assets:go_default_library",
         "//vendor/github.com/gorilla/handlers:go_default_library",
-        "//vendor/k0s.io/pkg/asciitransport/v2:go_default_library",
         "//vendor/modernc.org/httpfs:go_default_library",
     ],
 )

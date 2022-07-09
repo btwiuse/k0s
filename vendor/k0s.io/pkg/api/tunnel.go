@@ -4,8 +4,6 @@ import "fmt"
 
 type Tunnel uint8
 
-//go:generate stringer -type=Tunnel
-
 const (
 	Terminal Tunnel = iota // starts at 0
 	Session

@@ -6,7 +6,6 @@ replace (
 	k0s.io => ../../
 	k0s.io/pkg/agent => ../agent
 	k0s.io/pkg/api => ../api
-	k0s.io/pkg/asciiproto => ../asciiproto
 	k0s.io/pkg/asciitransport => ../asciitransport
 	k0s.io/pkg/console => ../console
 	k0s.io/pkg/distro => ../distro

@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	asciitransport "k0s.io/pkg/asciitransport/v2"
+	asciitransport "k0s.io/third_party/pkg/asciitransport/v2"
 	"k0s.io/pkg/console"
 	"k0s.io/pkg/agent/tty/factory"
 	"k0s.io/pkg/uuid"

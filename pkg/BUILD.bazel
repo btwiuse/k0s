@@ -4,7 +4,6 @@ go_library(
     name = "go_default_library",
     srcs = [
         "default.go",
-        "gen.go",
         "types.go",
     ],
     importpath = "k0s.io/pkg",

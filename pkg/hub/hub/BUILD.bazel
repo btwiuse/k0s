@@ -18,6 +18,7 @@ go_library(
         "//vendor/github.com/btwiuse/wetty/pkg/assets:go_default_library",
         "//vendor/github.com/gorilla/mux:go_default_library",
         "//vendor/github.com/jpillora/go-echo-server/handler:go_default_library",
+        "//vendor/k0s.io/pkg/api:go_default_library",
         "//vendor/k0s.io/pkg/exporter:go_default_library",
         "//vendor/k0s.io/pkg/hub:go_default_library",
         "//vendor/k0s.io/pkg/hub/agent:go_default_library",

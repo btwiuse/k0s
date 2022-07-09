@@ -1,35 +1,9 @@
-load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
-load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
-
-proto_library(
-    name = "api_proto",
-    srcs = ["api.proto"],
-    visibility = ["//visibility:public"],
-)
-
-go_proto_library(
-    name = "api_go_proto",
-    compilers = ["@io_bazel_rules_go//proto:go_grpc"],
-    importpath = "k0s.io/pkg/api",
-    proto = ":api_proto",
-    visibility = ["//visibility:public"],
-)
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "api.pb.go",
-        "tunnel.go",
-        "tunnel_string.go",
-    ],
+    srcs = ["tunnel.go"],
     importmap = "k0s.io/vendor/k0s.io/pkg/api",
     importpath = "k0s.io/pkg/api",
     visibility = ["//visibility:public"],
-    deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
-        "//vendor/google.golang.org/grpc:go_default_library",
-        "//vendor/google.golang.org/grpc/codes:go_default_library",
-        "//vendor/google.golang.org/grpc/status:go_default_library",
-    ],
 )

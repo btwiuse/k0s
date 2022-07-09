@@ -9,6 +9,7 @@ go_library(
     deps = [
         "//vendor/github.com/abbot/go-http-auth:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
+        "//vendor/k0s.io/pkg/api:go_default_library",
         "//vendor/k0s.io/pkg/hub:go_default_library",
     ],
 )

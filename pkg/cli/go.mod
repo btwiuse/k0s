@@ -6,7 +6,6 @@ replace (
 	k0s.io => ../../
 	k0s.io/pkg/agent => ../agent
 	k0s.io/pkg/api => ../api
-	k0s.io/pkg/asciiproto => ../asciiproto
 	k0s.io/pkg/asciitransport => ../asciitransport
 	k0s.io/pkg/client => ../client
 	k0s.io/pkg/console => ../console
@@ -185,7 +184,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k0s.io v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/api v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/asciiproto v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/asciitransport v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/console v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/distro v0.0.0-00010101000000-000000000000 // indirect

@@ -6,7 +6,6 @@ replace (
 	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb
 	k0s.io => ../../
 	k0s.io/pkg/api => ../api
-	k0s.io/pkg/asciiproto => ../asciiproto
 	k0s.io/pkg/asciitransport => ../asciitransport
 	k0s.io/pkg/distro => ../distro
 	k0s.io/pkg/middleware => ../middleware
@@ -143,5 +142,4 @@ require (
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k0s.io/pkg/asciiproto v0.0.0-00010101000000-000000000000 // indirect
 )
