@@ -291,6 +291,7 @@ jobs:
         args: -c ". ~/.bashrc; make build-android"
       env:
         GOCACHE: /github/workspace/.cache/go-build
+        HOME: /home/btwiuse
 
     - name: archive artifacts
       uses: actions/upload-artifact@v2
