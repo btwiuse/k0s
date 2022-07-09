@@ -8563,6 +8563,13 @@ go_repository(
     version = "v1.3.0",
 )
 
+go_repository(
+    name = "com_github_btwiuse_gost",
+    importpath = "github.com/btwiuse/gost",
+    sum = "h1:IDDEgNZaCP9O3IrA46sDM5znSnrgpTQmJtny2FanyJM=",
+    version = "v0.0.0-20220709112350-568332f86f87",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -8686,8 +8693,8 @@ go_repository(
 go_repository(
     name = "com_github_btwiuse_gods",
     importpath = "github.com/btwiuse/gods",
-    sum = "h1:RamJoBgLnq2tsdeXwKc/+ytJ30rftG+MBDreHGFWpSw=",
-    version = "v0.0.0-20190414062120-7e7cf0aebbb0",
+    sum = "h1:QNsQLjEYbXh0eDpXGPms5NbqcZDGpTC2ra3QJO/avxg=",
+    version = "v0.0.0-20220709102725-20662ea32ad9",
 )
 
 go_repository(
@@ -8798,8 +8805,8 @@ go_repository(
 go_repository(
     name = "com_github_envoyproxy_go_control_plane",
     importpath = "github.com/envoyproxy/go-control-plane",
-    sum = "h1:xvqufLtNVwAhN8NMyWklVgxnWohi+wtMGQMhtxexlm0=",
-    version = "v0.10.2-0.20220325020618-49ff273808a1",
+    sum = "h1:fP+fF0up6oPY49OrjPrhIJ8yQfdIM85NXMLkMg1EXVs=",
+    version = "v0.9.10-0.20210907150352-cf90f659a021",
 )
 
 go_repository(
@@ -9470,15 +9477,15 @@ go_repository(
 go_repository(
     name = "org_golang_google_genproto",
     importpath = "google.golang.org/genproto",
-    sum = "h1:7YDGQC/0sigNGzsEWyb9s72jTxlFdwVEYNJHbfQ+Dtg=",
-    version = "v0.0.0-20220706185917-7780775163c4",
+    sum = "h1:zmf8Yq9j+IyTpps+paSkmHkSu5fJlRKy69LxRzc17Q0=",
+    version = "v0.0.0-20220207164111-0872dc986b00",
 )
 
 go_repository(
     name = "org_golang_google_grpc",
     importpath = "google.golang.org/grpc",
-    sum = "h1:9n77onPX5F3qfFCqjy9dhn8PbNQsIKeVU04J9G7umt8=",
-    version = "v1.47.0",
+    sum = "h1:weqSxi/TMs1SqFRMHCtBgXRs8k3X39QIDEZ0pRcttUg=",
+    version = "v1.44.0",
 )
 
 go_repository(
@@ -10583,8 +10590,8 @@ go_repository(
 go_repository(
     name = "com_github_bifurcation_mint",
     importpath = "github.com/bifurcation/mint",
-    sum = "h1:fUjoj2bT6dG8LoEe+uNsKk8J+sLkDbQkJnB6Z1F02Bc=",
-    version = "v0.0.0-20180715133206-93c51c6ce115",
+    sum = "h1:x17NvoJaphEzay72TFej4OSSsgu3xRYBLkbIwdofS/4=",
+    version = "v0.0.0-20181105071958-a14404e9a861",
 )
 
 go_repository(
@@ -10627,14 +10634,6 @@ go_repository(
     importpath = "github.com/ginuerzh/gosocks5",
     sum = "h1:K0Ua23U9LU3BZrf3XpGDcs0mP8DiEpa6PJE4TA/MU3s=",
     version = "v0.2.0",
-)
-
-go_repository(
-    name = "com_github_ginuerzh_gost",
-    importpath = "github.com/ginuerzh/gost",
-    replace = "github.com/btwiuse/gost",
-    sum = "h1:Bq63o5dfSsNdfxtk8l5vu6LARqdAXZ007hqBh4EBPO4=",
-    version = "v0.0.0-20220706230444-f7c58a8aecbb",
 )
 
 go_repository(

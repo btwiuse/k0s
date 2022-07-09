@@ -2,14 +2,12 @@ module k0s.io/pkg/agent
 
 go 1.19
 
-replace github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb
-
 require (
 	github.com/ActiveState/termtest/conpty v0.5.0
 	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895
 	github.com/creack/pty v1.1.18
 	github.com/denisbrodbeck/machineid v1.0.1
-	github.com/ginuerzh/gost v0.0.0-20210206051340-8dd4d8d9a123
+	github.com/btwiuse/gost v0.0.0-20220709112350-568332f86f87
 	github.com/gorilla/websocket v1.5.0
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b

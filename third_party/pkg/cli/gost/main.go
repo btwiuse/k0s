@@ -11,7 +11,7 @@ import (
 
 	_ "net/http/pprof"
 
-	"github.com/ginuerzh/gost"
+	"github.com/btwiuse/gost"
 	"github.com/go-log/log"
 )
 

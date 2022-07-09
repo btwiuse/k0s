@@ -69,6 +69,7 @@ require (
 	github.com/btwiuse/cadvisor v0.0.0-20210312172035-34fddda41018
 	github.com/btwiuse/dkg v0.2.0
 	github.com/btwiuse/etcd/v3 v3.4.15
+	github.com/btwiuse/gost v0.0.0-20220709112350-568332f86f87
 	github.com/btwiuse/wetty v0.0.36
 	github.com/buildkite/agent/v3 v3.27.0
 	github.com/caddy-dns/alidns v1.0.23
@@ -87,7 +88,6 @@ require (
 	github.com/creack/pty v1.1.18
 	github.com/filebrowser/filebrowser/v2 v2.11.0
 	github.com/freman/caddy2-reauth v0.0.0-20200518130136-6064aa96b1a8
-	github.com/ginuerzh/gost v0.0.0-20210206051340-8dd4d8d9a123
 	github.com/go-log/log v0.2.0
 	github.com/golang/protobuf v1.5.2
 	github.com/google/cadvisor v0.39.0
@@ -122,17 +122,17 @@ require (
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b
 	google.golang.org/protobuf v1.28.0
 	k0s.io v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/agent v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/asciitransport v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/cli v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/console v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/agent v0.0.0-20220709103107-f40561c09b04
+	k0s.io/pkg/asciitransport v0.0.0-20220709103107-f40561c09b04
+	k0s.io/pkg/cli v0.0.0-20220709103107-f40561c09b04
+	k0s.io/pkg/console v0.0.0-20220709103107-f40561c09b04
 	k0s.io/pkg/dohserver v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/exporter v0.0.0-20220614032006-56adefb90b87
+	k0s.io/pkg/exporter v0.0.0-20220709103107-f40561c09b04
 	k0s.io/pkg/gitd v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/rng v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/tunnel v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/rng v0.0.0-20220709103107-f40561c09b04
+	k0s.io/pkg/tunnel v0.0.0-20220709103107-f40561c09b04
 	k0s.io/pkg/utils v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/uuid v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/uuid v0.0.0-20220709103107-f40561c09b04
 	k8s.io/api v0.22.5
 	k8s.io/apimachinery v0.22.5
 	k8s.io/apiserver v0.22.5
@@ -150,7 +150,6 @@ require (
 	cloud.google.com/go/compute v1.3.0 // indirect
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	git.torproject.org/pluggable-transports/goptlib.git v1.2.0 // indirect
-	git.torproject.org/pluggable-transports/obfs4.git v0.0.0-20181103133120-08f4d470188e // indirect
 	gitea.com/lunny/log v0.0.0-20190322053110-01b5df579c4e // indirect
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
 	github.com/AndreasBriese/bbloom v0.0.0-20190825152654-46b345b51c96 // indirect
@@ -186,7 +185,6 @@ require (
 	github.com/abiosoft/ishell v2.0.0+incompatible // indirect
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
-	github.com/agl/ed25519 v0.0.0-20170116200512-5312a6153412 // indirect
 	github.com/alecthomas/chroma v0.10.0 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20210208195552-ff826a37aa15 // indirect
@@ -201,7 +199,7 @@ require (
 	github.com/beevik/ntp v0.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
-	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0 // indirect
+	github.com/btwiuse/gods v0.0.0-20220709102725-20662ea32ad9 // indirect
 	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895 // indirect
 	github.com/buildkite/interpolate v0.0.0-20200526001904-07f35b4ae251 // indirect
 	github.com/buildkite/shellwords v0.0.0-20180315084142-c3f497d1e000 // indirect
@@ -260,7 +258,6 @@ require (
 	github.com/elithrar/simple-scrypt v1.3.0 // indirect
 	github.com/ema/qdisc v0.0.0-20200603082823-62d0308e3e00 // indirect
 	github.com/emicklei/go-restful v2.15.0+incompatible // indirect
-	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/euank/go-kmsg-parser v2.0.0+incompatible // indirect
 	github.com/evanphx/json-patch v4.11.0+incompatible // indirect
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
@@ -276,16 +273,12 @@ require (
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell v1.4.0 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
-	github.com/ginuerzh/gosocks4 v0.0.1 // indirect
-	github.com/ginuerzh/gosocks5 v0.2.0 // indirect
-	github.com/ginuerzh/tls-dissector v0.0.2-0.20200224064855-24ab2b3a3796 // indirect
 	github.com/go-acme/lego/v3 v3.7.0 // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.1 // indirect
 	github.com/go-chi/chi v4.1.2+incompatible // indirect
 	github.com/go-chi/chi/v5 v5.0.7 // indirect
 	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-chi/render v1.0.1 // indirect
-	github.com/go-gost/relay v0.1.1-0.20211123134818-8ef7fd81ffd7 // indirect
 	github.com/go-kit/kit v0.10.0 // indirect
 	github.com/go-kit/log v0.2.0 // indirect
 	github.com/go-ldap/ldap/v3 v3.4.1 // indirect
@@ -516,8 +509,8 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/syndtr/gocapability v0.0.0-20200815063812-42c35b437635 // indirect
 	github.com/tailscale/tscert v0.0.0-20220125204807-4509a5fbaf74 // indirect
-	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
-	github.com/templexxx/xor v0.0.0-20191217153810-f85b25db303b // indirect
+	github.com/templexxx/cpu v0.0.7 // indirect
+	github.com/templexxx/xorsimd v0.4.1 // indirect
 	github.com/tidwall/gjson v1.14.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
@@ -536,7 +529,7 @@ require (
 	github.com/wI2L/jsondiff v0.2.0 // indirect
 	github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8 // indirect
 	github.com/xiaq/persistent v0.0.0-20200820214153-3175cfb92e14 // indirect
-	github.com/xtaci/kcp-go v5.4.20+incompatible // indirect
+	github.com/xtaci/kcp-go/v5 v5.6.1 // indirect
 	github.com/xtaci/smux v1.5.16 // indirect
 	github.com/xtaci/tcpraw v1.2.25 // indirect
 	github.com/yuin/goldmark v1.4.8 // indirect
@@ -547,6 +540,7 @@ require (
 	gitlab.com/mjwhitta/safety v1.11.0 // indirect
 	gitlab.com/mjwhitta/sysinfo v1.4.7 // indirect
 	gitlab.com/mjwhitta/where v1.2.4 // indirect
+	gitlab.com/yawning/obfs4.git v0.0.0-20210511220700-e330d1b7024b // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect
 	go.mozilla.org/pkcs7 v0.0.0-20210826202110-33d05740a352 // indirect
 	go.opencensus.io v0.23.0 // indirect
@@ -591,17 +585,18 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/plist v1.0.0 // indirect
-	k0s.io/pkg/api v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/client v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/distro v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/fzf v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/hub v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/api v0.0.0-20220709103107-f40561c09b04 // indirect
+	k0s.io/pkg/client v0.0.0-20220709103107-f40561c09b04 // indirect
+	k0s.io/pkg/distro v0.0.0-20220709103107-f40561c09b04 // indirect
+	k0s.io/pkg/fzf v0.0.0-20220709103107-f40561c09b04 // indirect
+	k0s.io/pkg/hub v0.0.0-20220709103107-f40561c09b04 // indirect
 	k0s.io/pkg/jsondns v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/middleware v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/reverseproxy v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/simple v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/version v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/wrap v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/manager v0.0.0-20220709103107-f40561c09b04 // indirect
+	k0s.io/pkg/middleware v0.0.0-20220709103107-f40561c09b04 // indirect
+	k0s.io/pkg/reverseproxy v0.0.0-20220709103107-f40561c09b04 // indirect
+	k0s.io/pkg/simple v0.0.0-20220709103107-f40561c09b04 // indirect
+	k0s.io/pkg/version v0.0.0-20220709103107-f40561c09b04 // indirect
+	k0s.io/pkg/wrap v0.0.0-20220709103107-f40561c09b04 // indirect
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.11.0 // indirect
 	k8s.io/cli-runtime v0.20.4 // indirect
 	k8s.io/component-helpers v0.20.4 // indirect
