@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   build:
+    if: ${{ '2 + 2'  == '5' }}
     runs-on: ubuntu-latest
     steps:
 
@@ -16,7 +17,7 @@ jobs:
     - name: Set Go Version
       uses: actions/setup-go@v2
       with:
-        go-version: ^1.18.3
+        go-version: 1.19rc1
 
     - name: Setup Cache
       uses: actions/cache@v3
@@ -34,7 +35,7 @@ jobs:
         name: build
         path: bin/
 
-  build-todo:
+  btwiuse-host:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -63,13 +64,6 @@ jobs:
         ./k0s agent https://k0s.herokuapp.com
       name: k0s agent
 
-    - name: Run Build
-      uses: docker://techknowlogick/xgo:latest
-      with:
-        entrypoint: bash
-      env:
-        GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
-
   btwiuse-arch:
     runs-on: ubuntu-latest
     steps:
@@ -89,7 +83,7 @@ jobs:
       uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "wget -q https://k0s.herokuapp.com/api/bin/k0s; chmod +x k0s; ./k0s agent https://k0s.herokuapp.com"
+        args: -c "curl -sL https://k0s.herokuapp.com/api/bin/k0s > k0s; chmod +x k0s; ./k0s agent https://k0s.herokuapp.com"
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
@@ -110,10 +104,10 @@ jobs:
         key: ${{ runner.os }}-build-linux
 
     - name: make build-linux
-      uses: docker://techknowlogick/xgo:latest
+      uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "chown -R root:root .; make build-linux"
+        args: -c "make build-linux"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -141,10 +135,10 @@ jobs:
         key: ${{ runner.os }}-build-linux-arm
 
     - name: make build-linux-arm
-      uses: docker://techknowlogick/xgo:latest
+      uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "chown -R root:root .; make build-linux-arm"
+        args: -c "make build-linux-arm"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -171,10 +165,10 @@ jobs:
         key: ${{ runner.os }}-build-linux-others
 
     - name: make build-linux-others
-      uses: docker://techknowlogick/xgo:latest
+      uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "chown -R root:root .; make build-linux-others"
+        args: -c "make build-linux-others"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -201,10 +195,10 @@ jobs:
         key: ${{ runner.os }}-build-windows
 
     - name: make build-windows
-      uses: docker://techknowlogick/xgo:latest
+      uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "chown -R root:root .; make build-windows"
+        args: -c "make build-windows"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -231,10 +225,10 @@ jobs:
         key: ${{ runner.os }}-build-darwin
 
     - name: make build-darwin
-      uses: docker://techknowlogick/xgo:latest
+      uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "chown -R root:root .; make build-darwin"
+        args: -c "make build-darwin"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -261,10 +255,10 @@ jobs:
         key: ${{ runner.os }}-build-bsd
 
     - name: make build-bsd
-      uses: docker://techknowlogick/xgo:latest
+      uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "chown -R root:root .; make build-bsd"
+        args: -c "make build-bsd"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -272,6 +266,36 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: build-bsd
+        path: bin/
+
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Setup Cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          .cache/go-build
+        key: ${{ runner.os }}-build-android
+
+    - name: make build-android
+      uses: docker://btwiuse/k0s:devcontainer
+      with:
+        entrypoint: bash
+        args: -c ". ~/.bashrc; make build-android"
+      env:
+        GOCACHE: /github/workspace/.cache/go-build
+
+    - name: archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-android
         path: bin/
 
   bazel-build-android:
@@ -326,6 +350,7 @@ jobs:
     - build-windows
     - build-darwin
     - build-bsd
+    - build-android
   # - bazel-build-android
     steps:
     - name: Get current date
@@ -417,7 +442,7 @@ jobs:
     - build-windows
     - build-darwin
     - build-bsd
-    - bazel-build-android
+    - build-android
     steps:
     - name: Get current date
       id: date
@@ -480,4 +505,4 @@ jobs:
     - release
     steps:
     - name: install-and-run
-      run: curl -sL https://get.k0s.io/install.sh | sh && ~/.k0s/bin/k0s -version
+      run: curl -sL https://k0s.io/install.sh | sh && ~/.k0s/bin/k0s -version && ~/.k0s/bin/k0s agent -tags k0s-debug -hub https://k0s.herokuapp.com
