@@ -3,10 +3,35 @@ package hilighter
 import (
 	"image/color"
 	"math"
+	"os"
 	"runtime"
 	"strconv"
 	"strings"
 )
+
+// ColorToTrueColor will convert the color instance to its truecolor
+// representation.
+func ColorToTrueColor(c color.Color) string {
+	var a uint32
+	var b uint32
+	var g uint32
+	var r uint32
+
+	r, g, b, a = c.RGBA()
+
+	if (a != 0) && (a != 0xffff) {
+		r = uint32(float64(r*0xffff) / float64(a))
+		g = uint32(float64(g*0xffff) / float64(a))
+		b = uint32(float64(b*0xffff) / float64(a))
+	}
+
+	r >>= 8
+	g >>= 8
+	b >>= 8
+	a >>= 8
+
+	return RGBAToTrueColor(uint8(r), uint8(g), uint8(b), uint8(a))
+}
 
 // ColorToXterm256 will convert the color instance to its xterm256
 // representation.
@@ -40,15 +65,54 @@ func Disable(b bool) {
 // Hex will take a hex color code and add the appropriate ANSI color
 // codes to the provided string.
 func Hex(hex string, str string) string {
-	return colorize(HexToXterm256(hex), str)
+	switch strings.ToLower(os.Getenv("COLORTERM")) {
+	case "truecolor":
+		return colorize(HexToTrueColor(hex), str)
+	default:
+		return colorize(HexToXterm256(hex), str)
+	}
+}
+
+// HexToTrueColor will convert hex to the 24-bit RGB values.
+func HexToTrueColor(hex string) string {
+	var hasKey bool
+	if _, hasKey = Colors[hex]; hasKey {
+		return hex
+	}
+
+	var b int
+	var g int
+	var hexB uint64
+	var hexG uint64
+	var hexR uint64
+	var matches [][]string
+	var r int
+
+	r, g, b = 0, 0, 0
+	matches = parseHex.FindAllStringSubmatch(hex, -1)
+	for _, match := range matches {
+		hexB, _ = strconv.ParseUint(match[3], 16, 8)
+		b = int(hexB)
+
+		hexG, _ = strconv.ParseUint(match[2], 16, 8)
+		g = int(hexG)
+
+		hexR, _ = strconv.ParseUint(match[1], 16, 8)
+		r = int(hexR)
+	}
+
+	Colors[hex] = Sprintf("38;2;%d;%d;%d", r, g, b)
+	Colors["on_"+hex] = Sprintf("48;2;%d;%d;%d", r, g, b)
+
+	return hex
 }
 
 // HexToXterm256 will convert hex to xterm-256 8-bit value
 // https://stackoverflow.com/questions/11765623/convert-hex-hex_to_256bitto-closest-x11-color-number
 func HexToXterm256(hex string) string {
 	var hasKey bool
-	if _, hasKey = cachedCodes[hex]; hasKey {
-		return cachedCodes[hex]
+	if _, hasKey = cachedXterm[hex]; hasKey {
+		return cachedXterm[hex]
 	}
 
 	var average int
@@ -149,12 +213,12 @@ func HexToXterm256(hex string) string {
 		math.Pow(float64(int(gv-b)), 2)
 
 	if clrErr <= grayErr {
-		cachedCodes[hex] = Sprintf("color_%03d", cidx+16)
+		cachedXterm[hex] = Sprintf("color_%03d", cidx+16)
 	} else {
-		cachedCodes[hex] = Sprintf("color_%03d", gidx+232)
+		cachedXterm[hex] = Sprintf("color_%03d", gidx+232)
 	}
 
-	return cachedCodes[hex]
+	return cachedXterm[hex]
 }
 
 // Hilight will add the appropriate ANSI code to the specified
@@ -185,7 +249,13 @@ func Hilight(code string, str string) string {
 			if len(matches) > 0 {
 				match = matches[0]
 
-				clr = HexToXterm256(match[2])
+				switch strings.ToLower(os.Getenv("COLORTERM")) {
+				case "truecolor":
+					clr = HexToTrueColor(match[2])
+				default:
+					clr = HexToXterm256(match[2])
+				}
+
 				if strings.HasPrefix(code, "on_") {
 					clr = "on_" + clr
 				}
@@ -245,7 +315,12 @@ func IsDisabled() bool {
 // OnHex will take a hex color code and add the appropriate ANSI color
 // codes to the provided string.
 func OnHex(hex string, str string) string {
-	return colorize("on_"+HexToXterm256(hex), str)
+	switch strings.ToLower(os.Getenv("COLORTERM")) {
+	case "truecolor":
+		return colorize("on_"+HexToTrueColor(hex), str)
+	default:
+		return colorize("on_"+HexToXterm256(hex), str)
+	}
 }
 
 // OnRainbow will add multiple ANSI color codes to a string for a
@@ -332,6 +407,12 @@ func Rainbow(str string) string {
 	// Put lines back together, and remove color codes if the line
 	// only contains color codes
 	return onlyCodes.ReplaceAllString(strings.Join(out, "\n"), "$1$4")
+}
+
+// RGBAToTrueColor will convert the RGBA values to their hex
+// representation.
+func RGBAToTrueColor(r uint8, g uint8, b uint8, a uint8) string {
+	return HexToTrueColor(Sprintf("%02x%02x%02x%02x", r, g, b, a))
 }
 
 // RGBAToXterm256 will convert the RGBA values to the closest xterm256

@@ -18,7 +18,10 @@ go_proto_library(
 
 go_library(
     name = "go_default_library",
-    srcs = ["tunnel.go"],
+    srcs = [
+        "tunnel.go",
+        "tunnel_string.go",
+    ],
     embed = [":api_go_proto"],
     importpath = "k0s.io/pkg/api",
     visibility = ["//visibility:public"],

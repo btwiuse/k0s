@@ -15,8 +15,8 @@ go_library(
     importpath = "k0s.io/pkg/asciitransport",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/asciitransport/cast:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
         "//vendor/github.com/json-iterator/go:go_default_library",
+        "//vendor/k0s.io/pkg/asciitransport/cast:go_default_library",
     ],
 )

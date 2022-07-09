@@ -12,21 +12,21 @@ import (
 	"k0s.io/pkg/cli/agent"
 	"k0s.io/pkg/cli/chassis"
 	"k0s.io/pkg/cli/client"
-	"k0s.io/pkg/cli/miniclient"
 	"k0s.io/pkg/cli/hub"
+	"k0s.io/pkg/cli/miniclient"
 	"k0s.io/pkg/cli/mnt"
 	"k0s.io/pkg/cli/upgrade"
 )
 
 var cmdRun = map[string]func([]string) error{
-	"mnt":             mnt.Run,
-	"chassis":         chassis.Run,
-	"client":          client.Run,
-	"miniclient":      miniclient.Run,
-	"hub":             hub.Run,
-	"hub2":            hub.Run2,
-	"agent":           agent.Run,
-	"upgrade":         upgrade.Run,
+	"mnt":        mnt.Run,
+	"chassis":    chassis.Run,
+	"client":     client.Run,
+	"miniclient": miniclient.Run,
+	"hub":        hub.Run,
+	"hub2":       hub.Run2,
+	"agent":      agent.Run,
+	"upgrade":    upgrade.Run,
 }
 
 func main() {

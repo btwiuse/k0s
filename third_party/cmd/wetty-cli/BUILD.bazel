@@ -6,10 +6,10 @@ go_library(
     importpath = "k0s.io/third_party/cmd/wetty-cli",
     visibility = ["//visibility:private"],
     deps = [
-        "//pkg/asciitransport/v2:go_default_library",
-        "//pkg/console:go_default_library",
         "//pkg/utils:go_default_library",
         "//third_party/pkg/wetty/wetty:go_default_library",
+        "//vendor/k0s.io/pkg/asciitransport/v2:go_default_library",
+        "//vendor/k0s.io/pkg/console:go_default_library",
         "//vendor/k0s.io/pkg/uuid:go_default_library",
     ],
 )

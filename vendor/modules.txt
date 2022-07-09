@@ -11,10 +11,6 @@ github.com/ActiveState/termtest/conpty
 ## explicit
 github.com/Azure/go-ansiterm
 github.com/Azure/go-ansiterm/winterm
-# github.com/BurntSushi/toml v1.1.0
-## explicit; go 1.16
-github.com/BurntSushi/toml
-github.com/BurntSushi/toml/internal
 # github.com/LiamHaworth/go-tproxy v0.0.0-20190726054950-ef7efd7f24ed
 ## explicit
 github.com/LiamHaworth/go-tproxy
@@ -275,10 +271,6 @@ github.com/hodgesds/perf-utils
 # github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973
 ## explicit
 github.com/illumos/go-kstat
-# github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
-## explicit; go 1.13
-github.com/infobloxopen/go-trees/iptree
-github.com/infobloxopen/go-trees/numtree
 # github.com/josharian/native v0.0.0-20200817173448-b6b71def0850
 ## explicit; go 1.13
 github.com/josharian/native
@@ -519,7 +511,7 @@ github.com/xtaci/tcpraw
 # gitlab.com/mjwhitta/errors v1.0.0
 ## explicit; go 1.17
 gitlab.com/mjwhitta/errors
-# gitlab.com/mjwhitta/hilighter v1.10.1
+# gitlab.com/mjwhitta/hilighter v1.11.0
 ## explicit; go 1.17
 gitlab.com/mjwhitta/hilighter
 # gitlab.com/mjwhitta/pathname v1.2.0
@@ -528,10 +520,10 @@ gitlab.com/mjwhitta/pathname
 # gitlab.com/mjwhitta/safety v1.11.0
 ## explicit; go 1.17
 gitlab.com/mjwhitta/safety
-# gitlab.com/mjwhitta/sysinfo v1.4.6
+# gitlab.com/mjwhitta/sysinfo v1.4.7
 ## explicit; go 1.17
 gitlab.com/mjwhitta/sysinfo
-# gitlab.com/mjwhitta/where v1.2.3
+# gitlab.com/mjwhitta/where v1.2.4
 ## explicit; go 1.17
 gitlab.com/mjwhitta/where
 # gitlab.com/yawning/obfs4.git v0.0.0-20210511220700-e330d1b7024b
@@ -608,7 +600,7 @@ golang.org/x/net/websocket
 ## explicit; go 1.11
 golang.org/x/oauth2
 golang.org/x/oauth2/internal
-# golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+# golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
 ## explicit
 golang.org/x/sync/errgroup
 # golang.org/x/sys v0.0.0-20220708085239-5a0f0661e09d
@@ -769,7 +761,7 @@ gopkg.in/tomb.v1
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit; go 1.15
 gopkg.in/yaml.v2
-# gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+# gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3
 # k0s.io/pkg/agent v0.0.0-00010101000000-000000000000 => ./pkg/agent
@@ -781,6 +773,17 @@ k0s.io/pkg/agent/dialer
 k0s.io/pkg/agent/info
 k0s.io/pkg/agent/tty
 k0s.io/pkg/agent/tty/factory
+# k0s.io/pkg/api v0.0.0-00010101000000-000000000000 => ./pkg/api
+## explicit; go 1.19
+k0s.io/pkg/api
+# k0s.io/pkg/asciiproto v0.0.0-00010101000000-000000000000 => ./pkg/asciiproto
+## explicit; go 1.19
+k0s.io/pkg/asciiproto
+# k0s.io/pkg/asciitransport v0.0.0-00010101000000-000000000000 => ./pkg/asciitransport
+## explicit; go 1.19
+k0s.io/pkg/asciitransport
+k0s.io/pkg/asciitransport/cast
+k0s.io/pkg/asciitransport/v2
 # k0s.io/pkg/cli v0.0.0-00010101000000-000000000000 => ./pkg/cli
 ## explicit; go 1.19
 k0s.io/pkg/cli/agent
@@ -796,10 +799,19 @@ k0s.io/pkg/client
 k0s.io/pkg/client/client
 k0s.io/pkg/client/config
 k0s.io/pkg/client/wsdialer
-# k0s.io/pkg/exporter v0.0.0-00010101000000-000000000000 => ./pkg/exporter
+# k0s.io/pkg/console v0.0.0-00010101000000-000000000000 => ./pkg/console
+## explicit; go 1.19
+k0s.io/pkg/console
+# k0s.io/pkg/distro v0.0.0-00010101000000-000000000000 => ./pkg/distro
+## explicit; go 1.19
+k0s.io/pkg/distro
+# k0s.io/pkg/exporter v0.0.0-20220614032006-56adefb90b87 => ./pkg/exporter
 ## explicit; go 1.19
 k0s.io/pkg/exporter
 k0s.io/pkg/exporter/env
+# k0s.io/pkg/fonts v0.0.0-00010101000000-000000000000 => ./pkg/fonts
+## explicit; go 1.19
+k0s.io/pkg/fonts
 # k0s.io/pkg/fzf v0.0.0-00010101000000-000000000000 => ./pkg/fzf
 ## explicit; go 1.19
 k0s.io/pkg/fzf
@@ -817,6 +829,9 @@ k0s.io/pkg/hub/self
 # k0s.io/pkg/middleware v0.0.0-00010101000000-000000000000 => ./pkg/middleware
 ## explicit; go 1.19
 k0s.io/pkg/middleware
+# k0s.io/pkg/reverseproxy v0.0.0-00010101000000-000000000000 => ./pkg/reverseproxy
+## explicit; go 1.19
+k0s.io/pkg/reverseproxy
 # k0s.io/pkg/rng v0.0.0-00010101000000-000000000000 => ./pkg/rng
 ## explicit; go 1.19
 k0s.io/pkg/rng
@@ -831,6 +846,9 @@ k0s.io/pkg/tunnel/listener
 # k0s.io/pkg/uuid v0.0.0-00010101000000-000000000000 => ./pkg/uuid
 ## explicit; go 1.19
 k0s.io/pkg/uuid
+# k0s.io/pkg/version v0.0.0-00010101000000-000000000000 => ./pkg/version
+## explicit; go 1.19
+k0s.io/pkg/version
 # k0s.io/pkg/wrap v0.0.0-00010101000000-000000000000 => ./pkg/wrap
 ## explicit; go 1.19
 k0s.io/pkg/wrap
@@ -846,15 +864,26 @@ nhooyr.io/websocket/internal/wsjs
 nhooyr.io/websocket/internal/xsync
 # github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb
 # k0s.io/pkg/agent => ./pkg/agent
+# k0s.io/pkg/api => ./pkg/api
+# k0s.io/pkg/asciiproto => ./pkg/asciiproto
+# k0s.io/pkg/asciitransport => ./pkg/asciitransport
 # k0s.io/pkg/cli => ./pkg/cli
 # k0s.io/pkg/client => ./pkg/client
+# k0s.io/pkg/console => ./pkg/console
+# k0s.io/pkg/distro => ./pkg/distro
+# k0s.io/pkg/dohserver => ./pkg/dohserver
 # k0s.io/pkg/exporter => ./pkg/exporter
+# k0s.io/pkg/fonts => ./pkg/fonts
 # k0s.io/pkg/fzf => ./pkg/fzf
 # k0s.io/pkg/gitd => ./pkg/gitd
 # k0s.io/pkg/hub => ./pkg/hub
+# k0s.io/pkg/jsondns => ./pkg/jsondns
 # k0s.io/pkg/middleware => ./pkg/middleware
+# k0s.io/pkg/reverseproxy => ./pkg/reverseproxy
 # k0s.io/pkg/rng => ./pkg/rng
 # k0s.io/pkg/simple => ./pkg/simple
 # k0s.io/pkg/tunnel => ./pkg/tunnel
+# k0s.io/pkg/utils => ./pkg/utils
 # k0s.io/pkg/uuid => ./pkg/uuid
+# k0s.io/pkg/version => ./pkg/version
 # k0s.io/pkg/wrap => ./pkg/wrap

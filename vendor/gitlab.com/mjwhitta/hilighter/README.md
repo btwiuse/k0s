@@ -19,17 +19,6 @@ $ go install --ldflags "-s -w" --trimpath \
     gitlab.com/mjwhitta/hilighter/cmd/hl@latest
 ```
 
-Or install from source:
-
-```
-$ git clone https://gitlab.com/mjwhitta/hilighter.git
-$ cd hilighter
-$ git submodule update --init
-$ make install
-```
-
-**Note:** `make install` will install to `$HOME/.local/bin`.
-
 ## Usage
 
 In a terminal you can do things like the following:

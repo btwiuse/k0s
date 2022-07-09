@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["reverseproxy.go"],
+    importmap = "k0s.io/vendor/k0s.io/pkg/reverseproxy",
+    importpath = "k0s.io/pkg/reverseproxy",
+    visibility = ["//visibility:public"],
+)

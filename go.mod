@@ -5,42 +5,43 @@ go 1.19
 replace (
 	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb
 	k0s.io/pkg/agent => ./pkg/agent
+	k0s.io/pkg/api => ./pkg/api
+	k0s.io/pkg/asciiproto => ./pkg/asciiproto
+	k0s.io/pkg/asciitransport => ./pkg/asciitransport
 	k0s.io/pkg/cli => ./pkg/cli
 	k0s.io/pkg/client => ./pkg/client
+	k0s.io/pkg/console => ./pkg/console
+	k0s.io/pkg/distro => ./pkg/distro
+	k0s.io/pkg/dohserver => ./pkg/dohserver
 	k0s.io/pkg/exporter => ./pkg/exporter
+	k0s.io/pkg/fonts => ./pkg/fonts
 	k0s.io/pkg/fzf => ./pkg/fzf
 	k0s.io/pkg/gitd => ./pkg/gitd
 	k0s.io/pkg/hub => ./pkg/hub
+	k0s.io/pkg/jsondns => ./pkg/jsondns
 	k0s.io/pkg/middleware => ./pkg/middleware
+	k0s.io/pkg/reverseproxy => ./pkg/reverseproxy
 	k0s.io/pkg/rng => ./pkg/rng
 	k0s.io/pkg/simple => ./pkg/simple
 	k0s.io/pkg/tunnel => ./pkg/tunnel
+	k0s.io/pkg/utils => ./pkg/utils
 	k0s.io/pkg/uuid => ./pkg/uuid
+	k0s.io/pkg/version => ./pkg/version
 	k0s.io/pkg/wrap => ./pkg/wrap
 )
 
 require (
-	github.com/BurntSushi/toml v1.1.0
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
-	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895
-	github.com/golang/protobuf v1.5.2
-	github.com/gorilla/websocket v1.5.0
-	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
-	github.com/json-iterator/go v1.1.12
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
 	github.com/mattn/go-isatty v0.0.14
-	github.com/miekg/dns v1.1.48
-	github.com/pkg/errors v0.9.1
-	gitlab.com/mjwhitta/sysinfo v1.4.6
-	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e
-	golang.org/x/sys v0.0.0-20220708085239-5a0f0661e09d
-	google.golang.org/grpc v1.47.0
-	google.golang.org/protobuf v1.28.0
 	k0s.io/pkg/agent v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/cli v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/console v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/fonts v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/hub v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/uuid v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/version v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -61,6 +62,7 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/beevik/ntp v0.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895 // indirect
 	github.com/btwiuse/wetty v0.0.36 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cheekybits/genny v1.0.0 // indirect
@@ -92,6 +94,7 @@ require (
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/godbus/dbus v0.0.0-20190422162347-ade71ed3457e // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/go-github/v30 v30.1.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
@@ -99,6 +102,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/go-envparse v0.0.0-20200406174449-d9cfd743a15e // indirect
 	github.com/hashicorp/go-version v1.2.1 // indirect
 	github.com/hodgesds/perf-utils v0.4.0 // indirect
@@ -109,6 +113,7 @@ require (
 	github.com/jpillora/requestlog v1.0.0 // indirect
 	github.com/jpillora/sizestr v1.0.0 // indirect
 	github.com/jsimonetti/rtnetlink v0.0.0-20211022192332-93da33804786 // indirect
+	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.11 // indirect
 	github.com/klauspost/reedsolomon v1.9.15 // indirect
@@ -128,11 +133,13 @@ require (
 	github.com/mdlayher/netlink v1.4.1 // indirect
 	github.com/mdlayher/socket v0.0.0-20210307095302-262dc9984e00 // indirect
 	github.com/mdlayher/wifi v0.0.0-20200527114002-84f0b9457fdd // indirect
+	github.com/miekg/dns v1.1.48 // indirect
 	github.com/milosgajdos/tenus v0.0.3 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.12.1 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.34.0 // indirect
@@ -157,31 +164,41 @@ require (
 	github.com/xtaci/smux v1.5.16 // indirect
 	github.com/xtaci/tcpraw v1.2.25 // indirect
 	gitlab.com/mjwhitta/errors v1.0.0 // indirect
-	gitlab.com/mjwhitta/hilighter v1.10.1 // indirect
+	gitlab.com/mjwhitta/hilighter v1.11.0 // indirect
 	gitlab.com/mjwhitta/pathname v1.2.0 // indirect
 	gitlab.com/mjwhitta/safety v1.11.0 // indirect
-	gitlab.com/mjwhitta/where v1.2.3 // indirect
+	gitlab.com/mjwhitta/sysinfo v1.4.7 // indirect
+	gitlab.com/mjwhitta/where v1.2.4 // indirect
 	gitlab.com/yawning/obfs4.git v0.0.0-20210511220700-e330d1b7024b // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
+	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e // indirect
 	golang.org/x/oauth2 v0.0.0-20220223155221-ee480838109b // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
+	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f // indirect
+	golang.org/x/sys v0.0.0-20220708085239-5a0f0661e09d // indirect
 	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b // indirect
 	golang.org/x/tools v0.1.10 // indirect
 	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220706185917-7780775163c4 // indirect
+	google.golang.org/grpc v1.47.0 // indirect
+	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
+	k0s.io/pkg/api v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/asciiproto v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/asciitransport v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/client v0.0.0-00010101000000-000000000000 // indirect
-	k0s.io/pkg/exporter v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/distro v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/exporter v0.0.0-20220614032006-56adefb90b87 // indirect
 	k0s.io/pkg/fzf v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/middleware v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/reverseproxy v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/rng v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/simple v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/tunnel v0.0.0-00010101000000-000000000000 // indirect

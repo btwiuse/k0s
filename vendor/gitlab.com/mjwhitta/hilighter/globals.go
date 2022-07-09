@@ -46,7 +46,7 @@ var Colors = map[string]string{
 var disable = false
 
 // Cached hex to xterm-256 8-bit mappings
-var cachedCodes = map[string]string{}
+var cachedXterm = map[string]string{}
 
 // Modes maps mode names to mode codes
 var Modes = map[string]string{
@@ -88,7 +88,7 @@ var Modes = map[string]string{
 }
 
 // Version is the package version
-const Version = "1.10.1"
+const Version = "1.11.0"
 
 // Various regular expressions
 var allCodes = regexp.MustCompile(`\x1b\[([0-9;]*m|K)`)

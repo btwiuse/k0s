@@ -6,8 +6,5 @@ go_library(
     importmap = "k0s.io/vendor/k0s.io/pkg/agent",
     importpath = "k0s.io/pkg/agent",
     visibility = ["//visibility:public"],
-    deps = [
-        "//pkg:go_default_library",
-        "//pkg/api:go_default_library",
-    ],
+    deps = ["//pkg:go_default_library"],
 )

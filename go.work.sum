@@ -2,7 +2,6 @@ github.com/Masterminds/semver v1.5.0 h1:H65muMkzWKEuNDnfl9d70GUjFniHKHRbFPGBuZ3Q
 github.com/Masterminds/sprig v2.22.0+incompatible h1:z4yfnGrZ7netVz+0EDJ0Wi+5VZCSYp4Z0m2dk6cEM60=
 github.com/bits-and-blooms/bitset v1.2.0 h1:Kn4yilvwNtMACtf1eYDlG8H77R07mZSPbMjLyS07ChA=
 github.com/blang/semver v3.5.0+incompatible/go.mod h1:kRBLl5iJ+tD4TcOOxsy/0fnwebNt5EWlYSAyrTnjyyk=
-github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb/go.mod h1:Vi3QvH272Wu65LeTRGaxGfJxbzd5JCh0qm6iU+MgKPQ=
 github.com/cenkalti/backoff v2.2.1+incompatible h1:tNowT99t7UNflLxfYYSlKYsBpXdEet03Pg2g16Swow4=
 github.com/checkpoint-restore/go-criu/v5 v5.0.0 h1:TW8f/UvntYoVDMN1K2HlT82qH1rb0sOjpGw3m6Ym+i4=
 github.com/containerd/console v1.0.2 h1:Pi6D+aZXM+oUw1czuKgH5IJ+y0jhYcwBJfx5/Ghn9dE=
@@ -21,7 +20,6 @@ github.com/googleapis/gnostic v0.1.0/go.mod h1:sJBsCZ4ayReDTBIg8b9dl28c5xFWyhBTV
 github.com/jackc/chunkreader v1.0.0 h1:4s39bBR8ByfqH+DKm8rQA3E1LHZWB9XWcrz8fqaZbe0=
 github.com/jackc/pgproto3 v1.1.0 h1:FYYE4yRw+AgI8wXIinMlNjBbp/UitDJwfj5LqqewP1A=
 github.com/kr/pretty v0.3.0/go.mod h1:640gp4NfQd8pI5XOwp5fnNeVWj67G7CFk/SaSQn7NBk=
-github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42 h1:UtyD+eBVdLYSj5/pjfSR6mtnzMgIiOVcFT024G2l4CY=
 github.com/miekg/dns v1.1.47/go.mod h1:e3IlAVfNqAllflbibAZEWOXOQ+Ynzk/dDozDxY7XnME=
 github.com/moby/sys/mountinfo v0.4.1 h1:1O+1cHA1aujwEwwVMa2Xm2l+gIpUHyd3+D+d7LZh1kM=
 github.com/opencontainers/runc v1.0.2 h1:opHZMaswlyxz1OuGpBE53Dwe4/xF7EZTY0A2L/FpCOg=
@@ -32,11 +30,11 @@ github.com/rogpeppe/go-internal v1.6.1/go.mod h1:xXDCJY+GAPziupqXw64V24skbSoqbTE
 github.com/v2fly/v2ray-core/v4 v4.42.1/go.mod h1:YrWpRau9RYPHZLJXJIoVHjSXwL5DhGuIlTnA1i9FG98=
 github.com/vishvananda/netlink v1.1.1-0.20201029203352-d40f9887b852 h1:cPXZWzzG0NllBLdjWoD1nDfaqu98YMv+OneaKc8sPOA=
 github.com/vultr/govultr v0.1.4 h1:UnNMixYFVO0p80itc8PcweoVENyo1PasfvwKhoasR9U=
-github.com/xtaci/lossyconn v0.0.0-20200209145036-adba10fffc37/go.mod h1:HpMP7DB2CyokmAh4lp0EQnnWhmycP/TvwBGzvuie+H0=
 gitlab.com/mjwhitta/cli v1.9.0/go.mod h1:XoT9culHMbF+4OUpgUxiTLjp8YkI2JSos1f18AqYhko=
 gitlab.com/mjwhitta/jq v1.5.2/go.mod h1:bdsvpGZvd7ZONzsbNxgT1Sk+c3WTl95YB236LFonfdo=
 gitlab.com/mjwhitta/jsoncfg v1.6.6/go.mod h1:sZkU3q4Q3LXbDAgws/SI4vjFEBZtk+vUHRwHWPbE6Xo=
 gitlab.com/mjwhitta/log v1.6.0/go.mod h1:5Tq1QlR6rDc6qxRo5Fs6PlZH5NLhZfvdnMX8rfwosCY=
+gitlab.com/mjwhitta/log v1.6.1/go.mod h1:0F2T9Ace82DObkAkDJlOYjfldGaqyf3S9Vu1WHmjxF0=
 go.opentelemetry.io/contrib v0.20.0 h1:ubFQUn0VCZ0gPwIoJfBJVpeBlyRMxu8Mm/huKWYd9p0=
 go.opentelemetry.io/otel/exporters/otlp v0.20.0 h1:PTNgq9MRmQqqJY0REVbZFvwkYOA85vbdQU/nVfxDyqg=
 go.starlark.net v0.0.0-20210602144842-1cdb82c9e17a/go.mod h1:t3mmBBPzAVvK0L0n1drDmrQsJ8FoIx4INCqVMTr/Zo0=

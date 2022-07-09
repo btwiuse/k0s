@@ -3,17 +3,28 @@ go 1.19
 use (
 	.
 	./pkg/agent
+	./pkg/api
+	./pkg/asciiproto
+	./pkg/asciitransport
 	./pkg/cli
 	./pkg/client
+	./pkg/console
+	./pkg/distro
+	./pkg/dohserver
 	./pkg/exporter
+	./pkg/fonts
 	./pkg/fzf
 	./pkg/gitd
 	./pkg/hub
+	./pkg/jsondns
 	./pkg/middleware
+	./pkg/reverseproxy
 	./pkg/rng
 	./pkg/simple
 	./pkg/tunnel
+	./pkg/utils
 	./pkg/uuid
+	./pkg/version
 	./pkg/wrap
 	./third_party
 )

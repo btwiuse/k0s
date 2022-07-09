@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/cli/mnt",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/reverseproxy:go_default_library",
+        "//vendor/k0s.io/pkg/reverseproxy:go_default_library",
         "//vendor/k0s.io/pkg/tunnel/listener:go_default_library",
     ],
 )

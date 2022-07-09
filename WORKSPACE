@@ -6605,8 +6605,8 @@ go_repository(
 go_repository(
     name = "com_gitlab_mjwhitta_hilighter",
     importpath = "gitlab.com/mjwhitta/hilighter",
-    sum = "h1:TmE55gpilZjXrGQWYvT8RADD36kf4oBdlAPIJQDMUnU=",
-    version = "v1.10.1",
+    sum = "h1:6jD05Sfv56p8AsSJEhRaRf8MCXuoZfvw/FarlPXmMws=",
+    version = "v1.11.0",
 )
 
 go_repository(
@@ -6626,8 +6626,8 @@ go_repository(
 go_repository(
     name = "com_gitlab_mjwhitta_log",
     importpath = "gitlab.com/mjwhitta/log",
-    sum = "h1:g+Pr678Sh/404fnYNnIokKe9cQh/eC21ZdJ7sb+mRQM=",
-    version = "v1.6.0",
+    sum = "h1:Xv9mXN3UPBmaBmk0FoYcR5CaKC3Ec014sMdm3Mo2IZ0=",
+    version = "v1.6.1",
 )
 
 go_repository(
@@ -6647,15 +6647,15 @@ go_repository(
 go_repository(
     name = "com_gitlab_mjwhitta_sysinfo",
     importpath = "gitlab.com/mjwhitta/sysinfo",
-    sum = "h1:FD/J3aGxyfqE799jKm8v3qPyvQhs2nx90dHFowkJR90=",
-    version = "v1.4.6",
+    sum = "h1:T7W4LnpAW+oLe7Dr84sx+cKOtna6HZA0kq0grC/5rWI=",
+    version = "v1.4.7",
 )
 
 go_repository(
     name = "com_gitlab_mjwhitta_where",
     importpath = "gitlab.com/mjwhitta/where",
-    sum = "h1:UfJSi6vHklt5ufnZ+lnIF+vHmrBFUSbHZt/hF7Nox+k=",
-    version = "v1.2.3",
+    sum = "h1:W4mlZD4DaejygWCDvP+c14u/N2qGoZJfBP2ic/lGuBU=",
+    version = "v1.2.4",
 )
 
 go_repository(
@@ -9512,8 +9512,8 @@ go_repository(
 go_repository(
     name = "org_golang_x_net",
     importpath = "golang.org/x/net",
-    sum = "h1:8NSylCMxLW4JvserAndSgFL7aPli6A68yf0bYFTcWCM=",
-    version = "v0.0.0-20220706163947-c90051bbdb60",
+    sum = "h1:vucSRfWwTsoXro7P+3Cjlr6flUMtzCwzlvkxEQtHHB0=",
+    version = "v0.0.0-20220708220712-1185a9018129",
 )
 
 go_repository(
@@ -10858,15 +10858,15 @@ go_repository(
 go_repository(
     name = "com_github_chzyer_logex",
     importpath = "github.com/chzyer/logex",
-    sum = "h1:Swpa1K6QvQznwJRcfTfQJmTE72DqScAa40E+fbHEXEE=",
-    version = "v1.1.10",
+    sum = "h1:XHDu3E6q+gdHgsdTPH6ImJMIp436vR6MPtH8gP05QzM=",
+    version = "v1.2.1",
 )
 
 go_repository(
     name = "com_github_chzyer_test",
     importpath = "github.com/chzyer/test",
-    sum = "h1:q763qf9huN11kDQavWsoZXJNW3xEE4JJyHa5Q25/sd8=",
-    version = "v0.0.0-20180213035817-a1ea475d72b1",
+    sum = "h1:p3BQDXSxOhOG0P9z6/hGnII4LGiEPOYBhs8asl/fC04=",
+    version = "v1.0.0",
 )
 
 go_repository(

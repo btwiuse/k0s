@@ -13,8 +13,8 @@ go_library(
     importpath = "k0s.io/pkg/asciitransport/v2",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/asciiproto:go_default_library",
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/google.golang.org/protobuf/encoding/protojson:go_default_library",
+        "//vendor/k0s.io/pkg/asciiproto:go_default_library",
     ],
 )
