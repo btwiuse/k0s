@@ -55,6 +55,56 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
+  push-devcontainer:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - run: |
+        ls -la
+        pwd
+        env
+      name: probe env
+
+    - name: build and push devcontainer
+      uses: docker://btwiuse/k0s:devcontainer
+      with:
+        entrypoint: bash
+        args: -c "sudo -E make devcontainer"
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
+  push-image:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - run: |
+        ls -la
+        pwd
+        env
+      name: probe env
+
+    - name: build and push docker image
+      uses: docker://btwiuse/k0s:devcontainer
+      with:
+        entrypoint: bash
+        args: -c "sudo -E make img"
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -84,7 +134,6 @@ jobs:
       with:
         name: build-linux
         path: bin/
-
 
   build-linux-arm:
     runs-on: ubuntu-latest

@@ -233,8 +233,9 @@ cover:          ## Run test coverage suite
 	@go test ./... --coverprofile=cov.out
 	@go tool cover --html=cov.out
 
-img:            ## Build Docker Image
-	@docker build --rm -t ${IMAGE} .
+img:  docker-login   ## Build Docker Image and push
+	@ docker build --rm -t ${IMAGE} -f Dockerfile .
+	@ docker push ${IMAGE}
 
 bazel-img:      ## Build Docker Image archive with bazel
 	@ ${BAZEL} build //:k0s_image.tar
