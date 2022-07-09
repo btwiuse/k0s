@@ -10,6 +10,7 @@ replace (
 	k0s.io => ../
 	k0s.io/pkg/agent => ../pkg/agent
 	k0s.io/pkg/exporter => ../pkg/exporter
+	k0s.io/pkg/rng => ../pkg/rng
 	k8s.io/api => k8s.io/api v0.20.4
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.20.4
 	k8s.io/apimachinery => k8s.io/apimachinery v0.20.4
@@ -103,6 +104,7 @@ require (
 	k0s.io v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/agent v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/exporter v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/rng v0.0.0-00010101000000-000000000000
 	k8s.io/api v0.22.5
 	k8s.io/apimachinery v0.22.5
 	k8s.io/apiserver v0.22.5

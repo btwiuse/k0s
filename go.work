@@ -2,8 +2,9 @@ go 1.19
 
 use (
 	.
-	./pkg/exporter
 	./pkg/agent
+	./pkg/exporter
+	./pkg/rng
 	./third_party
 )
 

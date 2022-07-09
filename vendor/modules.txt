@@ -785,6 +785,9 @@ k0s.io/pkg/agent/tty/factory
 ## explicit; go 1.19
 k0s.io/pkg/exporter
 k0s.io/pkg/exporter/env
+# k0s.io/pkg/rng v0.0.0-00010101000000-000000000000 => ./pkg/rng
+## explicit; go 1.19
+k0s.io/pkg/rng
 # modernc.org/httpfs v1.0.6
 ## explicit; go 1.15
 modernc.org/httpfs
@@ -798,3 +801,4 @@ nhooyr.io/websocket/internal/xsync
 # github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb
 # k0s.io/pkg/agent => ./pkg/agent
 # k0s.io/pkg/exporter => ./pkg/exporter
+# k0s.io/pkg/rng => ./pkg/rng

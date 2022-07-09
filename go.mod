@@ -6,6 +6,7 @@ replace (
 	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb
 	k0s.io/pkg/agent => ./pkg/agent
 	k0s.io/pkg/exporter => ./pkg/exporter
+	k0s.io/pkg/rng => ./pkg/rng
 )
 
 require (
@@ -19,7 +20,6 @@ require (
 	github.com/btwiuse/wetty v0.0.36
 	github.com/creativeprojects/go-selfupdate v0.6.1
 	github.com/denisbrodbeck/machineid v1.0.1
-	github.com/docker/docker v20.10.17+incompatible
 	github.com/gdamore/tcell v1.4.0
 	github.com/golang/protobuf v1.5.2
 	github.com/google/uuid v1.3.0
@@ -45,6 +45,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	k0s.io/pkg/agent v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/exporter v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/rng v0.0.0-00010101000000-000000000000
 	modernc.org/httpfs v1.0.6
 	nhooyr.io/websocket v1.8.7
 )
@@ -70,6 +71,7 @@ require (
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/creack/pty v1.1.18 // indirect
 	github.com/dchest/siphash v1.2.2 // indirect
+	github.com/docker/docker v20.10.17+incompatible // indirect
 	github.com/docker/libcontainer v2.2.1+incompatible // indirect
 	github.com/ema/qdisc v0.0.0-20200603082823-62d0308e3e00 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
