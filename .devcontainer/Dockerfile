@@ -8,6 +8,12 @@ RUN curl -sL https://go.dev/dl/go1.19rc1.linux-amd64.tar.gz | tar -xzC /usr/loca
 
 USER btwiuse
 
+RUN export NIGHTLY=nightly \
+    rustup install $NIGHTLY \
+    rustup target add wasm32-unknown-unknown --toolchain $NIGHTLY \
+    rustup target add wasm32-wasi --toolchain $NIGHTLY \
+    rustup default $NIGHTLY
+
 RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git $HOME/.asdf && \
     echo '. $HOME/.asdf/asdf.sh' >> $HOME/.bashrc
 
