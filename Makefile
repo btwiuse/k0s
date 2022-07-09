@@ -14,6 +14,13 @@ BAZEL    := $(shell ./tools/which_bazel)
 
 default: help
 
+docker-login:
+	@ docker login -u $(DOCKERHUB_USERNAME) -p $(DOCKERHUB_TOKEN)
+
+devcontainer: docker-login
+	@ docker build -t btwiuse/k0s:devcontainer -f .devcontainer/Dockerfile .devcontainer
+	@ docker push btwiuse/k0s:devcontainer
+
 fonts:
 	@ mkdir -p fonts/ pkg/fonts/; cp /usr/share/figlet/fonts/standard.flf fonts/
 	@ assets -d fonts/ -package fonts -o ./pkg/fonts/standard.go -map Fonts
