@@ -6,6 +6,8 @@ ENV ANDROID_NDK_BAZEL=True
 
 ENV PATH=/usr/local/go/bin:go/bin:/home/btwiuse/bin/go/bin:${PATH}
 
+ENV EDITOR=vim
+
 ENV CGO_ENABLED=0
 
 RUN curl -sL https://go.dev/dl/go1.19rc1.linux-amd64.tar.gz | tar -xzC /usr/local/
