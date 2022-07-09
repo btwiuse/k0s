@@ -3,7 +3,7 @@ package agent
 import (
 	"net"
 
-	"github.com/ginuerzh/gost"
+	"github.com/btwiuse/gost"
 	types "k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
 )

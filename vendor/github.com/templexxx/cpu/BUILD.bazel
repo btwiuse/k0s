@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "cpu.go",
+        "cpu_386.go",
+        "cpu_amd64.go",
+        "cpu_amd64p32.go",
+        "cpu_arm.go",
+        "cpu_arm64.go",
+        "cpu_mips.go",
+        "cpu_mips64.go",
+        "cpu_mips64le.go",
+        "cpu_mipsle.go",
+        "cpu_no_init.go",
+        "cpu_ppc64x.go",
+        "cpu_s390x.go",
+        "cpu_s390x.s",
+        "cpu_wasm.go",
+        "cpu_x86.go",
+        "cpu_x86.s",
+    ],
+    importmap = "k0s.io/vendor/github.com/templexxx/cpu",
+    importpath = "github.com/templexxx/cpu",
+    visibility = ["//visibility:public"],
+)

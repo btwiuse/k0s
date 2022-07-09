@@ -12,9 +12,9 @@ go_library(
     importpath = "github.com/btwiuse/gods/maps/linkedhashmap",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/emirpasic/gods/containers:go_default_library",
-        "//vendor/github.com/emirpasic/gods/lists/doublylinkedlist:go_default_library",
-        "//vendor/github.com/emirpasic/gods/maps:go_default_library",
-        "//vendor/github.com/emirpasic/gods/utils:go_default_library",
+        "//vendor/github.com/btwiuse/gods/containers:go_default_library",
+        "//vendor/github.com/btwiuse/gods/lists/doublylinkedlist:go_default_library",
+        "//vendor/github.com/btwiuse/gods/maps:go_default_library",
+        "//vendor/github.com/btwiuse/gods/utils:go_default_library",
     ],
 )

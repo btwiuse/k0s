@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["lists.go"],
+    importmap = "k0s.io/vendor/github.com/btwiuse/gods/lists",
+    importpath = "github.com/btwiuse/gods/lists",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/btwiuse/gods/containers:go_default_library",
+        "//vendor/github.com/btwiuse/gods/utils:go_default_library",
+    ],
+)

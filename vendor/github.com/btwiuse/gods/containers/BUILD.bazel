@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "containers.go",
+        "enumerable.go",
+        "iterator.go",
+        "serialization.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/btwiuse/gods/containers",
+    importpath = "github.com/btwiuse/gods/containers",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/btwiuse/gods/utils:go_default_library"],
+)

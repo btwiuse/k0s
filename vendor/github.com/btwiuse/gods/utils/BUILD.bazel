@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "comparator.go",
+        "sort.go",
+        "utils.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/btwiuse/gods/utils",
+    importpath = "github.com/btwiuse/gods/utils",
+    visibility = ["//visibility:public"],
+)

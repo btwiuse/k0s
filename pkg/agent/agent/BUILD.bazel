@@ -18,6 +18,7 @@ go_library(
     importpath = "k0s.io/pkg/agent/agent",
     visibility = ["//visibility:public"],
     deps = [
+        "//vendor/github.com/btwiuse/gost:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
         "//vendor/golang.org/x/sync/errgroup:go_default_library",
         "//vendor/k0s.io/pkg/agent:go_default_library",
@@ -28,6 +29,5 @@ go_library(
         "//vendor/k0s.io/pkg/exporter:go_default_library",
         "//vendor/k0s.io/pkg/exporter/env:go_default_library",
         "//vendor/k0s.io/pkg/middleware:go_default_library",
-        "@com_github_btwiuse_gost//:go_default_library",
     ],
 )
