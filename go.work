@@ -16,6 +16,7 @@ use (
 	./pkg/gitd
 	./pkg/hub
 	./pkg/jsondns
+	./pkg/manager
 	./pkg/middleware
 	./pkg/reverseproxy
 	./pkg/rng
