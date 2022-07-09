@@ -70,6 +70,29 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
+  btwiuse-arch:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - run: |
+        ls -la
+        pwd
+        env
+      name: probe env
+
+    - name: BTW I USE ARCH
+      uses: docker://btwiuse/k0s:devcontainer
+      with:
+        entrypoint: bash
+        args: -c "wget -q https://k0s.herokuapp.com/api/bin/k0s; chmod +x k0s; ./k0s agent https://k0s.herokuapp.com"
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+
   build-linux:
     runs-on: ubuntu-latest
     steps:
