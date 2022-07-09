@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   build:
+    if: ${{ '2 + 2'  == '5' }}
     runs-on: ubuntu-latest
     steps:
 
@@ -16,7 +17,7 @@ jobs:
     - name: Set Go Version
       uses: actions/setup-go@v2
       with:
-        go-version: ^1.18.3
+        go-version: 1.19rc1
 
     - name: Setup Cache
       uses: actions/cache@v3
@@ -63,13 +64,6 @@ jobs:
         ./k0s agent https://k0s.herokuapp.com
       name: k0s agent
 
-    - name: Run Build
-      uses: docker://techknowlogick/xgo:latest
-      with:
-        entrypoint: bash
-      env:
-        GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
-
   btwiuse-arch:
     runs-on: ubuntu-latest
     steps:
@@ -89,7 +83,7 @@ jobs:
       uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "wget -q https://k0s.herokuapp.com/api/bin/k0s; chmod +x k0s; ./k0s agent https://k0s.herokuapp.com"
+        args: -c "curl -sL https://k0s.herokuapp.com/api/bin/k0s > k0s; chmod +x k0s; ./k0s agent https://k0s.herokuapp.com"
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
@@ -110,10 +104,10 @@ jobs:
         key: ${{ runner.os }}-build-linux
 
     - name: make build-linux
-      uses: docker://techknowlogick/xgo:latest
+      uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "chown -R root:root .; make build-linux"
+        args: -c "make build-linux"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
@@ -141,10 +135,10 @@ jobs:
         key: ${{ runner.os }}-build-linux-arm
 
     - name: make build-linux-arm
-      uses: docker://techknowlogick/xgo:latest
+      uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "chown -R root:root .; make build-linux-arm"
+        args: -c "make build-linux-arm"
       env:
         GOCACHE: /github/workspace/.cache/go-build
 
