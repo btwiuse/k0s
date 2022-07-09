@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "conn.go",
+        "socks5.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/ginuerzh/gosocks5",
+    importpath = "github.com/ginuerzh/gosocks5",
+    visibility = ["//visibility:public"],
+)

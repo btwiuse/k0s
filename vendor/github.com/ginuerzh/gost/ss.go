@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/go-gost/gosocks5"
+	"github.com/ginuerzh/gosocks5"
 	"github.com/go-log/log"
 	"github.com/shadowsocks/go-shadowsocks2/core"
 	ss "github.com/shadowsocks/shadowsocks-go/shadowsocks"
@@ -580,7 +580,7 @@ func (c *shadowCipher) StreamConn(conn net.Conn) net.Conn {
 }
 
 func (c *shadowCipher) PacketConn(conn net.PacketConn) net.PacketConn {
-	return ss.NewSecurePacketConn(conn, c.cipher.Copy())
+	return ss.NewSecurePacketConn(conn, c.cipher.Copy(), false)
 }
 
 func initShadowCipher(info *url.Userinfo) (cipher core.Cipher) {

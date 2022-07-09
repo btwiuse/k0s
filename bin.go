@@ -5,7 +5,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"flag"
 	"fmt"
 	"io"
@@ -16,37 +15,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/lukesampson/figlet/figletlib"
-	isatty "github.com/mattn/go-isatty"
-	"k0s.io/pkg/console"
 	"k0s.io/pkg/fonts"
 )
-
-func figlet(str string) {
-	var (
-		std, _     = fonts.Fonts["/standard.flf"]
-		width  int = 80
-	)
-	if isatty.IsTerminal(os.Stdin.Fd()) {
-		var (
-			term    = console.Current()
-			size, _ = term.Size()
-		)
-		width = int(size.Width)
-	}
-	stdFont, err := figletlib.ReadFontFromBytes([]byte(std))
-	if err != nil {
-		log.Println("Failed to load standard figlet font:", err)
-		log.Println(str)
-		return
-	}
-	buf := bytes.NewBuffer(nil)
-	figletlib.FPrintMsg(buf, str, stdFont, width, stdFont.Settings(), "left")
-	lines := strings.Split(buf.String(), "\n")
-	for _, line := range lines {
-		log.Println(line)
-	}
-}
 
 func (c Combo) String() string {
 	return fmt.Sprintf("%s/%s", c.OS, c.ARCH)
@@ -64,7 +34,6 @@ var (
 	DefaultCombo = Combo{runtime.GOOS, runtime.GOARCH}
 	GlobalEnv    = []string{
 		"CGO_ENABLED=0",
-		"GOWORK=off",
 	}
 )
 
@@ -210,7 +179,7 @@ func main() {
 	}
 
 	for _, c := range combos {
-		figlet(c.String())
+		fonts.Figlet(c.String())
 
 		log.Println("Go Build Env:", c.Env())
 
@@ -220,7 +189,7 @@ func main() {
 
 		buildArgs := []string{"build",
 			"-o", filepath.Join(Path, c.ReleaseName()),
-			"-mod=vendor",
+			"-mod=readonly",
 			"-trimpath",
 			"-ldflags", ldflags,
 			"-tags", tags,

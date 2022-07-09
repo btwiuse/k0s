@@ -10,6 +10,4 @@ RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git $HOME/.asdf && \
 
 ENV ANDROID_BAZEL_NDK=True
 
-ENV GOWORK=off
-
 ENV PATH=${PATH}:/go/bin

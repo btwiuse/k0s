@@ -1,7 +1,6 @@
 package gost
 
 import (
-	"context"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
@@ -18,11 +17,11 @@ import (
 
 type quicSession struct {
 	conn    net.Conn
-	session quic.Connection
+	session quic.Session
 }
 
 func (session *quicSession) GetConn() (*quicConn, error) {
-	stream, err := session.session.OpenStreamSync(context.Background())
+	stream, err := session.session.OpenStreamSync()
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +33,7 @@ func (session *quicSession) GetConn() (*quicConn, error) {
 }
 
 func (session *quicSession) Close() error {
-	return session.session.CloseWithError(quic.ApplicationErrorCode(0), "closed")
+	return session.session.Close()
 }
 
 type quicTransporter struct {
@@ -140,15 +139,15 @@ func (tr *quicTransporter) initSession(addr string, conn net.Conn, config *QUICC
 		return nil, err
 	}
 	quicConfig := &quic.Config{
-		HandshakeIdleTimeout: config.Timeout,
-		KeepAlivePeriod: config.IdleTimeout,
+		HandshakeTimeout: config.Timeout,
+		KeepAlive:        config.KeepAlive,
+		IdleTimeout:      config.IdleTimeout,
 		Versions: []quic.VersionNumber{
-			quic.Version1,
-			quic.VersionDraft29,
+			quic.VersionGQUIC43,
+			quic.VersionGQUIC39,
 		},
-		MaxIdleTimeout: config.IdleTimeout,
 	}
-	session, err := quic.Dial(udpConn, udpAddr, addr, tlsConfigQUICALPN(config.TLSConfig), quicConfig)
+	session, err := quic.Dial(udpConn, udpAddr, addr, config.TLSConfig, quicConfig)
 	if err != nil {
 		log.Logf("quic dial %s: %v", addr, err)
 		return nil, err
@@ -181,19 +180,16 @@ func QUICListener(addr string, config *QUICConfig) (Listener, error) {
 		config = &QUICConfig{}
 	}
 	quicConfig := &quic.Config{
-		HandshakeIdleTimeout: config.Timeout,
-		KeepAlivePeriod:      config.IdleTimeout,
-		MaxIdleTimeout:       config.IdleTimeout,
-		Versions: []quic.VersionNumber{
-			quic.Version1,
-			quic.VersionDraft29,
-		},
+		HandshakeTimeout: config.Timeout,
+		KeepAlive:        config.KeepAlive,
+		IdleTimeout:      config.IdleTimeout,
 	}
 
 	tlsConfig := config.TLSConfig
 	if tlsConfig == nil {
 		tlsConfig = DefaultTLSConfig
 	}
+
 	var conn net.PacketConn
 
 	udpAddr, err := net.ResolveUDPAddr("udp", addr)
@@ -210,7 +206,7 @@ func QUICListener(addr string, config *QUICConfig) (Listener, error) {
 		conn = &quicCipherConn{UDPConn: lconn, key: config.Key}
 	}
 
-	ln, err := quic.Listen(conn, tlsConfigQUICALPN(tlsConfig), quicConfig)
+	ln, err := quic.Listen(conn, tlsConfig, quicConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -227,7 +223,7 @@ func QUICListener(addr string, config *QUICConfig) (Listener, error) {
 
 func (l *quicListener) listenLoop() {
 	for {
-		session, err := l.ln.Accept(context.Background())
+		session, err := l.ln.Accept()
 		if err != nil {
 			log.Log("[quic] accept:", err)
 			l.errChan <- err
@@ -238,15 +234,15 @@ func (l *quicListener) listenLoop() {
 	}
 }
 
-func (l *quicListener) sessionLoop(session quic.Connection) {
+func (l *quicListener) sessionLoop(session quic.Session) {
 	log.Logf("[quic] %s <-> %s", session.RemoteAddr(), session.LocalAddr())
 	defer log.Logf("[quic] %s >-< %s", session.RemoteAddr(), session.LocalAddr())
 
 	for {
-		stream, err := session.AcceptStream(context.Background())
+		stream, err := session.AcceptStream()
 		if err != nil {
 			log.Log("[quic] accept stream:", err)
-			session.CloseWithError(quic.ApplicationErrorCode(0), "closed")
+			session.Close()
 			return
 		}
 
@@ -365,14 +361,4 @@ func (conn *quicCipherConn) decrypt(data []byte) ([]byte, error) {
 
 	nonce, ciphertext := data[:nonceSize], data[nonceSize:]
 	return gcm.Open(nil, nonce, ciphertext, nil)
-}
-
-func tlsConfigQUICALPN(tlsConfig *tls.Config) *tls.Config {
-	if tlsConfig == nil {
-		panic("quic: tlsconfig is nil")
-	}
-	tlsConfigQUIC := &tls.Config{}
-	*tlsConfigQUIC = *tlsConfig
-	tlsConfigQUIC.NextProtos = []string{"http/3", "quic/v1"}
-	return tlsConfigQUIC
 }

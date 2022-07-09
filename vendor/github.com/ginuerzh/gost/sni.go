@@ -18,7 +18,7 @@ import (
 	"sync"
 
 	"github.com/asaskevich/govalidator"
-	dissector "github.com/go-gost/tls-dissector"
+	dissector "github.com/ginuerzh/tls-dissector"
 	"github.com/go-log/log"
 )
 

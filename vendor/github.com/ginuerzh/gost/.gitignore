@@ -30,5 +30,5 @@ _testmain.go
 
 *.bak
 
-.vscode/
 cmd/gost/gost
+snap

@@ -3,7 +3,6 @@ module k0s.io
 go 1.19
 
 replace (
-	github.com/ginuerzh/gost => github.com/btwiuse/gost v0.0.0-20220706230444-f7c58a8aecbb
 	k0s.io/pkg/agent => ./pkg/agent
 	k0s.io/pkg/api => ./pkg/api
 	k0s.io/pkg/asciitransport => ./pkg/asciitransport
@@ -32,11 +31,8 @@ replace (
 require (
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/btwiuse/gods v0.0.0-20190414062120-7e7cf0aebbb0
-	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42
-	github.com/mattn/go-isatty v0.0.14
 	k0s.io/pkg/agent v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/cli v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/console v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/fonts v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/hub v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/uuid v0.0.0-00010101000000-000000000000
@@ -46,6 +42,7 @@ require (
 require (
 	code.gitea.io/sdk/gitea v0.13.2 // indirect
 	git.torproject.org/pluggable-transports/goptlib.git v1.2.0 // indirect
+	git.torproject.org/pluggable-transports/obfs4.git v0.0.0-20181103133120-08f4d470188e // indirect
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
 	github.com/LiamHaworth/go-tproxy v0.0.0-20190726054950-ef7efd7f24ed // indirect
@@ -55,6 +52,7 @@ require (
 	github.com/abiosoft/ishell v2.0.0+incompatible // indirect
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
+	github.com/agl/ed25519 v0.0.0-20170116200512-5312a6153412 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20210208195552-ff826a37aa15 // indirect
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2 // indirect
@@ -82,11 +80,11 @@ require (
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell v1.4.0 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
+	github.com/ginuerzh/gosocks4 v0.0.1 // indirect
+	github.com/ginuerzh/gosocks5 v0.2.0 // indirect
 	github.com/ginuerzh/gost v0.0.0-20210206051340-8dd4d8d9a123 // indirect
-	github.com/go-gost/gosocks4 v0.0.1 // indirect
-	github.com/go-gost/gosocks5 v0.3.0 // indirect
+	github.com/ginuerzh/tls-dissector v0.0.2-0.20200224064855-24ab2b3a3796 // indirect
 	github.com/go-gost/relay v0.1.1-0.20211123134818-8ef7fd81ffd7 // indirect
-	github.com/go-gost/tls-dissector v0.0.2-0.20220408131628-aac992c27451 // indirect
 	github.com/go-kit/log v0.2.0 // indirect
 	github.com/go-log/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
@@ -119,11 +117,13 @@ require (
 	github.com/lucas-clemente/quic-go v0.28.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/lufia/iostat v1.2.0 // indirect
+	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42 // indirect
 	github.com/marten-seemann/qtls-go1-16 v0.1.5 // indirect
 	github.com/marten-seemann/qtls-go1-17 v0.1.2 // indirect
 	github.com/marten-seemann/qtls-go1-18 v0.1.2 // indirect
 	github.com/marten-seemann/qtls-go1-19 v0.1.0-beta.1 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/mattn/go-shellwords v1.0.12 // indirect
 	github.com/mattn/go-xmlrpc v0.0.3 // indirect
@@ -154,12 +154,12 @@ require (
 	github.com/songgao/water v0.0.0-20200317203138-2b4b6d7c09d8 // indirect
 	github.com/soundcloud/go-runit v0.0.0-20150630195641-06ad41a06c4a // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/templexxx/cpu v0.0.7 // indirect
-	github.com/templexxx/xorsimd v0.4.1 // indirect
+	github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161 // indirect
+	github.com/templexxx/xor v0.0.0-20191217153810-f85b25db303b // indirect
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
 	github.com/ulikunitz/xz v0.5.8 // indirect
-	github.com/xtaci/kcp-go/v5 v5.6.1 // indirect
+	github.com/xtaci/kcp-go v5.4.20+incompatible // indirect
 	github.com/xtaci/smux v1.5.16 // indirect
 	github.com/xtaci/tcpraw v1.2.25 // indirect
 	gitlab.com/mjwhitta/errors v1.0.0 // indirect
@@ -168,7 +168,6 @@ require (
 	gitlab.com/mjwhitta/safety v1.11.0 // indirect
 	gitlab.com/mjwhitta/sysinfo v1.4.7 // indirect
 	gitlab.com/mjwhitta/where v1.2.4 // indirect
-	gitlab.com/yawning/obfs4.git v0.0.0-20210511220700-e330d1b7024b // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
@@ -190,6 +189,7 @@ require (
 	k0s.io/pkg/api v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/asciitransport v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/client v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/console v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/distro v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/exporter v0.0.0-20220614032006-56adefb90b87 // indirect
 	k0s.io/pkg/fzf v0.0.0-00010101000000-000000000000 // indirect

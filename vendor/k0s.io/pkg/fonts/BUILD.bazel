@@ -2,8 +2,16 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["standard.go"],
+    srcs = [
+        "figlet.go",
+        "standard.go",
+    ],
     importmap = "k0s.io/vendor/k0s.io/pkg/fonts",
     importpath = "k0s.io/pkg/fonts",
     visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/lukesampson/figlet/figletlib:go_default_library",
+        "//vendor/github.com/mattn/go-isatty:go_default_library",
+        "//vendor/k0s.io/pkg/console:go_default_library",
+    ],
 )

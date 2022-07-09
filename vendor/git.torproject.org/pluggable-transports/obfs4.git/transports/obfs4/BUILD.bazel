@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "handshake_ntor.go",
+        "obfs4.go",
+        "packet.go",
+        "statefile.go",
+    ],
+    importmap = "k0s.io/vendor/git.torproject.org/pluggable-transports/obfs4.git/transports/obfs4",
+    importpath = "git.torproject.org/pluggable-transports/obfs4.git/transports/obfs4",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/git.torproject.org/pluggable-transports/goptlib.git:go_default_library",
+        "//vendor/git.torproject.org/pluggable-transports/obfs4.git/common/csrand:go_default_library",
+        "//vendor/git.torproject.org/pluggable-transports/obfs4.git/common/drbg:go_default_library",
+        "//vendor/git.torproject.org/pluggable-transports/obfs4.git/common/ntor:go_default_library",
+        "//vendor/git.torproject.org/pluggable-transports/obfs4.git/common/probdist:go_default_library",
+        "//vendor/git.torproject.org/pluggable-transports/obfs4.git/common/replayfilter:go_default_library",
+        "//vendor/git.torproject.org/pluggable-transports/obfs4.git/transports/base:go_default_library",
+        "//vendor/git.torproject.org/pluggable-transports/obfs4.git/transports/obfs4/framing:go_default_library",
+    ],
+)
