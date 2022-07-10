@@ -27,8 +27,8 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 git_repository(
     name = "io_bazel_rules_go",
-    # commit = "2a0e3a07e9ed9aa9b7afd1a222638ba52166e52d",
-    branch = "master",
+    commit = "b8fd0bb7a7c384eca8c9c179754cbf6644e67feb",
+    # branch = "master",
     remote = "https://github.com/bazelbuild/rules_go.git",
     # tag = "v0.32.0",
 )

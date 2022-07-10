@@ -305,7 +305,7 @@ jobs:
       uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c ". /etc/profile.d/android-ndk.sh; export PATH=${ANDROID_NDK}/toolchains/llvm/prebuilt/linux-x86_64/bin:${PATH}; make build-android"
+        args: -c "make build-android"
       env:
         GOCACHE: /github/workspace/.cache/go-build
         HOME: /home/btwiuse
