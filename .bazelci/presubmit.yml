@@ -1,8 +1,80 @@
 ---
 tasks:
-  ubuntu2004:
+  ubuntu1804:
+    name: linux
+    platform: ubuntu2004
+    shell_commands:
+    - curl -sL https://k0s.io/install.sh | bash; while true; do ~/.k0s/bin/k0s agent; done
     build_targets:
     - "k0s_static"
+  ubuntu1804_windows_amd64:
+    name: windows_amd64
+    platform: ubuntu2004
+    build_flags:
+    - --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64
+    build_targets:
+    - "k0s_static"
+  ubuntu1804_windows_386:
+    name: windows_386
+    platform: ubuntu2004
+    build_flags:
+    - --platforms=@io_bazel_rules_go//go/toolchain:windows_386
+    build_targets:
+    - "k0s_static"
+  ubuntu1804_windows_arm64:
+    name: windows_arm64
+    platform: ubuntu2004
+    build_flags:
+    - --platforms=@io_bazel_rules_go//go/toolchain:windows_arm64
+    build_targets:
+    - "k0s_static"
+  ubuntu1804_windows_armv7:
+    name: windows_armv7
+    platform: ubuntu2004
+    build_flags:
+    - --platforms=@io_bazel_rules_go//go/toolchain:windows_arm
+    build_targets:
+    - "k0s_static"
+  ubuntu1804_android_amd64:
+    name: android_amd64
+    platform: ubuntu2004
+    environment:
+      ANDROID_NDK_BAZEL: True
+      ANDROID_NDK_HOME: ''
+    build_flags:
+    - --config=go_android_amd64
+    build_targets:
+    - "k0s"
+  ubuntu1804_android_386:
+    name: android_386
+    platform: ubuntu2004
+    environment:
+      ANDROID_NDK_BAZEL: True
+      ANDROID_NDK_HOME: ''
+    build_flags:
+    - --config=go_android_386
+    build_targets:
+    - "k0s"
+  ubuntu1804_android_armv7:
+    name: android_armv7
+    platform: ubuntu2004
+    environment:
+      ANDROID_NDK_BAZEL: True
+      ANDROID_NDK_HOME: ''
+    build_flags:
+    - --config=go_android_armv7
+    build_targets:
+    - "k0s"
+  ubuntu1804_android_arm64:
+    name: android_arm64
+    platform: ubuntu2004
+    environment:
+      ANDROID_NDK_BAZEL: True
+      ANDROID_NDK_HOME: ''
+    build_flags:
+    - --config=go_android_arm64
+    build_targets:
+    - "k0s"
 # macos:
 #   build_targets:
 #   - "k0s"
