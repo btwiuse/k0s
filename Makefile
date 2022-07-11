@@ -57,10 +57,10 @@ bazel-build-android:            ## Build android binaries using bazel
 	# $(BAZEL) build //:k0s --config=go_android_arm64
 
 bazel-build-windows:            ## Build windows binaries using bazel
-	$(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin/windows/amd64
-	$(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin/windows/386
-	$(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin/windows/armv7
-	$(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin/windows/arm64
+	$(BAZEL) run --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64 //:install_k0s_static -- -g $(PWD)/bin/windows/amd64
+	$(BAZEL) run --platforms=@io_bazel_rules_go//go/toolchain:windows_386 //:install_k0s_static -- -g $(PWD)/bin/windows/386
+	$(BAZEL) run --platforms=@io_bazel_rules_go//go/toolchain:windows_arm //:install_k0s_static -- -g $(PWD)/bin/windows/armv7
+	$(BAZEL) run --platforms=@io_bazel_rules_go//go/toolchain:windows_arm64 //:install_k0s_static -- -g $(PWD)/bin/windows/arm64
 	# $(BAZEL) build //:k0s --config=go_win32
 	# $(BAZEL) build //:k0s --config=go_win64
 
