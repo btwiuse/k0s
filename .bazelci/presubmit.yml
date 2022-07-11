@@ -1,8 +1,36 @@
 ---
 tasks:
-  ubuntu2004:
+  linux:
     build_targets:
     - "k0s_static"
+  android_amd64:
+    environment:
+      ANDROID_NDK_BAZEL: True
+    build_flags:
+    - --config=go_android_amd64
+    build_targets:
+    - "k0s"
+  android_386:
+    environment:
+      ANDROID_NDK_BAZEL: True
+    build_flags:
+    - --config=go_android_386
+    build_targets:
+    - "k0s"
+  android_armv7:
+    environment:
+      ANDROID_NDK_BAZEL: True
+    build_flags:
+    - --config=go_android_armv7
+    build_targets:
+    - "k0s"
+  android_arm64:
+    environment:
+      ANDROID_NDK_BAZEL: True
+    build_flags:
+    - --config=go_android_arm64
+    build_targets:
+    - "k0s"
 # macos:
 #   build_targets:
 #   - "k0s"
