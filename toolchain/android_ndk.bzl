@@ -2,9 +2,9 @@ def _android_ndk_impl(ctx):
 
     ctx.file("README.md", '# Hello, Android!')
 
-    is_host_ndk = "ANDROID_NDK_HOME" in ctx.os.environ
+    is_host_ndk = "ANDROID_NDK_HOME" in ctx.os.environ and ctx.os.environ["ANDROID_NDK_HOME"]
 
-    is_bazel_ndk = "ANDROID_NDK_BAZEL" in ctx.os.environ
+    is_bazel_ndk = "ANDROID_NDK_BAZEL" in ctx.os.environ and ctx.os.environ["ANDROID_NDK_BAZEL"]
 
     path_ndk = ctx.os.environ["ANDROID_NDK_HOME"] if is_host_ndk else ctx.path(".").realpath
 
