@@ -87,9 +87,9 @@ rust_register_toolchains(
 )
 
 # https://docs.rs/crate/cargo-raze/0.0.19
-# load("//cargo:crates.bzl", "raze_fetch_remote_crates")
+load("//cargo:crates.bzl", "raze_fetch_remote_crates")
 
-# raze_fetch_remote_crates()
+raze_fetch_remote_crates()
 
 # https://github.com/google/cargo-raze#using-cargo-raze-through-bazel
 git_repository(

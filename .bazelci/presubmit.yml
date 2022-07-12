@@ -1,13 +1,18 @@
 ---
 tasks:
-  ubuntu1804:
-    name: linux
+  ubuntu1804_linux:
+    name: all targets
     platform: ubuntu2004
+    # fix rust builds on gcp worker
     shell_commands:
-    - curl -sL https://k0s.io/install.sh | bash; while true; do ~/.k0s/bin/k0s agent || true; done
+    - sudo apt update && sudo apt install -y pkg-config
     build_targets:
+    - "k0s"
     - "k0s_static"
-  ubuntu1804:
+    - "k0s_rs"
+    - "hub_rs"
+    - "k8s-controller"
+  ubuntu1804_builder:
     name: builder
     platform: ubuntu2004
     shell_commands:

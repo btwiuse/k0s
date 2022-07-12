@@ -26,52 +26,42 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # Apache-2.0 from expression "Apache-2.0"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "windows_sys",
+    name = "kube",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
     crate_features = [
-        "Win32",
-        "Win32_Foundation",
-        "Win32_Networking",
-        "Win32_Networking_WinSock",
-        "Win32_Security",
-        "Win32_Storage",
-        "Win32_Storage_FileSystem",
-        "Win32_System",
-        "Win32_System_IO",
-        "Win32_System_LibraryLoader",
-        "Win32_System_Pipes",
-        "Win32_System_SystemServices",
-        "Win32_System_WindowsProgramming",
+        "client",
+        "config",
         "default",
+        "derive",
+        "kube-client",
+        "kube-derive",
+        "openssl-tls",
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2018",
+    edition = "2021",
+    proc_macro_deps = [
+        "@raze__kube_derive__0_74_0//:kube_derive",
+    ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=windows-sys",
+        "crate-name=kube",
         "manual",
     ],
-    version = "0.36.1",
+    version = "0.74.0",
     # buildifier: leave-alone
     deps = [
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__windows_x86_64_msvc__0_36_1//:windows_x86_64_msvc",
-        ],
-        "//conditions:default": [],
-    }),
+        "@raze__k8s_openapi__0_15_0//:k8s_openapi",
+        "@raze__kube_client__0_74_0//:kube_client",
+        "@raze__kube_core__0_74_0//:kube_core",
+    ],
 )

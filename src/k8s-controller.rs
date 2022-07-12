@@ -11,7 +11,7 @@ use futures::StreamExt;
 use futures::TryStreamExt;
 use kube::api::Api;
 use kube::api::ListParams;
-use kube::api::Meta;
+// use kube::api::Meta;
 use kube::Client;
 use kube_runtime::watcher;
 use kube_runtime::watcher::Event;
@@ -50,8 +50,8 @@ async fn main() -> () {
     let mut w = watcher::watcher(books, lp).boxed();
     while let Some(event) = w.try_next().await.unwrap() {
         match event {
-            Event::Applied(b) => println!("Created({}): Title: {}", Meta::name(&b), b.spec.title),
-            Event::Deleted(b) => println!("Deleted({}): Title: {}", Meta::name(&b), b.spec.title),
+            Event::Applied(b) => println!("Created({}): Title: {}", b.metadata.name.unwrap(), b.spec.title),
+            Event::Deleted(b) => println!("Deleted({}): Title: {}", b.metadata.name.unwrap(), b.spec.title),
             _ => (), // Ignore Restarted (We already use list)
         };
     }

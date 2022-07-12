@@ -26,28 +26,16 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
-# Unsupported target "chrono" with type "bench" omitted
-
-# Unsupported target "serde" with type "bench" omitted
+# Unsupported target "benches" with type "bench" omitted
 
 rust_library(
-    name = "chrono",
+    name = "strsim",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
-    crate_features = [
-        "alloc",
-        "clock",
-        "libc",
-        "serde",
-        "std",
-        "winapi",
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2015",
@@ -56,24 +44,13 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=chrono",
+        "crate-name=strsim",
         "manual",
     ],
-    version = "0.4.19",
+    version = "0.10.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_126//:libc",
-        "@raze__num_integer__0_1_45//:num_integer",
-        "@raze__num_traits__0_2_15//:num_traits",
-        "@raze__serde__1_0_138//:serde",
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__winapi__0_3_9//:winapi",
-        ],
-        "//conditions:default": [],
-    }),
+    ],
 )
 
-# Unsupported target "wasm" with type "test" omitted
+# Unsupported target "lib" with type "test" omitted

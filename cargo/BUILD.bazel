@@ -77,7 +77,7 @@ alias(
 
 alias(
     name = "k8s_openapi",
-    actual = "@raze__k8s_openapi__0_10_0//:k8s_openapi",
+    actual = "@raze__k8s_openapi__0_15_0//:k8s_openapi",
     tags = [
         "cargo-raze",
         "manual",
@@ -86,7 +86,7 @@ alias(
 
 alias(
     name = "kube",
-    actual = "@raze__kube__0_47_0//:kube",
+    actual = "@raze__kube__0_74_0//:kube",
     tags = [
         "cargo-raze",
         "manual",
@@ -95,7 +95,7 @@ alias(
 
 alias(
     name = "kube_runtime",
-    actual = "@raze__kube_runtime__0_47_0//:kube_runtime",
+    actual = "@raze__kube_runtime__0_74_0//:kube_runtime",
     tags = [
         "cargo-raze",
         "manual",

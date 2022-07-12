@@ -31,25 +31,16 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "async" with type "example" omitted
+
+# Unsupported target "permanent_error" with type "example" omitted
+
+# Unsupported target "retry" with type "example" omitted
+
 rust_library(
-    name = "windows_sys",
+    name = "backoff",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
     crate_features = [
-        "Win32",
-        "Win32_Foundation",
-        "Win32_Networking",
-        "Win32_Networking_WinSock",
-        "Win32_Security",
-        "Win32_Storage",
-        "Win32_Storage_FileSystem",
-        "Win32_System",
-        "Win32_System_IO",
-        "Win32_System_LibraryLoader",
-        "Win32_System_Pipes",
-        "Win32_System_SystemServices",
-        "Win32_System_WindowsProgramming",
         "default",
     ],
     crate_root = "src/lib.rs",
@@ -60,18 +51,18 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=windows-sys",
+        "crate-name=backoff",
         "manual",
     ],
-    version = "0.36.1",
+    version = "0.4.0",
     # buildifier: leave-alone
     deps = [
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__windows_x86_64_msvc__0_36_1//:windows_x86_64_msvc",
-        ],
-        "//conditions:default": [],
-    }),
+        "@raze__getrandom__0_2_7//:getrandom",
+        "@raze__instant__0_1_12//:instant",
+        "@raze__rand__0_8_5//:rand",
+    ],
 )
+
+# Unsupported target "exponential" with type "test" omitted
+
+# Unsupported target "retry" with type "test" omitted
