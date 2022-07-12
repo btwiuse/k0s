@@ -22,11 +22,11 @@ scrape_configs:
       target_label: __address__       # change target
 
 # Settings related to the remote write feature.
-remote_write:
-  - url: "https://prometheus-postgresql-adapter.k0s.io/write"
+# remote_write:
+# - url: "https://prometheus-postgresql-adapter.k0s.io/write"
 # - url: "http://prometheus-postgresql-adapter:9201/write"
 
 # Settings related to the remote read feature.
-remote_read:
-  - url: "https://prometheus-postgresql-adapter.k0s.io/read"
+# remote_read:
+# - url: "https://prometheus-postgresql-adapter.k0s.io/read"
 # - url: "http://prometheus-postgresql-adapter:9201/read"

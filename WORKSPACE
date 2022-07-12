@@ -8641,6 +8641,25 @@ container_pull(
     tag = "latest",
 )
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+git_repository(
+    name = "rules_python",
+    branch = "master",
+    remote = "https://github.com/bazelbuild/rules_python.git",
+)
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+git_repository(
+    name = "io_bazel_rules_grafana",
+    # commit = "{HEAD}", # replace with a real commit hash
+    branch = "master",
+    remote = "https://github.com/etsy/rules_grafana.git",
+)
+
+load("@io_bazel_rules_grafana//grafana:workspace.bzl", grafana_repositories="repositories")
+grafana_repositories()
+
 go_repository(
     name = "co_honnef_go_tools",
     importpath = "honnef.co/go/tools",

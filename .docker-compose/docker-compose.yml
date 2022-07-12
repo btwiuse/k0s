@@ -1,9 +1,10 @@
 version: '3'
 services:
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana
     network_mode: host
     working_dir: /work
+    user: root
     environment:
     - GF_PATHS_DATA=grafana
     - GF_PATHS_CONFIG=grafana.ini

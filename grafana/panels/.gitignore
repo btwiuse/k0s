@@ -1,0 +1,4 @@
+__pycache__/
+grafana-dashboards
+*.json
+*.yaml

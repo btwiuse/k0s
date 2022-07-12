@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -e
+OUT="./grafana-dashboards/"
+[[ -d "$OUT" ]] && rm -r "$OUT"
+mkdir -p "$OUT"
+find . -name '*.py' | sed -e 's,^./,,g' | while read py; do
+  name="${py//.py/}"
+  json="${name}.json"
+  yaml="${name}.yaml"
+  echo "${py} -> ${json}"
+  generate-dashboard -o "${json}" "${py}"
+  echo "${json} -> ${yaml}"
+
+  grep -qF "examples/" <<< "$name" && continue
+
+  kubectl create configmap "grafanalib-dashboard-${name}" --from-file="${json}" --dry-run=client -o yaml |
+  kubectl label --overwrite -f - grafana_dashboard="1" --dry-run=client --local=true -o yaml > "${yaml}"
+  cp -v "${yaml}" "$OUT"
+done
+
+kubectl create configmap "grafanalib-dashboards" $(find . -name '*.py' -type f | ts -- --from-file ) --dry-run=client -o yaml > ../deployments/k8s/grafanalib-dashboards.yaml
+git status ../deployments/k8s/grafanalib-dashboards.yaml
