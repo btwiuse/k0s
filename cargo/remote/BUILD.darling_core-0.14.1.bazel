@@ -26,31 +26,17 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "windows_sys",
+    name = "darling_core",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
     crate_features = [
-        "Win32",
-        "Win32_Foundation",
-        "Win32_Networking",
-        "Win32_Networking_WinSock",
-        "Win32_Security",
-        "Win32_Storage",
-        "Win32_Storage_FileSystem",
-        "Win32_System",
-        "Win32_System_IO",
-        "Win32_System_LibraryLoader",
-        "Win32_System_Pipes",
-        "Win32_System_SystemServices",
-        "Win32_System_WindowsProgramming",
-        "default",
+        "strsim",
+        "suggestions",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -60,18 +46,17 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=windows-sys",
+        "crate-name=darling_core",
         "manual",
     ],
-    version = "0.36.1",
+    version = "0.14.1",
     # buildifier: leave-alone
     deps = [
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__windows_x86_64_msvc__0_36_1//:windows_x86_64_msvc",
-        ],
-        "//conditions:default": [],
-    }),
+        "@raze__fnv__1_0_7//:fnv",
+        "@raze__ident_case__1_0_1//:ident_case",
+        "@raze__proc_macro2__1_0_40//:proc_macro2",
+        "@raze__quote__1_0_20//:quote",
+        "@raze__strsim__0_10_0//:strsim",
+        "@raze__syn__1_0_98//:syn",
+    ],
 )
