@@ -45,6 +45,9 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 go-get:               ## trigger update for https://pkg.go.dev
 	@ go work edit -json | jq -r .Use[].ModPath | xargs -I% bash -c 'echo go get %@$(shell git rev-parse HEAD)' | bash -v
 
+go-install:           ## install latest commit from https://pkg.go.dev
+	@ go install -v k0s.io@$(shell git rev-parse HEAD)
+
 bazel-build-android:            ## Build android binaries using bazel
 	$(BAZEL) run //:install_k0s --config=go_android_amd64 -- -g $(PWD)/bin/android/amd64
 	$(BAZEL) run //:install_k0s --config=go_android_386   -- -g $(PWD)/bin/android/386

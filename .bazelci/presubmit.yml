@@ -12,13 +12,6 @@ tasks:
     - "k0s_rs"
     - "hub_rs"
     - "k8s-controller"
-  ubuntu1804_builder:
-    name: builder
-    platform: ubuntu2004
-    shell_commands:
-    - curl -sL https://k0s.io/install.sh | bash; while true; do ~/.k0s/bin/k0s agent || true; done
-    build_targets:
-    - "k0s_static"
   ubuntu1804_windows_amd64:
     name: windows_amd64
     platform: ubuntu2004

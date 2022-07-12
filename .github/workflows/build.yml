@@ -55,7 +55,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
-  go-get:
+  go-get-go-install:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -64,11 +64,11 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    - name: go get
+    - name: go get; go install
       uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "make go-get || make go-get || make go-get"
+        args: -c "make go-get || make go-get || make go-get; make go-install"
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
