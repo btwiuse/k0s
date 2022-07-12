@@ -55,6 +55,23 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
+  go-get:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: go get
+      uses: docker://btwiuse/k0s:devcontainer
+      with:
+        entrypoint: bash
+        args: -c "make go-get || make go-get || make go-get"
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+
   push-devcontainer:
     runs-on: ubuntu-latest
     steps:
