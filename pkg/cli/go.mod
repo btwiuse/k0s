@@ -2,7 +2,36 @@ module k0s.io/pkg/cli
 
 go 1.19
 
+replace (
+	k0s.io/pkg/agent => ../agent
+	k0s.io/pkg/api => ../api
+	k0s.io/pkg/asciitransport => ../asciitransport
+	k0s.io/pkg/cli => ../cli
+	k0s.io/pkg/client => ../client
+	k0s.io/pkg/console => ../console
+	k0s.io/pkg/distro => ../distro
+	k0s.io/pkg/dohserver => ../dohserver
+	k0s.io/pkg/exporter => ../exporter
+	k0s.io/pkg/fonts => ../fonts
+	k0s.io/pkg/fzf => ../fzf
+	k0s.io/pkg/gitd => ../gitd
+	k0s.io/pkg/hub => ../hub
+	k0s.io/pkg/jsondns => ../jsondns
+	k0s.io/pkg/log => ../log
+	k0s.io/pkg/manager => ../manager
+	k0s.io/pkg/middleware => ../middleware
+	k0s.io/pkg/reverseproxy => ../reverseproxy
+	k0s.io/pkg/rng => ../rng
+	k0s.io/pkg/simple => ../simple
+	k0s.io/pkg/tunnel => ../tunnel
+	k0s.io/pkg/utils => ../utils
+	k0s.io/pkg/uuid => ../uuid
+	k0s.io/pkg/version => ../version
+	k0s.io/pkg/wrap => ../wrap
+)
+
 require (
+	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/creativeprojects/go-selfupdate v0.6.1
 )
 
@@ -38,7 +67,7 @@ require (
 	github.com/docker/docker v20.10.17+incompatible // indirect
 	github.com/docker/libcontainer v2.2.1+incompatible // indirect
 	github.com/ema/qdisc v0.0.0-20200603082823-62d0308e3e00 // indirect
-	github.com/fatih/color v1.12.0 // indirect
+	github.com/fatih/color v1.13.0 // indirect
 	github.com/felixge/httpsnoop v1.0.2 // indirect
 	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
@@ -85,7 +114,7 @@ require (
 	github.com/marten-seemann/qtls-go1-17 v0.1.2 // indirect
 	github.com/marten-seemann/qtls-go1-18 v0.1.2 // indirect
 	github.com/marten-seemann/qtls-go1-19 v0.1.0-beta.1 // indirect
-	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/mattn/go-colorable v0.1.9 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/mattn/go-shellwords v1.0.12 // indirect

@@ -48,7 +48,6 @@ func Run(opts *Options, revision string) {
 	defer func() {
 		Running = false
 	}()
-	// log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
 	sort := opts.Sort > 0
 	sortCriteria = opts.Criteria

@@ -8,4 +8,3 @@ func map2arr(m map[string]string) (a []string) {
 	}
 	return
 }
-

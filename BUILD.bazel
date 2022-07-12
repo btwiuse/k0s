@@ -19,14 +19,8 @@ go_library(
     importpath = "k0s.io",
     visibility = ["//visibility:private"],
     deps = [
-        "//vendor/github.com/alexpantyukhin/go-pattern-match:go_default_library",
-        "//vendor/k0s.io/pkg/cli/agent:go_default_library",
-        "//vendor/k0s.io/pkg/cli/chassis:go_default_library",
-        "//vendor/k0s.io/pkg/cli/client:go_default_library",
-        "//vendor/k0s.io/pkg/cli/hub:go_default_library",
-        "//vendor/k0s.io/pkg/cli/miniclient:go_default_library",
-        "//vendor/k0s.io/pkg/cli/mnt:go_default_library",
-        "//vendor/k0s.io/pkg/cli/upgrade:go_default_library",
+        "//vendor/k0s.io/pkg/cli/k0s:go_default_library",
+        "//vendor/k0s.io/pkg/log:go_default_library",
     ],
 )
 

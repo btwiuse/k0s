@@ -1,8 +1,6 @@
 FROM btwiuse/arch
 
-RUN curl -sL https://go.dev/dl/go1.19rc1.linux-amd64.tar.gz | tar -xzC /usr/local/
-
-RUN cp /usr/local/go/bin/go /usr/bin/go
+RUN curl -sL https://go.dev/dl/go1.19rc1.linux-amd64.tar.gz | tar -xzC /usr/local/ && cp /usr/local/go/bin/go /usr/bin/go
 
 RUN pacman -Syu --noconfirm --overwrite='*' \
     docker clang android-ndk rustup deno pkgfile yarn npm wget htop dstat neofetch &&\

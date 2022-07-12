@@ -1,14 +1,12 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"k0s.io/pkg/cli/hub"
+	"k0s.io/pkg/log"
 )
 
 func main() {
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-
 	log.Fatalln(hub.Run2(os.Args[1:]))
 }

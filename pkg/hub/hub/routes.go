@@ -14,6 +14,7 @@ import (
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/wetty/pkg/assets"
 	"github.com/gorilla/mux"
+	echo "github.com/jpillora/go-echo-server/handler"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/exporter"
 	types "k0s.io/pkg/hub"
@@ -21,7 +22,6 @@ import (
 	"k0s.io/pkg/wrap"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
-	echo "github.com/jpillora/go-echo-server/handler"
 )
 
 var (

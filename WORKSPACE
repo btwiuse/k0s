@@ -8570,6 +8570,13 @@ go_repository(
     version = "v0.0.0-20220709112350-568332f86f87",
 )
 
+go_repository(
+    name = "com_github_pkg_diff",
+    importpath = "github.com/pkg/diff",
+    sum = "h1:aoZm08cpOy4WuID//EZDgcC4zIxODThtZNPirFr42+A=",
+    version = "v0.0.0-20210226163009-20ebb0f2a09e",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
@@ -9267,8 +9274,8 @@ go_repository(
 go_repository(
     name = "com_github_rogpeppe_go_internal",
     importpath = "github.com/rogpeppe/go-internal",
-    sum = "h1:/FiVV8dS/e+YqF2JvO3yXRFbBLTIuSDkuC7aBOAvL+k=",
-    version = "v1.6.1",
+    sum = "h1:geMPLpDpQOgVyCg5z5GoRwLHepNdb71NXb67XFkP+Eg=",
+    version = "v1.8.1",
 )
 
 go_repository(

@@ -1,14 +1,12 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"k0s.io/pkg/cli/chassis"
+	"k0s.io/pkg/log"
 )
 
 func main() {
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
-
 	chassis.Run(os.Args[1:])
 }
