@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+go work edit --json | jq .Use[] -c | jq -r .ModPath | xargs -I% bash -c 'echo %/$(<VERSION)' | sed s,^k0s.io/,,g | xargs -I% bash -vc 'git tag -f % && git push -f origin %'
