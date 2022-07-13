@@ -40,7 +40,4 @@ type Version interface {
 	GetBuildDate() string
 	GetVersion() string
 	GetGoVersion() string
-
-	YAMLString() string
-	JsonString() string
 }

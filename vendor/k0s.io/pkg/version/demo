@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-basedir=$(dirname $(realpath $0))
-cd $basedir
-go run -ldflags="$(./ldflags)" demo.go

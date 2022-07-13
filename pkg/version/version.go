@@ -5,7 +5,6 @@ import (
 	"runtime"
 	"runtime/debug"
 
-	"github.com/btwiuse/pretty"
 	"k0s.io/pkg"
 )
 
@@ -31,8 +30,8 @@ var Info = &Version{
 
 func init() {
 	if HasBuildInfo && BuildInfo.Main.Version != "" {
-		VersionString = BuildInfo.Main.Version 
-		Info.Version = BuildInfo.Main.Version 
+		VersionString = BuildInfo.Main.Version
+		Info.Version = BuildInfo.Main.Version
 	}
 }
 
@@ -57,8 +56,6 @@ func (v *Version) GetGitSummary() string { return v.GitSummary }
 func (v *Version) GetBuildDate() string  { return v.BuildDate }
 func (v *Version) GetVersion() string    { return v.Version }
 func (v *Version) GetGoVersion() string  { return v.GoVersion }
-func (v *Version) YAMLString() string    { return pretty.YAMLString(v) }
-func (v *Version) JsonString() string    { return pretty.JsonStringLine(v) }
 
 func Decode(data []byte) (pkg.Version, error) {
 	v := &Version{}

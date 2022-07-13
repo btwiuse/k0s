@@ -3,7 +3,6 @@ go 1.19
 use (
 	.
 	./pkg/agent
-	./pkg/api
 	./pkg/asciitransport
 	./pkg/cli
 	./pkg/client
@@ -16,7 +15,6 @@ use (
 	./pkg/gitd
 	./pkg/hub
 	./pkg/jsondns
-	./pkg/log
 	./pkg/manager
 	./pkg/middleware
 	./pkg/reverseproxy
@@ -25,6 +23,5 @@ use (
 	./pkg/tunnel
 	./pkg/utils
 	./pkg/uuid
-	./pkg/version
 	./pkg/wrap
 )

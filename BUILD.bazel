@@ -19,8 +19,8 @@ go_library(
     importpath = "k0s.io",
     visibility = ["//visibility:private"],
     deps = [
+        "//pkg/log:go_default_library",
         "//vendor/k0s.io/pkg/cli/k0s:go_default_library",
-        "//vendor/k0s.io/pkg/log:go_default_library",
     ],
 )
 

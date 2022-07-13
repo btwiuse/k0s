@@ -7,8 +7,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg:go_default_library",
+        "//pkg/version:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
         "//vendor/k0s.io/pkg/hub:go_default_library",
-        "//vendor/k0s.io/pkg/version:go_default_library",
     ],
 )

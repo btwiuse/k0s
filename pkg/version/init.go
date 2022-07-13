@@ -4,15 +4,15 @@
 package version
 
 import (
+	"encoding/json"
 	"runtime/debug"
-
-	"github.com/btwiuse/pretty"
 )
 
 func init() {
-	b, ok := debug.ReadBuildInfo()
+	v, ok := debug.ReadBuildInfo()
 	if ok {
-		println(pretty.YAMLString(b))
-		println(pretty.YAMLString(b.Main.Version == ""))
+		b, _ := json.MarshalIndent(v, "", "  ")
+		println(string(b))
+		println(v.Main.Version)
 	}
 }

@@ -4,7 +4,6 @@ go 1.19
 
 replace (
 	k0s.io/pkg/agent => ../agent
-	k0s.io/pkg/api => ../api
 	k0s.io/pkg/asciitransport => ../asciitransport
 	k0s.io/pkg/cli => ../cli
 	k0s.io/pkg/client => ../client
@@ -17,7 +16,6 @@ replace (
 	k0s.io/pkg/gitd => ../gitd
 	k0s.io/pkg/hub => ../hub
 	k0s.io/pkg/jsondns => ../jsondns
-	k0s.io/pkg/log => ../log
 	k0s.io/pkg/manager => ../manager
 	k0s.io/pkg/middleware => ../middleware
 	k0s.io/pkg/reverseproxy => ../reverseproxy
@@ -26,7 +24,6 @@ replace (
 	k0s.io/pkg/tunnel => ../tunnel
 	k0s.io/pkg/utils => ../utils
 	k0s.io/pkg/uuid => ../uuid
-	k0s.io/pkg/version => ../version
 	k0s.io/pkg/wrap => ../wrap
 )
 

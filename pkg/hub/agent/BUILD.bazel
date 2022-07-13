@@ -6,9 +6,9 @@ go_library(
     importpath = "k0s.io/pkg/hub/agent",
     visibility = ["//visibility:public"],
     deps = [
+        "//pkg/api:go_default_library",
         "//vendor/github.com/abbot/go-http-auth:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
-        "//vendor/k0s.io/pkg/api:go_default_library",
         "//vendor/k0s.io/pkg/hub:go_default_library",
     ],
 )
