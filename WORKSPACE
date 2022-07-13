@@ -8577,6 +8577,13 @@ go_repository(
     version = "v0.0.0-20210226163009-20ebb0f2a09e",
 )
 
+go_repository(
+    name = "com_github_btwiuse_k16s_v2",
+    importpath = "github.com/btwiuse/k16s/v2",
+    sum = "h1:TLQVNB9er5Afj0CzwJJPzHaBpy2VVu0cJ+SBXSbo9bI=",
+    version = "v2.0.0-20201224175329-3bc18834f8c1",
+)
+
 rules_proto_dependencies()
 
 rules_proto_toolchains()
