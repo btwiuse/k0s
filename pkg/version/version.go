@@ -17,21 +17,21 @@ var (
 	VersionString    string
 )
 
-func GetVersion() pkg.Version {
-	return &version{
-		GitCommit:  GitCommitString,
-		GitState:   GitStateString,
-		GitBranch:  GitBranchString,
-		GitSummary: GitSummaryString,
-		BuildDate:  BuildDateString,
-		Version:    VersionString,
-		GoVersion:  runtime.Version(),
-	}
+var Info = &Version{
+	GitCommit:  GitCommitString,
+	GitState:   GitStateString,
+	GitBranch:  GitBranchString,
+	GitSummary: GitSummaryString,
+	BuildDate:  BuildDateString,
+	Version:    VersionString,
+	GoVersion:  runtime.Version(),
 }
 
-type Version version
+func GetVersion() pkg.Version {
+	return Info
+}
 
-type version struct {
+type Version struct {
 	GitCommit  string
 	GitState   string
 	GitBranch  string
@@ -41,18 +41,18 @@ type version struct {
 	GoVersion  string
 }
 
-func (v *version) GetGitCommit() string  { return v.GitCommit }
-func (v *version) GetGitState() string   { return v.GitState }
-func (v *version) GetGitBranch() string  { return v.GitBranch }
-func (v *version) GetGitSummary() string { return v.GitSummary }
-func (v *version) GetBuildDate() string  { return v.BuildDate }
-func (v *version) GetVersion() string    { return v.Version }
-func (v *version) GetGoVersion() string  { return v.GoVersion }
-func (v *version) YAMLString() string    { return pretty.YAMLString(v) }
-func (v *version) JsonString() string    { return pretty.JsonStringLine(v) }
+func (v *Version) GetGitCommit() string  { return v.GitCommit }
+func (v *Version) GetGitState() string   { return v.GitState }
+func (v *Version) GetGitBranch() string  { return v.GitBranch }
+func (v *Version) GetGitSummary() string { return v.GitSummary }
+func (v *Version) GetBuildDate() string  { return v.BuildDate }
+func (v *Version) GetVersion() string    { return v.Version }
+func (v *Version) GetGoVersion() string  { return v.GoVersion }
+func (v *Version) YAMLString() string    { return pretty.YAMLString(v) }
+func (v *Version) JsonString() string    { return pretty.JsonStringLine(v) }
 
 func Decode(data []byte) (pkg.Version, error) {
-	v := &version{}
+	v := &Version{}
 	err := json.Unmarshal(data, v)
 	if err != nil {
 		return nil, err

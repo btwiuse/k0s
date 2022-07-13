@@ -67,7 +67,7 @@ require (
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.11 // indirect
 	github.com/klauspost/reedsolomon v1.9.15 // indirect
-	github.com/kr/pretty v0.3.0 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/lucas-clemente/quic-go v0.28.0 // indirect
 	github.com/lufia/iostat v1.2.0 // indirect
 	github.com/marten-seemann/qtls-go1-16 v0.1.5 // indirect
@@ -93,7 +93,6 @@ require (
 	github.com/prometheus/node_exporter v1.3.1 // indirect
 	github.com/prometheus/procfs v0.7.4-0.20211011103944-1a7a2bd3279f // indirect
 	github.com/riobard/go-bloom v0.0.0-20200614022211-cdc8013cb5b3 // indirect
-	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/rs/cors v1.8.2 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/safchain/ethtool v0.1.0 // indirect

@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
-	fmt.Print(version.Version.JsonString())
-	fmt.Print(version.Version.YAMLString())
+	v := &version.Version{}
+	fmt.Print(v.JsonString())
+	fmt.Print(v.YAMLString())
 }

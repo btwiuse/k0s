@@ -3,6 +3,9 @@ module k0s.io
 go 1.19
 
 require (
+)
+
+require (
 	code.gitea.io/sdk/gitea v0.13.2 // indirect
 	git.torproject.org/pluggable-transports/goptlib.git v1.2.0 // indirect
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect

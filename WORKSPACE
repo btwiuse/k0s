@@ -8650,6 +8650,7 @@ git_repository(
 )
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
 git_repository(
     name = "io_bazel_rules_grafana",
     # commit = "{HEAD}", # replace with a real commit hash
@@ -8657,7 +8658,8 @@ git_repository(
     remote = "https://github.com/etsy/rules_grafana.git",
 )
 
-load("@io_bazel_rules_grafana//grafana:workspace.bzl", grafana_repositories="repositories")
+load("@io_bazel_rules_grafana//grafana:workspace.bzl", grafana_repositories = "repositories")
+
 grafana_repositories()
 
 go_repository(
