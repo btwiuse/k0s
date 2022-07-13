@@ -6,10 +6,10 @@ go_library(
     importpath = "k0s.io/third_party/pkg/kproxy",
     visibility = ["//visibility:public"],
     deps = [
-        "@io_k8s_apimachinery//pkg/util/net:go_default_library",
+        "//vendor/k8s.io/apimachinery/pkg/util/net:go_default_library",
+        "//vendor/k8s.io/client-go/rest:go_default_library",
+        "//vendor/k8s.io/client-go/transport:go_default_library",
+        "//vendor/k8s.io/klog/v2:go_default_library",
         "@io_k8s_apimachinery//pkg/util/proxy:go_default_library",
-        "@io_k8s_client_go//rest:go_default_library",
-        "@io_k8s_client_go//transport:go_default_library",
-        "@io_k8s_klog_v2//:go_default_library",
     ],
 )

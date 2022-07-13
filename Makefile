@@ -33,6 +33,9 @@ raze:             ## auto generate BUILD.bazel files from Cargo.toml
 	# @ $(BAZEL) run @cargo_raze//:raze -- --manifest-path=$(realpath /Cargo.toml)
 	@ git status cargo
 
+replace:         ## inject replace directives to all workspace modules based on go.work
+	@ ./tools/replace_all
+
 gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ go mod tidy
 	@ go mod vendor

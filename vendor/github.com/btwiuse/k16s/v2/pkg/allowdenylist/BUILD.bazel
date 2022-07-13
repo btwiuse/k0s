@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["allowdenylist.go"],
+    importmap = "k0s.io/vendor/github.com/btwiuse/k16s/v2/pkg/allowdenylist",
+    importpath = "github.com/btwiuse/k16s/v2/pkg/allowdenylist",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/pkg/errors:go_default_library"],
+)

@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "family.go",
+        "metric.go",
+    ],
+    importmap = "k0s.io/vendor/github.com/btwiuse/k16s/v2/pkg/metric",
+    importpath = "github.com/btwiuse/k16s/v2/pkg/metric",
+    visibility = ["//visibility:public"],
+)

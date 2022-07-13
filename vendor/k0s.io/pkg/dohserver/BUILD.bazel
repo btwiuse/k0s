@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "google.go",
+        "ietf.go",
+        "server.go",
+        "version.go",
+    ],
+    importmap = "k0s.io/vendor/k0s.io/pkg/dohserver",
+    importpath = "k0s.io/pkg/dohserver",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/BurntSushi/toml:go_default_library",
+        "//vendor/github.com/miekg/dns:go_default_library",
+        "//vendor/golang.org/x/net/idna:go_default_library",
+        "//vendor/k0s.io/pkg/jsondns:go_default_library",
+    ],
+)

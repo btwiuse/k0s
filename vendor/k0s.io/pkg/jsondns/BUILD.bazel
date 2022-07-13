@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "error.go",
+        "globalip.go",
+        "marshal.go",
+        "response.go",
+        "unmarshal.go",
+    ],
+    importmap = "k0s.io/vendor/k0s.io/pkg/jsondns",
+    importpath = "k0s.io/pkg/jsondns",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/infobloxopen/go-trees/iptree:go_default_library",
+        "//vendor/github.com/miekg/dns:go_default_library",
+    ],
+)

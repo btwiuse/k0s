@@ -12,9 +12,9 @@ go_library(
     importpath = "k0s.io/pkg/dohserver",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/jsondns:go_default_library",
+        "//vendor/github.com/BurntSushi/toml:go_default_library",
         "//vendor/github.com/miekg/dns:go_default_library",
         "//vendor/golang.org/x/net/idna:go_default_library",
-        "@com_github_burntsushi_toml//:go_default_library",
+        "//vendor/k0s.io/pkg/jsondns:go_default_library",
     ],
 )

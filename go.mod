@@ -6,10 +6,18 @@ require (
 )
 
 require (
+	cloud.google.com/go v0.65.0 // indirect
 	code.gitea.io/sdk/gitea v0.13.2 // indirect
 	git.torproject.org/pluggable-transports/goptlib.git v1.2.0 // indirect
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
+	github.com/Azure/go-autorest v14.2.0+incompatible // indirect
+	github.com/Azure/go-autorest/autorest v0.11.1 // indirect
+	github.com/Azure/go-autorest/autorest/adal v0.9.5 // indirect
+	github.com/Azure/go-autorest/autorest/date v0.3.0 // indirect
+	github.com/Azure/go-autorest/logger v0.2.0 // indirect
+	github.com/Azure/go-autorest/tracing v0.6.0 // indirect
+	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/LiamHaworth/go-tproxy v0.0.0-20190726054950-ef7efd7f24ed // indirect
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5 // indirect
@@ -26,6 +34,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btwiuse/gods v0.0.0-20220709102725-20662ea32ad9 // indirect
 	github.com/btwiuse/gost v0.0.0-20220709112350-568332f86f87 // indirect
+	github.com/btwiuse/k16s/v2 v2.0.0-20201224175329-3bc18834f8c1 // indirect
 	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895 // indirect
 	github.com/btwiuse/wetty v0.0.36 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
@@ -35,14 +44,17 @@ require (
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/creack/pty v1.1.18 // indirect
 	github.com/creativeprojects/go-selfupdate v0.6.1 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dchest/siphash v1.2.2 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1 // indirect
+	github.com/dgryski/go-jump v0.0.0-20170409065014-e1f439676b57 // indirect
 	github.com/docker/docker v20.10.17+incompatible // indirect
 	github.com/docker/libcontainer v2.2.1+incompatible // indirect
 	github.com/ema/qdisc v0.0.0-20200603082823-62d0308e3e00 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/felixge/httpsnoop v1.0.2 // indirect
 	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
+	github.com/form3tech-oss/jwt-go v3.2.2+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell v1.4.0 // indirect
@@ -54,22 +66,29 @@ require (
 	github.com/go-kit/log v0.2.0 // indirect
 	github.com/go-log/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
+	github.com/go-logr/logr v1.2.0 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/godbus/dbus v0.0.0-20190422162347-ade71ed3457e // indirect
+	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/go-github/v30 v30.1.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/google/gofuzz v1.1.0 // indirect
 	github.com/google/gopacket v1.1.19 // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/googleapis/gnostic v0.4.1 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/go-envparse v0.0.0-20200406174449-d9cfd743a15e // indirect
 	github.com/hashicorp/go-version v1.2.1 // indirect
+	github.com/hashicorp/golang-lru v0.5.1 // indirect
 	github.com/hodgesds/perf-utils v0.4.0 // indirect
 	github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973 // indirect
+	github.com/imdario/mergo v0.3.5 // indirect
+	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9 // indirect
 	github.com/josharian/native v0.0.0-20200817173448-b6b71def0850 // indirect
 	github.com/jpillora/ansi v1.0.2 // indirect
 	github.com/jpillora/go-echo-server v0.5.0 // indirect
@@ -112,6 +131,7 @@ require (
 	github.com/prometheus/procfs v0.7.4-0.20211011103944-1a7a2bd3279f // indirect
 	github.com/riobard/go-bloom v0.0.0-20200614022211-cdc8013cb5b3 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/robfig/cron/v3 v3.0.0 // indirect
 	github.com/rs/cors v1.8.2 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/safchain/ethtool v0.1.0 // indirect
@@ -145,14 +165,72 @@ require (
 	golang.org/x/sys v0.0.0-20220712014510-0a85c31ab51e // indirect
 	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b // indirect
+	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
 	golang.org/x/tools v0.1.10 // indirect
 	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6 // indirect
+	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	k8s.io/api v0.20.4 // indirect
+	k8s.io/apimachinery v0.20.4 // indirect
+	k8s.io/autoscaler/vertical-pod-autoscaler v0.11.0 // indirect
+	k8s.io/client-go v0.20.4 // indirect
+	k8s.io/klog/v2 v2.60.1 // indirect
+	k8s.io/utils v0.0.0-20201110183641-67b214c5f920 // indirect
 	modernc.org/httpfs v1.0.6 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
+	sigs.k8s.io/structured-merge-diff/v4 v4.0.2 // indirect
+	sigs.k8s.io/yaml v1.2.0 // indirect
 )
+
+replace k0s.io => ././
+
+replace k0s.io/cmd => ./cmd/
+
+replace k0s.io/pkg/agent => ./pkg/agent/
+
+replace k0s.io/pkg/asciitransport => ./pkg/asciitransport/
+
+replace k0s.io/pkg/cli => ./pkg/cli/
+
+replace k0s.io/pkg/client => ./pkg/client/
+
+replace k0s.io/pkg/console => ./pkg/console/
+
+replace k0s.io/pkg/distro => ./pkg/distro/
+
+replace k0s.io/pkg/dohserver => ./pkg/dohserver/
+
+replace k0s.io/pkg/exporter => ./pkg/exporter/
+
+replace k0s.io/pkg/fonts => ./pkg/fonts/
+
+replace k0s.io/pkg/fzf => ./pkg/fzf/
+
+replace k0s.io/pkg/gitd => ./pkg/gitd/
+
+replace k0s.io/pkg/hub => ./pkg/hub/
+
+replace k0s.io/pkg/jsondns => ./pkg/jsondns/
+
+replace k0s.io/pkg/manager => ./pkg/manager/
+
+replace k0s.io/pkg/middleware => ./pkg/middleware/
+
+replace k0s.io/pkg/reverseproxy => ./pkg/reverseproxy/
+
+replace k0s.io/pkg/rng => ./pkg/rng/
+
+replace k0s.io/pkg/simple => ./pkg/simple/
+
+replace k0s.io/pkg/tunnel => ./pkg/tunnel/
+
+replace k0s.io/pkg/utils => ./pkg/utils/
+
+replace k0s.io/pkg/uuid => ./pkg/uuid/
+
+replace k0s.io/pkg/wrap => ./pkg/wrap/

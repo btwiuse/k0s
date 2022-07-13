@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+ROOT=$(pwd)
+
+echo $ROOT
+
+modpaths(){
+  cd $ROOT
+  go work edit --json | jq .Use[] -c | jq -r .DiskPath | while read a ; do realpath $a; done
+}
+
+modpaths2(){
+  cd $ROOT
+  go work edit --json | jq .Use[] -c | jq -r '"\(.ModPath) \(.DiskPath)/"' | while read a b; do echo $a $(realpath $b); done
+}
+
+modpaths | while read dir; do
+  pushd $dir
+  modpaths2 | while read mod path; do
+    [[ $PWD == $ROOT ]] && prefix="./"
+    dst="${prefix}$(realpath --relative-to $PWD $path)/"
+    go mod edit --replace=${mod}=${dst}
+  done
+  # sleep 1
+  popd
+done

@@ -2,31 +2,6 @@ module k0s.io/pkg/cli
 
 go 1.19
 
-replace (
-	k0s.io/pkg/agent => ../agent
-	k0s.io/pkg/asciitransport => ../asciitransport
-	k0s.io/pkg/cli => ../cli
-	k0s.io/pkg/client => ../client
-	k0s.io/pkg/console => ../console
-	k0s.io/pkg/distro => ../distro
-	k0s.io/pkg/dohserver => ../dohserver
-	k0s.io/pkg/exporter => ../exporter
-	k0s.io/pkg/fonts => ../fonts
-	k0s.io/pkg/fzf => ../fzf
-	k0s.io/pkg/gitd => ../gitd
-	k0s.io/pkg/hub => ../hub
-	k0s.io/pkg/jsondns => ../jsondns
-	k0s.io/pkg/manager => ../manager
-	k0s.io/pkg/middleware => ../middleware
-	k0s.io/pkg/reverseproxy => ../reverseproxy
-	k0s.io/pkg/rng => ../rng
-	k0s.io/pkg/simple => ../simple
-	k0s.io/pkg/tunnel => ../tunnel
-	k0s.io/pkg/utils => ../utils
-	k0s.io/pkg/uuid => ../uuid
-	k0s.io/pkg/wrap => ../wrap
-)
-
 require (
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
 	github.com/creativeprojects/go-selfupdate v0.6.1
@@ -209,3 +184,51 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.0.2 // indirect
 	sigs.k8s.io/yaml v1.2.0 // indirect
 )
+
+replace k0s.io => ../../
+
+replace k0s.io/cmd => ../../cmd/
+
+replace k0s.io/pkg/agent => ../agent/
+
+replace k0s.io/pkg/asciitransport => ../asciitransport/
+
+replace k0s.io/pkg/cli => ./
+
+replace k0s.io/pkg/client => ../client/
+
+replace k0s.io/pkg/console => ../console/
+
+replace k0s.io/pkg/distro => ../distro/
+
+replace k0s.io/pkg/dohserver => ../dohserver/
+
+replace k0s.io/pkg/exporter => ../exporter/
+
+replace k0s.io/pkg/fonts => ../fonts/
+
+replace k0s.io/pkg/fzf => ../fzf/
+
+replace k0s.io/pkg/gitd => ../gitd/
+
+replace k0s.io/pkg/hub => ../hub/
+
+replace k0s.io/pkg/jsondns => ../jsondns/
+
+replace k0s.io/pkg/manager => ../manager/
+
+replace k0s.io/pkg/middleware => ../middleware/
+
+replace k0s.io/pkg/reverseproxy => ../reverseproxy/
+
+replace k0s.io/pkg/rng => ../rng/
+
+replace k0s.io/pkg/simple => ../simple/
+
+replace k0s.io/pkg/tunnel => ../tunnel/
+
+replace k0s.io/pkg/utils => ../utils/
+
+replace k0s.io/pkg/uuid => ../uuid/
+
+replace k0s.io/pkg/wrap => ../wrap/

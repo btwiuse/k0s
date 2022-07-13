@@ -1,5 +1,4 @@
 //go:build bin
-// +build bin
 
 package main
 
