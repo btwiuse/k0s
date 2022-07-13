@@ -8,7 +8,7 @@ VERSION  := $(shell cat VERSION)
 IMG_NAME := btwiuse/k0s
 IMAGE    := ${IMG_NAME}
 LDFLAGS  := $(shell ./pkg/version/ldflags)
-TAGS     := ""
+TAGS     := $(TAGS)
 SHELL    := bash
 BAZEL    := $(shell ./tools/which_bazel)
 

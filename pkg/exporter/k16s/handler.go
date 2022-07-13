@@ -26,10 +26,10 @@ import (
 	vpaclientset "k8s.io/autoscaler/vertical-pod-autoscaler/pkg/client/clientset/versioned"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/klog/v2"
-	"k8s.io/kube-state-metrics/v2/external/store"
-	"k8s.io/kube-state-metrics/v2/pkg/allowdenylist"
-	"k8s.io/kube-state-metrics/v2/pkg/metricshandler"
-	"k8s.io/kube-state-metrics/v2/pkg/options"
+	"github.com/btwiuse/k16s/v2/external/store"
+	"github.com/btwiuse/k16s/v2/pkg/allowdenylist"
+	"github.com/btwiuse/k16s/v2/pkg/metricshandler"
+	"github.com/btwiuse/k16s/v2/pkg/options"
 )
 
 func opt(args []string) *options.Options {

@@ -1,5 +1,5 @@
-//go:build ignore
-// +build ignore
+//go:build plugin_jsonlserver
+// +build plugin_jsonlserver
 
 package agent
 
@@ -12,7 +12,10 @@ import (
 	"k0s.io/pkg/api"
 )
 
-func init() { Tunnels[api.Jsonl] = StartJsonlServer }
+func init() {
+	Tunnels[api.Jsonl] = StartJsonlServer
+	println("JSONL")
+}
 
 func StartJsonlServer(c types.Config) chan net.Conn {
 	var (

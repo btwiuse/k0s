@@ -3,9 +3,6 @@ module k0s.io/pkg/exporter
 go 1.19
 
 replace (
-	github.com/buildkite/agent/v3 => github.com/btwiuse/agent/v3 v3.27.1-0.20210217080418-ae42a28eefa7
-	github.com/coredns/coredns => github.com/btwiuse/coredns v1.8.4
-	github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
 	k8s.io/api => k8s.io/api v0.20.4
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.20.4
 	k8s.io/apimachinery => k8s.io/apimachinery v0.20.4
@@ -24,7 +21,6 @@ replace (
 	k8s.io/kube-controller-manager => k8s.io/kube-controller-manager v0.20.4
 	k8s.io/kube-proxy => k8s.io/kube-proxy v0.20.4
 	k8s.io/kube-scheduler => k8s.io/kube-scheduler v0.20.4
-	k8s.io/kube-state-metrics/v2 => github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9
 	k8s.io/kubectl => k8s.io/kubectl v0.20.4
 	k8s.io/kubelet => k8s.io/kubelet v0.20.4
 	k8s.io/legacy-cloud-providers => k8s.io/legacy-cloud-providers v0.20.4
@@ -38,12 +34,14 @@ require (
 	github.com/prometheus/client_golang v1.12.1
 	github.com/prometheus/common v0.34.0
 	github.com/prometheus/node_exporter v1.3.1
+	// github.com/btwiuse/k16s/v2 v2.0.0-beta.0.20201224174453-2114e07844a9
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.11.0
 	k8s.io/client-go v0.20.4
 	k8s.io/klog/v2 v2.60.1
-	k8s.io/kube-state-metrics/v2 v2.4.2
 )
+
+require github.com/btwiuse/k16s/v2 v2.0.0-20201224175329-3bc18834f8c1
 
 require (
 	cloud.google.com/go v0.65.0 // indirect

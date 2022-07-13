@@ -196,7 +196,7 @@ func main() {
 			"-v",
 		}
 		buildArgs = append(buildArgs, freeArgs...)
-		buildArgs = append(buildArgs, ".")
+		buildArgs = append(buildArgs, "./cmd/k0s")
 
 		for i, arg := range buildArgs {
 			log.Println(fmt.Sprintf("[%02d] = %q", i, arg))

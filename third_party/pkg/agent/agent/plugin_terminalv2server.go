@@ -1,5 +1,5 @@
-//go:build ignore
-// +build ignore
+//go:build terminalv2_server
+// +build terminalv2_server
 
 package agent
 
@@ -10,7 +10,7 @@ import (
 	types "k0s.io/pkg/agent"
 	"k0s.io/pkg/agent/tty/factory"
 	"k0s.io/pkg/api"
-	asciitransport "k0s.io/pkg/asciitransport/v2"
+	asciitransport "k0s.io/third_party/pkg/asciitransport/v2"
 )
 
 func init() { Tunnels[api.TerminalV2] = StartTerminalV2Server }

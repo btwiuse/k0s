@@ -1,5 +1,5 @@
-//go:build ignore
-// +build ignore
+//go:build plugin_k16sserver
+// +build plugin_k16sserver
 
 package agent
 

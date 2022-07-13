@@ -1,5 +1,5 @@
-//go:build ignore
-// +build ignore
+//go:build plugin_dohserver
+// +build plugin_dohserver
 
 package agent
 
