@@ -19,7 +19,7 @@ modpaths | while read dir; do
   modpaths2 | while read mod path; do
     [[ $PWD == $ROOT ]] && prefix="./"
     dst="${prefix}$(realpath --relative-to $PWD $path)/"
-    go mod edit -replace=${mod}=${dst}
+    go mod edit -dropreplace=${mod}
   done
   # sleep 1
   popd

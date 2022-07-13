@@ -9,6 +9,14 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	gopkg.in/yaml.v3 v3.0.1
+	k0s.io v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/agent v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/asciitransport v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/console v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/fzf v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/hub v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/uuid v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/wrap v0.0.0-00010101000000-000000000000
 	nhooyr.io/websocket v1.8.7
 )
 
@@ -46,6 +54,8 @@ require (
 	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	k0s.io/pkg/distro v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/rng v0.0.0-00010101000000-000000000000 // indirect
 )
 
 replace k0s.io => ../../

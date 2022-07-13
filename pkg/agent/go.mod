@@ -12,6 +12,15 @@ require (
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b
 	gopkg.in/yaml.v3 v3.0.1
+	k0s.io v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/asciitransport v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/distro v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/dohserver v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/exporter v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/middleware v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/rng v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/uuid v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/wrap v0.0.0-00010101000000-000000000000
 	nhooyr.io/websocket v1.8.7
 )
 
@@ -144,6 +153,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	k0s.io/pkg/jsondns v0.0.0-00010101000000-000000000000 // indirect
 	k8s.io/api v0.20.4 // indirect
 	k8s.io/apimachinery v0.20.4 // indirect
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.11.0 // indirect

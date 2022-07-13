@@ -8,6 +8,14 @@ require (
 	github.com/btwiuse/wetty v0.0.36
 	github.com/gorilla/mux v1.8.0
 	github.com/jpillora/go-echo-server v0.5.0
+	k0s.io v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/agent v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/exporter v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/manager v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/middleware v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/rng v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/uuid v0.0.0-00010101000000-000000000000
+	k0s.io/pkg/wrap v0.0.0-00010101000000-000000000000
 	modernc.org/httpfs v1.0.6
 	nhooyr.io/websocket v1.8.7
 )
@@ -154,6 +162,10 @@ require (
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	k0s.io/pkg/asciitransport v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/distro v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/dohserver v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/jsondns v0.0.0-00010101000000-000000000000 // indirect
 	k8s.io/api v0.20.4 // indirect
 	k8s.io/apimachinery v0.20.4 // indirect
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.11.0 // indirect
