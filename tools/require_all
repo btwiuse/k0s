@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+VERSION=$(cat VERSION)
+
 ROOT=$(pwd)
 
 echo $ROOT
@@ -14,12 +16,21 @@ modpaths2(){
   go work edit --json | jq .Use[] -c | jq -r '"\(.ModPath) \(.DiskPath)/"' | while read a b; do echo $a $(realpath $b); done
 }
 
+
+mods(){
+  go mod edit -json | jq -cr '.Require[]?|.Path' | grep k0s.io
+}
+
 modpaths | while read dir; do
   pushd $dir
+  MODS="$(mods)"
   modpaths2 | while read mod path; do
-    [[ $PWD == $ROOT ]] && prefix="./"
     dst="${prefix}$(realpath --relative-to $PWD $path)/"
-    go mod edit -replace=${mod}=${dst}
+    [[ $dst == .* ]] && dst="./${dst}"
+    go mod edit -dropreplace=${mod}
+    grep -q "^${mod}$" <<<"$MODS" && {
+      go mod edit -require=${mod}@${VERSION}
+    }
   done
   # sleep 1
   popd

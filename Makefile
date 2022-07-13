@@ -36,11 +36,14 @@ raze:             ## auto generate BUILD.bazel files from Cargo.toml
 replace:         ## inject replace directives to all workspace modules based on go.work
 	@ ./tools/replace_all
 
+require:         ## turn replace directives for workspace modules into require
+	@ ./tools/require_all
+
 gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ go mod tidy
 	@ go mod vendor
 	@ find pkg -name 'go.mod' | sed s,go.mod,,g | xargs -I% bash -vc 'pushd % && go mod tidy'
-	@ sed -i -e '/k0s.io.* v/d' pkg/*/go.mod go.mod
+	@#sed -i -e '/k0s.io.* v/d' pkg/*/go.mod go.mod
 	@ $(BAZEL) run //:gazelle -- update-repos --from_file=go.mod
 	@ $(BAZEL) run //:gazelle
 	@ git status vendor/
