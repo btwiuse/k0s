@@ -13,5 +13,6 @@ func init() {
 	b, ok := debug.ReadBuildInfo()
 	if ok {
 		println(pretty.YAMLString(b))
+		println(pretty.YAMLString(b.Main.Version == ""))
 	}
 }

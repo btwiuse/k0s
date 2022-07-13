@@ -3,6 +3,7 @@ package version
 import (
 	"encoding/json"
 	"runtime"
+	"runtime/debug"
 
 	"github.com/btwiuse/pretty"
 	"k0s.io/pkg"
@@ -17,6 +18,7 @@ var (
 	VersionString    string
 )
 
+var BuildInfo, HasBuildInfo = debug.ReadBuildInfo()
 var Info = &Version{
 	GitCommit:  GitCommitString,
 	GitState:   GitStateString,
@@ -25,6 +27,13 @@ var Info = &Version{
 	BuildDate:  BuildDateString,
 	Version:    VersionString,
 	GoVersion:  runtime.Version(),
+}
+
+func init() {
+	if HasBuildInfo && BuildInfo.Main.Version != "" {
+		VersionString = BuildInfo.Main.Version 
+		Info.Version = BuildInfo.Main.Version 
+	}
 }
 
 func GetVersion() pkg.Version {

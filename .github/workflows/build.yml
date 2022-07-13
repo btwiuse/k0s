@@ -64,14 +64,23 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    - run: curl -sL https://go.dev/dl/go1.19rc1.linux-amd64.tar.gz | sudo tar -xzC /usr/local/ && sudo cp /usr/local/go/bin/go /usr/bin/go
-      name: install-go
+    - name: go version
+      uses: docker://library/golang:1.19rc1
+      with:
+        entrypoint: bash
+        args: -c "which go && go version"
 
-    - run: make go-get || make go-get || make go-get
-      name: go get
+    - name: go get
+      uses: docker://library/golang:1.19rc1
+      with:
+        entrypoint: bash
+        args: -c "make go-get || make go-get || make go-get"
 
-    - run: make go-install
-      name: go install
+    - name: go install
+      uses: docker://library/golang:1.19rc1
+      with:
+        entrypoint: bash
+        args: -c "make go-install"
 
   push-devcontainer:
     runs-on: ubuntu-latest

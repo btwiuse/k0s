@@ -43,7 +43,7 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ git status vendor/
 
 go-get:               ## trigger update for https://pkg.go.dev
-	@ go work edit -json | jq -r .Use[].ModPath | xargs -I% bash -c 'echo go get %@$(shell git rev-parse HEAD)' | bash -v
+	@ go work edit --json | grep ModPath | grep -o '"k0s.io/.*"' | xargs -I% bash -c 'echo go get %@$(shell git rev-parse HEAD)' | bash -v
 
 go-install:           ## install latest commit from https://pkg.go.dev
 	@ go install -v k0s.io@$(shell git rev-parse HEAD)
