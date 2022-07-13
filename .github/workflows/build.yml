@@ -80,7 +80,7 @@ jobs:
       uses: docker://library/golang:1.19rc1
       with:
         entrypoint: bash
-        args: -c "make go-install"
+        args: -c "make go-install-debuginfo"
 
   push-devcontainer:
     runs-on: ubuntu-latest

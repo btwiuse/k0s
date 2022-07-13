@@ -48,6 +48,10 @@ go-get:               ## trigger update for https://pkg.go.dev
 go-install:           ## install latest commit from https://pkg.go.dev
 	@ go install -v k0s.io@$(shell git rev-parse HEAD)
 
+go-install-debuginfo:     ## install latest commit from https://pkg.go.dev with debuginfo
+	@ go install -tags runtime_debug_buildinfo -v k0s.io@$(shell git rev-parse HEAD)
+	@ ~/go/bin/k0s.io hub -version
+
 bazel-build-android:            ## Build android binaries using bazel
 	$(BAZEL) run //:install_k0s --config=go_android_amd64 -- -g $(PWD)/bin/android/amd64
 	$(BAZEL) run //:install_k0s --config=go_android_386   -- -g $(PWD)/bin/android/386
