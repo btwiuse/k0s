@@ -129,7 +129,7 @@ bazel-build:          ## Build binary for current platform using bazel
 	# $(BAZEL) build # //:k0s # //cmd/{hub,client,agent}
 
 build:          ## Build binary for current platform
-	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}"
+	@ go run ./cmd/bingo -tags "$(TAGS)" -ldflags="${LDFLAGS}"
 
 dry:      ## Build binary for every supported platform
 	@ go run bin.go -tags "$(TAGS)" -ldflags="${LDFLAGS}" -dry \

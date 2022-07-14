@@ -8,5 +8,7 @@ import (
 )
 
 func main() {
-	log.Fatalln(agent.Run(os.Args[1:]))
+	if err := agent.Run(os.Args[1:]); err != nil {
+		log.Fatalln(err)
+	}
 }

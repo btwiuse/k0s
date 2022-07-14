@@ -1,5 +1,3 @@
-//go:build bin
-
 package main
 
 import (

@@ -8,5 +8,7 @@ import (
 )
 
 func main() {
-	log.Fatalln(hub.Run2(os.Args[1:]))
+	if err := hub.Run2(os.Args[1:]); err != nil {
+		log.Fatalln(err)
+	}
 }

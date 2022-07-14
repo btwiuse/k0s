@@ -8,5 +8,7 @@ import (
 )
 
 func main() {
-	log.Fatalln(k0s.Run(os.Args[1:]))
+	if err := k0s.Run(os.Args[1:]); err != nil {
+		log.Fatalln(err)
+	}
 }

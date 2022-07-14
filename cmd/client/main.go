@@ -8,5 +8,7 @@ import (
 )
 
 func main() {
-	log.Fatalln(client.Run(os.Args[1:]))
+	if err := client.Run(os.Args[1:]); err != nil {
+		log.Fatalln(err)
+	}
 }

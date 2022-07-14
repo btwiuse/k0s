@@ -21,7 +21,13 @@ type config struct {
 }
 
 func (c *config) Port() string {
-	return c.port
+	if c.port != "" {
+		return c.port
+	}
+	if port, ok := os.LookupEnv("PORT"); ok {
+		return ":" + port
+	}
+	return ":8000"
 }
 
 func (c *config) UseTLS() bool {
@@ -50,7 +56,7 @@ func Parse(args []string) hub.Config {
 		showVersion bool
 	)
 
-	fset.StringVar(&port, "port", ":8000", "hub listening port")
+	fset.StringVar(&port, "port", "", "hub listening port")
 	fset.StringVar(&cert, "cert", "", "path to tls cert file")
 	fset.StringVar(&key, "key", "", "path to tls key file")
 	fset.BoolVar(&showVersion, "version", false, "Show hub version info.")

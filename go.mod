@@ -5,7 +5,6 @@ go 1.19
 require (
 	k0s.io/pkg/agent v0.1.4
 	k0s.io/pkg/cli v0.1.4
-	k0s.io/pkg/fonts v0.1.4
 	k0s.io/pkg/uuid v0.1.4
 )
 
@@ -106,7 +105,6 @@ require (
 	github.com/lucas-clemente/quic-go v0.28.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/lufia/iostat v1.2.0 // indirect
-	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42 // indirect
 	github.com/marten-seemann/qtls-go1-16 v0.1.5 // indirect
 	github.com/marten-seemann/qtls-go1-17 v0.1.2 // indirect
 	github.com/marten-seemann/qtls-go1-18 v0.1.2 // indirect
