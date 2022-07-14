@@ -3,7 +3,7 @@
 {
   "name": "Go",
   "build": {
-    "dockerfile": "Dockerfile",
+    "dockerfile": "Dockerfile.devcontainer",
     "args": {
       // Update the VARIANT arg to pick a version of Go: 1, 1.18, 1.17
       // Append -bullseye or -buster to pin to an OS version.
@@ -27,11 +27,16 @@
 
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-    "golang.Go",
-    "denoland.vscode-deno",
-    "GitHub.copilot",
-    "ms-azuretools.vscode-docker"
-  ],
+	"golang.Go",
+	"denoland.vscode-deno",
+	"GitHub.copilot",
+	"ms-azuretools.vscode-docker",
+	"BazelBuild.vscode-bazel",
+	"rust-lang.rust-analyzer",
+	"ms-python.python",
+	"tamasfe.even-better-toml",
+	"coolbear.systemd-unit-file"
+],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
