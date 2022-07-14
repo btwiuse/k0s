@@ -1,5 +1,5 @@
 # https://cirrus-ci.com/github/btwiuse/k0s
 
-FROM btwiuse/k0s
+FROM btwiuse/k0s:devcontainer
 ENTRYPOINT ["sh", "-c"]
-CMD ["/usr/bin/k0s hub --port :$PORT"]
+CMD ["k0s hub"]

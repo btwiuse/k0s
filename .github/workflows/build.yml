@@ -83,6 +83,8 @@ jobs:
         args: -c "make go-install-debuginfo"
 
   push-devcontainer:
+    needs:
+    - push-image
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
