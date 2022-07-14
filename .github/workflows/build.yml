@@ -65,19 +65,19 @@ jobs:
         submodules: recursive
 
     - name: go version
-      uses: docker://library/golang:1.19rc1
+      uses: docker://library/golang:1.19rc2
       with:
         entrypoint: bash
         args: -c "which go && go version"
 
     - name: go get
-      uses: docker://library/golang:1.19rc1
+      uses: docker://library/golang:1.19rc2
       with:
         entrypoint: bash
         args: -c "make go-get || make go-get || make go-get"
 
     - name: go install
-      uses: docker://library/golang:1.19rc1
+      uses: docker://library/golang:1.19rc2
       with:
         entrypoint: bash
         args: -c "make go-install-debuginfo"
