@@ -166,6 +166,7 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	r.HandleFunc("/terminalv2", h.handleTunnel(api.TerminalV2)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/version", h.handleTunnel(api.Version)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/jsonl", h.handleTunnel(api.Jsonl)).Methods("GET").Queries("id", "{id}")
+	r.HandleFunc("/xpra", h.handleTunnel(api.Xpra)).Methods("GET").Queries("id", "{id}")
 
 	// hub specific function
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
@@ -314,6 +315,8 @@ func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
 		dohRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/jsonl"):
 		jsonlRelay(ag)(w, r)
+	case strings.HasPrefix(subpath, "/xpra"):
+		xpraRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/metrics"):
 		var (
 			vars    = r.URL.Query()

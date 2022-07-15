@@ -13,7 +13,7 @@ require (
 	github.com/felixge/httpsnoop v1.0.2 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
-	github.com/modern-go/reflect2 v1.0.2 // indirect
+	k0s.io v0.0.0-00010101000000-000000000000 // indirect
 )
 
 replace k0s.io => ../../

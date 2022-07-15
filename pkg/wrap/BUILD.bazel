@@ -5,11 +5,14 @@ go_library(
     srcs = [
         "connaddr.go",
         "hijack.go",
-        "netconn_gorilla.go",
+        "netconn_nhooyr.go",
         "wrconn.go",
-        "wrconn_gorilla.go",
+        "wrconn_nhooyr.go",
     ],
     importpath = "k0s.io/pkg/wrap",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/gorilla/websocket:go_default_library"],
+    deps = [
+        "//pkg:go_default_library",
+        "//vendor/nhooyr.io/websocket:go_default_library",
+    ],
 )

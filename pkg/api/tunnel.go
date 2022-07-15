@@ -18,6 +18,7 @@ const (
 	Env
 	TerminalV2
 	Jsonl
+	Xpra
 
 	MaxTunnel // number of tunnels
 )
@@ -36,6 +37,7 @@ var tunnelNames = []string{
 	"ENV",
 	"TERMINALV2",
 	"JSONL",
+	"XPRA",
 }
 
 func (tun Tunnel) String() string {
@@ -48,5 +50,5 @@ func FromString(s string) (Tunnel, error) {
 			return Tunnel(i), nil
 		}
 	}
-	return 0, fmt.Errorf("Invalid tunnel type: %s", s)
+	return 0, fmt.Errorf("invalid tunnel type: %s", s)
 }

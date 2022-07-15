@@ -13,12 +13,15 @@ go_library(
         "plugin_socks5server.go",
         "plugin_terminalserver.go",
         "plugin_versionserver.go",
+        "plugin_xpraserver.go",
         "rpc.go",
     ],
     importpath = "k0s.io/pkg/agent/agent",
     visibility = ["//visibility:public"],
     deps = [
+        "//pkg:go_default_library",
         "//pkg/api:go_default_library",
+        "//pkg/log:go_default_library",
         "//vendor/github.com/btwiuse/gost:go_default_library",
         "//vendor/github.com/btwiuse/pretty:go_default_library",
         "//vendor/golang.org/x/sync/errgroup:go_default_library",
@@ -29,5 +32,6 @@ go_library(
         "//vendor/k0s.io/pkg/exporter:go_default_library",
         "//vendor/k0s.io/pkg/exporter/env:go_default_library",
         "//vendor/k0s.io/pkg/middleware:go_default_library",
+        "//vendor/nhooyr.io/websocket:go_default_library",
     ],
 )

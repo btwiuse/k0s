@@ -1,5 +1,5 @@
-//go:build nhooyr && !gorilla && !raw
-// +build nhooyr,!gorilla,!raw
+//go:build !gorilla && !raw
+// +build !gorilla,!raw
 
 package wrap
 
@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"nhooyr.io/websocket"
+	"k0s.io/pkg"
 )
 
 func wrconn(w http.ResponseWriter, r *http.Request) (net.Conn, error) {
@@ -17,6 +18,7 @@ func wrconn(w http.ResponseWriter, r *http.Request) (net.Conn, error) {
 	if err != nil {
 		return nil, err
 	}
+	wsconn.SetReadLimit(pkg.MAX_WS_MESSAGE)
 	conn := NetConn(wsconn)
 	addr := NewAddr("websocket", r.RemoteAddr)
 	conn = ConnWithAddr(conn, addr)

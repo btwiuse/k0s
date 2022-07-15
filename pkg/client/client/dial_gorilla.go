@@ -1,5 +1,5 @@
-//go:build !nhooyr && !raw
-// +build !nhooyr,!raw
+//go:build gorilla && !nhooyr && !raw
+// +build gorilla,!nhooyr,!raw
 
 package client
 

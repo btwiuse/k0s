@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "dialer.go",
         "dialer_gorilla.go",
+        "dialer_nhooyr.go",
     ],
     importmap = "k0s.io/vendor/k0s.io/pkg/agent/dialer",
     importpath = "k0s.io/pkg/agent/dialer",
@@ -13,5 +14,6 @@ go_library(
         "//vendor/github.com/gorilla/websocket:go_default_library",
         "//vendor/k0s.io/pkg/agent:go_default_library",
         "//vendor/k0s.io/pkg/wrap:go_default_library",
+        "//vendor/nhooyr.io/websocket:go_default_library",
     ],
 )

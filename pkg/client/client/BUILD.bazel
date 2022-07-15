@@ -4,7 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "client.go",
-        "dial_gorilla.go",
+        "dial_nhooyr.go",
         "terminal_unix.go",
         "terminal_windows.go",
     ],
@@ -14,7 +14,6 @@ go_library(
         "//pkg:go_default_library",
         "//vendor/github.com/VojtechVitek/yaml-cli/pkg/cli:go_default_library",
         "//vendor/github.com/abiosoft/ishell:go_default_library",
-        "//vendor/github.com/gorilla/websocket:go_default_library",
         "//vendor/golang.org/x/crypto/ssh/terminal:go_default_library",
         "//vendor/k0s.io/pkg/client:go_default_library",
         "//vendor/k0s.io/pkg/client/wsdialer:go_default_library",
@@ -22,7 +21,7 @@ go_library(
         "//vendor/k0s.io/pkg/fzf:go_default_library",
         "//vendor/k0s.io/pkg/hub:go_default_library",
         "//vendor/k0s.io/pkg/hub/agent/info:go_default_library",
-        "//vendor/k0s.io/pkg/wrap:go_default_library",
+        "//vendor/nhooyr.io/websocket:go_default_library",
     ] + select({
         "@io_bazel_rules_go//go/platform:aix": [
             "//vendor/k0s.io/pkg/asciitransport:go_default_library",

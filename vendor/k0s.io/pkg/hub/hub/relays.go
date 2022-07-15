@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"k0s.io/pkg"
 	"k0s.io/pkg/api"
 	types "k0s.io/pkg/hub"
 	"k0s.io/pkg/wrap"
@@ -170,6 +171,33 @@ func jsonlRelay(ag types.Agent) http.HandlerFunc {
 		defer conn.Close()
 
 		go io.Copy(conn, wsconn)
+		io.Copy(wsconn, conn)
+	}
+}
+
+func xpraRelay(ag types.Agent) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		wsc, err := websocket.Accept(w, r, &websocket.AcceptOptions{
+			InsecureSkipVerify: true,
+			Subprotocols:       []string{"binary"},
+			CompressionMode:    websocket.CompressionContextTakeover,
+		})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		wsc.SetReadLimit(pkg.MAX_WS_MESSAGE)
+
+		wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
+		defer wsconn.Close()
+
+		conn := ag.NewTunnel(api.Xpra)
+		defer conn.Close()
+
+		b := make([]byte, pkg.MAX_WS_MESSAGE)
+		go io.CopyBuffer(conn, wsconn, b)
+
+		// b := make([]byte, 160*1024)
 		io.Copy(wsconn, conn)
 	}
 }
