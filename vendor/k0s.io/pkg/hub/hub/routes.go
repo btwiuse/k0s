@@ -239,7 +239,7 @@ func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageText)
+	conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
 
 	watchInterval := time.Second
 	for {
