@@ -6,7 +6,6 @@ import (
 	"expvar"
 	"fmt"
 	"io"
-	"log"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -18,8 +17,9 @@ import (
 	"sync"
 	"time"
 
+	"k0s.io/pkg/log"
 	portless "k0s.io/pkg/tunnel"
-	// "k0s.io/pkg/wrap"
+	"k0s.io/pkg/wrap"
 
 	"github.com/gorilla/handlers"
 	"github.com/rs/cors"
@@ -74,18 +74,27 @@ func manageHub(next http.Handler) http.Handler {
 			}
 			defaultTunnelMux.mu.RUnlock()
 			io.WriteString(w, "<h2>Debug Info</h2>\n")
-			io.WriteString(w, fmt.Sprintf("<p><a href=\"%s\">%s</a></p>\n", "/_/", "/_/"))
+			io.WriteString(w, fmt.Sprintf("<p><a href=\"%s\">%s</a></p>\n", "/api/chassis/_/", "/api/chassis/_/"))
 		}))
-		m.Handle("/_/expvar", expvar.Handler())
+		m.Handle("/api/chassis/_/expvar", expvar.Handler())
 		m.ServeHTTP(w, r)
 	})
+}
+
+func getFingerprint(r *http.Request) string {
+	param := r.URL.Query().Get(portless.FingerPrintHeader)
+	if param != "" {
+		return param
+	}
+	return r.Header.Get(portless.FingerPrintHeader)
 }
 
 // split internal tunnel requests from normal requests
 // register custom routes
 func setupTunnel(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fp := r.Header.Get(portless.FingerPrintHeader)
+		fp := getFingerprint(r)
+		log.Println("fingerprint", fp)
 		pattern := r.URL.Path
 		from := r.URL.Query().Get("from")
 		switch _, ok := defaultTunnelMux.Tunnels[fp]; {
@@ -168,6 +177,8 @@ func (mux *tunnelMux) match(path string) *muxEntry {
 // pattern most closely matches the request URL.
 func (mux *tunnelMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
+	isWS := strings.Split(r.Header.Get("Upgrade"), ",")[0] == "websocket"
+
 	path := r.URL.Path
 	e := defaultTunnelMux.match(path)
 	if e == nil {
@@ -184,6 +195,24 @@ func (mux *tunnelMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// here we capture the http request,
 	// or use http.Request.Write
 	// Google: how caddy reverse proxy works?
+
+	if isWS {
+		connSrc, err := e.tunnel.Accept()
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		connDst, err := wrap.Wrconn(w, r)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		go io.Copy(connSrc, connDst)
+		go io.Copy(connDst, connSrc)
+		return
+	}
 
 	tr := &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
@@ -204,8 +233,8 @@ func (mux *tunnelMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			req.URL.Scheme = "http" //r.URL.Scheme
 			req.Host = r.Host
 			req.URL.Host = req.Host
-			req.URL.Path = rebase(req.URL.Path, e.pattern, e.from)
-			req.RequestURI = rebase(req.RequestURI, e.pattern, e.from)
+			// req.URL.Path = rebase(req.URL.Path, e.pattern, e.from)
+			// req.RequestURI = rebase(req.RequestURI, e.pattern, e.from)
 		},
 		Transport: tr,
 	}
