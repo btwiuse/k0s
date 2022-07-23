@@ -9,7 +9,7 @@ import (
 	"k0s.io/pkg/tunnel/listener"
 )
 
-const HOST = "ws://127.0.0.1:8000/tmp/"
+const HOST = "ws://127.0.0.1:8000/api/chassis/socks5/"
 
 var autoHandler = gost.AutoHandler()
 var teleportListener = listener.Listener(HOST, "/")

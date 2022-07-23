@@ -41,7 +41,7 @@ require (
 	github.com/beevik/ntp v0.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btwiuse/gods v0.0.0-20220709102725-20662ea32ad9 // indirect
-	github.com/btwiuse/gost v0.0.0-20220709112350-568332f86f87 // indirect
+	github.com/btwiuse/gost v0.0.1 // indirect
 	github.com/btwiuse/k16s/v2 v2.0.0-20201224175329-3bc18834f8c1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cheekybits/genny v1.0.0 // indirect
