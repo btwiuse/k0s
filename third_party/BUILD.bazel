@@ -6,6 +6,12 @@ go_library(
     importpath = "k0s.io/third_party",
     visibility = ["//visibility:private"],
     deps = [
+        "//pkg/cli/agent:go_default_library",
+        "//pkg/cli/chassis:go_default_library",
+        "//pkg/cli/client:go_default_library",
+        "//pkg/cli/hub:go_default_library",
+        "//pkg/cli/miniclient:go_default_library",
+        "//pkg/cli/mnt:go_default_library",
         "//third_party/pkg/cli/bcrypt:go_default_library",
         "//third_party/pkg/cli/buildkite:go_default_library",
         "//third_party/pkg/cli/caddy:go_default_library",
@@ -19,13 +25,7 @@ go_library(
         "//third_party/pkg/cli/kubectl:go_default_library",
         "//third_party/pkg/cli/trojan:go_default_library",
         "//third_party/pkg/cli/webproc:go_default_library",
-        "//vendor/github.com/alexpantyukhin/go-pattern-match:go_default_library",
-        "//vendor/k0s.io/pkg/cli/agent:go_default_library",
-        "//vendor/k0s.io/pkg/cli/chassis:go_default_library",
-        "//vendor/k0s.io/pkg/cli/client:go_default_library",
-        "//vendor/k0s.io/pkg/cli/hub:go_default_library",
-        "//vendor/k0s.io/pkg/cli/miniclient:go_default_library",
-        "//vendor/k0s.io/pkg/cli/mnt:go_default_library",
+        "@com_github_alexpantyukhin_go_pattern_match//:go_default_library",
     ],
 )
 

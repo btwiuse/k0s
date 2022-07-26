@@ -8,7 +8,7 @@ go_library(
     ],
     importpath = "k0s.io/third_party/pkg/cli/bcrypt",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/golang.org/x/crypto/bcrypt:go_default_library"],
+    deps = ["@org_golang_x_crypto//bcrypt:go_default_library"],
 )
 
 go_test(
@@ -16,8 +16,8 @@ go_test(
     srcs = ["cmd_test.go"],
     embed = [":go_default_library"],
     deps = [
-        "//vendor/golang.org/x/crypto/bcrypt:go_default_library",
         "@com_github_stretchr_testify//assert:go_default_library",
         "@com_github_stretchr_testify//require:go_default_library",
+        "@org_golang_x_crypto//bcrypt:go_default_library",
     ],
 )

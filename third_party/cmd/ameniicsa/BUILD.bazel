@@ -6,9 +6,9 @@ go_library(
     importpath = "k0s.io/third_party/cmd/ameniicsa",
     visibility = ["//visibility:private"],
     deps = [
+        "//pkg/console:go_default_library",
         "//third_party/pkg/asciitransport/v2:go_default_library",
         "//vendor/k0s.io/pkg/agent/tty/factory:go_default_library",
-        "//vendor/k0s.io/pkg/console:go_default_library",
         "//vendor/k0s.io/pkg/uuid:go_default_library",
     ],
 )

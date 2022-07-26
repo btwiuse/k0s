@@ -13,13 +13,13 @@ go_library(
     importpath = "k0s.io/pkg/fzf/tui",
     visibility = ["//visibility:public"],
     deps = [
+        "//pkg/fzf/util:go_default_library",
         "//vendor/golang.org/x/crypto/ssh/terminal:go_default_library",
-        "//vendor/k0s.io/pkg/fzf/util:go_default_library",
     ] + select({
         "@io_bazel_rules_go//go/platform:windows": [
-            "//vendor/github.com/gdamore/tcell:go_default_library",
-            "//vendor/github.com/gdamore/tcell/encoding:go_default_library",
-            "//vendor/github.com/mattn/go-runewidth:go_default_library",
+            "@com_github_gdamore_tcell//:go_default_library",
+            "@com_github_gdamore_tcell//encoding:go_default_library",
+            "@com_github_mattn_go_runewidth//:go_default_library",
         ],
         "//conditions:default": [],
     }),

@@ -12,7 +12,7 @@ go_library(
     importpath = "k0s.io/pkg/gitd",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/gorilla/mux:go_default_library",
         "//vendor/k0s.io/pkg/middleware:go_default_library",
+        "@com_github_gorilla_mux//:go_default_library",
     ],
 )

@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/cli/miniclient",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/k0s.io/pkg/client/client:go_default_library",
-        "//vendor/k0s.io/pkg/client/config:go_default_library",
+        "//pkg/client/client:go_default_library",
+        "//pkg/client/config:go_default_library",
     ],
 )

@@ -9,8 +9,8 @@ go_library(
     importpath = "k0s.io/third_party/cmd/mnt-etcd",
     visibility = ["//visibility:private"],
     deps = [
+        "//pkg/tunnel/listener:go_default_library",
         "//vendor/github.com/gorilla/handlers:go_default_library",
-        "//vendor/k0s.io/pkg/tunnel/listener:go_default_library",
         "@com_github_btwiuse_etcd_v3//client/v3:go_default_library",
         "@com_github_freman_caddy2_reauth//backends/ldap:go_default_library",
         "@com_github_freman_caddy2_reauth//jsontypes:go_default_library",

@@ -13,8 +13,8 @@ go_library(
         "//third_party/pkg/asciitransport/v2:go_default_library",
         "//third_party/pkg/localcmd:go_default_library",
         "//third_party/pkg/wetty/wetty:go_default_library",
-        "//vendor/github.com/btwiuse/wetty/pkg/assets:go_default_library",
         "//vendor/github.com/gorilla/handlers:go_default_library",
-        "//vendor/modernc.org/httpfs:go_default_library",
+        "@com_github_btwiuse_wetty//pkg/assets:go_default_library",
+        "@org_modernc_httpfs//:go_default_library",
     ],
 )

@@ -9,8 +9,8 @@ go_library(
     importpath = "k0s.io/pkg/fonts",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/mattn/go-isatty:go_default_library",
-        "//vendor/k0s.io/pkg/console:go_default_library",
+        "//pkg/console:go_default_library",
         "@com_github_lukesampson_figlet//figletlib:go_default_library",
+        "@com_github_mattn_go_isatty//:go_default_library",
     ],
 )

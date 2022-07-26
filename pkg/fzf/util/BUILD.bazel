@@ -14,7 +14,7 @@ go_library(
     importpath = "k0s.io/pkg/fzf/util",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/mattn/go-isatty:go_default_library",
-        "//vendor/github.com/mattn/go-runewidth:go_default_library",
+        "@com_github_mattn_go_isatty//:go_default_library",
+        "@com_github_mattn_go_runewidth//:go_default_library",
     ],
 )
