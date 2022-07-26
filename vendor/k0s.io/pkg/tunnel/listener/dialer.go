@@ -2,9 +2,7 @@ package listener
 
 import (
 	"context"
-	"crypto/tls"
 	"net"
-	"net/http"
 	"net/url"
 
 	portless "k0s.io/pkg/tunnel"
@@ -27,28 +25,19 @@ func Dial(addr string, from string) (conn net.Conn, err error) {
 		return nil, err
 	}
 
-	var (
-		ub = &url.URL{
-			Scheme:   wscheme(_url),
-			Host:     _url.Host,
-			Path:     _url.Path,
-			RawQuery: "from=" + from,
-		}
-		u = ub.String()
-		t = &http.Client{
-			Transport: &http.Transport{
-				Proxy: http.ProxyFromEnvironment,
-				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: true,
-				},
-			},
-		}
-		opts = &websocket.DialOptions{
-			HTTPClient: t,
-			HTTPHeader: make(map[string][]string),
-		}
-	)
-	opts.HTTPHeader.Set(portless.FingerPrintHeader, fingerprint)
+	ub := &url.URL{
+		Scheme: wscheme(_url),
+		Host:   _url.Host,
+		Path:   _url.Path,
+	}
+
+	values := ub.Query()
+	values.Set(portless.FingerPrintHeader, fingerprint)
+	values.Set("from", from)
+	ub.RawQuery = values.Encode()
+
+	u := ub.String()
+	println(u)
 
 	wsconn, _, err := websocket.Dial(context.Background(), u, opts)
 	if err != nil {

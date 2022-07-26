@@ -192,6 +192,7 @@ require (
 	k0s.io/pkg/rng v0.1.4 // indirect
 	k0s.io/pkg/simple v0.1.4 // indirect
 	k0s.io/pkg/tunnel v0.1.4 // indirect
+	k0s.io/pkg/ui v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/wrap v0.1.4 // indirect
 	k8s.io/api v0.20.4 // indirect
 	k8s.io/apimachinery v0.20.4 // indirect
@@ -252,3 +253,5 @@ replace k0s.io/pkg/utils => ./pkg/utils/
 replace k0s.io/pkg/uuid => ./pkg/uuid/
 
 replace k0s.io/pkg/wrap => ./pkg/wrap/
+
+replace k0s.io/pkg/ui => ./pkg/ui/

@@ -1,0 +1,8 @@
+#    -d '{"jsonrpc":"2.0","id":1,"method":"HelloService.Say","params":{"Who":"btwiuse"}}' \
+curl -X POST \
+     -H 'Content-Type: application/json' \
+     -d '{"jsonrpc":"2.0","id":1,"method":"hello_say","params":[{"who":"btwiuse"}]}' \
+     http://localhost:8000
+
+echo '{"jsonrpc":"2.0","id":1,"method":"hello_say","params":[{"who":"btwiuse"}]}' | websocat -n ws://localhost:8000
+# cat <(echo '{"jsonrpc":"2.0","id":1,"method":"hello_say","params":[{"who":"btwiuse"}]}') - | websocat ws://localhost:8000

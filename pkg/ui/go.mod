@@ -1,11 +1,13 @@
-module k0s.io/pkg/manager
+module k0s.io/pkg/ui
 
 go 1.19
 
 require (
-	github.com/btwiuse/gods v0.0.0-20220709102725-20662ea32ad9
-	k0s.io v0.1.4
+	github.com/gorilla/mux v1.8.0
+	k0s.io/pkg/reverseproxy v0.1.4
 )
+
+require k0s.io v0.0.0-00010101000000-000000000000 // indirect
 
 replace k0s.io => ../../
 
@@ -37,7 +39,7 @@ replace k0s.io/pkg/hub => ../hub/
 
 replace k0s.io/pkg/jsondns => ../jsondns/
 
-replace k0s.io/pkg/manager => ./
+replace k0s.io/pkg/manager => ../manager/
 
 replace k0s.io/pkg/middleware => ../middleware/
 
@@ -49,10 +51,10 @@ replace k0s.io/pkg/simple => ../simple/
 
 replace k0s.io/pkg/tunnel => ../tunnel/
 
+replace k0s.io/pkg/ui => ./
+
 replace k0s.io/pkg/utils => ../utils/
 
 replace k0s.io/pkg/uuid => ../uuid/
 
 replace k0s.io/pkg/wrap => ../wrap/
-
-replace k0s.io/pkg/ui => ../ui/

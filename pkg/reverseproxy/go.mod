@@ -49,3 +49,7 @@ replace k0s.io/pkg/utils => ../utils/
 replace k0s.io/pkg/uuid => ../uuid/
 
 replace k0s.io/pkg/wrap => ../wrap/
+
+require k0s.io v0.0.0-00010101000000-000000000000
+
+replace k0s.io/pkg/ui => ../ui/

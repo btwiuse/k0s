@@ -6,8 +6,10 @@ go_library(
     importpath = "k0s.io/pkg/tunnel/handler",
     visibility = ["//visibility:public"],
     deps = [
+        "//pkg/log:go_default_library",
         "//vendor/github.com/gorilla/handlers:go_default_library",
         "//vendor/github.com/rs/cors:go_default_library",
         "//vendor/k0s.io/pkg/tunnel:go_default_library",
+        "//vendor/k0s.io/pkg/wrap:go_default_library",
     ],
 )

@@ -3,7 +3,6 @@ package hub
 import (
 	"context"
 	"crypto/tls"
-	"log"
 	"net"
 	"net/http"
 	"net/http/pprof"
@@ -15,10 +14,13 @@ import (
 	"github.com/btwiuse/wetty/pkg/assets"
 	"github.com/gorilla/mux"
 	echo "github.com/jpillora/go-echo-server/handler"
+	"k0s.io/pkg"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/exporter"
 	types "k0s.io/pkg/hub"
+	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
+	"k0s.io/pkg/ui"
 	"k0s.io/pkg/wrap"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
@@ -59,7 +61,7 @@ func NewHub(c types.Config) types.Hub {
 		}
 	)
 	// ensure core fields of h is not empty before return
-	h.initServer(h.c.Port(), "/api", listhand)
+	h.initServer(h.GetConfig().Port(), "/api", listhand)
 	go h.serve(listhand, listhand)
 	return h
 }
@@ -107,16 +109,26 @@ func (h *hub) register(conn net.Conn) {
 }
 
 func (h *hub) initServer(addr, apiPrefix string, hl http.Handler) {
+	handler := middleware.AllowAllCorsMiddleware(h.initRouter(apiPrefix, hl))
+	if h.GetConfig().Verbose() {
+		handler = middleware.LoggingMiddleware(handler)
+	}
 	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
 	h.Server = &http.Server{
 		Addr:         addr,
-		Handler:      h.initHandler(apiPrefix, hl),
+		Handler:      handler,
 		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
 }
 
-func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
-	r := mux.NewRouter().PathPrefix(apiPrefix).Subrouter()
+func (h *hub) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router) {
+	if h.GetConfig().UI() {
+		R = ui.NewRouter(pkg.DEFAULT_UI_ADDRESS)
+	} else {
+		R = mux.NewRouter()
+	}
+
+	r := R.PathPrefix(apiPrefix).Subrouter()
 
 	r.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
 	r.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
@@ -172,8 +184,8 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
 	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
 	r.Handle("/bin/k0s", h.BinHandler).Methods("GET")
-	// return middleware.LoggingMiddleware(middleware.AllowAllCorsMiddleware(r))
-	return middleware.AllowAllCorsMiddleware(r)
+
+	return R
 }
 
 func (h *hub) handleVersion(w http.ResponseWriter, r *http.Request) {

@@ -2,11 +2,12 @@ package reverseproxy
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
+
+	"k0s.io/pkg/log"
 )
 
 func dumpRequest(r *http.Request) {

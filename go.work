@@ -22,6 +22,7 @@ use (
 	./pkg/rng
 	./pkg/simple
 	./pkg/tunnel
+	./pkg/ui
 	./pkg/utils
 	./pkg/uuid
 	./pkg/wrap

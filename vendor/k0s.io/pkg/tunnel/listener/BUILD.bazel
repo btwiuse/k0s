@@ -4,6 +4,8 @@ go_library(
     name = "go_default_library",
     srcs = [
         "dialer.go",
+        "dialer_js.go",
+        "dialer_nojs.go",
         "fingerprint.go",
         "listener.go",
     ],

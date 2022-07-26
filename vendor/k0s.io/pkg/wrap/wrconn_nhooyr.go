@@ -7,8 +7,8 @@ import (
 	"net"
 	"net/http"
 
-	"nhooyr.io/websocket"
 	"k0s.io/pkg"
+	"nhooyr.io/websocket"
 )
 
 func wrconn(w http.ResponseWriter, r *http.Request) (net.Conn, error) {

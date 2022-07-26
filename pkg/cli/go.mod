@@ -190,6 +190,7 @@ require (
 	k0s.io/pkg/manager v0.1.4 // indirect
 	k0s.io/pkg/middleware v0.1.4 // indirect
 	k0s.io/pkg/rng v0.1.4 // indirect
+	k0s.io/pkg/ui v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/uuid v0.1.4 // indirect
 	k0s.io/pkg/wrap v0.1.4 // indirect
 	k8s.io/api v0.20.4 // indirect
@@ -251,3 +252,5 @@ replace k0s.io/pkg/utils => ../utils/
 replace k0s.io/pkg/uuid => ../uuid/
 
 replace k0s.io/pkg/wrap => ../wrap/
+
+replace k0s.io/pkg/ui => ../ui/
