@@ -15,6 +15,8 @@ import (
 type config struct {
 	port    string
 	tls     bool
+	ui      bool
+	verbose bool
 	cert    string
 	key     string
 	version pkg.Version
@@ -34,6 +36,14 @@ func (c *config) UseTLS() bool {
 	return c.tls
 }
 
+func (c *config) Verbose() bool {
+	return c.verbose
+}
+
+func (c *config) UI() bool {
+	return c.ui
+}
+
 func (c *config) Cert() string {
 	return c.cert
 }
@@ -51,6 +61,8 @@ func Parse(args []string) hub.Config {
 	var (
 		port        string
 		tls         bool
+		ui          bool
+		verbose     bool
 		cert        string
 		key         string
 		showVersion bool
@@ -60,6 +72,8 @@ func Parse(args []string) hub.Config {
 	fset.StringVar(&cert, "cert", "", "path to tls cert file")
 	fset.StringVar(&key, "key", "", "path to tls key file")
 	fset.BoolVar(&showVersion, "version", false, "Show hub version info.")
+	fset.BoolVar(&ui, "ui", false, "enable web ui.")
+	fset.BoolVar(&verbose, "verbose", false, "show verbose log.")
 	err := fset.Parse(args)
 	if err != nil {
 		log.Println(err)
@@ -78,8 +92,10 @@ func Parse(args []string) hub.Config {
 	c := &config{
 		port:    port,
 		tls:     tls,
+		ui:      ui,
 		cert:    cert,
 		key:     key,
+		verbose: verbose,
 		version: version.GetVersion(),
 	}
 

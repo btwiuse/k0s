@@ -32,6 +32,8 @@ type AgentInfo interface {
 type Config interface {
 	Port() string
 	UseTLS() bool
+	UI() bool
+	Verbose() bool
 	Cert() string
 	Key() string
 	GetVersion() pkg.Version

@@ -2,11 +2,12 @@ package reverseproxy
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
+
+	"k0s.io/pkg/log"
 )
 
 func dumpRequest(r *http.Request) {
@@ -31,7 +32,7 @@ func Handler(addr string) http.Handler {
 			// dumpRequest(r)
 		},
 		ModifyResponse: func(r *http.Response) (err error) {
-			log.Println("reverse proxy response status code:", r.StatusCode)
+			// log.Println("reverse proxy response status code:", r.StatusCode)
 			for r.StatusCode == 301 || r.StatusCode == 302 {
 				if err = resolve(r); err != nil {
 					return err
@@ -62,6 +63,6 @@ func resolve(r *http.Response) error {
 	r.Trailer = resp.Trailer
 	r.Request = resp.Request
 	r.TLS = resp.TLS
-	log.Println("redirected reverse proxy response status code:", r.StatusCode)
+	// log.Println("redirected reverse proxy response status code:", r.StatusCode)
 	return nil
 }
