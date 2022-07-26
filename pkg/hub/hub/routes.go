@@ -3,7 +3,6 @@ package hub
 import (
 	"context"
 	"crypto/tls"
-	"log"
 	"net"
 	"net/http"
 	"net/http/pprof"
@@ -15,10 +14,13 @@ import (
 	"github.com/btwiuse/wetty/pkg/assets"
 	"github.com/gorilla/mux"
 	echo "github.com/jpillora/go-echo-server/handler"
+	"k0s.io/pkg"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/exporter"
 	types "k0s.io/pkg/hub"
+	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
+	"k0s.io/pkg/reverseproxy"
 	"k0s.io/pkg/wrap"
 	"modernc.org/httpfs"
 	"nhooyr.io/websocket"
@@ -115,8 +117,15 @@ func (h *hub) initServer(addr, apiPrefix string, hl http.Handler) {
 	}
 }
 
+func fallbackHandler(w http.ResponseWriter, r *http.Request) {
+	reverseproxy.Handler(pkg.DEFAULT_UI_ADDRESS).ServeHTTP(w, r)
+}
+
 func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
-	r := mux.NewRouter().PathPrefix(apiPrefix).Subrouter()
+	R := mux.NewRouter()
+	R.NotFoundHandler = http.HandlerFunc(fallbackHandler)
+
+	r := R.PathPrefix(apiPrefix).Subrouter()
 
 	r.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
 	r.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
@@ -172,8 +181,8 @@ func (h *hub) initHandler(apiPrefix string, hl http.Handler) http.Handler {
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
 	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
 	r.Handle("/bin/k0s", h.BinHandler).Methods("GET")
-	// return middleware.LoggingMiddleware(middleware.AllowAllCorsMiddleware(r))
-	return middleware.AllowAllCorsMiddleware(r)
+
+	return middleware.LoggingMiddleware(middleware.AllowAllCorsMiddleware(R))
 }
 
 func (h *hub) handleVersion(w http.ResponseWriter, r *http.Request) {
