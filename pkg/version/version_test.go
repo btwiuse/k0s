@@ -3,7 +3,7 @@ package version
 import (
 	"testing"
 
-	"k0s.io/pkg"
+	"k0s.io"
 )
 
 func check(t *testing.T, name string, got string, expected string) bool {
@@ -17,14 +17,14 @@ func TestDecode(t *testing.T) {
 	inputs := []string{
 		`{"GitCommit":"deadbeef","GitState":"dirty","GitBranch":"master","GitSummary":"summary","BuildDate":"now","Version":"0.0.1"}`,
 	}
-	expects := [][]func(v pkg.Version) bool{
+	expects := [][]func(v k0s.Version) bool{
 		{
-			func(v pkg.Version) bool { return check(t, "GitCommit", v.GetGitCommit(), "deadbeef") },
-			func(v pkg.Version) bool { return check(t, "GitBranch", v.GetGitBranch(), "master") },
-			func(v pkg.Version) bool { return check(t, "GitState", v.GetGitState(), "dirty") },
-			func(v pkg.Version) bool { return check(t, "GitSummary", v.GetGitSummary(), "summary") },
-			func(v pkg.Version) bool { return check(t, "BuildDate", v.GetBuildDate(), "now") },
-			func(v pkg.Version) bool { return check(t, "Version", v.GetVersion(), "0.0.1") },
+			func(v k0s.Version) bool { return check(t, "GitCommit", v.GetGitCommit(), "deadbeef") },
+			func(v k0s.Version) bool { return check(t, "GitBranch", v.GetGitBranch(), "master") },
+			func(v k0s.Version) bool { return check(t, "GitState", v.GetGitState(), "dirty") },
+			func(v k0s.Version) bool { return check(t, "GitSummary", v.GetGitSummary(), "summary") },
+			func(v k0s.Version) bool { return check(t, "BuildDate", v.GetBuildDate(), "now") },
+			func(v k0s.Version) bool { return check(t, "Version", v.GetVersion(), "0.0.1") },
 		},
 	}
 	for i, input := range inputs {

@@ -1,4 +1,4 @@
-package pkg
+package k0s
 
 const (
 	DEFAULT_HUB_ADDRESS = "https://k0s.herokuapp.com"

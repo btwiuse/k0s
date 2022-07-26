@@ -1,7 +1,7 @@
 package hub
 
 import (
-	"k0s.io/pkg"
+	"k0s.io"
 	types "k0s.io/pkg/hub"
 	"k0s.io/pkg/manager"
 )
@@ -11,7 +11,7 @@ var (
 )
 
 type agentManager struct {
-	pkg.Manager
+	k0s.Manager
 }
 
 func (am *agentManager) AddAgent(ag types.Agent) {

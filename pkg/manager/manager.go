@@ -4,11 +4,11 @@ import (
 	"sync"
 
 	"github.com/btwiuse/gods/maps/linkedhashmap"
-	"k0s.io/pkg"
+	"k0s.io"
 )
 
 var (
-	_ pkg.Manager = NewManager()
+	_ k0s.Manager = NewManager()
 )
 
 func NewManager() *manager {
@@ -37,14 +37,14 @@ func (m *manager) Has(id string) bool {
 	return ok
 }
 
-func (m *manager) Get(id string) pkg.Tider {
+func (m *manager) Get(id string) k0s.Tider {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	v, _ := m.Map.Get(id)
-	return v.(pkg.Tider)
+	return v.(k0s.Tider)
 }
 
-func (m *manager) Add(idr pkg.Tider) {
+func (m *manager) Add(idr k0s.Tider) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	m.Map.Put(idr.ID(), idr)
@@ -60,12 +60,12 @@ func (m *manager) Keys() (ret []string) {
 	return ret
 }
 
-func (m *manager) Values() (ret []pkg.Tider) {
+func (m *manager) Values() (ret []k0s.Tider) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	vals := m.Map.Values()
 	for _, v := range vals {
-		ret = append(ret, v.(pkg.Tider))
+		ret = append(ret, v.(k0s.Tider))
 	}
 	return ret
 }

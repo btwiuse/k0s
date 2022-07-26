@@ -24,11 +24,11 @@ import (
 
 	"github.com/spf13/pflag"
 
-	rest "k8s.io/client-go/rest"
 	api "k8s.io/api/core/v1"
-	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/kubernetes/scheme"
+	rest "k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
 var server = pflag.StringP("server", "s", "http://127.0.0.1:8080", "address of the K8s API Server")
@@ -145,10 +145,10 @@ func getPodIP(podName string) (string, error) {
 }
 
 func createRESTConfig(apiserver string, kubeconfig string) (*rest.Config, error) {
-        config, err := clientcmd.BuildConfigFromFlags(apiserver, kubeconfig)
-        if err != nil {
-                return nil, err
-        }
+	config, err := clientcmd.BuildConfigFromFlags(apiserver, kubeconfig)
+	if err != nil {
+		return nil, err
+	}
 	config.GroupVersion = &schema.GroupVersion{Group: "", Version: "v1"}
 	config.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
 	config.APIPath = "/api"
@@ -156,10 +156,10 @@ func createRESTConfig(apiserver string, kubeconfig string) (*rest.Config, error)
 }
 
 func createKubeClient(apiserver string, kubeconfig string) (*rest.RESTClient, error) {
-        config, err := createRESTConfig(apiserver, kubeconfig)
-        if err != nil {
-                return nil, err
-        }
+	config, err := createRESTConfig(apiserver, kubeconfig)
+	if err != nil {
+		return nil, err
+	}
 
 	c, err := rest.UnversionedRESTClientFor(config)
 	if err != nil {

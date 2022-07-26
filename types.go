@@ -1,4 +1,4 @@
-package pkg
+package k0s
 
 import (
 	"time"

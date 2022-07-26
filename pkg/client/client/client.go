@@ -19,7 +19,7 @@ import (
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
 	"github.com/abiosoft/ishell"
 	"golang.org/x/crypto/ssh/terminal"
-	"k0s.io/pkg"
+	"k0s.io"
 	types "k0s.io/pkg/client"
 	"k0s.io/pkg/client/wsdialer"
 	"k0s.io/pkg/console"
@@ -342,7 +342,7 @@ func (cl *client) RunRedir() error {
 	ep := fmt.Sprintf("/api/agent/%s/redir", idd)
 	log.Println("dial", ep)
 
-	addr := pkg.REDIR_PROXY_PORT
+	addr := k0s.REDIR_PROXY_PORT
 	if cl.GetRedir() != "" {
 		addr = cl.GetRedir()
 	}
@@ -381,7 +381,7 @@ func (cl *client) RunSocks() error {
 	ep := fmt.Sprintf("/api/agent/%s/socks5", idd)
 	log.Println("dial", ep)
 
-	addr := pkg.SOCKS5_PROXY_PORT
+	addr := k0s.SOCKS5_PROXY_PORT
 	if cl.GetSocks() != "" {
 		addr = cl.GetSocks()
 	}
@@ -420,7 +420,7 @@ func (cl *client) RunDoh() error {
 	ep := fmt.Sprintf("/api/agent/%s/doh", idd)
 	log.Println("dial", ep)
 
-	addr := pkg.DOH_PROXY_PORT
+	addr := k0s.DOH_PROXY_PORT
 	if cl.GetDoh() != "" {
 		addr = cl.GetDoh()
 	}

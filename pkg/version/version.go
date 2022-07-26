@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"runtime/debug"
 
-	"k0s.io/pkg"
+	"k0s.io"
 )
 
 var (
@@ -40,7 +40,7 @@ func init() {
 	}
 }
 
-func GetVersion() pkg.Version {
+func GetVersion() k0s.Version {
 	return Info
 }
 
@@ -62,7 +62,7 @@ func (v *Version) GetBuildDate() string  { return v.BuildDate }
 func (v *Version) GetVersion() string    { return v.Version }
 func (v *Version) GetGoVersion() string  { return v.GoVersion }
 
-func Decode(data []byte) (pkg.Version, error) {
+func Decode(data []byte) (k0s.Version, error) {
 	v := &Version{}
 	err := json.Unmarshal(data, v)
 	if err != nil {

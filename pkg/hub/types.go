@@ -6,7 +6,7 @@ import (
 
 	// "net/rpc"
 
-	"k0s.io/pkg"
+	"k0s.io"
 	"k0s.io/pkg/api"
 )
 
@@ -36,7 +36,7 @@ type Config interface {
 	Verbose() bool
 	Cert() string
 	Key() string
-	GetVersion() pkg.Version
+	GetVersion() k0s.Version
 }
 
 type Hub interface {
@@ -51,7 +51,7 @@ type Hub interface {
 }
 
 type AgentManager interface {
-	pkg.Manager
+	k0s.Manager
 
 	AddAgent(Agent)
 	GetAgent(string) Agent
@@ -60,7 +60,7 @@ type AgentManager interface {
 
 type Agent interface {
 	AgentInfo
-	pkg.Tider
+	k0s.Tider
 
 	AddTunnel(api.Tunnel, net.Conn)
 	NewTunnel(api.Tunnel) net.Conn
@@ -68,7 +68,7 @@ type Agent interface {
 }
 
 type RPC interface {
-	pkg.Tider
+	k0s.Tider
 
 	Close()
 	Done() <-chan struct{}

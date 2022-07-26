@@ -1,8 +1,8 @@
 package main
 
 import (
-        "log"
-        "os"
+	"log"
+	"os"
 
 	"k0s.io/third_party/pkg/cli/caddy"
 )

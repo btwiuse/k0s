@@ -7,10 +7,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	asciitransport "k0s.io/third_party/pkg/asciitransport/v2"
-	"k0s.io/pkg/console"
 	"k0s.io/pkg/agent/tty/factory"
+	"k0s.io/pkg/console"
 	"k0s.io/pkg/uuid"
+	asciitransport "k0s.io/third_party/pkg/asciitransport/v2"
 )
 
 var (
@@ -19,12 +19,12 @@ var (
 
 func server() {
 	var (
-		fac = factory.New([]string{"bash"})
+		fac     = factory.New([]string{"bash"})
 		term, _ = fac.MakeTty()
 		opts    = []asciitransport.Opt{
 			asciitransport.WithReader(term),
 			asciitransport.WithWriter(term),
-			asciitransport.WithResizeHook(func(w, h uint16){
+			asciitransport.WithResizeHook(func(w, h uint16) {
 				err := term.Resize(int(w), int(h))
 				if err != nil {
 					log.Println(err)
@@ -44,7 +44,7 @@ func main() {
 	go server()
 
 	var (
-		err  error
+		err error
 	)
 
 	term, err := console.ConsoleFromFile(os.Stdin)

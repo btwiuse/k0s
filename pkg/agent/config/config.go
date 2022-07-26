@@ -17,7 +17,7 @@ import (
 	"github.com/denisbrodbeck/machineid"
 	"gopkg.in/yaml.v3"
 
-	"k0s.io/pkg"
+	"k0s.io"
 	"k0s.io/pkg/agent"
 	"k0s.io/pkg/agent/info"
 	"k0s.io/pkg/rng"
@@ -57,10 +57,10 @@ type Config struct {
 
 	uri *url.URL `json:"-"` // where server scheme, host, port, addr are defined
 
-	Version pkg.Version `json:"version" yaml:"-"`
+	Version k0s.Version `json:"version" yaml:"-"`
 }
 
-func (c *Config) GetVersion() pkg.Version {
+func (c *Config) GetVersion() k0s.Version {
 	return c.Version
 }
 
@@ -261,7 +261,7 @@ func probeConfigFile() string {
 
 func loadConfigFile(file string) *Config {
 	c := &Config{
-		Hub:     pkg.DEFAULT_HUB_ADDRESS,
+		Hub:     k0s.DEFAULT_HUB_ADDRESS,
 		Tags:    []string{},
 		Version: version.GetVersion(),
 	}
@@ -292,7 +292,7 @@ func Parse(args []string) *Config {
 			SetID(id),
 		}
 
-		hubapi   *string    = fset.String("hub", pkg.DEFAULT_HUB_ADDRESS, "Hub address.")
+		hubapi   *string    = fset.String("hub", k0s.DEFAULT_HUB_ADDRESS, "Hub address.")
 		verbose  *bool      = fset.Bool("verbose", false, "Verbose log.")
 		version  *bool      = fset.Bool("version", false, "Show agent/hub version info.")
 		ro       *bool      = fset.Bool("ro", false, "Make shell readonly.")
@@ -388,11 +388,11 @@ func Parse(args []string) *Config {
 }
 
 type agentVersion struct {
-	Agent pkg.Version
+	Agent k0s.Version
 }
 
 type hubVersion struct {
-	Hub pkg.Version
+	Hub k0s.Version
 }
 
 func printAgentVersion(c agent.Config) {

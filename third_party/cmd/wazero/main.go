@@ -2,9 +2,10 @@ package main
 
 import (
 	_ "embed"
+	"log"
+
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/wasi"
-	"log"
 )
 
 // fibWasm was compiled from TinyGo testdata/fibonacci.go

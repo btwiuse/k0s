@@ -4,7 +4,7 @@ import (
 	"net"
 	"net/url"
 
-	"k0s.io/pkg"
+	"k0s.io"
 	"k0s.io/pkg/hub"
 )
 
@@ -33,7 +33,7 @@ type Config interface {
 	GetCredentials() map[string]KeyStore
 	GetConfigLocation() string
 
-	GetVersion() pkg.Version
+	GetVersion() k0s.Version
 	GetInsecure() bool
 	GetRecord() bool
 }

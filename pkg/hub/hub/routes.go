@@ -14,7 +14,7 @@ import (
 	"github.com/btwiuse/wetty/pkg/assets"
 	"github.com/gorilla/mux"
 	echo "github.com/jpillora/go-echo-server/handler"
-	"k0s.io/pkg"
+	"k0s.io"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/exporter"
 	types "k0s.io/pkg/hub"
@@ -123,7 +123,7 @@ func (h *hub) initServer(addr, apiPrefix string, hl http.Handler) {
 
 func (h *hub) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router) {
 	if h.GetConfig().UI() {
-		R = ui.NewRouter(pkg.DEFAULT_UI_ADDRESS)
+		R = ui.NewRouter(k0s.DEFAULT_UI_ADDRESS)
 	} else {
 		R = mux.NewRouter()
 	}

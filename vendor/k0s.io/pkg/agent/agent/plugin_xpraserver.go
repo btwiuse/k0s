@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"k0s.io/pkg"
+	"k0s.io"
 	types "k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/log"
@@ -45,7 +45,7 @@ func wsdial(u string) (*websocket.Conn, net.Conn, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	wsconn.SetReadLimit(pkg.MAX_WS_MESSAGE)
+	wsconn.SetReadLimit(k0s.MAX_WS_MESSAGE)
 	return wsconn, websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary), nil
 }
 
@@ -73,7 +73,7 @@ func xpraHandle(c net.Conn) {
 	*/
 
 	go func() {
-		if _, err := io.CopyBuffer(c, dnetconn, make([]byte, pkg.MAX_WS_MESSAGE)); err != nil {
+		if _, err := io.CopyBuffer(c, dnetconn, make([]byte, k0s.MAX_WS_MESSAGE)); err != nil {
 			log.Println(err)
 		}
 	}()

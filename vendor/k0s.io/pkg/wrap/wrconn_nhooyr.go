@@ -7,7 +7,7 @@ import (
 	"net"
 	"net/http"
 
-	"k0s.io/pkg"
+	"k0s.io"
 	"nhooyr.io/websocket"
 )
 
@@ -18,7 +18,7 @@ func wrconn(w http.ResponseWriter, r *http.Request) (net.Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	wsconn.SetReadLimit(pkg.MAX_WS_MESSAGE)
+	wsconn.SetReadLimit(k0s.MAX_WS_MESSAGE)
 	conn := NetConn(wsconn)
 	addr := NewAddr("websocket", r.RemoteAddr)
 	conn = ConnWithAddr(conn, addr)

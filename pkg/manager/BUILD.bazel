@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/manager",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg:go_default_library",
+        "//:go_default_library",
         "@com_github_btwiuse_gods//maps/linkedhashmap:go_default_library",
     ],
 )

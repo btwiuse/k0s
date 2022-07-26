@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-        "github.com/buildkite/agent/v3/agent"
-        "github.com/buildkite/agent/v3/clicommand"
-        "github.com/urfave/cli"
+	"github.com/buildkite/agent/v3/agent"
+	"github.com/buildkite/agent/v3/clicommand"
+	"github.com/urfave/cli"
 )
 
 var AppHelpTemplate = `Usage:
@@ -115,4 +115,3 @@ func Run(args []string) error {
 	}
 	return nil
 }
-

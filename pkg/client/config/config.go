@@ -15,7 +15,7 @@ import (
 	"github.com/btwiuse/pretty"
 	"gopkg.in/yaml.v3"
 
-	"k0s.io/pkg"
+	"k0s.io"
 	"k0s.io/pkg/client"
 	"k0s.io/pkg/version"
 )
@@ -34,7 +34,7 @@ type config struct {
 
 	uri *url.URL `json:"-"` // where server scheme, host, port, addr are defined
 
-	Version pkg.Version `json:"version" yaml:"-"`
+	Version k0s.Version `json:"version" yaml:"-"`
 }
 
 func (c *config) GetConfigLocation() string {
@@ -65,7 +65,7 @@ func (c *config) GetDoh() string {
 	return c.Doh
 }
 
-func (c *config) GetVersion() pkg.Version {
+func (c *config) GetVersion() k0s.Version {
 	return c.Version
 }
 
@@ -225,7 +225,7 @@ func probeConfigFile() string {
 
 func loadConfigFile(file string) *config {
 	c := &config{
-		Hub:            pkg.DEFAULT_HUB_ADDRESS,
+		Hub:            k0s.DEFAULT_HUB_ADDRESS,
 		Version:        version.GetVersion(),
 		ConfigLocation: file,
 	}
@@ -251,10 +251,10 @@ func Parse(args []string) client.Config {
 
 		opts = []Opt{}
 
-		hubapi   *string = fset.String("hub", pkg.DEFAULT_HUB_ADDRESS, "Hub address.")
-		redir    *string = fset.String("redir", pkg.REDIR_PROXY_PORT, "Redir port.")
-		socks    *string = fset.String("socks", pkg.SOCKS5_PROXY_PORT, "Socks port.")
-		doh      *string = fset.String("doh", pkg.DOH_PROXY_PORT, "Doh port.")
+		hubapi   *string = fset.String("hub", k0s.DEFAULT_HUB_ADDRESS, "Hub address.")
+		redir    *string = fset.String("redir", k0s.REDIR_PROXY_PORT, "Redir port.")
+		socks    *string = fset.String("socks", k0s.SOCKS5_PROXY_PORT, "Socks port.")
+		doh      *string = fset.String("doh", k0s.DOH_PROXY_PORT, "Doh port.")
 		verbose  *bool   = fset.Bool("verbose", false, "Verbose log.")
 		version  *bool   = fset.Bool("version", false, "Show agent/hub version info.")
 		insecure *bool   = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
@@ -320,11 +320,11 @@ func Parse(args []string) client.Config {
 }
 
 type clientVersion struct {
-	Client pkg.Version
+	Client k0s.Version
 }
 
 type hubVersion struct {
-	Hub pkg.Version
+	Hub k0s.Version
 }
 
 func printClientVersion(c client.Config) {

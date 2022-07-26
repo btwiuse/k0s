@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"k0s.io/pkg"
+	"k0s.io"
 	"k0s.io/pkg/agent/agent"
 	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/uuid"
@@ -26,7 +26,7 @@ func gorun() {
 func run() {
 	c := &config.Config{
 		ID:  uuid.New(),
-		Hub: pkg.DEFAULT_HUB_ADDRESS,
+		Hub: k0s.DEFAULT_HUB_ADDRESS,
 		Htpasswd: map[string]string{
 			"aaron": "$2a$10$WbZm/thAZI/f/QrcJn6V4OS.I61V2cLnOV.z7uXxtjHY8tZkTacLm",
 		},

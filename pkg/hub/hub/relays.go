@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
-	"k0s.io/pkg"
+	"k0s.io"
 	"k0s.io/pkg/api"
 	types "k0s.io/pkg/hub"
 	"k0s.io/pkg/wrap"
@@ -186,7 +186,7 @@ func xpraRelay(ag types.Agent) http.HandlerFunc {
 			log.Println(err)
 			return
 		}
-		wsc.SetReadLimit(pkg.MAX_WS_MESSAGE)
+		wsc.SetReadLimit(k0s.MAX_WS_MESSAGE)
 
 		wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
 		defer wsconn.Close()
@@ -194,7 +194,7 @@ func xpraRelay(ag types.Agent) http.HandlerFunc {
 		conn := ag.NewTunnel(api.Xpra)
 		defer conn.Close()
 
-		b := make([]byte, pkg.MAX_WS_MESSAGE)
+		b := make([]byte, k0s.MAX_WS_MESSAGE)
 		go io.CopyBuffer(conn, wsconn, b)
 
 		// b := make([]byte, 160*1024)

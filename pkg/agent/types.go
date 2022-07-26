@@ -4,7 +4,7 @@ import (
 	"io"
 	"net"
 
-	"k0s.io/pkg"
+	"k0s.io"
 	"k0s.io/pkg/api"
 )
 
@@ -38,7 +38,7 @@ type Config interface {
 
 	String() string
 
-	GetVersion() pkg.Version
+	GetVersion() k0s.Version
 }
 
 type Dialer interface {

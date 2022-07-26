@@ -11,7 +11,7 @@ go_library(
     importpath = "k0s.io/pkg/client/client",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg:go_default_library",
+        "//:go_default_library",
         "//pkg/client:go_default_library",
         "//pkg/client/wsdialer:go_default_library",
         "//pkg/console:go_default_library",

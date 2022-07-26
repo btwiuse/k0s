@@ -4,10 +4,11 @@ import (
 	"log"
 	"net"
 	"net/http"
+
 	"k0s.io/pkg/exporter/env"
 )
 
-func main(){
+func main() {
 	port := ":8000"
 	listener, err := net.Listen("tcp", port)
 	if err != nil {
