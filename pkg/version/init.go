@@ -1,5 +1,4 @@
 //go:build runtime_debug_buildinfo
-// +build runtime_debug_buildinfo
 
 package version
 

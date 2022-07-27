@@ -62,3 +62,5 @@ replace k0s.io/pkg/uuid => ../uuid/
 replace k0s.io/pkg/wrap => ../wrap/
 
 replace k0s.io/third_party => ../../third_party/
+
+replace k0s.io/pkg/dial => ../dial/

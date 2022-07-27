@@ -1,5 +1,4 @@
 //go:build version
-// +build version
 
 package main
 

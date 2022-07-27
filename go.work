@@ -8,6 +8,7 @@ use (
 	./pkg/cli
 	./pkg/client
 	./pkg/console
+	./pkg/dial
 	./pkg/distro
 	./pkg/dohserver
 	./pkg/exporter

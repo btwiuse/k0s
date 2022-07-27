@@ -1,9 +1,6 @@
 package client
 
 import (
-	"net"
-	"net/http"
-
 	"k0s.io"
 	"k0s.io/pkg/hub"
 )
@@ -36,10 +33,6 @@ type Config interface {
 	GetVersion() k0s.Version
 	GetInsecure() bool
 	GetRecord() bool
-}
-
-type Dialer interface {
-	Dial(string, http.Header) (net.Conn, error)
 }
 
 type KeyStore map[string]string

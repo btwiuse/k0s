@@ -12,7 +12,6 @@ import (
 	"github.com/btwiuse/pretty"
 	"golang.org/x/sync/errgroup"
 	"k0s.io/pkg/agent"
-	"k0s.io/pkg/agent/dial"
 	"k0s.io/pkg/api"
 )
 
@@ -25,8 +24,8 @@ var (
 
 type server struct {
 	*errgroup.Group
+	*dialer
 	agent.Config
-	agent.Dialer
 	Tunnels map[api.Tunnel]chan net.Conn
 	// agent.RPC
 
@@ -40,6 +39,7 @@ func NewAgent(c agent.Config) agent.Agent {
 		id      = c.GetID()
 		name    = c.GetName()
 		shell   = "bash"
+		dialer  = &dialer{c}
 		tunnels = map[api.Tunnel]chan net.Conn{}
 	)
 
@@ -54,7 +54,7 @@ func NewAgent(c agent.Config) agent.Agent {
 	return &server{
 		Group:   eg,
 		Config:  c,
-		Dialer:  dial.New(c),
+		dialer:  dialer,
 		Tunnels: tunnels,
 		id:      id,
 		name:    name,

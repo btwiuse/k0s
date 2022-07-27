@@ -1,6 +1,8 @@
 package k0s
 
 import (
+	"net"
+	"net/url"
 	"time"
 )
 
@@ -40,4 +42,8 @@ type Version interface {
 	GetBuildDate() string
 	GetVersion() string
 	GetGoVersion() string
+}
+
+type Dialer interface {
+	Dial(*url.URL) (net.Conn, error)
 }

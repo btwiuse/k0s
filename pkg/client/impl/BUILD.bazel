@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "client.go",
+        "dialer.go",
         "terminal_unix.go",
         "terminal_windows.go",
     ],
@@ -12,8 +13,8 @@ go_library(
     deps = [
         "//:go_default_library",
         "//pkg/client:go_default_library",
-        "//pkg/client/dial:go_default_library",
         "//pkg/console:go_default_library",
+        "//pkg/dial:go_default_library",
         "//pkg/fzf:go_default_library",
         "//pkg/hub:go_default_library",
         "//pkg/hub/agent/info:go_default_library",

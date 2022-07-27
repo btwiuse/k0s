@@ -22,7 +22,6 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io"
 	"k0s.io/pkg/client"
-	"k0s.io/pkg/client/dial"
 	"k0s.io/pkg/console"
 	"k0s.io/pkg/fzf"
 	"k0s.io/pkg/hub"
@@ -38,11 +37,13 @@ func NewClient(c client.Config) client.Client {
 	cl := &clientImpl{
 		Config: c,
 		sl:     ishell.New(),
+		dialer: &dialer{c},
 	}
 	return cl
 }
 
 type clientImpl struct {
+	*dialer
 	client.Config
 	userinfo *url.Userinfo
 	sl       *ishell.Shell
@@ -335,11 +336,6 @@ func (cl *clientImpl) runLogin(idd string) error {
 }
 
 func (cl *clientImpl) RunRedir() error {
-	var (
-		c      = cl.Config
-		dialer = dial.New(c)
-	)
-
 	ep := fmt.Sprintf("/api/agent/%s/redir", idd)
 	log.Println("dial", ep)
 
@@ -361,7 +357,7 @@ func (cl *clientImpl) RunRedir() error {
 			continue
 		}
 		go func() {
-			wsconn, err := dialer.Dial(ep, authorizationHeader(cl.userinfo))
+			wsconn, err := cl.Dial(ep, cl.userinfo)
 			if err != nil {
 				log.Println(err)
 				return
@@ -374,11 +370,6 @@ func (cl *clientImpl) RunRedir() error {
 }
 
 func (cl *clientImpl) RunSocks() error {
-	var (
-		c      = cl.Config
-		dialer = dial.New(c)
-	)
-
 	ep := fmt.Sprintf("/api/agent/%s/socks5", idd)
 	log.Println("dial", ep)
 
@@ -400,7 +391,7 @@ func (cl *clientImpl) RunSocks() error {
 			continue
 		}
 		go func() {
-			wsconn, err := dialer.Dial(ep, authorizationHeader(cl.userinfo))
+			wsconn, err := cl.Dial(ep, cl.userinfo)
 			if err != nil {
 				log.Println(err)
 				return
@@ -413,11 +404,6 @@ func (cl *clientImpl) RunSocks() error {
 }
 
 func (cl *clientImpl) RunDoh() error {
-	var (
-		c      = cl.Config
-		dialer = dial.New(c)
-	)
-
 	ep := fmt.Sprintf("/api/agent/%s/doh", idd)
 	log.Println("dial", ep)
 
@@ -439,7 +425,7 @@ func (cl *clientImpl) RunDoh() error {
 			continue
 		}
 		go func() {
-			wsconn, err := dialer.Dial(ep, authorizationHeader(cl.userinfo))
+			wsconn, err := cl.Dial(ep, cl.userinfo)
 			if err != nil {
 				log.Println(err)
 				return

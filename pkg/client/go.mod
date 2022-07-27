@@ -6,18 +6,16 @@ require (
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abiosoft/ishell v2.0.0+incompatible
 	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895
-	github.com/gorilla/websocket v1.5.0
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.5
 	k0s.io/pkg/agent v0.1.5
 	k0s.io/pkg/asciitransport v0.1.5
 	k0s.io/pkg/console v0.1.5
+	k0s.io/pkg/dial v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/fzf v0.1.5
 	k0s.io/pkg/hub v0.1.5
 	k0s.io/pkg/uuid v0.1.5
-	k0s.io/pkg/wrap v0.1.5
-	nhooyr.io/websocket v1.8.7
 )
 
 require (
@@ -31,6 +29,7 @@ require (
 	github.com/gdamore/tcell v1.4.0 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
@@ -56,6 +55,8 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/distro v0.1.5 // indirect
 	k0s.io/pkg/rng v0.1.5 // indirect
+	k0s.io/pkg/wrap v0.1.5 // indirect
+	nhooyr.io/websocket v1.8.7 // indirect
 )
 
 replace k0s.io => ../../
@@ -111,3 +112,5 @@ replace k0s.io/pkg/uuid => ../uuid/
 replace k0s.io/pkg/wrap => ../wrap/
 
 replace k0s.io/third_party => ../../third_party/
+
+replace k0s.io/pkg/dial => ../dial/

@@ -1,10 +1,8 @@
 package impl
 
 import (
-	"encoding/base64"
 	"log"
 	"net"
-	"net/http"
 	"net/url"
 	"os"
 	"time"
@@ -21,15 +19,10 @@ func (cl *clientImpl) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 		c    = cl.Config
 		conn net.Conn
 		err  error
-		h    = http.Header{
-			"Authorization": {
-				"Basic " + base64.StdEncoding.EncodeToString([]byte(userinfo.String())),
-			},
-		}
 	)
 
 	for {
-		conn, err = cl.dial(endpoint, h)
+		conn, err = cl.Dial(endpoint, userinfo)
 		if err != nil {
 			log.Println(err)
 			time.Sleep(time.Second)

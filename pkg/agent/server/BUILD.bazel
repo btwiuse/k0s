@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "agent.go",
+        "dialer.go",
         "lys.go",
         "plugin_envserver.go",
         "plugin_fileserver.go",
@@ -21,10 +22,10 @@ go_library(
     deps = [
         "//:go_default_library",
         "//pkg/agent:go_default_library",
-        "//pkg/agent/dial:go_default_library",
         "//pkg/agent/tty/factory:go_default_library",
         "//pkg/api:go_default_library",
         "//pkg/asciitransport:go_default_library",
+        "//pkg/dial:go_default_library",
         "//pkg/exporter:go_default_library",
         "//pkg/exporter/env:go_default_library",
         "//pkg/log:go_default_library",

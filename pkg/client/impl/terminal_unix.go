@@ -4,10 +4,8 @@
 package impl
 
 import (
-	"encoding/base64"
 	"log"
 	"net"
-	"net/http"
 	"net/url"
 	"os"
 	"os/signal"
@@ -15,7 +13,6 @@ import (
 	"time"
 
 	"k0s.io/pkg/asciitransport"
-	"k0s.io/pkg/client/dial"
 	"k0s.io/pkg/console"
 	"k0s.io/pkg/uuid"
 )
@@ -27,16 +24,10 @@ func (cl *clientImpl) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 		c    = cl.Config
 		conn net.Conn
 		err  error
-		h    = http.Header{
-			"Authorization": {
-				"Basic " + base64.StdEncoding.EncodeToString([]byte(userinfo.String())),
-			},
-		}
-		dialer = dial.New(c)
 	)
 
 	for {
-		conn, err = dialer.Dial(endpoint, h)
+		conn, err = cl.Dial(endpoint, userinfo)
 		if err != nil {
 			log.Println(err)
 			time.Sleep(time.Second)

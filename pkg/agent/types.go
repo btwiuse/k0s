@@ -41,13 +41,6 @@ type Config interface {
 	GetVersion() k0s.Version
 }
 
-type Dialer interface {
-	// Dial() (net.Conn, error)
-	// /api/rpc
-	// /api/grpc?id=*
-	Dial(string, string) (net.Conn, error)
-}
-
 type RPC interface {
 	// NewConnection()
 	// Ping()
@@ -64,7 +57,6 @@ type RPC interface {
 // rpc client/server (ephemeral)
 type Agent interface {
 	Config
-	Dialer
 	TunnelListener
 	TunnelChan(api.Tunnel) chan net.Conn
 	AgentRegister(net.Conn) (RPC, error)

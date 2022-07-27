@@ -1,16 +1,16 @@
-module k0s.io/pkg/gitd
+module k0s.io/pkg/dial
 
 go 1.19
 
 require (
-	github.com/gorilla/mux v1.8.0
-	k0s.io/pkg/middleware v0.1.5
+	github.com/gorilla/websocket v1.5.0
+	k0s.io/pkg/wrap v0.1.5
+	nhooyr.io/websocket v1.8.7
 )
 
 require (
-	github.com/felixge/httpsnoop v1.0.2 // indirect
-	github.com/gorilla/handlers v1.5.1 // indirect
-	github.com/rs/cors v1.8.2 // indirect
+	github.com/klauspost/compress v1.15.0 // indirect
+	k0s.io v0.1.5 // indirect
 )
 
 replace k0s.io => ../../
@@ -27,6 +27,8 @@ replace k0s.io/pkg/client => ../client/
 
 replace k0s.io/pkg/console => ../console/
 
+replace k0s.io/pkg/dial => ./
+
 replace k0s.io/pkg/distro => ../distro/
 
 replace k0s.io/pkg/dohserver => ../dohserver/
@@ -37,7 +39,7 @@ replace k0s.io/pkg/fonts => ../fonts/
 
 replace k0s.io/pkg/fzf => ../fzf/
 
-replace k0s.io/pkg/gitd => ./
+replace k0s.io/pkg/gitd => ../gitd/
 
 replace k0s.io/pkg/hub => ../hub/
 
@@ -66,5 +68,3 @@ replace k0s.io/pkg/uuid => ../uuid/
 replace k0s.io/pkg/wrap => ../wrap/
 
 replace k0s.io/third_party => ../../third_party/
-
-replace k0s.io/pkg/dial => ../dial/

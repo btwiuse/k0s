@@ -55,3 +55,5 @@ replace k0s.io/pkg/uuid => ./pkg/uuid/
 replace k0s.io/pkg/wrap => ./pkg/wrap/
 
 replace k0s.io/third_party => ./third_party/
+
+replace k0s.io/pkg/dial => ./pkg/dial/

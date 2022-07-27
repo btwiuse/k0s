@@ -146,6 +146,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k0s.io/pkg/asciitransport v0.1.5 // indirect
+	k0s.io/pkg/dial v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/distro v0.1.5 // indirect
 	k0s.io/pkg/dohserver v0.1.5 // indirect
 	k0s.io/pkg/exporter v0.1.5 // indirect
@@ -217,3 +218,5 @@ replace k0s.io/pkg/uuid => ../uuid/
 replace k0s.io/pkg/wrap => ../wrap/
 
 replace k0s.io/third_party => ../../third_party/
+
+replace k0s.io/pkg/dial => ../dial/

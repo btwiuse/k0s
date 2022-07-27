@@ -8,19 +8,18 @@ require (
 	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895
 	github.com/creack/pty v1.1.18
 	github.com/denisbrodbeck/machineid v1.0.1
-	github.com/gorilla/websocket v1.5.0
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.5
 	k0s.io/pkg/asciitransport v0.1.5
+	k0s.io/pkg/dial v0.0.0-00010101000000-000000000000
 	k0s.io/pkg/distro v0.1.5
 	k0s.io/pkg/dohserver v0.1.5
 	k0s.io/pkg/exporter v0.1.5
 	k0s.io/pkg/middleware v0.1.5
 	k0s.io/pkg/rng v0.1.5
 	k0s.io/pkg/uuid v0.1.5
-	k0s.io/pkg/wrap v0.1.5
 	nhooyr.io/websocket v1.8.7
 )
 
@@ -76,6 +75,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/gnostic v0.4.1 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/go-envparse v0.0.0-20200406174449-d9cfd743a15e // indirect
 	github.com/hashicorp/golang-lru v0.5.1 // indirect
 	github.com/hodgesds/perf-utils v0.4.0 // indirect
@@ -154,6 +154,7 @@ require (
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/jsondns v0.1.5 // indirect
+	k0s.io/pkg/wrap v0.1.5 // indirect
 	k8s.io/api v0.20.4 // indirect
 	k8s.io/apimachinery v0.20.4 // indirect
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.11.0 // indirect
@@ -217,3 +218,5 @@ replace k0s.io/pkg/uuid => ../uuid/
 replace k0s.io/pkg/wrap => ../wrap/
 
 replace k0s.io/third_party => ../../third_party/
+
+replace k0s.io/pkg/dial => ../dial/
