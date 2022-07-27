@@ -1,7 +1,7 @@
 //go:build raw && !gorilla && !nhooyr
 // +build raw,!gorilla,!nhooyr
 
-package dialer
+package dial
 
 import (
 	"crypto/tls"
@@ -11,7 +11,7 @@ import (
 	"net/url"
 )
 
-func (d *dialr) Dial(p string, q string) (conn net.Conn, err error) {
+func (d *dialer) Dial(p string, q string) (conn net.Conn, err error) {
 	var (
 		c  = d.c
 		ub = &url.URL{

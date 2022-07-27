@@ -12,7 +12,7 @@ import (
 	"github.com/btwiuse/pretty"
 	"golang.org/x/sync/errgroup"
 	"k0s.io/pkg/agent"
-	"k0s.io/pkg/agent/dialer"
+	"k0s.io/pkg/agent/dial"
 	"k0s.io/pkg/api"
 )
 
@@ -54,7 +54,7 @@ func NewAgent(c agent.Config) agent.Agent {
 	return &server{
 		Group:   eg,
 		Config:  c,
-		Dialer:  dialer.New(c),
+		Dialer:  dial.New(c),
 		Tunnels: tunnels,
 		id:      id,
 		name:    name,

@@ -1,7 +1,7 @@
 //go:build gorilla && !nhooyr && !raw
 // +build gorilla,!nhooyr,!raw
 
-package dialer
+package dial
 
 import (
 	"crypto/tls"
@@ -13,7 +13,7 @@ import (
 	"k0s.io/pkg/wrap"
 )
 
-func (d *dialr) Dial(p string, q string) (conn net.Conn, err error) {
+func (d *dialer) Dial(p string, q string) (conn net.Conn, err error) {
 	var (
 		c  = d.c
 		ub = &url.URL{

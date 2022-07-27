@@ -21,7 +21,7 @@ go_library(
     deps = [
         "//:go_default_library",
         "//pkg/agent:go_default_library",
-        "//pkg/agent/dialer:go_default_library",
+        "//pkg/agent/dial:go_default_library",
         "//pkg/agent/tty/factory:go_default_library",
         "//pkg/api:go_default_library",
         "//pkg/asciitransport:go_default_library",

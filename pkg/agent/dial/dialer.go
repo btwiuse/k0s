@@ -1,19 +1,19 @@
-package dialer
+package dial
 
 import (
 	"k0s.io/pkg/agent"
 )
 
 var (
-	_ agent.Dialer = (*dialr)(nil)
+	_ agent.Dialer = (*dialer)(nil)
 )
 
 func New(c agent.Config) agent.Dialer {
-	return &dialr{
+	return &dialer{
 		c: c,
 	}
 }
 
-type dialr struct {
+type dialer struct {
 	c agent.Config
 }
