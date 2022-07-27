@@ -5,5 +5,5 @@ go_library(
     srcs = ["run.go"],
     importpath = "k0s.io/third_party/pkg/cli/k16s",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/k0s.io/pkg/exporter/k16s:go_default_library"],
+    deps = ["//pkg/exporter/k16s:go_default_library"],
 )

@@ -41,12 +41,12 @@ require:         ## turn replace directives for workspace modules into require
 
 gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ go mod tidy
-	@ go mod vendor
+	@#go mod vendor
 	@ find pkg -name 'go.mod' | sed s,go.mod,,g | xargs -I% bash -vc 'pushd % && go mod tidy'
 	@#sed -i -e '/k0s.io.* v/d' pkg/*/go.mod go.mod
 	@ $(BAZEL) run //:gazelle -- update-repos --from_file=go.mod
 	@ $(BAZEL) run //:gazelle
-	@ git status vendor/
+	@#git status vendor/
 
 go-get:               ## trigger update for https://pkg.go.dev
 	@ go work edit --json | grep ModPath | grep -o '"k0s.io/.*"' | xargs -I% bash -c 'echo go get %@$(shell git rev-parse HEAD)' | bash -v

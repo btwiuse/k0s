@@ -14,7 +14,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//third_party/pkg/asciiproto:go_default_library",
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
         "@org_golang_google_protobuf//encoding/protojson:go_default_library",
     ],
 )

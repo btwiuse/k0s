@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/third_party/pkg/asciiproto",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/google.golang.org/protobuf/reflect/protoreflect:go_default_library",
-        "//vendor/google.golang.org/protobuf/runtime/protoimpl:go_default_library",
+        "@org_golang_google_protobuf//reflect/protoreflect:go_default_library",
+        "@org_golang_google_protobuf//runtime/protoimpl:go_default_library",
     ],
 )

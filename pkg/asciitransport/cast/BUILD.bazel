@@ -5,5 +5,5 @@ go_library(
     srcs = ["cast.go"],
     importpath = "k0s.io/pkg/asciitransport/cast",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/pkg/errors:go_default_library"],
+    deps = ["@com_github_pkg_errors//:go_default_library"],
 )

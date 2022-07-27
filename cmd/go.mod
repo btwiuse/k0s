@@ -51,3 +51,5 @@ replace k0s.io/pkg/uuid => ../pkg/uuid/
 replace k0s.io/pkg/wrap => ../pkg/wrap/
 
 replace k0s.io/pkg/ui => ../pkg/ui/
+
+replace k0s.io/pkg/plugin => ../pkg/plugin/

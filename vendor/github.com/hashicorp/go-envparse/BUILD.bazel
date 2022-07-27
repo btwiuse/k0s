@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["envparse.go"],
-    importmap = "k0s.io/vendor/github.com/hashicorp/go-envparse",
-    importpath = "github.com/hashicorp/go-envparse",
-    visibility = ["//visibility:public"],
-)

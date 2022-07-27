@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["wrap.go"],
-    importmap = "k0s.io/vendor/nhooyr.io/websocket/internal/errd",
-    importpath = "nhooyr.io/websocket/internal/errd",
-    visibility = ["//vendor/nhooyr.io/websocket:__subpackages__"],
-)

@@ -7,7 +7,7 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//pkg/tunnel/listener:go_default_library",
-        "//vendor/github.com/btwiuse/gost:go_default_library",
+        "@com_github_btwiuse_gost//:go_default_library",
     ],
 )
 

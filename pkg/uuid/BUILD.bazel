@@ -5,5 +5,5 @@ go_library(
     srcs = ["id.go"],
     importpath = "k0s.io/pkg/uuid",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/google/uuid:go_default_library"],
+    deps = ["@com_github_google_uuid//:go_default_library"],
 )

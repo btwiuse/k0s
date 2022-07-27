@@ -8,9 +8,9 @@ go_library(
     deps = [
         "//pkg/console:go_default_library",
         "//pkg/utils:go_default_library",
+        "//pkg/uuid:go_default_library",
         "//third_party/pkg/asciitransport/v2:go_default_library",
         "//third_party/pkg/wetty/wetty:go_default_library",
-        "//vendor/k0s.io/pkg/uuid:go_default_library",
     ],
 )
 

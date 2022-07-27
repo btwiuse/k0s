@@ -7,6 +7,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/client:go_default_library",
-        "//vendor/nhooyr.io/websocket:go_default_library",
+        "@io_nhooyr_websocket//:go_default_library",
     ],
 )

@@ -7,9 +7,9 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//:go_default_library",
+        "//pkg/agent/agent:go_default_library",
+        "//pkg/agent/config:go_default_library",
+        "//pkg/uuid:go_default_library",
         "//pkg/version:go_default_library",
-        "//vendor/k0s.io/pkg/agent/agent:go_default_library",
-        "//vendor/k0s.io/pkg/agent/config:go_default_library",
-        "//vendor/k0s.io/pkg/uuid:go_default_library",
     ],
 )

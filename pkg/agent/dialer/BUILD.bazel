@@ -9,7 +9,7 @@ go_library(
     importpath = "k0s.io/pkg/agent/dialer",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/k0s.io/pkg/agent:go_default_library",
-        "//vendor/nhooyr.io/websocket:go_default_library",
+        "//pkg/agent:go_default_library",
+        "@io_nhooyr_websocket//:go_default_library",
     ],
 )

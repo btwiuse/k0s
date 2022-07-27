@@ -1,7 +1,0 @@
-*.profile
-*.test
-.tags
-build
-cover.out
-local
-tags
