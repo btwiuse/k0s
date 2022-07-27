@@ -29,7 +29,7 @@ func (c *config) Port() string {
 	if port, ok := os.LookupEnv("PORT"); ok {
 		return ":" + port
 	}
-	return ":8000"
+	return k0s.HUB_PORT
 }
 
 func (c *config) UseTLS() bool {
