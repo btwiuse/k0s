@@ -6,30 +6,6 @@ replace (
 	github.com/buildkite/agent/v3 => github.com/btwiuse/agent/v3 v3.27.1-0.20210217080418-ae42a28eefa7
 	github.com/coredns/coredns => github.com/btwiuse/coredns v1.8.4
 	github.com/greenpau/caddy-auth-portal => github.com/btwiuse/caddy-auth-portal v1.3.12-0.20210204101408-068c2618b417
-	k0s.io => ../
-	k0s.io/pkg/agent => ../pkg/agent
-	k0s.io/pkg/asciitransport => ../pkg/asciitransport
-	k0s.io/pkg/cli => ../pkg/cli
-	k0s.io/pkg/client => ../pkg/client
-	k0s.io/pkg/console => ../pkg/console
-	k0s.io/pkg/distro => ../pkg/distro
-	k0s.io/pkg/dohserver => ../pkg/dohserver
-	k0s.io/pkg/exporter => ../pkg/exporter
-	k0s.io/pkg/fzf => ../pkg/fzf
-	k0s.io/pkg/gitd => ../pkg/gitd
-	k0s.io/pkg/hub => ../pkg/hub
-	k0s.io/pkg/jsondns => ../pkg/jsondns
-	k0s.io/pkg/middleware => ../pkg/middleware
-	k0s.io/pkg/reverseproxy => ../pkg/reverseproxy
-	k0s.io/pkg/rng => ../pkg/rng
-	k0s.io/pkg/simple => ../pkg/simple
-	k0s.io/pkg/tunnel => ../pkg/tunnel
-	// k0s.io/pkg/api => ../pkg/api
-	k0s.io/pkg/ui => ../pkg/ui
-	k0s.io/pkg/utils => ../pkg/utils
-	k0s.io/pkg/uuid => ../pkg/uuid
-	// k0s.io/pkg/version => ../pkg/version
-	k0s.io/pkg/wrap => ../pkg/wrap
 	k8s.io/api => k8s.io/api v0.20.4
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.20.4
 	k8s.io/apimachinery => k8s.io/apimachinery v0.20.4
@@ -69,7 +45,6 @@ require (
 	github.com/btwiuse/bcrypt v1.0.2
 	github.com/btwiuse/cadvisor v0.0.0-20210312172035-34fddda41018
 	github.com/btwiuse/dkg v0.2.0
-	github.com/btwiuse/etcd/v3 v3.4.15
 	github.com/btwiuse/gost v0.0.1
 	github.com/btwiuse/wetty v0.0.36
 	github.com/buildkite/agent/v3 v3.27.0
@@ -124,18 +99,19 @@ require (
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b
 	google.golang.org/protobuf v1.28.0
-	k0s.io v0.1.4
-	k0s.io/pkg/agent v0.1.4
-	k0s.io/pkg/asciitransport v0.1.4
-	k0s.io/pkg/cli v0.1.4
-	k0s.io/pkg/console v0.1.4
-	k0s.io/pkg/dohserver v0.1.4
-	k0s.io/pkg/exporter v0.1.4
-	k0s.io/pkg/gitd v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/rng v0.1.4
-	k0s.io/pkg/tunnel v0.1.4
-	k0s.io/pkg/utils v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/uuid v0.1.4
+	k0s.io v0.1.5
+	k0s.io/pkg/agent v0.1.5
+	k0s.io/pkg/asciitransport v0.1.5
+	k0s.io/pkg/cli v0.1.5
+	k0s.io/pkg/console v0.1.5
+	k0s.io/pkg/dohserver v0.1.5
+	k0s.io/pkg/exporter v0.1.5
+	k0s.io/pkg/gitd v0.1.5
+	k0s.io/pkg/plugin v0.1.5
+	k0s.io/pkg/rng v0.1.5
+	k0s.io/pkg/tunnel v0.1.5
+	k0s.io/pkg/utils v0.1.5
+	k0s.io/pkg/uuid v0.1.5
 	k8s.io/api v0.22.5
 	k8s.io/apimachinery v0.22.5
 	k8s.io/apiserver v0.22.5
@@ -150,6 +126,7 @@ require (
 )
 
 require (
+	github.com/btwiuse/etcd/v3 v3.4.15 // indirect
 	github.com/btwiuse/k16s/v2 v2.0.0-20201224175329-3bc18834f8c1 // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/go-gost/gosocks4 v0.0.1 // indirect
@@ -161,7 +138,7 @@ require (
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/tklauser/numcpus v0.2.2 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
-	k0s.io/pkg/ui v0.0.0-00010101000000-000000000000 // indirect
+	k0s.io/pkg/ui v0.1.5 // indirect
 )
 
 require (
@@ -604,17 +581,17 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/plist v1.0.0 // indirect
 	// k0s.io/pkg/api v0.0.0-20220709103107-f40561c09b04 // indirect
-	k0s.io/pkg/client v0.1.4 // indirect
-	k0s.io/pkg/distro v0.1.4 // indirect
-	k0s.io/pkg/fzf v0.1.4 // indirect
-	k0s.io/pkg/hub v0.1.4 // indirect
-	k0s.io/pkg/jsondns v0.1.4 // indirect
-	k0s.io/pkg/manager v0.1.4 // indirect
-	k0s.io/pkg/middleware v0.1.4 // indirect
-	k0s.io/pkg/reverseproxy v0.1.4 // indirect
-	k0s.io/pkg/simple v0.1.4 // indirect
+	k0s.io/pkg/client v0.1.5 // indirect
+	k0s.io/pkg/distro v0.1.5 // indirect
+	k0s.io/pkg/fzf v0.1.5 // indirect
+	k0s.io/pkg/hub v0.1.5 // indirect
+	k0s.io/pkg/jsondns v0.1.5 // indirect
+	k0s.io/pkg/manager v0.1.5 // indirect
+	k0s.io/pkg/middleware v0.1.5 // indirect
+	k0s.io/pkg/reverseproxy v0.1.5 // indirect
+	k0s.io/pkg/simple v0.1.5 // indirect
 	// k0s.io/pkg/version v0.0.0-20220709103107-f40561c09b04 // indirect
-	k0s.io/pkg/wrap v0.1.4 // indirect
+	k0s.io/pkg/wrap v0.1.5 // indirect
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.11.0 // indirect
 	k8s.io/cli-runtime v0.20.4 // indirect
 	k8s.io/component-helpers v0.20.4 // indirect
@@ -629,3 +606,57 @@ require (
 	sigs.k8s.io/yaml v1.2.0 // indirect
 	v2ray.com/core v4.19.1+incompatible // indirect
 )
+
+replace k0s.io => ../
+
+replace k0s.io/cmd => ../cmd/
+
+replace k0s.io/pkg/agent => ../pkg/agent/
+
+replace k0s.io/pkg/asciitransport => ../pkg/asciitransport/
+
+replace k0s.io/pkg/cli => ../pkg/cli/
+
+replace k0s.io/pkg/client => ../pkg/client/
+
+replace k0s.io/pkg/console => ../pkg/console/
+
+replace k0s.io/pkg/distro => ../pkg/distro/
+
+replace k0s.io/pkg/dohserver => ../pkg/dohserver/
+
+replace k0s.io/pkg/exporter => ../pkg/exporter/
+
+replace k0s.io/pkg/fonts => ../pkg/fonts/
+
+replace k0s.io/pkg/fzf => ../pkg/fzf/
+
+replace k0s.io/pkg/gitd => ../pkg/gitd/
+
+replace k0s.io/pkg/hub => ../pkg/hub/
+
+replace k0s.io/pkg/jsondns => ../pkg/jsondns/
+
+replace k0s.io/pkg/manager => ../pkg/manager/
+
+replace k0s.io/pkg/middleware => ../pkg/middleware/
+
+replace k0s.io/pkg/plugin => ../pkg/plugin/
+
+replace k0s.io/pkg/reverseproxy => ../pkg/reverseproxy/
+
+replace k0s.io/pkg/rng => ../pkg/rng/
+
+replace k0s.io/pkg/simple => ../pkg/simple/
+
+replace k0s.io/pkg/tunnel => ../pkg/tunnel/
+
+replace k0s.io/pkg/ui => ../pkg/ui/
+
+replace k0s.io/pkg/utils => ../pkg/utils/
+
+replace k0s.io/pkg/uuid => ../pkg/uuid/
+
+replace k0s.io/pkg/wrap => ../pkg/wrap/
+
+replace k0s.io/third_party => ./
