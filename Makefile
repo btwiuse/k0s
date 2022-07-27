@@ -44,19 +44,23 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@#go mod vendor
 	@ find pkg -name 'go.mod' | sed s,go.mod,,g | xargs -I% bash -vc 'pushd % && go mod tidy'
 	@#sed -i -e '/k0s.io.* v/d' pkg/*/go.mod go.mod
+	@#ls -1 pkg/*/go.mod | xargs -L1 $(BAZEL) run //:gazelle -- update-repos --from_file
 	@ $(BAZEL) run //:gazelle -- update-repos --from_file=go.mod
 	@ $(BAZEL) run //:gazelle
 	@#git status vendor/
+
+cancel-actions:     ## cancel gh actions
+	@ gh run list -L 60 | grep queued | cut -f 7 | xargs -L1 gh run cancel
 
 go-get:               ## trigger update for https://pkg.go.dev
 	@ go work edit --json | grep ModPath | grep -o '"k0s.io/.*"' | xargs -I% bash -c 'echo go get %@$(shell git rev-parse HEAD)' | bash -v
 
 go-install:           ## install latest commit from https://pkg.go.dev
-	@ go install -v k0s.io@$(shell git rev-parse HEAD)
+	@ go install -v k0s.io/cmd/k0s@$(shell git rev-parse HEAD)
 
 go-install-debuginfo:     ## install latest commit from https://pkg.go.dev with debuginfo
-	@ go install -tags runtime_debug_buildinfo -v k0s.io@$(shell git rev-parse HEAD)
-	@ k0s.io hub -version
+	@ go install -tags runtime_debug_buildinfo -v k0s.io/cmd/k0s@$(shell git rev-parse HEAD)
+	@ k0s hub -version
 
 bazel-build-android:            ## Build android binaries using bazel
 	$(BAZEL) run //:install_k0s --config=go_android_amd64 -- -g $(PWD)/bin/android/amd64
