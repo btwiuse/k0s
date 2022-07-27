@@ -1,7 +1,7 @@
 //go:build raw && !gorilla && !nhooyr
 // +build raw,!gorilla,!nhooyr
 
-package impl
+package dial
 
 import (
 	"crypto/tls"
@@ -12,9 +12,9 @@ import (
 	"net/url"
 )
 
-func (cl *clientImpl) dial(p string, h http.Header) (conn net.Conn, err error) {
+func (d *dialer) Dial(p string, h http.Header) (conn net.Conn, err error) {
 	var (
-		c  = cl.Config
+		c  = d.c
 		ub = &url.URL{
 			Scheme: c.GetSchemeWS(),
 			Host:   c.GetAddr(),

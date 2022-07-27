@@ -1,7 +1,7 @@
 //go:build !gorilla && !raw
 // +build !gorilla,!raw
 
-package impl
+package dial
 
 import (
 	"context"
@@ -13,9 +13,9 @@ import (
 	"nhooyr.io/websocket"
 )
 
-func (cl *clientImpl) dial(p string, h http.Header) (conn net.Conn, err error) {
+func (d *dialer) Dial(p string, h http.Header) (conn net.Conn, err error) {
 	var (
-		c  = cl.Config
+		c  = d.c
 		ub = &url.URL{
 			Scheme: c.GetSchemeWS(),
 			Host:   c.GetAddr(),

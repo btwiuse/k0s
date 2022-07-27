@@ -3,6 +3,7 @@ package impl
 import (
 	"bytes"
 	"crypto/tls"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -21,7 +22,7 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io"
 	"k0s.io/pkg/client"
-	"k0s.io/pkg/client/wsdialer"
+	"k0s.io/pkg/client/dial"
 	"k0s.io/pkg/console"
 	"k0s.io/pkg/fzf"
 	"k0s.io/pkg/hub"
@@ -335,9 +336,9 @@ func (cl *clientImpl) runLogin(idd string) error {
 
 func (cl *clientImpl) RunRedir() error {
 	var (
-		c = cl.Config
+		c      = cl.Config
+		dialer = dial.New(c)
 	)
-	wsd := wsdialer.New(c)
 
 	ep := fmt.Sprintf("/api/agent/%s/redir", idd)
 	log.Println("dial", ep)
@@ -360,7 +361,7 @@ func (cl *clientImpl) RunRedir() error {
 			continue
 		}
 		go func() {
-			wsconn, err := wsd.Dial(ep, cl.userinfo)
+			wsconn, err := dialer.Dial(ep, authorizationHeader(cl.userinfo))
 			if err != nil {
 				log.Println(err)
 				return
@@ -374,9 +375,9 @@ func (cl *clientImpl) RunRedir() error {
 
 func (cl *clientImpl) RunSocks() error {
 	var (
-		c = cl.Config
+		c      = cl.Config
+		dialer = dial.New(c)
 	)
-	wsd := wsdialer.New(c)
 
 	ep := fmt.Sprintf("/api/agent/%s/socks5", idd)
 	log.Println("dial", ep)
@@ -399,7 +400,7 @@ func (cl *clientImpl) RunSocks() error {
 			continue
 		}
 		go func() {
-			wsconn, err := wsd.Dial(ep, cl.userinfo)
+			wsconn, err := dialer.Dial(ep, authorizationHeader(cl.userinfo))
 			if err != nil {
 				log.Println(err)
 				return
@@ -413,9 +414,9 @@ func (cl *clientImpl) RunSocks() error {
 
 func (cl *clientImpl) RunDoh() error {
 	var (
-		c = cl.Config
+		c      = cl.Config
+		dialer = dial.New(c)
 	)
-	wsd := wsdialer.New(c)
 
 	ep := fmt.Sprintf("/api/agent/%s/doh", idd)
 	log.Println("dial", ep)
@@ -438,7 +439,7 @@ func (cl *clientImpl) RunDoh() error {
 			continue
 		}
 		go func() {
-			wsconn, err := wsd.Dial(ep, cl.userinfo)
+			wsconn, err := dialer.Dial(ep, authorizationHeader(cl.userinfo))
 			if err != nil {
 				log.Println(err)
 				return
@@ -448,4 +449,12 @@ func (cl *clientImpl) RunDoh() error {
 		}()
 	}
 	return nil
+}
+
+func authorizationHeader(userinfo *url.Userinfo) http.Header {
+	return http.Header{
+		"Authorization": {
+			"Basic " + base64.StdEncoding.EncodeToString([]byte(userinfo.String())),
+		},
+	}
 }

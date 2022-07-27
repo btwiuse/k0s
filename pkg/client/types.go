@@ -2,7 +2,7 @@ package client
 
 import (
 	"net"
-	"net/url"
+	"net/http"
 
 	"k0s.io"
 	"k0s.io/pkg/hub"
@@ -39,7 +39,7 @@ type Config interface {
 }
 
 type Dialer interface {
-	Dial(string, *url.Userinfo) (net.Conn, error)
+	Dial(string, http.Header) (net.Conn, error)
 }
 
 type KeyStore map[string]string

@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"k0s.io/pkg/asciitransport"
+	"k0s.io/pkg/client/dial"
 	"k0s.io/pkg/console"
 	"k0s.io/pkg/uuid"
 )
@@ -31,10 +32,11 @@ func (cl *clientImpl) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 				"Basic " + base64.StdEncoding.EncodeToString([]byte(userinfo.String())),
 			},
 		}
+		dialer = dial.New(c)
 	)
 
 	for {
-		conn, err = cl.dial(endpoint, h)
+		conn, err = dialer.Dial(endpoint, h)
 		if err != nil {
 			log.Println(err)
 			time.Sleep(time.Second)
