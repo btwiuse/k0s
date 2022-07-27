@@ -1,5 +1,4 @@
 //go:build uuid
-// +build uuid
 
 package main
 

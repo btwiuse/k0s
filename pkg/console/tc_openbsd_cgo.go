@@ -1,5 +1,4 @@
 //go:build openbsd && cgo
-// +build openbsd,cgo
 
 /*
    Copyright The containerd Authors.

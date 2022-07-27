@@ -1,5 +1,4 @@
 //go:build plugin_k16sserver
-// +build plugin_k16sserver
 
 package server
 

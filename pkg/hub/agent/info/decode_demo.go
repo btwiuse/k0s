@@ -1,5 +1,4 @@
 //go:build decode
-// +build decode
 
 package main
 

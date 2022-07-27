@@ -1,5 +1,4 @@
 //go:build plugin_dohserver
-// +build plugin_dohserver
 
 package server
 

@@ -1,5 +1,4 @@
-//go:build !gorilla && !raw
-// +build !gorilla,!raw
+//go:build !gorilla
 
 package wrap
 

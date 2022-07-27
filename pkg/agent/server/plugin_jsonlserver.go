@@ -1,5 +1,4 @@
 //go:build plugin_jsonlserver
-// +build plugin_jsonlserver
 
 package server
 

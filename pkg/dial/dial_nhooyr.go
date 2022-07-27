@@ -1,5 +1,4 @@
 //go:build !gorilla
-// +build !gorilla
 
 package dial
 

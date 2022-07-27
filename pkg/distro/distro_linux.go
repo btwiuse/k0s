@@ -1,7 +1,4 @@
 //go:build (linux || freebsd || openbsd || netbsd) && !windows && !darwin
-// +build linux freebsd openbsd netbsd
-// +build !windows
-// +build !darwin
 
 package distro
 

@@ -1,5 +1,4 @@
 //go:build gorilla && !nhooyr
-// +build gorilla,!nhooyr
 
 package dial
 
