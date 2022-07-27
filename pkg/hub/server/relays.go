@@ -1,4 +1,4 @@
-package hub
+package server
 
 import (
 	"bytes"
@@ -12,12 +12,12 @@ import (
 	"github.com/gorilla/mux"
 	"k0s.io"
 	"k0s.io/pkg/api"
-	types "k0s.io/pkg/hub"
+	"k0s.io/pkg/hub"
 	"k0s.io/pkg/wrap"
 	"nhooyr.io/websocket"
 )
 
-func terminalV2Relay(ag types.Agent) http.HandlerFunc {
+func terminalV2Relay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		wsc, err := websocket.Accept(w, r, &websocket.AcceptOptions{
 			InsecureSkipVerify: true,
@@ -38,7 +38,7 @@ func terminalV2Relay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func terminalRelay(ag types.Agent) http.HandlerFunc {
+func terminalRelay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		wsc, err := websocket.Accept(w, r, &websocket.AcceptOptions{
 			InsecureSkipVerify: true,
@@ -59,7 +59,7 @@ func terminalRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func fsRelay(ag types.Agent) http.HandlerFunc {
+func fsRelay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars = mux.Vars(r)
@@ -91,7 +91,7 @@ func fsRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func versionRelay(ag types.Agent) http.HandlerFunc {
+func versionRelay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars = mux.Vars(r)
@@ -123,7 +123,7 @@ func versionRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func dohRelay(ag types.Agent) http.HandlerFunc {
+func dohRelay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars = mux.Vars(r)
@@ -155,7 +155,7 @@ func dohRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func jsonlRelay(ag types.Agent) http.HandlerFunc {
+func jsonlRelay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		wsc, err := websocket.Accept(w, r, &websocket.AcceptOptions{
 			InsecureSkipVerify: true,
@@ -175,7 +175,7 @@ func jsonlRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func xpraRelay(ag types.Agent) http.HandlerFunc {
+func xpraRelay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		wsc, err := websocket.Accept(w, r, &websocket.AcceptOptions{
 			InsecureSkipVerify: true,
@@ -202,7 +202,7 @@ func xpraRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func envRelay(ag types.Agent) http.HandlerFunc {
+func envRelay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars = mux.Vars(r)
@@ -234,7 +234,7 @@ func envRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func k16sRelay(ag types.Agent) http.HandlerFunc {
+func k16sRelay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars = mux.Vars(r)
@@ -266,7 +266,7 @@ func k16sRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func metricsRelay(ag types.Agent) http.HandlerFunc {
+func metricsRelay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars = mux.Vars(r)
@@ -298,7 +298,7 @@ func metricsRelay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func socks5Relay(ag types.Agent) http.HandlerFunc {
+func socks5Relay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		wsconn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
 			InsecureSkipVerify: true,
@@ -328,7 +328,7 @@ func socks5Relay(ag types.Agent) http.HandlerFunc {
 	}
 }
 
-func redirRelay(ag types.Agent) http.HandlerFunc {
+func redirRelay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		wsconn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
 			InsecureSkipVerify: true,

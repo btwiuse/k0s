@@ -9,7 +9,7 @@ go_library(
         "routes.go",
         "rpc.go",
     ],
-    importpath = "k0s.io/pkg/hub/hub",
+    importpath = "k0s.io/pkg/hub/server",
     visibility = ["//visibility:public"],
     deps = [
         "//:go_default_library",

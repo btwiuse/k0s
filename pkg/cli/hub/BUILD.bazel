@@ -10,8 +10,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/hub/config:go_default_library",
-        "//pkg/hub/hub:go_default_library",
         "//pkg/hub/self:go_default_library",
+        "//pkg/hub/server:go_default_library",
         "//pkg/tunnel/listener:go_default_library",
     ],
 )

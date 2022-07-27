@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"k0s.io/pkg/hub/config"
-	"k0s.io/pkg/hub/hub"
+	"k0s.io/pkg/hub/server"
 	"k0s.io/pkg/tunnel/listener"
 )
 
@@ -15,7 +15,7 @@ func Run2(args []string) (err error) {
 
 	log.Println("server is listening on", c.Port())
 
-	h := hub.NewHub(c)
+	h := server.NewHub(c)
 
 	if c.UseTLS() {
 		err = h.ServeTLS(ln, c.Cert(), c.Key())

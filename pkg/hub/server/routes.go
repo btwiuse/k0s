@@ -1,4 +1,4 @@
-package hub
+package server
 
 import (
 	"context"
@@ -17,7 +17,7 @@ import (
 	"k0s.io"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/exporter"
-	types "k0s.io/pkg/hub"
+	"k0s.io/pkg/hub"
 	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
 	"k0s.io/pkg/ui"
@@ -27,15 +27,15 @@ import (
 )
 
 var (
-	_ types.Hub = (*hub)(nil)
+	_ hub.Hub = (*hubServer)(nil)
 )
 
-type hub struct {
-	types.AgentManager
+type hubServer struct {
+	hub.AgentManager
 
 	*http.Server
 
-	c              types.Config
+	c              hub.Config
 	MetricsHandler http.Handler
 	BinHandler     http.Handler
 }
@@ -50,10 +50,10 @@ func binHandler() http.Handler {
 	})
 }
 
-func NewHub(c types.Config) types.Hub {
+func NewHub(c hub.Config) hub.Hub {
 	var (
 		listhand = NewHandleHijackListener()
-		h        = &hub{
+		h        = &hubServer{
 			c:              c,
 			AgentManager:   NewAgentManager(),
 			MetricsHandler: middleware.GzipMiddleware(exporter.NewHandler()),
@@ -66,7 +66,7 @@ func NewHub(c types.Config) types.Hub {
 	return h
 }
 
-func (h *hub) GetConfig() types.Config {
+func (h *hubServer) GetConfig() hub.Config {
 	return h.c
 }
 
@@ -76,7 +76,7 @@ func (h *hub) GetConfig() types.Config {
 // this one doesn't require listening on a port, and the direction in which
 // connection goes is exactly opposite: the net.Conn's are created on the
 // handler side and then sent through a (chan net.Conn) to the listener side
-func (h *hub) serve(ln net.Listener, _ http.Handler) {
+func (h *hubServer) serve(ln net.Listener, _ http.Handler) {
 	// ln <- net.Conn <- hl
 	// ln: conventionally a producer of net.Conn, but it's role here is consumer
 	for {
@@ -90,7 +90,7 @@ func (h *hub) serve(ln net.Listener, _ http.Handler) {
 	}
 }
 
-func (h *hub) register(conn net.Conn) {
+func (h *hubServer) register(conn net.Conn) {
 	var rpc = ToRPC(conn)
 
 	// unregister
@@ -108,7 +108,7 @@ func (h *hub) register(conn net.Conn) {
 	}
 }
 
-func (h *hub) initServer(addr, apiPrefix string, hl http.Handler) {
+func (h *hubServer) initServer(addr, apiPrefix string, hl http.Handler) {
 	handler := middleware.AllowAllCorsMiddleware(h.initRouter(apiPrefix, hl))
 	if h.GetConfig().Verbose() {
 		handler = middleware.LoggingMiddleware(handler)
@@ -121,7 +121,7 @@ func (h *hub) initServer(addr, apiPrefix string, hl http.Handler) {
 	}
 }
 
-func (h *hub) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router) {
+func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router) {
 	if h.GetConfig().UI() {
 		R = ui.NewRouter(k0s.DEFAULT_UI_ADDRESS)
 	} else {
@@ -188,7 +188,7 @@ func (h *hub) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router) {
 	return R
 }
 
-func (h *hub) handleVersion(w http.ResponseWriter, r *http.Request) {
+func (h *hubServer) handleVersion(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(pretty.JSONStringLine(h.GetConfig().GetVersion())))
 }
@@ -211,7 +211,7 @@ func containsAll(set []string, subset []string) bool {
 	return true
 }
 
-func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
+func (h *hubServer) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	var (
 		// vars = mux.Vars(r)
 		// tags = vars["tags"]
@@ -220,7 +220,7 @@ func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 		vtags       = vars.Get("tags")
 		tags        = strings.Split(vtags, ",")
 		allAgents   = h.GetAgents()
-		agents      = []types.Agent{}
+		agents      = []hub.Agent{}
 	)
 	switch {
 	case untagged:
@@ -242,7 +242,7 @@ func (h *hub) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(pretty.JSONStringLine(agents)))
 }
 
-func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
+func (h *hubServer) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 	// conn, err := wrconn(w, r)
 	wsconn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
 		InsecureSkipVerify: true,
@@ -264,7 +264,7 @@ func (h *hub) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *hub) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *http.Request) {
+func (h *hubServer) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars = mux.Vars(r)
@@ -286,7 +286,7 @@ func (h *hub) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *http.R
 	}
 }
 
-func (h *hub) handleAgent(w http.ResponseWriter, r *http.Request) {
+func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars                           = mux.Vars(r)
 		id                             = vars["id"]

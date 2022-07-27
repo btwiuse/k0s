@@ -1,4 +1,4 @@
-package hub
+package server
 
 import (
 	"bufio"
@@ -10,22 +10,22 @@ import (
 	"time"
 
 	"k0s.io/pkg/api"
-	types "k0s.io/pkg/hub"
+	"k0s.io/pkg/hub"
 	"k0s.io/pkg/hub/agent"
 	"k0s.io/pkg/hub/agent/info"
 	"k0s.io/pkg/rng"
 )
 
 var (
-	_ types.RPC = (*YS)(nil)
+	_ hub.RPC = (*YS)(nil)
 )
 
-func ToRPC(conn net.Conn) types.RPC {
+func ToRPC(conn net.Conn) hub.RPC {
 
 	rpc := &YS{
 		id:            "00000000-0000-0000-0000-000000000000",
 		name:          rng.New(),
-		actions:       make(chan func(types.Hub), 1),
+		actions:       make(chan func(hub.Hub), 1),
 		created:       time.Now(),
 		Conn:          conn,
 		done:          make(chan struct{}),
@@ -59,7 +59,7 @@ func (rpc *YS) register() {
 	rpc.id = id
 	rpc.name = name
 
-	rpc.actions <- func(h types.Hub) {
+	rpc.actions <- func(h hub.Hub) {
 		// clobber previous connection, if any
 		if h.Has(id) {
 			h.Del(id)
@@ -89,7 +89,7 @@ func (rpc *YS) plumbing() {
 	}
 }
 
-func (ys *YS) Actions() <-chan func(types.Hub) {
+func (ys *YS) Actions() <-chan func(hub.Hub) {
 	return ys.actions
 }
 
@@ -128,7 +128,7 @@ type YS struct {
 	id      string
 	name    string
 	created time.Time
-	actions chan func(types.Hub)
+	actions chan func(hub.Hub)
 	net.Conn
 	*bufio.Scanner
 	done          chan struct{}
