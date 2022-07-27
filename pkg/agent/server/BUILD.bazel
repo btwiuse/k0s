@@ -16,7 +16,7 @@ go_library(
         "plugin_xpraserver.go",
         "rpc.go",
     ],
-    importpath = "k0s.io/pkg/agent/agent",
+    importpath = "k0s.io/pkg/agent/server",
     visibility = ["//visibility:public"],
     deps = [
         "//:go_default_library",

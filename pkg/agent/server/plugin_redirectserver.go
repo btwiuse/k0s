@@ -1,16 +1,16 @@
-package agent
+package server
 
 import (
 	"net"
 
 	"github.com/btwiuse/gost"
-	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
 )
 
 func init() { Tunnels[api.Redir] = StartRedirectServer }
 
-func StartRedirectServer(c types.Config) chan net.Conn {
+func StartRedirectServer(c agent.Config) chan net.Conn {
 	redirectListener := NewLys()
 	go redirectServe(redirectListener)
 	return redirectListener.Conns

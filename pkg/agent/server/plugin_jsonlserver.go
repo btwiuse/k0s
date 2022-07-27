@@ -1,14 +1,14 @@
 //go:build plugin_jsonlserver
 // +build plugin_jsonlserver
 
-package agent
+package server
 
 import (
 	"bufio"
 	"log"
 	"net"
 
-	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
 )
 
@@ -17,7 +17,7 @@ func init() {
 	println("JSONL")
 }
 
-func StartJsonlServer(c types.Config) chan net.Conn {
+func StartJsonlServer(c agent.Config) chan net.Conn {
 	var (
 		ro            bool     = c.GetReadOnly()
 		defaultCmd    []string = c.GetCmd()

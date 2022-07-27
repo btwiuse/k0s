@@ -1,14 +1,14 @@
 //go:build plugin_dohserver
 // +build plugin_dohserver
 
-package agent
+package server
 
 import (
 	"log"
 	"net"
 	"net/http"
 
-	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/dohserver"
 	"k0s.io/pkg/middleware"
@@ -31,7 +31,7 @@ func newDohHandler() (http.Handler, error) {
 	return server.Handler(), nil
 }
 
-func StartDohServer(c types.Config) chan net.Conn {
+func StartDohServer(c agent.Config) chan net.Conn {
 	dohHandler, err := newDohHandler()
 	if err != nil {
 		log.Println("dohserver: initialization failed:", err)

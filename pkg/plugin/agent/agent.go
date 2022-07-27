@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"k0s.io"
-	"k0s.io/pkg/agent/agent"
 	"k0s.io/pkg/agent/config"
+	"k0s.io/pkg/agent/server"
 	"k0s.io/pkg/uuid"
 	"k0s.io/pkg/version"
 )
@@ -37,7 +37,7 @@ func run() {
 		Version: version.GetVersion(),
 		Name:    "embedded",
 	}
-	ag := agent.NewAgent(c)
+	ag := server.NewAgent(c)
 
 	for {
 		println("running agent plugin in the background")

@@ -1,4 +1,4 @@
-package agent
+package server
 
 import (
 	"context"
@@ -11,30 +11,30 @@ import (
 
 	"github.com/btwiuse/pretty"
 	"golang.org/x/sync/errgroup"
-	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent"
 	"k0s.io/pkg/agent/dialer"
 	"k0s.io/pkg/api"
 )
 
-type TunnelFn = func(types.Config) chan net.Conn
+type TunnelFn = func(agent.Config) chan net.Conn
 
 var (
-	_       types.Agent             = (*agent)(nil)
+	_       agent.Agent             = (*server)(nil)
 	Tunnels map[api.Tunnel]TunnelFn = map[api.Tunnel]TunnelFn{}
 )
 
-type agent struct {
+type server struct {
 	*errgroup.Group
-	types.Config
-	types.Dialer
+	agent.Config
+	agent.Dialer
 	Tunnels map[api.Tunnel]chan net.Conn
-	// types.RPC
+	// agent.RPC
 
 	id   string
 	name string
 }
 
-func NewAgent(c types.Config) types.Agent {
+func NewAgent(c agent.Config) agent.Agent {
 	var (
 		eg, _   = errgroup.WithContext(context.Background())
 		id      = c.GetID()
@@ -51,7 +51,7 @@ func NewAgent(c types.Config) types.Agent {
 		tunnels[k] = v(c)
 	}
 
-	return &agent{
+	return &server{
 		Group:   eg,
 		Config:  c,
 		Dialer:  dialer.New(c),
@@ -61,11 +61,11 @@ func NewAgent(c types.Config) types.Agent {
 	}
 }
 
-func (ag *agent) TunnelChan(tun api.Tunnel) chan net.Conn {
+func (ag *server) TunnelChan(tun api.Tunnel) chan net.Conn {
 	return ag.Tunnels[tun]
 }
 
-func (ag *agent) Accept(tun api.Tunnel) (net.Conn, error) {
+func (ag *server) Accept(tun api.Tunnel) (net.Conn, error) {
 	var (
 		conn  net.Conn
 		err   error
@@ -81,7 +81,7 @@ func (ag *agent) Accept(tun api.Tunnel) (net.Conn, error) {
 	return conn, nil
 }
 
-func (ag *agent) AgentRegister(conn net.Conn) (types.RPC, error) {
+func (ag *server) AgentRegister(conn net.Conn) (agent.RPC, error) {
 	agentInfo := ag.Config.String()
 	if ag.Config.GetVerbose() {
 		log.Print(pretty.JSONStringLine(ag.Config))
@@ -94,7 +94,7 @@ func (ag *agent) AgentRegister(conn net.Conn) (types.RPC, error) {
 	return NewRPC(conn), nil
 }
 
-func (ag *agent) Serve(rpc types.RPC) error {
+func (ag *server) Serve(rpc agent.RPC) error {
 	for {
 		select {
 		case f := <-rpc.Actions():
@@ -107,7 +107,7 @@ exit:
 	return errors.New("agent: connection to hub closed")
 }
 
-func (ag *agent) ConnectAndServe() error {
+func (ag *server) ConnectAndServe() error {
 	var (
 		conn net.Conn
 		err  error

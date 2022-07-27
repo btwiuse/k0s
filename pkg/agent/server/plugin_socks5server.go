@@ -1,17 +1,17 @@
-package agent
+package server
 
 import (
 	"log"
 	"net"
 
 	"github.com/btwiuse/gost"
-	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
 )
 
 func init() { Tunnels[api.Socks5] = StartSocks5Server }
 
-func StartSocks5Server(c types.Config) chan net.Conn {
+func StartSocks5Server(c agent.Config) chan net.Conn {
 	socks5Listener := NewLys()
 	go autoServe(socks5Listener)
 	return socks5Listener.Conns

@@ -1,4 +1,4 @@
-package agent
+package server
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"k0s.io"
-	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/log"
 	"nhooyr.io/websocket"
@@ -17,7 +17,7 @@ import (
 
 func init() { Tunnels[api.Xpra] = StartXpraServer }
 
-func StartXpraServer(c types.Config) chan net.Conn {
+func StartXpraServer(c agent.Config) chan net.Conn {
 	xpraListener := NewLys()
 	go xpraServe(xpraListener)
 	return xpraListener.Conns

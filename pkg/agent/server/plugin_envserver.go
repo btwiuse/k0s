@@ -1,10 +1,10 @@
-package agent
+package server
 
 import (
 	"net"
 	"net/http"
 
-	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/exporter/env"
 	"k0s.io/pkg/middleware"
@@ -12,7 +12,7 @@ import (
 
 func init() { Tunnels[api.Env] = StartEnvServer }
 
-func StartEnvServer(c types.Config) chan net.Conn {
+func StartEnvServer(c agent.Config) chan net.Conn {
 	var (
 		envListener = NewLys()
 		handler     = middleware.LoggingMiddleware(middleware.GzipMiddleware(env.NewHandler()))

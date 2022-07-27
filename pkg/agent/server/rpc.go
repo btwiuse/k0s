@@ -1,4 +1,4 @@
-package agent
+package server
 
 import (
 	"bufio"
@@ -6,20 +6,20 @@ import (
 	"net"
 	"time"
 
-	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
 )
 
 var (
-	_ types.RPC = (*YS)(nil)
+	_ agent.RPC = (*YS)(nil)
 )
 
-func NewRPC(conn net.Conn) types.RPC {
+func NewRPC(conn net.Conn) agent.RPC {
 	scanner := bufio.NewScanner(conn)
 	ys := &YS{
 		Conn:    conn,
 		Scanner: scanner,
-		actions: make(chan func(types.Agent)),
+		actions: make(chan func(agent.Agent)),
 		done:    make(chan struct{}),
 	}
 	go ys.plumbing()
@@ -39,7 +39,7 @@ func (rpc *YS) plumbing() {
 		if tun == api.Ping {
 			continue
 		}
-		rpc.actions <- func(ag types.Agent) {
+		rpc.actions <- func(ag agent.Agent) {
 			var (
 				conn net.Conn
 				err  error
@@ -64,11 +64,11 @@ type YS struct {
 	net.Conn
 	*bufio.Scanner
 	// cmdc chan Cmd
-	actions chan func(types.Agent)
+	actions chan func(agent.Agent)
 	done    chan struct{}
 }
 
-func (ys *YS) Actions() <-chan func(types.Agent) {
+func (ys *YS) Actions() <-chan func(agent.Agent) {
 	return ys.actions
 }
 

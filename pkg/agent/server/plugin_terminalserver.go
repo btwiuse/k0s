@@ -1,4 +1,4 @@
-package agent
+package server
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"sync"
 
-	types "k0s.io/pkg/agent"
+	"k0s.io/pkg/agent"
 	"k0s.io/pkg/agent/tty/factory"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/asciitransport"
@@ -16,7 +16,7 @@ import (
 
 func init() { Tunnels[api.Terminal] = StartTerminalServer }
 
-func StartTerminalServer(c types.Config) chan net.Conn {
+func StartTerminalServer(c agent.Config) chan net.Conn {
 	var (
 		ro               bool     = c.GetReadOnly()
 		defaultCmd       []string = c.GetCmd()
@@ -27,8 +27,8 @@ func StartTerminalServer(c types.Config) chan net.Conn {
 	return terminalListener.Conns
 }
 
-func serveTerminal(ln net.Listener, defaultCmd []string, c types.Config) {
-	var fac types.TtyFactory = factory.New(defaultCmd)
+func serveTerminal(ln net.Listener, defaultCmd []string, c agent.Config) {
+	var fac agent.TtyFactory = factory.New(defaultCmd)
 
 	for nth := 1; ; nth++ {
 		conn, err := ln.Accept()

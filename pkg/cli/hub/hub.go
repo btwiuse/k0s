@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"k0s.io/pkg/hub/config"
-	"k0s.io/pkg/hub/server"
 	"k0s.io/pkg/hub/self"
+	"k0s.io/pkg/hub/server"
 )
 
 func Run(args []string) (err error) {

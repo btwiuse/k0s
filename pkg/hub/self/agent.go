@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"k0s.io/pkg/agent/agent"
 	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/agent/info"
+	"k0s.io/pkg/agent/server"
 	"k0s.io/pkg/uuid"
 	"k0s.io/pkg/version"
 )
@@ -35,7 +35,7 @@ func Agent(hub string) {
 	config.SetURI()(c)
 	// println(c.GetHost())
 
-	ag := agent.NewAgent(c)
+	ag := server.NewAgent(c)
 
 	for {
 		time.Sleep(time.Second)
