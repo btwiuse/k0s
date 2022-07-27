@@ -1,4 +1,4 @@
-package client
+package impl
 
 import (
 	"encoding/base64"
@@ -14,7 +14,7 @@ import (
 	"k0s.io/pkg/uuid"
 )
 
-func (cl *client) terminalConnect(endpoint string, userinfo *url.Userinfo) {
+func (cl *clientImpl) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 	log.Println("Press ESC twice to exit.")
 
 	var (

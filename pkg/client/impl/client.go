@@ -1,4 +1,4 @@
-package client
+package impl
 
 import (
 	"bytes"
@@ -20,7 +20,7 @@ import (
 	"github.com/abiosoft/ishell"
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io"
-	types "k0s.io/pkg/client"
+	"k0s.io/pkg/client"
 	"k0s.io/pkg/client/wsdialer"
 	"k0s.io/pkg/console"
 	"k0s.io/pkg/fzf"
@@ -29,25 +29,25 @@ import (
 )
 
 var (
-	_   types.Client = (*client)(nil)
+	_   client.Client = (*clientImpl)(nil)
 	idd string
 )
 
-func NewClient(c types.Config) types.Client {
-	cl := &client{
+func NewClient(c client.Config) client.Client {
+	cl := &clientImpl{
 		Config: c,
 		sl:     ishell.New(),
 	}
 	return cl
 }
 
-type client struct {
-	types.Config
+type clientImpl struct {
+	client.Config
 	userinfo *url.Userinfo
 	sl       *ishell.Shell
 }
 
-func (cl *client) ListAgents() (agis []hub.AgentInfo, err error) {
+func (cl *clientImpl) ListAgents() (agis []hub.AgentInfo, err error) {
 	var (
 		c  = cl.Config
 		ub = &url.URL{
@@ -89,7 +89,7 @@ func (cl *client) ListAgents() (agis []hub.AgentInfo, err error) {
 	return agis, err
 }
 
-func (cl *client) MiniRun() error {
+func (cl *clientImpl) MiniRun() error {
 	id := os.Getenv("ID")
 	endpoint := fmt.Sprintf("/api/agent/%s/terminal", id)
 	log.Println(os.Args, endpoint)
@@ -97,7 +97,7 @@ func (cl *client) MiniRun() error {
 	return nil
 }
 
-func (cl *client) Run() error {
+func (cl *clientImpl) Run() error {
 	cl.sl.AddCmd(&ishell.Cmd{
 		Name: "self",
 		Help: "run /proc/self/exe with args",
@@ -163,7 +163,7 @@ func (cl *client) Run() error {
 	return nil
 }
 
-func (cl *client) printAgentTable(out io.Writer) error {
+func (cl *clientImpl) printAgentTable(out io.Writer) error {
 	ags, err := cl.ListAgents()
 	if err != nil {
 		return err
@@ -183,7 +183,7 @@ func (cl *client) printAgentTable(out io.Writer) error {
 	return nil
 }
 
-func (cl *client) runFzf() string {
+func (cl *clientImpl) runFzf() string {
 	var (
 		id     = &strings.Builder{}
 		pr, pw = io.Pipe()
@@ -235,7 +235,7 @@ func (cl *client) runFzf() string {
 	return idd
 }
 
-func (cl *client) runLogin(idd string) error {
+func (cl *clientImpl) runLogin(idd string) error {
 	var (
 		c    = cl.Config
 		user string
@@ -333,7 +333,7 @@ func (cl *client) runLogin(idd string) error {
 	return nil
 }
 
-func (cl *client) RunRedir() error {
+func (cl *clientImpl) RunRedir() error {
 	var (
 		c = cl.Config
 	)
@@ -372,7 +372,7 @@ func (cl *client) RunRedir() error {
 	return nil
 }
 
-func (cl *client) RunSocks() error {
+func (cl *clientImpl) RunSocks() error {
 	var (
 		c = cl.Config
 	)
@@ -411,7 +411,7 @@ func (cl *client) RunSocks() error {
 	return nil
 }
 
-func (cl *client) RunDoh() error {
+func (cl *clientImpl) RunDoh() error {
 	var (
 		c = cl.Config
 	)

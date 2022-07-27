@@ -4,14 +4,14 @@ import (
 	"log"
 	"time"
 
-	"k0s.io/pkg/client/client"
 	"k0s.io/pkg/client/config"
+	"k0s.io/pkg/client/impl"
 )
 
 func Run(args []string) (err error) {
 	c := config.Parse(args)
 
-	cl := client.NewClient(c)
+	cl := impl.NewClient(c)
 
 	for {
 		err = cl.Run()

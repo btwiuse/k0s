@@ -1,7 +1,7 @@
 //go:build gorilla && !nhooyr && !raw
 // +build gorilla,!nhooyr,!raw
 
-package client
+package impl
 
 import (
 	"crypto/tls"
@@ -13,7 +13,7 @@ import (
 	"k0s.io/pkg/wrap"
 )
 
-func (cl *client) dial(p string, h http.Header) (conn net.Conn, err error) {
+func (cl *clientImpl) dial(p string, h http.Header) (conn net.Conn, err error) {
 	var (
 		c  = cl.Config
 		ub = &url.URL{
