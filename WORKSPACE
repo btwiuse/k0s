@@ -9029,15 +9029,15 @@ go_repository(
 go_repository(
     name = "com_github_btwiuse_gods",
     importpath = "github.com/btwiuse/gods",
-    sum = "h1:QNsQLjEYbXh0eDpXGPms5NbqcZDGpTC2ra3QJO/avxg=",
-    version = "v0.0.0-20220709102725-20662ea32ad9",
+    sum = "h1:LZs8rCGipp9xKSjRpENvVijtxq60aATn6UL357/bVvU=",
+    version = "v0.0.1",
 )
 
 go_repository(
     name = "com_github_btwiuse_pretty",
     importpath = "github.com/btwiuse/pretty",
-    sum = "h1:pa8rkKHu9kz1hQ/ArHHpIRVlTE+VzWO0TSRQ2PkTySs=",
-    version = "v0.0.0-20220605073556-820155689895",
+    sum = "h1:P6/2XTs08jm4T/Vqgb2fyrVtO1zTUGpBX48+jjfs1tI=",
+    version = "v0.2.1",
 )
 
 go_repository(

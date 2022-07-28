@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/ActiveState/termtest/conpty v0.5.0
 	github.com/btwiuse/gost v0.0.1
-	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895
+	github.com/btwiuse/pretty v0.2.1
 	github.com/creack/pty v1.1.18
 	github.com/denisbrodbeck/machineid v1.0.1
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f

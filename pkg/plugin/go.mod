@@ -29,7 +29,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btwiuse/gost v0.0.1 // indirect
 	github.com/btwiuse/k16s/v2 v2.0.0-20201224175329-3bc18834f8c1 // indirect
-	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895 // indirect
+	github.com/btwiuse/pretty v0.2.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cheekybits/genny v1.0.0 // indirect
 	github.com/coreos/go-iptables v0.6.0 // indirect

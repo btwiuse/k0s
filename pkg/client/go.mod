@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abiosoft/ishell v2.0.0+incompatible
-	github.com/btwiuse/pretty v0.0.0-20220605073556-820155689895
+	github.com/btwiuse/pretty v0.2.1
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.5
