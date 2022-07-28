@@ -2,6 +2,8 @@
 
 VERSION=$(cat VERSION)
 
+ROOT_MOD=$(go mod edit -json | jq -r .Module.Path)
+
 ROOT=$(pwd)
 
 echo $ROOT
@@ -18,7 +20,7 @@ modpaths2(){
 
 
 mods(){
-  go mod edit -json | jq -cr '.Require[]?|.Path' | grep k0s.io
+  go mod edit -json | jq -cr '.Require[]?|.Path' | grep $ROOT_MOD
 }
 
 modpaths | while read dir; do
