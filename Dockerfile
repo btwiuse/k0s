@@ -5,7 +5,9 @@
 # WORKDIR /k0s.io
 # RUN make bazel-build
 
-FROM golang:1.19 AS builder-go
+FROM golang AS builder-go
+ENV GO=go1.19
+RUN go install golang.org/dl/$GO@latest && $GO download
 COPY . /k0s.io
 WORKDIR /k0s.io
 RUN make build
