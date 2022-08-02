@@ -8,14 +8,14 @@ require (
 	github.com/btwiuse/pretty v0.2.1
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	gopkg.in/yaml.v3 v3.0.1
-	k0s.io v0.1.5
-	k0s.io/pkg/agent v0.1.5
-	k0s.io/pkg/asciitransport v0.1.5
-	k0s.io/pkg/console v0.1.5
-	k0s.io/pkg/dial v0.0.0-00010101000000-000000000000
-	k0s.io/pkg/fzf v0.1.5
-	k0s.io/pkg/hub v0.1.5
-	k0s.io/pkg/uuid v0.1.5
+	k0s.io v0.1.6
+	k0s.io/pkg/agent v0.1.6
+	k0s.io/pkg/asciitransport v0.1.6
+	k0s.io/pkg/console v0.1.6
+	k0s.io/pkg/dial v0.1.6
+	k0s.io/pkg/fzf v0.1.6
+	k0s.io/pkg/hub v0.1.6
+	k0s.io/pkg/uuid v0.1.6
 )
 
 require (
@@ -53,64 +53,8 @@ require (
 	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
 	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k0s.io/pkg/distro v0.1.5 // indirect
-	k0s.io/pkg/rng v0.1.5 // indirect
-	k0s.io/pkg/wrap v0.1.5 // indirect
+	k0s.io/pkg/distro v0.1.6 // indirect
+	k0s.io/pkg/rng v0.1.6 // indirect
+	k0s.io/pkg/wrap v0.1.6 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
 )
-
-replace k0s.io => ../../
-
-replace k0s.io/cmd => ../../cmd/
-
-replace k0s.io/pkg/agent => ../agent/
-
-replace k0s.io/pkg/asciitransport => ../asciitransport/
-
-replace k0s.io/pkg/cli => ../cli/
-
-replace k0s.io/pkg/client => ./
-
-replace k0s.io/pkg/console => ../console/
-
-replace k0s.io/pkg/distro => ../distro/
-
-replace k0s.io/pkg/dohserver => ../dohserver/
-
-replace k0s.io/pkg/exporter => ../exporter/
-
-replace k0s.io/pkg/fonts => ../fonts/
-
-replace k0s.io/pkg/fzf => ../fzf/
-
-replace k0s.io/pkg/gitd => ../gitd/
-
-replace k0s.io/pkg/hub => ../hub/
-
-replace k0s.io/pkg/jsondns => ../jsondns/
-
-replace k0s.io/pkg/manager => ../manager/
-
-replace k0s.io/pkg/middleware => ../middleware/
-
-replace k0s.io/pkg/plugin => ../plugin/
-
-replace k0s.io/pkg/reverseproxy => ../reverseproxy/
-
-replace k0s.io/pkg/rng => ../rng/
-
-replace k0s.io/pkg/simple => ../simple/
-
-replace k0s.io/pkg/tunnel => ../tunnel/
-
-replace k0s.io/pkg/ui => ../ui/
-
-replace k0s.io/pkg/utils => ../utils/
-
-replace k0s.io/pkg/uuid => ../uuid/
-
-replace k0s.io/pkg/wrap => ../wrap/
-
-replace k0s.io/third_party => ../../third_party/
-
-replace k0s.io/pkg/dial => ../dial/
