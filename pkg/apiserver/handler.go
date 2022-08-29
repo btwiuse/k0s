@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	"net/http"
+	"sort"
 	"strings"
 
 	"github.com/emicklei/go-restful/v3"
@@ -20,6 +21,20 @@ type APIServerHandler struct {
 
 func (a *APIServerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	a.FullHandlerChain.ServeHTTP(w, r)
+}
+
+func (a *APIServerHandler) ListedPaths() []string {
+	var handledPaths []string
+
+	for _, ws := range a.GoRestfulContainer.RegisteredWebServices() {
+		handledPaths = append(handledPaths, ws.RootPath())
+	}
+
+	handledPaths = append(handledPaths, a.NonGoRestfulMux.ListedPaths()...)
+
+	sort.Strings(handledPaths)
+
+	return handledPaths
 }
 
 type HandlerChainBuilderFn func(apiHandler http.Handler) http.Handler
