@@ -4,6 +4,7 @@ use (
 	.
 	./cmd
 	./pkg/agent
+	./pkg/apiserver
 	./pkg/asciitransport
 	./pkg/cli
 	./pkg/client
