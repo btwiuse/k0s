@@ -1,11 +1,12 @@
 package main
 
 import (
+	"context"
 	_ "embed"
 	"log"
 
 	"github.com/tetratelabs/wazero"
-	"github.com/tetratelabs/wazero/wasi"
+	"github.com/tetratelabs/wazero/wasi_snapshot_preview1"
 )
 
 // fibWasm was compiled from TinyGo testdata/fibonacci.go
@@ -13,20 +14,23 @@ import (
 var fibWasm []byte
 
 func main() {
-	runtime := wazero.NewRuntime()
+	ctx := context.Background()
 
-	// Note: fibonacci.go doesn't directly use WASI, but TinyGo needs to be initialized as a WASI Command.
-	wm, err := wasi.InstantiateSnapshotPreview1(runtime)
+	// Create a new WebAssembly Runtime.
+	r := wazero.NewRuntimeWithConfig(ctx, wazero.NewRuntimeConfig().
+		// WebAssembly 2.0 allows use of any version of TinyGo, including 0.24+.
+		WithWasmCore2())
+	defer r.Close(ctx) // This closes everything this Runtime created.
+
+	// Instantiate WASI, which implements system I/O such as console output.
+	if _, err = wasi_snapshot_preview1.Instantiate(ctx, r); err != nil {
+		log.Panicln(err)
+	}
+
+	module, err := r.InstantiateModuleFromBinary(ctx, fibWasm)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer wm.Close()
-
-	module, err := runtime.InstantiateModuleFromCode(fibWasm)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	defer module.Close()
 
 	fibonacci := module.ExportedFunction("fibonacci")
 
@@ -37,7 +41,7 @@ func main() {
 		{input: 10, expected: 55},
 		{input: 5, expected: 5},
 	} {
-		results, err := fibonacci.Call(nil, c.input)
+		results, err := fibonacci.Call(ctx, c.input)
 		if err != nil {
 			log.Fatalln(err)
 		}

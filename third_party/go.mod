@@ -89,7 +89,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
-	github.com/tetratelabs/wazero v0.0.0-20220430041858-abd1c79f3335
+	github.com/tetratelabs/wazero v1.0.0-beta.1
 	github.com/traefik/yaegi v0.9.14
 	github.com/urfave/cli v1.22.5
 	github.com/v2fly/v2ray-core/v4 v4.36.2
