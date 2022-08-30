@@ -7,6 +7,7 @@ import (
 
 	"github.com/emicklei/go-restful/v3"
 	"k0s.io/pkg/apiserver/mux"
+	"k0s.io/pkg/middleware"
 )
 
 type APIServerHandler struct {
@@ -42,7 +43,7 @@ type HandlerChainBuilderFn func(apiHandler http.Handler) http.Handler
 func DefaultAPIServerHandler() *APIServerHandler {
 	var (
 		name                string                = "default"
-		handlerChainBuilder HandlerChainBuilderFn = func(x http.Handler) http.Handler { return x }
+		handlerChainBuilder HandlerChainBuilderFn = middleware.LoggingMiddleware
 		notFoundHandler     http.Handler          = http.NotFoundHandler()
 	)
 

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# $ ./apiserver
+# 2022/08/30 11:14:54 listening on http://127.0.0.1:8080
+
+k(){
+  kubectl --kubeconfig=/dev/null -s http://127.0.0.1:8080 "$@"
+}
+
+# OK
+# /version
+k version
+
+# TODO
+# /apis
+k api-resources
+
+# TODO
+# /apis
+k api-versions
+
+# TODO
+# /apis
+k get pod
+
+# TODO
+# /apis
+k describe pod
+
+# TODO
+# /openapi/v2
+k explain pod
