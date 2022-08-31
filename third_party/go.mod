@@ -89,10 +89,11 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.0
 	github.com/tango-contrib/basicauth v0.0.0-20170526072948-7fbc19aece86
-	github.com/tetratelabs/wazero v1.0.0-beta.1
+	github.com/tetratelabs/wazero v1.0.0-beta1
 	github.com/traefik/yaegi v0.9.14
 	github.com/urfave/cli v1.22.5
 	github.com/v2fly/v2ray-core/v4 v4.36.2
+	go.etcd.io/etcd/client/v3 v3.5.0
 	go.starlark.net v0.0.0-20210305151048-6a590ae7f4eb
 	go.uber.org/automaxprocs v1.5.1
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
@@ -127,7 +128,9 @@ require (
 
 require (
 	github.com/btwiuse/etcd/v3 v3.4.15 // indirect
+	github.com/btwiuse/gods v0.0.1 // indirect
 	github.com/btwiuse/k16s/v2 v2.0.0-20201224175329-3bc18834f8c1 // indirect
+	github.com/btwiuse/pretty v0.2.1 // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/go-gost/gosocks4 v0.0.1 // indirect
 	github.com/go-gost/gosocks5 v0.3.0 // indirect
@@ -135,9 +138,13 @@ require (
 	github.com/go-gost/tls-dissector v0.0.2-0.20220408131628-aac992c27451 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
+	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/tklauser/numcpus v0.2.2 // indirect
+	go.etcd.io/etcd/api/v3 v3.5.0 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.5.0 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
+	k0s.io/pkg/dial v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/ui v0.1.5 // indirect
 )
 

@@ -23,7 +23,7 @@ func main() {
 	defer r.Close(ctx) // This closes everything this Runtime created.
 
 	// Instantiate WASI, which implements system I/O such as console output.
-	if _, err = wasi_snapshot_preview1.Instantiate(ctx, r); err != nil {
+	if _, err := wasi_snapshot_preview1.Instantiate(ctx, r); err != nil {
 		log.Panicln(err)
 	}
 
