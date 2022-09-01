@@ -7,26 +7,33 @@
 [![DockerHub](https://img.shields.io/docker/pulls/btwiuse/k0s.svg)](https://hub.docker.com/r/btwiuse/k0s)
 [![@kubernot](https://img.shields.io/twitter/url/https/twitter.com/kubernot.svg?style=social&label=Follow%20%40kubernot)](https://twitter.com/kubernot)
 
-Kubernot enables edge node access using the familiar `kubectl` cli.
-
-Think of it as an SSH alternative where
+Kubernot is a modern SSH alternative with a Kubernetes-like interface, where
 
 - `scp` becomes `kubectl cp`
 - `ssh` becomes `kubectl exec`
 - `ssh -L` becomes `kubectl port-forward`
 - `~/.ssh/config` becomes `~/.kube/config`
 
-Unlike SSH, Kubernot allows you to access nodes behind a firewall.
+Unlike SSH, Kubernot adopts the client-agent-server architecture from Kubernetes to allow accessing nodes behind a firewall.
 
-It emulates a Kubernetes cluster by implementing a minimal subset of the [Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/).
+||client|agent|server|
+|:--:|:--:|:--:|:--:|
+|SSH|`ssh`|-|`sshd`|
+|Kubernot|`kubectl`|`k0s pode`|`k0s apiserver`|
+|Kubernetes|`kubectl`|`kubelet`|`kube-apiserver`|
 
-Currently supported kubectl commands:
+Kubernot emulates a Kubernetes cluster by implementing a minimal subset of the [Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/).
+
+The apiserver is modelled after [kube-apiserver](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/), therefore compatible with the familiar `kubectl` CLI.
+
+Currently supported commands:
 
 - [ ] kubectl cp
 - [ ] kubectl exec
 - [ ] kubectl port-forward
+- [x] kubectl version
 
-The name is inspired by many:
+The name __Kubernot__ is inspired by many:
 
 - [@alexellisuk](https://twitter.com/alexellisuk):
 
@@ -39,49 +46,3 @@ The name is inspired by many:
 - [@mknz](https://twitter.com/mknz):
 
   [![image](https://user-images.githubusercontent.com/54848194/187809711-df63a8ef-9745-4992-9bd6-f9f168f39797.png)](https://twitter.com/mknz/status/1306608104201572357)
-
-## Why
-
-As a long-term Chrome OS user, I'm really into the idea of doing everything in the browser.
-
-Chromebooks, however, are quite limited in their computing power.
-
-When compiling large Rust projects, I still need to resort to my Ryzen 9 5950x home server.
-
-Kubernot was created to solve the problem.
-
-It works by exposing my home server on the web, allowing me to connect to it from anywhere.
-
-You can try it at [k0s.io](https://k0s.io).
-
-Some targets are not protected by a password, they act as honeypots for the purpose of demonstration.
-
-If you destroy them, they will be recovered later.
-
-
-## DISCLAIMER
-
-This project is not to be confused with [k0s - The Zero Friction Kubernetes by Team Lens](https://github.com/k0sproject/k0s).
-
-I started Kubernot as a hobby project and registered [k0s.io](https://k0s.io) in 2019.
-
-The Zero Friction Kubernetes project was launched with the domain name [k0sproject.io](https://k0sproject.io) in late 2020.
-
-Some people may think that by using the package name `k0s`, I am pretending to be the other project and performing a supply chain attack, which is not true.
-
-Several Chinese sources recently even flagged the npm installer as malware.
-
-Now I must make it explicit:
-
-* This project is for demonstration and education purposes only
-
-* It is not a distro of Kubernetes
-
-* It is not malware and contains no malicious code
-
-* It was created in hopes that it would be useful to others, not harmful
-
-* By using it you acknowlege that your are at your own risk
-
-* Author is not responsible for misuse
-
