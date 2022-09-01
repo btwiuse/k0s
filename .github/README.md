@@ -26,17 +26,19 @@ Currently supported kubectl commands:
 - [ ] kubectl exec
 - [ ] kubectl port-forward
 
-The name is inspired by [@alexellisuk](https://twitter.com/alexellisuk):
+The name is inspired by many:
 
-[![image](https://user-images.githubusercontent.com/54848194/187806938-53ad18cd-b122-4690-9adb-8ea5cf194fe5.png)](https://twitter.com/alexellisuk/status/1366849550305140737)
+- [@alexellisuk](https://twitter.com/alexellisuk):
 
-[@aevavoom](https://twitter.com/aevavoom):
+  [![image](https://user-images.githubusercontent.com/54848194/187806938-53ad18cd-b122-4690-9adb-8ea5cf194fe5.png)](https://twitter.com/alexellisuk/status/1366849550305140737)
 
-[![image](https://user-images.githubusercontent.com/54848194/187808142-748181f8-07f6-48c7-bb8e-786071e539c2.png)](https://twitter.com/aevavoom/status/1283146942738952193)
+- [@aevavoom](https://twitter.com/aevavoom):
 
-and [@mknz](https://twitter.com/mknz):
+  [![image](https://user-images.githubusercontent.com/54848194/187808142-748181f8-07f6-48c7-bb8e-786071e539c2.png)](https://twitter.com/aevavoom/status/1283146942738952193)
 
-[![image](https://user-images.githubusercontent.com/54848194/187809711-df63a8ef-9745-4992-9bd6-f9f168f39797.png)](https://twitter.com/mknz/status/1306608104201572357)
+- [@mknz](https://twitter.com/mknz):
+
+  [![image](https://user-images.githubusercontent.com/54848194/187809711-df63a8ef-9745-4992-9bd6-f9f168f39797.png)](https://twitter.com/mknz/status/1306608104201572357)
 
 ## Why
 
