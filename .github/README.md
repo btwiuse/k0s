@@ -3,6 +3,7 @@
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white)](https://pkg.go.dev/k0s.io?tab=doc)
 [![Go 1.18+](https://img.shields.io/github/go-mod/go-version/btwiuse/k0s)](https://golang.org/dl/)
 [![License](https://img.shields.io/github/license/btwiuse/k0s?color=%23000&style=flat-round)](https://github.com/btwiuse/k0s/blob/master/LICENSE)
+[![Visitors](https://visitor-badge.glitch.me/badge?page_id=btwiuse.k0s)](#)
 [![DockerHub](https://img.shields.io/docker/pulls/btwiuse/k0s.svg)](https://hub.docker.com/r/btwiuse/k0s)
 [![@kubernot](https://img.shields.io/twitter/url/https/twitter.com/kubernot.svg?style=social&label=Follow%20%40kubernot)](https://twitter.com/kubernot)
 
