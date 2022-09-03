@@ -1,4 +1,4 @@
-# Kubernot - Not Kubernetes
+# Kubernot (k0s)
 
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white)](https://pkg.go.dev/k0s.io?tab=doc)
 [![Go 1.18+](https://img.shields.io/github/go-mod/go-version/btwiuse/k0s)](https://golang.org/dl/)
@@ -13,11 +13,19 @@
 
 ----
 
+## Not Kubernetes
+
 Kubernot is an experimental SSH alternative with Kubernetes-like UX, where
 
 - [ ] `scp` becomes `kubectl cp`
 - [ ] `ssh` becomes `kubectl exec`
 - [ ] `ssh -L` becomes `kubectl port-forward`
+
+The name __Kubernot__ is inspired by [many](#credits).
+
+It shortens to __k0s__, mimicking the spelling of k8s, because Kubernot is made to resemble Kubernetes, while not being a distro of it.
+
+The shortened form should be pronounced as "chaos" not "kay-zero-es" in order to distinguish from [Mirantis' k0s](https://www.mirantis.com/software/k0s/).
 
 Unlike SSH, Kubernot adopts the client-agent-server model from Kubernetes that allows access to nodes behind a firewall.
 
@@ -37,34 +45,23 @@ Kubernot has two major components: __kuber__ and __knot__:
 
   It runs on targets like Windows / BSD / Android / Chrome (via WASI), since it only deals with processes, sockets and files - no container support is required.
 
-----
-
-## Not Kubernetes
+As a summary, there is a six line poem:
 
     Knowledge is power,
-
     France is bacon,
-
     Kubernot is not Kubernetes:
 
-
     knot is not kubelet,
-
     kuber is not kube-apiserver,
-
     k0s is not k8s.
-
-The name __Kubernot__ is inspired by [many](#credits).
-
-It should be shortened to __k0s__, mimicking the spelling of k8s, because Kubernot is made to resemble Kubernetes, while not being a distro of it.
-
-The shortened form should be pronounced as "chaos" not "kay-zero-es" in order to distinguish from [Mirantis' k0s](https://www.mirantis.com/software/k0s/).
 
 ----
 
 ## Getting Started
 
-`k0s` is the multicall binary of Kubernot. In addition to knot and kuber, it also bundles kubectl for convenience.
+`k0s` is the multicall binary of Kubernot.
+
+ In addition to knot and kuber, it also bundles kubectl for convenience.
 
 To install it, run:
 
