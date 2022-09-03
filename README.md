@@ -9,10 +9,9 @@
 
 Kubernot is an experimental SSH alternative with Kubernetes-like UX, where
 
-- `scp` becomes `kubectl cp`
-- `ssh` becomes `kubectl exec`
-- `ssh -L` becomes `kubectl port-forward`
-- `~/.ssh/config` becomes `~/.kube/config`
+- [ ] `scp` becomes `kubectl cp`
+- [ ] `ssh` becomes `kubectl exec`
+- [ ] `ssh -L` becomes `kubectl port-forward`
 
 Unlike SSH, Kubernot adopts the client-agent-server model from Kubernetes that allows access to nodes behind a firewall.
 
@@ -45,7 +44,7 @@ Kubernot has two major components: __kuber__ and __knot__:
 
     kuber is not kube-apiserver,
 
-    and k0s is not k8s.
+    so k0s is not k8s.
 
 The name __Kubernot__ is inspired by [many](#credits).
 
@@ -55,20 +54,12 @@ The shortened form should be pronounced as "chaos" not "kay-zero-es" in order to
 
 ## Getting Started
 
-`k0s` is the multicall binary of Kubernot. To install it, run:
+`k0s` is the multicall binary of Kubernot. In addition to knot and kuber, it also bundles kubectl for convenience.
+
+To install it, run:
 
 ```
 $ go install k0s.io/cmd/k0s@latest
-```
-
-Alternatively, standalone commands can be installed like this:
-
-```
-$ go install k0s.io/cmd/knot@latest
-```
-
-```
-$ go install k0s.io/cmd/kuber@latest
 ```
 
 To start the server, run:
@@ -77,40 +68,13 @@ To start the server, run:
 $ k0s kuber
 ```
 
-or
-
-```
-$ kuber
-```
-
 then point kubectl to http://127.0.0.1:8000 and print the version:
-
-```
-$ kubectl -s http://127.0.0.1:8000 version
-```
-
-or use the embedded kubectl if you don't have it readily installed:
-
 
 ```
 $ k0s kubectl -s http://127.0.0.1:8000 version
 ```
 
-## Features
-
-Currently supported kubectl commands are:
-
-- [ ] kubectl cp
-- [ ] kubectl exec
-- [ ] kubectl port-forward
-- [x] kubectl version
-
-<details open>
-<summary>
-
 ## Credits
-
-</summary>
 
 - [@alexellisuk](https://twitter.com/alexellisuk):
 
@@ -123,5 +87,3 @@ Currently supported kubectl commands are:
 - [@mknz](https://twitter.com/mknz):
 
   [![image](https://user-images.githubusercontent.com/54848194/187809711-df63a8ef-9745-4992-9bd6-f9f168f39797.png)](https://twitter.com/mknz/status/1306608104201572357)
-
-</details>
