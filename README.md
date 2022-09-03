@@ -7,6 +7,10 @@
 [![DockerHub](https://img.shields.io/docker/pulls/btwiuse/k0s.svg)](https://hub.docker.com/r/btwiuse/k0s)
 [![@kubernot](https://img.shields.io/twitter/url/https/twitter.com/kubernot.svg?style=social&label=Follow%20%40kubernot)](https://twitter.com/kubernot)
 
+<img src="https://github.com/btwiuse/k0s/raw/master/.github/kubernot.svg" width="100">
+
+----
+
 Kubernot is an experimental SSH alternative with Kubernetes-like UX, where
 
 - [ ] `scp` becomes `kubectl cp`
