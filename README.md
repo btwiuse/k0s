@@ -17,9 +17,9 @@ Unlike SSH, Kubernot adopts the client-agent-server model from Kubernetes that a
 
 ||client|agent|server|
 |:--:|:--:|:--:|:--:|
-|SSH|`ssh`|-|`sshd`|
-|Kubernot|`kubectl`|`knot`|`kuber`|
-|Kubernetes|`kubectl`|`kubelet`|`kube-apiserver`|
+|SSH|ssh|-|sshd|
+|Kubernot|kubectl|knot|kuber|
+|Kubernetes|kubectl|kubelet|kube-apiserver|
 
 Kubernot has two major components: __kuber__ and __knot__:
 
