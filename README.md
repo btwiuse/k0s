@@ -35,6 +35,8 @@ Kubernot has two major components: __kuber__ and __knot__:
 
   It runs on targets like Windows / BSD / Android / Chrome (via WASI), since it only deals with processes, sockets and files - no container support is required.
 
+----
+
 ## Not Kubernetes
 
     Knowledge is power,
@@ -55,6 +57,8 @@ The name __Kubernot__ is inspired by [many](#credits).
 It should be shortened to __k0s__, mimicking the spelling of k8s, because Kubernot is made to resemble Kubernetes, while not being a distro of it.
 
 The shortened form should be pronounced as "chaos" not "kay-zero-es" in order to distinguish from [Mirantis' k0s](https://www.mirantis.com/software/k0s/).
+
+----
 
 ## Getting Started
 
@@ -77,6 +81,8 @@ then point kubectl to http://127.0.0.1:8000 and print the version:
 ```
 $ k0s kubectl -s http://127.0.0.1:8000 version
 ```
+
+----
 
 ## Credits
 
