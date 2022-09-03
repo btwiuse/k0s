@@ -7,7 +7,9 @@
 [![DockerHub](https://img.shields.io/docker/pulls/btwiuse/k0s.svg)](https://hub.docker.com/r/btwiuse/k0s)
 [![@kubernot](https://img.shields.io/twitter/url/https/twitter.com/kubernot.svg?style=social&label=Follow%20%40kubernot)](https://twitter.com/kubernot)
 
-<img src="https://github.com/btwiuse/k0s/raw/master/.github/kubernot.svg" width="100">
+<a href="#">
+  <img src="https://github.com/btwiuse/k0s/raw/master/.github/kubernot.svg" width="100">
+</a>
 
 ----
 
@@ -43,14 +45,14 @@ Kubernot has two major components: __kuber__ and __knot__:
 
     France is bacon,
 
-    but Kubernot is not Kubernetes:
+    Kubernot is not Kubernetes:
 
 
     knot is not kubelet,
 
     kuber is not kube-apiserver,
 
-    so k0s is not k8s.
+    k0s is not k8s.
 
 The name __Kubernot__ is inspired by [many](#credits).
 
