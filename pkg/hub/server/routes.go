@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"crypto/tls"
 	"net"
 	"net/http"
@@ -24,7 +23,6 @@ import (
 	"k0s.io/pkg/ui"
 	"k0s.io/pkg/wrap"
 	"modernc.org/httpfs"
-	"nhooyr.io/websocket"
 )
 
 var (
@@ -147,7 +145,7 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 
 	// list active agents
 	r.Handle("/agents/list", http.HandlerFunc(h.handleAgentsList)).Methods("GET")
-	r.Handle("/agents/watch", http.HandlerFunc(h.handleAgentsWatchSSE)).Methods("GET")
+	r.Handle("/agents/watch", h.sseMux).Methods("GET")
 
 	// client /api/agent/{id}/rootfs/{path} hijack => net.Conn <(copy) hijacked grpc fs conn
 	// client /api/agent/{id}/ws => ws <(pipe)> hijacked grpc ws conn
@@ -249,32 +247,6 @@ func (h *hubServer) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(pretty.JSONStringLine(agents)))
-}
-
-func (h *hubServer) handleAgentsWatchSSE(w http.ResponseWriter, r *http.Request) {
-	h.sseMux.ServeHTTP(w, r)
-}
-
-func (h *hubServer) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {
-	// conn, err := wrconn(w, r)
-	wsconn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
-		InsecureSkipVerify: true,
-	})
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
-
-	watchInterval := time.Second
-	for {
-		_, err := conn.Write([]byte(pretty.JSONStringLine(h.GetAgents())))
-		if err != nil {
-			log.Println("agents watch:", err)
-			break
-		}
-		time.Sleep(watchInterval)
-	}
 }
 
 func (h *hubServer) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *http.Request) {
