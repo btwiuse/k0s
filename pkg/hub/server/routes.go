@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/btwiuse/pretty"
+	"github.com/btwiuse/sse"
 	"github.com/btwiuse/wetty/pkg/assets"
 	"github.com/gorilla/mux"
 	echo "github.com/jpillora/go-echo-server/handler"
@@ -38,6 +39,7 @@ type hubServer struct {
 	c              hub.Config
 	MetricsHandler http.Handler
 	BinHandler     http.Handler
+	sseMux         *sse.SSE
 }
 
 func binHandler() http.Handler {
@@ -58,8 +60,15 @@ func NewHub(c hub.Config) hub.Hub {
 			AgentManager:   NewAgentManager(),
 			MetricsHandler: middleware.GzipMiddleware(exporter.NewHandler()),
 			BinHandler:     middleware.GzipMiddleware(binHandler()),
+			sseMux:         sse.NewSSE(),
 		}
 	)
+	go func() {
+		for {
+			h.sseMux.SetData(pretty.JSONStringLine(h.GetAgents()))
+			time.Sleep(time.Second)
+		}
+	}()
 	// ensure core fields of h is not empty before return
 	h.initServer(h.GetConfig().Port(), "/api", listhand)
 	go h.serve(listhand, listhand)
@@ -138,7 +147,7 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 
 	// list active agents
 	r.Handle("/agents/list", http.HandlerFunc(h.handleAgentsList)).Methods("GET")
-	r.Handle("/agents/watch", http.HandlerFunc(h.handleAgentsWatch)).Methods("GET")
+	r.Handle("/agents/watch", http.HandlerFunc(h.handleAgentsWatchSSE)).Methods("GET")
 
 	// client /api/agent/{id}/rootfs/{path} hijack => net.Conn <(copy) hijacked grpc fs conn
 	// client /api/agent/{id}/ws => ws <(pipe)> hijacked grpc ws conn
@@ -240,6 +249,10 @@ func (h *hubServer) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(pretty.JSONStringLine(agents)))
+}
+
+func (h *hubServer) handleAgentsWatchSSE(w http.ResponseWriter, r *http.Request) {
+	h.sseMux.ServeHTTP(w, r)
 }
 
 func (h *hubServer) handleAgentsWatch(w http.ResponseWriter, r *http.Request) {

@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/abbot/go-http-auth v0.4.0
 	github.com/btwiuse/pretty v0.2.1
+	github.com/btwiuse/sse v0.0.1
 	github.com/btwiuse/wetty v0.0.36
 	github.com/gorilla/mux v1.8.0
 	github.com/jpillora/go-echo-server v0.5.0
