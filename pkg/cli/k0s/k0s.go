@@ -3,10 +3,6 @@ package k0s
 import (
 	"fmt"
 	"os"
-	"path/filepath"
-	"strings"
-
-	match "github.com/alexpantyukhin/go-pattern-match"
 
 	"k0s.io/pkg/cli/agent"
 	"k0s.io/pkg/cli/chassis"
@@ -15,9 +11,16 @@ import (
 	"k0s.io/pkg/cli/miniclient"
 	"k0s.io/pkg/cli/mnt"
 	"k0s.io/pkg/cli/upgrade"
+
+	"github.com/btwiuse/multicall"
 )
 
-var cmdRun = map[string]func([]string) error{
+func TODO([]string) error {
+	fmt.Println("TODO: not implemented yet")
+	return nil
+}
+
+var cmdRun multicall.RunnerFuncMap = map[string]multicall.RunnerFunc{
 	"mnt":        mnt.Run,
 	"chassis":    chassis.Run,
 	"client":     client.Run,
@@ -26,68 +29,11 @@ var cmdRun = map[string]func([]string) error{
 	"hub2":       hub.Run2,
 	"agent":      agent.Run,
 	"upgrade":    upgrade.Run,
+	"kuber":      TODO,
+	"knot":       TODO,
+	"version":    TODO,
 }
 
 func Run(args []string) error {
-	exe := strings.TrimSuffix(filepath.Base(os.Args[0]), ".exe")
-
-	osargs := append([]string{exe}, args...)
-
-	// arg parse using rust-style match
-	// https://github.com/ylxdzsw/v2socks/blob/master/src/main.rs
-	// https://github.com/alexpantyukhin/go-pattern-match
-	matcher := match.Match(osargs)
-
-	for cmd := range cmdRun {
-		subcmd := cmd
-		runf, _ := cmdRun[cmd]
-		// log.Println(subcmd)
-		matcher = matcher.
-			When(
-				[]interface{}{
-					subcmd,
-					match.ANY,
-				},
-				func() error {
-					// log.Println(subcmd)
-					return runf(osargs[1:])
-				},
-			).
-			When(
-				[]interface{}{
-					match.ANY,
-					subcmd,
-					match.ANY,
-				},
-				func() error {
-					// log.Println(subcmd)
-					return runf(osargs[2:])
-				},
-			)
-	}
-
-	matcher = matcher.When(
-		[]interface{}{
-			"k0s",
-			match.ANY,
-		},
-		func() error {
-			// log.Println("k0s")
-			return client.Run(osargs[1:])
-		},
-	)
-
-	ok, _ := matcher.Result()
-	if !ok {
-		usage()
-	}
-
-	return nil
-}
-
-func usage() {
-	fmt.Println("please specify one of the subcommands:")
-	for c := range cmdRun {
-		fmt.Println("-", c)
-	}
+	return cmdRun.Run(os.Args[1:])
 }
