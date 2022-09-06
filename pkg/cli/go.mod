@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5
+	github.com/btwiuse/multicall v0.0.0
 	github.com/creativeprojects/go-selfupdate v0.6.1
 	k0s.io/pkg/agent v0.1.5
 	k0s.io/pkg/client v0.1.5
@@ -43,6 +44,7 @@ require (
 	github.com/btwiuse/gost v0.0.1 // indirect
 	github.com/btwiuse/k16s/v2 v2.0.0-20201224175329-3bc18834f8c1 // indirect
 	github.com/btwiuse/pretty v0.2.1 // indirect
+	github.com/btwiuse/sse v0.0.1 // indirect
 	github.com/btwiuse/wetty v0.0.36 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cheekybits/genny v1.0.0 // indirect
