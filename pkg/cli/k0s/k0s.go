@@ -66,17 +66,6 @@ func Run(args []string) error {
 			)
 	}
 
-	matcher = matcher.When(
-		[]interface{}{
-			"k0s",
-			match.ANY,
-		},
-		func() error {
-			// log.Println("k0s")
-			return client.Run(osargs[1:])
-		},
-	)
-
 	ok, _ := matcher.Result()
 	if !ok {
 		usage()
