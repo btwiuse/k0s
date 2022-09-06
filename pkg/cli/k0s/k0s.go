@@ -1,6 +1,7 @@
 package k0s
 
 import (
+	"log"
 	"os"
 
 	"k0s.io/pkg/cli/agent"
@@ -14,7 +15,12 @@ import (
 	"github.com/btwiuse/multicall"
 )
 
-var cmdRun multicall.RunnerFuncMap = map[string]func([]string) error{
+func TODO([]string) error {
+	log.Println("TODO: not implemented yet")
+	return nil
+}
+
+var cmdRun multicall.RunnerFuncMap = map[string]multicall.RunnerFunc{
 	"mnt":        mnt.Run,
 	"chassis":    chassis.Run,
 	"client":     client.Run,
@@ -23,8 +29,11 @@ var cmdRun multicall.RunnerFuncMap = map[string]func([]string) error{
 	"hub2":       hub.Run2,
 	"agent":      agent.Run,
 	"upgrade":    upgrade.Run,
+	"kuber":      TODO,
+	"knot":       TODO,
+	"version":    TODO,
 }
 
 func Run(args []string) error {
-	return cmdRun.Run(os.Args)
+	return cmdRun.Run(os.Args[1:])
 }
