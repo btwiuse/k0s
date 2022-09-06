@@ -1,7 +1,7 @@
 package k0s
 
 import (
-	"log"
+	"fmt"
 	"os"
 
 	"k0s.io/pkg/cli/agent"
@@ -16,7 +16,7 @@ import (
 )
 
 func TODO([]string) error {
-	log.Println("TODO: not implemented yet")
+	fmt.Println("TODO: not implemented yet")
 	return nil
 }
 
