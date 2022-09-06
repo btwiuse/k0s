@@ -9,6 +9,7 @@ import (
 	"github.com/btwiuse/pretty"
 	"k0s.io"
 	"k0s.io/pkg/hub"
+	"k0s.io/pkg/utils"
 	"k0s.io/pkg/version"
 )
 
@@ -26,10 +27,7 @@ func (c *config) Port() string {
 	if c.port != "" {
 		return c.port
 	}
-	if port, ok := os.LookupEnv("PORT"); ok {
-		return ":" + port
-	}
-	return k0s.HUB_PORT
+	return utils.EnvPORT(k0s.HUB_PORT)
 }
 
 func (c *config) UseTLS() bool {
