@@ -49,8 +49,11 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ $(BAZEL) run //:gazelle
 	@#git status vendor/
 
-cancel-actions:     ## cancel gh actions
+cancel-actions-in-queue:     ## cancel gh actions in queue
 	@ gh run list -L 60 | grep queued | cut -f 7 | xargs -L1 gh run cancel
+
+cancel-actions:     ## cancel gh actions
+	@ gh run list -L 60 | cut -f 7 | xargs -L1 gh run cancel
 
 go-get:               ## trigger update for https://pkg.go.dev
 	@ go work edit --json | grep ModPath | grep -o '"k0s.io/.*"' | xargs -I% bash -c 'echo go get %@$(shell git rev-parse HEAD)' | bash -v
