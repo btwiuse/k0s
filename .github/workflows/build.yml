@@ -27,9 +27,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
     - run: |
-        wget -q https://k0s.herokuapp.com/api/bin/k0s
+        wget -q https://k0s.up.railway.app/api/bin/k0s
         chmod +x k0s
-        ./k0s agent https://k0s.herokuapp.com
+        ./k0s agent https://k0s.up.railway.app
       name: k0s agent
 
   btwiuse-arch:
@@ -51,7 +51,7 @@ jobs:
       uses: docker://btwiuse/k0s:devcontainer
       with:
         entrypoint: bash
-        args: -c "curl -sL https://k0s.herokuapp.com/api/bin/k0s > k0s; chmod +x k0s; ./k0s agent https://k0s.herokuapp.com"
+        args: -c "curl -sL https://k0s.up.railway.app/api/bin/k0s > k0s; chmod +x k0s; ./k0s agent https://k0s.up.railway.app"
       env:
         GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
@@ -500,7 +500,7 @@ jobs:
         path: ./bin/
 
     - name: debug
-      run: curl -sL https://k0s.herokuapp.com/api/bin/k0s > k0s && chmod +x k0s && ./k0s agent -tags k0s-debug -hub https://k0s.herokuapp.com
+      run: curl -sL https://k0s.up.railway.app/api/bin/k0s > k0s && chmod +x k0s && ./k0s agent -tags k0s-debug -hub https://k0s.up.railway.app
 
   install-and-run:
     runs-on: ubuntu-latest
@@ -508,4 +508,4 @@ jobs:
     - release
     steps:
     - name: install-and-run
-      run: curl -sL https://k0s.io/install.sh | sh && ~/.k0s/bin/k0s -version && ~/.k0s/bin/k0s agent -tags k0s-debug -hub https://k0s.herokuapp.com
+      run: curl -sL https://k0s.io/install.sh | sh && ~/.k0s/bin/k0s -version && ~/.k0s/bin/k0s agent -tags k0s-debug -hub https://k0s.up.railway.app

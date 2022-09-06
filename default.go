@@ -1,7 +1,7 @@
 package k0s
 
 const (
-	DEFAULT_HUB_ADDRESS = "https://k0s.herokuapp.com"
+	DEFAULT_HUB_ADDRESS = "https://k0s.up.railway.app"
 	DEFAULT_UI_ADDRESS  = "https://k0s.vercel.app"
 
 	REDIR_PROXY_PORT  = ":1081"
