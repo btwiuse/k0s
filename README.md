@@ -45,16 +45,6 @@ Kubernot has two major components: __kuber__ and __knot__:
 
   It runs on targets like Windows / BSD / Android / Chrome (via WASI), since it only deals with processes, sockets and files - no container support is required.
 
-As a summary, there is a six line poem:
-
-    Knowledge is power,
-    France is bacon,
-    Kubernot is not Kubernetes:
-
-    knot is not kubelet,
-    kuber is not kube-apiserver,
-    k0s is not k8s.
-
 ----
 
 ## Getting Started
