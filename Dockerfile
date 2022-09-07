@@ -1,6 +1,7 @@
 # https://cirrus-ci.com/github/btwiuse/k0s
 
-FROM btwiuse/arch:bazel AS builder-bazel
+# FROM btwiuse/arch:bazel AS builder-bazel
+FROM btwiuse/k0s:devcontainer AS builder-bazel
 COPY . /k0s.io
 WORKDIR /k0s.io
 RUN make bazel-build
