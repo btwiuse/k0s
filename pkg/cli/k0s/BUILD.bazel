@@ -10,9 +10,11 @@ go_library(
         "//pkg/cli/chassis:go_default_library",
         "//pkg/cli/client:go_default_library",
         "//pkg/cli/hub:go_default_library",
+        "//pkg/cli/kubectl:go_default_library",
+        "//pkg/cli/kuber:go_default_library",
         "//pkg/cli/miniclient:go_default_library",
         "//pkg/cli/mnt:go_default_library",
         "//pkg/cli/upgrade:go_default_library",
-        "@com_github_alexpantyukhin_go_pattern_match//:go_default_library",
+        "@com_github_btwiuse_multicall//:go_default_library",
     ],
 )

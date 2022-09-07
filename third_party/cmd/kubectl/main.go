@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"k0s.io/third_party/pkg/cli/kubectl"
+	"k0s.io/pkg/cli/kubectl"
 )
 
 func main() {

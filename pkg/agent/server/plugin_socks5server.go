@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/btwiuse/gost"
+	"github.com/ginuerzh/gost"
 	"k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
 )

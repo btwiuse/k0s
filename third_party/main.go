@@ -4,11 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
-	"strings"
 
-	match "github.com/alexpantyukhin/go-pattern-match"
-
+	"github.com/btwiuse/multicall"
 	"k0s.io/pkg/cli/agent"
 	"k0s.io/pkg/cli/chassis"
 	"k0s.io/pkg/cli/client"
@@ -17,7 +14,9 @@ import (
 	"k0s.io/pkg/cli/mnt"
 	"k0s.io/third_party/pkg/cli/bcrypt"
 	"k0s.io/third_party/pkg/cli/buildkite"
-	"k0s.io/third_party/pkg/cli/caddy"
+
+	// "k0s.io/third_party/pkg/cli/caddy"
+	"k0s.io/pkg/cli/kubectl"
 	"k0s.io/third_party/pkg/cli/dohserver"
 	"k0s.io/third_party/pkg/cli/filebrowser"
 	"k0s.io/third_party/pkg/cli/gitd"
@@ -25,12 +24,16 @@ import (
 	"k0s.io/third_party/pkg/cli/gos"
 	"k0s.io/third_party/pkg/cli/gost"
 	"k0s.io/third_party/pkg/cli/k16s"
-	"k0s.io/third_party/pkg/cli/kubectl"
 	"k0s.io/third_party/pkg/cli/trojan"
 	"k0s.io/third_party/pkg/cli/webproc"
 )
 
-var cmdRun = map[string]func([]string) error{
+func TODO([]string) error {
+	fmt.Println("TODO: not implemented yet")
+	return nil
+}
+
+var cmdRun multicall.RunnerFuncMap = map[string]multicall.RunnerFunc{
 	"dohserver":       dohserver.Run,
 	"bcrypt":          bcrypt.Run,
 	"k16s":            k16s.Run,
@@ -41,7 +44,7 @@ var cmdRun = map[string]func([]string) error{
 	"goproxy":         goproxy.Run,
 	"gos":             gos.Run,
 	"buildkite-agent": buildkite.Run,
-	"caddy":           caddy.Run,
+	"caddy":           TODO, // caddy.Run,
 	"chassis":         chassis.Run,
 	"client":          client.Run,
 	"miniclient":      miniclient.Run,
@@ -53,69 +56,14 @@ var cmdRun = map[string]func([]string) error{
 	"filebrowser":     filebrowser.Run,
 }
 
+func Run(args []string) error {
+	return cmdRun.Run(os.Args[1:])
+}
+
 func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	exe := strings.TrimSuffix(filepath.Base(os.Args[0]), ".exe")
-
-	osargs := append([]string{exe}, os.Args[1:]...)
-
-	// arg parse using rust-style match
-	// https://github.com/ylxdzsw/v2socks/blob/master/src/main.rs
-	// https://github.com/alexpantyukhin/go-pattern-match
-	matcher := match.Match(osargs)
-
-	for cmd := range cmdRun {
-		subcmd := cmd
-		runf, _ := cmdRun[cmd]
-		// log.Println(subcmd)
-		matcher = matcher.
-			When(
-				[]interface{}{
-					subcmd,
-					match.ANY,
-				},
-				func() error {
-					// log.Println(subcmd)
-					return runf(osargs[1:])
-				},
-			).
-			When(
-				[]interface{}{
-					match.ANY,
-					subcmd,
-					match.ANY,
-				},
-				func() error {
-					// log.Println(subcmd)
-					return runf(osargs[2:])
-				},
-			)
-	}
-
-	matcher = matcher.When(
-		[]interface{}{
-			"k0s",
-			match.ANY,
-		},
-		func() error {
-			// log.Println("k0s")
-			return client.Run(osargs[1:])
-		},
-	)
-
-	ok, err := matcher.Result()
-	if !ok {
-		usage()
-	}
-	if err != nil {
+	if err := Run(os.Args[1:]); err != nil {
 		log.Fatalln(err)
-	}
-}
-
-func usage() {
-	fmt.Println("please specify one of the subcommands:")
-	for c := range cmdRun {
-		fmt.Println("-", c)
 	}
 }
