@@ -5,6 +5,7 @@
 [![License](https://img.shields.io/github/license/btwiuse/k0s?color=%23000&style=flat-round)](https://github.com/btwiuse/k0s/blob/master/LICENSE)
 [![Visitors](https://visitor-badge.glitch.me/badge?page_id=btwiuse.k0s)](#)
 [![DockerHub](https://img.shields.io/docker/pulls/btwiuse/k0s.svg)](https://hub.docker.com/r/btwiuse/k0s)
+[![Buildkite](https://badge.buildkite.com/4be3caf595f18998bd63a201633a01b94c63e8d4c19f2a8920.svg?branch=master&theme=flickr)](https://buildkite.com/bazel/btwiuse-k0s)
 [![@kubernot](https://img.shields.io/twitter/url/https/twitter.com/kubernot.svg?style=social&label=Follow%20%40kubernot)](https://twitter.com/kubernot)
 
 <a href="#">
