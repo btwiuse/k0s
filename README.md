@@ -11,7 +11,7 @@
   <img src="https://github.com/btwiuse/k0s/raw/master/.github/kubernot.svg" width="100">
 </a>
 
-----
+---
 
 ## Not Kubernetes
 
@@ -21,37 +21,47 @@ Kubernot is an experimental SSH alternative with Kubernetes-like UX, where
 - [ ] `ssh` becomes `kubectl exec`
 - [ ] `ssh -L` becomes `kubectl port-forward`
 
-The name __Kubernot__ is inspired by [many](#credits).
+The name **Kubernot** is inspired by [many](#credits).
 
-It shortens to __k0s__, mimicking the spelling of k8s, because Kubernot is made to resemble Kubernetes, while not being a distro of it.
+It shortens to **k0s**, mimicking the spelling of k8s, because Kubernot is made
+to resemble Kubernetes, while not being a distro of it.
 
-The shortened form should be pronounced as "chaos" not "kay-zero-es" in order to distinguish from [Mirantis' k0s](https://www.mirantis.com/software/k0s/).
+The shortened form should be pronounced as "chaos" not "kay-zero-es" in order to
+distinguish from [Mirantis' k0s](https://www.mirantis.com/software/k0s/).
 
-Unlike SSH, Kubernot adopts the client-agent-server model from Kubernetes that allows access to nodes behind a firewall.
+Unlike SSH, Kubernot adopts the client-agent-server model from Kubernetes that
+allows access to nodes behind a firewall.
 
-||client|agent|server|
-|:--:|:--:|:--:|:--:|
-|SSH|ssh|-|sshd|
-|Kubernot|kubectl|knot|kuber|
-|Kubernetes|kubectl|kubelet|kube-apiserver|
+|            | client  |  agent  |     server     |
+| :--------: | :-----: | :-----: | :------------: |
+|    SSH     |   ssh   |    -    |      sshd      |
+|  Kubernot  | kubectl |  knot   |     kuber      |
+| Kubernetes | kubectl | kubelet | kube-apiserver |
 
-Kubernot has two major components: __kuber__ and __knot__:
+Kubernot has two major components: **kuber** and **knot**:
 
-- Kuber implements a minimal subset of [The Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/), and is therefore compatible with kubectl. 
+- Kuber implements a minimal subset of
+  [The Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/),
+  and is therefore compatible with kubectl.
 
-  It is directly modelled after [kube-apiserver](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/).
+  It is directly modelled after
+  [kube-apiserver](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/).
 
-- Knot is the equivalent of [kubelet](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/) in Kubernetes.
+- Knot is the equivalent of
+  [kubelet](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/)
+  in Kubernetes.
 
-  It runs on targets like Windows / BSD / Android / Chrome (via WASI), since it only deals with processes, sockets and files - no container support is required.
+  It runs on targets like Windows / BSD / Android / Chrome (via WASI), since it
+  only deals with processes, sockets and files - no container support is
+  required.
 
-----
+---
 
 ## Getting Started
 
 `k0s` is the multicall binary of Kubernot.
 
- In addition to knot and kuber, it also bundles kubectl for convenience.
+`kubectl` is also bundled as a subcommand for convenience.
 
 To install it, run:
 
@@ -71,7 +81,7 @@ then point kubectl to http://127.0.0.1:8000 and print the version:
 $ k0s kubectl -s http://127.0.0.1:8000 version
 ```
 
-----
+---
 
 ## Credits
 

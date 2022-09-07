@@ -20,8 +20,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-
-	"k0s.io/pkg/exporter/k16s"
 )
 
 func Run(args []string) error {
@@ -30,5 +28,5 @@ func Run(args []string) error {
 		log.Fatalf("Failed to create MetricsServer Listener: %v", err)
 	}
 
-	return http.Serve(ln, k16s.NewHandler())
+	return http.Serve(ln, http.NotFoundHandler())
 }

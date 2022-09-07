@@ -25,6 +25,7 @@ go_library(
         "//pkg/ui:go_default_library",
         "//pkg/wrap:go_default_library",
         "@com_github_btwiuse_pretty//:go_default_library",
+        "@com_github_btwiuse_sse//:go_default_library",
         "@com_github_btwiuse_wetty//pkg/assets:go_default_library",
         "@com_github_gorilla_mux//:go_default_library",
         "@com_github_jpillora_go_echo_server//handler:go_default_library",

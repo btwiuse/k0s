@@ -86,3 +86,17 @@ tasks:
 # windows:
 #   build_targets:
 #   - "k0s"
+  ubuntu1804_darwin_amd64:
+    name: darwin_amd64
+    platform: ubuntu2004
+    build_flags:
+    - --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64
+    build_targets:
+    - "k0s_static"
+  ubuntu1804_darwin_arm64:
+    name: darwin_arm64
+    platform: ubuntu2004
+    build_flags:
+    - --platforms=@io_bazel_rules_go//go/toolchain:darwin_arm64
+    build_targets:
+    - "k0s_static"

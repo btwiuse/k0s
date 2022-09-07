@@ -45,7 +45,9 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@ find pkg -name 'go.mod' | sed s,go.mod,,g | xargs -I% bash -vc 'pushd % && go mod tidy'
 	@#sed -i -e '/k0s.io.* v/d' pkg/*/go.mod go.mod
 	@#ls -1 pkg/*/go.mod | xargs -L1 $(BAZEL) run //:gazelle -- update-repos --from_file
-	@ $(BAZEL) run //:gazelle -- update-repos --from_file=go.mod
+	@# @ $(BAZEL) run //:gazelle -- update-repos --from_file=third_party/go.mod -lang go -proto disable_global
+	@# https://github.com/btwiuse/baize/blob/btwiuse/hack/update-deps.sh
+	@ $(BAZEL) run //:gazelle -- update-repos --from_file=third_party/go.mod --build_file_generation=on --build_file_proto_mode=disable --prune --to_macro=go_repos.bzl%go_repositories
 	@ $(BAZEL) run //:gazelle
 	@#git status vendor/
 

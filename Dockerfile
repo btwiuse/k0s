@@ -1,20 +1,17 @@
 # https://cirrus-ci.com/github/btwiuse/k0s
 
-# FROM btwiuse/bazel AS builder
+# FROM btwiuse/arch:bazel AS builder-bazel
+# FROM btwiuse/k0s:devcontainer AS builder-bazel
 # COPY . /k0s.io
 # WORKDIR /k0s.io
 # RUN make bazel-build
 
-FROM btwiuse/arch:golang AS builder-go
-#ENV GO=go1.19
-#RUN go install golang.org/dl/$GO@latest && $GO download
+FROM btwiuse/arch:golang AS builder-golang
 COPY . /k0s.io
 WORKDIR /k0s.io
 RUN make build
 
 FROM btwiuse/arch
-#FROM alpine
-#RUN apk add curl
-# COPY --from=builder /k0s.io/bin/k0s_static /usr/bin/k0s
-COPY --from=builder-go /k0s.io/bin/k0s /usr/bin/k0s
+# COPY --from=builder-bazel /k0s.io/bin/k0s_static /usr/bin/k0s
+COPY --from=builder-golang /k0s.io/bin/k0s /usr/bin/k0s
 ENTRYPOINT ["/usr/bin/k0s"]

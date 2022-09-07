@@ -7,7 +7,7 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "@com_github_tetratelabs_wazero//:go_default_library",
-        "@com_github_tetratelabs_wazero//wasi:go_default_library",
+        "@com_github_tetratelabs_wazero//wasi_snapshot_preview1:go_default_library",
     ],
 )
 

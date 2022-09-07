@@ -2,14 +2,14 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["config.go"],
-    importpath = "k0s.io/pkg/hub/config",
+    srcs = ["kuber.go"],
+    importpath = "k0s.io/pkg/cli/kuber",
     visibility = ["//visibility:public"],
     deps = [
         "//:go_default_library",
-        "//pkg/hub:go_default_library",
+        "//pkg/apiserver:go_default_library",
+        "//pkg/apiserver/routes:go_default_library",
         "//pkg/utils:go_default_library",
-        "//pkg/version:go_default_library",
-        "@com_github_btwiuse_pretty//:go_default_library",
+        "@io_k8s_apimachinery//pkg/version:go_default_library",
     ],
 )

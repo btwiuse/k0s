@@ -1,8 +1,6 @@
 FROM btwiuse/k0s AS k0s
 
-FROM btwiuse/arch
-
-RUN curl -sL https://go.dev/dl/go1.19.linux-amd64.tar.gz | tar -xzC /usr/local/ && cp /usr/local/go/bin/go /usr/bin/go
+FROM btwiuse/arch:golang
 
 RUN pacman -Syu --noconfirm --overwrite='*' \
     android-ndk &&\

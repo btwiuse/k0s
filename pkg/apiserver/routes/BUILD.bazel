@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "index.go",
+        "version.go",
+    ],
+    importpath = "k0s.io/pkg/apiserver/routes",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/apiserver/mux:go_default_library",
+        "@com_github_emicklei_go_restful_v3//:go_default_library",
+        "@io_k8s_apimachinery//pkg/apis/meta/v1:go_default_library",
+        "@io_k8s_apimachinery//pkg/util/sets:go_default_library",
+        "@io_k8s_apimachinery//pkg/version:go_default_library",
+        "@io_k8s_apiserver//pkg/endpoints/handlers/responsewriters:go_default_library",
+    ],
+)
