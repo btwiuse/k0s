@@ -69,7 +69,7 @@ rules_rust_dependencies()
 
 rust_register_toolchains(
     edition = "2021",
-    iso_date = "2022-07-10",
+    iso_date = "2022-09-06",
     version = "nightly",
 )
 
