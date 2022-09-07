@@ -14,13 +14,6 @@ go_library(
     importpath = "k0s.io/pkg/exporter",
     visibility = ["//visibility:public"],
     deps = select({
-        "@io_bazel_rules_go//go/platform:android": [
-            "@com_github_prometheus_client_golang//prometheus:go_default_library",
-            "@com_github_prometheus_client_golang//prometheus/promhttp:go_default_library",
-            "@com_github_prometheus_common//version:go_default_library",
-            "@com_github_prometheus_node_exporter//collector:go_default_library",
-            "@in_gopkg_alecthomas_kingpin_v2//:go_default_library",
-        ],
         "@io_bazel_rules_go//go/platform:linux": [
             "@com_github_prometheus_client_golang//prometheus:go_default_library",
             "@com_github_prometheus_client_golang//prometheus/promhttp:go_default_library",

@@ -47,7 +47,7 @@ gazelle:             ## auto generate BUILD.bazel files from go.mod
 	@#ls -1 pkg/*/go.mod | xargs -L1 $(BAZEL) run //:gazelle -- update-repos --from_file
 	# @ $(BAZEL) run //:gazelle -- update-repos --from_file=third_party/go.mod -lang go -proto disable_global
 	@ $(BAZEL) run //:gazelle -- update-repos --from_file=third_party/go.mod --build_file_generation=on --build_file_proto_mode=disable --prune
-	#@ $(BAZEL) run //:gazelle
+	@ $(BAZEL) run //:gazelle
 	@#git status vendor/
 
 cancel-actions-in-queue:     ## cancel gh actions in queue

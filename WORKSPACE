@@ -6279,30 +6279,12 @@ go_repository(
 )
 
 go_repository(
-    name = "com_gitlab_yawning_bsaes_git",
-    build_file_generation = "on",
-    build_file_proto_mode = "disable",
-    importpath = "gitlab.com/yawning/bsaes.git",
-    sum = "h1:FpfFs4EhNehiVfzQttTuxanPIT43FtkkCFypIod8LHo=",
-    version = "v0.0.0-20190805113838-0a714cd429ec",
-)
-
-go_repository(
     name = "com_gitlab_yawning_obfs4_git",
     build_file_generation = "on",
     build_file_proto_mode = "disable",
     importpath = "gitlab.com/yawning/obfs4.git",
     sum = "h1:tJ8F7ABaQ3p3wjxwXiWSktVDgjZEXkvaRawd2rIq5ws=",
     version = "v0.0.0-20220204003609-77af0cba934d",
-)
-
-go_repository(
-    name = "com_gitlab_yawning_utls_git",
-    build_file_generation = "on",
-    build_file_proto_mode = "disable",
-    importpath = "gitlab.com/yawning/utls.git",
-    sum = "h1:RL6O0MP2YI0KghuEU/uGN6+8b4183eqNWoYgx7CXD0U=",
-    version = "v0.0.12-1",
 )
 
 go_repository(

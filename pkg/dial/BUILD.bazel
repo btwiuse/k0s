@@ -2,15 +2,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = [
-        "dial_gorilla.go",
-        "dial_nhooyr.go",
-    ],
+    srcs = ["dial_nhooyr.go"],
     importpath = "k0s.io/pkg/dial",
     visibility = ["//visibility:public"],
-    deps = [
-        "//pkg/wrap:go_default_library",
-        "@com_github_gorilla_websocket//:go_default_library",
-        "@io_nhooyr_websocket//:go_default_library",
-    ],
+    deps = ["@io_nhooyr_websocket//:go_default_library"],
 )
