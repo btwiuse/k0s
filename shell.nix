@@ -15,6 +15,9 @@ pkgs.mkShell {
     gopkgs
     go-tools
     delve
+
+    # bazel
+    bazel_5
   ];
 
   hardeningDisable = [ "all" ];
