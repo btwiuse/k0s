@@ -7,6 +7,9 @@ pkgs.mkShell {
     rnix-lsp
     docker-client
     gnumake
+    vim
+    htop
+    tmux
 
     # go development
     go_1_19
@@ -18,6 +21,12 @@ pkgs.mkShell {
 
     # bazel
     bazel_5
+
+    # rust development
+    rustup
+
+    # deno development
+    deno
   ];
 
   hardeningDisable = [ "all" ];
