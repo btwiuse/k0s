@@ -7,7 +7,7 @@ RUN pacman -Syu --noconfirm --overwrite='*' \
     yes | pacman -Scc
 
 RUN pacman -Syu --noconfirm --overwrite='*' \
-    nix docker clang rustup deno pkgfile yarn npm wget htop dstat neofetch cmake gopls staticcheck delve go-tools &&\
+    direnv nix docker clang rustup deno pkgfile yarn npm wget htop dstat neofetch cmake gopls staticcheck delve go-tools &&\
     yes | pacman -Scc
 
 RUN pkgfile -u
