@@ -8,6 +8,7 @@ import (
 	"k0s.io"
 	"k0s.io/pkg/apiserver"
 	"k0s.io/pkg/apiserver/routes"
+	"k0s.io/pkg/apiserver/routes/apis"
 	"k0s.io/pkg/utils"
 	"k8s.io/apimachinery/pkg/version"
 )
@@ -28,6 +29,7 @@ func Run([]string) error {
 	port := utils.EnvPORT(k0s.HUB_PORT)
 	handler := apiserver.DefaultAPIServerHandler()
 	routes.Version{Version: &Info}.Install(handler.GoRestfulContainer)
+	apis.APIS{}.Install(handler.GoRestfulContainer)
 	routes.Index{}.Install(handler, handler.NonGoRestfulMux)
 	log.Println(fmt.Sprintf("listening on http://127.0.0.1%s", port))
 	return http.ListenAndServe(port, handler)
