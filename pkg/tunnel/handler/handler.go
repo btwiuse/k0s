@@ -20,15 +20,13 @@ import (
 	"k0s.io/pkg/log"
 	portless "k0s.io/pkg/tunnel"
 	"k0s.io/pkg/wrap"
-
-	"github.com/gorilla/handlers"
-	"github.com/rs/cors"
+	"k0s.io/pkg/middleware"
 )
 
 func Handler(prefix string) http.Handler {
 	r := http.NewServeMux()
 	r.Handle("/", manageHub(setupTunnel(defaultTunnelMux)))
-	return handlers.LoggingHandler(os.Stderr, cors.AllowAll().Handler(r))
+	return middleware.LoggingHandler(middleware.AllowAllCorsMiddleware(r))
 }
 
 func paths() []string {
@@ -81,6 +79,8 @@ func manageHub(next http.Handler) http.Handler {
 	})
 }
 
+// get stream identifier from query string if specified
+// otherwise from request header
 func getFingerprint(r *http.Request) string {
 	param := r.URL.Query().Get(portless.FingerPrintHeader)
 	if param != "" {
@@ -98,8 +98,10 @@ func setupTunnel(next http.Handler) http.Handler {
 		pattern := r.URL.Path
 		from := r.URL.Query().Get("from")
 		switch _, ok := defaultTunnelMux.Tunnels[fp]; {
+		// passthrough regular request to wrapped handler
 		case fp == "":
 			next.ServeHTTP(w, r)
+		// new stream identifier, create new tunnel
 		case !ok:
 			defaultTunnelMux.Tunnels[fp] = portless.NewTunnel()
 			// use first conn as controlling channel
@@ -116,6 +118,7 @@ func setupTunnel(next http.Handler) http.Handler {
 			}()
 			log.Printf("[SRV:%s] %s => %s\n", fp, r.RemoteAddr+"@"+from, r.URL.Path)
 			fallthrough
+		// handle request with registered
 		default:
 			defaultTunnelMux.Tunnels[fp].ServeHTTP(w, r)
 		}
