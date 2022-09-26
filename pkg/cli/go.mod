@@ -3,7 +3,7 @@ module k0s.io/pkg/cli
 go 1.19
 
 require (
-	github.com/btwiuse/multicall v0.0.0
+	github.com/btwiuse/multicall v0.0.1
 	github.com/creativeprojects/go-selfupdate v0.6.1
 	k0s.io v0.1.5
 	k0s.io/pkg/agent v0.1.5
