@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"os"
 	"runtime"
 	"sort"
 	"strings"
@@ -26,7 +25,7 @@ import (
 func Handler(prefix string) http.Handler {
 	r := http.NewServeMux()
 	r.Handle("/", manageHub(setupTunnel(defaultTunnelMux)))
-	return middleware.LoggingHandler(middleware.AllowAllCorsMiddleware(r))
+	return middleware.LoggingMiddleware(middleware.AllowAllCorsMiddleware(r))
 }
 
 func paths() []string {
