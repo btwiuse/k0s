@@ -41,7 +41,7 @@ go_rules_dependencies()
 
 go_register_toolchains(
     nogo = "@//:nogo",
-    version = "1.19.1",
+    version = "1.19.3",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
@@ -69,7 +69,7 @@ rules_rust_dependencies()
 
 rust_register_toolchains(
     edition = "2021",
-    iso_date = "2022-09-06",
+    iso_date = "2022-11-26",
     version = "nightly",
 )
 
