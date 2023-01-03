@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/prometheus/client_golang v1.13.0
 	github.com/prometheus/common v0.37.0
-	github.com/prometheus/node_exporter v1.3.1
+	github.com/prometheus/node_exporter v1.5.0
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )
 
