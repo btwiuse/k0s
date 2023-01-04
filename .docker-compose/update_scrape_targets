@@ -31,9 +31,14 @@ get_agents(){
   curl -s https://${HUB}/api/agents/list | jq -rc "$(jq_filter)"
 }
 
+get_metrics(){
+  curl -s https://metrics.k0s.io | jq .[].host -r | ts '  -'
+}
+
 get_all(){
   get_header
-  get_hub && get_agents && get_kube_state_metrics
+  # get_hub && get_agents && get_kube_state_metrics
+  get_metrics
 }
 
 update_targets(){
