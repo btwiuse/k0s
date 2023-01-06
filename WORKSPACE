@@ -69,8 +69,7 @@ rules_rust_dependencies()
 
 rust_register_toolchains(
     edition = "2021",
-    iso_date = "2023-01-04",
-    version = "nightly",
+    versions = ["nightly/2023-01-04"],
 )
 
 # https://docs.rs/crate/cargo-raze/0.0.19

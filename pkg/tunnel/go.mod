@@ -4,9 +4,8 @@ go 1.19
 
 require (
 	github.com/ginuerzh/gost v0.0.0-20220903125123-b0bb26fc952b
-	github.com/gorilla/handlers v1.5.1
-	github.com/rs/cors v1.8.2
 	k0s.io v0.1.5
+	k0s.io/pkg/middleware v0.1.5
 	k0s.io/pkg/wrap v0.1.5
 	nhooyr.io/websocket v1.8.7
 )
@@ -30,6 +29,7 @@ require (
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/google/gopacket v1.1.19 // indirect
+	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.11 // indirect
@@ -44,6 +44,7 @@ require (
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/riobard/go-bloom v0.0.0-20200614022211-cdc8013cb5b3 // indirect
+	github.com/rs/cors v1.8.2 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/shadowsocks/go-shadowsocks2 v0.1.5 // indirect
 	github.com/shadowsocks/shadowsocks-go v0.0.0-20200409064450-3e585ff90601 // indirect

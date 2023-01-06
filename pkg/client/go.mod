@@ -6,7 +6,7 @@ require (
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abiosoft/ishell v2.0.0+incompatible
 	github.com/btwiuse/pretty v0.2.1
-	golang.org/x/crypto v0.0.0-20220817201139-bc19a97f63c8
+	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.5
 	k0s.io/pkg/agent v0.1.5
@@ -48,10 +48,10 @@ require (
 	gitlab.com/mjwhitta/safety v1.11.0 // indirect
 	gitlab.com/mjwhitta/sysinfo v1.4.7 // indirect
 	gitlab.com/mjwhitta/where v1.2.4 // indirect
-	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
-	golang.org/x/sys v0.0.0-20220817070843-5a390386f1f2 // indirect
+	golang.org/x/sync v0.1.0 // indirect
+	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/term v0.0.0-20220411215600-e5f449aeb171 // indirect
-	golang.org/x/text v0.3.8-0.20211004125949-5bd84dd9b33b // indirect
+	golang.org/x/text v0.4.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/distro v0.1.5 // indirect
 	k0s.io/pkg/rng v0.1.5 // indirect
