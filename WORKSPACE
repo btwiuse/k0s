@@ -41,7 +41,7 @@ go_rules_dependencies()
 
 go_register_toolchains(
     nogo = "@//:nogo",
-    version = "1.20rc2",
+    version = "1.19.4",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
