@@ -11,7 +11,7 @@ tasks:
     - "k0s_static"
     - "k0s_rs"
     - "hub_rs"
-    - "k8s-controller"
+  # - "k8s-controller"
   ubuntu1804_windows_amd64:
     name: windows_amd64
     platform: ubuntu2004
