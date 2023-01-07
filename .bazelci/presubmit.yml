@@ -9,8 +9,8 @@ tasks:
     build_targets:
     - "k0s"
     - "k0s_static"
-    - "k0s_rs"
-    - "hub_rs"
+   #- "k0s_rs"
+   #- "hub_rs"
   # - "k8s-controller"
   ubuntu1804_windows_amd64:
     name: windows_amd64
