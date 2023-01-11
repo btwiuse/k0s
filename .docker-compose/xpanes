@@ -4,14 +4,26 @@ HUB="${1:-hub.k0s.io}"
 . .env
 GRA="grafana-${GRAFANA_VERSION}"
 PRO="prometheus-${PROMETHEUS_VERSION}.linux-amd64"
+NEX="node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64"
+
+# git clone https://github.com/greymd/tmux-xpanes
+# cd tmux-xpanes
+# sudo bash install.sh
+
+# sudo apt install -y moreutils
 
 start(){
   cat <<EOF | grep -v '^[[:space:]]*#' | grep . | xpanes -te
-  env "GF_PATHS_DATA=$PWD/grafana" ./${GRA}/bin/grafana-server -homepath=${GRA} --config="$PWD/grafana.ini"
-
   ./update_scrape_targets "${HUB}"
 
-  ${PRO}/prometheus --storage.tsdb.path=prometheus --config.file=prometheus.yml --web.listen-address=0.0.0.0:9090 --web.external-url=https://${HUB}/prometheus --web.route-prefix=/prometheus
+  # :3000
+  env "GF_PATHS_DATA=$PWD/grafana" ./${GRA}/bin/grafana-server -homepath=${GRA} --config="$PWD/grafana.ini"
+
+  # :9090
+  ./${PRO}/prometheus --storage.tsdb.path=prometheus --config.file=prometheus.yml --web.listen-address=0.0.0.0:9090 --web.external-url=https://${HUB}/prometheus --web.route-prefix=/prometheus
+
+  # :9100
+  ./${NEX}/node_exporter
 EOF
 }
 

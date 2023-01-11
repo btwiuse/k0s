@@ -6,3 +6,4 @@ prometheus_scrape_targets.json
 grafana-*
 prometheus-*
 alertmanager-*
+node_exporter-*

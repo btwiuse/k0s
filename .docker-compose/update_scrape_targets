@@ -32,12 +32,19 @@ get_agents(){
 }
 
 get_metrics(){
-  curl -s https://metrics.k0s.io | jq .[].host -r | ts '  -'
+  curl -s https://metrics.k0s.io | jq .[].host -r | cut -d . -f 1 | xargs -I% echo '  - %.metrics.k0s.io#%'
+}
+
+get_localhost(){
+cat <<EOF
+  - http://localhost:9100/metrics#localhost
+EOF
 }
 
 get_all(){
   get_header
   # get_hub && get_agents && get_kube_state_metrics
+  # get_localhost
   get_metrics
 }
 

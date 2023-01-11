@@ -19,3 +19,9 @@ if ! [[ -f alertmanager-${ALERTMANAGER_VERSION}.linux-amd64.tar.gz ]]; then
   wget https://github.com/prometheus/alertmanager/releases/download/v${ALERTMANAGER_VERSION}/alertmanager-${ALERTMANAGER_VERSION}.linux-amd64.tar.gz
 fi
 tar -zxvf alertmanager-${ALERTMANAGER_VERSION}.linux-amd64.tar.gz
+
+# https://prometheus.io/download/#node_exporter
+if ! [[ -f node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz ]]; then
+  wget https://github.com/prometheus/node_exporter/releases/download/v${NODE_EXPORTER_VERSION}/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz
+fi
+tar -zxvf node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz
