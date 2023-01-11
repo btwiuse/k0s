@@ -17,15 +17,15 @@ def _android_ndk_impl(ctx):
             print('downloading android ndk for', ctx.os.name)
             if ctx.os.name == "mac os x":
                 ctx.download_and_extract(
-                    "https://dl.google.com/android/repository/android-ndk-r24-darwin.zip",
-                    stripPrefix = "android-ndk-r24",
-                    sha256 = "162a7000515be07489f2ed70d6d3a117d236150f83f3fcb601c163349429ba23"
+                    "https://dl.google.com/android/repository/android-ndk-r25b-darwin.zip",
+                    stripPrefix = "android-ndk-r25b",
+                    sha256 = "7e12f1f809878d4f5d5a901809277aa31546d36c10730fade2036d7d95b3607a"
                 )
             if ctx.os.name == "linux":
                 ctx.download_and_extract(
-                    "https://dl.google.com/android/repository/android-ndk-r24-linux.zip",
-                    stripPrefix = "android-ndk-r24",
-                    sha256 = "caac638f060347c9aae994e718ba00bb18413498d8e0ad4e12e1482964032997"
+                    "https://dl.google.com/android/repository/android-ndk-r25b-linux.zip",
+                    stripPrefix = "android-ndk-r25b",
+                    sha256 = "403ac3e3020dd0db63a848dcaba6ceb2603bf64de90949d5c4361f848e44b005"
                 )
 
     ctx.file("template.bzl", 'ANDROID_NDK_HOME = "{}"'.format(path_ndk))
