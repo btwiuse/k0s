@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export ANDROID_NDK_BAZEL=True
+
 set -e
 
 # The whole point of this wrapper script is to specify a default build target for bazel
