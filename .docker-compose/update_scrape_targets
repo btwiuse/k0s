@@ -7,7 +7,6 @@ cat <<EOF
 - labels:
     job: all
     group: mebox
-  targets:
 EOF
 }
 
@@ -32,7 +31,13 @@ get_agents(){
 }
 
 get_metrics(){
-  curl -s https://metrics.k0s.io | jq .[].host -r | cut -d . -f 1 | xargs -I% echo '  - %.metrics.k0s.io#%'
+  curl -s https://metrics.k0s.io | jq .[].host -r | cut -d . -f 1 | jq -s . | jq -r '.[]|"  - \(.).metrics.k0s.io"' > /tmp/metrics
+  if [[ -s /tmp/metrics ]]; then
+    echo '  targets:'
+    cat /tmp/metrics
+  else
+    echo '  targets: []'
+  fi
 }
 
 get_localhost(){
