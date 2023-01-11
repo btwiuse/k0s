@@ -41,7 +41,7 @@ go_rules_dependencies()
 
 go_register_toolchains(
     nogo = "@//:nogo",
-    version = "1.19.4",
+    version = "1.19.5",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
@@ -56,6 +56,13 @@ load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
 
+http_archive(
+    name = "com_google_googletest",
+    sha256 = "199e68f9dff997b30d420bf23cd9a0d3f66bfee4460e2cd95084a2c45ee00f1a",
+    strip_prefix = "googletest-5376968f6948923e2411081fd9372e71a59d8e77",
+    urls = ["https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip"],
+)
+
 git_repository(
     name = "rules_rust",
     # commit = "f32695dcd02d9a19e42b9eb7f29a24a8ceb2b858",
@@ -69,7 +76,7 @@ rules_rust_dependencies()
 
 rust_register_toolchains(
     edition = "2021",
-    versions = ["nightly/2023-01-04"],
+    versions = ["nightly/2023-01-11"],
 )
 
 # https://docs.rs/crate/cargo-raze/0.0.19
