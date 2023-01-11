@@ -60,16 +60,16 @@ tasks:
     - --config=go_android_386
     build_targets:
     - "k0s"
-  ubuntu1804_android_armv7:
-    name: android_armv7
-    platform: ubuntu2004
-    environment:
-      ANDROID_NDK_BAZEL: True
-      ANDROID_NDK_HOME: ''
-    build_flags:
-    - --config=go_android_armv7
-    build_targets:
-    - "k0s"
+# ubuntu1804_android_armv7:
+#   name: android_armv7
+#   platform: ubuntu2004
+#   environment:
+#     ANDROID_NDK_BAZEL: True
+#     ANDROID_NDK_HOME: ''
+#   build_flags:
+#   - --config=go_android_armv7
+#   build_targets:
+#   - "k0s"
   ubuntu1804_android_arm64:
     name: android_arm64
     platform: ubuntu2004
