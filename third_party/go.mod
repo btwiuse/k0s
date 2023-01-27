@@ -11,7 +11,7 @@ require (
 	github.com/btwiuse/bcrypt v1.0.2
 	github.com/btwiuse/cadvisor v0.0.0-20210312172035-34fddda41018
 	github.com/btwiuse/dkg v0.2.0
-	github.com/btwiuse/gost v0.0.1
+	github.com/btwiuse/gost v0.0.3
 	github.com/btwiuse/wetty v0.0.36
 	github.com/buildkite/agent/v3 v3.27.0
 	github.com/caddy-dns/alidns v1.0.23

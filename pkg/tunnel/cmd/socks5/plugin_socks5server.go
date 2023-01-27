@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/ginuerzh/gost"
+	"github.com/btwiuse/gost"
 	"k0s.io/pkg/tunnel/listener"
 )
 
