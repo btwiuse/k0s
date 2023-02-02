@@ -41,7 +41,7 @@ go_rules_dependencies()
 
 go_register_toolchains(
     nogo = "@//:nogo",
-    version = "1.20rc3",
+    version = "1.20",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
@@ -76,7 +76,7 @@ rules_rust_dependencies()
 
 rust_register_toolchains(
     edition = "2021",
-    versions = ["nightly/2023-01-11"],
+    versions = ["nightly/2023-02-01"],
 )
 
 # https://docs.rs/crate/cargo-raze/0.0.19
