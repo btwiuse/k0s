@@ -218,7 +218,9 @@ func main() {
 		log.Println("Start compiling...")
 		build.Env = append(os.Environ(), c.Env()...)
 		build.Stdout = os.Stdout
-		build.Stderr = ts(os.Stderr)
+		build.Stderr = os.Stderr
+		build.Stderr = ts(build.Stderr)
+		build.Stderr = prefix(build.Stderr, "["+c.String()+"] ")
 		if err := build.Run(); err != nil {
 			log.Fatalln(err)
 		}
@@ -263,6 +265,23 @@ func ln(from, to string) {
 	if err := lnf.Run(); err != nil {
 		log.Fatalln(err)
 	}
+}
+
+func prefix(next io.Writer, p string) io.Writer {
+	var (
+		pr, pw  = io.Pipe()
+		scanner = bufio.NewScanner(pr)
+		logger  = log.New(next, p, 0)
+	)
+
+	go func() {
+		for scanner.Scan() {
+			line := scanner.Text()
+			logger.Println(line)
+		}
+	}()
+
+	return pw
 }
 
 func ts(next io.Writer) io.Writer {
