@@ -13,6 +13,7 @@ import (
 	"k0s.io/pkg/cli/miniclient"
 	"k0s.io/pkg/cli/mnt"
 	"k0s.io/pkg/cli/upgrade"
+	"k0s.io/pkg/cli/version"
 
 	"github.com/btwiuse/multicall"
 )
@@ -34,7 +35,7 @@ var cmdRun multicall.RunnerFuncMap = map[string]multicall.RunnerFunc{
 	"kubectl":    kubectl.Run,
 	"kuber":      kuber.Run,
 	"knot":       TODO,
-	"version":    TODO,
+	"version":    version.Run,
 }
 
 func Run(args []string) error {

@@ -42,6 +42,10 @@ type Version interface {
 	GetBuildDate() string
 	GetVersion() string
 	GetGoVersion() string
+	GetPlatform() string
+	GetMajor() string
+	GetMinor() string
+	GetCompiler() string
 }
 
 type Dialer interface {

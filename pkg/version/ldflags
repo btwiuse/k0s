@@ -32,6 +32,14 @@ version(){
   cat VERSION
 }
 
+major(){
+  version | sed s,^v,,g | cut -d . -f 1
+}
+
+minor(){
+  version | cut -d . -f 2
+}
+
 ldflags(){
   ldflags="${GO_LDFLAGS}
 "
@@ -46,6 +54,10 @@ ldflags(){
   ldflags+="-X 'k0s.io/pkg/version.BuildDateString=$(builddate)'
 "
   ldflags+="-X 'k0s.io/pkg/version.VersionString=$(version)'
+"
+  ldflags+="-X 'k0s.io/pkg/version.MajorString=$(major)'
+"
+  ldflags+="-X 'k0s.io/pkg/version.MinorString=$(minor)'
 "
   echo -n "$ldflags"
 }
