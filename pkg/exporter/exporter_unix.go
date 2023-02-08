@@ -1,4 +1,4 @@
-//go:build openbsd
+//go:build unix && !linux
 
 package exporter
 
@@ -9,6 +9,6 @@ import (
 
 func NewHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		io.WriteString(w, "# /metrics is not implemented for openbsd platform")
+		io.WriteString(w, "# /metrics is not implemented for unix platform")
 	})
 }
