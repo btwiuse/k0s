@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "exporter_android.go",
         "exporter_linux.go",
+        "exporter_unix.go",
         "exporter_windows.go",
     ],
     importpath = "k0s.io/pkg/exporter",

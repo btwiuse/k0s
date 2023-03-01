@@ -1,4 +1,4 @@
-//go:build unix && !linux
+//go:build !windows && !android && !linux
 
 package exporter
 
