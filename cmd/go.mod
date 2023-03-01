@@ -1,6 +1,6 @@
 module k0s.io/cmd
 
-go 1.19
+go 1.20
 
 replace k0s.io => ../
 

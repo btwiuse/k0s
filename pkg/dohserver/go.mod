@@ -1,6 +1,6 @@
 module k0s.io/pkg/dohserver
 
-go 1.19
+go 1.20
 
 require (
 	github.com/BurntSushi/toml v1.1.0

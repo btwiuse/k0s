@@ -1,6 +1,6 @@
 module k0s.io/pkg/tunnel
 
-go 1.19
+go 1.20
 
 require (
 	github.com/btwiuse/gost v0.0.3

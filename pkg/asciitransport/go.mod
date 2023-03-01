@@ -1,6 +1,6 @@
 module k0s.io/pkg/asciitransport
 
-go 1.19
+go 1.20
 
 require (
 	github.com/btwiuse/pretty v0.2.1

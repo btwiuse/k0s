@@ -15,6 +15,7 @@ go_library(
         "//pkg/cli/miniclient:go_default_library",
         "//pkg/cli/mnt:go_default_library",
         "//pkg/cli/upgrade:go_default_library",
+        "//pkg/cli/version:go_default_library",
         "@com_github_btwiuse_multicall//:go_default_library",
     ],
 )

@@ -4,54 +4,11 @@ go_library(
     name = "go_default_library",
     srcs = [
         "term.go",
-        "term_unix.go",
         "term_windows.go",
     ],
     importpath = "k0s.io/pkg/agent/tty",
     visibility = ["//visibility:public"],
     deps = select({
-        "@io_bazel_rules_go//go/platform:android": [
-            "//pkg/agent:go_default_library",
-            "@com_github_creack_pty//:go_default_library",
-            "@org_golang_x_text//encoding/unicode:go_default_library",
-            "@org_golang_x_text//transform:go_default_library",
-        ],
-        "@io_bazel_rules_go//go/platform:darwin": [
-            "//pkg/agent:go_default_library",
-            "@com_github_creack_pty//:go_default_library",
-            "@org_golang_x_text//encoding/unicode:go_default_library",
-            "@org_golang_x_text//transform:go_default_library",
-        ],
-        "@io_bazel_rules_go//go/platform:freebsd": [
-            "//pkg/agent:go_default_library",
-            "@com_github_creack_pty//:go_default_library",
-            "@org_golang_x_text//encoding/unicode:go_default_library",
-            "@org_golang_x_text//transform:go_default_library",
-        ],
-        "@io_bazel_rules_go//go/platform:ios": [
-            "//pkg/agent:go_default_library",
-            "@com_github_creack_pty//:go_default_library",
-            "@org_golang_x_text//encoding/unicode:go_default_library",
-            "@org_golang_x_text//transform:go_default_library",
-        ],
-        "@io_bazel_rules_go//go/platform:linux": [
-            "//pkg/agent:go_default_library",
-            "@com_github_creack_pty//:go_default_library",
-            "@org_golang_x_text//encoding/unicode:go_default_library",
-            "@org_golang_x_text//transform:go_default_library",
-        ],
-        "@io_bazel_rules_go//go/platform:netbsd": [
-            "//pkg/agent:go_default_library",
-            "@com_github_creack_pty//:go_default_library",
-            "@org_golang_x_text//encoding/unicode:go_default_library",
-            "@org_golang_x_text//transform:go_default_library",
-        ],
-        "@io_bazel_rules_go//go/platform:openbsd": [
-            "//pkg/agent:go_default_library",
-            "@com_github_creack_pty//:go_default_library",
-            "@org_golang_x_text//encoding/unicode:go_default_library",
-            "@org_golang_x_text//transform:go_default_library",
-        ],
         "@io_bazel_rules_go//go/platform:windows": [
             "//pkg/agent:go_default_library",
             "@com_github_activestate_termtest_conpty//:go_default_library",

@@ -1,6 +1,6 @@
 module k0s.io/pkg/jsondns
 
-go 1.19
+go 1.20
 
 require (
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9

@@ -4,11 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "exporter_android.go",
-        "exporter_darwin.go",
-        "exporter_freebsd.go",
         "exporter_linux.go",
-        "exporter_netbsd.go",
-        "exporter_openbsd.go",
         "exporter_windows.go",
     ],
     importpath = "k0s.io/pkg/exporter",

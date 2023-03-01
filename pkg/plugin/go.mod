@@ -1,6 +1,6 @@
 module k0s.io/pkg/plugin
 
-go 1.19
+go 1.20
 
 require (
 	k0s.io v0.1.5

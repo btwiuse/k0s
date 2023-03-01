@@ -1,6 +1,6 @@
 module k0s.io/pkg/console
 
-go 1.19
+go 1.20
 
 require (
 	github.com/pkg/errors v0.9.1

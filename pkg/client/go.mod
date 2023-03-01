@@ -1,6 +1,6 @@
 module k0s.io/pkg/client
 
-go 1.19
+go 1.20
 
 require (
 	github.com/VojtechVitek/yaml-cli v0.0.5
@@ -49,9 +49,9 @@ require (
 	gitlab.com/mjwhitta/sysinfo v1.4.7 // indirect
 	gitlab.com/mjwhitta/where v1.2.4 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.3.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/term v0.3.0 // indirect
-	golang.org/x/text v0.5.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/distro v0.1.5 // indirect
 	k0s.io/pkg/rng v0.1.5 // indirect

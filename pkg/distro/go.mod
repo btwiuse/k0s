@@ -1,6 +1,6 @@
 module k0s.io/pkg/distro
 
-go 1.19
+go 1.20
 
 require gitlab.com/mjwhitta/sysinfo v1.4.7
 
