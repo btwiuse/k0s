@@ -67,6 +67,9 @@ go-install-debuginfo:     ## install latest commit from https://pkg.go.dev with 
 	@ go install -tags runtime_debug_buildinfo -v k0s.io/cmd/k0s@$(shell git rev-parse HEAD)
 	@ k0s hub -version
 
+bazel-info:                ## Bazel info (buildkite precheck)
+	$(BAZEL) --nosystem_rc --nohome_rc info
+
 bazel-build-android:            ## Build android binaries using bazel
 	$(BAZEL) run //:install_k0s --config=go_android_amd64 -- -g $(PWD)/bin/android/amd64
 	$(BAZEL) run //:install_k0s --config=go_android_386   -- -g $(PWD)/bin/android/386

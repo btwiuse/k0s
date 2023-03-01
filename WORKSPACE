@@ -63,17 +63,11 @@ http_archive(
     urls = ["https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip"],
 )
 
-# git_repository(
-#     name = "rules_rust",
-#     # commit = "f32695dcd02d9a19e42b9eb7f29a24a8ceb2b858",
-#     branch = "main",
-#     remote = "https://github.com/bazelbuild/rules_rust.git",
-# )
-
-http_archive(
+git_repository(
     name = "rules_rust",
-    sha256 = "2466e5b2514772e84f9009010797b9cd4b51c1e6445bbd5b5e24848d90e6fb2e",
-    urls = ["https://github.com/bazelbuild/rules_rust/releases/download/0.18.0/rules_rust-v0.18.0.tar.gz"],
+    # commit = "f32695dcd02d9a19e42b9eb7f29a24a8ceb2b858",
+    branch = "main",
+    remote = "https://github.com/bazelbuild/rules_rust.git",
 )
 
 load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
@@ -89,22 +83,6 @@ rust_register_toolchains(
 load("//cargo:crates.bzl", "raze_fetch_remote_crates")
 
 raze_fetch_remote_crates()
-
-# https://github.com/google/cargo-raze#using-cargo-raze-through-bazel
-git_repository(
-    name = "cargo_raze",
-    # branch = "main",
-    tag = "v0.16.1",
-    remote = "https://github.com/google/cargo-raze",
-)
-
-load("@cargo_raze//:repositories.bzl", "cargo_raze_repositories")
-
-cargo_raze_repositories()
-
-load("@cargo_raze//:transitive_deps.bzl", "cargo_raze_transitive_deps")
-
-cargo_raze_transitive_deps()
 
 git_repository(
     name = "rules_proto",
