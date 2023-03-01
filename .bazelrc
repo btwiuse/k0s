@@ -1,5 +1,5 @@
-build --stamp --workspace_status_command=./pkg/version/ldflags_bazel 
-run --stamp --workspace_status_command=./pkg/version/ldflags_bazel 
+build --stamp --workspace_status_command=./pkg/version/ldflags_bazel
+run --stamp --workspace_status_command=./pkg/version/ldflags_bazel
 
 # https://github.com/bazelbuild/rules_go/issues/1642
 build:go_win32 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain

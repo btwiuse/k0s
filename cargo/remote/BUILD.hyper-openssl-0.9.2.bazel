@@ -92,7 +92,7 @@ rust_library(
         "@raze__openssl__0_10_40//:openssl",
         "@raze__openssl_sys__0_9_74//:openssl_sys",
         "@raze__parking_lot__0_12_1//:parking_lot",
-        "@raze__tokio__1_19_2//:tokio",
+        "@raze__tokio__1_20_4//:tokio",
         "@raze__tokio_openssl__0_6_3//:tokio_openssl",
         "@raze__tower_layer__0_3_1//:tower_layer",
     ],

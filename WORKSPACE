@@ -76,7 +76,7 @@ rules_rust_dependencies()
 
 rust_register_toolchains(
     edition = "2021",
-    versions = ["nightly/2023-02-01"],
+    versions = ["1.67.1"],
 )
 
 # https://docs.rs/crate/cargo-raze/0.0.19
@@ -87,7 +87,8 @@ raze_fetch_remote_crates()
 # https://github.com/google/cargo-raze#using-cargo-raze-through-bazel
 git_repository(
     name = "cargo_raze",
-    branch = "main",
+    # branch = "main",
+    tag = "v0.16.1",
     remote = "https://github.com/google/cargo-raze",
 )
 

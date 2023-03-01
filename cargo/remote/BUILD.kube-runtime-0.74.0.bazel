@@ -63,7 +63,7 @@ rust_library(
         "@raze__serde_json__1_0_82//:serde_json",
         "@raze__smallvec__1_9_0//:smallvec",
         "@raze__thiserror__1_0_31//:thiserror",
-        "@raze__tokio__1_19_2//:tokio",
+        "@raze__tokio__1_20_4//:tokio",
         "@raze__tokio_util__0_7_3//:tokio_util",
         "@raze__tracing__0_1_35//:tracing",
     ],

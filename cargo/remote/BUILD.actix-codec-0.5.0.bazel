@@ -57,7 +57,7 @@ rust_library(
         "@raze__log__0_4_17//:log",
         "@raze__memchr__2_5_0//:memchr",
         "@raze__pin_project_lite__0_2_9//:pin_project_lite",
-        "@raze__tokio__1_19_2//:tokio",
+        "@raze__tokio__1_20_4//:tokio",
         "@raze__tokio_util__0_7_3//:tokio_util",
     ],
 )

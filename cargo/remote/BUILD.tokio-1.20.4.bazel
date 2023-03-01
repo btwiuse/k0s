@@ -30,6 +30,78 @@ licenses([
 ])
 
 # Generated Targets
+# buildifier: disable=out-of-order-load
+# buildifier: disable=load-on-top
+load(
+    "@rules_rust//cargo:cargo_build_script.bzl",
+    "cargo_build_script",
+)
+
+cargo_build_script(
+    name = "tokio_build_script",
+    srcs = glob(["**/*.rs"]),
+    build_script_env = {
+    },
+    crate_features = [
+        "bytes",
+        "default",
+        "fs",
+        "full",
+        "io-std",
+        "io-util",
+        "libc",
+        "macros",
+        "memchr",
+        "mio",
+        "net",
+        "num_cpus",
+        "parking_lot",
+        "process",
+        "rt",
+        "rt-multi-thread",
+        "signal",
+        "signal-hook-registry",
+        "socket2",
+        "sync",
+        "time",
+        "tokio-macros",
+    ] + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+            "winapi",
+        ],
+        "//conditions:default": [],
+    }),
+    crate_root = "build.rs",
+    data = glob(["**"]),
+    edition = "2018",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+    version = "1.20.4",
+    visibility = ["//visibility:private"],
+    deps = [
+        "@raze__autocfg__1_1_0//:autocfg",
+    ] + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+        ): [
+        ],
+        "//conditions:default": [],
+    }) + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+        ],
+        "//conditions:default": [],
+    }),
+)
 
 rust_library(
     name = "tokio",
@@ -49,7 +121,6 @@ rust_library(
         "mio",
         "net",
         "num_cpus",
-        "once_cell",
         "parking_lot",
         "process",
         "rt",
@@ -82,14 +153,14 @@ rust_library(
         "crate-name=tokio",
         "manual",
     ],
-    version = "1.19.2",
+    version = "1.20.4",
     # buildifier: leave-alone
     deps = [
+        ":tokio_build_script",
         "@raze__bytes__1_1_0//:bytes",
         "@raze__memchr__2_5_0//:memchr",
         "@raze__mio__0_8_4//:mio",
         "@raze__num_cpus__1_13_1//:num_cpus",
-        "@raze__once_cell__1_13_0//:once_cell",
         "@raze__parking_lot__0_12_1//:parking_lot",
         "@raze__pin_project_lite__0_2_9//:pin_project_lite",
         "@raze__socket2__0_4_4//:socket2",
@@ -151,6 +222,8 @@ rust_library(
 # Unsupported target "io_lines" with type "test" omitted
 
 # Unsupported target "io_mem_stream" with type "test" omitted
+
+# Unsupported target "io_panic" with type "test" omitted
 
 # Unsupported target "io_poll_aio" with type "test" omitted
 
@@ -226,6 +299,8 @@ rust_library(
 
 # Unsupported target "rt_metrics" with type "test" omitted
 
+# Unsupported target "rt_panic" with type "test" omitted
+
 # Unsupported target "rt_threaded" with type "test" omitted
 
 # Unsupported target "signal_ctrl_c" with type "test" omitted
@@ -241,6 +316,8 @@ rust_library(
 # Unsupported target "signal_no_rt" with type "test" omitted
 
 # Unsupported target "signal_notify_both" with type "test" omitted
+
+# Unsupported target "signal_panic" with type "test" omitted
 
 # Unsupported target "signal_twice" with type "test" omitted
 
@@ -263,6 +340,8 @@ rust_library(
 # Unsupported target "sync_once_cell" with type "test" omitted
 
 # Unsupported target "sync_oneshot" with type "test" omitted
+
+# Unsupported target "sync_panic" with type "test" omitted
 
 # Unsupported target "sync_rwlock" with type "test" omitted
 
@@ -307,6 +386,8 @@ rust_library(
 # Unsupported target "test_clock" with type "test" omitted
 
 # Unsupported target "time_interval" with type "test" omitted
+
+# Unsupported target "time_panic" with type "test" omitted
 
 # Unsupported target "time_pause" with type "test" omitted
 

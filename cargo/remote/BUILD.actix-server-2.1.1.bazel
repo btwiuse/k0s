@@ -63,7 +63,7 @@ rust_library(
         "@raze__mio__0_8_4//:mio",
         "@raze__num_cpus__1_13_1//:num_cpus",
         "@raze__socket2__0_4_4//:socket2",
-        "@raze__tokio__1_19_2//:tokio",
+        "@raze__tokio__1_20_4//:tokio",
         "@raze__tracing__0_1_35//:tracing",
     ],
 )
