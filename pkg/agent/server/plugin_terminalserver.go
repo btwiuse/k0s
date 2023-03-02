@@ -79,10 +79,12 @@ func serveTerminal(ln net.Listener, defaultCmd []string, c agent.Config) {
 			}
 
 			go func() {
-				re := <-resizeCh
-				err := term.Resize(re.rows, re.cols)
-				if err != nil {
-					log.Println(err)
+				for {
+					re := <-resizeCh
+					err := term.Resize(re.rows, re.cols)
+					if err != nil {
+						log.Println(err)
+					}
 				}
 			}()
 
