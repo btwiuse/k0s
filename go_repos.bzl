@@ -918,8 +918,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/btwiuse/multicall",
-        sum = "h1:6p9IGdkigPI/C1xjcmoXoPkpz3cO/M5wQ0e3a6h+oi8=",
-        version = "v0.0.1",
+        sum = "h1:Xt108M7+koptJ7setp2YlP1W53F450acIUljbjd7WYM=",
+        version = "v0.0.2",
     )
     go_repository(
         name = "com_github_btwiuse_pretty",
