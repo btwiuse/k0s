@@ -36,18 +36,15 @@ type Config interface {
 	Verbose() bool
 	Cert() string
 	Key() string
+	Ufo() string
 	GetVersion() k0s.Version
 }
 
 type Hub interface {
 	AgentManager
 
-	// Serve(net.Listener) error
 	GetConfig() Config
-	ListenAndServe() error
-	ListenAndServeTLS(certFile, keyFile string) error
-	Serve(ln net.Listener) error
-	ServeTLS(ln net.Listener, certFile, keyFile string) error
+	Handler() http.Handler
 }
 
 type AgentManager interface {

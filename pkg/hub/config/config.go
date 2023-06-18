@@ -20,6 +20,7 @@ type config struct {
 	verbose bool
 	cert    string
 	key     string
+	ufo     string
 	version k0s.Version
 }
 
@@ -28,6 +29,10 @@ func (c *config) Port() string {
 		return c.port
 	}
 	return utils.EnvPORT(k0s.HUB_PORT)
+}
+
+func (c *config) Ufo() string {
+	return c.ufo
 }
 
 func (c *config) UseTLS() bool {
@@ -63,12 +68,14 @@ func Parse(args []string) hub.Config {
 		verbose     bool
 		cert        string
 		key         string
+		ufo         string
 		showVersion bool
 	)
 
 	fset.StringVar(&port, "port", "", "hub listening port")
 	fset.StringVar(&cert, "cert", "", "path to tls cert file")
 	fset.StringVar(&key, "key", "", "path to tls key file")
+	fset.StringVar(&ufo, "ufo", "", "webteleport station")
 	fset.BoolVar(&showVersion, "version", false, "Show hub version info.")
 	fset.BoolVar(&ui, "ui", false, "enable web ui.")
 	fset.BoolVar(&verbose, "verbose", false, "show verbose log.")
@@ -93,6 +100,7 @@ func Parse(args []string) hub.Config {
 		ui:      ui,
 		cert:    cert,
 		key:     key,
+		ufo:     ufo,
 		verbose: verbose,
 		version: version.GetVersion(),
 	}

@@ -5,12 +5,13 @@ go 1.20
 require (
 	github.com/btwiuse/multicall v0.0.2
 	github.com/creativeprojects/go-selfupdate v0.6.1
-	k0s.io v0.1.5
-	k0s.io/pkg/agent v0.1.5
+	github.com/webteleport/ufo v0.1.4
+	k0s.io v0.1.6
+	k0s.io/pkg/agent v0.1.6
 	k0s.io/pkg/apiserver v0.0.0-20220906145908-796acc0825e7
 	k0s.io/pkg/client v0.1.5
 	k0s.io/pkg/hub v0.1.5
-	k0s.io/pkg/reverseproxy v0.1.5
+	k0s.io/pkg/reverseproxy v0.1.6
 	k0s.io/pkg/simple v0.1.5
 	k0s.io/pkg/tunnel v0.1.5
 	k0s.io/pkg/utils v0.0.0-00010101000000-000000000000
@@ -61,13 +62,14 @@ require (
 	github.com/dennwc/ioctl v1.0.0 // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/docker v20.10.17+incompatible // indirect
+	github.com/ebi-yade/altsvc-go v0.1.1 // indirect
 	github.com/ema/qdisc v0.0.0-20200603082823-62d0308e3e00 // indirect
 	github.com/emicklei/go-restful/v3 v3.9.0 // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
 	github.com/fatih/camelcase v1.0.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
-	github.com/felixge/httpsnoop v1.0.2 // indirect
+	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/fvbommel/sortorder v1.0.1 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
@@ -122,7 +124,7 @@ require (
 	github.com/jsimonetti/rtnetlink v1.3.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.15.15 // indirect
-	github.com/klauspost/cpuid/v2 v2.0.11 // indirect
+	github.com/klauspost/cpuid/v2 v2.1.1 // indirect
 	github.com/klauspost/reedsolomon v1.9.15 // indirect
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
 	github.com/lithammer/dedent v1.1.0 // indirect
@@ -130,7 +132,7 @@ require (
 	github.com/lufia/iostat v1.2.1 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect
-	github.com/mattn/go-isatty v0.0.14 // indirect
+	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/mattn/go-shellwords v1.0.12 // indirect
 	github.com/mattn/go-xmlrpc v0.0.3 // indirect
@@ -159,6 +161,7 @@ require (
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/node_exporter v1.5.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
+	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/qtls-go1-18 v0.2.0 // indirect
 	github.com/quic-go/qtls-go1-19 v0.2.0 // indirect
 	github.com/quic-go/qtls-go1-20 v0.1.0-rc.1 // indirect
@@ -180,6 +183,10 @@ require (
 	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
 	github.com/ulikunitz/xz v0.5.8 // indirect
+	github.com/webteleport/utils v0.0.3 // indirect
+	github.com/webteleport/webteleport v0.2.4 // indirect
+	github.com/webtransport/quic-go v0.0.0-webtransport // indirect
+	github.com/webtransport/webtransport-go v0.0.0-webtransport // indirect
 	github.com/xlab/treeprint v1.1.0 // indirect
 	github.com/xtaci/kcp-go/v5 v5.6.1 // indirect
 	github.com/xtaci/smux v1.5.17 // indirect
@@ -193,8 +200,8 @@ require (
 	gitlab.com/yawning/edwards25519-extra.git v0.0.0-20211229043746-2f91fcc9fbdb // indirect
 	gitlab.com/yawning/obfs4.git v0.0.0-20220904064028-336a71d6e4cf // indirect
 	go.starlark.net v0.0.0-20200306205701-8dd3e2ee1dd5 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/multierr v1.7.0 // indirect
+	go.uber.org/atomic v1.10.0 // indirect
+	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/crypto v0.4.0 // indirect
 	golang.org/x/exp v0.0.0-20221205204356-47842c84f3db // indirect
 	golang.org/x/mod v0.6.0 // indirect
@@ -212,20 +219,20 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k0s.io/pkg/asciitransport v0.1.5 // indirect
+	k0s.io/pkg/asciitransport v0.1.6 // indirect
 	k0s.io/pkg/console v0.1.5 // indirect
 	k0s.io/pkg/dial v0.0.0-00010101000000-000000000000 // indirect
 	k0s.io/pkg/distro v0.1.5 // indirect
 	k0s.io/pkg/dohserver v0.1.5 // indirect
-	k0s.io/pkg/exporter v0.1.5 // indirect
+	k0s.io/pkg/exporter v0.1.6 // indirect
 	k0s.io/pkg/fzf v0.1.5 // indirect
 	k0s.io/pkg/jsondns v0.1.5 // indirect
 	k0s.io/pkg/manager v0.1.5 // indirect
-	k0s.io/pkg/middleware v0.1.5 // indirect
+	k0s.io/pkg/middleware v0.1.6 // indirect
 	k0s.io/pkg/rng v0.1.5 // indirect
 	k0s.io/pkg/ui v0.1.5 // indirect
-	k0s.io/pkg/uuid v0.1.5 // indirect
-	k0s.io/pkg/wrap v0.1.5 // indirect
+	k0s.io/pkg/uuid v0.1.6 // indirect
+	k0s.io/pkg/wrap v0.1.6 // indirect
 	k8s.io/api v0.25.0 // indirect
 	k8s.io/apiserver v0.25.0 // indirect
 	k8s.io/cli-runtime v0.25.0 // indirect

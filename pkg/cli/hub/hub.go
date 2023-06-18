@@ -3,6 +3,9 @@ package hub
 import (
 	"fmt"
 	"log"
+	"net/http"
+
+	"github.com/webteleport/ufo"
 
 	"k0s.io/pkg/hub/config"
 	"k0s.io/pkg/hub/self"
@@ -18,10 +21,14 @@ func Run(args []string) (err error) {
 
 	go self.Agent(fmt.Sprintf("http://127.0.0.1%s", c.Port()))
 
+	if c.Ufo() != "" {
+		go ufo.Serve(c.Ufo(), h.Handler())
+	}
+
 	if c.UseTLS() {
-		err = h.ListenAndServeTLS(c.Cert(), c.Key())
+		err = http.ListenAndServeTLS(c.Port(), c.Cert(), c.Key(), h.Handler())
 	} else {
-		err = h.ListenAndServe()
+		err = http.ListenAndServe(c.Port(), h.Handler())
 	}
 
 	return

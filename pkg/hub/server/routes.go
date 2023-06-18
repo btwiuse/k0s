@@ -40,6 +40,10 @@ type hubServer struct {
 	sseMux         *sse.SSE
 }
 
+func (h *hubServer) Handler() http.Handler {
+	return h.Server.Handler
+}
+
 func binHandler() http.Handler {
 	exe, err := os.Executable()
 	if err != nil {

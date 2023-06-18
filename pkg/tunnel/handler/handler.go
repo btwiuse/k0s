@@ -17,9 +17,9 @@ import (
 	"time"
 
 	"k0s.io/pkg/log"
+	"k0s.io/pkg/middleware"
 	portless "k0s.io/pkg/tunnel"
 	"k0s.io/pkg/wrap"
-	"k0s.io/pkg/middleware"
 )
 
 func Handler(prefix string) http.Handler {
