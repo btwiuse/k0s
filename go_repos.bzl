@@ -914,6 +914,15 @@ def go_repositories():
         version = "v0.0.3",
     )
     go_repository(
+        name = "com_github_btwiuse_h3",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/btwiuse/h3",
+        sum = "h1:LG4Qs/0Fd5SDe0wQOaFN3NfFA29Ze+1Aa00bXiHXThM=",
+        version = "v0.0.0-20220919172148-51b6e2f27e33",
+    )
+
+    go_repository(
         name = "com_github_btwiuse_multicall",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -2164,6 +2173,15 @@ def go_repositories():
         version = "v0.0.0-20140212075826-3c8d2dcb253a",
     )
     go_repository(
+        name = "com_github_ebi_yade_altsvc_go",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/ebi-yade/altsvc-go",
+        sum = "h1:HmZDNb5ZOPlkyXhi34LnRckawFCux7yPYw+dtInIixo=",
+        version = "v0.1.1",
+    )
+
+    go_repository(
         name = "com_github_edsrzf_mmap_go",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -2336,8 +2354,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/felixge/httpsnoop",
-        sum = "h1:+nS9g82KMXccJ/wp0zyRW9ZBHFETmMGtkk+2CTTrW4o=",
-        version = "v1.0.2",
+        sum = "h1:s/nj+GCswXYzN5v2DpNMuMQYe+0DDwt5WVCU6CWBdXk=",
+        version = "v1.0.3",
     )
     go_repository(
         name = "com_github_filebrowser_filebrowser_v2",
@@ -4906,8 +4924,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/klauspost/cpuid/v2",
-        sum = "h1:1XxvOiqXZ8SULZUKim/wncr3wZ38H4yCuVDvKdK9OGs=",
-        version = "v2.0.13",
+        sum = "h1:t0wUqjowdm8ezddV5k0tLWVklVuvLJpoHeb4WBdydm0=",
+        version = "v2.1.1",
     )
     go_repository(
         name = "com_github_klauspost_reedsolomon",
@@ -5506,8 +5524,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/mattn/go-isatty",
-        sum = "h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9Y=",
-        version = "v0.0.14",
+        sum = "h1:BTarxUcIeDqL27Mc+vyvdWYSL28zpIhv3RoTdsLMPng=",
+        version = "v0.0.17",
     )
     go_repository(
         name = "com_github_mattn_go_runewidth",
@@ -8376,6 +8394,55 @@ def go_repositories():
         version = "v2.11.0",
     )
     go_repository(
+        name = "com_github_webteleport_server",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/webteleport/server",
+        sum = "h1:MLg6O3R3WZxOsBhOs8mbq/5nUt0Iapeo8pelufaHfE4=",
+        version = "v0.0.4",
+    )
+    go_repository(
+        name = "com_github_webteleport_ufo",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/webteleport/ufo",
+        sum = "h1:dvo0ULMwWhXjUeZH/Mm2Hg1NpkcsBmYoluoJjga/lhU=",
+        version = "v0.1.4",
+    )
+    go_repository(
+        name = "com_github_webteleport_utils",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/webteleport/utils",
+        sum = "h1:7TUJDLYpIcU/toFuNWHoneFBFhrW0LSoifWWd9sh920=",
+        version = "v0.0.3",
+    )
+    go_repository(
+        name = "com_github_webteleport_webteleport",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/webteleport/webteleport",
+        sum = "h1:Qr+W9NElsUlEdkI9Z9uHC7bGs6dauUfM8+JVwNDUqkw=",
+        version = "v0.2.4",
+    )
+    go_repository(
+        name = "com_github_webtransport_quic_go",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/webtransport/quic-go",
+        sum = "h1:SQtqef+XAhs8Bw3pqoboSA1VbPzdx0awfcYcJU9o2ys=",
+        version = "v0.0.0-webtransport",
+    )
+    go_repository(
+        name = "com_github_webtransport_webtransport_go",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/webtransport/webtransport-go",
+        sum = "h1:SO343fsbvWrvQTbC4mm7Gv76eC1gZ6jw/4LIQ0tt19w=",
+        version = "v0.0.0-webtransport",
+    )
+
+    go_repository(
         name = "com_github_weppos_publicsuffix_go",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -10108,8 +10175,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "go.uber.org/atomic",
-        sum = "h1:ECmE8Bn/WFTYwEW/bpKD3M8VtR/zQVbavAoalC1PYyE=",
-        version = "v1.9.0",
+        sum = "h1:9qC72Qh0+3MqyJbAn8YU5xVq1frD8bn3JtD2oXtafVQ=",
+        version = "v1.10.0",
     )
     go_repository(
         name = "org_uber_go_automaxprocs",
@@ -10132,8 +10199,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "go.uber.org/multierr",
-        sum = "h1:zaiO/rmgFjbmCXdSYJWQcdvOCsthmdaHfr3Gm2Kx4Ec=",
-        version = "v1.7.0",
+        sum = "h1:7fIwc/ZtS0q++VgcfqFDxSBZVv/Xo49/SYnDFupUwlI=",
+        version = "v1.9.0",
     )
     go_repository(
         name = "org_uber_go_ratelimit",

@@ -13,5 +13,6 @@ go_library(
         "//pkg/hub/self:go_default_library",
         "//pkg/hub/server:go_default_library",
         "//pkg/tunnel/listener:go_default_library",
+        "@com_github_webteleport_ufo//:go_default_library",
     ],
 )
