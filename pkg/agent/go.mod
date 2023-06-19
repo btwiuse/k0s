@@ -41,7 +41,7 @@ require (
 	github.com/dchest/siphash v1.2.2 // indirect
 	github.com/dennwc/btrfs v0.0.0-20221026161108-3097362dc072 // indirect
 	github.com/dennwc/ioctl v1.0.0 // indirect
-	github.com/docker/docker v20.10.17+incompatible // indirect
+	github.com/docker/docker v20.10.24+incompatible // indirect
 	github.com/ema/qdisc v0.0.0-20200603082823-62d0308e3e00 // indirect
 	github.com/felixge/httpsnoop v1.0.2 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
