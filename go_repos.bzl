@@ -913,14 +913,6 @@ def go_repositories():
         sum = "h1:TYeFN0OhefpqBref7BIcHXfyFtldMvqy5t8qgMeNby0=",
         version = "v0.0.3",
     )
-    go_repository(
-        name = "com_github_btwiuse_h3",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/btwiuse/h3",
-        sum = "h1:LG4Qs/0Fd5SDe0wQOaFN3NfFA29Ze+1Aa00bXiHXThM=",
-        version = "v0.0.0-20220919172148-51b6e2f27e33",
-    )
 
     go_repository(
         name = "com_github_btwiuse_multicall",
@@ -1616,8 +1608,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/coreos/go-systemd",
-        sum = "h1:iW4rZ826su+pqaw19uhpSCzhj44qo35pNgKFGqzDKkU=",
-        version = "v0.0.0-20191104093116-d3cd4ed1dbcf",
+        sum = "h1:JOrtw2xFKzlg+cbHpyrpLDmnN1HqhBfnX7WDiW7eG2c=",
+        version = "v0.0.0-20190719114852-fd7a80b32e1f",
     )
     go_repository(
         name = "com_github_coreos_go_systemd_v22",
@@ -8374,22 +8366,7 @@ def go_repositories():
         sum = "h1:cvxH1mC/VTs2oRx3njhIhpypg2EBE70rlxAKKtRU/Zg=",
         version = "v2.11.0",
     )
-    go_repository(
-        name = "com_github_webteleport_server",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/webteleport/server",
-        sum = "h1:MLg6O3R3WZxOsBhOs8mbq/5nUt0Iapeo8pelufaHfE4=",
-        version = "v0.0.4",
-    )
-    go_repository(
-        name = "com_github_webteleport_ufo",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/webteleport/ufo",
-        sum = "h1:dvo0ULMwWhXjUeZH/Mm2Hg1NpkcsBmYoluoJjga/lhU=",
-        version = "v0.1.4",
-    )
+
     go_repository(
         name = "com_github_webteleport_utils",
         build_file_generation = "on",
@@ -8403,8 +8380,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/webteleport/webteleport",
-        sum = "h1:Qr+W9NElsUlEdkI9Z9uHC7bGs6dauUfM8+JVwNDUqkw=",
-        version = "v0.2.4",
+        sum = "h1:4TX2PUK26z6um4ru7yiJMznCPWlYpQkjsO8QwDMlpng=",
+        version = "v0.2.6",
     )
     go_repository(
         name = "com_github_webtransport_quic_go",
@@ -9702,6 +9679,10 @@ def go_repositories():
         name = "io_opentelemetry_go_otel_exporters_otlp_otlptrace",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
+        build_directives = [
+            "gazelle:resolve go go.opentelemetry.io/otel/exporters/otlp/internal @io_opentelemetry_go_otel//exporters/otlp/internal",
+            "gazelle:resolve go go.opentelemetry.io/otel/exporters/otlp/internal/envconfig @io_opentelemetry_go_otel//exporters/otlp/internal/envconfig",
+        ],
         importpath = "go.opentelemetry.io/otel/exporters/otlp/otlptrace",
         sum = "h1:pDDYmo0QadUPal5fwXoY1pmMpFcdyhXOmL5drCrI3vU=",
         version = "v1.10.0",
@@ -9710,6 +9691,10 @@ def go_repositories():
         name = "io_opentelemetry_go_otel_exporters_otlp_otlptrace_otlptracegrpc",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
+        build_directives = [
+            "gazelle:resolve go go.opentelemetry.io/otel/exporters/otlp/internal @io_opentelemetry_go_otel//exporters/otlp/internal",
+            "gazelle:resolve go go.opentelemetry.io/otel/exporters/otlp/internal/envconfig @io_opentelemetry_go_otel//exporters/otlp/internal/envconfig",
+        ],
         importpath = "go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc",
         sum = "h1:KtiUEhQmj/Pa874bVYKGNVdq8NPKiacPbaRRtgXi+t4=",
         version = "v1.10.0",

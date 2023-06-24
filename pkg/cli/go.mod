@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/btwiuse/multicall v0.0.2
 	github.com/creativeprojects/go-selfupdate v0.6.1
-	github.com/webteleport/ufo v0.1.4
+	github.com/webteleport/webteleport v0.2.6
 	k0s.io v0.1.6
 	k0s.io/pkg/agent v0.1.6
 	k0s.io/pkg/apiserver v0.0.0-20220906145908-796acc0825e7
@@ -182,7 +182,6 @@ require (
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
 	github.com/ulikunitz/xz v0.5.8 // indirect
 	github.com/webteleport/utils v0.0.3 // indirect
-	github.com/webteleport/webteleport v0.2.4 // indirect
 	github.com/webtransport/quic-go v0.0.0-webtransport // indirect
 	github.com/webtransport/webtransport-go v0.0.0-webtransport // indirect
 	github.com/xlab/treeprint v1.1.0 // indirect

@@ -129,9 +129,8 @@ require (
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/tklauser/numcpus v0.2.2 // indirect
-	github.com/webteleport/ufo v0.1.4 // indirect
 	github.com/webteleport/utils v0.0.3 // indirect
-	github.com/webteleport/webteleport v0.2.4 // indirect
+	github.com/webteleport/webteleport v0.2.6 // indirect
 	github.com/webtransport/quic-go v0.0.0-webtransport // indirect
 	github.com/webtransport/webtransport-go v0.0.0-webtransport // indirect
 	github.com/xlab/treeprint v1.1.0 // indirect
