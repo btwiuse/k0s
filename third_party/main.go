@@ -22,7 +22,8 @@ import (
 	"k0s.io/third_party/pkg/cli/gitd"
 	"k0s.io/third_party/pkg/cli/goproxy"
 	"k0s.io/third_party/pkg/cli/gos"
-	"k0s.io/third_party/pkg/cli/gost"
+
+	// "k0s.io/third_party/pkg/cli/gost"
 	"k0s.io/third_party/pkg/cli/k16s"
 	"k0s.io/third_party/pkg/cli/trojan"
 	"k0s.io/third_party/pkg/cli/webproc"
@@ -52,8 +53,8 @@ var cmdRun multicall.RunnerFuncMap = map[string]multicall.RunnerFunc{
 	"hub2":            hub.Run2,
 	"agent":           agent.Run,
 	"gitd":            gitd.Run,
-	"gost":            gost.Main,
-	"filebrowser":     filebrowser.Run,
+	// "gost":            gost.Main,
+	"filebrowser": filebrowser.Run,
 }
 
 func Run(args []string) error {

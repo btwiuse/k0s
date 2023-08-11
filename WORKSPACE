@@ -41,7 +41,7 @@ go_rules_dependencies()
 
 go_register_toolchains(
     nogo = "@//:nogo",
-    version = "1.20.5",
+    version = "1.21.0",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
@@ -223,7 +223,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 git_repository(
     name = "io_bazel_rules_grafana",
     # commit = "{HEAD}", # replace with a real commit hash
-    branch = "master",
+    branch = "main",
     remote = "https://github.com/etsy/rules_grafana.git",
 )
 

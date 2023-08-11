@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/gorilla/handlers"
-	"go.etcd.io/etcd/client/v3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"k0s.io/pkg/tunnel/listener"
 )
 

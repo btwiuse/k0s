@@ -8,7 +8,8 @@ import (
 	"k0s.io/pkg/cli/chassis"
 	"k0s.io/pkg/cli/client"
 	"k0s.io/pkg/cli/hub"
-	"k0s.io/pkg/cli/kubectl"
+
+	// "k0s.io/pkg/cli/kubectl"
 	"k0s.io/pkg/cli/kuber"
 	"k0s.io/pkg/cli/miniclient"
 	"k0s.io/pkg/cli/mnt"
@@ -32,10 +33,10 @@ var cmdRun multicall.RunnerFuncMap = map[string]multicall.RunnerFunc{
 	"hub2":       hub.Run2,
 	"agent":      agent.Run,
 	"upgrade":    upgrade.Run,
-	"kubectl":    kubectl.Run,
-	"kuber":      kuber.Run,
-	"knot":       TODO,
-	"version":    version.Run,
+	// "kubectl":    kubectl.Run,
+	"kuber":   kuber.Run,
+	"knot":    TODO,
+	"version": version.Run,
 }
 
 func Run(args []string) error {

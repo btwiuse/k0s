@@ -20,7 +20,6 @@ go_library(
         "//third_party/pkg/cli/gitd:go_default_library",
         "//third_party/pkg/cli/goproxy:go_default_library",
         "//third_party/pkg/cli/gos:go_default_library",
-        "//third_party/pkg/cli/gost:go_default_library",
         "//third_party/pkg/cli/k16s:go_default_library",
         "//third_party/pkg/cli/trojan:go_default_library",
         "//third_party/pkg/cli/webproc:go_default_library",

@@ -1,6 +1,6 @@
 module k0s.io/pkg/reverseproxy
 
-go 1.20
+go 1.21
 
 require k0s.io v0.1.5
 

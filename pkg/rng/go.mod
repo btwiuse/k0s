@@ -1,6 +1,6 @@
 module k0s.io/pkg/rng
 
-go 1.20
+go 1.21
 
 require github.com/docker/docker v20.10.17+incompatible
 
