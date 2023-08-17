@@ -910,8 +910,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/btwiuse/gost",
-        sum = "h1:TYeFN0OhefpqBref7BIcHXfyFtldMvqy5t8qgMeNby0=",
-        version = "v0.0.3",
+        sum = "h1:Ftd0gcqPU2HeDUYPzY8LOx391ZKK/N/+ffbMCnt8OM4=",
+        version = "v0.0.4",
     )
 
     go_repository(
@@ -9960,8 +9960,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/crypto",
-        sum = "h1:UVQgzMY87xqpKNgb+kDsll2Igd33HszWHFLmpaRMq/8=",
-        version = "v0.4.0",
+        sum = "h1:U/0M97KRkSFvyD/3FSmdP5W5swImpNgle/EHFhOsQPE=",
+        version = "v0.5.0",
     )
     go_repository(
         name = "org_golang_x_exp",
