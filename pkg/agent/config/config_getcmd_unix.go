@@ -9,7 +9,7 @@ func (c *Config) getCmd() []string {
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
 	}
-	args := []string{"env", "TERM=xterm", shell}
+	args := []string{"env", "TERM=xterm-256color", shell}
 	if c.Cmd == "" {
 		return args
 	}

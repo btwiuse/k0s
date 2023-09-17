@@ -71,7 +71,7 @@ func New(args []string) (agent.Tty, error) {
 }
 
 func NewEnv(args []string, env map[string]string) (agent.Tty, error) {
-	envArray := append([]string{"TERM=xterm"}, map2arr(env)...)
+	envArray := append([]string{"TERM=xterm-256color"}, map2arr(env)...)
 	cmd := exec.Command(args[0], args[1:]...)
 	cmd.Env = append(os.Environ(), envArray...)
 

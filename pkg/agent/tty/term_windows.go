@@ -62,7 +62,7 @@ func NewEnv(args []string, env map[string]string) (agent.Tty, error) {
 		return nil, err
 	}
 
-	envArray := append([]string{"TERM=xterm"}, map2arr(env)...)
+	envArray := append([]string{"TERM=xterm-256color"}, map2arr(env)...)
 	attr := &syscall.ProcAttr{
 		Env: append(os.Environ(), envArray...),
 	}
