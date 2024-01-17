@@ -4,19 +4,19 @@ workspace(name = "com_github_btwiuse_k0s")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-load("//toolchain:android_ndk.bzl", "android_ndk")
+# load("//toolchain:android_ndk.bzl", "android_ndk")
 
-android_ndk(name = "android_ndk")
+# android_ndk(name = "android_ndk")
 
-load("@android_ndk//:android_ndk.bzl", "ANDROID_NDK_HOME")
+# load("@android_ndk//:android_ndk.bzl", "ANDROID_NDK_HOME")
 
-android_sdk_repository(name = "androidsdk")
+# android_sdk_repository(name = "androidsdk")
 
-android_ndk_repository(
-    name = "androidndk",
-    api_level = 30,
-    path = ANDROID_NDK_HOME,
-)
+# android_ndk_repository(
+#     name = "androidndk",
+#     api_level = 30,
+#     path = ANDROID_NDK_HOME,
+# )
 
 register_toolchains(
     "//toolchain:cc-toolchain-mingw",

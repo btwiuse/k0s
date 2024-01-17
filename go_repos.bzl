@@ -7119,7 +7119,7 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/safchain/ethtool",
-        sum = "h1:tjsEsesUSlGdnUAAiIaEvk/YEycwk0k3Q6/q77qGpBI=",
+        sum = "h1:dILxMBqDnQfX192cCAPjZr9v2IgVXeElHPy435Z/IdE=",
         version = "v0.2.0",
     )
     go_repository(
@@ -8695,7 +8695,7 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "gitlab.com/mjwhitta/errors",
-        sum = "h1:v/EPRUZ4fRHYxQIPINdsR/zIXuQd86mKhYM9pgvzIcY=",
+        sum = "h1:rivvgv4HCdIJ6Y6kFfPcirzKnBRewkjgsOktR0Uaj8g=",
         version = "v1.0.0",
     )
     go_repository(
@@ -8735,7 +8735,7 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "gitlab.com/mjwhitta/pathname",
-        sum = "h1:+LinnQYLwf4bbxbUCMg2LuDa741KvvIMYU7YMT7z8CY=",
+        sum = "h1:GWLgFYO4RjYutbpV4s0096xLAGEIZbLnsoz2r6rcBf0=",
         version = "v1.2.0",
     )
     go_repository(
