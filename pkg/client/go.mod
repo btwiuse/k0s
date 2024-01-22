@@ -31,7 +31,6 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.15.15 // indirect
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -56,7 +55,7 @@ require (
 	k0s.io/pkg/distro v0.1.5 // indirect
 	k0s.io/pkg/rng v0.1.5 // indirect
 	k0s.io/pkg/wrap v0.1.5 // indirect
-	nhooyr.io/websocket v1.8.7 // indirect
+	nhooyr.io/websocket v1.8.10 // indirect
 )
 
 replace k0s.io => ../../

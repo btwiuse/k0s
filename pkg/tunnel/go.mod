@@ -7,7 +7,7 @@ require (
 	k0s.io v0.1.5
 	k0s.io/pkg/middleware v0.1.5
 	k0s.io/pkg/wrap v0.1.5
-	nhooyr.io/websocket v1.8.7
+	nhooyr.io/websocket v1.8.10
 )
 
 require (
@@ -25,8 +25,6 @@ require (
 	github.com/go-gost/tls-dissector v0.0.2-0.20220408131628-aac992c27451 // indirect
 	github.com/go-log/log v0.2.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/google/gopacket v1.1.19 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
@@ -34,8 +32,6 @@ require (
 	github.com/klauspost/cpuid/v2 v2.0.11 // indirect
 	github.com/klauspost/reedsolomon v1.9.15 // indirect
 	github.com/miekg/dns v1.1.50 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/riobard/go-bloom v0.0.0-20200614022211-cdc8013cb5b3 // indirect
 	github.com/rs/cors v1.8.2 // indirect
@@ -57,8 +53,6 @@ require (
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	golang.org/x/tools v0.9.1 // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
 replace k0s.io => ../../

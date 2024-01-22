@@ -20,7 +20,7 @@ require (
 	k0s.io/pkg/middleware v0.1.5
 	k0s.io/pkg/rng v0.1.5
 	k0s.io/pkg/uuid v0.1.5
-	nhooyr.io/websocket v1.8.7
+	nhooyr.io/websocket v1.8.10
 )
 
 require (

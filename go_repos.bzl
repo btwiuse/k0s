@@ -9631,8 +9631,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "nhooyr.io/websocket",
-        sum = "h1:usjR2uOr/zjjkVMy0lW+PPohFok7PCow5sDjLgX4P4g=",
-        version = "v1.8.7",
+        sum = "h1:mv4p+MnGrLDcPlBoWsvPP7XCzTYMXP9F9eIGoKbgx7Q=",
+        version = "v1.8.10",
     )
     go_repository(
         name = "io_opencensus_go",

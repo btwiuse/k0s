@@ -239,7 +239,7 @@ require (
 	k8s.io/metrics v0.27.3 // indirect
 	k8s.io/utils v0.0.0-20230209194617-a36077c30491 // indirect
 	modernc.org/httpfs v1.0.6 // indirect
-	nhooyr.io/websocket v1.8.7 // indirect
+	nhooyr.io/websocket v1.8.10 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/kustomize/api v0.13.2 // indirect
 	sigs.k8s.io/kustomize/kustomize/v5 v5.0.1 // indirect

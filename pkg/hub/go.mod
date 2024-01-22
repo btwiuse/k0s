@@ -20,7 +20,7 @@ require (
 	k0s.io/pkg/uuid v0.1.5
 	k0s.io/pkg/wrap v0.1.5
 	modernc.org/httpfs v1.0.6
-	nhooyr.io/websocket v1.8.7
+	nhooyr.io/websocket v1.8.10
 )
 
 require (

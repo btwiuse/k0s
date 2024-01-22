@@ -122,7 +122,7 @@ require (
 	k0s.io/pkg/middleware v0.1.5 // indirect
 	k0s.io/pkg/rng v0.1.5 // indirect
 	k0s.io/pkg/wrap v0.1.5 // indirect
-	nhooyr.io/websocket v1.8.7 // indirect
+	nhooyr.io/websocket v1.8.10 // indirect
 )
 
 replace k0s.io => ../../
