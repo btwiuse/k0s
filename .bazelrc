@@ -1,53 +1,53 @@
 build --stamp --workspace_status_command=./pkg/version/ldflags_bazel
 run --stamp --workspace_status_command=./pkg/version/ldflags_bazel
 
-# https://github.com/bazelbuild/rules_go/issues/1642
-build:go_win32 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
-build:go_win32 --host_platform=@local_config_platform//:host
-build:go_win32 --crosstool_top=//toolchain:mingw_suite
-build:go_win32 --cpu=x86_32
-build:go_win32 --compiler=mingw
-#build:go_win32 --platforms=:windows_386_cgo
-build:go_win32 --platforms=@io_bazel_rules_go//go/toolchain:windows_386_cgo
+# # https://github.com/bazelbuild/rules_go/issues/1642
+# build:go_win32 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+# build:go_win32 --host_platform=@local_config_platform//:host
+# build:go_win32 --crosstool_top=//toolchain:mingw_suite
+# build:go_win32 --cpu=x86_32
+# build:go_win32 --compiler=mingw
+# #build:go_win32 --platforms=:windows_386_cgo
+# build:go_win32 --platforms=@io_bazel_rules_go//go/toolchain:windows_386_cgo
 
-build:go_win64 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
-build:go_win64 --host_platform=@local_config_platform//:host
-build:go_win64 --crosstool_top=//toolchain:mingw_suite
-build:go_win64 --cpu=x86_64
-build:go_win64 --compiler=mingw64
-build:go_win64 --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64_cgo
+# build:go_win64 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+# build:go_win64 --host_platform=@local_config_platform//:host
+# build:go_win64 --crosstool_top=//toolchain:mingw_suite
+# build:go_win64 --cpu=x86_64
+# build:go_win64 --compiler=mingw64
+# build:go_win64 --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64_cgo
 
-build:go_android_386 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
-build:go_android_386 --host_platform=@local_config_platform//:host
-build:go_android_386 --crosstool_top=//toolchain:android_suite
-build:go_android_386 --cpu=x86_32
-build:go_android_386 --compiler=android_386
-build:go_android_386 --platforms=@io_bazel_rules_go//go/toolchain:android_386_cgo
-build:go_android_386 --action_env=ANDROID_NDK_HOME
+# build:go_android_386 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+# build:go_android_386 --host_platform=@local_config_platform//:host
+# build:go_android_386 --crosstool_top=//toolchain:android_suite
+# build:go_android_386 --cpu=x86_32
+# build:go_android_386 --compiler=android_386
+# build:go_android_386 --platforms=@io_bazel_rules_go//go/toolchain:android_386_cgo
+# build:go_android_386 --action_env=ANDROID_NDK_HOME
 
-build:go_android_amd64 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
-build:go_android_amd64 --host_platform=@local_config_platform//:host
-build:go_android_amd64 --crosstool_top=//toolchain:android_suite
-build:go_android_amd64 --cpu=x86_64
-build:go_android_amd64 --compiler=android_amd64
-build:go_android_amd64 --platforms=@io_bazel_rules_go//go/toolchain:android_amd64_cgo
-build:go_android_amd64 --action_env=ANDROID_NDK_HOME
+# build:go_android_amd64 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+# build:go_android_amd64 --host_platform=@local_config_platform//:host
+# build:go_android_amd64 --crosstool_top=//toolchain:android_suite
+# build:go_android_amd64 --cpu=x86_64
+# build:go_android_amd64 --compiler=android_amd64
+# build:go_android_amd64 --platforms=@io_bazel_rules_go//go/toolchain:android_amd64_cgo
+# build:go_android_amd64 --action_env=ANDROID_NDK_HOME
 
-build:go_android_arm64 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
-build:go_android_arm64 --host_platform=@local_config_platform//:host
-build:go_android_arm64 --crosstool_top=//toolchain:android_suite
-build:go_android_arm64 --cpu=aarch64
-build:go_android_arm64 --compiler=android_arm64
-build:go_android_arm64 --platforms=@io_bazel_rules_go//go/toolchain:android_arm64_cgo
-build:go_android_arm64 --action_env=ANDROID_NDK_HOME
+# build:go_android_arm64 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+# build:go_android_arm64 --host_platform=@local_config_platform//:host
+# build:go_android_arm64 --crosstool_top=//toolchain:android_suite
+# build:go_android_arm64 --cpu=aarch64
+# build:go_android_arm64 --compiler=android_arm64
+# build:go_android_arm64 --platforms=@io_bazel_rules_go//go/toolchain:android_arm64_cgo
+# build:go_android_arm64 --action_env=ANDROID_NDK_HOME
 
-build:go_android_armv7 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
-build:go_android_armv7 --host_platform=@local_config_platform//:host
-build:go_android_armv7 --crosstool_top=//toolchain:android_suite
-build:go_android_armv7 --cpu=armv7
-build:go_android_armv7 --compiler=android_armv7
-build:go_android_armv7 --platforms=@io_bazel_rules_go//go/toolchain:android_arm_cgo
-build:go_android_armv7 --action_env=ANDROID_NDK_HOME
+# build:go_android_armv7 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+# build:go_android_armv7 --host_platform=@local_config_platform//:host
+# build:go_android_armv7 --crosstool_top=//toolchain:android_suite
+# build:go_android_armv7 --cpu=armv7
+# build:go_android_armv7 --compiler=android_armv7
+# build:go_android_armv7 --platforms=@io_bazel_rules_go//go/toolchain:android_arm_cgo
+# build:go_android_armv7 --action_env=ANDROID_NDK_HOME
 
 # TODO: migrate all dependencies from WORKSPACE to MODULE.bazel
 # https://github.com/protocolbuffers/protobuf/issues/14313

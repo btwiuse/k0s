@@ -18,14 +18,33 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 #     path = ANDROID_NDK_HOME,
 # )
 
-register_toolchains(
-    "//toolchain:cc-toolchain-mingw",
-    "//toolchain:cc-toolchain-mingw64",
-    "//toolchain:cc-toolchain-android_amd64",
-    "//toolchain:cc-toolchain-android_386",
-    "//toolchain:cc-toolchain-android_arm64",
-    "//toolchain:cc-toolchain-android_armv7",
+# register_toolchains(
+#     "//toolchain:cc-toolchain-mingw",
+#     "//toolchain:cc-toolchain-mingw64",
+#     "//toolchain:cc-toolchain-android_amd64",
+#     "//toolchain:cc-toolchain-android_386",
+#     "//toolchain:cc-toolchain-android_arm64",
+#     "//toolchain:cc-toolchain-android_armv7",
+# )
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# git_repository(
+#     name = "rules_python",
+#     branch = "master",
+#     remote = "https://github.com/bazelbuild/rules_python.git",
+# )
+
+http_archive(
+    name = "rules_python",
+    sha256 = "d70cd72a7a4880f0000a6346253414825c19cdd40a28289bdf67b8e6480edff8",
+    strip_prefix = "rules_python-0.28.0",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.28.0/rules_python-0.28.0.tar.gz",
 )
+
+load("@rules_python//python:repositories.bzl", "py_repositories")
+
+py_repositories()
 
 git_repository(
     name = "io_bazel_rules_go",
@@ -105,43 +124,43 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
 # go_repos
 
-local_repository(
-    name = "starlark",
-    path = "starlark",
-)
+# local_repository(
+#     name = "starlark",
+#     path = "starlark",
+# )
 
-load("@starlark//:defs.bzl", "print_seq")
+# load("@starlark//:defs.bzl", "print_seq")
 
-print_seq()
+# print_seq()
 
-# https://github.com/google/bazel_rules_install
-git_repository(
-    name = "com_github_google_rules_install",
-    branch = "main",
-    # commit = "e93a17ed42a8a622a78fbf4737309e583f4b3cb4",
-    remote = "https://github.com/google/bazel_rules_install.git",
-)
+# # https://github.com/google/bazel_rules_install
+# git_repository(
+#     name = "com_github_google_rules_install",
+#     branch = "main",
+#     # commit = "e93a17ed42a8a622a78fbf4737309e583f4b3cb4",
+#     remote = "https://github.com/google/bazel_rules_install.git",
+# )
 
-load("@com_github_google_rules_install//:deps.bzl", "install_rules_dependencies")
+# load("@com_github_google_rules_install//:deps.bzl", "install_rules_dependencies")
 
-install_rules_dependencies()
+# install_rules_dependencies()
 
-load("@com_github_google_rules_install//:setup.bzl", "install_rules_setup")
+# load("@com_github_google_rules_install//:setup.bzl", "install_rules_setup")
 
-install_rules_setup()
+# install_rules_setup()
 
 # install bbox
-git_repository(
-    name = "bbox",
-    # commit = "16d0642dda469579fecf2d2e1efff544e30a60c1",
-    branch = "master",
-    remote = "https://github.com/btwiuse/bbox.git",
-)
-
-load("@bbox//:package.bzl", "register_repositories")
-
-register_repositories()
-
+# git_repository(
+#     name = "bbox",
+#     # commit = "16d0642dda469579fecf2d2e1efff544e30a60c1",
+#     branch = "master",
+#     remote = "https://github.com/btwiuse/bbox.git",
+# )
+#
+# load("@bbox//:package.bzl", "register_repositories")
+#
+# register_repositories()
+#
 load("//:go_repos.bzl", "go_repositories")
 
 go_repositories()
@@ -211,14 +230,6 @@ container_pull(
     # digest = "sha256:deadbeef",
     tag = "latest",
 )
-
-git_repository(
-    name = "rules_python",
-    branch = "master",
-    remote = "https://github.com/bazelbuild/rules_python.git",
-)
-
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 git_repository(
     name = "io_bazel_rules_grafana",

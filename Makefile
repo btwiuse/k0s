@@ -137,7 +137,8 @@ bazel-build-linux:          ## Build linux binaries using bazel
 	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_s390x    //:k0s_static
 
 bazel-build:          ## Build binary for current platform using bazel
-	$(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin
+	$(BAZEL) build //:k0s_static
+	# $(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin
 	# $(BAZEL) build # //:k0s # //cmd/{hub,client,agent}
 
 build:          ## Build binary for current platform
