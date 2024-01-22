@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+BASE=~/k0s.io/www
+find . -name 'go.mod' | while read mod; do
+  filename="$BASE/${mod/go.mod/index.html}"
+  dir=$(dirname $filename)
+  mkdir -p $dir
+  # mkdir -p ~/k0s.io/www/
+  pkg=$(head -n1 $mod | cut -d ' ' -f 2)
+  cat <<EOF > $filename
+<meta
+  name="go-import"
+  content="k0s.io git https://github.com/btwiuse/k0s"/>
+<meta
+  name="go-source"
+  content="k0s.io
+           https://github.com/btwiuse/k0s
+           https://github.com/btwiuse/k0s/tree/master{/dir}
+           https://github.com/btwiuse/k0s/blob/master{/dir}/{file}#L{line}">
+EOF
+done
