@@ -1,6 +1,6 @@
 module k0s.io
 
-go 1.21
+go 1.21.6
 
 replace k0s.io => ././
 

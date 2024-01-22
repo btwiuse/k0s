@@ -1,6 +1,6 @@
 module k0s.io/pkg/fonts
 
-go 1.21
+go 1.21.6
 
 require (
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42

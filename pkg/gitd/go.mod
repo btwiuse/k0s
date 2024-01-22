@@ -1,6 +1,6 @@
 module k0s.io/pkg/gitd
 
-go 1.21
+go 1.21.6
 
 require (
 	github.com/gorilla/mux v1.8.0

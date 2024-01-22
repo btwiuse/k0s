@@ -1,6 +1,6 @@
 module k0s.io/third_party
 
-go 1.21
+go 1.21.6
 
 replace github.com/buildkite/agent/v3 => github.com/btwiuse/agent/v3 v3.27.1-0.20210217080418-ae42a28eefa7
 

@@ -1,6 +1,6 @@
 module k0s.io/pkg/uuid
 
-go 1.21
+go 1.21.6
 
 require (
 	github.com/denisbrodbeck/machineid v1.0.1

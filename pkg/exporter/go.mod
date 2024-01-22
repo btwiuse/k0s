@@ -1,6 +1,6 @@
 module k0s.io/pkg/exporter
 
-go 1.21
+go 1.21.6
 
 require (
 	github.com/prometheus/client_golang v1.14.0
