@@ -569,7 +569,7 @@ require (
 	k0s.io/pkg/hub v0.1.8 // indirect
 	k0s.io/pkg/jsondns v0.1.8 // indirect
 	k0s.io/pkg/manager v0.1.8 // indirect
-	k0s.io/pkg/middleware v0.1.8 // indirect
+	k0s.io/pkg/middleware v0.1.8
 	k0s.io/pkg/simple v0.1.8 // indirect
 	// k0s.io/pkg/version v0.0.0-20220709103107-f40561c09b04 // indirect
 	k0s.io/pkg/wrap v0.1.8 // indirect
