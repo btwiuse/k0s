@@ -2595,22 +2595,6 @@ def go_repositories():
         version = "v1.0.1-0.20190212211648-25d852aebe32",
     )
     go_repository(
-        name = "com_github_gin_contrib_sse",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/gin-contrib/sse",
-        sum = "h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=",
-        version = "v0.1.0",
-    )
-    go_repository(
-        name = "com_github_gin_gonic_gin",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/gin-gonic/gin",
-        sum = "h1:ahKqKTFpO5KTPHxWZjEdPScmYaGtLo8Y4DMHoEsnp14=",
-        version = "v1.6.3",
-    )
-    go_repository(
         name = "com_github_gliderlabs_ssh",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -2897,38 +2881,6 @@ def go_repositories():
         importpath = "github.com/go-piv/piv-go",
         sum = "h1:rfjdFdASfGV5KLJhSjgpGJ5lzVZVtRWn8ovy/H9HQ/U=",
         version = "v1.7.0",
-    )
-    go_repository(
-        name = "com_github_go_playground_assert_v2",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/go-playground/assert/v2",
-        sum = "h1:MsBgLAaY856+nPRTKrp3/OZK38U/wa0CcBYNjji3q3A=",
-        version = "v2.0.1",
-    )
-    go_repository(
-        name = "com_github_go_playground_locales",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/go-playground/locales",
-        sum = "h1:HyWk6mgj5qFqCT5fjGBuRArbVDfE4hi8+e8ceBS/t7Q=",
-        version = "v0.13.0",
-    )
-    go_repository(
-        name = "com_github_go_playground_universal_translator",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/go-playground/universal-translator",
-        sum = "h1:icxd5fm+REJzpZx7ZfpaD876Lmtgy7VtROAbHHXk8no=",
-        version = "v0.17.0",
-    )
-    go_repository(
-        name = "com_github_go_playground_validator_v10",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/go-playground/validator/v10",
-        sum = "h1:KgJ0snyC2R9VXYN2rneOtQcw5aHQB1Vv0sFl1UcHBOY=",
-        version = "v10.2.0",
     )
     go_repository(
         name = "com_github_go_redis_redis",
@@ -5035,22 +4987,6 @@ def go_repositories():
         version = "v1.0.1",
     )
     go_repository(
-        name = "com_github_ledongthuc_pdf",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/ledongthuc/pdf",
-        sum = "h1:6Yzfa6GP0rIo/kULo2bwGEkFvCePZ3qHDDTC3/J9Swo=",
-        version = "v0.0.0-20220302134840-0c2507a12d80",
-    )
-    go_repository(
-        name = "com_github_leodido_go_urn",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/leodido/go-urn",
-        sum = "h1:hpXL4XnriNwQ/ABnpepYM/1vCLWNDfUNts8dX3xTG6Y=",
-        version = "v1.2.0",
-    )
-    go_repository(
         name = "com_github_letsencrypt_pkcs11key",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -6483,14 +6419,6 @@ def go_repositories():
         version = "v0.0.0-20190826125027-8c72a8bb44f6",
     )
     go_repository(
-        name = "com_github_orisano_pixelmatch",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/orisano/pixelmatch",
-        sum = "h1:x0TT0RDC7UhAVbbWWBzr41ElhJx5tXPWkIHA2HWPRuw=",
-        version = "v0.0.0-20220722002657-fb0b55479cde",
-    )
-    go_repository(
         name = "com_github_oschwald_geoip2_golang",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -6929,22 +6857,6 @@ def go_repositories():
         importpath = "github.com/quic-go/qpack",
         sum = "h1:Cr9BXA1sQS2SmDUWjSofMPNKmvF6IiIfDRmgU0w1ZCo=",
         version = "v0.4.0",
-    )
-    go_repository(
-        name = "com_github_quic_go_qtls_go1_18",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/quic-go/qtls-go1-18",
-        sum = "h1:5ViXqBZ90wpUcZS0ge79rf029yx0dYB0McyPJwqqj7U=",
-        version = "v0.2.0",
-    )
-    go_repository(
-        name = "com_github_quic_go_qtls_go1_19",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/quic-go/qtls-go1-19",
-        sum = "h1:Cvn2WdhyViFUHoOqK52i51k4nDX8EwIh5VJiVM4nttk=",
-        version = "v0.2.0",
     )
     go_repository(
         name = "com_github_quic_go_qtls_go1_20",
@@ -8191,16 +8103,16 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/ugorji/go",
-        sum = "h1:/68gy2h+1mWMrwZFeD1kQialdSzAb432dtpeJ42ovdo=",
-        version = "v1.1.7",
+        sum = "h1:j4s+tAvLfL3bZyefP2SEWmhBzmuIlH/eqNuPdFPgngw=",
+        version = "v1.1.4",
     )
     go_repository(
         name = "com_github_ugorji_go_codec",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/ugorji/go/codec",
-        sum = "h1:2SvQaVZ1ouYrrKKwoSk2pzd4A9evlKJb9oTL+OaLUSs=",
-        version = "v1.1.7",
+        sum = "h1:3SVOIvH7Ae1KRYyQWRjXWJEA9sS/c/pjvH++55Gr648=",
+        version = "v0.0.0-20181204163529-d75b2dcb6bc8",
     )
     go_repository(
         name = "com_github_ulikunitz_xz",
@@ -8441,22 +8353,6 @@ def go_repositories():
         importpath = "github.com/webteleport/wtf",
         sum = "h1:efBmWIm7LKodBTo/k0zs6ksr78vyYijb5g2QJuZFvzs=",
         version = "v0.0.6",
-    )
-    go_repository(
-        name = "com_github_webtransport_quic_go",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/webtransport/quic-go",
-        sum = "h1:SQtqef+XAhs8Bw3pqoboSA1VbPzdx0awfcYcJU9o2ys=",
-        version = "v0.0.0-webtransport",
-    )
-    go_repository(
-        name = "com_github_webtransport_webtransport_go",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/webtransport/webtransport-go",
-        sum = "h1:SO343fsbvWrvQTbC4mm7Gv76eC1gZ6jw/4LIQ0tt19w=",
-        version = "v0.0.0-webtransport",
     )
     go_repository(
         name = "com_github_weppos_publicsuffix_go",
