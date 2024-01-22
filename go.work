@@ -21,7 +21,6 @@ use (
 	./pkg/manager
 	./pkg/middleware
 	./pkg/plugin
-	./pkg/reverseproxy
 	./pkg/rng
 	./pkg/simple
 	./pkg/tunnel
@@ -53,7 +52,6 @@ replace (
 	k0s.io/pkg/manager v0.1.7 => ./pkg/manager/
 	k0s.io/pkg/middleware v0.1.7 => ./pkg/middleware/
 	k0s.io/pkg/plugin v0.1.7 => ./pkg/plugin/
-	k0s.io/pkg/reverseproxy v0.1.7 => ./pkg/reverseproxy/
 	k0s.io/pkg/rng v0.1.7 => ./pkg/rng/
 	k0s.io/pkg/simple v0.1.7 => ./pkg/simple/
 	k0s.io/pkg/tunnel v0.1.7 => ./pkg/tunnel/
