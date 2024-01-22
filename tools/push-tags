@@ -2,4 +2,4 @@
 
 ROOT_MOD=$(go mod edit -json | jq -r .Module.Path)
 
-go work edit --json | jq .Use[] -c | jq -r .ModPath | xargs -I% bash -c 'echo %/$(<VERSION)' | sed s,^$ROOT_MOD/,,g | xargs -I% bash -vc 'git tag -f % && git push -f origin %'
+cat .mods | xargs -I% bash -c 'echo %/$(<VERSION)' | sed s,^$ROOT_MOD/,,g | xargs -I% bash -vc 'git tag -f % && git push -f origin %'
