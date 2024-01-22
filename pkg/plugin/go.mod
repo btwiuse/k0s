@@ -3,9 +3,9 @@ module k0s.io/pkg/plugin
 go 1.21.6
 
 require (
-	k0s.io v0.1.8
-	k0s.io/pkg/agent v0.1.8
-	k0s.io/pkg/uuid v0.1.8
+	k0s.io v0.1.9
+	k0s.io/pkg/agent v0.1.9
+	k0s.io/pkg/uuid v0.1.9
 )
 
 require (
@@ -42,13 +42,13 @@ require (
 	golang.org/x/tools v0.17.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k0s.io/pkg/asciitransport v0.1.8 // indirect
-	k0s.io/pkg/dial v0.1.8 // indirect
-	k0s.io/pkg/distro v0.1.8 // indirect
+	k0s.io/pkg/asciitransport v0.1.9 // indirect
+	k0s.io/pkg/dial v0.1.9 // indirect
+	k0s.io/pkg/distro v0.1.9 // indirect
 	k0s.io/pkg/dohserver v0.1.8 // indirect
 	k0s.io/pkg/jsondns v0.1.8 // indirect
-	k0s.io/pkg/middleware v0.1.8 // indirect
-	k0s.io/pkg/rng v0.1.8 // indirect
-	k0s.io/pkg/wrap v0.1.8 // indirect
+	k0s.io/pkg/middleware v0.1.9 // indirect
+	k0s.io/pkg/rng v0.1.9 // indirect
+	k0s.io/pkg/wrap v0.1.9 // indirect
 	nhooyr.io/websocket v1.8.10 // indirect
 )

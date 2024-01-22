@@ -61,19 +61,19 @@ require (
 	golang.org/x/mod v0.14.0
 	golang.org/x/text v0.14.0
 	google.golang.org/protobuf v1.28.1
-	k0s.io v0.1.8
-	k0s.io/pkg/agent v0.1.8
-	k0s.io/pkg/asciitransport v0.1.8
-	k0s.io/pkg/cli v0.1.8
-	k0s.io/pkg/console v0.1.8
+	k0s.io v0.1.9
+	k0s.io/pkg/agent v0.1.9
+	k0s.io/pkg/asciitransport v0.1.9
+	k0s.io/pkg/cli v0.1.9
+	k0s.io/pkg/console v0.1.9
 	k0s.io/pkg/dohserver v0.1.8
-	k0s.io/pkg/exporter v0.1.8
-	k0s.io/pkg/gitd v0.1.8
-	k0s.io/pkg/plugin v0.1.8
-	k0s.io/pkg/rng v0.1.8
-	k0s.io/pkg/tunnel v0.1.8
-	k0s.io/pkg/utils v0.1.8
-	k0s.io/pkg/uuid v0.1.8
+	k0s.io/pkg/exporter v0.1.9
+	k0s.io/pkg/gitd v0.1.9
+	k0s.io/pkg/plugin v0.1.9
+	k0s.io/pkg/rng v0.1.9
+	k0s.io/pkg/tunnel v0.1.9
+	k0s.io/pkg/utils v0.1.9
+	k0s.io/pkg/uuid v0.1.9
 	// k8s.io/apimachinery v0.22.5
 	// k8s.io/apiserver v0.22.5
 	// k8s.io/client-go v0.22.5
@@ -152,8 +152,8 @@ require (
 	go.uber.org/mock v0.3.0 // indirect
 	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
-	k0s.io/pkg/dial v0.1.8 // indirect
-	k0s.io/pkg/ui v0.1.8 // indirect
+	k0s.io/pkg/dial v0.1.9 // indirect
+	k0s.io/pkg/ui v0.1.9 // indirect
 	k8s.io/cli-runtime v0.27.3 // indirect
 	k8s.io/component-base v0.27.3 // indirect
 	k8s.io/component-helpers v0.27.3 // indirect
@@ -563,16 +563,16 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/plist v1.0.0 // indirect
 	// k0s.io/pkg/api v0.0.0-20220709103107-f40561c09b04 // indirect
-	k0s.io/pkg/client v0.1.8 // indirect
-	k0s.io/pkg/distro v0.1.8 // indirect
-	k0s.io/pkg/fzf v0.1.8 // indirect
-	k0s.io/pkg/hub v0.1.8 // indirect
+	k0s.io/pkg/client v0.1.9 // indirect
+	k0s.io/pkg/distro v0.1.9 // indirect
+	k0s.io/pkg/fzf v0.1.9 // indirect
+	k0s.io/pkg/hub v0.1.9 // indirect
 	k0s.io/pkg/jsondns v0.1.8 // indirect
-	k0s.io/pkg/manager v0.1.8 // indirect
-	k0s.io/pkg/middleware v0.1.8
-	k0s.io/pkg/simple v0.1.8 // indirect
+	k0s.io/pkg/manager v0.1.9 // indirect
+	k0s.io/pkg/middleware v0.1.9
+	k0s.io/pkg/simple v0.1.9 // indirect
 	// k0s.io/pkg/version v0.0.0-20220709103107-f40561c09b04 // indirect
-	k0s.io/pkg/wrap v0.1.8 // indirect
+	k0s.io/pkg/wrap v0.1.9 // indirect
 	k8s.io/kube-openapi v0.0.0-20230501164219-8b0f38b5fd1f // indirect
 	k8s.io/utils v0.0.0-20230209194617-a36077c30491 // indirect
 	nhooyr.io/websocket v1.8.10 // indirect

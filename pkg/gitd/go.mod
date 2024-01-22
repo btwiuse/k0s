@@ -4,7 +4,7 @@ go 1.21.6
 
 require (
 	github.com/gorilla/mux v1.8.1
-	k0s.io/pkg/middleware v0.1.8
+	k0s.io/pkg/middleware v0.1.9
 )
 
 require (
