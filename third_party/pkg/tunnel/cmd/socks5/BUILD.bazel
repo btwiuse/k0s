@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["plugin_socks5server.go"],
-    importpath = "k0s.io/pkg/tunnel/cmd/socks5",
+    importpath = "k0s.io/third_party/pkg/tunnel/cmd/socks5",
     visibility = ["//visibility:private"],
     deps = [
         "//pkg/tunnel/listener:go_default_library",
