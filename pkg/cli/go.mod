@@ -21,29 +21,23 @@ require (
 
 require (
 	code.gitea.io/sdk/gitea v0.13.2 // indirect
-	filippo.io/edwards25519 v1.0.0-rc.1.0.20210721174708-390f27c3be20 // indirect
-	git.torproject.org/pluggable-transports/goptlib.git v1.2.0 // indirect
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/BurntSushi/toml v1.1.0 // indirect
-	github.com/LiamHaworth/go-tproxy v0.0.0-20190726054950-ef7efd7f24ed // indirect
 	github.com/MakeNowJust/heredoc v1.0.0 // indirect
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5 // indirect
 	github.com/abbot/go-http-auth v0.4.0 // indirect
 	github.com/abiosoft/ishell v2.0.0+incompatible // indirect
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
-	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137 // indirect
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20200628201436-c57d5ad3f2c5 // indirect
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2 // indirect
-	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/beevik/ntp v0.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/btwiuse/gods v0.0.1 // indirect
-	github.com/btwiuse/gost v0.0.4 // indirect
 	github.com/btwiuse/pretty v0.2.1 // indirect
 	github.com/btwiuse/sse v0.0.1 // indirect
 	github.com/btwiuse/wetty v0.0.36 // indirect
@@ -51,12 +45,10 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/chai2010/gettext-go v1.0.2 // indirect
 	github.com/chzyer/logex v1.2.1 // indirect
-	github.com/coreos/go-iptables v0.6.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/creack/pty v1.1.18 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/daviddengcn/go-colortext v1.0.0 // indirect
-	github.com/dchest/siphash v1.2.2 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1 // indirect
 	github.com/dennwc/btrfs v0.0.0-20221026161108-3097362dc072 // indirect
 	github.com/dennwc/ioctl v1.0.0 // indirect
@@ -76,12 +68,7 @@ require (
 	github.com/gdamore/tcell v1.4.0 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
 	github.com/go-errors/errors v1.4.2 // indirect
-	github.com/go-gost/gosocks4 v0.0.1 // indirect
-	github.com/go-gost/gosocks5 v0.3.0 // indirect
-	github.com/go-gost/relay v0.1.1-0.20211123134818-8ef7fd81ffd7 // indirect
-	github.com/go-gost/tls-dissector v0.0.2-0.20220408131628-aac992c27451 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
-	github.com/go-log/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -89,7 +76,6 @@ require (
 	github.com/go-openapi/jsonreference v0.20.1 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
-	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
@@ -99,7 +85,6 @@ require (
 	github.com/google/go-github/v30 v30.1.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
-	github.com/google/gopacket v1.1.19 // indirect
 	github.com/google/pprof v0.0.0-20230821062121-407c9e7a662f // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -125,9 +110,6 @@ require (
 	github.com/jsimonetti/rtnetlink v1.3.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kataras/basicauth v0.0.3 // indirect
-	github.com/klauspost/compress v1.15.15 // indirect
-	github.com/klauspost/cpuid/v2 v2.1.1 // indirect
-	github.com/klauspost/reedsolomon v1.9.15 // indirect
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
 	github.com/lithammer/dedent v1.1.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
@@ -166,38 +148,25 @@ require (
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/quic-go v0.41.0 // indirect
 	github.com/quic-go/webtransport-go v0.6.0 // indirect
-	github.com/riobard/go-bloom v0.0.0-20200614022211-cdc8013cb5b3 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/cors v1.10.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/safchain/ethtool v0.2.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/shadowsocks/go-shadowsocks2 v0.1.5 // indirect
-	github.com/shadowsocks/shadowsocks-go v0.0.0-20200409064450-3e585ff90601 // indirect
-	github.com/songgao/water v0.0.0-20200317203138-2b4b6d7c09d8 // indirect
 	github.com/soundcloud/go-runit v0.0.0-20150630195641-06ad41a06c4a // indirect
 	github.com/spf13/cobra v1.6.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/templexxx/cpu v0.0.7 // indirect
-	github.com/templexxx/xorsimd v0.4.1 // indirect
-	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
 	github.com/ulikunitz/xz v0.5.8 // indirect
 	github.com/webteleport/auth v0.0.6 // indirect
 	github.com/webteleport/webteleport v0.3.3 // indirect
 	github.com/xlab/treeprint v1.1.0 // indirect
-	github.com/xtaci/kcp-go/v5 v5.6.1 // indirect
-	github.com/xtaci/smux v1.5.17 // indirect
-	github.com/xtaci/tcpraw v1.2.25 // indirect
 	gitlab.com/mjwhitta/errors v1.0.0 // indirect
 	gitlab.com/mjwhitta/hilighter v1.11.0 // indirect
 	gitlab.com/mjwhitta/pathname v1.2.0 // indirect
 	gitlab.com/mjwhitta/safety v1.11.0 // indirect
 	gitlab.com/mjwhitta/sysinfo v1.4.7 // indirect
 	gitlab.com/mjwhitta/where v1.2.4 // indirect
-	gitlab.com/yawning/edwards25519-extra.git v0.0.0-20211229043746-2f91fcc9fbdb // indirect
-	gitlab.com/yawning/obfs4.git v0.0.0-20220904064028-336a71d6e4cf // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.35.1 // indirect
 	go.opentelemetry.io/otel v1.10.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/internal/retry v1.10.0 // indirect

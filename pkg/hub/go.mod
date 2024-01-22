@@ -24,26 +24,18 @@ require (
 )
 
 require (
-	filippo.io/edwards25519 v1.0.0-rc.1.0.20210721174708-390f27c3be20 // indirect
-	git.torproject.org/pluggable-transports/goptlib.git v1.2.0 // indirect
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/BurntSushi/toml v1.1.0 // indirect
-	github.com/LiamHaworth/go-tproxy v0.0.0-20190726054950-ef7efd7f24ed // indirect
-	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137 // indirect
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2 // indirect
-	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/beevik/ntp v0.3.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btwiuse/gods v0.0.1 // indirect
-	github.com/btwiuse/gost v0.0.4 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/coreos/go-iptables v0.6.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/creack/pty v1.1.18 // indirect
-	github.com/dchest/siphash v1.2.2 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1 // indirect
 	github.com/dennwc/btrfs v0.0.0-20221026161108-3097362dc072 // indirect
 	github.com/dennwc/ioctl v1.0.0 // indirect
@@ -52,18 +44,11 @@ require (
 	github.com/ema/qdisc v0.0.0-20200603082823-62d0308e3e00 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
-	github.com/go-gost/gosocks4 v0.0.1 // indirect
-	github.com/go-gost/gosocks5 v0.3.0 // indirect
-	github.com/go-gost/relay v0.1.1-0.20211123134818-8ef7fd81ffd7 // indirect
-	github.com/go-gost/tls-dissector v0.0.2-0.20220408131628-aac992c27451 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
-	github.com/go-log/log v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
-	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
-	github.com/google/gopacket v1.1.19 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/handlers v1.5.2 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
@@ -77,9 +62,6 @@ require (
 	github.com/jpillora/sizestr v1.0.0 // indirect
 	github.com/jsimonetti/rtnetlink v1.3.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.15.15 // indirect
-	github.com/klauspost/cpuid/v2 v2.1.1 // indirect
-	github.com/klauspost/reedsolomon v1.9.15 // indirect
 	github.com/lufia/iostat v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-xmlrpc v0.0.3 // indirect
@@ -99,30 +81,17 @@ require (
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/node_exporter v1.5.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
-	github.com/riobard/go-bloom v0.0.0-20200614022211-cdc8013cb5b3 // indirect
 	github.com/rs/cors v1.10.1 // indirect
-	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/safchain/ethtool v0.2.0 // indirect
-	github.com/shadowsocks/go-shadowsocks2 v0.1.5 // indirect
-	github.com/shadowsocks/shadowsocks-go v0.0.0-20200409064450-3e585ff90601 // indirect
-	github.com/songgao/water v0.0.0-20200317203138-2b4b6d7c09d8 // indirect
 	github.com/soundcloud/go-runit v0.0.0-20150630195641-06ad41a06c4a // indirect
-	github.com/templexxx/cpu v0.0.7 // indirect
-	github.com/templexxx/xorsimd v0.4.1 // indirect
-	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
 	github.com/webteleport/utils v0.2.2 // indirect
-	github.com/xtaci/kcp-go/v5 v5.6.1 // indirect
-	github.com/xtaci/smux v1.5.17 // indirect
-	github.com/xtaci/tcpraw v1.2.25 // indirect
 	gitlab.com/mjwhitta/errors v1.0.0 // indirect
 	gitlab.com/mjwhitta/hilighter v1.11.0 // indirect
 	gitlab.com/mjwhitta/pathname v1.2.0 // indirect
 	gitlab.com/mjwhitta/safety v1.11.0 // indirect
 	gitlab.com/mjwhitta/sysinfo v1.4.7 // indirect
 	gitlab.com/mjwhitta/where v1.2.4 // indirect
-	gitlab.com/yawning/edwards25519-extra.git v0.0.0-20211229043746-2f91fcc9fbdb // indirect
-	gitlab.com/yawning/obfs4.git v0.0.0-20220904064028-336a71d6e4cf // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/crypto v0.18.0 // indirect
