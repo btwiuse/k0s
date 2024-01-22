@@ -9,7 +9,7 @@ import (
 
 	"k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
-	"k0s.io/pkg/dohserver"
+	"k0s.io/third_party/pkg/dohserver"
 	"k0s.io/pkg/middleware"
 )
 

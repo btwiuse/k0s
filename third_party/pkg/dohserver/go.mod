@@ -6,7 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.1.0
 	github.com/miekg/dns v1.1.58
 	golang.org/x/net v0.20.0
-	k0s.io/pkg/jsondns v0.1.8
+	k0s.io/third_party/pkg/jsondns v0.1.8
 )
 
 require (

@@ -37,7 +37,7 @@ import (
 	"github.com/miekg/dns"
 	"golang.org/x/net/idna"
 
-	"k0s.io/pkg/jsondns"
+	"k0s.io/third_party/pkg/jsondns"
 )
 
 func (s *Server) parseRequestGoogle(ctx context.Context, w http.ResponseWriter, r *http.Request) *DNSRequest {

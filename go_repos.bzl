@@ -9283,6 +9283,22 @@ def go_repositories():
         version = "v1.0.2",
     )
     go_repository(
+        name = "io_k0s_pkg_dohserver",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "k0s.io/pkg/dohserver",
+        sum = "h1:3ZMtJe9C0ka443BAnh2Xb6krVKJ6rperAnBclKID2zo=",
+        version = "v0.1.8",
+    )
+    go_repository(
+        name = "io_k0s_pkg_jsondns",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "k0s.io/pkg/jsondns",
+        sum = "h1:egyG177v0eylI9Ur4TpkvEPN1nNTnwE4CXC8iTaV7bs=",
+        version = "v0.1.8",
+    )
+    go_repository(
         name = "io_k8s_api",
         build_file_generation = "on",
         build_file_proto_mode = "disable",

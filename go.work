@@ -11,13 +11,11 @@ use (
 	./pkg/console
 	./pkg/dial
 	./pkg/distro
-	./pkg/dohserver
 	./pkg/exporter
 	./pkg/fonts
 	./pkg/fzf
 	./pkg/gitd
 	./pkg/hub
-	./pkg/jsondns
 	./pkg/manager
 	./pkg/middleware
 	./pkg/plugin
@@ -42,13 +40,11 @@ replace (
 	k0s.io/pkg/console v0.1.8 => ./pkg/console/
 	k0s.io/pkg/dial v0.1.8 => ./pkg/dial/
 	k0s.io/pkg/distro v0.1.8 => ./pkg/distro/
-	k0s.io/pkg/dohserver v0.1.8 => ./pkg/dohserver/
 	k0s.io/pkg/exporter v0.1.8 => ./pkg/exporter/
 	k0s.io/pkg/fonts v0.1.8 => ./pkg/fonts/
 	k0s.io/pkg/fzf v0.1.8 => ./pkg/fzf/
 	k0s.io/pkg/gitd v0.1.8 => ./pkg/gitd/
 	k0s.io/pkg/hub v0.1.8 => ./pkg/hub/
-	k0s.io/pkg/jsondns v0.1.8 => ./pkg/jsondns/
 	k0s.io/pkg/manager v0.1.8 => ./pkg/manager/
 	k0s.io/pkg/middleware v0.1.8 => ./pkg/middleware/
 	k0s.io/pkg/plugin v0.1.8 => ./pkg/plugin/
