@@ -96,12 +96,22 @@ require (
 )
 
 require (
+	github.com/MakeNowJust/heredoc v1.0.0 // indirect
 	github.com/btwiuse/gods v0.0.1 // indirect
 	github.com/btwiuse/pretty v0.2.1 // indirect
+	github.com/btwiuse/sse v0.0.1 // indirect
+	github.com/chai2010/gettext-go v1.0.2 // indirect
+	github.com/daviddengcn/go-colortext v1.0.0 // indirect
 	github.com/deckarep/golang-set v1.8.0 // indirect
 	github.com/dennwc/btrfs v0.0.0-20221026161108-3097362dc072 // indirect
 	github.com/dennwc/ioctl v1.0.0 // indirect
+	github.com/ebi-yade/altsvc-go v0.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.9.0 // indirect
+	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
+	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
+	github.com/fatih/camelcase v1.0.0 // indirect
+	github.com/fvbommel/sortorder v1.0.1 // indirect
+	github.com/go-errors/errors v1.4.2 // indirect
 	github.com/go-gost/gosocks4 v0.0.1 // indirect
 	github.com/go-gost/gosocks5 v0.3.0 // indirect
 	github.com/go-gost/relay v0.1.1-0.20211123134818-8ef7fd81ffd7 // indirect
@@ -109,24 +119,49 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/google/gnostic v0.5.7-v3refs // indirect
 	github.com/google/pprof v0.0.0-20230821062121-407c9e7a662f // indirect
+	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.0.0-20220520183353-fd19c99a87aa // indirect
+	github.com/gregjones/httpcache v0.0.0-20180305231024-9cad4c3443a7 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0 // indirect
+	github.com/jonboulle/clockwork v0.2.2 // indirect
+	github.com/kataras/basicauth v0.0.3 // indirect
+	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
+	github.com/lithammer/dedent v1.1.0 // indirect
 	github.com/mdlayher/ethtool v0.0.0-20220830195143-0e16326d06d1 // indirect
+	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/moby/spdystream v0.2.0 // indirect
+	github.com/moby/term v0.0.0-20221205130635-1aeaba878587 // indirect
+	github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00 // indirect
 	github.com/onsi/ginkgo/v2 v2.12.0 // indirect
-	github.com/onsi/gomega v1.27.10 // indirect
+	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
+	github.com/quic-go/qpack v0.4.0 // indirect
+	github.com/quic-go/quic-go v0.41.0 // indirect
+	github.com/quic-go/webtransport-go v0.6.0 // indirect
 	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
 	github.com/tklauser/numcpus v0.2.2 // indirect
+	github.com/webteleport/auth v0.0.6 // indirect
+	github.com/webteleport/utils v0.2.2 // indirect
+	github.com/webteleport/webteleport v0.3.3 // indirect
+	github.com/webteleport/wtf v0.0.6 // indirect
+	github.com/xlab/treeprint v1.1.0 // indirect
 	gitlab.com/yawning/edwards25519-extra.git v0.0.0-20211229043746-2f91fcc9fbdb // indirect
 	go.etcd.io/etcd/api/v3 v3.5.7 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.7 // indirect
-	go.uber.org/goleak v1.2.1 // indirect
+	go.uber.org/mock v0.3.0 // indirect
+	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
-	k0s.io/pkg/reverseproxy v0.1.7 // indirect
+	k0s.io/pkg/dial v0.1.7 // indirect
 	k0s.io/pkg/ui v0.1.7 // indirect
+	k8s.io/cli-runtime v0.27.3 // indirect
+	k8s.io/component-base v0.27.3 // indirect
+	k8s.io/component-helpers v0.27.3 // indirect
+	k8s.io/metrics v0.27.3 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
+	sigs.k8s.io/kustomize/api v0.13.2 // indirect
+	sigs.k8s.io/kustomize/kustomize/v5 v5.0.1 // indirect
+	sigs.k8s.io/kustomize/kyaml v0.14.1 // indirect
 )
 
 require (
