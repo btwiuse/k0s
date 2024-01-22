@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"k0s.io/pkg/reverseproxy"
 	"k0s.io/pkg/tunnel/listener"
+	"github.com/webteleport/utils"
 )
 
 func Run(args []string) error {
@@ -31,7 +31,7 @@ func Run(args []string) error {
 
 	// from url
 	if strings.HasPrefix(from, "http") {
-		log.Println(http.Serve(listener.Listener(addr, from), reverseproxy.Handler(from)))
+		log.Println(http.Serve(listener.Listener(addr, from), utils.ReverseProxy(from)))
 	} else {
 		// from local file/dir
 		// relative file: base + filename

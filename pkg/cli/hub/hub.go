@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/webteleport/webteleport/ufo"
+	"github.com/webteleport/wtf"
 
 	"k0s.io/pkg/hub/config"
 	"k0s.io/pkg/hub/self"
@@ -22,7 +22,7 @@ func Run(args []string) (err error) {
 	go self.Agent(fmt.Sprintf("http://127.0.0.1%s", c.Port()))
 
 	if c.Ufo() != "" {
-		go ufo.Serve(c.Ufo(), h.Handler())
+		go wtf.Serve(c.Ufo(), h.Handler())
 	}
 
 	if c.UseTLS() {

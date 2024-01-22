@@ -14,6 +14,9 @@ func dumpRequest(r *http.Request) {
 	r.Clone(context.Background()).Write(os.Stderr)
 }
 
+// deprecated
+//
+// use github.com/webteleport/utils.ReverseProxy instead
 func Handler(addr string) http.Handler {
 	rpURL, err := url.Parse(addr)
 	if err != nil {

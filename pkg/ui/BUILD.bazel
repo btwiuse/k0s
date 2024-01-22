@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/ui",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/reverseproxy:go_default_library",
         "@com_github_gorilla_mux//:go_default_library",
+        "@com_github_webteleport_utils//:go_default_library",
     ],
 )
