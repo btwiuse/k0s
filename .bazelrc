@@ -48,3 +48,7 @@ build:go_android_armv7 --cpu=armv7
 build:go_android_armv7 --compiler=android_armv7
 build:go_android_armv7 --platforms=@io_bazel_rules_go//go/toolchain:android_arm_cgo
 build:go_android_armv7 --action_env=ANDROID_NDK_HOME
+
+# TODO: migrate all dependencies from WORKSPACE to MODULE.bazel
+# https://github.com/protocolbuffers/protobuf/issues/14313
+common --noenable_bzlmod
