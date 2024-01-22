@@ -7,14 +7,14 @@ require (
 	github.com/creativeprojects/go-selfupdate v0.6.1
 	github.com/webteleport/utils v0.2.2
 	github.com/webteleport/wtf v0.0.6
-	k0s.io v0.1.7
-	k0s.io/pkg/agent v0.1.7
+	k0s.io v0.1.8
+	k0s.io/pkg/agent v0.1.8
 	k0s.io/pkg/apiserver v0.0.0-20220906145908-796acc0825e7
-	k0s.io/pkg/client v0.1.7
-	k0s.io/pkg/hub v0.1.7
-	k0s.io/pkg/simple v0.1.7
-	k0s.io/pkg/tunnel v0.1.7
-	k0s.io/pkg/utils v0.1.7
+	k0s.io/pkg/client v0.1.8
+	k0s.io/pkg/hub v0.1.8
+	k0s.io/pkg/simple v0.1.8
+	k0s.io/pkg/tunnel v0.1.8
+	k0s.io/pkg/utils v0.1.8
 	k8s.io/apimachinery v0.27.3
 	k8s.io/kubectl v0.27.3
 )
@@ -230,20 +230,20 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k0s.io/pkg/asciitransport v0.1.7 // indirect
-	k0s.io/pkg/console v0.1.7 // indirect
-	k0s.io/pkg/dial v0.1.7 // indirect
-	k0s.io/pkg/distro v0.1.7 // indirect
-	k0s.io/pkg/dohserver v0.1.7 // indirect
-	k0s.io/pkg/exporter v0.1.7 // indirect
-	k0s.io/pkg/fzf v0.1.7 // indirect
-	k0s.io/pkg/jsondns v0.1.7 // indirect
-	k0s.io/pkg/manager v0.1.7 // indirect
-	k0s.io/pkg/middleware v0.1.7 // indirect
-	k0s.io/pkg/rng v0.1.7 // indirect
-	k0s.io/pkg/ui v0.1.7 // indirect
-	k0s.io/pkg/uuid v0.1.7 // indirect
-	k0s.io/pkg/wrap v0.1.7 // indirect
+	k0s.io/pkg/asciitransport v0.1.8 // indirect
+	k0s.io/pkg/console v0.1.8 // indirect
+	k0s.io/pkg/dial v0.1.8 // indirect
+	k0s.io/pkg/distro v0.1.8 // indirect
+	k0s.io/pkg/dohserver v0.1.8 // indirect
+	k0s.io/pkg/exporter v0.1.8 // indirect
+	k0s.io/pkg/fzf v0.1.8 // indirect
+	k0s.io/pkg/jsondns v0.1.8 // indirect
+	k0s.io/pkg/manager v0.1.8 // indirect
+	k0s.io/pkg/middleware v0.1.8 // indirect
+	k0s.io/pkg/rng v0.1.8 // indirect
+	k0s.io/pkg/ui v0.1.8 // indirect
+	k0s.io/pkg/uuid v0.1.8 // indirect
+	k0s.io/pkg/wrap v0.1.8 // indirect
 	k8s.io/api v0.27.3 // indirect
 	k8s.io/apiserver v0.27.3 // indirect
 	k8s.io/cli-runtime v0.27.3 // indirect

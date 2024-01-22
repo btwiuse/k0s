@@ -4,7 +4,7 @@ go 1.21.6
 
 require (
 	github.com/emicklei/go-restful/v3 v3.9.0
-	k0s.io/pkg/middleware v0.1.7
+	k0s.io/pkg/middleware v0.1.8
 	k8s.io/apimachinery v0.27.3
 	k8s.io/apiserver v0.27.3
 )

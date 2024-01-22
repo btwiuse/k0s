@@ -4,8 +4,8 @@ go 1.21.6
 
 require (
 	github.com/gorilla/websocket v1.5.0
-	k0s.io/pkg/wrap v0.1.7
+	k0s.io/pkg/wrap v0.1.8
 	nhooyr.io/websocket v1.8.10
 )
 
-require k0s.io v0.1.7 // indirect
+require k0s.io v0.1.8 // indirect
