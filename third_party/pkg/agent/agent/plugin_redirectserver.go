@@ -1,3 +1,5 @@
+//go:build plugin_redirserver
+
 package server
 
 import (

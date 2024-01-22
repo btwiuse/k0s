@@ -1,3 +1,5 @@
+//go:build plugin_socks5server
+
 package server
 
 import (

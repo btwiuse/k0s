@@ -1,3 +1,5 @@
+//go:build plugin_metricsserver
+
 package server
 
 import (
