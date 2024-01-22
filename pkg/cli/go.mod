@@ -23,7 +23,6 @@ require (
 	code.gitea.io/sdk/gitea v0.13.2 // indirect
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
-	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/MakeNowJust/heredoc v1.0.0 // indirect
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5 // indirect
@@ -99,7 +98,6 @@ require (
 	github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
-	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9 // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/josharian/native v1.0.0 // indirect
@@ -203,10 +201,8 @@ require (
 	k0s.io/pkg/console v0.1.9 // indirect
 	k0s.io/pkg/dial v0.1.9 // indirect
 	k0s.io/pkg/distro v0.1.9 // indirect
-	k0s.io/pkg/dohserver v0.1.8 // indirect
 	k0s.io/pkg/exporter v0.1.9 // indirect
 	k0s.io/pkg/fzf v0.1.9 // indirect
-	k0s.io/pkg/jsondns v0.1.8 // indirect
 	k0s.io/pkg/manager v0.1.9 // indirect
 	k0s.io/pkg/middleware v0.1.9 // indirect
 	k0s.io/pkg/rng v0.1.9 // indirect

@@ -26,7 +26,6 @@ require (
 require (
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
-	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137 // indirect
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2 // indirect
@@ -55,7 +54,6 @@ require (
 	github.com/hashicorp/go-envparse v0.1.0 // indirect
 	github.com/hodgesds/perf-utils v0.5.1 // indirect
 	github.com/illumos/go-kstat v0.0.0-20210513183136-173c9b0a9973 // indirect
-	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9 // indirect
 	github.com/josharian/native v1.0.0 // indirect
 	github.com/jpillora/ansi v1.0.2 // indirect
 	github.com/jpillora/requestlog v1.0.0 // indirect
@@ -109,6 +107,4 @@ require (
 	k0s.io/pkg/asciitransport v0.1.9 // indirect
 	k0s.io/pkg/dial v0.1.9 // indirect
 	k0s.io/pkg/distro v0.1.9 // indirect
-	k0s.io/pkg/dohserver v0.1.8 // indirect
-	k0s.io/pkg/jsondns v0.1.8 // indirect
 )
