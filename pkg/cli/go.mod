@@ -44,8 +44,8 @@ require (
 	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/btwiuse/gods v0.0.1 // indirect
 	github.com/btwiuse/gost v0.0.4 // indirect
-	github.com/btwiuse/k16s/v2 v2.0.0-20201224175329-3bc18834f8c1 // indirect
 	github.com/btwiuse/pretty v0.2.1 // indirect
+	github.com/btwiuse/sse v0.0.1 // indirect
 	github.com/btwiuse/wetty v0.0.36 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.3 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
@@ -59,7 +59,6 @@ require (
 	github.com/denisbrodbeck/machineid v1.0.1 // indirect
 	github.com/dennwc/btrfs v0.0.0-20221026161108-3097362dc072 // indirect
 	github.com/dennwc/ioctl v1.0.0 // indirect
-	github.com/dgryski/go-jump v0.0.0-20170409065014-e1f439676b57 // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/docker v20.10.17+incompatible // indirect
 	github.com/ebi-yade/altsvc-go v0.1.1 // indirect
@@ -104,7 +103,7 @@ require (
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/handlers v1.5.2 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/gregjones/httpcache v0.0.0-20180305231024-9cad4c3443a7 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0 // indirect
@@ -168,7 +167,6 @@ require (
 	github.com/quic-go/webtransport-go v0.6.0 // indirect
 	github.com/riobard/go-bloom v0.0.0-20200614022211-cdc8013cb5b3 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/robfig/cron/v3 v3.0.0 // indirect
 	github.com/rs/cors v1.10.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
@@ -241,14 +239,12 @@ require (
 	k0s.io/pkg/jsondns v0.1.7 // indirect
 	k0s.io/pkg/manager v0.1.7 // indirect
 	k0s.io/pkg/middleware v0.1.7 // indirect
-	k0s.io/pkg/reverseproxy v0.1.7 // indirect
 	k0s.io/pkg/rng v0.1.7 // indirect
 	k0s.io/pkg/ui v0.1.7 // indirect
 	k0s.io/pkg/uuid v0.1.7 // indirect
 	k0s.io/pkg/wrap v0.1.7 // indirect
 	k8s.io/api v0.27.3 // indirect
 	k8s.io/apiserver v0.27.3 // indirect
-	k8s.io/autoscaler/vertical-pod-autoscaler v0.11.0 // indirect
 	k8s.io/cli-runtime v0.27.3 // indirect
 	k8s.io/client-go v0.27.3 // indirect
 	k8s.io/component-base v0.27.3 // indirect
