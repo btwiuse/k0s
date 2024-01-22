@@ -4,9 +4,9 @@ go 1.21.6
 
 require (
 	github.com/btwiuse/gost v0.0.4
-	k0s.io v0.1.5
-	k0s.io/pkg/middleware v0.1.5
-	k0s.io/pkg/wrap v0.1.5
+	k0s.io v0.1.7
+	k0s.io/pkg/middleware v0.1.7
+	k0s.io/pkg/wrap v0.1.7
 	nhooyr.io/websocket v1.8.10
 )
 
