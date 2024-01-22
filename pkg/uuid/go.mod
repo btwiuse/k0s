@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.3.0
 )
 
-require golang.org/x/sys v0.0.0-20220712014510-0a85c31ab51e // indirect
+require golang.org/x/sys v0.16.0 // indirect
 
 replace k0s.io => ../../
 
