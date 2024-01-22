@@ -3,7 +3,7 @@ package gitd
 import (
 	"log"
 
-	"k0s.io/pkg/gitd"
+	"k0s.io/third_party/pkg/gitd"
 	"k0s.io/pkg/tunnel/listener"
 )
 

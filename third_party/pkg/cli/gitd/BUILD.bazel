@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/third_party/pkg/cli/gitd",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/gitd:go_default_library",
         "//pkg/tunnel/listener:go_default_library",
+        "//third_party/pkg/gitd:go_default_library",
     ],
 )

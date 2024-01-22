@@ -68,7 +68,6 @@ require (
 	k0s.io/pkg/console v0.1.9
 	k0s.io/pkg/dohserver v0.1.8
 	k0s.io/pkg/exporter v0.1.9
-	k0s.io/pkg/gitd v0.1.9
 	k0s.io/pkg/plugin v0.1.9
 	k0s.io/pkg/rng v0.1.9
 	k0s.io/pkg/tunnel v0.1.9

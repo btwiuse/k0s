@@ -9291,6 +9291,14 @@ def go_repositories():
         version = "v0.1.8",
     )
     go_repository(
+        name = "io_k0s_pkg_gitd",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "k0s.io/pkg/gitd",
+        sum = "h1:QFYL1CSE96Q7fIEeCgPvCdkc9IcwA55yekuEA0mIkzs=",
+        version = "v0.1.9",
+    )
+    go_repository(
         name = "io_k0s_pkg_jsondns",
         build_file_generation = "on",
         build_file_proto_mode = "disable",

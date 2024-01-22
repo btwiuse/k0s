@@ -11,7 +11,6 @@ k0s.io/pkg/distro
 k0s.io/pkg/exporter
 k0s.io/pkg/fonts
 k0s.io/pkg/fzf
-k0s.io/pkg/gitd
 k0s.io/pkg/hub
 k0s.io/pkg/manager
 k0s.io/pkg/middleware

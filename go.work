@@ -14,7 +14,6 @@ use (
 	./pkg/exporter
 	./pkg/fonts
 	./pkg/fzf
-	./pkg/gitd
 	./pkg/hub
 	./pkg/manager
 	./pkg/middleware
@@ -43,7 +42,6 @@ replace (
 	k0s.io/pkg/exporter v0.1.9 => ./pkg/exporter/
 	k0s.io/pkg/fonts v0.1.9 => ./pkg/fonts/
 	k0s.io/pkg/fzf v0.1.9 => ./pkg/fzf/
-	k0s.io/pkg/gitd v0.1.9 => ./pkg/gitd/
 	k0s.io/pkg/hub v0.1.9 => ./pkg/hub/
 	k0s.io/pkg/manager v0.1.9 => ./pkg/manager/
 	k0s.io/pkg/middleware v0.1.9 => ./pkg/middleware/
