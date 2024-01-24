@@ -21,11 +21,11 @@ require (
 )
 
 require (
-	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
-	github.com/docker/docker v20.10.17+incompatible // indirect
+	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
+	github.com/docker/docker v25.0.1+incompatible // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/handlers v1.5.2 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -34,12 +34,13 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/cors v1.10.1 // indirect
+	github.com/stretchr/testify v1.8.4 // indirect
 	gitlab.com/mjwhitta/errors v1.0.0 // indirect
-	gitlab.com/mjwhitta/hilighter v1.11.0 // indirect
-	gitlab.com/mjwhitta/pathname v1.2.0 // indirect
-	gitlab.com/mjwhitta/safety v1.11.0 // indirect
-	gitlab.com/mjwhitta/sysinfo v1.4.7 // indirect
-	gitlab.com/mjwhitta/where v1.2.4 // indirect
+	gitlab.com/mjwhitta/hilighter v1.11.1 // indirect
+	gitlab.com/mjwhitta/pathname v1.2.1 // indirect
+	gitlab.com/mjwhitta/safety v1.11.1 // indirect
+	gitlab.com/mjwhitta/sysinfo v1.4.8 // indirect
+	gitlab.com/mjwhitta/where v1.2.5 // indirect
 	golang.org/x/sys v0.16.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/wrap v0.1.9 // indirect
