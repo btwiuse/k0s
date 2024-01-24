@@ -5,7 +5,7 @@ go 1.21.6
 require (
 	github.com/ActiveState/termtest/conpty v0.5.0
 	github.com/btwiuse/pretty v0.2.1
-	github.com/creack/pty v1.1.18
+	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1
 	golang.org/x/sync v0.6.0
 	golang.org/x/text v0.14.0
@@ -21,7 +21,7 @@ require (
 )
 
 require (
-	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
+	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
 	github.com/docker/docker v20.10.17+incompatible // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect

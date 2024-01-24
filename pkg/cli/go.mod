@@ -5,8 +5,8 @@ go 1.21.6
 require (
 	github.com/btwiuse/multicall v0.0.4
 	github.com/creativeprojects/go-selfupdate v1.1.3
-	github.com/webteleport/utils v0.2.2
-	github.com/webteleport/wtf v0.0.6
+	github.com/webteleport/utils v0.2.5
+	github.com/webteleport/wtf v0.0.8
 	k0s.io v0.1.9
 	k0s.io/pkg/agent v0.1.9
 	k0s.io/pkg/apiserver v0.1.9
@@ -161,7 +161,7 @@ require (
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
 	github.com/ulikunitz/xz v0.5.11 // indirect
 	github.com/webteleport/auth v0.0.6 // indirect
-	github.com/webteleport/webteleport v0.3.3 // indirect
+	github.com/webteleport/webteleport v0.3.8 // indirect
 	github.com/xanzy/go-gitlab v0.95.2 // indirect
 	github.com/xlab/treeprint v1.2.0 // indirect
 	gitlab.com/mjwhitta/errors v1.0.0 // indirect

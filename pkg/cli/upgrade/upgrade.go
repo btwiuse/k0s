@@ -1,6 +1,7 @@
 package upgrade
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -24,7 +25,7 @@ func Run(args []string) error {
 }
 
 func upgrade(version string) error {
-	latest, found, err := selfupdate.DetectLatest("btwiuse/k0s")
+	latest, found, err := selfupdate.DetectLatest(context.TODO(), selfupdate.ParseSlug("btwiuse/k0s"))
 	if err != nil {
 		return fmt.Errorf("error occurred while detecting version: %v", err)
 	}
@@ -43,7 +44,7 @@ func upgrade(version string) error {
 	if err != nil {
 		return errors.New("could not locate executable path")
 	}
-	if err := selfupdate.UpdateTo(latest.AssetURL, latest.AssetName, exe); err != nil {
+	if err := selfupdate.UpdateTo(context.TODO(), latest.AssetURL, latest.AssetName, exe); err != nil {
 		return fmt.Errorf("error occurred while updating binary: %v", err)
 	}
 	log.Printf("Successfully updated to version %s", latest.Version())
