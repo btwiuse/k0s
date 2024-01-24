@@ -25,7 +25,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/cors v1.10.1 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
 	gitlab.com/mjwhitta/errors v1.0.0 // indirect
 	gitlab.com/mjwhitta/hilighter v1.11.1 // indirect
 	gitlab.com/mjwhitta/pathname v1.2.1 // indirect
