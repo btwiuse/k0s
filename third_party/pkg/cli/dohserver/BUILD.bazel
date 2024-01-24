@@ -7,6 +7,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/tunnel/listener:go_default_library",
-        "@io_k0s_pkg_dohserver//:go_default_library",
+        "//third_party/pkg/dohserver:go_default_library",
     ],
 )
