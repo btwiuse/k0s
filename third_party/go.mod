@@ -63,17 +63,17 @@ require (
 	golang.org/x/net v0.20.0
 	golang.org/x/text v0.14.0
 	google.golang.org/protobuf v1.32.0
-	k0s.io v0.1.9
-	k0s.io/pkg/agent v0.1.9
-	k0s.io/pkg/asciitransport v0.1.9
-	k0s.io/pkg/console v0.1.9
-	k0s.io/pkg/exporter v0.1.9
-	k0s.io/pkg/middleware v0.1.9
-	k0s.io/pkg/plugin v0.1.9
-	k0s.io/pkg/rng v0.1.9
-	k0s.io/pkg/tunnel v0.1.9
-	k0s.io/pkg/utils v0.1.9
-	k0s.io/pkg/uuid v0.1.9
+	k0s.io v0.1.10
+	k0s.io/pkg/agent v0.1.10
+	k0s.io/pkg/asciitransport v0.1.10
+	k0s.io/pkg/console v0.1.10
+	k0s.io/pkg/exporter v0.1.10
+	k0s.io/pkg/middleware v0.1.10
+	k0s.io/pkg/plugin v0.1.10
+	k0s.io/pkg/rng v0.1.10
+	k0s.io/pkg/tunnel v0.1.10
+	k0s.io/pkg/utils v0.1.10
+	k0s.io/pkg/uuid v0.1.10
 	k8s.io/api v0.29.1
 	k8s.io/apimachinery v0.29.1
 	k8s.io/client-go v0.29.1
@@ -505,9 +505,9 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/plist v1.0.0 // indirect
-	k0s.io/pkg/dial v0.1.9 // indirect
-	k0s.io/pkg/distro v0.1.9 // indirect
-	k0s.io/pkg/wrap v0.1.9 // indirect
+	k0s.io/pkg/dial v0.1.10 // indirect
+	k0s.io/pkg/distro v0.1.10 // indirect
+	k0s.io/pkg/wrap v0.1.10 // indirect
 	k8s.io/kube-openapi v0.0.0-20231010175941-2dd684a91f00 // indirect
 	k8s.io/utils v0.0.0-20230726121419-3b25d923346b // indirect
 	nhooyr.io/websocket v1.8.10 // indirect
