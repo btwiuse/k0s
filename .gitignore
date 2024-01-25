@@ -40,3 +40,4 @@ __pycache__/
 node_modules
 yarn.lock
 package-lock.json
+Cargo.lock

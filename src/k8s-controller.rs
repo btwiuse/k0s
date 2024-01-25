@@ -10,10 +10,10 @@ extern crate kube_runtime;
 use futures::StreamExt;
 use futures::TryStreamExt;
 use kube::api::Api;
-use kube::api::ListParams;
 // use kube::api::Meta;
 use kube::Client;
 use kube_runtime::watcher;
+use kube_runtime::watcher::Config;
 use kube_runtime::watcher::Event;
 
 // macros
@@ -44,14 +44,22 @@ async fn main() -> () {
     // This is basically the fields from our CRD definition.
     let books = Api::<Book>::namespaced(client, "default");
 
-    let lp = ListParams::default();
+    let lp = Config::default();
 
     // create our informer and start listening
     let mut w = watcher::watcher(books, lp).boxed();
     while let Some(event) = w.try_next().await.unwrap() {
         match event {
-            Event::Applied(b) => println!("Created({}): Title: {}", b.metadata.name.unwrap(), b.spec.title),
-            Event::Deleted(b) => println!("Deleted({}): Title: {}", b.metadata.name.unwrap(), b.spec.title),
+            Event::Applied(b) => println!(
+                "Created({}): Title: {}",
+                b.metadata.name.unwrap(),
+                b.spec.title
+            ),
+            Event::Deleted(b) => println!(
+                "Deleted({}): Title: {}",
+                b.metadata.name.unwrap(),
+                b.spec.title
+            ),
             _ => (), // Ignore Restarted (We already use list)
         };
     }
