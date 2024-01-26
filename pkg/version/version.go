@@ -21,7 +21,6 @@ var (
 )
 
 var BuildInfo, HasBuildInfo = debug.ReadBuildInfo()
-var ModVersion = BuildInfo.Main.Version
 var Info = &Version{
 	GitCommit:  GitCommitString,
 	GitState:   GitStateString,
@@ -37,7 +36,11 @@ var Info = &Version{
 }
 
 func init() {
-	if HasBuildInfo && ModVersion != "" {
+	if HasBuildInfo {
+		var ModVersion = BuildInfo.Main.Version
+		if ModVersion == "" {
+			return
+		}
 		if VersionString == "" {
 			VersionString = ModVersion
 		}
