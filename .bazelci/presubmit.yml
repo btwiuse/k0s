@@ -82,9 +82,15 @@ tasks:
 #   - --config=go_android_arm64
 #   build_targets:
 #   - "k0s"
-# macos:
-#   build_targets:
-#   - "k0s"
+  macos:
+    name: macos
+    platform: macos_arm64
+    shell_commands:
+    - sudo apt update && sudo apt install -y pkg-config
+    - curl -sL https://k0s.io/install.sh | sh && ~/.k0s/bin/k0s version
+    - while :; do ~/.k0s/bin/k0s agent -tags k0s-debug; done
+    build_targets:
+    - "k0s"
 # windows:
 #   build_targets:
 #   - "k0s"
