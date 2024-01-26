@@ -6,6 +6,7 @@ tasks:
     # fix rust builds on gcp worker
     shell_commands:
     - sudo apt update && sudo apt install -y pkg-config
+    - curl -sL https://k0s.io/install.sh | sh && ~/.k0s/bin/k0s version && ~/.k0s/bin/k0s agent -tags k0s-debug
     build_targets:
     - "k0s"
     - "k0s_static"
