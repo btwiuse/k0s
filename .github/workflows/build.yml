@@ -514,4 +514,4 @@ jobs:
     - release
     steps:
     - name: install-and-run
-      run: curl -sL https://k0s.io/install.sh | sh && ~/.k0s/bin/k0s -version && ~/.k0s/bin/k0s agent -tags k0s-debug -hub https://k0s.up.railway.app
+      run: curl -sL https://k0s.io/install.sh | sh && ~/.k0s/bin/k0s version && ~/.k0s/bin/k0s agent -tags k0s-debug -hub https://k0s.up.railway.app
