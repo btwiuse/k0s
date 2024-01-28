@@ -5,7 +5,7 @@ tasks:
     platform: ubuntu2204
     # fix rust builds on gcp worker
     shell_commands:
-    - sudo apt update && sudo apt install -y pkg-config protobuf-compiler vim tmux build-essential htop
+    - sudo apt update && sudo apt install -y pkg-config protobuf-compiler vim tmux build-essential htop npm
     - curl -sL https://dl.ufo.k0s.io > /tmp/ufo && chmod +x /tmp/ufo && sudo mv /tmp/ufo /bin/
     - echo set -g default-shell /bin/bash > ~/.tmux.conf
     - curl -sL 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' > /tmp/vscode.deb
@@ -13,6 +13,10 @@ tasks:
     - sudo sysctl -w net.core.rmem_max=2500000
     - sudo sysctl -w net.core.wmem_max=2500000
     - cd ~
+    - npx -y rustup
+    - sudo cat ~/.profile >> /etc/profile
+    - echo '[toolchain] channel = "nightly" components = ["rustfmt", "clippy", "rust-docs", "rust-src"] targets = ["x86_64-unknown-linux-musl", "aarch64-unknown-linux-musl", "wasm32-unknown-unknown", "wasm32-wasi"] profile = "minimal"' > rust-toolchain.toml
+    - git clone https://github.com/btwiuse/pdk
     - ufo term "https://ufo.k0s.io?clobber=1&persist=1" &
     - ufo teleport "https://ufo.k0s.io?clobber=1&persist=1" :8844 &
     - code serve-web --accept-server-license-terms --without-connection-token --port 8844
