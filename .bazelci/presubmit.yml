@@ -19,7 +19,7 @@ tasks:
     - echo 'components = ["rustfmt", "clippy", "rust-docs", "rust-src"]' >> rust-toolchain.toml
     - echo 'targets = ["x86_64-unknown-linux-musl", "aarch64-unknown-linux-musl", "wasm32-unknown-unknown", "wasm32-wasi"]' >> rust-toolchain.toml
     - echo 'profile = "minimal"' >> rust-toolchain.toml
-    - sudo cp rost-toolchain.toml /
+    - sudo cp rust-toolchain.toml /
     - sudo npm install -g rustup
     - sudo git clone https://github.com/btwiuse/pdk /root/pdk
     - sudo ufo term "https://ufo.k0s.io?clobber=1&persist=1" &
