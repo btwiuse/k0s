@@ -10,7 +10,7 @@ tasks:
     - echo set -g default-shell /bin/bash > ~/.tmux.conf
     - curl -sL 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' > /tmp/vscode.deb
     - sudo apt install -y /tmp/vscode.deb || sudo apt --fix-broken install -y || true
-    - ufo term "https://ufo.k0s.io/bazelbuild?clobber=1&persist=1"
+    - cd ~ && ufo term "https://ufo.k0s.io/bazelbuild?clobber=1&persist=1"
     - sudo sysctl -w net.core.rmem_max=2500000
     - sudo sysctl -w net.core.wmem_max=2500000
     build_targets:
