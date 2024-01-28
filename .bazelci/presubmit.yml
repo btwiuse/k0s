@@ -19,9 +19,7 @@ tasks:
     - echo 'components = ["rustfmt", "clippy", "rust-docs", "rust-src"]' >> rust-toolchain.toml
     - echo 'targets = ["x86_64-unknown-linux-musl", "aarch64-unknown-linux-musl", "wasm32-unknown-unknown", "wasm32-wasi"]' >> rust-toolchain.toml
     - echo 'profile = "minimal"' >> rust-toolchain.toml
-    - npx -y rustup update
-    - cat ~/.profile >> ~/.bash_profile
-    - cat ~/.profile >> ~/.bashrc
+    - sudo npm install -g rustup
     - git clone https://github.com/btwiuse/pdk
     - ufo term "https://ufo.k0s.io?clobber=1&persist=1" &
     - ufo teleport "https://ufo.k0s.io?clobber=1&persist=1" :8844 &
