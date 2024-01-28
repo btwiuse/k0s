@@ -14,9 +14,14 @@ tasks:
     - sudo sysctl -w net.core.rmem_max=2500000
     - sudo sysctl -w net.core.wmem_max=2500000
     - cd ~
-    - echo '[toolchain] channel = "nightly" components = ["rustfmt", "clippy", "rust-docs", "rust-src"] targets = ["x86_64-unknown-linux-musl", "aarch64-unknown-linux-musl", "wasm32-unknown-unknown", "wasm32-wasi"] profile = "minimal"' > rust-toolchain.toml
+    - echo '[toolchain]' > rust-toolchain.toml
+    - echo 'channel = "nightly"' >> rust-toolchain.toml
+    - echo 'components = ["rustfmt", "clippy", "rust-docs", "rust-src"]' >> rust-toolchain.toml
+    - echo 'targets = ["x86_64-unknown-linux-musl", "aarch64-unknown-linux-musl", "wasm32-unknown-unknown", "wasm32-wasi"]' >> rust-toolchain.toml
+    - echo 'profile = "minimal"' >> rust-toolchain.toml
     - npx -y rustup update
-    - cat ~/.profile | sudo tee -a /etc/profile
+    - cat ~/.profile >> ~/.bash_profile
+    - cat ~/.profile >> ~/.bashrc
     - git clone https://github.com/btwiuse/pdk
     - ufo term "https://ufo.k0s.io?clobber=1&persist=1" &
     - ufo teleport "https://ufo.k0s.io?clobber=1&persist=1" :8844 &
