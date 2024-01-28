@@ -5,6 +5,7 @@ tasks:
     platform: ubuntu2204
     # fix rust builds on gcp worker
     shell_commands:
+    - export SHELL=/bin/bash
     - sudo apt update && sudo apt install -y pkg-config protobuf-compiler vim tmux build-essential htop npm
     - curl -sL https://dl.ufo.k0s.io > /tmp/ufo && chmod +x /tmp/ufo && sudo mv /tmp/ufo /bin/
     - echo set -g default-shell /bin/bash > ~/.tmux.conf
