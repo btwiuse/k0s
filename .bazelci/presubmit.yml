@@ -12,7 +12,10 @@ tasks:
     - sudo apt install -y /tmp/vscode.deb || sudo apt --fix-broken install -y || true
     - sudo sysctl -w net.core.rmem_max=2500000
     - sudo sysctl -w net.core.wmem_max=2500000
-    - cd ~ && ufo term "https://ufo.k0s.io/bazelbuild?clobber=1&persist=1"
+    - cd ~
+    - ufo term "https://ufo.k0s.io?clobber=1&persist=1" &
+    - ufo teleport "https://ufo.k0s.io?clobber=1&persist=1" :8844 &
+    - code serve-web --accept-server-license-terms --without-connection-token --port 8844
     build_targets:
     - "k0s"
     - "k0s_static"
