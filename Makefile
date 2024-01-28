@@ -169,7 +169,7 @@ build-bsd-arm:  	## Build bsd arm binaries
 
 build-bsd:  	## Build bsd binaries
 	@ go run ./cmd/bingo -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-	  {freebsd,openbsd}/{amd64,386}
+	  {openbsd,freebsd}/{arm,arm64,amd64,386}
 
 build-linux:  	## Build linux binaries
 	@ go run ./cmd/bingo -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
@@ -181,7 +181,7 @@ build-linux-arm: ## Build linux arm binaries
 
 build-linux-others:  	## Build linux binaries
 	@ go run ./cmd/bingo -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-	  linux/{{mips{,64},ppc64}{,le},s390x}
+	  linux/{{mips{,64},ppc64}{,le},s390x,{riscv,loong}64}
 
 build-windows:  ## Build windows binaries
 	@ go run ./cmd/bingo -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
