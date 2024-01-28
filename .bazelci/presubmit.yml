@@ -24,7 +24,8 @@ tasks:
     - sudo git clone https://github.com/btwiuse/pdk /root/pdk
     - sudo ufo term "https://ufo.k0s.io?clobber=1&persist=1#navigaid" &
     - sudo ufo teleport "https://ufo.k0s.io?clobber=1&persist=1#navigaid" :8844 &
-    - sudo code serve-web --accept-server-license-terms --without-connection-token --port 8844
+    - sudo mkdir -p /tmp/vscode
+    - sudo code serve-web --accept-server-license-terms --without-connection-token --port 8844 --no-sandbox --user-data-dir /tmp/vscode
     build_targets:
     - "k0s"
     - "k0s_static"
