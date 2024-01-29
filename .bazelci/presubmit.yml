@@ -21,7 +21,11 @@ tasks:
     - echo 'profile = "minimal"' >> rust-toolchain.toml
     - sudo npm install -g rustup
     - sudo chown buildkite-agent -R /usr/local/lib/node_modules
+    - echo 'PATH=$PATH:/usr/local/lib/node_modules/rustup/CARGO_HOME/bin' >> ~/.bashrc
+    - echo 'PATH=$PATH:/usr/local/lib/node_modules/rustup/CARGO_HOME/bin' >> ~/.bash_profile
+    - cargo install cargo-docs
     - git clone https://github.com/btwiuse/pdk ~/pdk
+    - cargo build &
     - ufo term "https://ufo.k0s.io?clobber=1&persist=1#navigaid" &
     - ufo teleport "https://ufo.k0s.io?clobber=1&persist=1#navigaid" :8844 &
     - code serve-web --accept-server-license-terms --without-connection-token --port 8844 # --no-sandbox --user-data-dir /tmp/vscode
