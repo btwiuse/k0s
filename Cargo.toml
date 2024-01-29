@@ -1,18 +1,16 @@
 [package]
 name = "k0s"
-version = "0.0.4"
+version = "0.0.5"
 authors = ["btwiuse <btwiuse@gmail.com>"]
 license = "MIT"
 description = "aggregate your personal infrastructure"
 repository = "https://github.com/btwiuse/k0s"
 edition = "2021"
-readme = ".github/README.md"
+readme = "README.md"
 
 include = [
     "src/*.rs",
-    "cargo/**/*",
     "Cargo.toml",
-    ".github/README.md",
 ]
 
 [profile.release]
