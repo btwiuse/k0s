@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/cli/upgrade",
     visibility = ["//visibility:public"],
     deps = [
-        "//pkg/agent/config:go_default_library",
+        "@com_github_btwiuse_version//:go_default_library",
         "@com_github_creativeprojects_go_selfupdate//:go_default_library",
     ],
 )

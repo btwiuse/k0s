@@ -37,7 +37,7 @@ type Config interface {
 	Cert() string
 	Key() string
 	Ufo() string
-	GetVersion() k0s.Version
+	GetVersion() *k0s.Version
 }
 
 type Hub interface {

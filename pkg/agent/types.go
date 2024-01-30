@@ -38,7 +38,7 @@ type Config interface {
 
 	String() string
 
-	GetVersion() k0s.Version
+	GetVersion() *k0s.Version
 }
 
 type RPC interface {

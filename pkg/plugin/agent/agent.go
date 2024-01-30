@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"k0s.io"
+	"github.com/btwiuse/version"
 	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/agent/server"
 	"k0s.io/pkg/uuid"
-	"k0s.io/pkg/version"
 )
 
 var once = &sync.Once{}
@@ -34,7 +34,7 @@ func run() {
 			"os.Args = " + strings.Join(os.Args, " "),
 			// "os.Env = " + strings.Join(os.Environ(), ":"),
 		},
-		Version: version.GetVersion(),
+		Version: version.Info,
 		Name:    "embedded",
 	}
 	ag := server.NewAgent(c)

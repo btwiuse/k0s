@@ -19,12 +19,10 @@ go_binary(
     linkmode = "pie",  # https://github.com/bazelbuild/rules_go/issues/2371
     visibility = ["//visibility:public"],
     x_defs = {
-        "k0s.io/pkg/version.GitCommitString": "{STABLE_GitCommitString}",
-        "k0s.io/pkg/version.GitStateString": "{STABLE_GitStateString}",
-        "k0s.io/pkg/version.GitBranchString": "{STABLE_GitBranchString}",
-        "k0s.io/pkg/version.GitSummaryString": "{STABLE_GitSummaryString}",
-        "k0s.io/pkg/version.BuildDateString": "{STABLE_BuildDateString}",
-        "k0s.io/pkg/version.VersionString": "{STABLE_VersionString}",
+        "github.com/btwiuse/version.GitCommitString": "{STABLE_GitCommitString}",
+        "github.com/btwiuse/version.GitTreeStateString": "{STABLE_GitTreeStateString}",
+        "github.com/btwiuse/version.GitVersionString": "{STABLE_GitVersionString}",
+        "github.com/btwiuse/version.BuildDateString": "{STABLE_BuildDateString}",
     },
 )
 
@@ -34,12 +32,10 @@ go_binary(
     static = "on",
     visibility = ["//visibility:public"],
     x_defs = {
-        "k0s.io/pkg/version.GitCommitString": "{STABLE_GitCommitString}",
-        "k0s.io/pkg/version.GitStateString": "{STABLE_GitStateString}",
-        "k0s.io/pkg/version.GitBranchString": "{STABLE_GitBranchString}",
-        "k0s.io/pkg/version.GitSummaryString": "{STABLE_GitSummaryString}",
-        "k0s.io/pkg/version.BuildDateString": "{STABLE_BuildDateString}",
-        "k0s.io/pkg/version.VersionString": "{STABLE_VersionString}",
+        "github.com/btwiuse/version.GitCommitString": "{STABLE_GitCommitString}",
+        "github.com/btwiuse/version.GitTreeStateString": "{STABLE_GitTreeStateString}",
+        "github.com/btwiuse/version.GitVersionString": "{STABLE_GitVersionString}",
+        "github.com/btwiuse/version.BuildDateString": "{STABLE_BuildDateString}",
     },
 )
 
@@ -176,4 +172,5 @@ go_library(
     ],
     importpath = "k0s.io",
     visibility = ["//visibility:public"],
+    deps = ["@com_github_btwiuse_version//:go_default_library"],
 )

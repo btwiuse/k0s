@@ -43,21 +43,17 @@ minor(){
 ldflags(){
   ldflags="${GO_LDFLAGS}
 "
-  ldflags+="-X 'k0s.io/pkg/version.GitCommitString=$(commit)'
+  ldflags+="-X 'github.com/btwiuse/version.MajorString=$(major)'
 "
-  ldflags+="-X 'k0s.io/pkg/version.GitStateString=$(state)'
+  ldflags+="-X 'github.com/btwiuse/version.MinorString=$(minor)'
 "
-  ldflags+="-X 'k0s.io/pkg/version.GitBranchString=$(branch)'
+  ldflags+="-X 'github.com/btwiuse/version.GitCommitString=$(commit)'
 "
-  ldflags+="-X 'k0s.io/pkg/version.GitSummaryString=$(summary)'
+  ldflags+="-X 'github.com/btwiuse/version.GitTreeStateString=$(state)'
 "
-  ldflags+="-X 'k0s.io/pkg/version.BuildDateString=$(builddate)'
+  ldflags+="-X 'github.com/btwiuse/version.GitVersionString=$(version)'
 "
-  ldflags+="-X 'k0s.io/pkg/version.VersionString=$(version)'
-"
-  ldflags+="-X 'k0s.io/pkg/version.MajorString=$(major)'
-"
-  ldflags+="-X 'k0s.io/pkg/version.MinorString=$(minor)'
+  ldflags+="-X 'github.com/btwiuse/version.BuildDateString=$(builddate)'
 "
   echo -n "$ldflags"
 }

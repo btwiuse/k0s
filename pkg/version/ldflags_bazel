@@ -34,12 +34,10 @@ version(){
 
 kvs(){
   {
-    echo GitCommitString  $(commit)
-    echo GitStateString   $(state)
-    echo GitBranchString  $(branch)
-    echo GitSummaryString $(summary)
-    echo BuildDateString  $(builddate)
-    echo VersionString    $(version)
+    echo GitCommitString    $(commit)
+    echo GitTreeStateString $(state)
+    echo GitVersionString   $(version)
+    echo BuildDateString    $(builddate)
   } | sed s,^,STABLE_,g
 }
 

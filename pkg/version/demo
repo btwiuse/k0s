@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-basedir=$(dirname $(dirname $(dirname $(realpath $0))))
-cd $basedir
-pwd
-go run -ldflags="$(./pkg/version/ldflags)" ./pkg/version/demo.go

@@ -7,10 +7,10 @@ import (
 	"os"
 
 	"github.com/btwiuse/pretty"
+	"github.com/btwiuse/version"
 	"k0s.io"
 	"k0s.io/pkg/hub"
 	"k0s.io/pkg/utils"
-	"k0s.io/pkg/version"
 )
 
 type config struct {
@@ -21,7 +21,7 @@ type config struct {
 	cert    string
 	key     string
 	ufo     string
-	version k0s.Version
+	version *k0s.Version
 }
 
 func (c *config) Port() string {
@@ -55,7 +55,7 @@ func (c *config) Key() string {
 	return c.key
 }
 
-func (c *config) GetVersion() k0s.Version {
+func (c *config) GetVersion() *k0s.Version {
 	return c.version
 }
 
@@ -102,7 +102,7 @@ func Parse(args []string) hub.Config {
 		key:     key,
 		ufo:     ufo,
 		verbose: verbose,
-		version: version.GetVersion(),
+		version: version.Info,
 	}
 
 	if showVersion {
@@ -114,7 +114,7 @@ func Parse(args []string) hub.Config {
 }
 
 type hubVersion struct {
-	Hub k0s.Version
+	Hub *k0s.Version
 }
 
 func printHubVersion(c hub.Config) {

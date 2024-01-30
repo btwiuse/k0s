@@ -5,6 +5,7 @@ go 1.21.6
 require (
 	github.com/ActiveState/termtest/conpty v0.5.0
 	github.com/btwiuse/pretty v0.2.1
+	github.com/btwiuse/version v0.0.0-20240130171800-042c8be1e199
 	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1
 	golang.org/x/sync v0.6.0
@@ -43,4 +44,5 @@ require (
 	golang.org/x/sys v0.16.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/wrap v0.1.11 // indirect
+	k8s.io/apimachinery v0.29.1 // indirect
 )

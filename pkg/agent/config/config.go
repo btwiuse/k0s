@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/btwiuse/pretty"
+	"github.com/btwiuse/version"
 	"github.com/denisbrodbeck/machineid"
 	"gopkg.in/yaml.v3"
 
@@ -22,7 +23,6 @@ import (
 	"k0s.io/pkg/agent/info"
 	"k0s.io/pkg/rng"
 	"k0s.io/pkg/uuid"
-	"k0s.io/pkg/version"
 )
 
 type arrayFlags []string
@@ -57,10 +57,10 @@ type Config struct {
 
 	uri *url.URL `json:"-"` // where server scheme, host, port, addr are defined
 
-	Version k0s.Version `json:"version" yaml:"-"`
+	Version *version.Version `json:"version" yaml:"-"`
 }
 
-func (c *Config) GetVersion() k0s.Version {
+func (c *Config) GetVersion() *version.Version {
 	return c.Version
 }
 
@@ -263,7 +263,7 @@ func loadConfigFile(file string) *Config {
 	c := &Config{
 		Hub:     k0s.DEFAULT_HUB_ADDRESS,
 		Tags:    []string{},
-		Version: version.GetVersion(),
+		Version: version.Info,
 	}
 	if file == "" {
 		return c
@@ -388,11 +388,11 @@ func Parse(args []string) *Config {
 }
 
 type agentVersion struct {
-	Agent k0s.Version
+	Agent *version.Version
 }
 
 type hubVersion struct {
-	Hub k0s.Version
+	Hub *version.Version
 }
 
 func printAgentVersion(c agent.Config) {

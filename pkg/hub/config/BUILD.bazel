@@ -9,7 +9,7 @@ go_library(
         "//:go_default_library",
         "//pkg/hub:go_default_library",
         "//pkg/utils:go_default_library",
-        "//pkg/version:go_default_library",
         "@com_github_btwiuse_pretty//:go_default_library",
+        "@com_github_btwiuse_version//:go_default_library",
     ],
 )

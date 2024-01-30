@@ -4,6 +4,8 @@ import (
 	"net"
 	"net/url"
 	"time"
+
+	"github.com/btwiuse/version"
 )
 
 type Timer interface {
@@ -34,20 +36,8 @@ type Manager interface {
 	Size() int
 }
 
-type Version interface {
-	GetGitCommit() string
-	GetGitState() string
-	GetGitBranch() string
-	GetGitSummary() string
-	GetBuildDate() string
-	GetVersion() string
-	GetGoVersion() string
-	GetPlatform() string
-	GetMajor() string
-	GetMinor() string
-	GetCompiler() string
-}
-
 type Dialer interface {
 	Dial(*url.URL) (net.Conn, error)
 }
+
+type Version = version.Version

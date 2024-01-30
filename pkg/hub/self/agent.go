@@ -11,7 +11,7 @@ import (
 	"k0s.io/pkg/agent/info"
 	"k0s.io/pkg/agent/server"
 	"k0s.io/pkg/uuid"
-	"k0s.io/pkg/version"
+	"github.com/btwiuse/version"
 )
 
 func Agent(hub string) {
@@ -26,7 +26,7 @@ func Agent(hub string) {
 			"os.Args = " + strings.Join(os.Args, " "),
 			// "os.Env = " + strings.Join(os.Environ(), ":"),
 		},
-		Version: version.GetVersion(),
+		Version: version.Info,
 		Name:    "self",
 		Info:    info.CollectInfo(),
 	}

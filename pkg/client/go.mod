@@ -6,6 +6,7 @@ require (
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abiosoft/ishell v2.0.0+incompatible
 	github.com/btwiuse/pretty v0.2.1
+	github.com/btwiuse/version v0.0.0-20240130171800-042c8be1e199
 	golang.org/x/crypto v0.18.0
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.11
@@ -55,5 +56,6 @@ require (
 	k0s.io/pkg/distro v0.1.11 // indirect
 	k0s.io/pkg/rng v0.1.11 // indirect
 	k0s.io/pkg/wrap v0.1.11 // indirect
+	k8s.io/apimachinery v0.29.1 // indirect
 	nhooyr.io/websocket v1.8.10 // indirect
 )

@@ -3,6 +3,7 @@ module k0s.io/pkg/plugin
 go 1.21.6
 
 require (
+	github.com/btwiuse/version v0.0.0-20240130171800-042c8be1e199
 	k0s.io v0.1.11
 	k0s.io/pkg/agent v0.1.11
 	k0s.io/pkg/uuid v0.1.11
@@ -42,5 +43,6 @@ require (
 	k0s.io/pkg/middleware v0.1.11 // indirect
 	k0s.io/pkg/rng v0.1.11 // indirect
 	k0s.io/pkg/wrap v0.1.11 // indirect
+	k8s.io/apimachinery v0.29.1 // indirect
 	nhooyr.io/websocket v1.8.10 // indirect
 )

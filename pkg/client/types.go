@@ -30,7 +30,7 @@ type Config interface {
 	GetCredentials() map[string]KeyStore
 	GetConfigLocation() string
 
-	GetVersion() k0s.Version
+	GetVersion() *k0s.Version
 	GetInsecure() bool
 	GetRecord() bool
 }

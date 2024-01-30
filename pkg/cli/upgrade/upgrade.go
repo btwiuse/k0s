@@ -9,13 +9,11 @@ import (
 	"runtime"
 
 	"github.com/creativeprojects/go-selfupdate"
-	"k0s.io/pkg/agent/config"
+	"github.com/btwiuse/version"
 )
 
 func Run(args []string) error {
-	c := config.Parse(args)
-
-	currentVersion := c.GetVersion().GetVersion()
+	currentVersion := version.Info.GitVersion
 
 	log.Println(fmt.Sprintf("current version: %s", currentVersion))
 

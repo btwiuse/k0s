@@ -17,7 +17,7 @@ import (
 
 	"k0s.io"
 	"k0s.io/pkg/client"
-	"k0s.io/pkg/version"
+	"github.com/btwiuse/version"
 )
 
 type config struct {
@@ -34,7 +34,7 @@ type config struct {
 
 	uri *url.URL `json:"-"` // where server scheme, host, port, addr are defined
 
-	Version k0s.Version `json:"version" yaml:"-"`
+	Version *version.Version `json:"version" yaml:"-"`
 }
 
 func (c *config) GetConfigLocation() string {
@@ -65,7 +65,7 @@ func (c *config) GetDoh() string {
 	return c.Doh
 }
 
-func (c *config) GetVersion() k0s.Version {
+func (c *config) GetVersion() *version.Version {
 	return c.Version
 }
 
@@ -226,7 +226,7 @@ func probeConfigFile() string {
 func loadConfigFile(file string) *config {
 	c := &config{
 		Hub:            k0s.DEFAULT_HUB_ADDRESS,
-		Version:        version.GetVersion(),
+		Version:        version.Info,
 		ConfigLocation: file,
 	}
 	if file == "" {
@@ -320,11 +320,11 @@ func Parse(args []string) client.Config {
 }
 
 type clientVersion struct {
-	Client k0s.Version
+	Client *version.Version
 }
 
 type hubVersion struct {
-	Hub k0s.Version
+	Hub *version.Version
 }
 
 func printClientVersion(c client.Config) {

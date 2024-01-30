@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"k0s.io/pkg/version"
+	"github.com/btwiuse/version"
 )
 
 func Run(args []string) error {

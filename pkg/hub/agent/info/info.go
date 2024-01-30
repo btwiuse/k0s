@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"k0s.io/pkg/hub"
-	"k0s.io/pkg/version"
+	"github.com/btwiuse/version"
 )
 
 var _ hub.AgentInfo = (*Info)(nil)
@@ -28,7 +28,7 @@ type privateInfo struct {
 	Htpasswd map[string]string `json:"htpasswd,omitempty"`
 
 	Meta            `json:"meta"`
-	version.Version `json:"version"`
+	*version.Version `json:"version"`
 }
 
 // Metadata, for flatten json output
@@ -81,8 +81,7 @@ func (info *Info) populatePublicInfo() {
 	info.Distro = pi.Distro
 	info.Username = pi.Username
 	info.Hostname = pi.Hostname
-	info.Version = pi.Version.Version
-	info.GitSummary = pi.Version.GitSummary
+	info.GitVersion = pi.Version.GitVersion
 
 	if len(pi.Htpasswd) != 0 {
 		*info.Auth = true

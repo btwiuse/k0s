@@ -4,6 +4,7 @@ go 1.21.6
 
 require (
 	github.com/btwiuse/multicall v0.0.4
+	github.com/btwiuse/version v0.0.0-20240130171800-042c8be1e199
 	github.com/creativeprojects/go-selfupdate v1.1.3
 	github.com/webteleport/utils v0.2.5
 	github.com/webteleport/wtf v0.0.8
