@@ -39,7 +39,10 @@ replace:         ## inject replace directives to all workspace modules based on 
 require:         ## turn replace directives for workspace modules into require
 	@ ./tools/require_all
 
-gazelle:             ## auto generate BUILD.bazel files from go.mod
+work-sync:
+	go work sync
+
+gazelle: work-sync             ## auto generate BUILD.bazel files from go.mod
 	@ go mod tidy
 	@#go mod vendor
 	@ find pkg -name 'go.mod' | sed s,go.mod,,g | xargs -I% bash -vc 'pushd % && go mod tidy'

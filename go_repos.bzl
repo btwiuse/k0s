@@ -890,6 +890,14 @@ def go_repositories():
         version = "v1.0.2",
     )
     go_repository(
+        name = "com_github_btwiuse_bingo",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/btwiuse/bingo",
+        sum = "h1:HgTIAC+ZAQ61MJLtQuf+wfYdUIpgF51qo0dCNEeO08k=",
+        version = "v0.0.0-20240130160828-410a95142901",
+    )
+    go_repository(
         name = "com_github_btwiuse_cadvisor",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
