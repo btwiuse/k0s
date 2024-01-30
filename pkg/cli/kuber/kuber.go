@@ -14,8 +14,8 @@ import (
 
 var Info version.Info = version.Info{
 	Major:        "1",
-	Minor:        "23",
-	GitVersion:   "v1.23.0",
+	Minor:        "29",
+	GitVersion:   "v1.29.1",
 	GitCommit:    "10bca343e85180f668522fe252552da20220cb7a",
 	GitTreeState: "clean",
 	BuildDate:    "2021-09-23T22:46:18Z",
