@@ -8,5 +8,6 @@ go_library(
     deps = [
         "//:go_default_library",
         "//pkg/api:go_default_library",
+        "@com_github_btwiuse_version//:go_default_library",
     ],
 )

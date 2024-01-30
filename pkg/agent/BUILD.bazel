@@ -6,7 +6,7 @@ go_library(
     importpath = "k0s.io/pkg/agent",
     visibility = ["//visibility:public"],
     deps = [
-        "//:go_default_library",
         "//pkg/api:go_default_library",
+        "@com_github_btwiuse_version//:go_default_library",
     ],
 )

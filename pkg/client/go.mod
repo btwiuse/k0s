@@ -6,7 +6,7 @@ require (
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abiosoft/ishell v2.0.0+incompatible
 	github.com/btwiuse/pretty v0.2.1
-	github.com/btwiuse/version v0.0.0-20240130171800-042c8be1e199
+	github.com/btwiuse/version v0.0.0
 	golang.org/x/crypto v0.18.0
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.11

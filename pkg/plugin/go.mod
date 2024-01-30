@@ -3,7 +3,7 @@ module k0s.io/pkg/plugin
 go 1.21.6
 
 require (
-	github.com/btwiuse/version v0.0.0-20240130171800-042c8be1e199
+	github.com/btwiuse/version v0.0.0
 	k0s.io v0.1.11
 	k0s.io/pkg/agent v0.1.11
 	k0s.io/pkg/uuid v0.1.11

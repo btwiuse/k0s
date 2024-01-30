@@ -958,8 +958,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/btwiuse/version",
-        sum = "h1:L0168/a3iSVD1EXf6cBXLmp3EtVvNUpc8yXM2RJ6Blc=",
-        version = "v0.0.0-20240130171800-042c8be1e199",
+        sum = "h1:kMlx32Mxq9Yc4MnXIZHcKmL0ozkWmpPeKHOepNzq3jA=",
+        version = "v0.0.0",
     )
     go_repository(
         name = "com_github_btwiuse_wetty",
