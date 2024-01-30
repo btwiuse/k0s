@@ -8,5 +8,5 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	golang.org/x/sys v0.16.0 // indirect
-	k0s.io/pkg/console v0.1.10 // indirect
+	k0s.io/pkg/console v0.1.11 // indirect
 )

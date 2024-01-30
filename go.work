@@ -28,28 +28,28 @@ use (
 )
 
 replace (
-	k0s.io v0.1.10 => ./
-	k0s.io/cmd v0.1.10 => ./cmd/
-	k0s.io/pkg/agent v0.1.10 => ./pkg/agent/
-	k0s.io/pkg/apiserver v0.1.10 => ./pkg/apiserver/
-	k0s.io/pkg/asciitransport v0.1.10 => ./pkg/asciitransport/
-	k0s.io/pkg/cli v0.1.10 => ./pkg/cli/
-	k0s.io/pkg/client v0.1.10 => ./pkg/client/
-	k0s.io/pkg/console v0.1.10 => ./pkg/console/
-	k0s.io/pkg/dial v0.1.10 => ./pkg/dial/
-	k0s.io/pkg/distro v0.1.10 => ./pkg/distro/
-	k0s.io/pkg/exporter v0.1.10 => ./pkg/exporter/
-	k0s.io/pkg/fzf v0.1.10 => ./pkg/fzf/
-	k0s.io/pkg/hub v0.1.10 => ./pkg/hub/
-	k0s.io/pkg/manager v0.1.10 => ./pkg/manager/
-	k0s.io/pkg/middleware v0.1.10 => ./pkg/middleware/
-	k0s.io/pkg/plugin v0.1.10 => ./pkg/plugin/
-	k0s.io/pkg/rng v0.1.10 => ./pkg/rng/
-	k0s.io/pkg/simple v0.1.10 => ./pkg/simple/
-	k0s.io/pkg/tunnel v0.1.10 => ./pkg/tunnel/
-	k0s.io/pkg/ui v0.1.10 => ./pkg/ui/
-	k0s.io/pkg/utils v0.1.10 => ./pkg/utils/
-	k0s.io/pkg/uuid v0.1.10 => ./pkg/uuid/
-	k0s.io/pkg/wrap v0.1.10 => ./pkg/wrap/
-	k0s.io/third_party v0.1.10 => ./third_party/
+	k0s.io v0.1.11 => ./
+	k0s.io/cmd v0.1.11 => ./cmd/
+	k0s.io/pkg/agent v0.1.11 => ./pkg/agent/
+	k0s.io/pkg/apiserver v0.1.11 => ./pkg/apiserver/
+	k0s.io/pkg/asciitransport v0.1.11 => ./pkg/asciitransport/
+	k0s.io/pkg/cli v0.1.11 => ./pkg/cli/
+	k0s.io/pkg/client v0.1.11 => ./pkg/client/
+	k0s.io/pkg/console v0.1.11 => ./pkg/console/
+	k0s.io/pkg/dial v0.1.11 => ./pkg/dial/
+	k0s.io/pkg/distro v0.1.11 => ./pkg/distro/
+	k0s.io/pkg/exporter v0.1.11 => ./pkg/exporter/
+	k0s.io/pkg/fzf v0.1.11 => ./pkg/fzf/
+	k0s.io/pkg/hub v0.1.11 => ./pkg/hub/
+	k0s.io/pkg/manager v0.1.11 => ./pkg/manager/
+	k0s.io/pkg/middleware v0.1.11 => ./pkg/middleware/
+	k0s.io/pkg/plugin v0.1.11 => ./pkg/plugin/
+	k0s.io/pkg/rng v0.1.11 => ./pkg/rng/
+	k0s.io/pkg/simple v0.1.11 => ./pkg/simple/
+	k0s.io/pkg/tunnel v0.1.11 => ./pkg/tunnel/
+	k0s.io/pkg/ui v0.1.11 => ./pkg/ui/
+	k0s.io/pkg/utils v0.1.11 => ./pkg/utils/
+	k0s.io/pkg/uuid v0.1.11 => ./pkg/uuid/
+	k0s.io/pkg/wrap v0.1.11 => ./pkg/wrap/
+	k0s.io/third_party v0.1.11 => ./third_party/
 )
