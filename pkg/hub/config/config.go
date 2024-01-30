@@ -21,7 +21,7 @@ type config struct {
 	cert    string
 	key     string
 	ufo     string
-	version *k0s.Version
+	version *version.Version
 }
 
 func (c *config) Port() string {
@@ -55,7 +55,7 @@ func (c *config) Key() string {
 	return c.key
 }
 
-func (c *config) GetVersion() *k0s.Version {
+func (c *config) GetVersion() *version.Version {
 	return c.version
 }
 
@@ -114,7 +114,7 @@ func Parse(args []string) hub.Config {
 }
 
 type hubVersion struct {
-	Hub *k0s.Version
+	Hub *version.Version
 }
 
 func printHubVersion(c hub.Config) {

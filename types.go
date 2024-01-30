@@ -4,8 +4,6 @@ import (
 	"net"
 	"net/url"
 	"time"
-
-	"github.com/btwiuse/version"
 )
 
 type Timer interface {
@@ -39,5 +37,3 @@ type Manager interface {
 type Dialer interface {
 	Dial(*url.URL) (net.Conn, error)
 }
-
-type Version = version.Version

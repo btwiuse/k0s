@@ -4,8 +4,8 @@ import (
 	"io"
 	"net"
 
-	"k0s.io"
 	"k0s.io/pkg/api"
+	"github.com/btwiuse/version"
 )
 
 type Info interface {
@@ -38,7 +38,7 @@ type Config interface {
 
 	String() string
 
-	GetVersion() *k0s.Version
+	GetVersion() *version.Version
 }
 
 type RPC interface {

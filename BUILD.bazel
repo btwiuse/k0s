@@ -172,5 +172,4 @@ go_library(
     ],
     importpath = "k0s.io",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_btwiuse_version//:go_default_library"],
 )

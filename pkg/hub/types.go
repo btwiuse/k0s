@@ -8,6 +8,7 @@ import (
 
 	"k0s.io"
 	"k0s.io/pkg/api"
+	"github.com/btwiuse/version"
 )
 
 type AgentInfo interface {
@@ -37,7 +38,7 @@ type Config interface {
 	Cert() string
 	Key() string
 	Ufo() string
-	GetVersion() *k0s.Version
+	GetVersion() *version.Version
 }
 
 type Hub interface {
