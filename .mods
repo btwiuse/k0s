@@ -9,7 +9,6 @@ k0s.io/pkg/console
 k0s.io/pkg/dial
 k0s.io/pkg/distro
 k0s.io/pkg/exporter
-k0s.io/pkg/fonts
 k0s.io/pkg/fzf
 k0s.io/pkg/hub
 k0s.io/pkg/manager

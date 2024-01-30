@@ -12,7 +12,6 @@ use (
 	./pkg/dial
 	./pkg/distro
 	./pkg/exporter
-	./pkg/fonts
 	./pkg/fzf
 	./pkg/hub
 	./pkg/manager
@@ -40,7 +39,6 @@ replace (
 	k0s.io/pkg/dial v0.1.10 => ./pkg/dial/
 	k0s.io/pkg/distro v0.1.10 => ./pkg/distro/
 	k0s.io/pkg/exporter v0.1.10 => ./pkg/exporter/
-	k0s.io/pkg/fonts v0.1.10 => ./pkg/fonts/
 	k0s.io/pkg/fzf v0.1.10 => ./pkg/fzf/
 	k0s.io/pkg/hub v0.1.10 => ./pkg/hub/
 	k0s.io/pkg/manager v0.1.10 => ./pkg/manager/
