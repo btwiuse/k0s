@@ -894,8 +894,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/btwiuse/bingo",
-        sum = "h1:HgTIAC+ZAQ61MJLtQuf+wfYdUIpgF51qo0dCNEeO08k=",
-        version = "v0.0.0-20240130160828-410a95142901",
+        sum = "h1:T5M9dZfcIGmNOP/ySuoVjohrnr//ra/Xz7G2jOEEc08=",
+        version = "v0.0.3",
     )
     go_repository(
         name = "com_github_btwiuse_cadvisor",
@@ -1486,8 +1486,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/containerd/console",
-        sum = "h1:lIr7SlA5PxZyMV30bDW0MGbiOPXwc63yRuCP0ARubLw=",
-        version = "v1.0.3",
+        sum = "h1:F2g4+oChYvBTsASRTz8NP6iIAi97J3TtSAsLbIFn4ro=",
+        version = "v1.0.4",
     )
     go_repository(
         name = "com_github_containerd_containerd",
@@ -5890,6 +5890,86 @@ def go_repositories():
         version = "v1.0.2",
     )
     go_repository(
+        name = "com_github_mjwhitta_cli",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mjwhitta/cli",
+        sum = "h1:yTgigpp3VklFhr/ASBTzdk+Yiq1Qsq9h2h9BGC49Oa8=",
+        version = "v1.12.2",
+    )
+    go_repository(
+        name = "com_github_mjwhitta_errors",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mjwhitta/errors",
+        sum = "h1:5QmN4kKfFwYiSsdASDmoi3ie7HesdU7pNDqlhXE9nuU=",
+        version = "v1.0.2",
+    )
+    go_repository(
+        name = "com_github_mjwhitta_hilighter",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mjwhitta/hilighter",
+        sum = "h1:p8BdAFQo1x4MpxLRb3pILN3Pjkq4ghBJcip8mSCWEUY=",
+        version = "v1.11.7",
+    )
+    go_repository(
+        name = "com_github_mjwhitta_jq",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mjwhitta/jq",
+        sum = "h1:GHWCmesiCm69l2BZAtsoTK+YDAGrilL/yizhqpAIikI=",
+        version = "v1.5.5",
+    )
+    go_repository(
+        name = "com_github_mjwhitta_jsoncfg",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mjwhitta/jsoncfg",
+        sum = "h1:VIMAdED0J1IzETGyDBpXBfQwlmjQJB1UDwwnOM7DOwI=",
+        version = "v1.6.12",
+    )
+    go_repository(
+        name = "com_github_mjwhitta_log",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mjwhitta/log",
+        sum = "h1:ukO2jBJO4sDSp2xCVNZyNgvDx7ceP1vZBJ4OfayxGdQ=",
+        version = "v1.6.7",
+    )
+    go_repository(
+        name = "com_github_mjwhitta_pathname",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mjwhitta/pathname",
+        sum = "h1:wSUZGv+mCrmndNkX2uak8XMZhkXXbgjYG/dMclGKrUE=",
+        version = "v1.2.5",
+    )
+    go_repository(
+        name = "com_github_mjwhitta_safety",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mjwhitta/safety",
+        sum = "h1:dpg6CIQrlrt8yf/cXEdhPI+vRV6g/cRw8uO/TmUK1Mg=",
+        version = "v1.11.3",
+    )
+    go_repository(
+        name = "com_github_mjwhitta_sysinfo",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mjwhitta/sysinfo",
+        sum = "h1:lfiRKYCOKYA7wmX4o9NSKjeaPS1y5Uc41XC5M45UEqU=",
+        version = "v1.5.3",
+    )
+    go_repository(
+        name = "com_github_mjwhitta_where",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/mjwhitta/where",
+        sum = "h1:vxHJh0IavPgQCd2a1060bOfUMklC2aMyhz0UrO074bQ=",
+        version = "v1.2.10",
+    )
+    go_repository(
         name = "com_github_mmcloughlin_avo",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -8710,7 +8790,7 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "gitlab.com/mjwhitta/errors",
-        sum = "h1:rivvgv4HCdIJ6Y6kFfPcirzKnBRewkjgsOktR0Uaj8g=",
+        sum = "h1:v/EPRUZ4fRHYxQIPINdsR/zIXuQd86mKhYM9pgvzIcY=",
         version = "v1.0.0",
     )
     go_repository(

@@ -46,6 +46,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chai2010/gettext-go v1.0.2 // indirect
 	github.com/chzyer/logex v1.2.1 // indirect
+	github.com/containerd/console v1.0.4 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/creack/pty v1.1.21 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -205,7 +206,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/plist v1.0.0 // indirect
 	k0s.io/pkg/asciitransport v0.1.13 // indirect
-	k0s.io/pkg/console v0.1.12 // indirect
 	k0s.io/pkg/dial v0.1.13 // indirect
 	k0s.io/pkg/distro v0.1.13 // indirect
 	k0s.io/pkg/exporter v0.1.13 // indirect

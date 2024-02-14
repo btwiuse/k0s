@@ -3,6 +3,7 @@ module k0s.io/third_party
 go 1.21.6
 
 require (
+	github.com/containerd/console v1.0.4
 	github.com/BurntSushi/toml v1.1.0
 	github.com/Dreamacro/clash v1.11.4
 	github.com/btwiuse/bcrypt v1.0.2
@@ -89,8 +90,6 @@ require (
 	// sigs.k8s.io/metrics-server v0.4.2
 	src.elv.sh v0.14.1-0.20210218105754-53593c3ab79f
 )
-
-require github.com/containerd/console v1.0.3
 
 require (
 	cloud.google.com/go/compute v1.23.0 // indirect

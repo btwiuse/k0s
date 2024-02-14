@@ -10,5 +10,5 @@ require (
 	github.com/mjwhitta/pathname v1.2.5 // indirect
 	github.com/mjwhitta/safety v1.11.3 // indirect
 	github.com/mjwhitta/where v1.2.10 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 )
