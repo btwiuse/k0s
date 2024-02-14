@@ -11,5 +11,5 @@ require (
 	gitlab.com/mjwhitta/pathname v1.2.1 // indirect
 	gitlab.com/mjwhitta/safety v1.11.1 // indirect
 	gitlab.com/mjwhitta/where v1.2.5 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 )

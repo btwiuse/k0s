@@ -49,7 +49,7 @@ require (
 	gitlab.com/mjwhitta/sysinfo v1.4.8 // indirect
 	gitlab.com/mjwhitta/where v1.2.5 // indirect
 	golang.org/x/sync v0.6.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/term v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

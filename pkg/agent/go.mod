@@ -41,7 +41,7 @@ require (
 	gitlab.com/mjwhitta/safety v1.11.1 // indirect
 	gitlab.com/mjwhitta/sysinfo v1.4.8 // indirect
 	gitlab.com/mjwhitta/where v1.2.5 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/wrap v0.1.12 // indirect
 	k8s.io/apimachinery v0.29.1 // indirect
