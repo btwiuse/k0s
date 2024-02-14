@@ -3,7 +3,6 @@ module k0s.io/third_party
 go 1.22.0
 
 require (
-	github.com/containerd/console v1.0.4
 	github.com/BurntSushi/toml v1.1.0
 	github.com/Dreamacro/clash v1.11.4
 	github.com/btwiuse/bcrypt v1.0.2
@@ -24,6 +23,7 @@ require (
 	github.com/caddyserver/caddy/v2 v2.5.2
 	github.com/caddyserver/forwardproxy v0.0.0-20211013034647-8c6ef2bd4a8f
 	github.com/casbin/caddy-authz/v2 v2.0.0
+	github.com/containerd/console v1.0.4
 	github.com/cppforlife/go-cli-ui v0.0.0-20200716203538-1e47f820817f
 	github.com/creack/pty v1.1.21
 	github.com/ethereum/go-ethereum v1.10.20
@@ -59,9 +59,9 @@ require (
 	go.etcd.io/etcd/client/v3 v3.5.10
 	go.starlark.net v0.0.0-20230525235612-a134d8f9ddca
 	go.uber.org/automaxprocs v1.5.1
-	golang.org/x/crypto v0.18.0
-	golang.org/x/mod v0.14.0
-	golang.org/x/net v0.20.0
+	golang.org/x/crypto v0.19.0
+	golang.org/x/mod v0.15.0
+	golang.org/x/net v0.21.0
 	golang.org/x/text v0.14.0
 	google.golang.org/protobuf v1.32.0
 	k0s.io v0.1.14
@@ -343,6 +343,12 @@ require (
 	github.com/mitchellh/go-ps v1.0.0 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
+	github.com/mjwhitta/errors v1.0.2 // indirect
+	github.com/mjwhitta/hilighter v1.11.7 // indirect
+	github.com/mjwhitta/pathname v1.2.5 // indirect
+	github.com/mjwhitta/safety v1.11.3 // indirect
+	github.com/mjwhitta/sysinfo v1.5.3 // indirect
+	github.com/mjwhitta/where v1.2.10 // indirect
 	github.com/moby/spdystream v0.2.0 // indirect
 	github.com/moby/sys/mountinfo v0.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -450,12 +456,6 @@ require (
 	github.com/xtaci/tcpraw v1.2.25 // indirect
 	github.com/yuin/goldmark v1.4.13 // indirect
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594 // indirect
-	gitlab.com/mjwhitta/errors v1.0.0 // indirect
-	gitlab.com/mjwhitta/hilighter v1.11.1 // indirect
-	gitlab.com/mjwhitta/pathname v1.2.1 // indirect
-	gitlab.com/mjwhitta/safety v1.11.1 // indirect
-	gitlab.com/mjwhitta/sysinfo v1.4.8 // indirect
-	gitlab.com/mjwhitta/where v1.2.5 // indirect
 	gitlab.com/yawning/edwards25519-extra.git v0.0.0-20211229043746-2f91fcc9fbdb // indirect
 	gitlab.com/yawning/obfs4.git v0.0.0-20220204003609-77af0cba934d // indirect
 	go.etcd.io/bbolt v1.3.8 // indirect
@@ -482,7 +482,7 @@ require (
 	golang.org/x/oauth2 v0.16.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
-	golang.org/x/term v0.16.0 // indirect
+	golang.org/x/term v0.17.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.17.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect

@@ -8778,86 +8778,6 @@ def go_repositories():
         version = "v0.0.0-20190516161541-9047d02cf65a",
     )
     go_repository(
-        name = "com_gitlab_mjwhitta_cli",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "gitlab.com/mjwhitta/cli",
-        sum = "h1:rTSnmWaOItnQZ3f2NcPVjS1JSZcJFvwt9ctfWTBfut4=",
-        version = "v1.10.0",
-    )
-    go_repository(
-        name = "com_gitlab_mjwhitta_errors",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "gitlab.com/mjwhitta/errors",
-        sum = "h1:v/EPRUZ4fRHYxQIPINdsR/zIXuQd86mKhYM9pgvzIcY=",
-        version = "v1.0.0",
-    )
-    go_repository(
-        name = "com_gitlab_mjwhitta_hilighter",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "gitlab.com/mjwhitta/hilighter",
-        sum = "h1:meBsY/zGSEgxAFY092AZc4e16Zi7FlEzLFv+ragPLsc=",
-        version = "v1.11.1",
-    )
-    go_repository(
-        name = "com_gitlab_mjwhitta_jq",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "gitlab.com/mjwhitta/jq",
-        sum = "h1:XEjsAfYAP+4Fc3FWgd5O58Gsak3WuOsVE5lH6EsxpII=",
-        version = "v1.5.2",
-    )
-    go_repository(
-        name = "com_gitlab_mjwhitta_jsoncfg",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "gitlab.com/mjwhitta/jsoncfg",
-        sum = "h1:GxrNiulOGmWkG8Of09jjpkUWo7odZwhWgEorKnWGvpU=",
-        version = "v1.6.7",
-    )
-    go_repository(
-        name = "com_gitlab_mjwhitta_log",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "gitlab.com/mjwhitta/log",
-        sum = "h1:f/LWphvfLt93tjABlnTVLn+2bf7DjYG8AEE/pP1q3zQ=",
-        version = "v1.6.2",
-    )
-    go_repository(
-        name = "com_gitlab_mjwhitta_pathname",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "gitlab.com/mjwhitta/pathname",
-        sum = "h1:s8KM/t85B9jTLlnvssOaa1et2dWoMe+Jf3h/9RSCxRk=",
-        version = "v1.2.1",
-    )
-    go_repository(
-        name = "com_gitlab_mjwhitta_safety",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "gitlab.com/mjwhitta/safety",
-        sum = "h1:P1rukXKs6A5HPCxVsQJxQiL+LDk/rQoG/Whrv0cbY9s=",
-        version = "v1.11.1",
-    )
-    go_repository(
-        name = "com_gitlab_mjwhitta_sysinfo",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "gitlab.com/mjwhitta/sysinfo",
-        sum = "h1:aq5wCbBDR/ItorhpEYDZYXSJ3R/T+kwRWNd6Q6jPefw=",
-        version = "v1.4.8",
-    )
-    go_repository(
-        name = "com_gitlab_mjwhitta_where",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "gitlab.com/mjwhitta/where",
-        sum = "h1:Vnrk4rQE2vk1kgINJhE8jPdOeGdi7w+OzqnkVIQwK6I=",
-        version = "v1.2.5",
-    )
-    go_repository(
         name = "com_gitlab_yawning_edwards25519_extra_git",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -10926,8 +10846,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/crypto",
-        sum = "h1:PGVlW0xEltQnzFZ55hkuX5+KLyrMYhHld1YHO4AKcdc=",
-        version = "v0.18.0",
+        sum = "h1:ENy+Az/9Y1vSrlrvBSyna3PITt4tiZLf7sgCjZBX7Wo=",
+        version = "v0.19.0",
     )
     go_repository(
         name = "org_golang_x_exp",
@@ -10966,16 +10886,16 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/mod",
-        sum = "h1:dGoOF9QVLYng8IHTm7BAyWqCqSheQ5pYWGhzW00YJr0=",
-        version = "v0.14.0",
+        sum = "h1:SernR4v+D55NyBH2QiEQrlBAnj1ECL6AGrA5+dPaMY8=",
+        version = "v0.15.0",
     )
     go_repository(
         name = "org_golang_x_net",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/net",
-        sum = "h1:aCL9BSgETF1k+blQaYUBx9hJ9LOGP3gAVemcZlf1Kpo=",
-        version = "v0.20.0",
+        sum = "h1:AQyQV4dYCvJ7vGmJyKki9+PBdyvhkSd8EIx/qb0AYv4=",
+        version = "v0.21.0",
     )
     go_repository(
         name = "org_golang_x_oauth2",
@@ -11014,8 +10934,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/term",
-        sum = "h1:m+B6fahuftsE9qjo0VWp2FW0mB3MTJvR0BaMQrq0pmE=",
-        version = "v0.16.0",
+        sum = "h1:mkTF7LCd6WGJNL3K1Ad7kwxNfYAW6a8a8QqtMblp/4U=",
+        version = "v0.17.0",
     )
     go_repository(
         name = "org_golang_x_text",

@@ -8,7 +8,7 @@ require (
 	github.com/btwiuse/pretty v0.2.1
 	github.com/btwiuse/version v0.0.0
 	github.com/containerd/console v1.0.4
-	golang.org/x/crypto v0.18.0
+	golang.org/x/crypto v0.19.0
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.14
 	k0s.io/pkg/agent v0.1.14
@@ -50,7 +50,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
-	golang.org/x/term v0.16.0 // indirect
+	golang.org/x/term v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/distro v0.1.14 // indirect
