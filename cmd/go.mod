@@ -4,7 +4,7 @@ go 1.21.6
 
 require (
 	github.com/btwiuse/bingo v0.0.0-20240130160828-410a95142901
-	k0s.io v0.1.12
+	k0s.io v0.1.13
 )
 
 require (

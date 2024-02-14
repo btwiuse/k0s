@@ -11,13 +11,13 @@ require (
 	golang.org/x/sync v0.6.0
 	golang.org/x/text v0.14.0
 	gopkg.in/yaml.v3 v3.0.1
-	k0s.io v0.1.12
-	k0s.io/pkg/asciitransport v0.1.12
-	k0s.io/pkg/dial v0.1.12
-	k0s.io/pkg/distro v0.1.12
-	k0s.io/pkg/middleware v0.1.12
-	k0s.io/pkg/rng v0.1.12
-	k0s.io/pkg/uuid v0.1.12
+	k0s.io v0.1.13
+	k0s.io/pkg/asciitransport v0.1.13
+	k0s.io/pkg/dial v0.1.13
+	k0s.io/pkg/distro v0.1.13
+	k0s.io/pkg/middleware v0.1.13
+	k0s.io/pkg/rng v0.1.13
+	k0s.io/pkg/uuid v0.1.13
 	nhooyr.io/websocket v1.8.10
 )
 
@@ -43,6 +43,6 @@ require (
 	gitlab.com/mjwhitta/where v1.2.5 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k0s.io/pkg/wrap v0.1.12 // indirect
+	k0s.io/pkg/wrap v0.1.13 // indirect
 	k8s.io/apimachinery v0.29.1 // indirect
 )
