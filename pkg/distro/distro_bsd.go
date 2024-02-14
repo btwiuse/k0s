@@ -3,7 +3,7 @@
 package distro
 
 import (
-	"gitlab.com/mjwhitta/sysinfo"
+	"github.com/mjwhitta/sysinfo"
 )
 
 var Info = sysinfo.New()
