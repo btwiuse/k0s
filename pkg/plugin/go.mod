@@ -1,6 +1,6 @@
 module k0s.io/pkg/plugin
 
-go 1.21.6
+go 1.22.0
 
 require (
 	github.com/btwiuse/version v0.0.0

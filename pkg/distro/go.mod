@@ -1,6 +1,6 @@
 module k0s.io/pkg/distro
 
-go 1.21.6
+go 1.22.0
 
 require github.com/mjwhitta/sysinfo v1.5.3
 

@@ -1,6 +1,6 @@
 module k0s.io/pkg/tunnel
 
-go 1.21.6
+go 1.22.0
 
 require (
 	k0s.io v0.1.13

@@ -1,6 +1,6 @@
 module k0s.io/third_party
 
-go 1.21.6
+go 1.22.0
 
 require (
 	github.com/containerd/console v1.0.4

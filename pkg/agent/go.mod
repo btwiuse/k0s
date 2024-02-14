@@ -1,6 +1,6 @@
 module k0s.io/pkg/agent
 
-go 1.21.6
+go 1.22.0
 
 require (
 	github.com/ActiveState/termtest/conpty v0.5.0
