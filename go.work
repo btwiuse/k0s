@@ -8,7 +8,6 @@ use (
 	./pkg/asciitransport
 	./pkg/cli
 	./pkg/client
-	./pkg/console
 	./pkg/dial
 	./pkg/distro
 	./pkg/exporter
@@ -35,7 +34,6 @@ replace (
 	k0s.io/pkg/asciitransport v0.1.12 => ./pkg/asciitransport/
 	k0s.io/pkg/cli v0.1.12 => ./pkg/cli/
 	k0s.io/pkg/client v0.1.12 => ./pkg/client/
-	k0s.io/pkg/console v0.1.12 => ./pkg/console/
 	k0s.io/pkg/dial v0.1.12 => ./pkg/dial/
 	k0s.io/pkg/distro v0.1.12 => ./pkg/distro/
 	k0s.io/pkg/exporter v0.1.12 => ./pkg/exporter/

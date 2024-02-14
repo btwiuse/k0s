@@ -66,7 +66,6 @@ require (
 	k0s.io v0.1.12
 	k0s.io/pkg/agent v0.1.12
 	k0s.io/pkg/asciitransport v0.1.12
-	k0s.io/pkg/console v0.1.12
 	k0s.io/pkg/exporter v0.1.12
 	k0s.io/pkg/middleware v0.1.12
 	k0s.io/pkg/plugin v0.1.12
@@ -90,6 +89,8 @@ require (
 	// sigs.k8s.io/metrics-server v0.4.2
 	src.elv.sh v0.14.1-0.20210218105754-53593c3ab79f
 )
+
+require github.com/containerd/console v1.0.3
 
 require (
 	cloud.google.com/go/compute v1.23.0 // indirect
@@ -155,7 +156,6 @@ require (
 	github.com/cheekybits/genny v1.0.0 // indirect
 	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/cilium/ebpf v0.11.0 // indirect
-	github.com/containerd/console v1.0.3 // indirect
 	github.com/containerd/containerd v1.6.1 // indirect
 	github.com/containerd/stargz-snapshotter/estargz v0.4.1 // indirect
 	github.com/containerd/ttrpc v1.1.0 // indirect
