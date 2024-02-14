@@ -7,9 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/containerd/console"
 	"k0s.io/pkg/agent/tty/factory"
 	"k0s.io/pkg/asciitransport"
-	"k0s.io/pkg/console"
 	"k0s.io/pkg/uuid"
 )
 

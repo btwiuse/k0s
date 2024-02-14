@@ -7,12 +7,12 @@ require (
 	github.com/abiosoft/ishell v2.0.0+incompatible
 	github.com/btwiuse/pretty v0.2.1
 	github.com/btwiuse/version v0.0.0
+	github.com/containerd/console v1.0.3
 	golang.org/x/crypto v0.18.0
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.12
 	k0s.io/pkg/agent v0.1.12
 	k0s.io/pkg/asciitransport v0.1.12
-	k0s.io/pkg/console v0.1.12
 	k0s.io/pkg/dial v0.1.12
 	k0s.io/pkg/fzf v0.1.12
 	k0s.io/pkg/hub v0.1.12

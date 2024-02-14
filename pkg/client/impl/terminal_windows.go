@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/containerd/console"
 	"k0s.io/pkg/asciitransport"
-	"k0s.io/pkg/console"
 	"k0s.io/pkg/uuid"
 )
 
