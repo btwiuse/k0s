@@ -168,11 +168,11 @@ build-android:  ## Build android binaries
 
 build-bsd-arm:  	## Build bsd arm binaries
 	@ go run ./cmd/bingo -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-	  freebsd/{armv7,armv6} # ,arm64
+	  {netbsd,openbsd,freebsd}/{armv6,armv7,arm64}
 
 build-bsd:  	## Build bsd binaries
 	@ go run ./cmd/bingo -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
-	  {openbsd,freebsd}/{arm,arm64,amd64,386}
+	  {netbsd,openbsd,freebsd}/{amd64,386}
 
 build-linux:  	## Build linux binaries
 	@ go run ./cmd/bingo -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
