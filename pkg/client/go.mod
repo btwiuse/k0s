@@ -37,17 +37,17 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/mattn/go-shellwords v1.0.12 // indirect
+	github.com/mjwhitta/errors v1.0.2 // indirect
+	github.com/mjwhitta/hilighter v1.11.7 // indirect
+	github.com/mjwhitta/pathname v1.2.5 // indirect
+	github.com/mjwhitta/safety v1.11.3 // indirect
+	github.com/mjwhitta/sysinfo v1.5.3 // indirect
+	github.com/mjwhitta/where v1.2.10 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	gitlab.com/mjwhitta/errors v1.0.0 // indirect
-	gitlab.com/mjwhitta/hilighter v1.11.1 // indirect
-	gitlab.com/mjwhitta/pathname v1.2.1 // indirect
-	gitlab.com/mjwhitta/safety v1.11.1 // indirect
-	gitlab.com/mjwhitta/sysinfo v1.4.8 // indirect
-	gitlab.com/mjwhitta/where v1.2.5 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/term v0.16.0 // indirect

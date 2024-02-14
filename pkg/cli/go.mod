@@ -133,6 +133,12 @@ require (
 	github.com/mdlayher/wifi v0.1.0 // indirect
 	github.com/miekg/dns v1.1.58 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
+	github.com/mjwhitta/errors v1.0.2 // indirect
+	github.com/mjwhitta/hilighter v1.11.7 // indirect
+	github.com/mjwhitta/pathname v1.2.5 // indirect
+	github.com/mjwhitta/safety v1.11.3 // indirect
+	github.com/mjwhitta/sysinfo v1.5.3 // indirect
+	github.com/mjwhitta/where v1.2.10 // indirect
 	github.com/moby/spdystream v0.2.0 // indirect
 	github.com/moby/term v0.0.0-20221205130635-1aeaba878587 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -168,12 +174,6 @@ require (
 	github.com/xanzy/go-gitlab v0.95.2 // indirect
 	github.com/xhit/go-str2duration/v2 v2.1.0 // indirect
 	github.com/xlab/treeprint v1.2.0 // indirect
-	gitlab.com/mjwhitta/errors v1.0.0 // indirect
-	gitlab.com/mjwhitta/hilighter v1.11.1 // indirect
-	gitlab.com/mjwhitta/pathname v1.2.1 // indirect
-	gitlab.com/mjwhitta/safety v1.11.1 // indirect
-	gitlab.com/mjwhitta/sysinfo v1.4.8 // indirect
-	gitlab.com/mjwhitta/where v1.2.5 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.44.0 // indirect
 	go.opentelemetry.io/otel v1.19.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.19.0 // indirect

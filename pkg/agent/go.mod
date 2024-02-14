@@ -31,16 +31,16 @@ require (
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/mjwhitta/errors v1.0.2 // indirect
+	github.com/mjwhitta/hilighter v1.11.7 // indirect
+	github.com/mjwhitta/pathname v1.2.5 // indirect
+	github.com/mjwhitta/safety v1.11.3 // indirect
+	github.com/mjwhitta/sysinfo v1.5.3 // indirect
+	github.com/mjwhitta/where v1.2.10 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/cors v1.10.1 // indirect
-	gitlab.com/mjwhitta/errors v1.0.0 // indirect
-	gitlab.com/mjwhitta/hilighter v1.11.1 // indirect
-	gitlab.com/mjwhitta/pathname v1.2.1 // indirect
-	gitlab.com/mjwhitta/safety v1.11.1 // indirect
-	gitlab.com/mjwhitta/sysinfo v1.4.8 // indirect
-	gitlab.com/mjwhitta/where v1.2.5 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/wrap v0.1.14 // indirect

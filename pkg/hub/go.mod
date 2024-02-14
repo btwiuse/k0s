@@ -69,6 +69,12 @@ require (
 	github.com/mdlayher/socket v0.4.1 // indirect
 	github.com/mdlayher/wifi v0.1.0 // indirect
 	github.com/miekg/dns v1.1.58 // indirect
+	github.com/mjwhitta/errors v1.0.2 // indirect
+	github.com/mjwhitta/hilighter v1.11.7 // indirect
+	github.com/mjwhitta/pathname v1.2.5 // indirect
+	github.com/mjwhitta/safety v1.11.3 // indirect
+	github.com/mjwhitta/sysinfo v1.5.3 // indirect
+	github.com/mjwhitta/where v1.2.10 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/opencontainers/selinux v1.11.0 // indirect
@@ -84,12 +90,6 @@ require (
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
 	github.com/webteleport/utils v0.2.5 // indirect
 	github.com/xhit/go-str2duration/v2 v2.1.0 // indirect
-	gitlab.com/mjwhitta/errors v1.0.0 // indirect
-	gitlab.com/mjwhitta/hilighter v1.11.1 // indirect
-	gitlab.com/mjwhitta/pathname v1.2.1 // indirect
-	gitlab.com/mjwhitta/safety v1.11.1 // indirect
-	gitlab.com/mjwhitta/sysinfo v1.4.8 // indirect
-	gitlab.com/mjwhitta/where v1.2.5 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.18.0 // indirect
 	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
