@@ -75,13 +75,6 @@ load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
 
-http_archive(
-    name = "com_google_googletest",
-    sha256 = "199e68f9dff997b30d420bf23cd9a0d3f66bfee4460e2cd95084a2c45ee00f1a",
-    strip_prefix = "googletest-5376968f6948923e2411081fd9372e71a59d8e77",
-    urls = ["https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip"],
-)
-
 git_repository(
     name = "rules_rust",
     # commit = "f32695dcd02d9a19e42b9eb7f29a24a8ceb2b858",
