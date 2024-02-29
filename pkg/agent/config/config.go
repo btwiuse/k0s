@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/btwiuse/pretty"
+	"github.com/btwiuse/rng"
 	"github.com/btwiuse/version"
 	"github.com/denisbrodbeck/machineid"
 	"gopkg.in/yaml.v3"
@@ -21,8 +22,6 @@ import (
 	"k0s.io"
 	"k0s.io/pkg/agent"
 	"k0s.io/pkg/agent/info"
-	"k0s.io/pkg/rng"
-	"k0s.io/pkg/uuid"
 )
 
 type arrayFlags []string
@@ -285,8 +284,8 @@ func Parse(args []string) *Config {
 	var (
 		fset = flag.NewFlagSet("agent", flag.ExitOnError)
 
-		// fset.StringVar(&id, "id", uuid.New(), "Agent ID, for debugging purpose only")
-		id = uuid.New()
+		// fset.StringVar(&id, "id", rng.NewUUID(), "Agent ID, for debugging purpose only")
+		id = rng.NewUUID()
 
 		opts = []Opt{
 			SetID(id),
@@ -298,7 +297,7 @@ func Parse(args []string) *Config {
 		ro       *bool      = fset.Bool("ro", false, "Make shell readonly.")
 		insecure *bool      = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
 		pet      *bool      = fset.Bool("pet", false, "Run the agent like a pet, on real hardware.")
-		name     *string    = fset.String("name", rng.New(), "Set agent name.")
+		name     *string    = fset.String("name", rng.NewDocker(), "Set agent name.")
 		cmd      *string    = fset.String("cmd", "", "Command to run.")
 		c        *string    = fset.String("c", probeConfigFile(), "Config file location.")
 		tags     arrayFlags = []string{}
@@ -374,7 +373,7 @@ func Parse(args []string) *Config {
 					baseConfig.GetHostname()
 			}
 		}
-		uid := uuid.NewPet(mid)
+		uid := rng.NewPetUUID(mid)
 		SetID(uid)(baseConfig)
 	}
 

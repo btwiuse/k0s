@@ -9,7 +9,7 @@ import (
 
 	"github.com/containerd/console"
 	"k0s.io/pkg/agent/tty/factory"
-	"k0s.io/pkg/uuid"
+	"github.com/btwiuse/rng"
 	asciitransport "k0s.io/third_party/pkg/asciitransport/v2"
 )
 
@@ -57,7 +57,7 @@ func main() {
 		panic(err)
 	}
 
-	logname := uuid.New() + ".log"
+	logname := rng.NewUUID() + ".log"
 	logfile, err := os.Create(logname)
 	if err != nil {
 		panic(err)

@@ -16,12 +16,10 @@ use (
 	./pkg/manager
 	./pkg/middleware
 	./pkg/plugin
-	./pkg/rng
 	./pkg/simple
 	./pkg/tunnel
 	./pkg/ui
 	./pkg/utils
-	./pkg/uuid
 	./pkg/wrap
 	./third_party
 )
@@ -42,12 +40,10 @@ replace (
 	k0s.io/pkg/manager v0.1.14 => ./pkg/manager/
 	k0s.io/pkg/middleware v0.1.14 => ./pkg/middleware/
 	k0s.io/pkg/plugin v0.1.14 => ./pkg/plugin/
-	k0s.io/pkg/rng v0.1.14 => ./pkg/rng/
 	k0s.io/pkg/simple v0.1.14 => ./pkg/simple/
 	k0s.io/pkg/tunnel v0.1.14 => ./pkg/tunnel/
 	k0s.io/pkg/ui v0.1.14 => ./pkg/ui/
 	k0s.io/pkg/utils v0.1.14 => ./pkg/utils/
-	k0s.io/pkg/uuid v0.1.14 => ./pkg/uuid/
 	k0s.io/pkg/wrap v0.1.14 => ./pkg/wrap/
 	k0s.io/third_party v0.1.14 => ./third_party/
 )

@@ -70,10 +70,10 @@ require (
 	k0s.io/pkg/exporter v0.1.14
 	k0s.io/pkg/middleware v0.1.14
 	k0s.io/pkg/plugin v0.1.14
-	k0s.io/pkg/rng v0.1.14
+	k0s.io/pkg/rng v0.1.14 // indirect
 	k0s.io/pkg/tunnel v0.1.14
 	k0s.io/pkg/utils v0.1.14
-	k0s.io/pkg/uuid v0.1.14
+	k0s.io/pkg/uuid v0.1.14 // indirect
 	k8s.io/api v0.29.1
 	k8s.io/apimachinery v0.29.1
 	k8s.io/client-go v0.29.1
@@ -90,6 +90,8 @@ require (
 	// sigs.k8s.io/metrics-server v0.4.2
 	src.elv.sh v0.14.1-0.20210218105754-53593c3ab79f
 )
+
+require github.com/btwiuse/rng v0.0.0
 
 require (
 	cloud.google.com/go/compute v1.23.0 // indirect

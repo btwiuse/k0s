@@ -13,7 +13,7 @@ import (
 	"k0s.io/pkg/hub"
 	"k0s.io/pkg/hub/agent"
 	"k0s.io/pkg/hub/agent/info"
-	"k0s.io/pkg/rng"
+	"github.com/btwiuse/rng"
 )
 
 var (
@@ -24,7 +24,7 @@ func ToRPC(conn net.Conn) hub.RPC {
 
 	rpc := &YS{
 		id:            "00000000-0000-0000-0000-000000000000",
-		name:          rng.New(),
+		name:          rng.NewDocker(),
 		actions:       make(chan func(hub.Hub), 1),
 		created:       time.Now(),
 		Conn:          conn,

@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"k0s.io/pkg/rng"
+	"github.com/btwiuse/rng"
 )
 
 func main() {
-	fmt.Println(rng.New())
+	fmt.Println(rng.NewDocker())
 }

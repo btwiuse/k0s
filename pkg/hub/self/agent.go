@@ -10,14 +10,14 @@ import (
 	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/agent/info"
 	"k0s.io/pkg/agent/server"
-	"k0s.io/pkg/uuid"
+	"github.com/btwiuse/rng"
 	"github.com/btwiuse/version"
 )
 
 func Agent(hub string) {
-	_ = uuid.New()
+	_ = rng.NewUUID()
 	c := &config.Config{
-		ID:  "undefined", //uuid.New(),
+		ID:  "undefined", //rng.NewUUID(),
 		Hub: hub,
 		Htpasswd: map[string]string{
 			"aaron": "$2a$10$WbZm/thAZI/f/QrcJn6V4OS.I61V2cLnOV.z7uXxtjHY8tZkTacLm",

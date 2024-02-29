@@ -9,7 +9,7 @@ import (
 
 	"github.com/containerd/console"
 	"k0s.io/pkg/asciitransport"
-	"k0s.io/pkg/uuid"
+	"github.com/btwiuse/rng"
 )
 
 func (cl *clientImpl) terminalConnect(endpoint string, userinfo *url.Userinfo) {
@@ -47,7 +47,7 @@ func (cl *clientImpl) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 	}
 
 	if c.GetRecord() {
-		logname := uuid.New() + ".log"
+		logname := rng.NewUUID() + ".log"
 		logfile, err := os.Create(logname)
 		if err != nil {
 			panic(err)

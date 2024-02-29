@@ -10,7 +10,7 @@ import (
 	"github.com/btwiuse/version"
 	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/agent/server"
-	"k0s.io/pkg/uuid"
+	"github.com/btwiuse/rng"
 )
 
 var once = &sync.Once{}
@@ -25,7 +25,7 @@ func gorun() {
 
 func run() {
 	c := &config.Config{
-		ID:  uuid.New(),
+		ID:  rng.NewUUID(),
 		Hub: k0s.DEFAULT_HUB_ADDRESS,
 		Htpasswd: map[string]string{
 			"aaron": "$2a$10$WbZm/thAZI/f/QrcJn6V4OS.I61V2cLnOV.z7uXxtjHY8tZkTacLm",

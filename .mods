@@ -13,11 +13,9 @@ k0s.io/pkg/hub
 k0s.io/pkg/manager
 k0s.io/pkg/middleware
 k0s.io/pkg/plugin
-k0s.io/pkg/rng
 k0s.io/pkg/simple
 k0s.io/pkg/tunnel
 k0s.io/pkg/ui
 k0s.io/pkg/utils
-k0s.io/pkg/uuid
 k0s.io/pkg/wrap
 k0s.io/third_party
