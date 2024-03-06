@@ -1,6 +1,6 @@
 module k0s.io/pkg/client
 
-go 1.22.0
+go 1.22.1
 
 require (
 	github.com/VojtechVitek/yaml-cli v0.0.5

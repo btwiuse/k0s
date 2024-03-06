@@ -1,6 +1,6 @@
 module k0s.io/pkg/exporter
 
-go 1.22.0
+go 1.22.1
 
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0

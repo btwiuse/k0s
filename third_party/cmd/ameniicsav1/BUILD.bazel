@@ -8,7 +8,7 @@ go_library(
     deps = [
         "//pkg/agent/tty/factory:go_default_library",
         "//pkg/asciitransport:go_default_library",
-        "//pkg/uuid:go_default_library",
+        "@com_github_btwiuse_rng//:go_default_library",
         "@com_github_containerd_console//:go_default_library",
     ],
 )

@@ -946,6 +946,14 @@ def go_repositories():
         version = "v0.2.1",
     )
     go_repository(
+        name = "com_github_btwiuse_rng",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/btwiuse/rng",
+        sum = "h1:z9PGInDBB1Fw9Ep34sFjxgpxanXWspbRG1Jp25L5GZ4=",
+        version = "v0.0.0",
+    )
+    go_repository(
         name = "com_github_btwiuse_sse",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -3782,8 +3790,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/gorilla/websocket",
-        sum = "h1:PPwGk2jz7EePpoHN/+ClbZu8SPxiqlu12wZP/3sWmnc=",
-        version = "v1.5.0",
+        sum = "h1:gmztn0JnHVt9JZquRuzLw3g4wouNVzKL15iLr/zn/QY=",
+        version = "v1.5.1",
     )
     go_repository(
         name = "com_github_gostaticanalysis_analysisutil",
@@ -10208,6 +10216,22 @@ def go_repositories():
         importpath = "h12.io/socks",
         sum = "h1:cZhhbV8+DE0Y1kotwhr1a3RC3kFO7AtuZ4GLr3qKSc8=",
         version = "v1.0.2",
+    )
+    go_repository(
+        name = "io_k0s_pkg_rng",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "k0s.io/pkg/rng",
+        sum = "h1:2disumB4v7Q4vcqXSwpE2MGlYjcpONMD4WTLDHdG8ts=",
+        version = "v0.1.14",
+    )
+    go_repository(
+        name = "io_k0s_pkg_uuid",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "k0s.io/pkg/uuid",
+        sum = "h1:unV4fUB8Gc6+tuyrIfcmZCUO8QrbzVNMfWuIhoQLoCs=",
+        version = "v0.1.14",
     )
     go_repository(
         name = "io_k8s_api",

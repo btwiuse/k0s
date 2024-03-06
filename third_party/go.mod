@@ -1,6 +1,6 @@
 module k0s.io/third_party
 
-go 1.22.0
+go 1.22.1
 
 require (
 	github.com/BurntSushi/toml v1.1.0
@@ -36,7 +36,7 @@ require (
 	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/rpc v1.2.0
-	github.com/gorilla/websocket v1.5.0
+	github.com/gorilla/websocket v1.5.1
 	github.com/greenpau/caddy-auth-jwt v1.2.6
 	github.com/greenpau/caddy-trace v1.1.8
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
