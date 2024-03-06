@@ -10,7 +10,6 @@ use (
 	./pkg/client
 	./pkg/dial
 	./pkg/distro
-	./pkg/exporter
 	./pkg/fzf
 	./pkg/hub
 	./pkg/manager
@@ -34,7 +33,6 @@ replace (
 	k0s.io/pkg/client v0.1.14 => ./pkg/client/
 	k0s.io/pkg/dial v0.1.14 => ./pkg/dial/
 	k0s.io/pkg/distro v0.1.14 => ./pkg/distro/
-	k0s.io/pkg/exporter v0.1.14 => ./pkg/exporter/
 	k0s.io/pkg/fzf v0.1.14 => ./pkg/fzf/
 	k0s.io/pkg/hub v0.1.14 => ./pkg/hub/
 	k0s.io/pkg/manager v0.1.14 => ./pkg/manager/

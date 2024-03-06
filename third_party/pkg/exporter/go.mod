@@ -1,4 +1,4 @@
-module k0s.io/pkg/exporter
+module k0s.io/third_party/pkg/exporter
 
 go 1.22.1
 

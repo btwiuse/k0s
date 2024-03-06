@@ -16,7 +16,6 @@ import (
 	echo "github.com/jpillora/go-echo-server/handler"
 	"k0s.io"
 	"k0s.io/pkg/api"
-	"k0s.io/pkg/exporter"
 	"k0s.io/pkg/hub"
 	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
@@ -35,7 +34,6 @@ type hubServer struct {
 	*http.Server
 
 	c              hub.Config
-	MetricsHandler http.Handler
 	BinHandler     http.Handler
 	sseMux         *sse.SSE
 }
@@ -60,7 +58,6 @@ func NewHub(c hub.Config) hub.Hub {
 		h        = &hubServer{
 			c:              c,
 			AgentManager:   NewAgentManager(),
-			MetricsHandler: middleware.GzipMiddleware(exporter.NewHandler()),
 			BinHandler:     middleware.GzipMiddleware(binHandler()),
 			sseMux:         sse.NewSSE(),
 		}
@@ -181,8 +178,6 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 	r.HandleFunc("/fs", h.handleTunnel(api.FS)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/socks5", h.handleTunnel(api.Socks5)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/redir", h.handleTunnel(api.Redir)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/metrics", h.handleTunnel(api.Metrics)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/k16s", h.handleTunnel(api.K16s)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/doh", h.handleTunnel(api.Doh)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/env", h.handleTunnel(api.Env)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/terminal", h.handleTunnel(api.Terminal)).Methods("GET").Queries("id", "{id}")
@@ -193,7 +188,6 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 
 	// hub specific function
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
-	r.Handle("/metrics", h.MetricsHandler).Methods("GET")
 	r.Handle("/bin/k0s", h.BinHandler).Methods("GET")
 
 	return R
@@ -308,8 +302,6 @@ func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
 		ag.BasicAuth(http.HandlerFunc(socks5Relay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/version"):
 		versionRelay(ag)(w, r)
-	case strings.HasPrefix(subpath, "/k16s"):
-		k16sRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/env"):
 		envRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/doh"):
@@ -318,16 +310,6 @@ func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
 		jsonlRelay(ag)(w, r)
 	case strings.HasPrefix(subpath, "/xpra"):
 		xpraRelay(ag)(w, r)
-	case strings.HasPrefix(subpath, "/metrics"):
-		var (
-			vars    = r.URL.Query()
-			_, k16s = vars["k16s"]
-		)
-		if k16s {
-			k16sRelay(ag)(w, r)
-		} else {
-			metricsRelay(ag)(w, r)
-		}
 	case strings.HasPrefix(subpath, "/terminalv2"): // must come before "/terminal" otherwise won't ever match
 		ag.BasicAuth(http.HandlerFunc(terminalV2Relay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/terminal"):

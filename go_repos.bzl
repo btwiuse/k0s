@@ -10218,6 +10218,14 @@ def go_repositories():
         version = "v1.0.2",
     )
     go_repository(
+        name = "io_k0s_pkg_exporter",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "k0s.io/pkg/exporter",
+        sum = "h1:FkFkWE3shJH1E7LyJzF6iB3q6EZhaSzweSk5sNM35e4=",
+        version = "v0.1.14",
+    )
+    go_repository(
         name = "io_k0s_pkg_rng",
         build_file_generation = "on",
         build_file_proto_mode = "disable",

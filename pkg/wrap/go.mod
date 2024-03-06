@@ -7,3 +7,5 @@ require (
 	k0s.io v0.1.14
 	nhooyr.io/websocket v1.8.10
 )
+
+require golang.org/x/net v0.21.0 // indirect
