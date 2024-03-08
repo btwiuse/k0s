@@ -67,7 +67,5 @@ require (
 	k0s.io/pkg/asciitransport v0.1.15 // indirect
 	k0s.io/pkg/dial v0.1.15 // indirect
 	k0s.io/pkg/distro v0.1.15 // indirect
-	k0s.io/pkg/rng v0.1.14 // indirect
-	k0s.io/pkg/uuid v0.1.14 // indirect
 	k8s.io/apimachinery v0.29.1 // indirect
 )
