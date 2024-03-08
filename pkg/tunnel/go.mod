@@ -3,9 +3,9 @@ module k0s.io/pkg/tunnel
 go 1.22.1
 
 require (
-	k0s.io v0.1.14
-	k0s.io/pkg/middleware v0.1.14
-	k0s.io/pkg/wrap v0.1.14
+	k0s.io v0.1.15
+	k0s.io/pkg/middleware v0.1.15
+	k0s.io/pkg/wrap v0.1.15
 	nhooyr.io/websocket v1.8.10
 )
 
