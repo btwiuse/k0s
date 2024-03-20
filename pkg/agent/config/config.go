@@ -15,6 +15,7 @@ import (
 
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/rng"
+	"github.com/btwiuse/tags"
 	"github.com/btwiuse/version"
 	"github.com/denisbrodbeck/machineid"
 	"gopkg.in/yaml.v3"
@@ -24,26 +25,11 @@ import (
 	"k0s.io/pkg/agent/info"
 )
 
-type arrayFlags []string
-
-func (i *arrayFlags) String() string {
-	return strings.Join(*i, ",")
-}
-
-func (i *arrayFlags) Set(value string) error {
-	if value == "" {
-		return nil
-	}
-	tags := strings.Split(value, ",")
-	*i = append(*i, tags...)
-	return nil
-}
-
 type Config struct {
-	ID       string            `json:"id" yaml:"-"`
-	Name     string            `json:"name" yaml:"name"`
-	Tags     []string          `json:"tags" yaml:"tags"`
-	Htpasswd map[string]string `json:"htpasswd,omitempty" yaml:"htpasswd"`
+	ID       string                     `json:"id" yaml:"-"`
+	Name     string                     `json:"name" yaml:"name"`
+	Tags     tags.CommaSeparatedStrings `json:"tags" yaml:"tags"`
+	Htpasswd map[string]string          `json:"htpasswd,omitempty" yaml:"htpasswd"`
 
 	agent.Info `json:"meta" yaml:"-"`
 
@@ -291,16 +277,16 @@ func Parse(args []string) *Config {
 			SetID(id),
 		}
 
-		hubapi   *string    = fset.String("hub", k0s.DEFAULT_HUB_ADDRESS, "Hub address.")
-		verbose  *bool      = fset.Bool("verbose", false, "Verbose log.")
-		version  *bool      = fset.Bool("version", false, "Show agent/hub version info.")
-		ro       *bool      = fset.Bool("ro", false, "Make shell readonly.")
-		insecure *bool      = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
-		pet      *bool      = fset.Bool("pet", false, "Run the agent like a pet, on real hardware.")
-		name     *string    = fset.String("name", rng.NewDocker(), "Set agent name.")
-		cmd      *string    = fset.String("cmd", "", "Command to run.")
-		c        *string    = fset.String("c", probeConfigFile(), "Config file location.")
-		tags     arrayFlags = []string{}
+		hubapi   *string                    = fset.String("hub", k0s.DEFAULT_HUB_ADDRESS, "Hub address.")
+		verbose  *bool                      = fset.Bool("verbose", false, "Verbose log.")
+		version  *bool                      = fset.Bool("version", false, "Show agent/hub version info.")
+		ro       *bool                      = fset.Bool("ro", false, "Make shell readonly.")
+		insecure *bool                      = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
+		pet      *bool                      = fset.Bool("pet", false, "Run the agent like a pet, on real hardware.")
+		name     *string                    = fset.String("name", rng.NewDocker(), "Set agent name.")
+		cmd      *string                    = fset.String("cmd", "", "Command to run.")
+		c        *string                    = fset.String("c", probeConfigFile(), "Config file location.")
+		tags     tags.CommaSeparatedStrings = []string{}
 	)
 
 	// Should be comma separated values like foo,bar

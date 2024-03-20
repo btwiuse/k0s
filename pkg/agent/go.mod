@@ -6,6 +6,7 @@ require (
 	github.com/ActiveState/termtest/conpty v0.5.0
 	github.com/btwiuse/pretty v0.2.1
 	github.com/btwiuse/rng v0.0.0
+	github.com/btwiuse/tags v0.0.2
 	github.com/btwiuse/version v0.0.0
 	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1

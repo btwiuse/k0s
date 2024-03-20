@@ -4,8 +4,8 @@ import (
 	"io"
 	"net"
 
-	"k0s.io/pkg/api"
 	"github.com/btwiuse/version"
+	"k0s.io/pkg/api"
 )
 
 type Info interface {

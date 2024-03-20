@@ -954,6 +954,14 @@ def go_repositories():
         version = "v0.0.1",
     )
     go_repository(
+        name = "com_github_btwiuse_tags",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/btwiuse/tags",
+        sum = "h1:TWL6rwde+Ye1Oa0X7kRQh33rdT+PmukOHWKnxxHSjIg=",
+        version = "v0.0.2",
+    )
+    go_repository(
         name = "com_github_btwiuse_version",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
