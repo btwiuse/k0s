@@ -982,8 +982,8 @@ def go_repositories():
         build_file_generation = "on",
         build_file_proto_mode = "disable",
         importpath = "github.com/btwiuse/wsconn",
-        sum = "h1:rg91k9EygX1K5XErlo6mIkyD0cdtaG7FhdPAUKMBKEc=",
-        version = "v0.0.0",
+        sum = "h1:jWEgmgdYCeQmYuPAVwsv7GnEwY5Rfea8DnlbBx55wxw=",
+        version = "v0.0.1",
     )
     go_repository(
         name = "com_github_buger_jsonparser",

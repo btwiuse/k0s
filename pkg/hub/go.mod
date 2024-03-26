@@ -9,7 +9,7 @@ require (
 	github.com/btwiuse/sse v0.0.1
 	github.com/btwiuse/version v0.0.0
 	github.com/btwiuse/wetty v0.0.36
-	github.com/btwiuse/wsconn v0.0.0
+	github.com/btwiuse/wsconn v0.0.1
 	github.com/gorilla/mux v1.8.1
 	github.com/jpillora/go-echo-server v0.5.0
 	k0s.io v0.1.15
