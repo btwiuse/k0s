@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/http"
 
-	"k0s.io/pkg/wrap"
+	"github.com/btwiuse/wsconn"
 )
 
 var (
@@ -21,7 +21,7 @@ type lys struct {
 
 func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// log.Println(r.Header)
-	conn, err := wrap.Wrconn(w, r)
+	conn, err := wsconn.Wrconn(w, r)
 	if err != nil {
 		log.Println("error ws accept:", err)
 		return
@@ -34,8 +34,8 @@ func (l *lys) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		network := conn.RemoteAddr().Network()
 		hostport := forwardIP + ":" + forwardPort
-		addr := wrap.NewAddr(network, hostport)
-		conn = wrap.ConnWithAddr(conn, addr)
+		addr := wsconn.NewAddr(network, hostport)
+		conn = wsconn.ConnWithAddr(conn, addr)
 	}
 
 	l.conns <- conn

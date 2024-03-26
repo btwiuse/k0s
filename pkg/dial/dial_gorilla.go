@@ -9,7 +9,7 @@ import (
 	"net/url"
 
 	"github.com/gorilla/websocket"
-	"k0s.io/pkg/wrap"
+	"github.com/btwiuse/wsconn"
 )
 
 func Dial(u *url.URL) (conn net.Conn, err error) {
@@ -26,5 +26,5 @@ func Dial(u *url.URL) (conn net.Conn, err error) {
 		return nil, err
 	}
 
-	return wrap.NetConn(wsconn), nil
+	return wsconn.NetConn(wsconn), nil
 }

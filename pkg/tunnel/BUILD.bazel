@@ -8,5 +8,5 @@ go_library(
     ],
     importpath = "k0s.io/pkg/tunnel",
     visibility = ["//visibility:public"],
-    deps = ["//pkg/wrap:go_default_library"],
+    deps = ["@com_github_btwiuse_wsconn//:go_default_library"],
 )

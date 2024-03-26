@@ -20,7 +20,7 @@ import (
 	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
 	"k0s.io/pkg/ui"
-	"k0s.io/pkg/wrap"
+	"github.com/btwiuse/wsconn"
 	"modernc.org/httpfs"
 )
 
@@ -259,7 +259,7 @@ func (h *hubServer) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *
 			return
 		}
 
-		conn, err := wrap.Wrconn(w, r)
+		conn, err := wsconn.Wrconn(w, r)
 		if err != nil {
 			log.Printf("error accepting %s: %s\n", tun, err)
 			return

@@ -13,7 +13,7 @@ import (
 	"k0s.io"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/hub"
-	"k0s.io/pkg/wrap"
+	"github.com/btwiuse/wsconn"
 	"nhooyr.io/websocket"
 )
 
@@ -74,7 +74,7 @@ func fsRelay(ag hub.Agent) http.HandlerFunc {
 			return
 		}
 
-		conn, err := wrap.Hijack(w)
+		conn, err := wsconn.Hijack(w)
 		if err != nil {
 			log.Println(err)
 			return
@@ -106,7 +106,7 @@ func versionRelay(ag hub.Agent) http.HandlerFunc {
 			return
 		}
 
-		conn, err := wrap.Hijack(w)
+		conn, err := wsconn.Hijack(w)
 		if err != nil {
 			log.Println(err)
 			return
@@ -138,7 +138,7 @@ func dohRelay(ag hub.Agent) http.HandlerFunc {
 			return
 		}
 
-		conn, err := wrap.Hijack(w)
+		conn, err := wsconn.Hijack(w)
 		if err != nil {
 			log.Println(err)
 			return
@@ -217,7 +217,7 @@ func envRelay(ag hub.Agent) http.HandlerFunc {
 			return
 		}
 
-		conn, err := wrap.Hijack(w)
+		conn, err := wsconn.Hijack(w)
 		if err != nil {
 			log.Println(err)
 			return

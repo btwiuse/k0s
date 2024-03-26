@@ -19,7 +19,6 @@ use (
 	./pkg/tunnel
 	./pkg/ui
 	./pkg/utils
-	./pkg/wrap
 	./third_party
 )
 
@@ -42,6 +41,5 @@ replace (
 	k0s.io/pkg/tunnel v0.1.15 => ./pkg/tunnel/
 	k0s.io/pkg/ui v0.1.15 => ./pkg/ui/
 	k0s.io/pkg/utils v0.1.15 => ./pkg/utils/
-	k0s.io/pkg/wrap v0.1.15 => ./pkg/wrap/
 	k0s.io/third_party v0.1.15 => ./third_party/
 )

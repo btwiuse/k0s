@@ -16,5 +16,4 @@ k0s.io/pkg/simple
 k0s.io/pkg/tunnel
 k0s.io/pkg/ui
 k0s.io/pkg/utils
-k0s.io/pkg/wrap
 k0s.io/third_party

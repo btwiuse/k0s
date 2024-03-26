@@ -978,6 +978,14 @@ def go_repositories():
         version = "v0.0.36",
     )
     go_repository(
+        name = "com_github_btwiuse_wsconn",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/btwiuse/wsconn",
+        sum = "h1:rg91k9EygX1K5XErlo6mIkyD0cdtaG7FhdPAUKMBKEc=",
+        version = "v0.0.0",
+    )
+    go_repository(
         name = "com_github_buger_jsonparser",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -10080,6 +10088,14 @@ def go_repositories():
         importpath = "h12.io/socks",
         sum = "h1:cZhhbV8+DE0Y1kotwhr1a3RC3kFO7AtuZ4GLr3qKSc8=",
         version = "v1.0.2",
+    )
+    go_repository(
+        name = "io_k0s_pkg_wrap",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "k0s.io/pkg/wrap",
+        sum = "h1:n6nfxU+72QfHR1COxNts2xaJa0jv5BMO2prrt9wMgNg=",
+        version = "v0.1.15",
     )
     go_repository(
         name = "io_k8s_api",

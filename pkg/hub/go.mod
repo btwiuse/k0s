@@ -9,6 +9,7 @@ require (
 	github.com/btwiuse/sse v0.0.1
 	github.com/btwiuse/version v0.0.0
 	github.com/btwiuse/wetty v0.0.36
+	github.com/btwiuse/wsconn v0.0.0
 	github.com/gorilla/mux v1.8.1
 	github.com/jpillora/go-echo-server v0.5.0
 	k0s.io v0.1.15
@@ -17,7 +18,6 @@ require (
 	k0s.io/pkg/middleware v0.1.15
 	k0s.io/pkg/ui v0.1.15
 	k0s.io/pkg/utils v0.1.15
-	k0s.io/pkg/wrap v0.1.15
 	modernc.org/httpfs v1.0.6
 	nhooyr.io/websocket v1.8.10
 )
@@ -67,5 +67,6 @@ require (
 	k0s.io/pkg/asciitransport v0.1.15 // indirect
 	k0s.io/pkg/dial v0.1.15 // indirect
 	k0s.io/pkg/distro v0.1.15 // indirect
+	k0s.io/pkg/wrap v0.1.15 // indirect
 	k8s.io/apimachinery v0.29.1 // indirect
 )

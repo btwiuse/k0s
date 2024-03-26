@@ -19,7 +19,7 @@ import (
 	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
 	portless "k0s.io/pkg/tunnel"
-	"k0s.io/pkg/wrap"
+	"github.com/btwiuse/wsconn"
 )
 
 func Handler(prefix string) http.Handler {
@@ -97,7 +97,7 @@ func setupTunnel(next http.Handler) http.Handler {
 		pattern := r.URL.Path
 		from := r.URL.Query().Get("from")
 		switch _, ok := defaultTunnelMux.Tunnels[fp]; {
-		// passthrough regular request to wrapped handler
+		// passthrough regular request to wsconnped handler
 		case fp == "":
 			next.ServeHTTP(w, r)
 		// new stream identifier, create new tunnel
@@ -205,7 +205,7 @@ func (mux *tunnelMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		connDst, err := wrap.Wrconn(w, r)
+		connDst, err := wsconn.Wrconn(w, r)
 		if err != nil {
 			log.Println(err)
 			return

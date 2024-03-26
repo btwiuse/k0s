@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"sync"
 
-	"k0s.io/pkg/wrap"
+	"github.com/btwiuse/wsconn"
 )
 
 func NewTunnel() *Tunnel {
@@ -59,7 +59,7 @@ func (t *Tunnel) String() string {
 var _ http.Handler = (*Tunnel)(nil)
 
 func (t *Tunnel) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	conn, err := wrap.Wrconn(w, r)
+	conn, err := wsconn.Wrconn(w, r)
 	if err != nil {
 		log.Println(err)
 		return
