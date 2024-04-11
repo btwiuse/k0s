@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "go_default_library",
-    srcs = ["dial_nhooyr.go"],
-    importpath = "k0s.io/pkg/dial",
-    visibility = ["//visibility:public"],
-    deps = ["@io_nhooyr_websocket//:go_default_library"],
-)

@@ -986,6 +986,14 @@ def go_repositories():
         version = "v0.0.1",
     )
     go_repository(
+        name = "com_github_btwiuse_wsdial",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/btwiuse/wsdial",
+        sum = "h1:9Cqk+kKD7wptd6OZTd5o4hT8rHR5Lyrdayax60MlqFI=",
+        version = "v0.0.0",
+    )
+    go_repository(
         name = "com_github_buger_jsonparser",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -10088,6 +10096,14 @@ def go_repositories():
         importpath = "h12.io/socks",
         sum = "h1:cZhhbV8+DE0Y1kotwhr1a3RC3kFO7AtuZ4GLr3qKSc8=",
         version = "v1.0.2",
+    )
+    go_repository(
+        name = "io_k0s_pkg_dial",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "k0s.io/pkg/dial",
+        sum = "h1:D8iCHSWhFruDf7GgBa2jJzzy75DmK3RDUySpvJL9ZXI=",
+        version = "v0.1.15",
     )
     go_repository(
         name = "io_k0s_pkg_wrap",

@@ -23,7 +23,7 @@ func StartXpraServer(c agent.Config) chan net.Conn {
 	return xpraListener.Conns
 }
 
-func wsdial(u string) (*websocket.Conn, net.Conn, error) {
+func dialws(u string) (*websocket.Conn, net.Conn, error) {
 	var (
 		h = http.Header{}
 		t = &http.Client{
@@ -54,7 +54,7 @@ func xpraHandle(c net.Conn) {
 
 	log.Println("XPRA: ", u, c.RemoteAddr())
 
-	_, dnetconn, err := wsdial(u)
+	_, dnetconn, err := dialws(u)
 	if err != nil {
 		log.Println(err)
 		c.Close()

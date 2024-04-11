@@ -5,7 +5,7 @@ import (
 	"net/url"
 
 	"k0s.io/pkg/client"
-	"k0s.io/pkg/dial"
+	"github.com/btwiuse/wsdial"
 )
 
 type dialer struct {
@@ -20,5 +20,5 @@ func (d *dialer) Dial(p string, userinfo *url.Userinfo) (conn net.Conn, err erro
 		User:   userinfo,
 	}
 
-	return dial.Dial(u)
+	return wsdial.Dial(u)
 }

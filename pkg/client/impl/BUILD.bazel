@@ -13,11 +13,11 @@ go_library(
     deps = [
         "//:go_default_library",
         "//pkg/client:go_default_library",
-        "//pkg/dial:go_default_library",
         "//pkg/fzf:go_default_library",
         "//pkg/hub:go_default_library",
         "//pkg/hub/agent/info:go_default_library",
         "@com_github_abiosoft_ishell//:go_default_library",
+        "@com_github_btwiuse_wsdial//:go_default_library",
         "@com_github_containerd_console//:go_default_library",
         "@com_github_vojtechvitek_yaml_cli//pkg/cli:go_default_library",
         "@org_golang_x_crypto//ssh/terminal:go_default_library",

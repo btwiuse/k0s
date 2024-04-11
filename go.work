@@ -1,4 +1,4 @@
-go 1.22.1
+go 1.22.2
 
 use (
 	.
@@ -8,7 +8,6 @@ use (
 	./pkg/asciitransport
 	./pkg/cli
 	./pkg/client
-	./pkg/dial
 	./pkg/distro
 	./pkg/fzf
 	./pkg/hub
@@ -30,7 +29,6 @@ replace (
 	k0s.io/pkg/asciitransport v0.1.15 => ./pkg/asciitransport/
 	k0s.io/pkg/cli v0.1.15 => ./pkg/cli/
 	k0s.io/pkg/client v0.1.15 => ./pkg/client/
-	k0s.io/pkg/dial v0.1.15 => ./pkg/dial/
 	k0s.io/pkg/distro v0.1.15 => ./pkg/distro/
 	k0s.io/pkg/fzf v0.1.15 => ./pkg/fzf/
 	k0s.io/pkg/hub v0.1.15 => ./pkg/hub/

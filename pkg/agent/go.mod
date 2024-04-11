@@ -1,6 +1,6 @@
 module k0s.io/pkg/agent
 
-go 1.22.1
+go 1.22.2
 
 require (
 	github.com/ActiveState/termtest/conpty v0.5.0
@@ -8,6 +8,7 @@ require (
 	github.com/btwiuse/rng v0.0.0
 	github.com/btwiuse/tags v0.0.2
 	github.com/btwiuse/version v0.0.0
+	github.com/btwiuse/wsdial v0.0.0
 	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1
 	golang.org/x/sync v0.6.0
@@ -15,7 +16,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.15
 	k0s.io/pkg/asciitransport v0.1.15
-	k0s.io/pkg/dial v0.1.15
 	k0s.io/pkg/distro v0.1.15
 	k0s.io/pkg/middleware v0.1.15
 	nhooyr.io/websocket v1.8.10
@@ -44,6 +44,5 @@ require (
 	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k0s.io/pkg/wrap v0.1.15 // indirect
 	k8s.io/apimachinery v0.29.1 // indirect
 )
