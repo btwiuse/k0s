@@ -1,6 +1,6 @@
 module k0s.io/pkg/hub
 
-go 1.22.2
+go 1.22.3
 
 require (
 	github.com/abbot/go-http-auth v0.4.0

@@ -1,6 +1,6 @@
 module k0s.io/pkg/manager
 
-go 1.22.2
+go 1.22.3
 
 require (
 	github.com/btwiuse/gods v0.0.1
