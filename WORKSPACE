@@ -2,9 +2,10 @@
 # gazelle:repo bazel_gazelle
 workspace(name = "com_github_btwiuse_k0s")
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 # load("//toolchain:android_ndk.bzl", "android_ndk")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # android_ndk(name = "android_ndk")
 
@@ -26,8 +27,6 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 #     "//toolchain:cc-toolchain-android_arm64",
 #     "//toolchain:cc-toolchain-android_armv7",
 # )
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # git_repository(
 #     name = "rules_python",
@@ -98,12 +97,13 @@ raze_fetch_remote_crates()
 
 git_repository(
     name = "rules_proto",
+    remote = "https://github.com/bazelbuild/rules_proto.git",
     # branch = "master",
     tag = "6.0.0",
-    remote = "https://github.com/bazelbuild/rules_proto.git",
 )
 
 load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies")
+
 # load("@rules_proto//proto:setup.bzl", "rules_proto_setup")
 load("@rules_proto//proto:toolchains.bzl", "rules_proto_toolchains")
 

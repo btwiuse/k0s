@@ -1,3 +1,25 @@
+load(
+    ":cc_toolchain_config.bzl",
+    "cc_toolchain_config_32",
+    "cc_toolchain_config_64",
+)
+load(
+    ":cc_toolchain_config_android_386.bzl",
+    "cc_toolchain_config_android_386",
+)
+load(
+    ":cc_toolchain_config_android_amd64.bzl",
+    "cc_toolchain_config_android_amd64",
+)
+load(
+    ":cc_toolchain_config_android_arm64.bzl",
+    "cc_toolchain_config_android_arm64",
+)
+load(
+    ":cc_toolchain_config_android_armv7.bzl",
+    "cc_toolchain_config_android_armv7",
+)
+
 package(default_visibility = ["//visibility:public"])
 
 cc_toolchain_suite(
@@ -104,41 +126,15 @@ cc_toolchain(
     toolchain_identifier = "mingw-toolchain-64",
 )
 
-load(
-    ":cc_toolchain_config.bzl",
-    "cc_toolchain_config_32",
-    "cc_toolchain_config_64",
-)
-
 cc_toolchain_config_32(name = "mingw_toolchain_config_32")
 
 cc_toolchain_config_64(name = "mingw_toolchain_config_64")
 
-load(
-    ":cc_toolchain_config_android_amd64.bzl",
-    "cc_toolchain_config_android_amd64",
-)
-
 cc_toolchain_config_android_amd64(name = "android_amd64_toolchain_config")
-
-load(
-    ":cc_toolchain_config_android_386.bzl",
-    "cc_toolchain_config_android_386",
-)
 
 cc_toolchain_config_android_386(name = "android_386_toolchain_config")
 
-load(
-    ":cc_toolchain_config_android_arm64.bzl",
-    "cc_toolchain_config_android_arm64",
-)
-
 cc_toolchain_config_android_arm64(name = "android_arm64_toolchain_config")
-
-load(
-    ":cc_toolchain_config_android_armv7.bzl",
-    "cc_toolchain_config_android_armv7",
-)
 
 cc_toolchain_config_android_armv7(name = "android_armv7_toolchain_config")
 

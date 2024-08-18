@@ -66,7 +66,15 @@ go_library(
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
+        "@io_bazel_rules_go//go/platform:osx": [
+            "//pkg/asciitransport:go_default_library",
+            "@com_github_btwiuse_rng//:go_default_library",
+        ],
         "@io_bazel_rules_go//go/platform:plan9": [
+            "//pkg/asciitransport:go_default_library",
+            "@com_github_btwiuse_rng//:go_default_library",
+        ],
+        "@io_bazel_rules_go//go/platform:qnx": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
