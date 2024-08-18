@@ -60,7 +60,7 @@ go_rules_dependencies()
 
 go_register_toolchains(
     nogo = "@//:nogo",
-    version = "1.22.5",
+    version = "1.23.0",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
@@ -98,11 +98,14 @@ raze_fetch_remote_crates()
 
 git_repository(
     name = "rules_proto",
-    branch = "master",
+    # branch = "master",
+    tag = "6.0.0",
     remote = "https://github.com/bazelbuild/rules_proto.git",
 )
 
-load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
+load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies")
+# load("@rules_proto//proto:setup.bzl", "rules_proto_setup")
+load("@rules_proto//proto:toolchains.bzl", "rules_proto_toolchains")
 
 # install gazelle
 git_repository(
@@ -162,6 +165,8 @@ go_repositories()
 gazelle_dependencies()
 
 rules_proto_dependencies()
+
+# rules_proto_setup()
 
 rules_proto_toolchains()
 
