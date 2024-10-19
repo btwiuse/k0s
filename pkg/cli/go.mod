@@ -1,6 +1,6 @@
 module k0s.io/pkg/cli
 
-go 1.23.0
+go 1.23.2
 
 require (
 	github.com/btwiuse/multicall v0.0.4

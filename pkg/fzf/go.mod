@@ -1,6 +1,6 @@
 module k0s.io/pkg/fzf
 
-go 1.23.0
+go 1.23.2
 
 require (
 	github.com/gdamore/tcell v1.4.0

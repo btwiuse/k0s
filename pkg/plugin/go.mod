@@ -1,6 +1,6 @@
 module k0s.io/pkg/plugin
 
-go 1.23.0
+go 1.23.2
 
 require (
 	github.com/btwiuse/rng v0.0.0
