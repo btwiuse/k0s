@@ -162,7 +162,7 @@ jobs:
         GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: build-linux
         path: bin/
@@ -192,7 +192,7 @@ jobs:
         GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: build-linux-arm
         path: bin/
@@ -222,7 +222,7 @@ jobs:
         GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: build-linux-others
         path: bin/
@@ -252,7 +252,7 @@ jobs:
         GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: build-windows
         path: bin/
@@ -282,7 +282,7 @@ jobs:
         GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: build-darwin
         path: bin/
@@ -312,7 +312,7 @@ jobs:
         GOCACHE: /github/workspace/.cache/go-build
 
     - name: archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: build-bsd
         path: bin/
@@ -343,7 +343,7 @@ jobs:
         HOME: /home/btwiuse
 
     - name: archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: build-android
         path: bin/
@@ -369,43 +369,43 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-linux
       with:
         name: build-linux
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-linux-arm
       with:
         name: build-linux-arm
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-linux-others
       with:
         name: build-linux-others
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-windows
       with:
         name: build-windows
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-darwin
       with:
         name: build-darwin
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-bsd
       with:
         name: build-bsd
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-android
       with:
         name: build-android
@@ -462,43 +462,43 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-linux
       with:
         name: build-linux
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-linux-arm
       with:
         name: build-linux-arm
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-linux-others
       with:
         name: build-linux-others
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-windows
       with:
         name: build-windows
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-darwin
       with:
         name: build-darwin
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-bsd
       with:
         name: build-bsd
         path: ./bin/
 
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       name: download artifact build-android
       with:
         name: build-android
