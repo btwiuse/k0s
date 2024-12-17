@@ -1,5 +1,9 @@
 # .goreleaser.yaml
 
+project_name: k0s
+
+version: 2
+
 before:
   hooks:
     - go mod tidy
@@ -16,6 +20,38 @@ builds:
       - -s -w -X "github.com/btwiuse/version.GitTreeStateString=clean"
       - -s -w -X "github.com/btwiuse/version.GitVersionString={{.Version}}"
       - -s -w -X "github.com/btwiuse/version.BuildDateString={{.Date}}"
+    targets:
+#     - android_386
+#     - android_amd64
+      - android_arm64
+      - android_arm_6
+      - android_arm_7
+      - darwin_amd64
+      - darwin_arm64
+      - freebsd_386
+      - freebsd_amd64
+      - linux_386
+      - linux_amd64
+      - linux_arm64
+      - linux_arm_6
+      - linux_arm_7
+      - linux_loong64
+      - linux_mips
+      - linux_mips64
+      - linux_mips64le
+      - linux_mipsle
+      - linux_ppc64
+      - linux_ppc64le
+      - linux_riscv64
+      - linux_s390x
+      - netbsd_386
+      - netbsd_amd64
+      - openbsd_386
+      - openbsd_amd64
+      - windows_386
+      - windows_amd64
+      - windows_arm64
+      - windows_arm_7
 
 archives:
   - id: archive
