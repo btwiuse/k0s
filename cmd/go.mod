@@ -36,7 +36,7 @@ require (
 	github.com/creativeprojects/go-selfupdate v1.1.3 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1 // indirect
-	github.com/docker/docker v25.0.1+incompatible // indirect
+	github.com/docker/docker v25.0.6+incompatible // indirect
 	github.com/ebi-yade/altsvc-go v0.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.12.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
