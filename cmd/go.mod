@@ -1,6 +1,6 @@
 module k0s.io/cmd
 
-go 1.23.2
+go 1.23.4
 
 require (
 	github.com/btwiuse/bingo v0.0.3

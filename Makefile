@@ -60,6 +60,10 @@ cancel-actions-in-queue:     ## cancel gh actions in queue
 cancel-actions:     ## cancel gh actions
 	@ gh run list -L 60 | cut -f 7 | xargs -L1 gh run cancel
 
+delete-releases:    ## delete all non-version releases
+	@ gh release list -L 100 | grep ^cmd | cut -f 1 | xargs -L1 -P8 gh release delete --yes
+	@ gh release list -L 100 | grep ^pkg | cut -f 1 | xargs -L1 -P8 gh release delete --yes
+
 go-get:               ## trigger update for https://pkg.go.dev
 	@ go work edit --json | grep ModPath | grep -o '"k0s.io/.*"' | xargs -I% bash -c 'echo go get %@$(shell git rev-parse HEAD)' | bash -v
 

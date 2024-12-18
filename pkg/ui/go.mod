@@ -1,6 +1,6 @@
 module k0s.io/pkg/ui
 
-go 1.23.2
+go 1.23.4
 
 require (
 	github.com/gorilla/mux v1.8.1

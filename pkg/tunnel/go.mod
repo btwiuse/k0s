@@ -1,6 +1,6 @@
 module k0s.io/pkg/tunnel
 
-go 1.23.2
+go 1.23.4
 
 require (
 	github.com/btwiuse/wsconn v0.0.1
