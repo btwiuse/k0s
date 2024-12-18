@@ -1,6 +1,6 @@
 module k0s.io/pkg/simple
 
-go 1.23.4
+go 1.24rc1
 
 require (
 	github.com/gorilla/handlers v1.5.2
