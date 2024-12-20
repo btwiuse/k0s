@@ -22,21 +22,18 @@ func NewRPC(conn net.Conn) agent.RPC {
 		actions: make(chan func(agent.Agent)),
 		done:    make(chan struct{}),
 	}
-	go ys.plumbing()
+	// go ys.plumbing()
+	go ys.plumbingChan()
 	return ys
 }
 
-func (rpc *YS) plumbing() {
+func (rpc *YS) plumbingChan() {
 	defer rpc.Close()
 	for rpc.Scan() {
 		cmd := rpc.Text()
 		// log.Println(cmd)
-		tun, err := api.FromString(cmd)
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-		if tun == api.Ping {
+		p := api.ProtocolID(cmd)
+		if p == api.PingID {
 			continue
 		}
 		rpc.actions <- func(ag agent.Agent) {
@@ -46,7 +43,7 @@ func (rpc *YS) plumbing() {
 			)
 			// make sure conn is not nil
 			for i := 0; ; i++ {
-				conn, err = ag.Accept(tun)
+				conn, err = ag.AcceptProtocol(p)
 				if err != nil {
 					log.Println(i, err)
 					// retry on exponential interval
@@ -55,7 +52,7 @@ func (rpc *YS) plumbing() {
 				}
 				break
 			}
-			ag.TunnelChan(tun) <- conn
+			ag.ChannelChan(p) <- conn
 		}
 	}
 }

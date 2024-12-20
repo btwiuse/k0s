@@ -15,7 +15,9 @@ import (
 	"nhooyr.io/websocket"
 )
 
-func init() { Tunnels[api.Xpra] = StartXpraServer }
+func init() {
+	Channels[api.XpraID] = StartXpraServer
+}
 
 func StartXpraServer(c agent.Config) chan net.Conn {
 	xpraListener := NewLys()

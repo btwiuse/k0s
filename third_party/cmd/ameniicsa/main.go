@@ -7,9 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/btwiuse/rng"
 	"github.com/containerd/console"
 	"k0s.io/pkg/agent/tty/factory"
-	"github.com/btwiuse/rng"
 	asciitransport "k0s.io/third_party/pkg/asciitransport/v2"
 )
 

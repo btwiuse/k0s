@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"k0s.io/pkg/hub"
 	"github.com/btwiuse/version"
+	"k0s.io/pkg/hub"
 )
 
 var _ hub.AgentInfo = (*Info)(nil)
@@ -27,7 +27,7 @@ type privateInfo struct {
 	Tags     []string          `json:"tags"`
 	Htpasswd map[string]string `json:"htpasswd,omitempty"`
 
-	Meta            `json:"meta"`
+	Meta             `json:"meta"`
 	*version.Version `json:"version"`
 }
 

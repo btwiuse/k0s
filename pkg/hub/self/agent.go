@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/btwiuse/rng"
+	"github.com/btwiuse/version"
 	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/agent/info"
 	"k0s.io/pkg/agent/server"
-	"github.com/btwiuse/rng"
-	"github.com/btwiuse/version"
 )
 
 func Agent(hub string) {

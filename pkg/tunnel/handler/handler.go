@@ -16,10 +16,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/btwiuse/wsconn"
 	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
 	portless "k0s.io/pkg/tunnel"
-	"github.com/btwiuse/wsconn"
 )
 
 func Handler(prefix string) http.Handler {

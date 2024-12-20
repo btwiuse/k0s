@@ -1,8 +1,8 @@
 package client
 
 import (
-	"k0s.io/pkg/hub"
 	"github.com/btwiuse/version"
+	"k0s.io/pkg/hub"
 )
 
 type Client interface {

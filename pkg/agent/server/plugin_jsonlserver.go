@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	Tunnels[api.Jsonl] = StartJsonlServer
+	Channels[api.JsonlID] = StartJsonlServer
 	println("JSONL")
 }
 

@@ -14,7 +14,9 @@ import (
 	"k0s.io/pkg/asciitransport"
 )
 
-func init() { Tunnels[api.Terminal] = StartTerminalServer }
+func init() {
+	Channels[api.TerminalID] = StartTerminalServer
+}
 
 func StartTerminalServer(c agent.Config) chan net.Conn {
 	var (

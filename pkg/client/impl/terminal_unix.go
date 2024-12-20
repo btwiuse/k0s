@@ -11,9 +11,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/btwiuse/rng"
 	"github.com/containerd/console"
 	"k0s.io/pkg/asciitransport"
-	"github.com/btwiuse/rng"
 )
 
 func (cl *clientImpl) terminalConnect(endpoint string, userinfo *url.Userinfo) {

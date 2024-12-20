@@ -12,6 +12,7 @@ import (
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/sse"
 	"github.com/btwiuse/wetty/pkg/assets"
+	"github.com/btwiuse/wsconn"
 	"github.com/gorilla/mux"
 	echo "github.com/jpillora/go-echo-server/handler"
 	"k0s.io"
@@ -20,7 +21,6 @@ import (
 	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
 	"k0s.io/pkg/ui"
-	"github.com/btwiuse/wsconn"
 	"modernc.org/httpfs"
 )
 
@@ -33,9 +33,9 @@ type hubServer struct {
 
 	*http.Server
 
-	c              hub.Config
-	BinHandler     http.Handler
-	sseMux         *sse.SSE
+	c          hub.Config
+	BinHandler http.Handler
+	sseMux     *sse.SSE
 }
 
 func (h *hubServer) Handler() http.Handler {
@@ -56,10 +56,10 @@ func NewHub(c hub.Config) hub.Hub {
 	var (
 		listhand = NewHandleHijackListener()
 		h        = &hubServer{
-			c:              c,
-			AgentManager:   NewAgentManager(),
-			BinHandler:     middleware.GzipMiddleware(binHandler()),
-			sseMux:         sse.NewSSE(),
+			c:            c,
+			AgentManager: NewAgentManager(),
+			BinHandler:   middleware.GzipMiddleware(binHandler()),
+			sseMux:       sse.NewSSE(),
 		}
 	)
 	go func() {
@@ -175,16 +175,8 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
 	// alternative websocket implementation:
 	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
-	r.HandleFunc("/fs", h.handleTunnel(api.FS)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/socks5", h.handleTunnel(api.Socks5)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/redir", h.handleTunnel(api.Redir)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/doh", h.handleTunnel(api.Doh)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/env", h.handleTunnel(api.Env)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/terminal", h.handleTunnel(api.Terminal)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/terminalv2", h.handleTunnel(api.TerminalV2)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/version", h.handleTunnel(api.Version)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/jsonl", h.handleTunnel(api.Jsonl)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/xpra", h.handleTunnel(api.Xpra)).Methods("GET").Queries("id", "{id}")
+
+	r.HandleFunc("/channel", h.handleChannels).Methods("GET").Queries("id", "{id}").Queries("protocol", "{protocol}")
 
 	// hub specific function
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
@@ -247,7 +239,17 @@ func (h *hubServer) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(pretty.JSONStringLine(agents)))
 }
 
-func (h *hubServer) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *http.Request) {
+func (h *hubServer) handleChannels(w http.ResponseWriter, r *http.Request) {
+	var (
+		vars = mux.Vars(r)
+		p    = api.ProtocolID(vars["protocol"])
+	)
+	println("handleChannels", string(p))
+
+	h.handleChannel(p)(w, r)
+}
+
+func (h *hubServer) handleChannel(p api.ProtocolID) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars = mux.Vars(r)
@@ -261,11 +263,11 @@ func (h *hubServer) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *
 
 		conn, err := wsconn.Wrconn(w, r)
 		if err != nil {
-			log.Printf("error accepting %s: %s\n", tun, err)
+			log.Printf("error accepting %s: %s\n", p, err)
 			return
 		}
 
-		h.GetAgent(id).AddTunnel(tun, conn)
+		h.GetAgent(id).AddChannel(p, conn)
 	}
 }
 

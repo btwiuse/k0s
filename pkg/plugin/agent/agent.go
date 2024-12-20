@@ -6,11 +6,11 @@ import (
 	"sync"
 	"time"
 
-	"k0s.io"
+	"github.com/btwiuse/rng"
 	"github.com/btwiuse/version"
+	"k0s.io"
 	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/agent/server"
-	"github.com/btwiuse/rng"
 )
 
 var once = &sync.Once{}

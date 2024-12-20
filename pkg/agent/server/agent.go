@@ -3,11 +3,11 @@ package server
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net"
 	"os/exec"
-	"strings"
 
 	"github.com/btwiuse/pretty"
 	"golang.org/x/sync/errgroup"
@@ -15,18 +15,18 @@ import (
 	"k0s.io/pkg/api"
 )
 
-type TunnelFn = func(agent.Config) chan net.Conn
+type ChannelFn = func(agent.Config) chan net.Conn
 
 var (
-	_       agent.Agent             = (*server)(nil)
-	Tunnels map[api.Tunnel]TunnelFn = map[api.Tunnel]TunnelFn{}
+	_        agent.Agent                  = (*server)(nil)
+	Channels map[api.ProtocolID]ChannelFn = map[api.ProtocolID]ChannelFn{}
 )
 
 type server struct {
 	*errgroup.Group
 	*dialer
 	agent.Config
-	Tunnels map[api.Tunnel]chan net.Conn
+	Channels map[api.ProtocolID]chan net.Conn
 	// agent.RPC
 
 	id   string
@@ -35,42 +35,43 @@ type server struct {
 
 func NewAgent(c agent.Config) agent.Agent {
 	var (
-		eg, _   = errgroup.WithContext(context.Background())
-		id      = c.GetID()
-		name    = c.GetName()
-		shell   = "bash"
-		dialer  = &dialer{c}
-		tunnels = map[api.Tunnel]chan net.Conn{}
+		eg, _    = errgroup.WithContext(context.Background())
+		id       = c.GetID()
+		name     = c.GetName()
+		shell    = "bash"
+		dialer   = &dialer{c}
+		channels = map[api.ProtocolID]chan net.Conn{}
 	)
 
 	if _, err := exec.LookPath(shell); err != nil {
 		shell = "sh"
 	}
 
-	for k, v := range Tunnels {
-		tunnels[k] = v(c)
+	for k, v := range Channels {
+		channels[k] = v(c)
 	}
 
 	return &server{
-		Group:   eg,
-		Config:  c,
-		dialer:  dialer,
-		Tunnels: tunnels,
-		id:      id,
-		name:    name,
+		Group:    eg,
+		Config:   c,
+		dialer:   dialer,
+		Channels: channels,
+		id:       id,
+		name:     name,
 	}
 }
 
-func (ag *server) TunnelChan(tun api.Tunnel) chan net.Conn {
-	return ag.Tunnels[tun]
+func (ag *server) ChannelChan(p api.ProtocolID) chan net.Conn {
+	return ag.Channels[p]
 }
 
-func (ag *server) Accept(tun api.Tunnel) (net.Conn, error) {
+func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
+	println("AcceptProtocol", string(p))
 	var (
 		conn  net.Conn
 		err   error
-		path  = "/api/" + strings.ToLower(tun.String())
-		query = "id=" + ag.GetID()
+		path  = "/api/channel"
+		query = fmt.Sprintf("id=%s&protocol=%s", ag.GetID(), string(p))
 	)
 
 	conn, err = ag.Dial(path, query)

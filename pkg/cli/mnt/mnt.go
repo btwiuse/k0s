@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"k0s.io/pkg/tunnel/listener"
 	"github.com/webteleport/utils"
+	"k0s.io/pkg/tunnel/listener"
 )
 
 func Run(args []string) error {
