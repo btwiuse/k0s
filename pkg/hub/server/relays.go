@@ -9,11 +9,11 @@ import (
 	"net/http/httputil"
 	"strings"
 
+	"github.com/btwiuse/wsconn"
 	"github.com/gorilla/mux"
 	"k0s.io"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/hub"
-	"github.com/btwiuse/wsconn"
 	"nhooyr.io/websocket"
 )
 

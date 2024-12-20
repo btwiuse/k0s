@@ -19,8 +19,8 @@ import (
 
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
 	"github.com/abiosoft/ishell"
-	"golang.org/x/crypto/ssh/terminal"
 	"github.com/containerd/console"
+	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io"
 	"k0s.io/pkg/client"
 	"k0s.io/pkg/fzf"

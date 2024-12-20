@@ -4,8 +4,8 @@ import (
 	"net"
 	"net/url"
 
-	"k0s.io/pkg/agent"
 	"github.com/btwiuse/wsdial"
+	"k0s.io/pkg/agent"
 )
 
 type dialer struct {

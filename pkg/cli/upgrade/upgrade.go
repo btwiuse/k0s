@@ -8,8 +8,8 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/creativeprojects/go-selfupdate"
 	"github.com/btwiuse/version"
+	"github.com/creativeprojects/go-selfupdate"
 )
 
 func Run(args []string) error {

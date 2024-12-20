@@ -12,6 +12,7 @@ import (
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/sse"
 	"github.com/btwiuse/wetty/pkg/assets"
+	"github.com/btwiuse/wsconn"
 	"github.com/gorilla/mux"
 	echo "github.com/jpillora/go-echo-server/handler"
 	"k0s.io"
@@ -20,7 +21,6 @@ import (
 	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
 	"k0s.io/pkg/ui"
-	"github.com/btwiuse/wsconn"
 	"modernc.org/httpfs"
 )
 
@@ -33,9 +33,9 @@ type hubServer struct {
 
 	*http.Server
 
-	c              hub.Config
-	BinHandler     http.Handler
-	sseMux         *sse.SSE
+	c          hub.Config
+	BinHandler http.Handler
+	sseMux     *sse.SSE
 }
 
 func (h *hubServer) Handler() http.Handler {
@@ -56,10 +56,10 @@ func NewHub(c hub.Config) hub.Hub {
 	var (
 		listhand = NewHandleHijackListener()
 		h        = &hubServer{
-			c:              c,
-			AgentManager:   NewAgentManager(),
-			BinHandler:     middleware.GzipMiddleware(binHandler()),
-			sseMux:         sse.NewSSE(),
+			c:            c,
+			AgentManager: NewAgentManager(),
+			BinHandler:   middleware.GzipMiddleware(binHandler()),
+			sseMux:       sse.NewSSE(),
 		}
 	)
 	go func() {
@@ -186,6 +186,8 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 	r.HandleFunc("/jsonl", h.handleTunnel(api.Jsonl)).Methods("GET").Queries("id", "{id}")
 	r.HandleFunc("/xpra", h.handleTunnel(api.Xpra)).Methods("GET").Queries("id", "{id}")
 
+	r.HandleFunc("/channel", h.handleChannels).Methods("GET").Queries("id", "{id}").Queries("protocol", "{protocol}")
+
 	// hub specific function
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
 	r.Handle("/bin/k0s", h.BinHandler).Methods("GET")
@@ -245,6 +247,37 @@ func (h *hubServer) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(pretty.JSONStringLine(agents)))
+}
+
+func (h *hubServer) handleChannels(w http.ResponseWriter, r *http.Request) {
+	var (
+		vars = mux.Vars(r)
+		p    = api.ProtocolID(vars["protocol"])
+	)
+
+	h.handleChannel(p)(w, r)
+}
+
+func (h *hubServer) handleChannel(p api.ProtocolID) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var (
+			vars = mux.Vars(r)
+			id   = vars["id"]
+		)
+
+		if !h.Has(id) {
+			log.Println("no such id", id)
+			return
+		}
+
+		conn, err := wsconn.Wrconn(w, r)
+		if err != nil {
+			log.Printf("error accepting %s: %s\n", p, err)
+			return
+		}
+
+		h.GetAgent(id).AddChannel(p, conn)
+	}
 }
 
 func (h *hubServer) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *http.Request) {

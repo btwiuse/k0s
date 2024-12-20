@@ -23,11 +23,17 @@ func newTunnels() map[api.Tunnel]chan net.Conn {
 	return tuns
 }
 
+func newChannels() map[api.ProtocolID]chan net.Conn {
+	chns := make(map[api.ProtocolID]chan net.Conn)
+	return chns
+}
+
 func NewAgent(rpc hub.RPC, info hub.AgentInfo) hub.Agent {
 	ag := &agent{
 		rpc:       rpc,
 		created:   time.Now(),
 		Tunnels:   newTunnels(),
+		Channels:  newChannels(),
 		grpcNames: make(map[net.Conn]string),
 	}
 
@@ -48,14 +54,20 @@ func (ag *agent) MarshalJSON() ([]byte, error) {
 type agent struct {
 	hub.AgentInfo // `json:"-"` // inherit methods
 
-	Tunnels map[api.Tunnel]chan net.Conn `json:"-"`
-	rpc     hub.RPC
+	Tunnels  map[api.Tunnel]chan net.Conn     `json:"-"`
+	Channels map[api.ProtocolID]chan net.Conn `json:"-"`
+	rpc      hub.RPC
 
 	created  time.Time
 	htpasswd map[string]string
 
 	grpcCounter int
 	grpcNames   map[net.Conn]string
+}
+
+func (ag *agent) NewChannel(p api.ProtocolID) net.Conn {
+	ag.rpc.NewChannel(p)
+	return <-ag.Channels[p]
 }
 
 func (ag *agent) NewTunnel(tun api.Tunnel) net.Conn {
@@ -98,4 +110,9 @@ func (ag *agent) Name() string {
 // blocks until agent.NewTunnel(api.Tunnel) reads the channel
 func (ag *agent) AddTunnel(tun api.Tunnel, conn net.Conn) {
 	ag.Tunnels[tun] <- conn
+}
+
+// blocks until agent.NewTunnel(api.Tunnel) reads the channel
+func (ag *agent) AddChannel(p api.ProtocolID, conn net.Conn) {
+	ag.Channels[p] <- conn
 }

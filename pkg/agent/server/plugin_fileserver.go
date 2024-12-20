@@ -9,7 +9,10 @@ import (
 	"k0s.io/pkg/middleware"
 )
 
-func init() { Tunnels[api.FS] = StartFileServer }
+func init() {
+	Tunnels[api.FS] = StartFileServer
+	Channels[api.FSID] = StartFileServer
+}
 
 func StartFileServer(c agent.Config) chan net.Conn {
 	var (

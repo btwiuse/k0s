@@ -10,7 +10,10 @@ import (
 	"k0s.io/pkg/middleware"
 )
 
-func init() { Tunnels[api.Version] = StartVersionServer }
+func init() {
+	Tunnels[api.Version] = StartVersionServer
+	Channels[api.VersionID] = StartVersionServer
+}
 
 func StartVersionServer(c agent.Config) chan net.Conn {
 	var (

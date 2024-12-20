@@ -8,8 +8,8 @@ import (
 
 	"k0s.io/pkg/agent"
 	"k0s.io/pkg/api"
-	"k0s.io/third_party/pkg/exporter"
 	"k0s.io/pkg/middleware"
+	"k0s.io/third_party/pkg/exporter"
 )
 
 func init() { Tunnels[api.Metrics] = StartMetricsServer }

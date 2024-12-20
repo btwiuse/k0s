@@ -9,11 +9,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/btwiuse/rng"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/hub"
 	"k0s.io/pkg/hub/agent"
 	"k0s.io/pkg/hub/agent/info"
-	"github.com/btwiuse/rng"
 )
 
 var (
@@ -133,6 +133,14 @@ type YS struct {
 	*bufio.Scanner
 	done          chan struct{}
 	closeOnceDone *sync.Once
+}
+
+func (ys *YS) NewChannel(p api.ProtocolID) {
+	cmd := string(p)
+	_, err := io.WriteString(ys.Conn, fmt.Sprintln(cmd))
+	if err != nil {
+		ys.Close()
+	}
 }
 
 func (ys *YS) NewTunnel(tun api.Tunnel) {

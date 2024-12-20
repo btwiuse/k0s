@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -18,15 +19,17 @@ import (
 type TunnelFn = func(agent.Config) chan net.Conn
 
 var (
-	_       agent.Agent             = (*server)(nil)
-	Tunnels map[api.Tunnel]TunnelFn = map[api.Tunnel]TunnelFn{}
+	_        agent.Agent                 = (*server)(nil)
+	Tunnels  map[api.Tunnel]TunnelFn     = map[api.Tunnel]TunnelFn{}
+	Channels map[api.ProtocolID]TunnelFn = map[api.ProtocolID]TunnelFn{}
 )
 
 type server struct {
 	*errgroup.Group
 	*dialer
 	agent.Config
-	Tunnels map[api.Tunnel]chan net.Conn
+	Tunnels  map[api.Tunnel]chan net.Conn
+	Channels map[api.ProtocolID]chan net.Conn
 	// agent.RPC
 
 	id   string
@@ -35,12 +38,13 @@ type server struct {
 
 func NewAgent(c agent.Config) agent.Agent {
 	var (
-		eg, _   = errgroup.WithContext(context.Background())
-		id      = c.GetID()
-		name    = c.GetName()
-		shell   = "bash"
-		dialer  = &dialer{c}
-		tunnels = map[api.Tunnel]chan net.Conn{}
+		eg, _    = errgroup.WithContext(context.Background())
+		id       = c.GetID()
+		name     = c.GetName()
+		shell    = "bash"
+		dialer   = &dialer{c}
+		tunnels  = map[api.Tunnel]chan net.Conn{}
+		channels = map[api.ProtocolID]chan net.Conn{}
 	)
 
 	if _, err := exec.LookPath(shell); err != nil {
@@ -51,18 +55,43 @@ func NewAgent(c agent.Config) agent.Agent {
 		tunnels[k] = v(c)
 	}
 
-	return &server{
-		Group:   eg,
-		Config:  c,
-		dialer:  dialer,
-		Tunnels: tunnels,
-		id:      id,
-		name:    name,
+	for k, v := range Channels {
+		channels[k] = v(c)
 	}
+
+	return &server{
+		Group:    eg,
+		Config:   c,
+		dialer:   dialer,
+		Tunnels:  tunnels,
+		Channels: channels,
+		id:       id,
+		name:     name,
+	}
+}
+
+func (ag *server) ChannelChan(p api.ProtocolID) chan net.Conn {
+	return ag.Channels[p]
 }
 
 func (ag *server) TunnelChan(tun api.Tunnel) chan net.Conn {
 	return ag.Tunnels[tun]
+}
+
+func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
+	var (
+		conn  net.Conn
+		err   error
+		path  = "/api/channel"
+		query = fmt.Sprintf("id=%s&protocol=%s", ag.GetID(), string(p))
+	)
+
+	conn, err = ag.Dial(path, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
 }
 
 func (ag *server) Accept(tun api.Tunnel) (net.Conn, error) {

@@ -59,6 +59,7 @@ type Agent interface {
 	Config
 	TunnelListener
 	TunnelChan(api.Tunnel) chan net.Conn
+	ChannelChan(api.ProtocolID) chan net.Conn
 	AgentRegister(net.Conn) (RPC, error)
 
 	ConnectAndServe() error
@@ -71,6 +72,7 @@ type Agent interface {
 
 type TunnelListener interface {
 	Accept(api.Tunnel) (net.Conn, error)
+	AcceptProtocol(api.ProtocolID) (net.Conn, error)
 }
 
 type TtyFactory interface {

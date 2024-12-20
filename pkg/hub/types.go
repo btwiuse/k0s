@@ -6,9 +6,9 @@ import (
 
 	// "net/rpc"
 
+	"github.com/btwiuse/version"
 	"k0s.io"
 	"k0s.io/pkg/api"
-	"github.com/btwiuse/version"
 )
 
 type AgentInfo interface {
@@ -60,6 +60,8 @@ type Agent interface {
 	AgentInfo
 	k0s.Tider
 
+	AddChannel(api.ProtocolID, net.Conn)
+	NewChannel(api.ProtocolID) net.Conn
 	AddTunnel(api.Tunnel, net.Conn)
 	NewTunnel(api.Tunnel) net.Conn
 	BasicAuth(http.Handler) http.Handler
@@ -71,6 +73,7 @@ type RPC interface {
 	Close()
 	Done() <-chan struct{}
 
+	NewChannel(api.ProtocolID)
 	NewTunnel(api.Tunnel)
 
 	Ping()
