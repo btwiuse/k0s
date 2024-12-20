@@ -4,8 +4,8 @@ go 1.24rc1
 
 require (
 	github.com/btwiuse/wsconn v0.0.1
-	k0s.io v0.1.15
-	k0s.io/pkg/middleware v0.1.15
+	k0s.io v0.1.16
+	k0s.io/pkg/middleware v0.1.16
 	nhooyr.io/websocket v1.8.10
 )
 

@@ -12,12 +12,12 @@ require (
 	github.com/btwiuse/wsconn v0.0.1
 	github.com/gorilla/mux v1.8.1
 	github.com/jpillora/go-echo-server v0.5.0
-	k0s.io v0.1.15
-	k0s.io/pkg/agent v0.1.15
-	k0s.io/pkg/manager v0.1.15
-	k0s.io/pkg/middleware v0.1.15
-	k0s.io/pkg/ui v0.1.15
-	k0s.io/pkg/utils v0.1.15
+	k0s.io v0.1.16
+	k0s.io/pkg/agent v0.1.16
+	k0s.io/pkg/manager v0.1.16
+	k0s.io/pkg/middleware v0.1.16
+	k0s.io/pkg/ui v0.1.16
+	k0s.io/pkg/utils v0.1.16
 	modernc.org/httpfs v1.0.6
 	nhooyr.io/websocket v1.8.10
 )
@@ -64,9 +64,9 @@ require (
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k0s.io/pkg/asciitransport v0.1.15 // indirect
+	k0s.io/pkg/asciitransport v0.1.16 // indirect
 	k0s.io/pkg/dial v0.1.15 // indirect
-	k0s.io/pkg/distro v0.1.15 // indirect
+	k0s.io/pkg/distro v0.1.16 // indirect
 	k0s.io/pkg/wrap v0.1.15 // indirect
 	k8s.io/apimachinery v0.31.2 // indirect
 )

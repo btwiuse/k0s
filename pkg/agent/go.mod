@@ -14,10 +14,10 @@ require (
 	golang.org/x/sync v0.7.0
 	golang.org/x/text v0.16.0
 	gopkg.in/yaml.v3 v3.0.1
-	k0s.io v0.1.15
-	k0s.io/pkg/asciitransport v0.1.15
-	k0s.io/pkg/distro v0.1.15
-	k0s.io/pkg/middleware v0.1.15
+	k0s.io v0.1.16
+	k0s.io/pkg/asciitransport v0.1.16
+	k0s.io/pkg/distro v0.1.16
+	k0s.io/pkg/middleware v0.1.16
 	nhooyr.io/websocket v1.8.10
 )
 

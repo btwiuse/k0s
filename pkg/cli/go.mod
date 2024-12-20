@@ -8,14 +8,14 @@ require (
 	github.com/creativeprojects/go-selfupdate v1.1.3
 	github.com/webteleport/utils v0.2.5
 	github.com/webteleport/wtf v0.0.8
-	k0s.io v0.1.15
-	k0s.io/pkg/agent v0.1.15
-	k0s.io/pkg/apiserver v0.1.15
-	k0s.io/pkg/client v0.1.15
-	k0s.io/pkg/hub v0.1.15
-	k0s.io/pkg/simple v0.1.15
-	k0s.io/pkg/tunnel v0.1.15
-	k0s.io/pkg/utils v0.1.15
+	k0s.io v0.1.16
+	k0s.io/pkg/agent v0.1.16
+	k0s.io/pkg/apiserver v0.1.16
+	k0s.io/pkg/client v0.1.16
+	k0s.io/pkg/hub v0.1.16
+	k0s.io/pkg/simple v0.1.16
+	k0s.io/pkg/tunnel v0.1.16
+	k0s.io/pkg/utils v0.1.16
 	k8s.io/apimachinery v0.31.2
 	k8s.io/kubectl v0.31.2
 )
@@ -177,13 +177,13 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k0s.io/pkg/asciitransport v0.1.15 // indirect
+	k0s.io/pkg/asciitransport v0.1.16 // indirect
 	k0s.io/pkg/dial v0.1.15 // indirect
-	k0s.io/pkg/distro v0.1.15 // indirect
-	k0s.io/pkg/fzf v0.1.15 // indirect
-	k0s.io/pkg/manager v0.1.15 // indirect
-	k0s.io/pkg/middleware v0.1.15 // indirect
-	k0s.io/pkg/ui v0.1.15 // indirect
+	k0s.io/pkg/distro v0.1.16 // indirect
+	k0s.io/pkg/fzf v0.1.16 // indirect
+	k0s.io/pkg/manager v0.1.16 // indirect
+	k0s.io/pkg/middleware v0.1.16 // indirect
+	k0s.io/pkg/ui v0.1.16 // indirect
 	k0s.io/pkg/wrap v0.1.15 // indirect
 	k8s.io/api v0.31.2 // indirect
 	k8s.io/apiserver v0.31.2 // indirect

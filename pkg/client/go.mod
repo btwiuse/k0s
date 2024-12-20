@@ -12,11 +12,11 @@ require (
 	github.com/containerd/console v1.0.4
 	golang.org/x/crypto v0.24.0
 	gopkg.in/yaml.v3 v3.0.1
-	k0s.io v0.1.15
-	k0s.io/pkg/agent v0.1.15
-	k0s.io/pkg/asciitransport v0.1.15
-	k0s.io/pkg/fzf v0.1.15
-	k0s.io/pkg/hub v0.1.15
+	k0s.io v0.1.16
+	k0s.io/pkg/agent v0.1.16
+	k0s.io/pkg/asciitransport v0.1.16
+	k0s.io/pkg/fzf v0.1.16
+	k0s.io/pkg/hub v0.1.16
 )
 
 require (
@@ -54,7 +54,7 @@ require (
 	golang.org/x/term v0.21.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k0s.io/pkg/distro v0.1.15 // indirect
+	k0s.io/pkg/distro v0.1.16 // indirect
 	k8s.io/apimachinery v0.31.2 // indirect
 	nhooyr.io/websocket v1.8.10 // indirect
 )
