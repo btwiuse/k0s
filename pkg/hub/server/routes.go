@@ -254,6 +254,7 @@ func (h *hubServer) handleChannels(w http.ResponseWriter, r *http.Request) {
 		vars = mux.Vars(r)
 		p    = api.ProtocolID(vars["protocol"])
 	)
+	println("handleChannels", string(p))
 
 	h.handleChannel(p)(w, r)
 }
@@ -287,6 +288,7 @@ func (h *hubServer) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *
 			vars = mux.Vars(r)
 			id   = vars["id"]
 		)
+		println("handleTunnel", tun, id)
 
 		if !h.Has(id) {
 			log.Println("no such id", id)

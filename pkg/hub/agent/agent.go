@@ -67,6 +67,12 @@ type agent struct {
 
 func (ag *agent) NewChannel(p api.ProtocolID) net.Conn {
 	ag.rpc.NewChannel(p)
+	// make sure the channel is created
+	_, ok := ag.Channels[p]
+	if !ok {
+		println("NewChannel", string(p))
+		ag.Channels[p] = make(chan net.Conn)
+	}
 	return <-ag.Channels[p]
 }
 
@@ -114,5 +120,11 @@ func (ag *agent) AddTunnel(tun api.Tunnel, conn net.Conn) {
 
 // blocks until agent.NewTunnel(api.Tunnel) reads the channel
 func (ag *agent) AddChannel(p api.ProtocolID, conn net.Conn) {
+	// make sure the channel is created
+	_, ok := ag.Channels[p]
+	if !ok {
+		println("AddChannel", string(p))
+		ag.Channels[p] = make(chan net.Conn)
+	}
 	ag.Channels[p] <- conn
 }
