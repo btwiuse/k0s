@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-ROOT_MOD=$(go mod edit -json | jq -r .Module.Path)
+export ROOT_MOD=$(go mod edit -json | jq -r .Module.Path)
 
 cat .mods | xargs -I% bash -c 'echo %/$(<VERSION)' | sed s,^$ROOT_MOD/,,g | xargs -I% bash -vc 'git tag -f % && git push -f origin %'

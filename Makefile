@@ -55,10 +55,10 @@ gazelle: work-sync             ## auto generate BUILD.bazel files from go.mod
 	@#git status vendor/
 
 cancel-actions-in-queue:     ## cancel gh actions in queue
-	@ gh run list -L 60 | grep queued | cut -f 7 | xargs -L1 gh run cancel
+	@ gh run list -L 60 | grep queued | cut -f 7 | xargs -L1 -P8 gh run cancel
 
 cancel-actions:     ## cancel gh actions
-	@ gh run list -L 60 | cut -f 7 | xargs -L1 gh run cancel
+	@ gh run list -L 60 | cut -f 7 | xargs -L1 -P8 gh run cancel
 
 delete-releases:    ## delete all non-version releases
 	@ gh release list -L 100 | grep ^cmd | cut -f 1 | xargs -L1 -P8 gh release delete --yes
