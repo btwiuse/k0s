@@ -281,6 +281,7 @@ func (h *hubServer) handleChannel(p api.ProtocolID) func(w http.ResponseWriter, 
 }
 
 func (h *hubServer) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *http.Request) {
+	println("handleTunnel", tun)
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars = mux.Vars(r)

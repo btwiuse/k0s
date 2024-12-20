@@ -79,6 +79,7 @@ func (ag *server) TunnelChan(tun api.Tunnel) chan net.Conn {
 }
 
 func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
+	println("AcceptProtocol", string(p))
 	var (
 		conn  net.Conn
 		err   error
