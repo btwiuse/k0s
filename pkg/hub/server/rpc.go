@@ -143,14 +143,6 @@ func (ys *YS) NewChannel(p api.ProtocolID) {
 	}
 }
 
-func (ys *YS) NewTunnel(tun api.Tunnel) {
-	cmd := tun.String()
-	_, err := io.WriteString(ys.Conn, fmt.Sprintln(cmd))
-	if err != nil {
-		ys.Close()
-	}
-}
-
 func (ys *YS) Ping() {
 	_, err := io.WriteString(ys.Conn, fmt.Sprintln("PING"))
 	if err != nil {

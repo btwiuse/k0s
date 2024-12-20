@@ -15,7 +15,6 @@ import (
 )
 
 func init() {
-	Tunnels[api.Terminal] = StartTerminalServer
 	Channels[api.TerminalID] = StartTerminalServer
 }
 

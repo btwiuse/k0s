@@ -11,7 +11,6 @@ import (
 )
 
 func init() {
-	Tunnels[api.Version] = StartVersionServer
 	Channels[api.VersionID] = StartVersionServer
 }
 

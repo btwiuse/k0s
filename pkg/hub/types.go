@@ -62,8 +62,6 @@ type Agent interface {
 
 	AddChannel(api.ProtocolID, net.Conn)
 	NewChannel(api.ProtocolID) net.Conn
-	AddTunnel(api.Tunnel, net.Conn)
-	NewTunnel(api.Tunnel) net.Conn
 	BasicAuth(http.Handler) http.Handler
 }
 
@@ -74,7 +72,6 @@ type RPC interface {
 	Done() <-chan struct{}
 
 	NewChannel(api.ProtocolID)
-	NewTunnel(api.Tunnel)
 
 	Ping()
 	RemoteIP() string

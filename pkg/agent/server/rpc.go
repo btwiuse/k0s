@@ -57,40 +57,6 @@ func (rpc *YS) plumbingChan() {
 	}
 }
 
-func (rpc *YS) plumbing() {
-	defer rpc.Close()
-	for rpc.Scan() {
-		cmd := rpc.Text()
-		// log.Println(cmd)
-		tun, err := api.FromString(cmd)
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-		if tun == api.Ping {
-			continue
-		}
-		rpc.actions <- func(ag agent.Agent) {
-			var (
-				conn net.Conn
-				err  error
-			)
-			// make sure conn is not nil
-			for i := 0; ; i++ {
-				conn, err = ag.Accept(tun)
-				if err != nil {
-					log.Println(i, err)
-					// retry on exponential interval
-					time.After(time.Duration(1<<i) * time.Millisecond)
-					continue
-				}
-				break
-			}
-			ag.TunnelChan(tun) <- conn
-		}
-	}
-}
-
 type YS struct {
 	net.Conn
 	*bufio.Scanner

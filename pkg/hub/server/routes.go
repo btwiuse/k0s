@@ -175,16 +175,6 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
 	// alternative websocket implementation:
 	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
-	r.HandleFunc("/fs", h.handleTunnel(api.FS)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/socks5", h.handleTunnel(api.Socks5)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/redir", h.handleTunnel(api.Redir)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/doh", h.handleTunnel(api.Doh)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/env", h.handleTunnel(api.Env)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/terminal", h.handleTunnel(api.Terminal)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/terminalv2", h.handleTunnel(api.TerminalV2)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/version", h.handleTunnel(api.Version)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/jsonl", h.handleTunnel(api.Jsonl)).Methods("GET").Queries("id", "{id}")
-	r.HandleFunc("/xpra", h.handleTunnel(api.Xpra)).Methods("GET").Queries("id", "{id}")
 
 	r.HandleFunc("/channel", h.handleChannels).Methods("GET").Queries("id", "{id}").Queries("protocol", "{protocol}")
 
@@ -278,30 +268,6 @@ func (h *hubServer) handleChannel(p api.ProtocolID) func(w http.ResponseWriter, 
 		}
 
 		h.GetAgent(id).AddChannel(p, conn)
-	}
-}
-
-func (h *hubServer) handleTunnel(tun api.Tunnel) func(w http.ResponseWriter, r *http.Request) {
-	println("handleTunnel", tun)
-	return func(w http.ResponseWriter, r *http.Request) {
-		var (
-			vars = mux.Vars(r)
-			id   = vars["id"]
-		)
-		println("handleTunnel", tun, id)
-
-		if !h.Has(id) {
-			log.Println("no such id", id)
-			return
-		}
-
-		conn, err := wsconn.Wrconn(w, r)
-		if err != nil {
-			log.Printf("error accepting %s: %s\n", tun, err)
-			return
-		}
-
-		h.GetAgent(id).AddTunnel(tun, conn)
 	}
 }
 

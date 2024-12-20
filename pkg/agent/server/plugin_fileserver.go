@@ -10,7 +10,6 @@ import (
 )
 
 func init() {
-	Tunnels[api.FS] = StartFileServer
 	Channels[api.FSID] = StartFileServer
 }
 

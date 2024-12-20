@@ -8,7 +8,6 @@ import (
 )
 
 func init() {
-	Tunnels[api.Ping] = StartPingServer
 	Channels[api.PingID] = StartPingServer
 }
 

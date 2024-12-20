@@ -16,7 +16,6 @@ import (
 )
 
 func init() {
-	Tunnels[api.Xpra] = StartXpraServer
 	Channels[api.XpraID] = StartXpraServer
 }
 
