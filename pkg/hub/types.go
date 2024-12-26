@@ -65,8 +65,9 @@ type Agent interface {
 	BasicAuth(http.Handler) http.Handler
 }
 
-type RPC interface {
+type Session interface {
 	k0s.Tider
+	RemoteIP() string
 
 	Close()
 	Done() <-chan struct{}
@@ -74,6 +75,5 @@ type RPC interface {
 	OpenChannel(api.ProtocolID)
 
 	Ping()
-	RemoteIP() string
 	Actions() <-chan func(Hub)
 }

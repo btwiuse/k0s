@@ -41,7 +41,7 @@ type Config interface {
 	GetVersion() *version.Version
 }
 
-type RPC interface {
+type Session interface {
 	// NewConnection()
 	// Ping()
 	// Pong()
@@ -59,14 +59,10 @@ type Agent interface {
 	Config
 	TunnelListener
 	ChannelChan(api.ProtocolID) chan net.Conn
-	AgentRegister(net.Conn) (RPC, error)
+	AgentRegister(net.Conn) (Session, error)
 
 	ConnectAndServe() error
-	Serve(RPC) error
-
-	// RPC
-	// ServeGRPC() error
-	// Connect() (RPC, error)
+	Serve(Session) error
 }
 
 type TunnelListener interface {

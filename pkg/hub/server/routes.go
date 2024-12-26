@@ -94,23 +94,23 @@ func (h *hubServer) serve(ln net.Listener, _ http.Handler) {
 			continue
 		}
 
-		go h.register(conn)
+		go h.upgrade(conn)
 	}
 }
 
-func (h *hubServer) register(conn net.Conn) {
-	var rpc = ToRPC(conn)
+func (h *hubServer) upgrade(conn net.Conn) {
+	var ss = NewServerSession(conn)
 
 	// unregister
-	defer h.Del(rpc.ID())
+	defer h.Del(ss.ID())
 
 	for {
 		select {
-		case f := <-rpc.Actions():
+		case f := <-ss.Actions():
 			go f(h)
 		case <-time.After(3 * time.Second):
-			go rpc.Ping()
-		case <-rpc.Done():
+			go ss.Ping()
+		case <-ss.Done():
 			return
 		}
 	}

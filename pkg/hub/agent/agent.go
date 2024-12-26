@@ -15,7 +15,7 @@ var (
 	_ hub.Agent = (*agent)(nil)
 )
 
-func NewAgent(rpc hub.RPC, info hub.AgentInfo) hub.Agent {
+func NewAgent(rpc hub.Session, info hub.AgentInfo) hub.Agent {
 	ag := &agent{
 		rpc:       rpc,
 		created:   time.Now(),
@@ -40,7 +40,7 @@ type agent struct {
 	hub.AgentInfo // `json:"-"` // inherit methods
 
 	channels map[api.ProtocolID]chan net.Conn `json:"-"`
-	rpc      hub.RPC
+	rpc      hub.Session
 
 	created  time.Time
 	htpasswd map[string]string

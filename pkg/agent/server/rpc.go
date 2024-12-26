@@ -11,32 +11,31 @@ import (
 )
 
 var (
-	_ agent.RPC = (*YS)(nil)
+	_ agent.Session = (*ClientSession)(nil)
 )
 
-func NewRPC(conn net.Conn) agent.RPC {
+func NewClientSession(conn net.Conn) agent.Session {
 	scanner := bufio.NewScanner(conn)
-	ys := &YS{
+	cs := &ClientSession{
 		Conn:    conn,
 		Scanner: scanner,
 		actions: make(chan func(agent.Agent)),
 		done:    make(chan struct{}),
 	}
-	// go ys.plumbing()
-	go ys.plumbingChan()
-	return ys
+	go cs.plumbing()
+	return cs
 }
 
-func (rpc *YS) plumbingChan() {
-	defer rpc.Close()
-	for rpc.Scan() {
-		cmd := rpc.Text()
+func (cs *ClientSession) plumbing() {
+	defer cs.Close()
+	for cs.Scan() {
+		cmd := cs.Text()
 		// log.Println(cmd)
 		p := api.ProtocolID(cmd)
 		if p == api.PingID {
 			continue
 		}
-		rpc.actions <- func(ag agent.Agent) {
+		cs.actions <- func(ag agent.Agent) {
 			var (
 				conn net.Conn
 				err  error
@@ -57,7 +56,7 @@ func (rpc *YS) plumbingChan() {
 	}
 }
 
-type YS struct {
+type ClientSession struct {
 	net.Conn
 	*bufio.Scanner
 	// cmdc chan Cmd
@@ -65,14 +64,14 @@ type YS struct {
 	done    chan struct{}
 }
 
-func (ys *YS) Actions() <-chan func(agent.Agent) {
-	return ys.actions
+func (cs *ClientSession) Actions() <-chan func(agent.Agent) {
+	return cs.actions
 }
 
-func (ys *YS) Close() {
-	close(ys.done)
+func (cs *ClientSession) Close() {
+	close(cs.done)
 }
 
-func (ys *YS) Done() <-chan struct{} {
-	return ys.done
+func (cs *ClientSession) Done() <-chan struct{} {
+	return cs.done
 }

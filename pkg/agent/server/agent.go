@@ -26,7 +26,7 @@ type server struct {
 	*dialer
 	agent.Config
 	channels map[api.ProtocolID]chan net.Conn
-	// agent.RPC
+	// agent.Session
 
 	id   string
 	name string
@@ -90,7 +90,7 @@ func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
 	return conn, nil
 }
 
-func (ag *server) AgentRegister(conn net.Conn) (agent.RPC, error) {
+func (ag *server) AgentRegister(conn net.Conn) (agent.Session, error) {
 	agentInfo := ag.Config.String()
 	if ag.Config.GetVerbose() {
 		log.Print(pretty.JSONStringLine(ag.Config))
@@ -100,15 +100,15 @@ func (ag *server) AgentRegister(conn net.Conn) (agent.RPC, error) {
 		return nil, err
 	}
 
-	return NewRPC(conn), nil
+	return NewClientSession(conn), nil
 }
 
-func (ag *server) Serve(rpc agent.RPC) error {
+func (ag *server) Serve(cs agent.Session) error {
 	for {
 		select {
-		case f := <-rpc.Actions():
+		case f := <-cs.Actions():
 			go f(ag)
-		case <-rpc.Done():
+		case <-cs.Done():
 			goto exit
 		}
 	}
@@ -130,12 +130,12 @@ func (ag *server) ConnectAndServe() error {
 		return err
 	}
 
-	rpc, err := ag.AgentRegister(conn)
+	cs, err := ag.AgentRegister(conn)
 	if err != nil {
 		return err
 	}
 
-	err = ag.Serve(rpc)
+	err = ag.Serve(cs)
 	if err != nil {
 		return err
 	}

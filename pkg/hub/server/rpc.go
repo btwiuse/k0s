@@ -17,12 +17,12 @@ import (
 )
 
 var (
-	_ hub.RPC = (*YS)(nil)
+	_ hub.Session = (*ServerSession)(nil)
 )
 
-func ToRPC(conn net.Conn) hub.RPC {
+func NewServerSession(conn net.Conn) hub.Session {
 
-	rpc := &YS{
+	ss := &ServerSession{
 		id:            "00000000-0000-0000-0000-000000000000",
 		name:          rng.NewDocker(),
 		actions:       make(chan func(hub.Hub), 1),
@@ -33,16 +33,16 @@ func ToRPC(conn net.Conn) hub.RPC {
 		Scanner:       bufio.NewScanner(conn),
 	}
 
-	rpc.register()
+	ss.populate()
 
-	go rpc.plumbing()
+	go ss.plumbing()
 
-	return rpc
+	return ss
 }
 
-func (rpc *YS) register() {
-	rpc.Scan()
-	cmd := rpc.Text()
+func (ss *ServerSession) populate() {
+	ss.Scan()
+	cmd := ss.Text()
 
 	ifo, err := info.Decode([]byte(cmd))
 	if err != nil {
@@ -56,32 +56,32 @@ func (rpc *YS) register() {
 		name = ifo.GetName()
 	)
 
-	rpc.id = id
-	rpc.name = name
+	ss.id = id
+	ss.name = name
 
-	rpc.actions <- func(h hub.Hub) {
+	ss.actions <- func(h hub.Hub) {
 		// clobber previous connection, if any
 		if h.Has(id) {
 			h.Del(id)
 		}
 
-		ag := agent.NewAgent(rpc, ifo)
+		ag := agent.NewAgent(ss, ifo)
 
 		h.Add(ag)
 	}
 }
 
-func (rpc *YS) plumbing() {
+func (ss *ServerSession) plumbing() {
 	defer func() {
-		rpc.Close()
+		ss.Close()
 		// println("hub close")
 	}()
-	for rpc.Scan() {
-		cmd := rpc.Text()
+	for ss.Scan() {
+		cmd := ss.Text()
 		switch {
 		case cmd == "PONG":
 			// infinite ping/pong loop
-			// rpc.Ping()
+			// ss.Ping()
 		default:
 			// cmd = "UNKNOWN_CMD: " + cmd
 			// log.Println(cmd)
@@ -89,34 +89,34 @@ func (rpc *YS) plumbing() {
 	}
 }
 
-func (ys *YS) Actions() <-chan func(hub.Hub) {
-	return ys.actions
+func (ss *ServerSession) Actions() <-chan func(hub.Hub) {
+	return ss.actions
 }
 
-func (ys *YS) Close() {
-	ys.closeOnceDone.Do(func() {
-		close(ys.done)
+func (ss *ServerSession) Close() {
+	ss.closeOnceDone.Do(func() {
+		close(ss.done)
 	})
 }
 
-func (ys *YS) Done() <-chan struct{} {
-	return ys.done
+func (ss *ServerSession) Done() <-chan struct{} {
+	return ss.done
 }
 
-func (ys *YS) Time() time.Time {
-	return ys.created
+func (ss *ServerSession) Time() time.Time {
+	return ss.created
 }
 
-func (ys *YS) Name() string {
-	return ys.name
+func (ss *ServerSession) Name() string {
+	return ss.name
 }
 
-func (ys *YS) ID() string {
-	return ys.id
+func (ss *ServerSession) ID() string {
+	return ss.id
 }
 
-func (ys *YS) RemoteIP() string {
-	remote_hostport := ys.Conn.RemoteAddr().String()
+func (ss *ServerSession) RemoteIP() string {
+	remote_hostport := ss.Conn.RemoteAddr().String()
 	if !strings.Contains(remote_hostport, ":") {
 		return remote_hostport
 	}
@@ -124,7 +124,7 @@ func (ys *YS) RemoteIP() string {
 	return ip
 }
 
-type YS struct {
+type ServerSession struct {
 	id      string
 	name    string
 	created time.Time
@@ -135,17 +135,17 @@ type YS struct {
 	closeOnceDone *sync.Once
 }
 
-func (ys *YS) OpenChannel(p api.ProtocolID) {
+func (ss *ServerSession) OpenChannel(p api.ProtocolID) {
 	cmd := string(p)
-	_, err := io.WriteString(ys.Conn, fmt.Sprintln(cmd))
+	_, err := io.WriteString(ss.Conn, fmt.Sprintln(cmd))
 	if err != nil {
-		ys.Close()
+		ss.Close()
 	}
 }
 
-func (ys *YS) Ping() {
-	_, err := io.WriteString(ys.Conn, fmt.Sprintln("PING"))
+func (ss *ServerSession) Ping() {
+	_, err := io.WriteString(ss.Conn, fmt.Sprintln("PING"))
 	if err != nil {
-		ys.Close()
+		ss.Close()
 	}
 }
