@@ -151,20 +151,9 @@ func (h *hubServer) installRoutes(apiPrefix string, hl http.Handler) (R *mux.Rou
 	s := r.PathPrefix("/agent/{id}")
 	s.Handler(http.HandlerFunc(h.handleAgent)) // allow all methods
 
-	// public api
-	// agent hijack => yrpc -> hub.RPC -> hub.Agent
-	// alternative websocket implementation:
-	// http upgrade => websocket conn => net.Conn => hub.RPC -> hub.Agent
-
-	// hl -> net.Conn -> ln
-	// hl: conventionally a consumer of net.Conn, but it's role here is producer
-	r.Handle("/upgrade", hl).Methods("GET")
-
-	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
-	// alternative websocket implementation:
-	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
-
+	// order routes from most specific to least specific
 	r.HandleFunc("/upgrade", h.handleStreamUpgrade).Methods("GET").Queries("id", "{id}").Queries("protocol", "{protocol}")
+	r.Handle("/upgrade", hl).Methods("GET")
 
 	// dev helper
 	r.Handle("/echo", echo.New(echo.Config{})).Methods(
