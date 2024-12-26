@@ -272,6 +272,8 @@ func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
 
 	// delegate := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
 	switch {
+	case strings.HasPrefix(subpath, "/fsv2"):
+		ag.BasicAuth(http.HandlerFunc(fsV2Relay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/rootfs"):
 		ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
 	case strings.HasPrefix(subpath, "/redir"):
