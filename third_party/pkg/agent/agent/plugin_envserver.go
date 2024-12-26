@@ -14,7 +14,7 @@ func init() { Tunnels[api.Env] = StartEnvServer }
 
 func StartEnvServer(c agent.Config) chan net.Conn {
 	var (
-		envListener = NewLys()
+		envListener = NewChannelListener()
 		handler     = middleware.LoggingMiddleware(middleware.GzipMiddleware(env.NewHandler()))
 		envServer   = &http.Server{Handler: handler}
 	)

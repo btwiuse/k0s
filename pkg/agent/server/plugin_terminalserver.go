@@ -17,7 +17,7 @@ func StartTerminalServer(c agent.Config) chan net.Conn {
 	var (
 		ro               bool     = c.GetReadOnly()
 		defaultCmd       []string = c.GetCmd()
-		terminalListener          = NewLys()
+		terminalListener          = NewChannelListener()
 	)
 	_ = ro
 	go serveTerminal(terminalListener, defaultCmd, c)

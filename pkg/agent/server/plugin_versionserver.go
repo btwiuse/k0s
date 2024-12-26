@@ -11,7 +11,7 @@ import (
 
 func StartVersionServer(c agent.Config) chan net.Conn {
 	var (
-		versionListener = NewLys()
+		versionListener = NewChannelListener()
 		handler         = middleware.LoggingMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			w.Write([]byte(pretty.JSONString(c.GetVersion())))

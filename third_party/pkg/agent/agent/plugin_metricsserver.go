@@ -16,7 +16,7 @@ func init() { Tunnels[api.Metrics] = StartMetricsServer }
 
 func StartMetricsServer(c agent.Config) chan net.Conn {
 	var (
-		metricsListener = NewLys()
+		metricsListener = NewChannelListener()
 		handler         = middleware.LoggingMiddleware(middleware.GzipMiddleware(exporter.NewHandler()))
 		metricsServer   = &http.Server{Handler: handler}
 	)

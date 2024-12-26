@@ -29,7 +29,7 @@ func (l *lys) String() string {
 	return l.Network()
 }
 
-func NewLys() *lys {
+func NewChannelListener() *lys {
 	return &lys{
 		Conns: make(chan net.Conn),
 	}

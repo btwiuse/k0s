@@ -7,7 +7,7 @@ import (
 )
 
 func StartPingServer(c agent.Config) chan net.Conn {
-	pingListener := NewLys()
+	pingListener := NewChannelListener()
 	go pingServe(pingListener)
 	return pingListener.Conns
 }

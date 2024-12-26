@@ -14,7 +14,7 @@ import (
 func init() { Tunnels[api.Socks5] = StartSocks5Server }
 
 func StartSocks5Server(c agent.Config) chan net.Conn {
-	socks5Listener := NewLys()
+	socks5Listener := NewChannelListener()
 	go autoServe(socks5Listener)
 	return socks5Listener.Conns
 }

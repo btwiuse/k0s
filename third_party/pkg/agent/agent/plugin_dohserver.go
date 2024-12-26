@@ -37,7 +37,7 @@ func StartDohServer(c agent.Config) chan net.Conn {
 		dohHandler = http.NotFoundHandler()
 	}
 	var (
-		dohListener = NewLys()
+		dohListener = NewChannelListener()
 		handler     = middleware.LoggingMiddleware(dohHandler)
 		dohServer   = &http.Server{Handler: handler}
 	)

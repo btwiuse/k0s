@@ -15,7 +15,7 @@ import (
 )
 
 func StartXpraServer(c agent.Config) chan net.Conn {
-	xpraListener := NewLys()
+	xpraListener := NewChannelListener()
 	go xpraServe(xpraListener)
 	return xpraListener.Conns
 }

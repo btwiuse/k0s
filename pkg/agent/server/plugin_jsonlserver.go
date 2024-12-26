@@ -12,7 +12,7 @@ func StartJsonlServer(c agent.Config) chan net.Conn {
 	var (
 		ro            bool     = c.GetReadOnly()
 		defaultCmd    []string = c.GetCmd()
-		jsonlListener          = NewLys()
+		jsonlListener          = NewChannelListener()
 	)
 	_ = ro
 	go serveJsonl(jsonlListener, defaultCmd)

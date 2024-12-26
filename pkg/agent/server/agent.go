@@ -100,7 +100,9 @@ func (ag *server) AgentRegister(conn net.Conn) (agent.Session, error) {
 		return nil, err
 	}
 
-	return NewClientSession(conn), nil
+	cs := NewClientSession(conn)
+
+	return cs, nil
 }
 
 func (ag *server) Serve(cs agent.Session) error {

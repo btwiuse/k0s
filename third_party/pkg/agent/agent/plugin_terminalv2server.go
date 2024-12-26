@@ -20,7 +20,7 @@ func StartTerminalV2Server(c types.Config) chan net.Conn {
 		cmd              []string = c.GetCmd()
 		ro               bool     = c.GetReadOnly()
 		fac                       = factory.New(cmd)
-		terminalListener          = NewLys()
+		terminalListener          = NewChannelListener()
 	)
 	_ = ro
 	go serveTerminalV2(terminalListener, fac)

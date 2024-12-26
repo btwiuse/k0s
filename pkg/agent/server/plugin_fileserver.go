@@ -10,7 +10,7 @@ import (
 
 func StartFileServer(c agent.Config) chan net.Conn {
 	var (
-		fsListener = NewLys()
+		fsListener = NewChannelListener()
 		handler    = middleware.LoggingMiddleware(http.FileServer(http.Dir("/")))
 		fileServer = &http.Server{Handler: handler}
 	)

@@ -13,7 +13,7 @@ import (
 func init() { Tunnels[api.Redir] = StartRedirectServer }
 
 func StartRedirectServer(c agent.Config) chan net.Conn {
-	redirectListener := NewLys()
+	redirectListener := NewChannelListener()
 	go redirectServe(redirectListener)
 	return redirectListener.Conns
 }
