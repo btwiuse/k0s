@@ -15,16 +15,11 @@ var (
 	_ hub.Agent = (*agent)(nil)
 )
 
-func newChannels() map[api.ProtocolID]chan net.Conn {
-	chns := make(map[api.ProtocolID]chan net.Conn)
-	return chns
-}
-
 func NewAgent(rpc hub.RPC, info hub.AgentInfo) hub.Agent {
 	ag := &agent{
 		rpc:       rpc,
 		created:   time.Now(),
-		Channels:  newChannels(),
+		channels:  map[api.ProtocolID]chan net.Conn{},
 	}
 
 	info.SetIP(rpc.RemoteIP())
@@ -44,7 +39,7 @@ func (ag *agent) MarshalJSON() ([]byte, error) {
 type agent struct {
 	hub.AgentInfo // `json:"-"` // inherit methods
 
-	Channels map[api.ProtocolID]chan net.Conn `json:"-"`
+	channels map[api.ProtocolID]chan net.Conn `json:"-"`
 	rpc      hub.RPC
 
 	created  time.Time
@@ -53,13 +48,7 @@ type agent struct {
 
 func (ag *agent) OpenChannel(p api.ProtocolID) net.Conn {
 	ag.rpc.OpenChannel(p)
-	// make sure the channel is created
-	_, ok := ag.Channels[p]
-	if !ok {
-		println("OpenChannel", string(p))
-		ag.Channels[p] = make(chan net.Conn)
-	}
-	return <-ag.Channels[p]
+	return <-ag.ChannelChan(p)
 }
 
 func (ag *agent) BasicAuth(next http.Handler) http.Handler {
@@ -94,7 +83,11 @@ func (ag *agent) Name() string {
 	return ag.GetName()
 }
 
-// blocks until agent.OpenChannel(api.ProtocolID) reads the channel
-func (ag *agent) AddChannel(p api.ProtocolID, conn net.Conn) {
-	ag.Channels[p] <- conn
+func (ag *agent) ChannelChan(p api.ProtocolID) chan net.Conn {
+	// ensure the channel is not nil
+	_, ok := ag.channels[p]
+	if !ok {
+		ag.channels[p] = make(chan net.Conn)
+	}
+	return ag.channels[p]
 }

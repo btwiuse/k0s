@@ -25,7 +25,7 @@ type server struct {
 	*errgroup.Group
 	*dialer
 	agent.Config
-	Channels map[api.ProtocolID]chan net.Conn
+	channels map[api.ProtocolID]chan net.Conn
 	// agent.RPC
 
 	id   string
@@ -50,7 +50,7 @@ func NewAgent(c agent.Config) agent.Agent {
 		Group:    eg,
 		Config:   c,
 		dialer:   dialer,
-		Channels: channels,
+		channels: channels,
 		id:       id,
 		name:     name,
 	}
@@ -66,7 +66,11 @@ func NewAgent(c agent.Config) agent.Agent {
 }
 
 func (ag *server) ChannelChan(p api.ProtocolID) chan net.Conn {
-	return ag.Channels[p]
+	_, ok := ag.channels[p]
+	if !ok {
+		ag.channels[p] = make(chan net.Conn)
+	}
+	return ag.channels[p]
 }
 
 func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
@@ -74,7 +78,7 @@ func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
 	var (
 		conn  net.Conn
 		err   error
-		path  = "/api/channel"
+		path  = "/api/upgrade"
 		query = fmt.Sprintf("id=%s&protocol=%s", ag.GetID(), string(p))
 	)
 
@@ -140,5 +144,5 @@ func (ag *server) ConnectAndServe() error {
 }
 
 func (ag *server) SetProtocolHandler(p api.ProtocolID, fn ChannelFn) {
-	ag.Channels[p] = fn(ag.Config)
+	ag.channels[p] = fn(ag.Config)
 }

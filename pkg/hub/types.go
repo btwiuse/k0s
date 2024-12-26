@@ -60,7 +60,7 @@ type Agent interface {
 	AgentInfo
 	k0s.Tider
 
-	AddChannel(api.ProtocolID, net.Conn)
+	ChannelChan(api.ProtocolID) chan net.Conn
 	OpenChannel(api.ProtocolID) net.Conn
 	BasicAuth(http.Handler) http.Handler
 }
