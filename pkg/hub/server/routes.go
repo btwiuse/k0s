@@ -160,7 +160,7 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 
 	// hl -> net.Conn -> ln
 	// hl: conventionally a consumer of net.Conn, but it's role here is producer
-	r.Handle("/rpc", hl).Methods("GET")
+	r.Handle("/upgrade", hl).Methods("GET")
 
 	// dev helper
 	r.Handle("/echo", echo.New(echo.Config{})).Methods(

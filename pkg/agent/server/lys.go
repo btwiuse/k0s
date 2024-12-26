@@ -4,33 +4,34 @@ import (
 	"net"
 )
 
-// lys implements net.Listener
-type lys struct {
+// ChannelListener implements net.Listener
+type ChannelListener struct {
 	Conns chan net.Conn
 }
 
-func (l *lys) Accept() (net.Conn, error) {
-	return <-l.Conns, nil
+func (cl *ChannelListener) Accept() (net.Conn, error) {
+	return <-cl.Conns, nil
 }
 
-func (l *lys) Close() error {
+func (cl *ChannelListener) Close() error {
+	// TODO: close Conns
 	return nil
 }
 
-func (l *lys) Addr() net.Addr {
-	return l
+func (cl *ChannelListener) Addr() net.Addr {
+	return cl
 }
 
-func (l *lys) Network() string {
+func (cl *ChannelListener) Network() string {
 	return "hijack"
 }
 
-func (l *lys) String() string {
-	return l.Network()
+func (cl *ChannelListener) String() string {
+	return cl.Network()
 }
 
-func NewChannelListener() *lys {
-	return &lys{
+func NewChannelListener() *ChannelListener {
+	return &ChannelListener {
 		Conns: make(chan net.Conn),
 	}
 }

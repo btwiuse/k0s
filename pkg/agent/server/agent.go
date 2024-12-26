@@ -25,7 +25,7 @@ type server struct {
 	*errgroup.Group
 	*dialer
 	agent.Config
-	channels map[api.ProtocolID]chan net.Conn
+	protocolHandlers map[api.ProtocolID]chan net.Conn
 	// agent.Session
 
 	id   string
@@ -39,7 +39,7 @@ func NewAgent(c agent.Config) agent.Agent {
 		name     = c.GetName()
 		shell    = "bash"
 		dialer   = &dialer{c}
-		channels = map[api.ProtocolID]chan net.Conn{}
+		protocolHandlers = map[api.ProtocolID]chan net.Conn{}
 	)
 
 	if _, err := exec.LookPath(shell); err != nil {
@@ -50,7 +50,7 @@ func NewAgent(c agent.Config) agent.Agent {
 		Group:    eg,
 		Config:   c,
 		dialer:   dialer,
-		channels: channels,
+		protocolHandlers: protocolHandlers,
 		id:       id,
 		name:     name,
 	}
@@ -66,11 +66,11 @@ func NewAgent(c agent.Config) agent.Agent {
 }
 
 func (ag *server) ChannelChan(p api.ProtocolID) chan net.Conn {
-	_, ok := ag.channels[p]
+	_, ok := ag.protocolHandlers[p]
 	if !ok {
-		ag.channels[p] = make(chan net.Conn)
+		ag.protocolHandlers[p] = make(chan net.Conn)
 	}
-	return ag.channels[p]
+	return ag.protocolHandlers[p]
 }
 
 func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
@@ -92,9 +92,11 @@ func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
 
 func (ag *server) AgentRegister(conn net.Conn) (agent.Session, error) {
 	agentInfo := ag.Config.String()
+
 	if ag.Config.GetVerbose() {
 		log.Print(pretty.JSONStringLine(ag.Config))
 	}
+
 	_, err := io.WriteString(conn, agentInfo)
 	if err != nil {
 		return nil, err
@@ -122,7 +124,7 @@ func (ag *server) ConnectAndServe() error {
 	var (
 		conn net.Conn
 		err  error
-		path = "/api/rpc"
+		path = "/api/upgrade"
 		// unused: "id=" + ag.GetID()
 		query = ""
 	)
@@ -146,5 +148,5 @@ func (ag *server) ConnectAndServe() error {
 }
 
 func (ag *server) SetProtocolHandler(p api.ProtocolID, fn ChannelFn) {
-	ag.channels[p] = fn(ag.Config)
+	ag.protocolHandlers[p] = fn(ag.Config)
 }
