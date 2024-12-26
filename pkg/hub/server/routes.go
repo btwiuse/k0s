@@ -54,7 +54,7 @@ func binHandler() http.Handler {
 
 func NewHub(c hub.Config) hub.Hub {
 	var (
-		listhand = NewHandleHijackListener()
+		listhand = NewHTTPChannelListener()
 		h        = &hubServer{
 			c:            c,
 			AgentManager: NewAgentManager(),
@@ -69,8 +69,8 @@ func NewHub(c hub.Config) hub.Hub {
 		}
 	}()
 	// ensure core fields of h is not empty before return
-	h.initServer(h.GetConfig().Port(), "/api", listhand)
-	go h.serve(listhand, listhand)
+	h.setupServer(h.GetConfig().Port(), "/api", listhand)
+	go h.serveLoop(listhand)
 	return h
 }
 
@@ -84,7 +84,7 @@ func (h *hubServer) GetConfig() hub.Config {
 // this one doesn't require listening on a port, and the direction in which
 // connection goes is exactly opposite: the net.Conn's are created on the
 // handler side and then sent through a (chan net.Conn) to the listener side
-func (h *hubServer) serve(ln net.Listener, _ http.Handler) {
+func (h *hubServer) serveLoop(ln net.Listener) {
 	// ln <- net.Conn <- hl
 	// ln: conventionally a producer of net.Conn, but it's role here is consumer
 	for {
@@ -116,8 +116,8 @@ func (h *hubServer) upgrade(conn net.Conn) {
 	}
 }
 
-func (h *hubServer) initServer(addr, apiPrefix string, hl http.Handler) {
-	handler := middleware.AllowAllCorsMiddleware(h.initRouter(apiPrefix, hl))
+func (h *hubServer) setupServer(addr, apiPrefix string, hl http.Handler) {
+	handler := middleware.AllowAllCorsMiddleware(h.installRoutes(apiPrefix, hl))
 	if h.GetConfig().Verbose() {
 		handler = middleware.LoggingMiddleware(handler)
 	}
@@ -129,7 +129,7 @@ func (h *hubServer) initServer(addr, apiPrefix string, hl http.Handler) {
 	}
 }
 
-func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router) {
+func (h *hubServer) installRoutes(apiPrefix string, hl http.Handler) (R *mux.Router) {
 	if h.GetConfig().UI() {
 		R = ui.NewRouter(k0s.DEFAULT_UI_ADDRESS)
 	} else {
@@ -162,6 +162,12 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 	// hl: conventionally a consumer of net.Conn, but it's role here is producer
 	r.Handle("/upgrade", hl).Methods("GET")
 
+	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
+	// alternative websocket implementation:
+	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
+
+	r.HandleFunc("/upgrade", h.handleStreamUpgrade).Methods("GET").Queries("id", "{id}").Queries("protocol", "{protocol}")
+
 	// dev helper
 	r.Handle("/echo", echo.New(echo.Config{})).Methods(
 		http.MethodGet,
@@ -171,12 +177,6 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 		http.MethodOptions,
 		http.MethodPost,
 	)
-
-	// agent hijack => gRPC {ws, fs} -> hub.Session -> hub.Agent
-	// alternative websocket implementation:
-	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
-
-	r.HandleFunc("/upgrade", h.handleUpgrade).Methods("GET").Queries("id", "{id}").Queries("protocol", "{protocol}")
 
 	// hub specific function
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
@@ -239,36 +239,27 @@ func (h *hubServer) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(pretty.JSONStringLine(agents)))
 }
 
-func (h *hubServer) handleUpgrade(w http.ResponseWriter, r *http.Request) {
+func (h *hubServer) handleStreamUpgrade(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars = mux.Vars(r)
 		p    = api.ProtocolID(vars["protocol"])
+		id   = vars["id"]
 	)
-	println("handleUpgrade", string(p))
+	println("handleStreamUpgrade", string(p))
 
-	h.handleChannel(p)(w, r)
-}
-
-func (h *hubServer) handleChannel(p api.ProtocolID) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var (
-			vars = mux.Vars(r)
-			id   = vars["id"]
-		)
-
-		if !h.Has(id) {
-			log.Println("no such id", id)
-			return
-		}
-
-		conn, err := wsconn.Wrconn(w, r)
-		if err != nil {
-			log.Printf("error accepting %s: %s\n", p, err)
-			return
-		}
-
-		h.GetAgent(id).ChannelChan(p) <- conn
+	if !h.Has(id) {
+		log.Println("no such id", id)
+		return
 	}
+	ag := h.GetAgent(id)
+
+	conn, err := wsconn.Wrconn(w, r)
+	if err != nil {
+		log.Printf("error accepting %s: %s\n", p, err)
+		return
+	}
+
+	ag.ChannelChan(p) <- conn
 }
 
 func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
