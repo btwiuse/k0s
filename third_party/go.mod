@@ -138,7 +138,10 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/btwiuse/pretty v0.2.1 // indirect
+	github.com/btwiuse/tags v0.0.2 // indirect
 	github.com/btwiuse/version v0.0.0 // indirect
+	github.com/btwiuse/wsconn v0.0.1 // indirect
+	github.com/btwiuse/wsdial v0.0.0 // indirect
 	github.com/buildkite/interpolate v0.0.0-20200526001904-07f35b4ae251 // indirect
 	github.com/buildkite/shellwords v0.0.0-20180315084142-c3f497d1e000 // indirect
 	github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3 // indirect
@@ -484,9 +487,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/plist v1.0.0 // indirect
-	k0s.io/pkg/dial v0.1.15 // indirect
 	k0s.io/pkg/distro v0.1.16 // indirect
-	k0s.io/pkg/wrap v0.1.15 // indirect
 	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340 // indirect
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 // indirect
 	nhooyr.io/websocket v1.8.10 // indirect

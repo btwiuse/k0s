@@ -6,13 +6,8 @@ import (
 
 	"github.com/btwiuse/pretty"
 	"k0s.io/pkg/agent"
-	"k0s.io/pkg/api"
 	"k0s.io/pkg/middleware"
 )
-
-func init() {
-	Channels[api.VersionID] = StartVersionServer
-}
 
 func StartVersionServer(c agent.Config) chan net.Conn {
 	var (

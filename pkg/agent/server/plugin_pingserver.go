@@ -4,12 +4,7 @@ import (
 	"net"
 
 	"k0s.io/pkg/agent"
-	"k0s.io/pkg/api"
 )
-
-func init() {
-	Channels[api.PingID] = StartPingServer
-}
 
 func StartPingServer(c agent.Config) chan net.Conn {
 	pingListener := NewLys()

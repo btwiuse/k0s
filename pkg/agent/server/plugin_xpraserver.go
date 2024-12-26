@@ -10,14 +10,9 @@ import (
 
 	"k0s.io"
 	"k0s.io/pkg/agent"
-	"k0s.io/pkg/api"
 	"k0s.io/pkg/log"
 	"nhooyr.io/websocket"
 )
-
-func init() {
-	Channels[api.XpraID] = StartXpraServer
-}
 
 func StartXpraServer(c agent.Config) chan net.Conn {
 	xpraListener := NewLys()

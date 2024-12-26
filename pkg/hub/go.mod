@@ -27,6 +27,8 @@ require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2 // indirect
 	github.com/btwiuse/gods v0.0.1 // indirect
+	github.com/btwiuse/tags v0.0.2 // indirect
+	github.com/btwiuse/wsdial v0.0.0 // indirect
 	github.com/creack/pty v1.1.21 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1 // indirect
 	github.com/docker/docker v25.0.1+incompatible // indirect
@@ -65,8 +67,6 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k0s.io/pkg/asciitransport v0.1.16 // indirect
-	k0s.io/pkg/dial v0.1.15 // indirect
 	k0s.io/pkg/distro v0.1.16 // indirect
-	k0s.io/pkg/wrap v0.1.15 // indirect
 	k8s.io/apimachinery v0.31.2 // indirect
 )

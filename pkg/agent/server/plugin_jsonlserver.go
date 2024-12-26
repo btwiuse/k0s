@@ -1,5 +1,3 @@
-//go:build plugin_jsonlserver
-
 package server
 
 import (
@@ -8,13 +6,7 @@ import (
 	"net"
 
 	"k0s.io/pkg/agent"
-	"k0s.io/pkg/api"
 )
-
-func init() {
-	Channels[api.JsonlID] = StartJsonlServer
-	println("JSONL")
-}
 
 func StartJsonlServer(c agent.Config) chan net.Conn {
 	var (

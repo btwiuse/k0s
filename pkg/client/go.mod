@@ -21,6 +21,7 @@ require (
 
 require (
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
+	github.com/btwiuse/tags v0.0.2 // indirect
 	github.com/chzyer/test v1.0.0 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1 // indirect
 	github.com/docker/docker v25.0.1+incompatible // indirect

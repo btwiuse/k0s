@@ -18,8 +18,7 @@ import (
 type ChannelFn = func(agent.Config) chan net.Conn
 
 var (
-	_        agent.Agent                  = (*server)(nil)
-	Channels map[api.ProtocolID]ChannelFn = map[api.ProtocolID]ChannelFn{}
+	_ agent.Agent = (*server)(nil)
 )
 
 type server struct {
@@ -47,11 +46,7 @@ func NewAgent(c agent.Config) agent.Agent {
 		shell = "sh"
 	}
 
-	for k, v := range Channels {
-		channels[k] = v(c)
-	}
-
-	return &server{
+	ag := &server{
 		Group:    eg,
 		Config:   c,
 		dialer:   dialer,
@@ -59,6 +54,15 @@ func NewAgent(c agent.Config) agent.Agent {
 		id:       id,
 		name:     name,
 	}
+
+	ag.SetProtocolHandler(api.FSID, StartFileServer)
+	ag.SetProtocolHandler(api.JsonlID, StartJsonlServer)
+	ag.SetProtocolHandler(api.PingID, StartPingServer)
+	ag.SetProtocolHandler(api.TerminalID, StartTerminalServer)
+	ag.SetProtocolHandler(api.VersionID, StartVersionServer)
+	ag.SetProtocolHandler(api.XpraID, StartXpraServer)
+
+	return ag
 }
 
 func (ag *server) ChannelChan(p api.ProtocolID) chan net.Conn {
@@ -133,4 +137,8 @@ func (ag *server) ConnectAndServe() error {
 	}
 
 	return errors.New("agent: serve failed")
+}
+
+func (ag *server) SetProtocolHandler(p api.ProtocolID, fn ChannelFn) {
+	ag.Channels[p] = fn(ag.Config)
 }

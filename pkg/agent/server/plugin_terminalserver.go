@@ -10,13 +10,8 @@ import (
 
 	"k0s.io/pkg/agent"
 	"k0s.io/pkg/agent/tty/factory"
-	"k0s.io/pkg/api"
 	"k0s.io/pkg/asciitransport"
 )
-
-func init() {
-	Channels[api.TerminalID] = StartTerminalServer
-}
 
 func StartTerminalServer(c agent.Config) chan net.Conn {
 	var (

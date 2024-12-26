@@ -176,7 +176,8 @@ func (h *hubServer) initRouter(apiPrefix string, hl http.Handler) (R *mux.Router
 	// alternative websocket implementation:
 	// http upgrade => websocket conn => net.Conn => gRPC {ws, fs} -> hub.Session -> hub.Agent
 
-	r.HandleFunc("/channel", h.handleChannels).Methods("GET").Queries("id", "{id}").Queries("protocol", "{protocol}")
+	r.HandleFunc("/channel", h.handleUpgrade).Methods("GET").Queries("id", "{id}").Queries("protocol", "{protocol}")
+	r.HandleFunc("/upgrade", h.handleUpgrade).Methods("GET").Queries("id", "{id}").Queries("protocol", "{protocol}")
 
 	// hub specific function
 	r.HandleFunc("/version", h.handleVersion).Methods("GET")
@@ -239,12 +240,12 @@ func (h *hubServer) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(pretty.JSONStringLine(agents)))
 }
 
-func (h *hubServer) handleChannels(w http.ResponseWriter, r *http.Request) {
+func (h *hubServer) handleUpgrade(w http.ResponseWriter, r *http.Request) {
 	var (
 		vars = mux.Vars(r)
 		p    = api.ProtocolID(vars["protocol"])
 	)
-	println("handleChannels", string(p))
+	println("handleUpgrade", string(p))
 
 	h.handleChannel(p)(w, r)
 }

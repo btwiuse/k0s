@@ -5,13 +5,8 @@ import (
 	"net/http"
 
 	"k0s.io/pkg/agent"
-	"k0s.io/pkg/api"
 	"k0s.io/pkg/middleware"
 )
-
-func init() {
-	Channels[api.FSID] = StartFileServer
-}
 
 func StartFileServer(c agent.Config) chan net.Conn {
 	var (
