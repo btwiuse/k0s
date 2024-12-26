@@ -11,7 +11,6 @@ import (
 
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/sse"
-	"github.com/btwiuse/wetty/pkg/assets"
 	"github.com/btwiuse/wsconn"
 	"github.com/gorilla/mux"
 	echo "github.com/jpillora/go-echo-server/handler"
@@ -21,7 +20,6 @@ import (
 	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
 	"k0s.io/pkg/ui"
-	"modernc.org/httpfs"
 )
 
 var (
@@ -264,11 +262,9 @@ func (h *hubServer) handleStreamUpgrade(w http.ResponseWriter, r *http.Request) 
 
 func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
 	var (
-		vars                           = mux.Vars(r)
-		id                             = vars["id"]
-		subpath                        = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id)
-		staticFileServer  http.Handler = http.FileServer(httpfs.NewFileSystem(assets.Assets, time.Now()))
-		staticFileHandler http.Handler = http.StripPrefix("/api/agent/"+id+"/", staticFileServer)
+		vars    = mux.Vars(r)
+		id      = vars["id"]
+		subpath = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id)
 	)
 
 	log.Println("handleAgent", id, subpath)
@@ -308,6 +304,6 @@ func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
 	case strings.HasPrefix(subpath, "/terminal"):
 		ag.BasicAuth(http.HandlerFunc(terminalRelay(ag))).ServeHTTP(w, r)
 	default:
-		ag.BasicAuth(staticFileHandler).ServeHTTP(w, r)
+		http.NotFound(w, r)
 	}
 }

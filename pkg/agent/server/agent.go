@@ -34,11 +34,11 @@ type server struct {
 
 func NewAgent(c agent.Config) agent.Agent {
 	var (
-		eg, _    = errgroup.WithContext(context.Background())
-		id       = c.GetID()
-		name     = c.GetName()
-		shell    = "bash"
-		dialer   = &dialer{c}
+		eg, _            = errgroup.WithContext(context.Background())
+		id               = c.GetID()
+		name             = c.GetName()
+		shell            = "bash"
+		dialer           = &dialer{c}
 		protocolHandlers = map[api.ProtocolID]chan net.Conn{}
 	)
 
@@ -47,12 +47,12 @@ func NewAgent(c agent.Config) agent.Agent {
 	}
 
 	ag := &server{
-		Group:    eg,
-		Config:   c,
-		dialer:   dialer,
+		Group:            eg,
+		Config:           c,
+		dialer:           dialer,
 		protocolHandlers: protocolHandlers,
-		id:       id,
-		name:     name,
+		id:               id,
+		name:             name,
 	}
 
 	ag.SetProtocolHandler(api.FSID, StartFileServer)

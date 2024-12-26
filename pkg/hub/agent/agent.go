@@ -17,9 +17,9 @@ var (
 
 func NewAgent(rpc hub.Session, info hub.AgentInfo) hub.Agent {
 	ag := &agent{
-		rpc:       rpc,
-		created:   time.Now(),
-		channels:  map[api.ProtocolID]chan net.Conn{},
+		rpc:      rpc,
+		created:  time.Now(),
+		channels: map[api.ProtocolID]chan net.Conn{},
 	}
 
 	info.SetIP(rpc.RemoteIP())

@@ -31,7 +31,7 @@ func (cl *ChannelListener) String() string {
 }
 
 func NewChannelListener() *ChannelListener {
-	return &ChannelListener {
+	return &ChannelListener{
 		Conns: make(chan net.Conn),
 	}
 }
