@@ -2,6 +2,7 @@ package server
 
 import (
 	"crypto/tls"
+	"errors"
 	"net"
 	"net/http"
 	"net/http/pprof"
@@ -270,31 +271,59 @@ func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
 
 	ag := h.GetAgent(id)
 
-	// delegate := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
-	switch {
-	case strings.HasPrefix(subpath, "/fsv2"):
-		ag.BasicAuth(http.HandlerFunc(fsV2Relay(ag))).ServeHTTP(w, r)
-	case strings.HasPrefix(subpath, "/rootfs"):
-		ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
-	case strings.HasPrefix(subpath, "/redir"):
-		ag.BasicAuth(http.HandlerFunc(redirRelay(ag))).ServeHTTP(w, r)
-	case strings.HasPrefix(subpath, "/socks5"):
-		ag.BasicAuth(http.HandlerFunc(socks5Relay(ag))).ServeHTTP(w, r)
-	case strings.HasPrefix(subpath, "/version"):
-		versionRelay(ag)(w, r)
-	case strings.HasPrefix(subpath, "/env"):
-		envRelay(ag)(w, r)
-	case strings.HasPrefix(subpath, "/doh"):
-		dohRelay(ag)(w, r)
-	case strings.HasPrefix(subpath, "/jsonl"):
-		jsonlRelay(ag)(w, r)
-	case strings.HasPrefix(subpath, "/xpra"):
-		xpraRelay(ag)(w, r)
-	case strings.HasPrefix(subpath, "/terminalv2"): // must come before "/terminal" otherwise won't ever match
-		ag.BasicAuth(http.HandlerFunc(terminalV2Relay(ag))).ServeHTTP(w, r)
-	case strings.HasPrefix(subpath, "/terminal"):
-		ag.BasicAuth(http.HandlerFunc(terminalRelay(ag))).ServeHTTP(w, r)
-	default:
+	protocol, _, _ := SplitPathPrefix(subpath)
+	if protocol == "" {
 		http.NotFound(w, r)
+		return
 	}
+
+	protocolRelay(protocol, ag)(w, r)
+	/*
+		return
+
+		// delegate := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
+		switch {
+		case strings.HasPrefix(subpath, "/fsv2"):
+			ag.BasicAuth(http.HandlerFunc(protocolRelay("fsv2", ag))).ServeHTTP(w, r)
+		case strings.HasPrefix(subpath, "/rootfs"):
+			ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
+		case strings.HasPrefix(subpath, "/redir"):
+			ag.BasicAuth(http.HandlerFunc(redirRelay(ag))).ServeHTTP(w, r)
+		case strings.HasPrefix(subpath, "/socks5"):
+			ag.BasicAuth(http.HandlerFunc(socks5Relay(ag))).ServeHTTP(w, r)
+		case strings.HasPrefix(subpath, "/version"):
+			versionRelay(ag)(w, r)
+		case strings.HasPrefix(subpath, "/env"):
+			envRelay(ag)(w, r)
+		case strings.HasPrefix(subpath, "/doh"):
+			dohRelay(ag)(w, r)
+		case strings.HasPrefix(subpath, "/jsonl"):
+			jsonlRelay(ag)(w, r)
+		case strings.HasPrefix(subpath, "/xpra"):
+			xpraRelay(ag)(w, r)
+		case strings.HasPrefix(subpath, "/terminalv2"): // must come before "/terminal" otherwise won't ever match
+			ag.BasicAuth(http.HandlerFunc(terminalV2Relay(ag))).ServeHTTP(w, r)
+		case strings.HasPrefix(subpath, "/terminal"):
+			ag.BasicAuth(http.HandlerFunc(terminalRelay(ag))).ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	*/
+}
+
+// SplitKey takes a key in the form `/$namespace/$path` and splits it into
+// `$namespace` and `$path`.
+func SplitPathPrefix(key string) (string, string, error) {
+	if len(key) == 0 || key[0] != '/' {
+		return "", "", errors.New("invalid record type")
+	}
+
+	key = key[1:]
+
+	i := strings.IndexByte(key, '/')
+	if i <= 0 {
+		return key, "", nil
+	}
+
+	return key[:i], key[i+1:], nil
 }

@@ -326,3 +326,33 @@ func fsV2Relay(ag hub.Agent) http.HandlerFunc {
 		http.StripPrefix(prefix, rp).ServeHTTP(w, r)
 	}
 }
+
+func protocolRelay(protocol api.ProtocolID, ag hub.Agent) http.HandlerFunc {
+	println("protocolRelay", protocol)
+	return func(w http.ResponseWriter, r *http.Request) {
+		var (
+			vars   = mux.Vars(r)
+			id     = vars["id"]
+			prefix = fmt.Sprintf("/api/agent/%s/%s", id, protocol)
+		)
+		dialCtx := func(ctx context.Context, network, addr string) (net.Conn, error) {
+			conn := ag.OpenChannel(protocol)
+			return conn, nil
+		}
+		tr := &http.Transport{
+			DialContext:     dialCtx,
+			MaxIdleConns:    100,
+			IdleConnTimeout: 90 * time.Second,
+		}
+		rewrite := func(req *httputil.ProxyRequest) {
+			req.SetXForwarded()
+			req.Out.URL.Host = r.Host
+			req.Out.URL.Scheme = "http"
+		}
+		rp := &httputil.ReverseProxy{
+			Rewrite:   rewrite,
+			Transport: tr,
+		}
+		http.StripPrefix(prefix, rp).ServeHTTP(w, r)
+	}
+}

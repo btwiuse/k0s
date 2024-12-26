@@ -32,7 +32,7 @@ func (cs *ClientSession) plumbing() {
 		cmd := cs.Text()
 		// log.Println(cmd)
 		p := api.ProtocolID(cmd)
-		if p == api.PingID {
+		if p == "PING" {
 			continue
 		}
 		cs.actions <- func(ag agent.Agent) {

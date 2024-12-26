@@ -9,7 +9,7 @@ require (
 	github.com/btwiuse/cadvisor v0.0.0-20210312172035-34fddda41018
 	github.com/btwiuse/dkg v0.2.0
 	github.com/btwiuse/gost v0.0.4
-	github.com/btwiuse/multicall v0.0.4
+	github.com/btwiuse/multicall v0.0.5
 	github.com/btwiuse/rng v0.0.1
 	github.com/btwiuse/wetty v0.0.36
 	github.com/buildkite/agent/v3 v3.27.0
@@ -37,7 +37,7 @@ require (
 	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/rpc v1.2.0
-	github.com/gorilla/websocket v1.5.1
+	github.com/gorilla/websocket v1.5.3
 	github.com/greenpau/caddy-auth-jwt v1.2.6
 	github.com/greenpau/caddy-trace v1.1.8
 	github.com/infobloxopen/go-trees v0.0.0-20200715205103-96a057b8dfb9
@@ -45,7 +45,7 @@ require (
 	github.com/jpillora/webproc v0.4.0
 	github.com/lunny/tango v0.5.6
 	github.com/mholt/caddy-l4 v0.0.0-20220420174601-aec6535658b1
-	github.com/miekg/dns v1.1.58
+	github.com/miekg/dns v1.1.62
 	github.com/p4gefau1t/trojan-go v0.8.2
 	github.com/portainer/agent v0.0.0-20220708094808-9c896747b4ff
 	github.com/rancher/dapper v0.5.5
@@ -139,7 +139,7 @@ require (
 	github.com/btwiuse/pretty v0.2.1 // indirect
 	github.com/btwiuse/tags v0.0.2 // indirect
 	github.com/btwiuse/version v0.0.1 // indirect
-	github.com/btwiuse/wsconn v0.0.1 // indirect
+	github.com/btwiuse/wsconn v0.0.3 // indirect
 	github.com/btwiuse/wsdial v0.0.0 // indirect
 	github.com/buildkite/interpolate v0.0.0-20200526001904-07f35b4ae251 // indirect
 	github.com/buildkite/shellwords v0.0.0-20180315084142-c3f497d1e000 // indirect
@@ -380,7 +380,7 @@ require (
 	github.com/rakyll/statik v0.1.7 // indirect
 	github.com/refraction-networking/utls v0.0.0-20200601200209-ada0bb9b38a0 // indirect
 	github.com/riobard/go-bloom v0.0.0-20200614022211-cdc8013cb5b3 // indirect
-	github.com/rs/cors v1.10.1 // indirect
+	github.com/rs/cors v1.11.1 // indirect
 	github.com/rs/xid v1.2.1 // indirect
 	github.com/russross/blackfriday v1.5.2 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
@@ -459,14 +459,14 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.26.0 // indirect
-	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
+	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c // indirect
 	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 	golang.org/x/oauth2 v0.21.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/term v0.27.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
+	golang.org/x/tools v0.26.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
 	gomodules.xyz/jsonpatch/v3 v3.0.1 // indirect
 	gomodules.xyz/orderedmap v0.1.0 // indirect
@@ -489,7 +489,7 @@ require (
 	k0s.io/pkg/distro v0.1.16 // indirect
 	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340 // indirect
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 // indirect
-	nhooyr.io/websocket v1.8.10 // indirect
+	nhooyr.io/websocket v1.8.17 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect

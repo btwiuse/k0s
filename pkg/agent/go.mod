@@ -8,6 +8,7 @@ require (
 	github.com/btwiuse/rng v0.0.1
 	github.com/btwiuse/tags v0.0.2
 	github.com/btwiuse/version v0.0.1
+	github.com/btwiuse/wsconn v0.0.3
 	github.com/btwiuse/wsdial v0.0.0
 	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1
@@ -18,7 +19,7 @@ require (
 	k0s.io/pkg/asciitransport v0.1.16
 	k0s.io/pkg/distro v0.1.16
 	k0s.io/pkg/middleware v0.1.16
-	nhooyr.io/websocket v1.8.10
+	nhooyr.io/websocket v1.8.17
 )
 
 require (
@@ -28,7 +29,7 @@ require (
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/handlers v1.5.2 // indirect
-	github.com/gorilla/websocket v1.5.1 // indirect
+	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mjwhitta/errors v1.0.2 // indirect
@@ -40,8 +41,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/rs/cors v1.10.1 // indirect
-	golang.org/x/net v0.33.0 // indirect
+	github.com/rs/cors v1.11.1 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/apimachinery v0.31.2 // indirect
