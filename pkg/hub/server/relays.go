@@ -30,7 +30,7 @@ func terminalV2Relay(ag hub.Agent) http.HandlerFunc {
 		wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
 		defer wsconn.Close()
 
-		conn := ag.NewChannel(api.TerminalV2ID)
+		conn := ag.OpenChannel(api.TerminalV2ID)
 		defer conn.Close()
 
 		go io.Copy(conn, wsconn)
@@ -51,7 +51,7 @@ func terminalRelay(ag hub.Agent) http.HandlerFunc {
 		wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
 		defer wsconn.Close()
 
-		conn := ag.NewChannel(api.TerminalID)
+		conn := ag.OpenChannel(api.TerminalID)
 		defer conn.Close()
 
 		go io.Copy(conn, wsconn)
@@ -81,7 +81,7 @@ func fsRelay(ag hub.Agent) http.HandlerFunc {
 		}
 		defer conn.Close()
 
-		fsConn := ag.NewChannel(api.FSID)
+		fsConn := ag.OpenChannel(api.FSID)
 		defer fsConn.Close()
 
 		go func() {
@@ -113,7 +113,7 @@ func versionRelay(ag hub.Agent) http.HandlerFunc {
 		}
 		defer conn.Close()
 
-		versionConn := ag.NewChannel(api.VersionID)
+		versionConn := ag.OpenChannel(api.VersionID)
 		defer versionConn.Close()
 
 		go func() {
@@ -145,7 +145,7 @@ func dohRelay(ag hub.Agent) http.HandlerFunc {
 		}
 		defer conn.Close()
 
-		metricsConn := ag.NewChannel(api.DohID)
+		metricsConn := ag.OpenChannel(api.DohID)
 		defer metricsConn.Close()
 
 		go func() {
@@ -167,7 +167,7 @@ func jsonlRelay(ag hub.Agent) http.HandlerFunc {
 		wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
 		defer wsconn.Close()
 
-		conn := ag.NewChannel(api.JsonlID)
+		conn := ag.OpenChannel(api.JsonlID)
 		defer conn.Close()
 
 		go io.Copy(conn, wsconn)
@@ -191,7 +191,7 @@ func xpraRelay(ag hub.Agent) http.HandlerFunc {
 		wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
 		defer wsconn.Close()
 
-		conn := ag.NewChannel(api.XpraID)
+		conn := ag.OpenChannel(api.XpraID)
 		defer conn.Close()
 
 		b := make([]byte, k0s.MAX_WS_MESSAGE)
@@ -224,7 +224,7 @@ func envRelay(ag hub.Agent) http.HandlerFunc {
 		}
 		defer conn.Close()
 
-		envConn := ag.NewChannel(api.EnvID)
+		envConn := ag.OpenChannel(api.EnvID)
 		defer envConn.Close()
 
 		go func() {
@@ -245,7 +245,7 @@ func socks5Relay(ag hub.Agent) http.HandlerFunc {
 		}
 		conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
 
-		socks5Conn := ag.NewChannel(api.Socks5ID)
+		socks5Conn := ag.OpenChannel(api.Socks5ID)
 		defer socks5Conn.Close()
 
 		go func() {
@@ -275,7 +275,7 @@ func redirRelay(ag hub.Agent) http.HandlerFunc {
 		}
 		conn := websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary)
 
-		redirConn := ag.NewChannel(api.RedirID)
+		redirConn := ag.OpenChannel(api.RedirID)
 		defer redirConn.Close()
 
 		go func() {

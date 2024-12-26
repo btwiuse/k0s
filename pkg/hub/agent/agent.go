@@ -25,7 +25,6 @@ func NewAgent(rpc hub.RPC, info hub.AgentInfo) hub.Agent {
 		rpc:       rpc,
 		created:   time.Now(),
 		Channels:  newChannels(),
-		grpcNames: make(map[net.Conn]string),
 	}
 
 	info.SetIP(rpc.RemoteIP())
@@ -50,17 +49,14 @@ type agent struct {
 
 	created  time.Time
 	htpasswd map[string]string
-
-	grpcCounter int
-	grpcNames   map[net.Conn]string
 }
 
-func (ag *agent) NewChannel(p api.ProtocolID) net.Conn {
-	ag.rpc.NewChannel(p)
+func (ag *agent) OpenChannel(p api.ProtocolID) net.Conn {
+	ag.rpc.OpenChannel(p)
 	// make sure the channel is created
 	_, ok := ag.Channels[p]
 	if !ok {
-		println("NewChannel", string(p))
+		println("OpenChannel", string(p))
 		ag.Channels[p] = make(chan net.Conn)
 	}
 	return <-ag.Channels[p]
@@ -98,7 +94,7 @@ func (ag *agent) Name() string {
 	return ag.GetName()
 }
 
-// blocks until agent.NewChannel(api.ProtocolID) reads the channel
+// blocks until agent.OpenChannel(api.ProtocolID) reads the channel
 func (ag *agent) AddChannel(p api.ProtocolID, conn net.Conn) {
 	ag.Channels[p] <- conn
 }

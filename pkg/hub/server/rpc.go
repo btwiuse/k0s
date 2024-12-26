@@ -135,7 +135,7 @@ type YS struct {
 	closeOnceDone *sync.Once
 }
 
-func (ys *YS) NewChannel(p api.ProtocolID) {
+func (ys *YS) OpenChannel(p api.ProtocolID) {
 	cmd := string(p)
 	_, err := io.WriteString(ys.Conn, fmt.Sprintln(cmd))
 	if err != nil {

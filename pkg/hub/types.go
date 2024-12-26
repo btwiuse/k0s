@@ -61,7 +61,7 @@ type Agent interface {
 	k0s.Tider
 
 	AddChannel(api.ProtocolID, net.Conn)
-	NewChannel(api.ProtocolID) net.Conn
+	OpenChannel(api.ProtocolID) net.Conn
 	BasicAuth(http.Handler) http.Handler
 }
 
@@ -71,7 +71,7 @@ type RPC interface {
 	Close()
 	Done() <-chan struct{}
 
-	NewChannel(api.ProtocolID)
+	OpenChannel(api.ProtocolID)
 
 	Ping()
 	RemoteIP() string
