@@ -3,8 +3,8 @@ module k0s.io/pkg/plugin
 go 1.24rc1
 
 require (
-	github.com/btwiuse/rng v0.0.0
-	github.com/btwiuse/version v0.0.0
+	github.com/btwiuse/rng v0.0.1
+	github.com/btwiuse/version v0.0.1
 	k0s.io v0.1.16
 	k0s.io/pkg/agent v0.1.16
 )
@@ -17,7 +17,7 @@ require (
 	github.com/btwiuse/wsdial v0.0.0 // indirect
 	github.com/creack/pty v1.1.21 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1 // indirect
-	github.com/docker/docker v25.0.1+incompatible // indirect
+	github.com/docker/docker v27.3.1+incompatible // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -34,10 +34,10 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/cors v1.10.1 // indirect
-	golang.org/x/net v0.26.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k0s.io/pkg/asciitransport v0.1.16 // indirect

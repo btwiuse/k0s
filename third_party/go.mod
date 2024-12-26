@@ -10,6 +10,7 @@ require (
 	github.com/btwiuse/dkg v0.2.0
 	github.com/btwiuse/gost v0.0.4
 	github.com/btwiuse/multicall v0.0.4
+	github.com/btwiuse/rng v0.0.1
 	github.com/btwiuse/wetty v0.0.36
 	github.com/buildkite/agent/v3 v3.27.0
 	github.com/caddy-dns/alidns v1.0.23
@@ -59,10 +60,10 @@ require (
 	go.etcd.io/etcd/client/v3 v3.5.14
 	go.starlark.net v0.0.0-20230525235612-a134d8f9ddca
 	go.uber.org/automaxprocs v1.5.1
-	golang.org/x/crypto v0.24.0
-	golang.org/x/mod v0.17.0
-	golang.org/x/net v0.26.0
-	golang.org/x/text v0.16.0
+	golang.org/x/crypto v0.31.0
+	golang.org/x/mod v0.22.0
+	golang.org/x/net v0.33.0
+	golang.org/x/text v0.21.0
 	google.golang.org/protobuf v1.34.2
 	k0s.io v0.1.16
 	k0s.io/pkg/agent v0.1.16
@@ -87,8 +88,6 @@ require (
 	// sigs.k8s.io/metrics-server v0.4.2
 	src.elv.sh v0.14.1-0.20210218105754-53593c3ab79f
 )
-
-require github.com/btwiuse/rng v0.0.0
 
 require (
 	cloud.google.com/go/compute/metadata v0.3.0 // indirect
@@ -139,7 +138,7 @@ require (
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/btwiuse/pretty v0.2.1 // indirect
 	github.com/btwiuse/tags v0.0.2 // indirect
-	github.com/btwiuse/version v0.0.0 // indirect
+	github.com/btwiuse/version v0.0.1 // indirect
 	github.com/btwiuse/wsconn v0.0.1 // indirect
 	github.com/btwiuse/wsdial v0.0.0 // indirect
 	github.com/buildkite/interpolate v0.0.0-20200526001904-07f35b4ae251 // indirect
@@ -183,7 +182,7 @@ require (
 	github.com/dlclark/regexp2 v1.4.1-0.20201116162257-a2a8dda75c91 // indirect
 	github.com/docker/cli v20.10.9+incompatible // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
-	github.com/docker/docker v25.0.1+incompatible // indirect
+	github.com/docker/docker v27.3.1+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.6.3 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
@@ -463,9 +462,9 @@ require (
 	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
 	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 	golang.org/x/oauth2 v0.21.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
-	golang.org/x/term v0.21.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/term v0.27.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect

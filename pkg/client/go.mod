@@ -6,11 +6,11 @@ require (
 	github.com/VojtechVitek/yaml-cli v0.0.5
 	github.com/abiosoft/ishell v2.0.0+incompatible
 	github.com/btwiuse/pretty v0.2.1
-	github.com/btwiuse/rng v0.0.0
-	github.com/btwiuse/version v0.0.0
+	github.com/btwiuse/rng v0.0.1
+	github.com/btwiuse/version v0.0.1
 	github.com/btwiuse/wsdial v0.0.0
 	github.com/containerd/console v1.0.4
-	golang.org/x/crypto v0.24.0
+	golang.org/x/crypto v0.31.0
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.16
 	k0s.io/pkg/agent v0.1.16
@@ -24,7 +24,7 @@ require (
 	github.com/btwiuse/tags v0.0.2 // indirect
 	github.com/chzyer/test v1.0.0 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1 // indirect
-	github.com/docker/docker v25.0.1+incompatible // indirect
+	github.com/docker/docker v27.3.1+incompatible // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
@@ -49,11 +49,11 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/net v0.26.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
-	golang.org/x/term v0.21.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/term v0.27.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/distro v0.1.16 // indirect
 	k8s.io/apimachinery v0.31.2 // indirect

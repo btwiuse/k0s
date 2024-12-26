@@ -21,6 +21,7 @@ type HTTPChannelListener struct {
 }
 
 func (l *HTTPChannelListener) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	println("HTTPChannelListener.ServeHTTP")
 	// log.Println(r.Header)
 	conn, err := wsconn.Wrconn(w, r)
 	if err != nil {

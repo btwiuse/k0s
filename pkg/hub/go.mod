@@ -5,10 +5,9 @@ go 1.24rc1
 require (
 	github.com/abbot/go-http-auth v0.4.0
 	github.com/btwiuse/pretty v0.2.1
-	github.com/btwiuse/rng v0.0.0
+	github.com/btwiuse/rng v0.0.1
 	github.com/btwiuse/sse v0.0.1
-	github.com/btwiuse/version v0.0.0
-	github.com/btwiuse/wetty v0.0.36
+	github.com/btwiuse/version v0.0.1
 	github.com/btwiuse/wsconn v0.0.1
 	github.com/gorilla/mux v1.8.1
 	github.com/jpillora/go-echo-server v0.5.0
@@ -18,7 +17,6 @@ require (
 	k0s.io/pkg/middleware v0.1.16
 	k0s.io/pkg/ui v0.1.16
 	k0s.io/pkg/utils v0.1.16
-	modernc.org/httpfs v1.0.6
 	nhooyr.io/websocket v1.8.10
 )
 
@@ -31,7 +29,7 @@ require (
 	github.com/btwiuse/wsdial v0.0.0 // indirect
 	github.com/creack/pty v1.1.21 // indirect
 	github.com/denisbrodbeck/machineid v1.0.1 // indirect
-	github.com/docker/docker v25.0.1+incompatible // indirect
+	github.com/docker/docker v27.3.1+incompatible // indirect
 	github.com/ebi-yade/altsvc-go v0.1.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
@@ -56,13 +54,13 @@ require (
 	github.com/rs/cors v1.10.1 // indirect
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
 	github.com/webteleport/utils v0.2.5 // indirect
-	golang.org/x/crypto v0.24.0 // indirect
+	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
-	golang.org/x/mod v0.17.0 // indirect
-	golang.org/x/net v0.26.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/mod v0.22.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
