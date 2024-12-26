@@ -1,6 +1,6 @@
 package api
 
-type ProtocolID string
+type ProtocolID = string
 
 const (
 	TerminalID   ProtocolID = "TERMINAL"

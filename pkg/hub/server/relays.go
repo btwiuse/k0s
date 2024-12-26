@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -299,17 +300,18 @@ func redirRelay(ag hub.Agent) http.HandlerFunc {
 func fsV2Relay(ag hub.Agent) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
-			vars = mux.Vars(r)
-			id   = vars["id"]
-			path = strings.TrimPrefix(r.RequestURI, "/api/agent/"+id+"/rootfs")
+			vars     = mux.Vars(r)
+			id       = vars["id"]
+			protocol = "fsv2"
+			prefix   = fmt.Sprintf("/api/agent/%s/%s", id, protocol)
 		)
 		dialCtx := func(ctx context.Context, network, addr string) (net.Conn, error) {
-			conn := ag.OpenChannel("fsv2")
+			conn := ag.OpenChannel(protocol)
 			return conn, nil
 		}
 		tr := &http.Transport{
-			DialContext: dialCtx,
-			MaxIdleConns: 100,
+			DialContext:     dialCtx,
+			MaxIdleConns:    100,
 			IdleConnTimeout: 90 * time.Second,
 		}
 		rewrite := func(req *httputil.ProxyRequest) {
@@ -318,9 +320,9 @@ func fsV2Relay(ag hub.Agent) http.HandlerFunc {
 			req.Out.URL.Scheme = "http"
 		}
 		rp := &httputil.ReverseProxy{
-			Rewrite: rewrite,
+			Rewrite:   rewrite,
 			Transport: tr,
 		}
-		http.StripPrefix(path, rp).ServeHTTP(w, r)
+		http.StripPrefix(prefix, rp).ServeHTTP(w, r)
 	}
 }
