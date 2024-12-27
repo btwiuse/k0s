@@ -3,16 +3,17 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "listener.go",
         "manager.go",
         "relays.go",
-        "req2conn.go",
         "routes.go",
-        "rpc.go",
+        "session.go",
     ],
     importpath = "k0s.io/pkg/hub/server",
     visibility = ["//visibility:public"],
     deps = [
         "//:go_default_library",
+        "//pkg/agent/server:go_default_library",
         "//pkg/api:go_default_library",
         "//pkg/hub:go_default_library",
         "//pkg/hub/agent:go_default_library",
@@ -24,11 +25,8 @@ go_library(
         "@com_github_btwiuse_pretty//:go_default_library",
         "@com_github_btwiuse_rng//:go_default_library",
         "@com_github_btwiuse_sse//:go_default_library",
-        "@com_github_btwiuse_wetty//pkg/assets:go_default_library",
         "@com_github_btwiuse_wsconn//:go_default_library",
         "@com_github_gorilla_mux//:go_default_library",
         "@com_github_jpillora_go_echo_server//handler:go_default_library",
-        "@io_nhooyr_websocket//:go_default_library",
-        "@org_modernc_httpfs//:go_default_library",
     ],
 )

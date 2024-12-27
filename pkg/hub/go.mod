@@ -21,7 +21,7 @@ require (
 
 require (
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
-	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
+	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2 // indirect
 	github.com/btwiuse/gods v0.0.1 // indirect
 	github.com/btwiuse/tags v0.0.2 // indirect
@@ -64,6 +64,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k0s.io/pkg/asciitransport v0.1.16 // indirect
 	k0s.io/pkg/distro v0.1.16 // indirect
-	k8s.io/apimachinery v0.31.2 // indirect
+	k8s.io/apimachinery v0.32.0 // indirect
 	nhooyr.io/websocket v1.8.17 // indirect
 )

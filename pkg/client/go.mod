@@ -57,6 +57,6 @@ require (
 	golang.org/x/text v0.21.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k0s.io/pkg/distro v0.1.16 // indirect
-	k8s.io/apimachinery v0.31.2 // indirect
+	k8s.io/apimachinery v0.32.0 // indirect
 	nhooyr.io/websocket v1.8.17 // indirect
 )
