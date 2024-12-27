@@ -59,6 +59,7 @@ func NewAgent(c agent.Config) agent.Agent {
 	ag.SetProtocolHandler("fsv2", StartFileServer)
 	ag.SetProtocolHandler("wsecho", StartWsEchoServer)
 	ag.SetProtocolHandler("wsecho2", StartWsEcho2Server)
+	ag.SetProtocolHandler("wsecho3", StartWsEcho3Server)
 	ag.SetProtocolHandler(api.JsonlID, StartJsonlServer)
 	ag.SetProtocolHandler(api.PingID, StartPingServer)
 	ag.SetProtocolHandler(api.TerminalID, StartTerminalServer)

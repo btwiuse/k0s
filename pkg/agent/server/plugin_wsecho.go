@@ -51,3 +51,11 @@ func handleWsEcho2(ln net.Listener) {
 		}()
 	}
 }
+
+func StartWsEcho3Server(c agent.Config) chan net.Conn {
+	var (
+		wsEchoListener = NewChannelListener()
+	)
+	go handleWsEcho2(wsEchoListener)
+	return wsEchoListener.Conns
+}

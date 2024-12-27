@@ -335,6 +335,26 @@ func protocolRelay(protocol api.ProtocolID, ag hub.Agent) http.HandlerFunc {
 			id     = vars["id"]
 			prefix = fmt.Sprintf("/api/agent/%s/%s", id, protocol)
 		)
+		// websocket
+		if strings.ToLower(r.Header.Get("Upgrade")) == "websocket" && strings.ToLower(r.Header.Get("Connection")) == "upgrade" {
+			wsc, err := websocket.Accept(w, r, &websocket.AcceptOptions{
+				InsecureSkipVerify: true,
+			})
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			wsconn := websocket.NetConn(context.Background(), wsc, websocket.MessageBinary)
+			defer wsconn.Close()
+
+			conn := ag.OpenChannel(protocol)
+			defer conn.Close()
+
+			go io.Copy(conn, wsconn)
+			io.Copy(wsconn, conn)
+			return
+		}
+		// http
 		dialCtx := func(ctx context.Context, network, addr string) (net.Conn, error) {
 			conn := ag.OpenChannel(protocol)
 			return conn, nil
