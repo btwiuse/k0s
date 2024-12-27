@@ -65,13 +65,13 @@ require (
 	golang.org/x/net v0.33.0
 	golang.org/x/text v0.21.0
 	google.golang.org/protobuf v1.35.1
-	k0s.io v0.1.18-alpha.1
-	k0s.io/pkg/agent v0.1.18-alpha.1
-	k0s.io/pkg/asciitransport v0.1.18-alpha.1
-	k0s.io/pkg/middleware v0.1.18-alpha.1
-	k0s.io/pkg/plugin v0.1.18-alpha.1
-	k0s.io/pkg/tunnel v0.1.18-alpha.1
-	k0s.io/pkg/utils v0.1.18-alpha.1
+	k0s.io v0.1.18-alpha.2
+	k0s.io/pkg/agent v0.1.18-alpha.2
+	k0s.io/pkg/asciitransport v0.1.18-alpha.2
+	k0s.io/pkg/middleware v0.1.18-alpha.2
+	k0s.io/pkg/plugin v0.1.18-alpha.2
+	k0s.io/pkg/tunnel v0.1.18-alpha.2
+	k0s.io/pkg/utils v0.1.18-alpha.2
 	k8s.io/api v0.32.0
 	k8s.io/apimachinery v0.32.0
 	k8s.io/client-go v0.32.0
