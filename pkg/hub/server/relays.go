@@ -37,8 +37,27 @@ func protocolRelay(protocol api.ProtocolID, ag hub.Agent) http.HandlerFunc {
 			conn := ag.OpenChannel(protocol)
 			defer conn.Close()
 
-			go io.Copy(conn, wsc)
-			io.Copy(wsc, conn)
+			// ensure both copy goroutines are done before returning
+			done := make(chan struct{}, 2)
+			go func() {
+				_, err := io.Copy(conn, wsc)
+				if err != nil {
+					log.Println(err)
+				}
+				done <- struct{}{}
+			}()
+
+			go func() {
+				_, err := io.Copy(wsc, conn)
+				if err != nil {
+					log.Println(err)
+				}
+				done <- struct{}{}
+			}()
+
+			<-done
+			<-done
+
 			return
 		}
 		// http
