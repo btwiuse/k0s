@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-cat .mods | while read a; do echo "s,$a v0.1.17$,$a v0.1.17-rel.1,g"; done > /tmp/sed
+cat .mods | while read a; do echo "s,$a v0.1.17-rel.1$,$a v0.1.18-alpha.1,g"; done > /tmp/sed
 find . -name go.mod | xargs -L1 sed -i -f /tmp/sed
 sed -i -f /tmp/sed go.work

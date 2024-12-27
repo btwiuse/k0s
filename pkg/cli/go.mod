@@ -8,14 +8,14 @@ require (
 	github.com/creativeprojects/go-selfupdate v1.1.3
 	github.com/webteleport/utils v0.2.17
 	github.com/webteleport/wtf v0.1.29
-	k0s.io v0.1.17-rel.1
-	k0s.io/pkg/agent v0.1.17-rel.1
-	k0s.io/pkg/apiserver v0.1.17-rel.1
-	k0s.io/pkg/client v0.1.17-rel.1
-	k0s.io/pkg/hub v0.1.17-rel.1
-	k0s.io/pkg/simple v0.1.17-rel.1
-	k0s.io/pkg/tunnel v0.1.17-rel.1
-	k0s.io/pkg/utils v0.1.17-rel.1
+	k0s.io v0.1.18-alpha.1
+	k0s.io/pkg/agent v0.1.18-alpha.1
+	k0s.io/pkg/apiserver v0.1.18-alpha.1
+	k0s.io/pkg/client v0.1.18-alpha.1
+	k0s.io/pkg/hub v0.1.18-alpha.1
+	k0s.io/pkg/simple v0.1.18-alpha.1
+	k0s.io/pkg/tunnel v0.1.18-alpha.1
+	k0s.io/pkg/utils v0.1.18-alpha.1
 	k8s.io/apimachinery v0.32.0
 	k8s.io/kubectl v0.32.0
 )
