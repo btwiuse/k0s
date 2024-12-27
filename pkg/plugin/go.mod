@@ -5,8 +5,8 @@ go 1.24rc1
 require (
 	github.com/btwiuse/rng v0.0.1
 	github.com/btwiuse/version v0.0.1
-	k0s.io v0.1.16
-	k0s.io/pkg/agent v0.1.16
+	k0s.io v0.1.17
+	k0s.io/pkg/agent v0.1.17
 )
 
 require (
@@ -39,9 +39,9 @@ require (
 	golang.org/x/text v0.21.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k0s.io/pkg/asciitransport v0.1.16 // indirect
+	k0s.io/pkg/asciitransport v0.1.17 // indirect
 	k0s.io/pkg/distro v0.1.16 // indirect
-	k0s.io/pkg/middleware v0.1.16 // indirect
+	k0s.io/pkg/middleware v0.1.17 // indirect
 	k8s.io/apimachinery v0.32.0 // indirect
 	nhooyr.io/websocket v1.8.17 // indirect
 )

@@ -20,20 +20,20 @@ use (
 )
 
 replace (
-	k0s.io v0.1.16 => ./
-	k0s.io/cmd v0.1.16 => ./cmd/
-	k0s.io/pkg/agent v0.1.16 => ./pkg/agent/
-	k0s.io/pkg/apiserver v0.1.16 => ./pkg/apiserver/
-	k0s.io/pkg/asciitransport v0.1.16 => ./pkg/asciitransport/
-	k0s.io/pkg/cli v0.1.16 => ./pkg/cli/
-	k0s.io/pkg/client v0.1.16 => ./pkg/client/
-	k0s.io/pkg/hub v0.1.16 => ./pkg/hub/
-	k0s.io/pkg/manager v0.1.16 => ./pkg/manager/
-	k0s.io/pkg/middleware v0.1.16 => ./pkg/middleware/
-	k0s.io/pkg/plugin v0.1.16 => ./pkg/plugin/
-	k0s.io/pkg/simple v0.1.16 => ./pkg/simple/
-	k0s.io/pkg/tunnel v0.1.16 => ./pkg/tunnel/
-	k0s.io/pkg/ui v0.1.16 => ./pkg/ui/
-	k0s.io/pkg/utils v0.1.16 => ./pkg/utils/
-	k0s.io/third_party v0.1.16 => ./third_party/
+	k0s.io v0.1.17 => ./
+	k0s.io/cmd v0.1.17 => ./cmd/
+	k0s.io/pkg/agent v0.1.17 => ./pkg/agent/
+	k0s.io/pkg/apiserver v0.1.17 => ./pkg/apiserver/
+	k0s.io/pkg/asciitransport v0.1.17 => ./pkg/asciitransport/
+	k0s.io/pkg/cli v0.1.17 => ./pkg/cli/
+	k0s.io/pkg/client v0.1.17 => ./pkg/client/
+	k0s.io/pkg/hub v0.1.17 => ./pkg/hub/
+	k0s.io/pkg/manager v0.1.17 => ./pkg/manager/
+	k0s.io/pkg/middleware v0.1.17 => ./pkg/middleware/
+	k0s.io/pkg/plugin v0.1.17 => ./pkg/plugin/
+	k0s.io/pkg/simple v0.1.17 => ./pkg/simple/
+	k0s.io/pkg/tunnel v0.1.17 => ./pkg/tunnel/
+	k0s.io/pkg/ui v0.1.17 => ./pkg/ui/
+	k0s.io/pkg/utils v0.1.17 => ./pkg/utils/
+	k0s.io/third_party v0.1.17 => ./third_party/
 )
