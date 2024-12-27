@@ -5,8 +5,8 @@ go 1.24rc1
 require (
 	github.com/emicklei/go-restful/v3 v3.12.1
 	k0s.io/pkg/middleware v0.1.16
-	k8s.io/apimachinery v0.31.2
-	k8s.io/apiserver v0.31.2
+	k8s.io/apimachinery v0.32.0
+	k8s.io/apiserver v0.32.0
 )
 
 require (
@@ -55,9 +55,9 @@ require (
 	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k8s.io/api v0.31.2 // indirect
-	k8s.io/client-go v0.31.2 // indirect
-	k8s.io/component-base v0.31.2 // indirect
+	k8s.io/api v0.32.0 // indirect
+	k8s.io/client-go v0.32.0 // indirect
+	k8s.io/component-base v0.32.0 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect

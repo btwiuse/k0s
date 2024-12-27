@@ -72,11 +72,11 @@ require (
 	k0s.io/pkg/plugin v0.1.16
 	k0s.io/pkg/tunnel v0.1.16
 	k0s.io/pkg/utils v0.1.16
-	k8s.io/api v0.31.2
-	k8s.io/apimachinery v0.31.2
-	k8s.io/client-go v0.31.2
+	k8s.io/api v0.32.0
+	k8s.io/apimachinery v0.32.0
+	k8s.io/client-go v0.32.0
 	k8s.io/klog/v2 v2.130.1
-	k8s.io/kubectl v0.31.2
+	k8s.io/kubectl v0.32.0
 	// k8s.io/apimachinery v0.22.5
 	// k8s.io/apiserver v0.22.5
 	// k8s.io/client-go v0.22.5
