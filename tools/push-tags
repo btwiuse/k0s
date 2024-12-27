@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
-export ROOT_MOD=$(go mod edit -json | jq -r .Module.Path)
+# export ROOT_MOD=$(go mod edit -json | jq -r .Module.Path)
+
+export ROOT_MOD=k0s.io
 
 cat .mods | xargs -I% bash -c 'echo %/$(<VERSION)' | sed s,^$ROOT_MOD/,,g | xargs -I% bash -vc 'git tag -f % && git push -f origin %'
