@@ -173,12 +173,12 @@ func (cl *clientImpl) printAgentTable(out io.Writer) error {
 	}
 	w := new(tabwriter.Writer)
 	w.Init(out, 2, 0, 2, ' ', 0)
-	fmt.Fprintln(w, strings.ReplaceAll("agent username hostname os arch distro auth @", " ", "\t"))
+	fmt.Fprintln(w, strings.ReplaceAll("agent username hostname os arch auth @", " ", "\t"))
 	for _, ag := range ags {
 		col := fmt.Sprintf(
-			strings.ReplaceAll("%s %s %s %s %s %s %t %s", " ", "\t"),
+			strings.ReplaceAll("%s %s %s %s %s %t %s", " ", "\t"),
 			ag.GetName(), ag.GetUsername(), ag.GetHostname(), ag.GetOS(),
-			ag.GetArch(), ag.GetDistro(), ag.GetAuth(), "@"+ag.GetID(),
+			ag.GetArch(), ag.GetAuth(), "@"+ag.GetID(),
 		)
 		fmt.Fprintln(w, col)
 	}

@@ -14,7 +14,6 @@ type Meta struct {
 	OS       string `json:"os"`
 	Pwd      string `json:"pwd"`
 	Arch     string `json:"arch"`
-	Distro   string `json:"distro,omitempty"`
 	Username string `json:"username"`
 	Hostname string `json:"hostname"`
 }
@@ -45,7 +44,6 @@ type Info struct {
 	OS         string `json:"os"`
 	Pwd        string `json:"pwd"`
 	Arch       string `json:"arch"`
-	Distro     string `json:"distro,omitempty"`
 	Username   string `json:"username"`
 	Hostname   string `json:"hostname"`
 	Version    string `json:"version"`
@@ -78,7 +76,6 @@ func (info *Info) populatePublicInfo() {
 	info.OS = pi.OS
 	info.Pwd = pi.Pwd
 	info.Arch = pi.Arch
-	info.Distro = pi.Distro
 	info.Username = pi.Username
 	info.Hostname = pi.Hostname
 	info.GitVersion = pi.Version.GitVersion
@@ -102,10 +99,6 @@ func (info *Info) GetPwd() string {
 
 func (info *Info) GetArch() string {
 	return info.Arch
-}
-
-func (info *Info) GetDistro() string {
-	return info.Distro
 }
 
 func (info *Info) GetUsername() string {

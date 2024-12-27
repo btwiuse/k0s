@@ -47,7 +47,6 @@ var data2 string = `{
     "os": "linux",
     "pwd": "/home/aaron/go/src/github.com/btwiuse/k0s",
     "arch": "amd64",
-    "distro": "arch",
     "username": "aaron",
     "hostname": "localhost"
   },
@@ -60,6 +59,3 @@ var data2 string = `{
     "Version": "v0.0.1"
   }
 }`
-
-// "distro": "arch",
-// "arch": "amd64",

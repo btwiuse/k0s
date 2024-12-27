@@ -8,7 +8,6 @@ use (
 	./pkg/asciitransport
 	./pkg/cli
 	./pkg/client
-	./pkg/distro
 	./pkg/hub
 	./pkg/manager
 	./pkg/middleware
@@ -28,7 +27,6 @@ replace (
 	k0s.io/pkg/asciitransport v0.1.16 => ./pkg/asciitransport/
 	k0s.io/pkg/cli v0.1.16 => ./pkg/cli/
 	k0s.io/pkg/client v0.1.16 => ./pkg/client/
-	k0s.io/pkg/distro v0.1.16 => ./pkg/distro/
 	k0s.io/pkg/hub v0.1.16 => ./pkg/hub/
 	k0s.io/pkg/manager v0.1.16 => ./pkg/manager/
 	k0s.io/pkg/middleware v0.1.16 => ./pkg/middleware/

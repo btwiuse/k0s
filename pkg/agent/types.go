@@ -12,7 +12,6 @@ type Info interface {
 	GetOS() string
 	GetPwd() string
 	GetArch() string
-	GetDistro() string
 	GetHostname() string
 	GetUsername() string
 }

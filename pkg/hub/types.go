@@ -21,7 +21,6 @@ type AgentInfo interface {
 	GetOS() string
 	GetPwd() string
 	GetArch() string
-	GetDistro() string
 	GetHostname() string
 	GetUsername() string
 	GetVersion() string
