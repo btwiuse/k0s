@@ -17,7 +17,6 @@ require (
 	k0s.io/pkg/middleware v0.1.16
 	k0s.io/pkg/ui v0.1.16
 	k0s.io/pkg/utils v0.1.16
-	nhooyr.io/websocket v1.8.17
 )
 
 require (
@@ -66,4 +65,5 @@ require (
 	k0s.io/pkg/asciitransport v0.1.16 // indirect
 	k0s.io/pkg/distro v0.1.16 // indirect
 	k8s.io/apimachinery v0.31.2 // indirect
+	nhooyr.io/websocket v1.8.17 // indirect
 )

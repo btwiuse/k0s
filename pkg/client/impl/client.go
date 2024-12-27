@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"bufio"
 	"bytes"
 	"crypto/tls"
 	"encoding/base64"
@@ -18,12 +19,12 @@ import (
 	"text/tabwriter"
 
 	"github.com/VojtechVitek/yaml-cli/pkg/cli"
-	"github.com/abiosoft/ishell"
+	"github.com/abiosoft/ishell/v2"
 	"github.com/containerd/console"
+	fzf "github.com/junegunn/fzf/src"
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io"
 	"k0s.io/pkg/client"
-	"k0s.io/pkg/fzf"
 	"k0s.io/pkg/hub"
 	"k0s.io/pkg/hub/agent/info"
 )
@@ -185,9 +186,22 @@ func (cl *clientImpl) printAgentTable(out io.Writer) error {
 	return nil
 }
 
+// convert io.Reader to chan string using bufio.Scanner
+func readerToChan(r io.Reader) chan string {
+	ch := make(chan string)
+	go func() {
+		defer close(ch)
+		scanner := bufio.NewScanner(r)
+		for scanner.Scan() {
+			ch <- scanner.Text()
+		}
+	}()
+	return ch
+}
+
 func (cl *clientImpl) runFzf() string {
 	var (
-		id     = &strings.Builder{}
+		out    = make(chan string, 1)
 		pr, pw = io.Pipe()
 	)
 
@@ -204,10 +218,6 @@ func (cl *clientImpl) runFzf() string {
 		--reverse --tac --cycle -d '@' --with-nth=1 --header-lines=1 --preview-window=right:40%
 	*/
 
-	opts := []fzf.Opt{
-		fzf.WithReader(pr),
-		fzf.WithWriter(id),
-	}
 	args := []string{
 		"--tac",
 		"--cycle",
@@ -217,14 +227,27 @@ func (cl *clientImpl) runFzf() string {
 		"--header-lines", "1",
 	}
 
-	fzf.Run(fzf.ParseOptions(args, opts...), "revision")
+	fzfApp, err := fzf.ParseOptions(true, args)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	if strings.TrimSpace(id.String()) == "" {
+	fzfApp.Input = readerToChan(pr)
+	fzfApp.Output = out
+
+	exitCode, err := fzf.Run(fzfApp)
+	if exitCode != 0 || err != nil {
+		return ""
+	}
+
+	id := <-out
+
+	if strings.TrimSpace(id) == "" {
 		log.Fatalln("fzf empty result", id, idd)
 		// return nil
 	}
 
-	parts := strings.Split(id.String(), "@")
+	parts := strings.Split(id, "@")
 	if len(parts) == 0 {
 		log.Fatalln("fzf bad output format")
 	}
