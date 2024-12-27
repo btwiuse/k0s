@@ -42,7 +42,7 @@ func protocolRelay(protocol api.ProtocolID, ag hub.Agent) http.HandlerFunc {
 			go func() {
 				_, err := io.Copy(conn, wsc)
 				if err != nil {
-					log.Println(err)
+					// log.Println(err)
 				}
 				done <- struct{}{}
 			}()
@@ -50,7 +50,7 @@ func protocolRelay(protocol api.ProtocolID, ag hub.Agent) http.HandlerFunc {
 			go func() {
 				_, err := io.Copy(wsc, conn)
 				if err != nil {
-					log.Println(err)
+					// log.Println(err)
 				}
 				done <- struct{}{}
 			}()
