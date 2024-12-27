@@ -4,9 +4,9 @@ go 1.24rc1
 
 require (
 	github.com/btwiuse/bingo v0.0.3
-	k0s.io v0.1.17
-	k0s.io/pkg/cli v0.1.17
-	k0s.io/pkg/hub v0.1.17
+	k0s.io v0.1.17-rel.1
+	k0s.io/pkg/cli v0.1.17-rel.1
+	k0s.io/pkg/hub v0.1.17-rel.1
 )
 
 require (

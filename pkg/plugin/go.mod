@@ -5,8 +5,8 @@ go 1.24rc1
 require (
 	github.com/btwiuse/rng v0.0.1
 	github.com/btwiuse/version v0.0.1
-	k0s.io v0.1.17
-	k0s.io/pkg/agent v0.1.17
+	k0s.io v0.1.17-rel.1
+	k0s.io/pkg/agent v0.1.17-rel.1
 )
 
 require (
