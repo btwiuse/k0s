@@ -77,15 +77,7 @@ func (h *hubServer) GetConfig() hub.Config {
 	return h.c
 }
 
-// this function is modeled after http.Serve(net.Listener, http.Handler)
-// but unlike conventional servers, in which connections are extablished
-// on the listener side and then passed on to handler,
-// this one doesn't require listening on a port, and the direction in which
-// connection goes is exactly opposite: the net.Conn's are created on the
-// handler side and then sent through a (chan net.Conn) to the listener side
 func (h *hubServer) serveLoop(ln net.Listener) {
-	// ln <- net.Conn <- hl
-	// ln: conventionally a producer of net.Conn, but it's role here is consumer
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
@@ -259,12 +251,7 @@ func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("handleAgent", id, subpath)
 
-	// TODO: lookup agent by name
 	if !h.Has(id) {
-		//  log.Println("hub has no such id", id)
-		//  for i, ider := range h.Values() {
-		//  	log.Println(i, ider.ID())
-		//  }
 		http.Redirect(w, r, "/", http.StatusFound /*302*/)
 		return
 	}
@@ -278,37 +265,6 @@ func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	protocolRelay(protocol, ag)(w, r)
-	/*
-		return
-
-		// delegate := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
-		switch {
-		case strings.HasPrefix(subpath, "/fsv2"):
-			ag.BasicAuth(http.HandlerFunc(protocolRelay("fsv2", ag))).ServeHTTP(w, r)
-		case strings.HasPrefix(subpath, "/rootfs"):
-			ag.BasicAuth(http.HandlerFunc(fsRelay(ag))).ServeHTTP(w, r)
-		case strings.HasPrefix(subpath, "/redir"):
-			ag.BasicAuth(http.HandlerFunc(redirRelay(ag))).ServeHTTP(w, r)
-		case strings.HasPrefix(subpath, "/socks5"):
-			ag.BasicAuth(http.HandlerFunc(socks5Relay(ag))).ServeHTTP(w, r)
-		case strings.HasPrefix(subpath, "/version"):
-			versionRelay(ag)(w, r)
-		case strings.HasPrefix(subpath, "/env"):
-			envRelay(ag)(w, r)
-		case strings.HasPrefix(subpath, "/doh"):
-			dohRelay(ag)(w, r)
-		case strings.HasPrefix(subpath, "/jsonl"):
-			jsonlRelay(ag)(w, r)
-		case strings.HasPrefix(subpath, "/xpra"):
-			xpraRelay(ag)(w, r)
-		case strings.HasPrefix(subpath, "/terminalv2"): // must come before "/terminal" otherwise won't ever match
-			ag.BasicAuth(http.HandlerFunc(terminalV2Relay(ag))).ServeHTTP(w, r)
-		case strings.HasPrefix(subpath, "/terminal"):
-			ag.BasicAuth(http.HandlerFunc(terminalRelay(ag))).ServeHTTP(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	*/
 }
 
 // SplitKey takes a key in the form `/$namespace/$path` and splits it into
