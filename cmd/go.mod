@@ -16,7 +16,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.1 // indirect
 	github.com/VojtechVitek/yaml-cli v0.0.5 // indirect
 	github.com/abbot/go-http-auth v0.4.0 // indirect
-	github.com/abiosoft/ishell v2.0.0+incompatible // indirect
+	github.com/abiosoft/ishell/v2 v2.0.2 // indirect
 	github.com/abiosoft/readline v0.0.0-20180607040430-155bce2042db // indirect
 	github.com/alexpantyukhin/go-pattern-match v0.0.0-20230301210247-d84479c117d7 // indirect
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2 // indirect
@@ -29,11 +29,11 @@ require (
 	github.com/btwiuse/sse v0.0.1 // indirect
 	github.com/btwiuse/tags v0.0.2 // indirect
 	github.com/btwiuse/version v0.0.1 // indirect
-	github.com/btwiuse/wetty v0.0.36 // indirect
 	github.com/btwiuse/wsconn v0.0.3 // indirect
 	github.com/btwiuse/wsdial v0.0.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
+	github.com/charlievieth/fastwalk v1.0.9 // indirect
 	github.com/containerd/console v1.0.4 // indirect
 	github.com/creack/pty v1.1.21 // indirect
 	github.com/creativeprojects/go-selfupdate v1.1.3 // indirect
@@ -47,7 +47,7 @@ require (
 	github.com/flynn-archive/go-shlex v0.0.0-20150515145356-3f9db97f8568 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
-	github.com/gdamore/tcell v1.4.0 // indirect
+	github.com/gdamore/tcell/v2 v2.7.4 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
 	github.com/go-fed/httpsig v1.1.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
@@ -73,20 +73,15 @@ require (
 	github.com/jpillora/requestlog v1.0.0 // indirect
 	github.com/jpillora/sizestr v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/junegunn/fzf v0.57.0 // indirect
+	github.com/junegunn/go-shellwords v0.0.0-20240813092932-a62c48c52e97 // indirect
 	github.com/kataras/basicauth v0.0.3 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
-	github.com/mattn/go-shellwords v1.0.12 // indirect
 	github.com/miekg/dns v1.1.62 // indirect
-	github.com/mjwhitta/errors v1.0.2 // indirect
-	github.com/mjwhitta/hilighter v1.11.7 // indirect
-	github.com/mjwhitta/pathname v1.2.5 // indirect
-	github.com/mjwhitta/safety v1.11.3 // indirect
-	github.com/mjwhitta/sysinfo v1.5.3 // indirect
-	github.com/mjwhitta/where v1.2.10 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
@@ -142,8 +137,6 @@ require (
 	k0s.io/pkg/apiserver v0.1.17 // indirect
 	k0s.io/pkg/asciitransport v0.1.17 // indirect
 	k0s.io/pkg/client v0.1.17 // indirect
-	k0s.io/pkg/distro v0.1.16 // indirect
-	k0s.io/pkg/fzf v0.1.16 // indirect
 	k0s.io/pkg/manager v0.1.17 // indirect
 	k0s.io/pkg/middleware v0.1.17 // indirect
 	k0s.io/pkg/simple v0.1.17 // indirect
@@ -157,7 +150,6 @@ require (
 	k8s.io/component-base v0.32.0 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/utils v0.0.0-20241104100929-3ea5e8cea738 // indirect
-	modernc.org/httpfs v1.0.6 // indirect
 	nhooyr.io/websocket v1.8.17 // indirect
 	sigs.k8s.io/json v0.0.0-20241010143419-9aa6b5e7a4b3 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.2 // indirect

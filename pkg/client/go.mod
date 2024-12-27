@@ -40,12 +40,6 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
-	github.com/mjwhitta/errors v1.0.2 // indirect
-	github.com/mjwhitta/hilighter v1.11.7 // indirect
-	github.com/mjwhitta/pathname v1.2.5 // indirect
-	github.com/mjwhitta/safety v1.11.3 // indirect
-	github.com/mjwhitta/sysinfo v1.5.3 // indirect
-	github.com/mjwhitta/where v1.2.10 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -56,7 +50,6 @@ require (
 	golang.org/x/term v0.27.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k0s.io/pkg/distro v0.1.16 // indirect
 	k8s.io/apimachinery v0.32.0 // indirect
 	nhooyr.io/websocket v1.8.17 // indirect
 )

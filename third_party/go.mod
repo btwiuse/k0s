@@ -327,12 +327,6 @@ require (
 	github.com/mitchellh/go-ps v1.0.0 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
-	github.com/mjwhitta/errors v1.0.2 // indirect
-	github.com/mjwhitta/hilighter v1.11.7 // indirect
-	github.com/mjwhitta/pathname v1.2.5 // indirect
-	github.com/mjwhitta/safety v1.11.3 // indirect
-	github.com/mjwhitta/sysinfo v1.5.3 // indirect
-	github.com/mjwhitta/where v1.2.10 // indirect
 	github.com/moby/spdystream v0.5.0 // indirect
 	github.com/moby/sys/mountinfo v0.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -487,7 +481,6 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/plist v1.0.0 // indirect
-	k0s.io/pkg/distro v0.1.16 // indirect
 	k8s.io/kube-openapi v0.0.0-20241105132330-32ad38e42d3f // indirect
 	k8s.io/utils v0.0.0-20241104100929-3ea5e8cea738 // indirect
 	nhooyr.io/websocket v1.8.17 // indirect

@@ -2570,14 +2570,6 @@ def go_repositories():
         version = "v1.0.0",
     )
     go_repository(
-        name = "com_github_gdamore_tcell",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/gdamore/tcell",
-        sum = "h1:vUnHwJRvcPQa3tzi+0QI4U9JINXYJlOz9yiaiPQ2wMU=",
-        version = "v1.4.0",
-    )
-    go_repository(
         name = "com_github_gdamore_tcell_v2",
         build_file_generation = "on",
         build_file_proto_mode = "disable",
@@ -5776,86 +5768,6 @@ def go_repositories():
         importpath = "github.com/mitchellh/reflectwalk",
         sum = "h1:G2LzWKi524PWgd3mLHV8Y5k7s6XUvT0Gef6zxSIeXaQ=",
         version = "v1.0.2",
-    )
-    go_repository(
-        name = "com_github_mjwhitta_cli",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/mjwhitta/cli",
-        sum = "h1:yTgigpp3VklFhr/ASBTzdk+Yiq1Qsq9h2h9BGC49Oa8=",
-        version = "v1.12.2",
-    )
-    go_repository(
-        name = "com_github_mjwhitta_errors",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/mjwhitta/errors",
-        sum = "h1:5QmN4kKfFwYiSsdASDmoi3ie7HesdU7pNDqlhXE9nuU=",
-        version = "v1.0.2",
-    )
-    go_repository(
-        name = "com_github_mjwhitta_hilighter",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/mjwhitta/hilighter",
-        sum = "h1:p8BdAFQo1x4MpxLRb3pILN3Pjkq4ghBJcip8mSCWEUY=",
-        version = "v1.11.7",
-    )
-    go_repository(
-        name = "com_github_mjwhitta_jq",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/mjwhitta/jq",
-        sum = "h1:GHWCmesiCm69l2BZAtsoTK+YDAGrilL/yizhqpAIikI=",
-        version = "v1.5.5",
-    )
-    go_repository(
-        name = "com_github_mjwhitta_jsoncfg",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/mjwhitta/jsoncfg",
-        sum = "h1:VIMAdED0J1IzETGyDBpXBfQwlmjQJB1UDwwnOM7DOwI=",
-        version = "v1.6.12",
-    )
-    go_repository(
-        name = "com_github_mjwhitta_log",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/mjwhitta/log",
-        sum = "h1:ukO2jBJO4sDSp2xCVNZyNgvDx7ceP1vZBJ4OfayxGdQ=",
-        version = "v1.6.7",
-    )
-    go_repository(
-        name = "com_github_mjwhitta_pathname",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/mjwhitta/pathname",
-        sum = "h1:wSUZGv+mCrmndNkX2uak8XMZhkXXbgjYG/dMclGKrUE=",
-        version = "v1.2.5",
-    )
-    go_repository(
-        name = "com_github_mjwhitta_safety",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/mjwhitta/safety",
-        sum = "h1:dpg6CIQrlrt8yf/cXEdhPI+vRV6g/cRw8uO/TmUK1Mg=",
-        version = "v1.11.3",
-    )
-    go_repository(
-        name = "com_github_mjwhitta_sysinfo",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/mjwhitta/sysinfo",
-        sum = "h1:lfiRKYCOKYA7wmX4o9NSKjeaPS1y5Uc41XC5M45UEqU=",
-        version = "v1.5.3",
-    )
-    go_repository(
-        name = "com_github_mjwhitta_where",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/mjwhitta/where",
-        sum = "h1:vxHJh0IavPgQCd2a1060bOfUMklC2aMyhz0UrO074bQ=",
-        version = "v1.2.10",
     )
     go_repository(
         name = "com_github_mmcloughlin_avo",
@@ -10072,22 +9984,6 @@ def go_repositories():
         importpath = "h12.io/socks",
         sum = "h1:cZhhbV8+DE0Y1kotwhr1a3RC3kFO7AtuZ4GLr3qKSc8=",
         version = "v1.0.2",
-    )
-    go_repository(
-        name = "io_k0s_pkg_distro",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "k0s.io/pkg/distro",
-        sum = "h1:1eDHaAL3+fk/FxKgbr3H7E28lRZ+7IVa3Naj5ruVwrE=",
-        version = "v0.1.16",
-    )
-    go_repository(
-        name = "io_k0s_pkg_fzf",
-        build_file_generation = "on",
-        build_file_proto_mode = "disable",
-        importpath = "k0s.io/pkg/fzf",
-        sum = "h1:Y47LMer7yC+8cp94x7wllZo22kw4Qcip76Ub442+gNo=",
-        version = "v0.1.16",
     )
     go_repository(
         name = "io_k8s_api",
