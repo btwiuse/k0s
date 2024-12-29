@@ -4,6 +4,7 @@ go 1.24rc1
 
 require (
 	github.com/ActiveState/termtest/conpty v0.5.0
+	github.com/btwiuse/better v0.0.0
 	github.com/btwiuse/pretty v0.2.1
 	github.com/btwiuse/rng v0.0.1
 	github.com/btwiuse/tags v0.0.2
