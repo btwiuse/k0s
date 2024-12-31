@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -17,67 +16,28 @@ import (
 
 	"github.com/btwiuse/version"
 	"k0s.io"
-	"k0s.io/pkg/client"
 )
 
-type config struct {
-	Redir            string                     `json:"-" yaml:"redir"`
-	Socks            string                     `json:"-" yaml:"socks"`
-	Doh              string                     `json:"-" yaml:"doh"`
-	Verbose          bool                       `json:"-" yaml:"verbose"`
-	Insecure         bool                       `json:"-" yaml:"insecure"`
-	Record           bool                       `json:"-" yaml:"record"`
-	CacheCredentials bool                       `json:"-" yaml:"cache_credentials"`
-	Credentials      map[string]client.KeyStore `json:"-" yaml:"credentials"`
-	ConfigLocation   string                     `json:"-" yaml:"-"`
-	Hub              string                     `json:"-" yaml:"hub"`
+type KeyStore map[string]string
+
+type Config struct {
+	Redir            string              `json:"-" yaml:"redir"`
+	Socks            string              `json:"-" yaml:"socks"`
+	Doh              string              `json:"-" yaml:"doh"`
+	Verbose          bool                `json:"-" yaml:"verbose"`
+	Insecure         bool                `json:"-" yaml:"insecure"`
+	Record           bool                `json:"-" yaml:"record"`
+	CacheCredentials bool                `json:"-" yaml:"cache_credentials"`
+	Credentials      map[string]KeyStore `json:"-" yaml:"credentials"`
+	ConfigLocation   string              `json:"-" yaml:"-"`
+	Hub              string              `json:"-" yaml:"hub"`
 
 	uri *url.URL `json:"-"` // where server scheme, host, port, addr are defined
 
 	Version *version.Version `json:"version" yaml:"-"`
 }
 
-func (c *config) GetConfigLocation() string {
-	return c.ConfigLocation
-}
-
-func (c *config) GetRecord() bool {
-	return c.Record
-}
-
-func (c *config) GetCacheCredentials() bool {
-	return c.CacheCredentials
-}
-
-func (c *config) GetCredentials() map[string]client.KeyStore {
-	return c.Credentials
-}
-
-func (c *config) GetSocks() string {
-	return c.Socks
-}
-
-func (c *config) GetRedir() string {
-	return c.Redir
-}
-
-func (c *config) GetDoh() string {
-	return c.Doh
-}
-
-func (c *config) GetVersion() *version.Version {
-	return c.Version
-}
-
-func (c *config) GetVerbose() bool {
-	return c.Verbose
-}
-
-func (c *config) GetInsecure() bool {
-	return c.Insecure
-}
-
-func (c *config) GetPort() string {
+func (c *Config) GetPort() string {
 	if c.uri.Port() == "" {
 		switch c.uri.Scheme {
 		case "http":
@@ -89,7 +49,7 @@ func (c *config) GetPort() string {
 	return c.uri.Port()
 }
 
-func (c *config) GetAddr() string {
+func (c *Config) GetAddr() string {
 	var (
 		scheme = c.GetScheme()
 		host   = c.GetHost()
@@ -106,7 +66,7 @@ func (c *config) GetAddr() string {
 	}
 }
 
-func (c *config) GetSchemeWS() string {
+func (c *Config) GetSchemeWS() string {
 	switch c.GetScheme() {
 	case "https":
 		return "wss"
@@ -115,84 +75,14 @@ func (c *config) GetSchemeWS() string {
 	}
 }
 
-func (c *config) GetScheme() string {
+func (c *Config) GetScheme() string {
 	if c.uri.Scheme == "http" && c.uri.Hostname() == "" && c.uri.Port() == "443" {
 		return "https"
 	}
 	return c.uri.Scheme
 }
 
-type Opt func(c *config)
-
-func SetCacheCredentials(cc bool) Opt {
-	return func(c *config) {
-		c.CacheCredentials = cc
-	}
-}
-
-func SetHub(h string) Opt {
-	return func(c *config) {
-		c.Hub = h
-	}
-}
-
-func SetRedir(h string) Opt {
-	return func(c *config) {
-		c.Redir = h
-	}
-}
-
-func SetSocks(h string) Opt {
-	return func(c *config) {
-		c.Socks = h
-	}
-}
-
-func SetDoh(h string) Opt {
-	return func(c *config) {
-		c.Doh = h
-	}
-}
-
-func SetRecord(h bool) Opt {
-	return func(c *config) {
-		c.Record = h
-	}
-}
-
-func SetInsecure(h bool) Opt {
-	return func(c *config) {
-		c.Insecure = h
-	}
-}
-
-func SetURI() Opt {
-	return func(c *config) {
-		var hubapi = c.Hub
-		// prepend host 127.0.0.1 to port without an explicit host :8000
-		if strings.HasPrefix(hubapi, ":") {
-			hubapi = "127.0.0.1" + hubapi
-		}
-		// default to http
-		if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
-			hubapi = "http://" + hubapi
-		}
-
-		uri, err := url.Parse(hubapi)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		c.uri = uri
-	}
-}
-
-func SetVerbose(v bool) Opt {
-	return func(c *config) {
-		c.Verbose = v
-	}
-}
-
-func (c *config) GetHost() string {
+func (c *Config) GetHost() string {
 	host := c.uri.Hostname()
 	if host == "" {
 		return "127.0.0.1"
@@ -223,8 +113,8 @@ func probeConfigFile() string {
 	return ""
 }
 
-func loadConfigFile(file string) *config {
-	c := &config{
+func loadConfigFile(file string) *Config {
+	c := &Config{
 		Hub:            k0s.DEFAULT_HUB_ADDRESS,
 		Version:        version.Info,
 		ConfigLocation: file,
@@ -245,11 +135,9 @@ func loadConfigFile(file string) *config {
 	return c
 }
 
-func Parse(args []string) client.Config {
+func Parse(args []string) *Config {
 	var (
 		fset = flag.NewFlagSet("client", flag.ExitOnError)
-
-		opts = []Opt{}
 
 		hubapi   *string = fset.String("hub", k0s.DEFAULT_HUB_ADDRESS, "Hub address.")
 		redir    *string = fset.String("redir", k0s.REDIR_PROXY_PORT, "Redir port.")
@@ -259,7 +147,7 @@ func Parse(args []string) client.Config {
 		version  *bool   = fset.Bool("version", false, "Show agent/hub version info.")
 		insecure *bool   = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
 		record   *bool   = fset.Bool("record", false, "Record terminal events to a log file.")
-		// cc           *bool   = fset.Bool("cc", false, "Cache credentials.")
+		// cc       *bool   = fset.Bool("cc", false, "Cache credentials.")
 		c *string = fset.String("c", probeConfigFile(), "Config file location.")
 	)
 
@@ -268,47 +156,39 @@ func Parse(args []string) client.Config {
 		log.Fatalln(err)
 	}
 
+	baseConfig := loadConfigFile(*c)
+
+	// Apply flags if they were set
 	fset.Visit(func(f *flag.Flag) {
+		switch f.Name {
 		/*
-			if f.Name == "cc" {
-				opts = append(opts, SetCacheCredentials(*cc))
-			}
+		   case "cc":
+		       baseConfig.WithCacheCredentials(*cc)
 		*/
-		if f.Name == "hub" {
-			opts = append(opts, SetHub(*hubapi))
-		}
-		if f.Name == "redir" {
-			opts = append(opts, SetRedir(*redir))
-		}
-		if f.Name == "socks" {
-			opts = append(opts, SetSocks(*socks))
-		}
-		if f.Name == "doh" {
-			opts = append(opts, SetDoh(*doh))
-		}
-		if f.Name == "verbose" {
-			opts = append(opts, SetVerbose(*verbose))
-		}
-		if f.Name == "record" {
-			opts = append(opts, SetRecord(*record))
-		}
-		if f.Name == "insecure" {
-			opts = append(opts, SetInsecure(*insecure))
+		case "hub":
+			baseConfig.WithHub(*hubapi)
+		case "redir":
+			baseConfig.WithRedir(*redir)
+		case "socks":
+			baseConfig.WithSocks(*socks)
+		case "doh":
+			baseConfig.WithDoh(*doh)
+		case "verbose":
+			baseConfig.WithVerbose(*verbose)
+		case "record":
+			baseConfig.WithRecord(*record)
+		case "insecure":
+			baseConfig.WithInsecure(*insecure)
 		}
 	})
 
-	//  The 1st positional argument is used if you leave out the -hub part.
+	// Handle positional hub argument
 	if len(fset.Args()) != 0 {
-		opts = append(opts, SetHub(fset.Args()[0]))
+		baseConfig.WithHub(fset.Args()[0])
 	}
 
-	opts = append(opts, SetURI())
-
-	baseConfig := loadConfigFile(*c)
-
-	for _, opt := range opts {
-		opt(baseConfig)
-	}
+	// Set URI
+	baseConfig.WithURI()
 
 	if *version {
 		printClientVersion(baseConfig)
@@ -319,6 +199,66 @@ func Parse(args []string) client.Config {
 	return baseConfig
 }
 
+// Replace Opt functions with With* methods on Config
+func (c *Config) WithCacheCredentials(cc bool) *Config {
+	c.CacheCredentials = cc
+	return c
+}
+
+func (c *Config) WithHub(h string) *Config {
+	c.Hub = h
+	return c
+}
+
+func (c *Config) WithRedir(h string) *Config {
+	c.Redir = h
+	return c
+}
+
+func (c *Config) WithSocks(h string) *Config {
+	c.Socks = h
+	return c
+}
+
+func (c *Config) WithDoh(h string) *Config {
+	c.Doh = h
+	return c
+}
+
+func (c *Config) WithRecord(h bool) *Config {
+	c.Record = h
+	return c
+}
+
+func (c *Config) WithInsecure(h bool) *Config {
+	c.Insecure = h
+	return c
+}
+
+func (c *Config) WithURI() *Config {
+	var hubapi = c.Hub
+	// prepend host 127.0.0.1 to port without an explicit host :8000
+	if strings.HasPrefix(hubapi, ":") {
+		hubapi = "127.0.0.1" + hubapi
+	}
+	// default to http
+	if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
+		hubapi = "http://" + hubapi
+	}
+
+	uri, err := url.Parse(hubapi)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	c.uri = uri
+	return c
+}
+
+func (c *Config) WithVerbose(v bool) *Config {
+	c.Verbose = v
+	return c
+}
+
 type clientVersion struct {
 	Client *version.Version
 }
@@ -327,12 +267,12 @@ type hubVersion struct {
 	Hub *version.Version
 }
 
-func printClientVersion(c client.Config) {
-	av := &clientVersion{c.GetVersion()}
+func printClientVersion(c *Config) {
+	av := &clientVersion{c.Version}
 	fmt.Println(pretty.YAMLString(av))
 }
 
-func printHubVersion(c client.Config) {
+func printHubVersion(c *Config) {
 	var (
 		ub = &url.URL{
 			Scheme: c.GetScheme(),
@@ -346,7 +286,7 @@ func printHubVersion(c client.Config) {
 		t = &http.Client{
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: c.GetInsecure(),
+					InsecureSkipVerify: c.Insecure,
 				},
 			},
 		}
@@ -356,7 +296,7 @@ func printHubVersion(c client.Config) {
 		log.Fatalln(err)
 	}
 
-	buf, err := ioutil.ReadAll(resp.Body)
+	buf, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -372,7 +312,7 @@ func printHubVersion(c client.Config) {
 	fmt.Print(pretty.YAMLString(hv))
 }
 
-func (c *config) String() string {
+func (c *Config) String() string {
 	return pretty.JsonStringLine(c)
 }
 

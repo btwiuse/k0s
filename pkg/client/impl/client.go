@@ -25,6 +25,7 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io"
 	"k0s.io/pkg/client"
+	"k0s.io/pkg/client/config"
 	"k0s.io/pkg/hub/agent/info"
 )
 
@@ -33,9 +34,9 @@ var (
 	idd string
 )
 
-func NewClient(c client.Config) client.Client {
+func NewClient(c *config.Config) client.Client {
 	cl := &clientImpl{
-		Config: c,
+		config: c,
 		sl:     ishell.New(),
 		dialer: &dialer{c},
 	}
@@ -44,14 +45,18 @@ func NewClient(c client.Config) client.Client {
 
 type clientImpl struct {
 	*dialer
-	client.Config
+	config   *config.Config
 	userinfo *url.Userinfo
 	sl       *ishell.Shell
 }
 
+func (cl *clientImpl) Config() *config.Config {
+	return cl.config
+}
+
 func (cl *clientImpl) ListAgents() (agis []*info.Info, err error) {
 	var (
-		c  = cl.Config
+		c  = cl.config
 		ub = &url.URL{
 			Scheme: c.GetScheme(),
 			Host:   c.GetAddr(),
@@ -66,7 +71,7 @@ func (cl *clientImpl) ListAgents() (agis []*info.Info, err error) {
 		t = &http.Client{
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: c.GetInsecure(),
+					InsecureSkipVerify: c.Insecure,
 				},
 			},
 		}
@@ -261,7 +266,7 @@ func (cl *clientImpl) runFzf() string {
 
 func (cl *clientImpl) runLogin(idd string) error {
 	var (
-		c    = cl.Config
+		c    = cl.config
 		user string
 		pass string
 	)
@@ -275,11 +280,11 @@ func (cl *clientImpl) runLogin(idd string) error {
 			if *ag.Auth {
 				var (
 					name  = ag.Name
-					creds = c.GetCredentials()
+					creds = c.Credentials
 				)
 				ks, ok := creds[name]
 				if ok && len(ks) > 0 {
-					log.Println("loading cached credentials from", c.GetConfigLocation())
+					log.Println("loading cached credentials from", c.ConfigLocation)
 					// load first entry in map
 					for k, v := range ks {
 						user = k
@@ -331,7 +336,7 @@ func (cl *clientImpl) runLogin(idd string) error {
 							}
 						}
 
-						if conf := c.GetConfigLocation(); conf != "" && c.GetCacheCredentials() {
+						if conf := c.ConfigLocation; conf != "" && c.CacheCredentials {
 							// log.Println("yes")
 							set(conf, fmt.Sprintf("credentials.%s.%s: %s", ag.Name, user, pass))
 						}
@@ -343,13 +348,13 @@ func (cl *clientImpl) runLogin(idd string) error {
 		}
 	}
 
-	if len(cl.GetRedir()) > 0 {
+	if len(cl.config.Redir) > 0 {
 		go cl.RunRedir()
 	}
-	if len(cl.GetSocks()) > 0 {
+	if len(cl.config.Socks) > 0 {
 		go cl.RunSocks()
 	}
-	if len(cl.GetDoh()) > 0 {
+	if len(cl.config.Doh) > 0 {
 		go cl.RunDoh()
 	}
 
@@ -362,8 +367,8 @@ func (cl *clientImpl) RunRedir() error {
 	log.Println("dial", ep)
 
 	addr := k0s.REDIR_PROXY_PORT
-	if cl.GetRedir() != "" {
-		addr = cl.GetRedir()
+	if cl.config.Redir != "" {
+		addr = cl.config.Redir
 	}
 	log.Println("redir listening on", addr)
 	ln, err := net.Listen("tcp", addr)
@@ -396,8 +401,8 @@ func (cl *clientImpl) RunSocks() error {
 	log.Println("dial", ep)
 
 	addr := k0s.SOCKS5_PROXY_PORT
-	if cl.GetSocks() != "" {
-		addr = cl.GetSocks()
+	if cl.config.Socks != "" {
+		addr = cl.config.Socks
 	}
 	log.Println("socks5 listening on", addr)
 	ln, err := net.Listen("tcp", addr)
@@ -430,8 +435,8 @@ func (cl *clientImpl) RunDoh() error {
 	log.Println("dial", ep)
 
 	addr := k0s.DOH_PROXY_PORT
-	if cl.GetDoh() != "" {
-		addr = cl.GetDoh()
+	if cl.config.Doh != "" {
+		addr = cl.config.Doh
 	}
 	log.Println("doh listening on", addr)
 	ln, err := net.Listen("udp", addr)

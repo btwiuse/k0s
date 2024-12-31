@@ -1,12 +1,12 @@
 package client
 
 import (
-	"github.com/btwiuse/version"
+	"k0s.io/pkg/client/config"
 	"k0s.io/pkg/hub/agent/info"
 )
 
 type Client interface {
-	Config
+	Config() *config.Config
 
 	RunRedir() error
 	RunSocks() error
@@ -15,24 +15,3 @@ type Client interface {
 	MiniRun() error
 	ListAgents() ([]*info.Info, error)
 }
-
-type Config interface {
-	GetHost() string
-	GetPort() string
-	GetAddr() string
-	GetScheme() string
-	GetSchemeWS() string
-
-	GetRedir() string
-	GetSocks() string
-	GetDoh() string
-	GetCacheCredentials() bool
-	GetCredentials() map[string]KeyStore
-	GetConfigLocation() string
-
-	GetVersion() *version.Version
-	GetInsecure() bool
-	GetRecord() bool
-}
-
-type KeyStore map[string]string

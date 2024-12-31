@@ -20,7 +20,7 @@ func (cl *clientImpl) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 	log.Println("Press ESC twice to exit. (Some terminals don't supported it)")
 
 	var (
-		c    = cl.Config
+		c    = cl.Config()
 		conn net.Conn
 		err  error
 	)
@@ -50,7 +50,7 @@ func (cl *clientImpl) terminalConnect(endpoint string, userinfo *url.Userinfo) {
 		asciitransport.WithWriter(os.Stdout),
 	}
 
-	if c.GetRecord() {
+	if c.Record {
 		logname := rng.NewUUID() + ".log"
 		logfile, err := os.Create(logname)
 		if err != nil {
