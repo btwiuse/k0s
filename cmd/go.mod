@@ -4,9 +4,9 @@ go 1.24rc1
 
 require (
 	github.com/btwiuse/bingo v0.0.3
-	k0s.io v0.1.18-alpha.2
-	k0s.io/pkg/cli v0.1.18-alpha.2
-	k0s.io/pkg/hub v0.1.18-alpha.2
+	k0s.io v0.1.18-alpha.3
+	k0s.io/pkg/cli v0.1.18-alpha.3
+	k0s.io/pkg/hub v0.1.18-alpha.3
 )
 
 require (
@@ -133,16 +133,16 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k0s.io/pkg/agent v0.1.18-alpha.2 // indirect
-	k0s.io/pkg/apiserver v0.1.18-alpha.2 // indirect
-	k0s.io/pkg/asciitransport v0.1.18-alpha.2 // indirect
-	k0s.io/pkg/client v0.1.18-alpha.2 // indirect
-	k0s.io/pkg/manager v0.1.18-alpha.2 // indirect
-	k0s.io/pkg/middleware v0.1.18-alpha.2 // indirect
-	k0s.io/pkg/simple v0.1.18-alpha.2 // indirect
-	k0s.io/pkg/tunnel v0.1.18-alpha.2 // indirect
-	k0s.io/pkg/ui v0.1.18-alpha.2 // indirect
-	k0s.io/pkg/utils v0.1.18-alpha.2 // indirect
+	k0s.io/pkg/agent v0.1.18-alpha.3 // indirect
+	k0s.io/pkg/apiserver v0.1.18-alpha.3 // indirect
+	k0s.io/pkg/asciitransport v0.1.18-alpha.3 // indirect
+	k0s.io/pkg/client v0.1.18-alpha.3 // indirect
+	k0s.io/pkg/manager v0.1.18-alpha.3 // indirect
+	k0s.io/pkg/middleware v0.1.18-alpha.3 // indirect
+	k0s.io/pkg/simple v0.1.18-alpha.3 // indirect
+	k0s.io/pkg/tunnel v0.1.18-alpha.3 // indirect
+	k0s.io/pkg/ui v0.1.18-alpha.3 // indirect
+	k0s.io/pkg/utils v0.1.18-alpha.3 // indirect
 	k8s.io/api v0.32.0 // indirect
 	k8s.io/apimachinery v0.32.0 // indirect
 	k8s.io/apiserver v0.32.0 // indirect

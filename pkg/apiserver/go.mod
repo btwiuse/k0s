@@ -4,7 +4,7 @@ go 1.24rc1
 
 require (
 	github.com/emicklei/go-restful/v3 v3.12.1
-	k0s.io/pkg/middleware v0.1.18-alpha.2
+	k0s.io/pkg/middleware v0.1.18-alpha.3
 	k8s.io/apimachinery v0.32.0
 	k8s.io/apiserver v0.32.0
 )
