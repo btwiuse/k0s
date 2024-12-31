@@ -2,7 +2,7 @@ package client
 
 import (
 	"github.com/btwiuse/version"
-	"k0s.io/pkg/hub"
+	"k0s.io/pkg/hub/agent/info"
 )
 
 type Client interface {
@@ -13,7 +13,7 @@ type Client interface {
 	RunDoh() error
 	Run() error
 	MiniRun() error
-	ListAgents() ([]hub.AgentInfo, error)
+	ListAgents() ([]*info.Info, error)
 }
 
 type Config interface {

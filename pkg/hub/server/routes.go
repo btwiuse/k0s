@@ -18,6 +18,7 @@ import (
 	"k0s.io"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/hub"
+	"k0s.io/pkg/hub/config"
 	"k0s.io/pkg/log"
 	"k0s.io/pkg/middleware"
 	"k0s.io/pkg/ui"
@@ -32,7 +33,7 @@ type hubServer struct {
 
 	*http.Server
 
-	c          hub.Config
+	config     *config.Config
 	BinHandler http.Handler
 	sseMux     *sse.SSE
 }
@@ -51,11 +52,11 @@ func binHandler() http.Handler {
 	})
 }
 
-func NewHub(c hub.Config) hub.Hub {
+func NewHub(c *config.Config) hub.Hub {
 	var (
 		listhand = NewHTTPChannelListener()
 		h        = &hubServer{
-			c:            c,
+			config:       c,
 			AgentManager: NewAgentManager(),
 			BinHandler:   middleware.GzipMiddleware(binHandler()),
 			sseMux:       sse.NewSSE(),
@@ -68,13 +69,13 @@ func NewHub(c hub.Config) hub.Hub {
 		}
 	}()
 	// ensure core fields of h is not empty before return
-	h.setupServer(h.GetConfig().Port(), "/api", listhand)
+	h.setupServer(h.config.GetPort(), "/api", listhand)
 	go h.serveLoop(listhand)
 	return h
 }
 
-func (h *hubServer) GetConfig() hub.Config {
-	return h.c
+func (h *hubServer) Config() *config.Config {
+	return h.config
 }
 
 func (h *hubServer) serveLoop(ln net.Listener) {
@@ -109,7 +110,7 @@ func (h *hubServer) upgrade(conn net.Conn) {
 
 func (h *hubServer) setupServer(addr, apiPrefix string, hl http.Handler) {
 	handler := middleware.AllowAllCorsMiddleware(h.installRoutes(apiPrefix, hl))
-	if h.GetConfig().Verbose() {
+	if h.config.Verbose {
 		handler = middleware.LoggingMiddleware(handler)
 	}
 	// http2 is not hijack friendly, use TLSNextProto to force HTTP/1.1
@@ -121,7 +122,7 @@ func (h *hubServer) setupServer(addr, apiPrefix string, hl http.Handler) {
 }
 
 func (h *hubServer) installRoutes(apiPrefix string, hl http.Handler) (R *mux.Router) {
-	if h.GetConfig().UI() {
+	if h.config.UI {
 		R = ui.NewRouter(k0s.DEFAULT_UI_ADDRESS)
 	} else {
 		R = mux.NewRouter()
@@ -167,7 +168,7 @@ func (h *hubServer) installRoutes(apiPrefix string, hl http.Handler) (R *mux.Rou
 
 func (h *hubServer) handleVersion(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(pretty.JSONStringLine(h.GetConfig().GetVersion())))
+	w.Write([]byte(pretty.JSONStringLine(h.config.Version)))
 }
 
 func contains(set []string, e string) bool {
@@ -202,13 +203,13 @@ func (h *hubServer) handleAgentsList(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case untagged:
 		for _, a := range allAgents {
-			if len(a.GetTags()) == 0 {
+			if len(a.Info().Tags) == 0 {
 				agents = append(agents, a)
 			}
 		}
 	case vtags != "":
 		for _, a := range allAgents {
-			if containsAll(a.GetTags(), tags) {
+			if containsAll(a.Info().Tags, tags) {
 				agents = append(agents, a)
 			}
 		}

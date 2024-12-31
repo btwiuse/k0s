@@ -52,8 +52,8 @@ func (ss *ServerSession) populate() {
 	}
 
 	var (
-		id   = ifo.GetID()
-		name = ifo.GetName()
+		id   = ifo.ID
+		name = ifo.Name
 	)
 
 	ss.id = id

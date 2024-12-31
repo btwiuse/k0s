@@ -12,14 +12,14 @@ import (
 func Run2(args []string) (err error) {
 	c := config.Parse(args)
 
-	ln := listener.Listener(c.Port(), "/")
+	ln := listener.Listener(c.Port, "/")
 
-	log.Println("server is listening on", c.Port())
+	log.Println("server is listening on", c.Port)
 
 	h := server.NewHub(c)
 
-	if c.UseTLS() {
-		err = http.ServeTLS(ln, h.Handler(), c.Cert(), c.Key())
+	if c.TLS {
+		err = http.ServeTLS(ln, h.Handler(), c.Cert, c.Key)
 	} else {
 		err = http.Serve(ln, h.Handler())
 	}

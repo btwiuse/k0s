@@ -5,10 +5,7 @@ import (
 	"time"
 
 	"github.com/btwiuse/version"
-	"k0s.io/pkg/hub"
 )
-
-var _ hub.AgentInfo = (*Info)(nil)
 
 type Meta struct {
 	OS       string `json:"os"`
@@ -52,7 +49,7 @@ type Info struct {
 	*privateInfo `json:"-"`
 }
 
-func Decode(data []byte) (hub.AgentInfo, error) {
+func Decode(data []byte) (*Info, error) {
 	pi := &privateInfo{}
 	err := json.Unmarshal(data, pi)
 	if err != nil {
@@ -78,7 +75,7 @@ func (info *Info) populatePublicInfo() {
 	info.Arch = pi.Arch
 	info.Username = pi.Username
 	info.Hostname = pi.Hostname
-	info.GitVersion = pi.Version.GitVersion
+	info.GitSummary = pi.Version.GitVersion
 
 	if len(pi.Htpasswd) != 0 {
 		*info.Auth = true
@@ -87,52 +84,4 @@ func (info *Info) populatePublicInfo() {
 
 func (info *Info) SetIP(ip string) {
 	info.IP = ip
-}
-
-func (info *Info) GetOS() string {
-	return info.OS
-}
-
-func (info *Info) GetPwd() string {
-	return info.Pwd
-}
-
-func (info *Info) GetArch() string {
-	return info.Arch
-}
-
-func (info *Info) GetUsername() string {
-	return info.Username
-}
-
-func (info *Info) GetHostname() string {
-	return info.Hostname
-}
-
-func (info *Info) GetGitSummary() string {
-	return info.GitSummary
-}
-
-func (info *Info) GetVersion() string {
-	return info.Version
-}
-
-func (info *Info) GetID() string {
-	return info.ID
-}
-
-func (info *Info) GetName() string {
-	return info.Name
-}
-
-func (info *Info) GetTags() []string {
-	return info.Tags
-}
-
-func (info *Info) GetHtpasswd() map[string]string {
-	return info.Htpasswd
-}
-
-func (info *Info) GetAuth() bool {
-	return *info.Auth
 }

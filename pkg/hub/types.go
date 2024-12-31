@@ -6,44 +6,16 @@ import (
 
 	// "net/rpc"
 
-	"github.com/btwiuse/version"
 	"k0s.io"
 	"k0s.io/pkg/api"
+	"k0s.io/pkg/hub/agent/info"
+	"k0s.io/pkg/hub/config"
 )
-
-type AgentInfo interface {
-	GetID() string
-	GetName() string
-	GetTags() []string
-	GetAuth() bool
-	GetHtpasswd() map[string]string
-
-	GetOS() string
-	GetPwd() string
-	GetArch() string
-	GetHostname() string
-	GetUsername() string
-	GetVersion() string
-	GetGitSummary() string
-
-	SetIP(string)
-}
-
-type Config interface {
-	Port() string
-	UseTLS() bool
-	UI() bool
-	Verbose() bool
-	Cert() string
-	Key() string
-	Ufo() string
-	GetVersion() *version.Version
-}
 
 type Hub interface {
 	AgentManager
 
-	GetConfig() Config
+	Config() *config.Config
 	Handler() http.Handler
 }
 
@@ -56,7 +28,7 @@ type AgentManager interface {
 }
 
 type Agent interface {
-	AgentInfo
+	Info() *info.Info
 	k0s.Tider
 
 	ChannelChan(api.ProtocolID) chan net.Conn

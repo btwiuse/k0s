@@ -9,57 +9,28 @@ import (
 	"github.com/btwiuse/pretty"
 	"github.com/btwiuse/version"
 	"k0s.io"
-	"k0s.io/pkg/hub"
 	"k0s.io/pkg/utils"
 )
 
-type config struct {
-	port    string
-	tls     bool
-	ui      bool
-	verbose bool
-	cert    string
-	key     string
-	ufo     string
-	version *version.Version
+type Config struct {
+	Port    string
+	TLS     bool
+	UI      bool
+	Verbose bool
+	Cert    string
+	Key     string
+	Ufo     string
+	Version *version.Version
 }
 
-func (c *config) Port() string {
-	if c.port != "" {
-		return c.port
+func (c *Config) GetPort() string {
+	if c.Port != "" {
+		return c.Port
 	}
 	return utils.EnvPORT(k0s.HUB_PORT)
 }
 
-func (c *config) Ufo() string {
-	return c.ufo
-}
-
-func (c *config) UseTLS() bool {
-	return c.tls
-}
-
-func (c *config) Verbose() bool {
-	return c.verbose
-}
-
-func (c *config) UI() bool {
-	return c.ui
-}
-
-func (c *config) Cert() string {
-	return c.cert
-}
-
-func (c *config) Key() string {
-	return c.key
-}
-
-func (c *config) GetVersion() *version.Version {
-	return c.version
-}
-
-func Parse(args []string) hub.Config {
+func Parse(args []string) *Config {
 	fset := flag.NewFlagSet("hub", flag.ExitOnError)
 	var (
 		port        string
@@ -94,15 +65,15 @@ func Parse(args []string) hub.Config {
 		}
 	}
 
-	c := &config{
-		port:    port,
-		tls:     tls,
-		ui:      ui,
-		cert:    cert,
-		key:     key,
-		ufo:     ufo,
-		verbose: verbose,
-		version: version.Info,
+	c := &Config{
+		Port:    port,
+		TLS:     tls,
+		UI:      ui,
+		Cert:    cert,
+		Key:     key,
+		Ufo:     ufo,
+		Verbose: verbose,
+		Version: version.Info,
 	}
 
 	if showVersion {
@@ -117,7 +88,7 @@ type hubVersion struct {
 	Hub *version.Version
 }
 
-func printHubVersion(c hub.Config) {
-	v := &hubVersion{c.GetVersion()}
+func printHubVersion(c *Config) {
+	v := &hubVersion{c.Version}
 	fmt.Print(pretty.YAMLString(v))
 }

@@ -25,7 +25,6 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 	"k0s.io"
 	"k0s.io/pkg/client"
-	"k0s.io/pkg/hub"
 	"k0s.io/pkg/hub/agent/info"
 )
 
@@ -50,7 +49,7 @@ type clientImpl struct {
 	sl       *ishell.Shell
 }
 
-func (cl *clientImpl) ListAgents() (agis []hub.AgentInfo, err error) {
+func (cl *clientImpl) ListAgents() (agis []*info.Info, err error) {
 	var (
 		c  = cl.Config
 		ub = &url.URL{
@@ -177,8 +176,8 @@ func (cl *clientImpl) printAgentTable(out io.Writer) error {
 	for _, ag := range ags {
 		col := fmt.Sprintf(
 			strings.ReplaceAll("%s %s %s %s %s %t %s", " ", "\t"),
-			ag.GetName(), ag.GetUsername(), ag.GetHostname(), ag.GetOS(),
-			ag.GetArch(), ag.GetAuth(), "@"+ag.GetID(),
+			ag.Name, ag.Username, ag.Hostname, ag.OS,
+			ag.Arch, ag.Auth, "@"+ag.ID,
 		)
 		fmt.Fprintln(w, col)
 	}
@@ -272,10 +271,10 @@ func (cl *clientImpl) runLogin(idd string) error {
 		return err
 	}
 	for _, ag := range ags {
-		if ag.GetID() == idd {
-			if ag.GetAuth() {
+		if ag.ID == idd {
+			if *ag.Auth {
 				var (
-					name  = ag.GetName()
+					name  = ag.Name
 					creds = c.GetCredentials()
 				)
 				ks, ok := creds[name]
@@ -334,7 +333,7 @@ func (cl *clientImpl) runLogin(idd string) error {
 
 						if conf := c.GetConfigLocation(); conf != "" && c.GetCacheCredentials() {
 							// log.Println("yes")
-							set(conf, fmt.Sprintf("credentials.%s.%s: %s", ag.GetName(), user, pass))
+							set(conf, fmt.Sprintf("credentials.%s.%s: %s", ag.Name, user, pass))
 						}
 					}
 				}

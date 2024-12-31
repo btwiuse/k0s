@@ -9,35 +9,40 @@ import (
 	"github.com/btwiuse/pretty"
 	"k0s.io/pkg/api"
 	"k0s.io/pkg/hub"
+	"k0s.io/pkg/hub/agent/info"
 )
 
 var (
 	_ hub.Agent = (*agent)(nil)
 )
 
-func NewAgent(session hub.Session, info hub.AgentInfo) hub.Agent {
+func NewAgent(session hub.Session, info *info.Info) hub.Agent {
 	ag := &agent{
+		info:             info,
 		session:          session,
 		created:          time.Now(),
 		protocolHandlers: map[api.ProtocolID]chan net.Conn{},
 	}
 
-	info.SetIP(session.RemoteIP())
-	ag.AgentInfo = info
+	ag.info.SetIP(session.RemoteIP())
 
-	if info.GetAuth() {
-		ag.htpasswd = info.GetHtpasswd()
+	if *info.Auth {
+		ag.htpasswd = info.Htpasswd
 	}
 
 	return ag
 }
 
+func (ag *agent) Info() *info.Info {
+	return ag.info
+}
+
 func (ag *agent) MarshalJSON() ([]byte, error) {
-	return []byte(pretty.JSONStringLine(ag.AgentInfo)), nil
+	return []byte(pretty.JSONStringLine(ag.Info)), nil
 }
 
 type agent struct {
-	hub.AgentInfo // `json:"-"` // inherit methods
+	info *info.Info // `json:"-"`
 
 	protocolHandlers map[api.ProtocolID]chan net.Conn `json:"-"`
 	session          hub.Session
@@ -76,11 +81,11 @@ func (ag *agent) Time() time.Time {
 }
 
 func (ag *agent) ID() string {
-	return ag.GetID()
+	return ag.info.ID
 }
 
 func (ag *agent) Name() string {
-	return ag.GetName()
+	return ag.info.Name
 }
 
 func (ag *agent) ChannelChan(p api.ProtocolID) chan net.Conn {
