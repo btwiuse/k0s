@@ -11,7 +11,7 @@ import (
 func Run(args []string) error {
 	c := config.Parse(args)
 
-	log.Println(fmt.Sprintf("agent name: %s (%s)", c.GetName(), c.GetID()))
+	log.Println(fmt.Sprintf("agent name: %s (%s)", c.Name, c.ID))
 
 	ag := server.NewAgent(c)
 

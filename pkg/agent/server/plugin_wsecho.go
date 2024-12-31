@@ -7,11 +7,11 @@ import (
 	"net/http"
 
 	"github.com/btwiuse/wsconn"
-	"k0s.io/pkg/agent"
+	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/middleware"
 )
 
-func StartWsEchoServer(c agent.Config) chan net.Conn {
+func StartWsEchoServer(c *config.Config) chan net.Conn {
 	var (
 		wsEchoListener = NewChannelListener()
 		handler        = middleware.LoggingMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +30,7 @@ func StartWsEchoServer(c agent.Config) chan net.Conn {
 	return wsEchoListener.Conns
 }
 
-func StartWsEcho2Server(c agent.Config) chan net.Conn {
+func StartWsEcho2Server(c *config.Config) chan net.Conn {
 	var (
 		wsEchoListener = NewWSChannelListener()
 	)
@@ -52,7 +52,7 @@ func handleWsEcho2(ln net.Listener) {
 	}
 }
 
-func StartWsEcho3Server(c agent.Config) chan net.Conn {
+func StartWsEcho3Server(c *config.Config) chan net.Conn {
 	var (
 		wsEchoListener = NewChannelListener()
 	)

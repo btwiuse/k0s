@@ -6,7 +6,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -21,7 +20,6 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"k0s.io"
-	"k0s.io/pkg/agent"
 	"k0s.io/pkg/agent/info"
 )
 
@@ -31,7 +29,7 @@ type Config struct {
 	Tags     tags.CommaSeparatedStrings `json:"tags" yaml:"tags"`
 	Htpasswd map[string]string          `json:"htpasswd,omitempty" yaml:"htpasswd"`
 
-	agent.Info `json:"meta" yaml:"-"`
+	Info *info.Info `json:"meta" yaml:"-"`
 
 	Verbose  bool   `json:"-" yaml:"verbose"`
 	ReadOnly bool   `json:"-" yaml:"ro"`
@@ -45,40 +43,8 @@ type Config struct {
 	Version *version.Version `json:"version" yaml:"-"`
 }
 
-func (c *Config) GetVersion() *version.Version {
-	return c.Version
-}
-
-func (c *Config) GetVerbose() bool {
-	return c.Verbose
-}
-
-func (c *Config) GetReadOnly() bool {
-	return c.ReadOnly
-}
-
-func (c *Config) GetInsecure() bool {
-	return c.Insecure
-}
-
-func (c *Config) GetPet() bool {
-	return c.Pet
-}
-
 func (c *Config) GetCmd() []string {
 	return c.getCmd()
-}
-
-func (c *Config) GetID() string {
-	return c.ID
-}
-
-func (c *Config) GetName() string {
-	return c.Name
-}
-
-func (c *Config) GetTags() []string {
-	return c.Tags
 }
 
 func (c *Config) GetPort() string {
@@ -132,82 +98,69 @@ func (c *Config) GetScheme() string {
 	return c.uri.Scheme
 }
 
-type Opt func(c *Config)
-
-func SetHub(h string) Opt {
-	return func(c *Config) {
-		c.Hub = h
-	}
+func (c *Config) WithHub(h string) *Config {
+	c.Hub = h
+	return c
 }
 
-func SetCmd(h string) Opt {
-	return func(c *Config) {
-		c.Cmd = h
-	}
+func (c *Config) WithCmd(h string) *Config {
+	c.Cmd = h
+	return c
 }
 
-func SetPet(h bool) Opt {
-	return func(c *Config) {
-		c.Pet = h
-	}
+func (c *Config) WithPet(h bool) *Config {
+	c.Pet = h
+	return c
 }
 
-func SetInsecure(h bool) Opt {
-	return func(c *Config) {
-		c.Insecure = h
-	}
+func (c *Config) WithInsecure(h bool) *Config {
+	c.Insecure = h
+	return c
 }
 
-func SetURI() Opt {
-	return func(c *Config) {
-		var hubapi = c.Hub
-		// default to http
-		if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
-			hubapi = "http://" + hubapi
-		}
-
-		uri, err := url.Parse(hubapi)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		c.uri = uri
+func (c *Config) WithURI() *Config {
+	var hubapi = c.Hub
+	// default to http
+	if !(strings.HasPrefix(hubapi, "http://") || strings.HasPrefix(hubapi, "https://")) {
+		hubapi = "http://" + hubapi
 	}
+
+	uri, err := url.Parse(hubapi)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	c.uri = uri
+	return c
 }
 
-func SetReadOnly(ro bool) Opt {
-	return func(c *Config) {
-		c.ReadOnly = ro
-	}
+func (c *Config) WithReadOnly(ro bool) *Config {
+	c.ReadOnly = ro
+	return c
 }
 
-func SetVerbose(v bool) Opt {
-	return func(c *Config) {
-		c.Verbose = v
-	}
+func (c *Config) WithVerbose(v bool) *Config {
+	c.Verbose = v
+	return c
 }
 
-func SetID(id string) Opt {
-	return func(c *Config) {
-		c.ID = id
-	}
+func (c *Config) WithID(id string) *Config {
+	c.ID = id
+	return c
 }
 
-func SetName(name string) Opt {
-	return func(c *Config) {
-		c.Name = name
-	}
+func (c *Config) WithName(name string) *Config {
+	c.Name = name
+	return c
 }
 
-func SetTags(tags []string) Opt {
-	return func(c *Config) {
-		c.Tags = append(c.Tags, tags...)
-	}
+func (c *Config) WithTags(tags []string) *Config {
+	c.Tags = append(c.Tags, tags...)
+	return c
 }
 
-func SetInfo(ifo agent.Info) Opt {
-	return func(c *Config) {
-		c.Info = ifo
-	}
+func (c *Config) WithInfo(ifo *info.Info) *Config {
+	c.Info = ifo
+	return c
 }
 
 func (c *Config) GetHost() string {
@@ -271,11 +224,7 @@ func Parse(args []string) *Config {
 		fset = flag.NewFlagSet("agent", flag.ExitOnError)
 
 		// fset.StringVar(&id, "id", rng.NewUUID(), "Agent ID, for debugging purpose only")
-		id = rng.NewUUID()
-
-		opts = []Opt{
-			SetID(id),
-		}
+		id string = rng.NewUUID()
 
 		hubapi   *string                    = fset.String("hub", k0s.DEFAULT_HUB_ADDRESS, "Hub address.")
 		verbose  *bool                      = fset.Bool("verbose", false, "Verbose log.")
@@ -297,75 +246,67 @@ func Parse(args []string) *Config {
 		log.Fatalln(err)
 	}
 
+	baseConfig := loadConfigFile(*c)
+
+	// Set ID first
+	baseConfig.WithID(id)
+
+	// Apply flags if they were set
 	fset.Visit(func(f *flag.Flag) {
-		if f.Name == "hub" {
-			opts = append(opts, SetHub(*hubapi))
-		}
-		if f.Name == "ro" {
-			opts = append(opts, SetReadOnly(*ro))
-		}
-		if f.Name == "verbose" {
-			opts = append(opts, SetVerbose(*verbose))
-		}
-		if f.Name == "name" {
-			opts = append(opts, SetName(*name))
-		}
-		if f.Name == "pet" {
-			opts = append(opts, SetPet(*pet))
-		}
-		if f.Name == "insecure" {
-			opts = append(opts, SetInsecure(*insecure))
-		}
-		if f.Name == "tags" {
-			opts = append(opts, SetTags(tags))
-		}
-		if f.Name == "cmd" {
-			opts = append(opts, SetCmd(*cmd))
+		switch f.Name {
+		case "hub":
+			baseConfig.WithHub(*hubapi)
+		case "ro":
+			baseConfig.WithReadOnly(*ro)
+		case "verbose":
+			baseConfig.WithVerbose(*verbose)
+		case "name":
+			baseConfig.WithName(*name)
+		case "pet":
+			baseConfig.WithPet(*pet)
+		case "insecure":
+			baseConfig.WithInsecure(*insecure)
+		case "tags":
+			baseConfig.WithTags(tags)
+		case "cmd":
+			baseConfig.WithCmd(*cmd)
 		}
 	})
 
-	//  The 1st positional argument is used if you leave out the -hub part.
+	// Handle positional hub argument
 	if len(fset.Args()) != 0 {
-		opts = append(opts, SetHub(fset.Args()[0]))
+		baseConfig.WithHub(fset.Args()[0])
 	}
 
-	opts = append(opts, SetURI(), SetInfo(info.CollectInfo()))
+	// Apply URI and Info
+	baseConfig.WithURI().WithInfo(info.CollectInfo())
 
-	baseConfig := loadConfigFile(*c)
-
-	if baseConfig.GetName() == "" {
-		opts = append(opts, SetName(*name))
+	// Set default name if not provided
+	if baseConfig.Name == "" {
+		baseConfig.WithName(*name)
 	}
 
-	for _, opt := range opts {
-		opt(baseConfig)
-	}
-
-	if baseConfig.GetPet() {
+	// Handle pet mode
+	if baseConfig.Pet {
 		mid, err := machineid.ID()
 		if err != nil {
 			log.Println(err)
 			log.Println("Using alternative approach")
-			// on some platforms like android, mid is empty string
-			// assume user has set a fixed name
-			// generate a fixed id with best effort
-			// based on provided info
-			// use mid as seed
 			if mid == "" {
-				mid = baseConfig.GetOS() +
-					baseConfig.GetArch() +
-					baseConfig.GetName() +
-					baseConfig.GetUsername() +
-					baseConfig.GetHostname()
+				mid = baseConfig.Info.OS +
+					baseConfig.Info.Arch +
+					baseConfig.Name +
+					baseConfig.Info.Username +
+					baseConfig.Info.Hostname
 			}
 		}
 		uid := rng.NewPetUUID(mid)
-		SetID(uid)(baseConfig)
+		baseConfig.WithID(uid)
 	}
 
 	if *version {
-		printAgentVersion(baseConfig)
-		printHubVersion(baseConfig)
+		printAgentVersion(*baseConfig)
+		printHubVersion(*baseConfig)
 		os.Exit(0)
 	}
 
@@ -380,12 +321,12 @@ type hubVersion struct {
 	Hub *version.Version
 }
 
-func printAgentVersion(c agent.Config) {
-	av := &agentVersion{c.GetVersion()}
+func printAgentVersion(c Config) {
+	av := &agentVersion{c.Version}
 	fmt.Println(pretty.YAMLString(av))
 }
 
-func printHubVersion(c agent.Config) {
+func printHubVersion(c Config) {
 	var (
 		ub = &url.URL{
 			Scheme: c.GetScheme(),
@@ -399,7 +340,7 @@ func printHubVersion(c agent.Config) {
 		t = &http.Client{
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{
-					InsecureSkipVerify: c.GetInsecure(),
+					InsecureSkipVerify: c.Insecure,
 				},
 			},
 		}
@@ -409,7 +350,7 @@ func printHubVersion(c agent.Config) {
 		log.Fatalln(err)
 	}
 
-	buf, err := ioutil.ReadAll(resp.Body)
+	buf, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -429,13 +370,13 @@ func (c *Config) String() string {
 	return pretty.JsonStringLine(c)
 }
 
-func Decode(data []byte) (agent.Info, error) {
+func Decode(data []byte) (*info.Info, error) {
 	v := &Config{
-		Info: info.EmptyInfo(),
+		Info: info.CollectInfo(),
 	}
 	err := json.Unmarshal(data, v)
 	if err != nil {
 		return nil, err
 	}
-	return v, err
+	return v.Info, err
 }

@@ -4,41 +4,9 @@ import (
 	"io"
 	"net"
 
-	"github.com/btwiuse/version"
+	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/api"
 )
-
-type Info interface {
-	GetOS() string
-	GetPwd() string
-	GetArch() string
-	GetHostname() string
-	GetUsername() string
-}
-
-type Config interface {
-	Info
-
-	GetID() string
-	GetName() string
-	GetTags() []string
-
-	GetHost() string
-	GetPort() string
-	GetAddr() string
-	GetScheme() string
-	GetSchemeWS() string
-
-	GetCmd() []string
-	GetReadOnly() bool
-	GetVerbose() bool
-	GetInsecure() bool
-	GetPet() bool
-
-	String() string
-
-	GetVersion() *version.Version
-}
 
 type Session interface {
 	// NewConnection()
@@ -55,7 +23,7 @@ type Session interface {
 // grpcServer (long lived)
 // rpc client/server (ephemeral)
 type Agent interface {
-	Config
+	Config() *config.Config
 	TunnelListener
 	ChannelChan(api.ProtocolID) chan net.Conn
 	AgentRegister(net.Conn) (Session, error)

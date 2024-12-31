@@ -3,10 +3,10 @@ package server
 import (
 	"net"
 
-	"k0s.io/pkg/agent"
+	"k0s.io/pkg/agent/config"
 )
 
-func StartPingServer(c agent.Config) chan net.Conn {
+func StartPingServer(c *config.Config) chan net.Conn {
 	pingListener := NewChannelListener()
 	go pingServe(pingListener)
 	return pingListener.Conns

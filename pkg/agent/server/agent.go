@@ -12,10 +12,11 @@ import (
 	"github.com/btwiuse/pretty"
 	"golang.org/x/sync/errgroup"
 	"k0s.io/pkg/agent"
+	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/api"
 )
 
-type ChannelFn = func(agent.Config) chan net.Conn
+type ChannelFn = func(*config.Config) chan net.Conn
 
 var (
 	_ agent.Agent = (*server)(nil)
@@ -24,7 +25,7 @@ var (
 type server struct {
 	*errgroup.Group
 	*dialer
-	agent.Config
+	config           *config.Config
 	protocolHandlers map[api.ProtocolID]chan net.Conn
 	// agent.Session
 
@@ -32,11 +33,11 @@ type server struct {
 	name string
 }
 
-func NewAgent(c agent.Config) agent.Agent {
+func NewAgent(c *config.Config) agent.Agent {
 	var (
 		eg, _            = errgroup.WithContext(context.Background())
-		id               = c.GetID()
-		name             = c.GetName()
+		id               = c.ID
+		name             = c.Name
 		shell            = "bash"
 		dialer           = &dialer{c}
 		protocolHandlers = map[api.ProtocolID]chan net.Conn{}
@@ -48,7 +49,7 @@ func NewAgent(c agent.Config) agent.Agent {
 
 	ag := &server{
 		Group:            eg,
-		Config:           c,
+		config:           c,
 		dialer:           dialer,
 		protocolHandlers: protocolHandlers,
 		id:               id,
@@ -69,6 +70,10 @@ func NewAgent(c agent.Config) agent.Agent {
 	return ag
 }
 
+func (ag *server) Config() *config.Config {
+	return ag.config
+}
+
 func (ag *server) ChannelChan(p api.ProtocolID) chan net.Conn {
 	_, ok := ag.protocolHandlers[p]
 	if !ok {
@@ -83,7 +88,7 @@ func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
 		conn  net.Conn
 		err   error
 		path  = "/api/upgrade"
-		query = fmt.Sprintf("id=%s&protocol=%s", ag.GetID(), string(p))
+		query = fmt.Sprintf("id=%s&protocol=%s", ag.id, string(p))
 	)
 
 	conn, err = ag.Dial(path, query)
@@ -95,10 +100,10 @@ func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
 }
 
 func (ag *server) AgentRegister(conn net.Conn) (agent.Session, error) {
-	agentInfo := ag.Config.String()
+	agentInfo := ag.config.String()
 
-	if ag.Config.GetVerbose() {
-		log.Print(pretty.JSONStringLine(ag.Config))
+	if ag.config.Verbose {
+		log.Print(pretty.JSONStringLine(ag.config))
 	}
 
 	_, err := io.WriteString(conn, agentInfo)
@@ -129,7 +134,7 @@ func (ag *server) ConnectAndServe() error {
 		conn net.Conn
 		err  error
 		path = "/api/upgrade"
-		// unused: "id=" + ag.GetID()
+		// unused: "id=" + ag.id
 		query = ""
 	)
 
@@ -152,5 +157,5 @@ func (ag *server) ConnectAndServe() error {
 }
 
 func (ag *server) SetProtocolHandler(p api.ProtocolID, fn ChannelFn) {
-	ag.protocolHandlers[p] = fn(ag.Config)
+	ag.protocolHandlers[p] = fn(ag.config)
 }

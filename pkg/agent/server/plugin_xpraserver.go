@@ -9,12 +9,12 @@ import (
 	"os"
 
 	"k0s.io"
-	"k0s.io/pkg/agent"
+	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/log"
 	"nhooyr.io/websocket"
 )
 
-func StartXpraServer(c agent.Config) chan net.Conn {
+func StartXpraServer(c *config.Config) chan net.Conn {
 	xpraListener := NewChannelListener()
 	go xpraServe(xpraListener)
 	return xpraListener.Conns

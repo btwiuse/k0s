@@ -4,12 +4,12 @@ import (
 	"net"
 	"net/http"
 
-	"k0s.io/pkg/agent"
-	"k0s.io/pkg/middleware"
 	"github.com/btwiuse/better"
+	"k0s.io/pkg/agent/config"
+	"k0s.io/pkg/middleware"
 )
 
-func StartFileServer(c agent.Config) chan net.Conn {
+func StartFileServer(c *config.Config) chan net.Conn {
 	var (
 		fsListener = NewChannelListener()
 		handler    = middleware.LoggingMiddleware(better.FileServer(http.Dir("/")))

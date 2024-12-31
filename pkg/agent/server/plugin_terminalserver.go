@@ -9,13 +9,14 @@ import (
 	"sync"
 
 	"k0s.io/pkg/agent"
+	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/agent/tty/factory"
 	"k0s.io/pkg/asciitransport"
 )
 
-func StartTerminalServer(c agent.Config) chan net.Conn {
+func StartTerminalServer(c *config.Config) chan net.Conn {
 	var (
-		ro               bool     = c.GetReadOnly()
+		ro               bool     = c.ReadOnly
 		defaultCmd       []string = c.GetCmd()
 		terminalListener          = NewChannelListener()
 	)
@@ -24,7 +25,7 @@ func StartTerminalServer(c agent.Config) chan net.Conn {
 	return terminalListener.Conns
 }
 
-func serveTerminal(ln net.Listener, defaultCmd []string, c agent.Config) {
+func serveTerminal(ln net.Listener, defaultCmd []string, c *config.Config) {
 	var fac agent.TtyFactory = factory.New(defaultCmd)
 
 	for nth := 1; ; nth++ {
@@ -85,7 +86,7 @@ func serveTerminal(ln net.Listener, defaultCmd []string, c agent.Config) {
 				}
 			}()
 
-			logname := fmt.Sprintf("/tmp/%s-%d.log", c.GetID(), nth)
+			logname := fmt.Sprintf("/tmp/%s-%d.log", c.ID, nth)
 			logfile, err := os.Create(logname)
 			if err == nil {
 				defer func() {

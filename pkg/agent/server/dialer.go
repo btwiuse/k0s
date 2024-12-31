@@ -5,11 +5,11 @@ import (
 	"net/url"
 
 	"github.com/btwiuse/wsdial"
-	"k0s.io/pkg/agent"
+	"k0s.io/pkg/agent/config"
 )
 
 type dialer struct {
-	c agent.Config
+	c *config.Config
 }
 
 func (d *dialer) Dial(p string, q string) (conn net.Conn, err error) {

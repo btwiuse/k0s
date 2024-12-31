@@ -5,12 +5,12 @@ import (
 	"log"
 	"net"
 
-	"k0s.io/pkg/agent"
+	"k0s.io/pkg/agent/config"
 )
 
-func StartJsonlServer(c agent.Config) chan net.Conn {
+func StartJsonlServer(c *config.Config) chan net.Conn {
 	var (
-		ro            bool     = c.GetReadOnly()
+		ro            bool     = c.ReadOnly
 		defaultCmd    []string = c.GetCmd()
 		jsonlListener          = NewWSChannelListener()
 	)

@@ -32,7 +32,7 @@ func Agent(hub string) {
 	}
 
 	// println(c.GetHost())
-	config.SetURI()(c)
+	c.WithURI()
 	// println(c.GetHost())
 
 	ag := server.NewAgent(c)
