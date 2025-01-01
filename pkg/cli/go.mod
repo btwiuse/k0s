@@ -34,6 +34,7 @@ require (
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
+	github.com/btwiuse/better v0.0.0 // indirect
 	github.com/btwiuse/gods v0.0.1 // indirect
 	github.com/btwiuse/pretty v0.2.1 // indirect
 	github.com/btwiuse/rng v0.0.1 // indirect

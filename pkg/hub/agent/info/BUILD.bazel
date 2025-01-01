@@ -5,8 +5,5 @@ go_library(
     srcs = ["info.go"],
     importpath = "k0s.io/pkg/hub/agent/info",
     visibility = ["//visibility:public"],
-    deps = [
-        "//pkg/hub:go_default_library",
-        "@com_github_btwiuse_version//:go_default_library",
-    ],
+    deps = ["@com_github_btwiuse_version//:go_default_library"],
 )

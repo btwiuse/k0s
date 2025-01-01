@@ -13,7 +13,7 @@ go_library(
     deps = [
         "//:go_default_library",
         "//pkg/client:go_default_library",
-        "//pkg/hub:go_default_library",
+        "//pkg/client/config:go_default_library",
         "//pkg/hub/agent/info:go_default_library",
         "@com_github_abiosoft_ishell_v2//:go_default_library",
         "@com_github_btwiuse_wsdial//:go_default_library",

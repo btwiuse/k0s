@@ -137,6 +137,7 @@ require (
 	github.com/aws/aws-sdk-go v1.41.14 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
+	github.com/btwiuse/better v0.0.0 // indirect
 	github.com/btwiuse/pretty v0.2.1 // indirect
 	github.com/btwiuse/tags v0.0.2 // indirect
 	github.com/btwiuse/version v0.0.1 // indirect

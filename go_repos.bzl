@@ -890,6 +890,14 @@ def go_repositories():
         version = "v1.0.2",
     )
     go_repository(
+        name = "com_github_btwiuse_better",
+        build_file_generation = "on",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/btwiuse/better",
+        sum = "h1:IlagQV6/n8tQP5br1ioQ6QTf9CMe6mt1vuOUPAQgfrU=",
+        version = "v0.0.0",
+    )
+    go_repository(
         name = "com_github_btwiuse_bingo",
         build_file_generation = "on",
         build_file_proto_mode = "disable",

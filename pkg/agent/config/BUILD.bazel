@@ -11,7 +11,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//:go_default_library",
-        "//pkg/agent:go_default_library",
         "//pkg/agent/info:go_default_library",
         "@com_github_btwiuse_pretty//:go_default_library",
         "@com_github_btwiuse_rng//:go_default_library",

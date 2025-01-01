@@ -20,11 +20,13 @@ go_library(
     deps = [
         "//:go_default_library",
         "//pkg/agent:go_default_library",
+        "//pkg/agent/config:go_default_library",
         "//pkg/agent/tty/factory:go_default_library",
         "//pkg/api:go_default_library",
         "//pkg/asciitransport:go_default_library",
         "//pkg/log:go_default_library",
         "//pkg/middleware:go_default_library",
+        "@com_github_btwiuse_better//:go_default_library",
         "@com_github_btwiuse_pretty//:go_default_library",
         "@com_github_btwiuse_wsconn//:go_default_library",
         "@com_github_btwiuse_wsdial//:go_default_library",

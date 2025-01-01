@@ -12,6 +12,7 @@ require (
 require (
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
+	github.com/btwiuse/better v0.0.0 // indirect
 	github.com/btwiuse/pretty v0.2.1 // indirect
 	github.com/btwiuse/tags v0.0.2 // indirect
 	github.com/btwiuse/wsconn v0.0.3 // indirect

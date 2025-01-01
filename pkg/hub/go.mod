@@ -23,6 +23,7 @@ require (
 	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/andrew-d/go-termutil v0.0.0-20150726205930-009166a695a2 // indirect
+	github.com/btwiuse/better v0.0.0 // indirect
 	github.com/btwiuse/gods v0.0.1 // indirect
 	github.com/btwiuse/tags v0.0.2 // indirect
 	github.com/btwiuse/wsdial v0.0.0 // indirect

@@ -18,6 +18,7 @@ go_library(
         "//pkg/hub:go_default_library",
         "//pkg/hub/agent:go_default_library",
         "//pkg/hub/agent/info:go_default_library",
+        "//pkg/hub/config:go_default_library",
         "//pkg/log:go_default_library",
         "//pkg/manager:go_default_library",
         "//pkg/middleware:go_default_library",
