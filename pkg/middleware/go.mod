@@ -1,6 +1,6 @@
 module k0s.io/pkg/middleware
 
-go 1.24rc1
+go 1.23.4
 
 require (
 	github.com/gorilla/handlers v1.5.2

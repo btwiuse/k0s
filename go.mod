@@ -1,3 +1,3 @@
 module k0s.io
 
-go 1.24rc1
+go 1.23.4
