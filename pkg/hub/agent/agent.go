@@ -38,7 +38,7 @@ func (ag *agent) Info() *info.Info {
 }
 
 func (ag *agent) MarshalJSON() ([]byte, error) {
-	return []byte(pretty.JSONStringLine(ag.Info)), nil
+	return []byte(pretty.JSONStringLine(ag.Info())), nil
 }
 
 type agent struct {
