@@ -9,6 +9,7 @@
 FROM btwiuse/arch:golang AS builder-golang
 COPY . /k0s.io
 WORKDIR /k0s.io
+ENV GONOSUMDB="*"
 RUN make build
 
 FROM btwiuse/arch
