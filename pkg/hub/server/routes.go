@@ -69,7 +69,7 @@ func NewHub(c *config.Config) hub.Hub {
 		}
 	}()
 	// ensure core fields of h is not empty before return
-	h.setupServer(h.config.GetPort(), "/api", listhand)
+	h.setupServer(h.config.Port, "/api", listhand)
 	go h.serveLoop(listhand)
 	return h
 }

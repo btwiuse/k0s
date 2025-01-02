@@ -23,13 +23,6 @@ type Config struct {
 	Version *version.Version
 }
 
-func (c *Config) GetPort() string {
-	if c.Port != "" {
-		return c.Port
-	}
-	return utils.EnvPORT(k0s.HUB_PORT)
-}
-
 func Parse(args []string) *Config {
 	fset := flag.NewFlagSet("hub", flag.ExitOnError)
 	var (
@@ -43,7 +36,7 @@ func Parse(args []string) *Config {
 		showVersion bool
 	)
 
-	fset.StringVar(&port, "port", "", "hub listening port")
+	fset.StringVar(&port, "port", utils.EnvPORT(k0s.HUB_PORT), "hub listening port")
 	fset.StringVar(&cert, "cert", "", "path to tls cert file")
 	fset.StringVar(&key, "key", "", "path to tls key file")
 	fset.StringVar(&ufo, "ufo", "", "webteleport station")
