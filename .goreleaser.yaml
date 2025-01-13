@@ -12,6 +12,7 @@ builds:
   - id: k0s
     env:
       - CGO_ENABLED=0
+      - GONOSUMDB="*"
     main: ./cmd/k0s
     ldflags:
       - -s -w -X "github.com/btwiuse/version.MajorString=0"
