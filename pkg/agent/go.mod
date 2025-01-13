@@ -16,9 +16,9 @@ require (
 	golang.org/x/sync v0.10.0
 	golang.org/x/text v0.21.0
 	gopkg.in/yaml.v3 v3.0.1
-	k0s.io v0.1.18-alpha.6
-	k0s.io/pkg/asciitransport v0.1.18-alpha.6
-	k0s.io/pkg/middleware v0.1.18-alpha.6
+	k0s.io v0.1.18-alpha.7
+	k0s.io/pkg/asciitransport v0.1.18-alpha.7
+	k0s.io/pkg/middleware v0.1.18-alpha.7
 	nhooyr.io/websocket v1.8.17
 )
 
