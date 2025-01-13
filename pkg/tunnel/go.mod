@@ -4,8 +4,8 @@ go 1.23.4
 
 require (
 	github.com/btwiuse/wsconn v0.0.3
-	k0s.io v0.1.18-alpha.5
-	k0s.io/pkg/middleware v0.1.18-alpha.5
+	k0s.io v0.1.18-alpha.6
+	k0s.io/pkg/middleware v0.1.18-alpha.6
 	nhooyr.io/websocket v1.8.17
 )
 
