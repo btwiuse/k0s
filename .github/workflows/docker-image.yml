@@ -1,0 +1,31 @@
+name: Docker image
+
+on:
+  push:
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  docker-image:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - run: docker build -f Dockerfile -t btwiuse/k0s:${{ github.sha }} .
+      name: docker build
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - run: docker push btwiuse/k0s:${{ github.sha }}
+      name: docker push
+
+    - run: |
+        docker tag btwiuse/k0s:${{ github.sha }} btwiuse/k0s
+        docker push btwiuse/k0s
+      if: github.ref == 'refs/heads/main'
+      name: docker push latest

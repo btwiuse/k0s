@@ -2,17 +2,7 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.234.0/containers/go
 {
   "name": "Go",
-  "build": {
-    "dockerfile": "Dockerfile.devcontainer",
-    "args": {
-      // Update the VARIANT arg to pick a version of Go: 1, 1.18, 1.17
-      // Append -bullseye or -buster to pin to an OS version.
-      // Use -bullseye variants on local arm64/Apple Silicon.
-      "VARIANT": "1-bullseye",
-      // Options
-      "NODE_VERSION": "lts/*"
-    }
-  },
+  "image": "btwiuse/arch:golang",
   "runArgs": ["--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined"],
 
   // Set *default* container specific settings.json values on container create.
@@ -23,20 +13,22 @@
   },
 
   // Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker.
-  "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
 
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-	"golang.Go",
-	"denoland.vscode-deno",
-	"GitHub.copilot",
-	"ms-azuretools.vscode-docker",
-	"BazelBuild.vscode-bazel",
-	"rust-lang.rust-analyzer",
-	"ms-python.python",
-	"tamasfe.even-better-toml",
-	"coolbear.systemd-unit-file"
-],
+    "golang.Go",
+    "denoland.vscode-deno",
+    "GitHub.copilot",
+    "ms-azuretools.vscode-docker",
+    "BazelBuild.vscode-bazel",
+    "rust-lang.rust-analyzer",
+    "ms-python.python",
+    "tamasfe.even-better-toml",
+    "coolbear.systemd-unit-file"
+  ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
