@@ -13,7 +13,7 @@ builds:
     env:
       - CGO_ENABLED=0
       - GONOSUMDB="*"
-      - GOPROXY=direct
+      - GOPROXY="https://proxy.golang.org,https://goproxy.cn,https://goproxy.io,direct"
     main: ./cmd/k0s
     ldflags:
       - -s -w -X "github.com/btwiuse/version.MajorString=0"
