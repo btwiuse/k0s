@@ -14,6 +14,9 @@ BAZEL    := $(shell ./tools/which_bazel)
 
 default: help
 
+goreleaser:
+	@ GORELEASER_CURRENT_TAG=v0.0.0 goreleaser release --snapshot --clean --parallelism 1 --timeout 1h
+
 docker-login:
 	@ docker login -u $(DOCKERHUB_USERNAME) -p $(DOCKERHUB_TOKEN)
 
