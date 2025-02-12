@@ -1,6 +1,6 @@
 module k0s.io/pkg/apiserver
 
-go 1.23.4
+go 1.24
 
 require (
 	github.com/emicklei/go-restful/v3 v3.12.1
