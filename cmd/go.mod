@@ -3,7 +3,6 @@ module k0s.io/cmd
 go 1.24
 
 require (
-	github.com/btwiuse/bingo v0.0.3
 	k0s.io v0.1.18-alpha.8
 	k0s.io/pkg/cli v0.1.18-alpha.8
 	k0s.io/pkg/hub v0.1.18-alpha.8
@@ -78,7 +77,6 @@ require (
 	github.com/junegunn/go-shellwords v0.0.0-20240813092932-a62c48c52e97 // indirect
 	github.com/kataras/basicauth v0.0.3 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
-	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
