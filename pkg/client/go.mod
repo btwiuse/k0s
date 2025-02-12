@@ -13,10 +13,10 @@ require (
 	github.com/junegunn/fzf v0.57.0
 	golang.org/x/crypto v0.31.0
 	gopkg.in/yaml.v3 v3.0.1
-	k0s.io v0.1.18-alpha.7
-	k0s.io/pkg/agent v0.1.18-alpha.7
-	k0s.io/pkg/asciitransport v0.1.18-alpha.7
-	k0s.io/pkg/hub v0.1.18-alpha.7
+	k0s.io v0.1.18-alpha.8
+	k0s.io/pkg/agent v0.1.18-alpha.8
+	k0s.io/pkg/asciitransport v0.1.18-alpha.8
+	k0s.io/pkg/hub v0.1.18-alpha.8
 )
 
 require (

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PREV=v0.1.18-alpha.6
+PREV=v0.1.18-alpha.7
 NEXT=$(<VERSION)
 
 cat .mods | while read a; do

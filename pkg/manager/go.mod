@@ -4,5 +4,5 @@ go 1.24
 
 require (
 	github.com/btwiuse/gods v0.0.1
-	k0s.io v0.1.18-alpha.7
+	k0s.io v0.1.18-alpha.8
 )
