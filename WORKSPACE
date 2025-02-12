@@ -28,18 +28,27 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 #     "//toolchain:cc-toolchain-android_armv7",
 # )
 
-# git_repository(
-#     name = "rules_python",
-#     branch = "master",
-#     remote = "https://github.com/bazelbuild/rules_python.git",
-# )
-
-http_archive(
+git_repository(
     name = "rules_python",
-    sha256 = "d70cd72a7a4880f0000a6346253414825c19cdd40a28289bdf67b8e6480edff8",
-    strip_prefix = "rules_python-0.28.0",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.28.0/rules_python-0.28.0.tar.gz",
+    branch = "main",
+    remote = "https://github.com/bazelbuild/rules_python.git",
 )
+
+git_repository(
+    name = "rules_java",
+    branch = "master",
+    remote = "https://github.com/bazelbuild/rules_java.git",
+)
+
+#load("@rules_java//java:java_library.bzl", "java_library")
+
+#http_archive(
+#     name = "rules_python",
+#     sha256 = "d70cd72a7a4880f0000a6346253414825c19cdd40a28289bdf67b8e6480edff8",
+#     branch = "master",
+#     strip_prefix = "rules_python-0.28.0",
+#     url = "https://github.com/bazelbuild/rules_python/releases/download/0.28.0/rules_python-0.28.0.tar.gz",
+#)
 
 load("@rules_python//python:repositories.bzl", "py_repositories")
 
@@ -97,9 +106,9 @@ raze_fetch_remote_crates()
 
 git_repository(
     name = "rules_proto",
+    branch = "main",
     remote = "https://github.com/bazelbuild/rules_proto.git",
-    # branch = "master",
-    tag = "6.0.0",
+    # tag = "6.0.0",
 )
 
 load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies")

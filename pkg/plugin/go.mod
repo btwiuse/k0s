@@ -37,6 +37,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k0s.io/pkg/asciitransport v0.1.18-alpha.8 // indirect
 	k0s.io/pkg/middleware v0.1.18-alpha.8 // indirect
-	k8s.io/apimachinery v0.32.0 // indirect
+	k8s.io/apimachinery v0.32.1 // indirect
 	nhooyr.io/websocket v1.8.17 // indirect
 )
