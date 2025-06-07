@@ -87,66 +87,66 @@ bazel-build-android:            ## Build android binaries using bazel
 	$(BAZEL) run //:install_k0s --config=go_android_386   -- -g $(PWD)/bin/android/386
 	$(BAZEL) run //:install_k0s --config=go_android_armv7 -- -g $(PWD)/bin/android/armv7
 	$(BAZEL) run //:install_k0s --config=go_android_arm64 -- -g $(PWD)/bin/android/arm64
-	# @ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_amd64  //:k0s
-	# @ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_386    //:k0s
-	# @ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_arm    //:k0s
-	# @ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:android_arm64  //:k0s
+	# @ $(BAZEL) build --platforms=@rules_go//go/toolchain:android_amd64  //:k0s
+	# @ $(BAZEL) build --platforms=@rules_go//go/toolchain:android_386    //:k0s
+	# @ $(BAZEL) build --platforms=@rules_go//go/toolchain:android_arm    //:k0s
+	# @ $(BAZEL) build --platforms=@rules_go//go/toolchain:android_arm64  //:k0s
 	# $(BAZEL) build //:k0s --config=go_android_amd64
 	# $(BAZEL) build //:k0s --config=go_android_386
 	# $(BAZEL) build //:k0s --config=go_android_armv7
 	# $(BAZEL) build //:k0s --config=go_android_arm64
 
 bazel-build-windows:            ## Build windows binaries using bazel
-	$(BAZEL) run --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64 //:install_k0s_static -- -g $(PWD)/bin/windows/amd64
-	$(BAZEL) run --platforms=@io_bazel_rules_go//go/toolchain:windows_386 //:install_k0s_static -- -g $(PWD)/bin/windows/386
-	$(BAZEL) run --platforms=@io_bazel_rules_go//go/toolchain:windows_arm //:install_k0s_static -- -g $(PWD)/bin/windows/armv7
-	$(BAZEL) run --platforms=@io_bazel_rules_go//go/toolchain:windows_arm64 //:install_k0s_static -- -g $(PWD)/bin/windows/arm64
+	$(BAZEL) run --platforms=@rules_go//go/toolchain:windows_amd64 //:install_k0s_static -- -g $(PWD)/bin/windows/amd64
+	$(BAZEL) run --platforms=@rules_go//go/toolchain:windows_386 //:install_k0s_static -- -g $(PWD)/bin/windows/386
+	$(BAZEL) run --platforms=@rules_go//go/toolchain:windows_arm //:install_k0s_static -- -g $(PWD)/bin/windows/armv7
+	$(BAZEL) run --platforms=@rules_go//go/toolchain:windows_arm64 //:install_k0s_static -- -g $(PWD)/bin/windows/arm64
 	# $(BAZEL) build //:k0s --config=go_win32
 	# $(BAZEL) build //:k0s --config=go_win64
 
 bazel-build-darwin:            ## Build darwin binaries using bazel
-	$(BAZEL) run --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64  //:install_k0s -- -g $(PWD)/bin/darwin/amd64
-	$(BAZEL) run --platforms=@io_bazel_rules_go//go/toolchain:darwin_arm64  //:install_k0s -- -g $(PWD)/bin/darwin/arm64
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64  //:k0s
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:darwin_arm64  //:k0s
+	$(BAZEL) run --platforms=@rules_go//go/toolchain:darwin_amd64  //:install_k0s -- -g $(PWD)/bin/darwin/amd64
+	$(BAZEL) run --platforms=@rules_go//go/toolchain:darwin_arm64  //:install_k0s -- -g $(PWD)/bin/darwin/arm64
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:darwin_amd64  //:k0s
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:darwin_arm64  //:k0s
 
 bazel-build-bsd:            ## Build bsd binaries using bazel
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:freebsd_amd64  //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:freebsd_386    //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:openbsd_amd64  //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:openbsd_386    //:k0s
+	@ $(BAZEL) build --platforms=@rules_go//go/toolchain:freebsd_amd64  //:k0s
+	@ $(BAZEL) build --platforms=@rules_go//go/toolchain:freebsd_386    //:k0s
+	@ $(BAZEL) build --platforms=@rules_go//go/toolchain:openbsd_amd64  //:k0s
+	@ $(BAZEL) build --platforms=@rules_go//go/toolchain:openbsd_386    //:k0s
 
 bazel-build-bsd-arm:            ## Build bsd arm binaries using bazel
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:freebsd_arm    //:k0s
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:openbsd_arm    //:k0s
+	@ $(BAZEL) build --platforms=@rules_go//go/toolchain:freebsd_arm    //:k0s
+	@ $(BAZEL) build --platforms=@rules_go//go/toolchain:openbsd_arm    //:k0s
 
 bazel-build-linux-arm:          ## Build linux arm binaries using bazel
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm64    //:k0s_static
-	@ $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm      //:k0s_static
+	@ $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_arm64    //:k0s_static
+	@ $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_arm      //:k0s_static
 
 bazel-build-linux:          ## Build linux binaries using bazel
-	$(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64    //:install_k0s_static -- -g $(PWD)/bin/linux/amd64
-	$(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_386      //:install_k0s_static -- -g $(PWD)/bin/linux/386
-	$(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_arm64    //:install_k0s_static -- -g $(PWD)/bin/linux/arm64
-	$(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_arm      //:install_k0s_static -- -g $(PWD)/bin/linux/arm
-	# $(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_mips     //:install_k0s_static -- -g $(PWD)/bin/linux/mips
-	# $(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_mips64   //:install_k0s_static -- -g $(PWD)/bin/linux/mips64
-	# $(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_mipsle   //:install_k0s_static -- -g $(PWD)/bin/linux/mipsle
-	# $(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_mips64le //:install_k0s_static -- -g $(PWD)/bin/linux/mips64le
-	# $(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64    //:install_k0s_static -- -g $(PWD)/bin/linux/ppc64
-	# $(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64le  //:install_k0s_static -- -g $(PWD)/bin/linux/ppc64le
-	# $(BAZEL) run   --platforms=@io_bazel_rules_go//go/toolchain:linux_s390x    //:install_k0s_static -- -g $(PWD)/bin/linux/s390x
+	$(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_amd64    //:install_k0s_static -- -g $(PWD)/bin/linux/amd64
+	$(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_386      //:install_k0s_static -- -g $(PWD)/bin/linux/386
+	$(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_arm64    //:install_k0s_static -- -g $(PWD)/bin/linux/arm64
+	$(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_arm      //:install_k0s_static -- -g $(PWD)/bin/linux/arm
+	# $(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_mips     //:install_k0s_static -- -g $(PWD)/bin/linux/mips
+	# $(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_mips64   //:install_k0s_static -- -g $(PWD)/bin/linux/mips64
+	# $(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_mipsle   //:install_k0s_static -- -g $(PWD)/bin/linux/mipsle
+	# $(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_mips64le //:install_k0s_static -- -g $(PWD)/bin/linux/mips64le
+	# $(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_ppc64    //:install_k0s_static -- -g $(PWD)/bin/linux/ppc64
+	# $(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_ppc64le  //:install_k0s_static -- -g $(PWD)/bin/linux/ppc64le
+	# $(BAZEL) run   --platforms=@rules_go//go/toolchain:linux_s390x    //:install_k0s_static -- -g $(PWD)/bin/linux/s390x
 	# $(BAZEL) build //:k0s_static # //cmd/{hub,client,agent}
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64    //:k0s_static
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm64    //:k0s_static
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_386      //:k0s_static
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips     //:k0s_static
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips64   //:k0s_static
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mipsle   //:k0s_static
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_mips64le //:k0s_static
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64    //:k0s_static
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64le  //:k0s_static
-	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_s390x    //:k0s_static
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_amd64    //:k0s_static
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_arm64    //:k0s_static
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_386      //:k0s_static
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_mips     //:k0s_static
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_mips64   //:k0s_static
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_mipsle   //:k0s_static
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_mips64le //:k0s_static
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_ppc64    //:k0s_static
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_ppc64le  //:k0s_static
+	# $(BAZEL) build --platforms=@rules_go//go/toolchain:linux_s390x    //:k0s_static
 
 bazel-build:          ## Build binary for current platform using bazel
 	$(BAZEL) build //:k0s

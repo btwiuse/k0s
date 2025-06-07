@@ -6,7 +6,7 @@ load("@rules_clojure//:rules.bzl", "clojure_repl")
 # load("@io_bazel_rules_docker//go:image.bzl", "go_image")
 load("@rules_go//go:def.bzl", "go_binary", "go_library", "nogo")
 
-# load("@io_bazel_rules_go//go:def.bzl", "go_binary")
+# load("@rules_go//go:def.bzl", "go_binary")
 
 load("@rules_rust//rust:defs.bzl", "rust_binary")
 

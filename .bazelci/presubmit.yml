@@ -16,28 +16,28 @@ tasks:
     name: windows_amd64
     platform: ubuntu2204
     build_flags:
-    - --platforms=@io_bazel_rules_go//go/toolchain:windows_amd64
+    - --platforms=@rules_go//go/toolchain:windows_amd64
     build_targets:
     - "k0s_static"
   ubuntu2204_windows_386:
     name: windows_386
     platform: ubuntu2204
     build_flags:
-    - --platforms=@io_bazel_rules_go//go/toolchain:windows_386
+    - --platforms=@rules_go//go/toolchain:windows_386
     build_targets:
     - "k0s_static"
 # ubuntu2204_windows_arm64:
 #   name: windows_arm64
 #   platform: ubuntu2004
 #   build_flags:
-#   - --platforms=@io_bazel_rules_go//go/toolchain:windows_arm64
+#   - --platforms=@rules_go//go/toolchain:windows_arm64
 #   build_targets:
 #   - "k0s_static"
   ubuntu2204_windows_armv7:
     name: windows_armv7
     platform: ubuntu2204
     build_flags:
-    - --platforms=@io_bazel_rules_go//go/toolchain:windows_arm
+    - --platforms=@rules_go//go/toolchain:windows_arm
     build_targets:
     - "k0s_static"
 # ubuntu2204_android_amd64:
@@ -90,13 +90,13 @@ tasks:
     name: darwin_amd64
     platform: ubuntu2204
     build_flags:
-    - --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64
+    - --platforms=@rules_go//go/toolchain:darwin_amd64
     build_targets:
     - "k0s_static"
   ubuntu2204_darwin_arm64:
     name: darwin_arm64
     platform: ubuntu2204
     build_flags:
-    - --platforms=@io_bazel_rules_go//go/toolchain:darwin_arm64
+    - --platforms=@rules_go//go/toolchain:darwin_arm64
     build_targets:
     - "k0s_static"
