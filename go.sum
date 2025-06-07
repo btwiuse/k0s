@@ -1,0 +1,12 @@
+github.com/btwiuse/bingo v0.0.5 h1:4MVoecIqhlyCaLgSFl0bvcp4gt2XhsnH//xYvxwEaQs=
+github.com/btwiuse/bingo v0.0.5/go.mod h1:8jXkWxSUQjYqYSoQBDjcY9pGssdvMrYBFFvPEFkUgnA=
+github.com/containerd/console v1.0.4 h1:F2g4+oChYvBTsASRTz8NP6iIAi97J3TtSAsLbIFn4ro=
+github.com/containerd/console v1.0.4/go.mod h1:YynlIjWYF8myEu6sdkwKIvGQq+cOckRm6So2avqoYAk=
+github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42 h1:UtyD+eBVdLYSj5/pjfSR6mtnzMgIiOVcFT024G2l4CY=
+github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42/go.mod h1:/peI0OaxVYh7fzA72CD7rUsyGVdF7sCiFw7GcYqOcCw=
+github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
+github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
+golang.org/x/sys v0.1.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.31.0 h1:ioabZlmFYtWhL+TRYpcnNlLwhyxaM9kWTDEmfnprqik=
+golang.org/x/sys v0.31.0/go.mod h1:BJP2sWEmIv4KK5OTEluFJCKSidICx8ciO85XgH3Ak8k=

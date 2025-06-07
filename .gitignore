@@ -34,7 +34,7 @@ __pycache__/
 *.pyc
 
 .vscode
-*.sum
+go.work.sum
 /vendor/modules.txt
 
 node_modules
