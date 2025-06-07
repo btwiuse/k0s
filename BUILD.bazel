@@ -1,8 +1,10 @@
-load("@bazel_gazelle//:def.bzl", "gazelle")
-load("@io_bazel_rules_docker//container:container.bzl", "container_push")
-load("@io_bazel_rules_docker//go:image.bzl", "go_image")
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "nogo")
+load("@gazelle//:def.bzl", "gazelle")
 load("@rules_clojure//:rules.bzl", "clojure_repl")
+
+# TODO: Migrate from rules_docker to rules_oci
+# load("@io_bazel_rules_docker//container:container.bzl", "container_push")
+# load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+load("@rules_go//go:def.bzl", "go_binary", "go_library", "nogo")
 
 # load("@io_bazel_rules_go//go:def.bzl", "go_binary")
 
@@ -11,8 +13,8 @@ load("@rules_rust//rust:defs.bzl", "rust_binary")
 # bazel rule definition
 gazelle(
     name = "gazelle",
-    command = "fix",
-    prefix = "k0s.io",
+    #   command = "fix",
+    #   prefix = "k0s.io",
 )
 
 go_binary(
@@ -50,21 +52,22 @@ nogo(
     ],
 )
 
-go_image(
-    name = "k0s_image",
-    base = "@base//image",
-    binary = ":k0s_static",
-    repository = "btwiuse",
-)
+# TODO: Migrate from rules_docker to rules_oci
+# go_image(
+#     name = "k0s_image",
+#     base = "@base//image",
+#     binary = ":k0s_static",
+#     repository = "btwiuse",
+# )
 
-container_push(
-    name = "k0s_image_push",
-    format = "Docker",
-    image = ":k0s_image",
-    registry = "index.docker.io",
-    repository = "btwiuse/k0s",
-    tag = "latest",
-)
+# container_push(
+#     name = "k0s_image_push",
+#     format = "Docker",
+#     image = ":k0s_image",
+#     registry = "index.docker.io",
+#     repository = "btwiuse/k0s",
+#     tag = "latest",
+# )
 
 rust_binary(
     name = "k0s_rs",
@@ -121,7 +124,7 @@ platform(
     constraint_values = [
         ":mingw",
     ],
-    parents = ["@io_bazel_rules_go//go/toolchain:windows_386_cgo"],
+    parents = ["@rules_go//go/toolchain:windows_386_cgo"],
 )
 
 platform(
@@ -129,7 +132,7 @@ platform(
     constraint_values = [
         ":mingw64",
     ],
-    parents = ["@io_bazel_rules_go//go/toolchain:windows_amd64_cgo"],
+    parents = ["@rules_go//go/toolchain:windows_amd64_cgo"],
 )
 
 platform(
@@ -137,7 +140,7 @@ platform(
     constraint_values = [
         ":android_amd64",
     ],
-    parents = ["@io_bazel_rules_go//go/toolchain:android_amd64_cgo"],
+    parents = ["@rules_go//go/toolchain:android_amd64_cgo"],
 )
 
 platform(
@@ -145,7 +148,7 @@ platform(
     constraint_values = [
         ":android_386",
     ],
-    parents = ["@io_bazel_rules_go//go/toolchain:android_386_cgo"],
+    parents = ["@rules_go//go/toolchain:android_386_cgo"],
 )
 
 clojure_repl(name = "clj_repl")

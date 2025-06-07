@@ -1,5 +1,5 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+load("@rules_go//go:def.bzl", "go_library")
+load("@rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
 proto_library(
@@ -18,7 +18,6 @@ go_proto_library(
 go_library(
     name = "go_default_library",
     srcs = ["gen.go"],
-    embed = [":asciiproto_go_proto"],
     importpath = "k0s.io/third_party/pkg/asciiproto/generator",
     visibility = ["//visibility:public"],
 )

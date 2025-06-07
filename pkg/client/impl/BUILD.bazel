@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
@@ -22,67 +22,67 @@ go_library(
         "@com_github_vojtechvitek_yaml_cli//pkg/cli:go_default_library",
         "@org_golang_x_crypto//ssh/terminal:go_default_library",
     ] + select({
-        "@io_bazel_rules_go//go/platform:aix": [
+        "@rules_go//go/platform:aix": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:android": [
+        "@rules_go//go/platform:android": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:darwin": [
+        "@rules_go//go/platform:darwin": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:dragonfly": [
+        "@rules_go//go/platform:dragonfly": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:freebsd": [
+        "@rules_go//go/platform:freebsd": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:illumos": [
+        "@rules_go//go/platform:illumos": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:ios": [
+        "@rules_go//go/platform:ios": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:js": [
+        "@rules_go//go/platform:js": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:linux": [
+        "@rules_go//go/platform:linux": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:netbsd": [
+        "@rules_go//go/platform:netbsd": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:openbsd": [
+        "@rules_go//go/platform:openbsd": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:osx": [
+        "@rules_go//go/platform:osx": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:plan9": [
+        "@rules_go//go/platform:plan9": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:qnx": [
+        "@rules_go//go/platform:qnx": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:solaris": [
+        "@rules_go//go/platform:solaris": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],
-        "@io_bazel_rules_go//go/platform:windows": [
+        "@rules_go//go/platform:windows": [
             "//pkg/asciitransport:go_default_library",
             "@com_github_btwiuse_rng//:go_default_library",
         ],

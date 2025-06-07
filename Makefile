@@ -48,14 +48,15 @@ work-sync:
 
 gazelle: work-sync             ## auto generate BUILD.bazel files from go.mod
 	@ go mod tidy
+	@ $(BAZEL) mod tidy
 	@#go mod vendor
 	@ find pkg -name 'go.mod' | sed s,go.mod,,g | xargs -I% bash -vc 'pushd % && go mod tidy'
 	@#sed -i -e '/k0s.io.* v/d' pkg/*/go.mod go.mod
 	@#ls -1 pkg/*/go.mod | xargs -L1 $(BAZEL) run //:gazelle -- update-repos --from_file
 	@# @ $(BAZEL) run //:gazelle -- update-repos --from_file=third_party/go.mod -lang go -proto disable_global
 	@# https://github.com/btwiuse/baize/blob/btwiuse/hack/update-deps.sh
-	@ $(BAZEL) run //:gazelle -- update-repos --from_file=third_party/go.mod --build_file_generation=on --build_file_proto_mode=disable --prune --to_macro=go_repos.bzl%go_repositories
-	@ $(BAZEL) run //:gazelle
+	@# $(BAZEL) run //:gazelle -- update-repos --from_file=third_party/go.mod --build_file_generation=on --build_file_proto_mode=disable --prune --to_macro=go_repos.bzl%go_repositories
+	@ $(BAZEL) run //:gazelle -- -build_file_name=BUILD.bazel
 	@#git status vendor/
 
 cancel-actions-in-queue:     ## cancel gh actions in queue
@@ -148,7 +149,7 @@ bazel-build-linux:          ## Build linux binaries using bazel
 	# $(BAZEL) build --platforms=@io_bazel_rules_go//go/toolchain:linux_s390x    //:k0s_static
 
 bazel-build:          ## Build binary for current platform using bazel
-	$(BAZEL) build //:k0s_static
+	$(BAZEL) build //:k0s
 	# $(BAZEL) run //:install_k0s_static -- -g $(PWD)/bin
 	# $(BAZEL) build # //:k0s # //cmd/{hub,client,agent}
 

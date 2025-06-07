@@ -1,0 +1,262 @@
+"""K0s project using Bzlmod."""
+
+module(
+    name = "k0s",
+    version = "0.0.5",
+    repo_name = "com_github_btwiuse_k0s",
+)
+
+# Bazel features for feature detection
+bazel_dep(name = "bazel_features", version = "1.21.0")
+
+# Skylib for utility functions (needed by legacy rules)
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+
+# Go dependencies
+bazel_dep(name = "rules_go", version = "0.50.1")
+bazel_dep(name = "gazelle", version = "0.43.0")
+
+# Protobuf
+bazel_dep(name = "protobuf", version = "29.0")
+bazel_dep(name = "rules_proto", version = "7.0.2")
+
+# Python
+bazel_dep(name = "rules_python", version = "0.40.0")
+
+# Java
+bazel_dep(name = "rules_java", version = "8.11.0")
+
+# Rust
+bazel_dep(name = "rules_rust", version = "0.46.0")
+
+# Container and OCI
+bazel_dep(name = "rules_oci", version = "1.7.6")
+
+# Non-module dependencies (legacy rules not in BCR)
+non_module_deps = use_extension("//:extensions.bzl", "non_module_dependencies")
+use_repo(
+    non_module_deps,
+    # "android_ndk",
+    # "io_bazel_rules_docker",  # temporarily commented out
+    "io_bazel_rules_grafana",
+    "rules_clojure",
+    "rules_dhall",
+)
+
+# Note: The following rules are not in BCR and need to be handled via
+# non_module_dependencies extension or kept in WORKSPACE temporarily
+# until they are migrated to support BZLMOD
+
+# # Docker rules - not in BCR yet
+# git_override(
+#     module_name = "rules_docker",
+#     remote = "https://github.com/bazelbuild/rules_docker.git",
+#     commit = "b1e80761a8a8243d03ebca8845e9cc1ba6c82ce0",
+# )
+
+# # Dhall rules - not in BCR
+# git_override(
+#     module_name = "rules_dhall",
+#     remote = "https://github.com/humphrej/rules_dhall.git",
+#     commit = "b6e4b8cbc2a095b2be2c8e02cb1b69c59aa6e95b",
+# )
+
+# # Clojure rules - not in BCR
+# git_override(
+#     module_name = "rules_clojure",
+#     remote = "https://github.com/simuons/rules_clojure.git",
+#     commit = "d3e1a1c55b5c4b3a4f7b8c0a7f0e0b1c1a1b1c1d",
+# )
+
+# # Grafana rules - not in BCR
+# git_override(
+#     module_name = "rules_grafana",
+#     remote = "https://github.com/etsy/rules_grafana.git",
+#     commit = "main",
+# )
+
+# Go toolchain configuration
+go = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
+go.download(version = "1.24.4")
+
+# Register Go SDK
+use_repo(go, "go_toolchains")
+
+# TODO: Gazelle configuration for Go dependencies (will be enabled once legacy migration is complete)
+# For now, Go dependencies are loaded via WORKSPACE.bzlmod during migration
+go_deps = use_extension("@gazelle//:extensions.bzl", "go_deps")
+go_deps.from_file(
+    go_work = "//:go.work",
+)
+go_deps.gazelle_override(
+    build_file_generation = "on",  # overwrite existing Bazel files (for go code)
+    directives = [
+        # This module is distributed with pre-generated .pb.go files, so we disable generation of
+        # go_proto_library targets. Trying to enable them anyway runs into issues because they
+        # copy some protos from googleapis.
+        "gazelle:proto disable",
+        "gazelle:go_generate_proto false",
+    ],
+    path = "k8s.io/apiserver",
+)
+use_repo(
+    go_deps,
+    "com_github_abbot_go_http_auth",
+    "com_github_abiosoft_ishell_v2",
+    "com_github_activestate_termtest_conpty",
+    "com_github_btwiuse_bcrypt",
+    "com_github_btwiuse_better",
+    "com_github_btwiuse_cadvisor",
+    "com_github_btwiuse_dkg",
+    "com_github_btwiuse_gods",
+    "com_github_btwiuse_gost",
+    "com_github_btwiuse_multicall",
+    "com_github_btwiuse_pretty",
+    "com_github_btwiuse_rng",
+    "com_github_btwiuse_sse",
+    "com_github_btwiuse_tags",
+    "com_github_btwiuse_version",
+    "com_github_btwiuse_wetty",
+    "com_github_btwiuse_wsconn",
+    "com_github_btwiuse_wsdial",
+    "com_github_buildkite_agent_v3",
+    "com_github_burntsushi_toml",
+    "com_github_caddy_dns_alidns",
+    "com_github_caddy_dns_azure",
+    "com_github_caddy_dns_cloudflare",
+    "com_github_caddy_dns_digitalocean",
+    "com_github_caddy_dns_dnspod",
+    "com_github_caddy_dns_duckdns",
+    "com_github_caddy_dns_route53",
+    "com_github_caddy_dns_vultr",
+    "com_github_caddyserver_caddy_v2",
+    "com_github_caddyserver_forwardproxy",
+    "com_github_casbin_caddy_authz_v2",
+    "com_github_containerd_console",
+    "com_github_cppforlife_go_cli_ui",
+    "com_github_creack_pty",
+    "com_github_creativeprojects_go_selfupdate",
+    "com_github_denisbrodbeck_machineid",
+    "com_github_dreamacro_clash",
+    "com_github_emicklei_go_restful_v3",
+    "com_github_ethereum_go_ethereum",
+    "com_github_filebrowser_filebrowser_v2",
+    "com_github_freman_caddy2_reauth",
+    "com_github_go_log_log",
+    "com_github_golang_protobuf",
+    "com_github_google_cadvisor",
+    "com_github_goproxyio_goproxy_v2",
+    "com_github_gorilla_handlers",
+    "com_github_gorilla_mux",
+    "com_github_gorilla_rpc",
+    "com_github_gorilla_websocket",
+    "com_github_greenpau_caddy_auth_jwt",
+    "com_github_greenpau_caddy_trace",
+    "com_github_infobloxopen_go_trees",
+    "com_github_jpillora_go_echo_server",
+    "com_github_jpillora_opts",
+    "com_github_jpillora_webproc",
+    "com_github_json_iterator_go",
+    "com_github_junegunn_fzf",
+    "com_github_lunny_tango",
+    "com_github_mholt_caddy_l4",
+    "com_github_miekg_dns",
+    "com_github_p4gefau1t_trojan_go",
+    "com_github_pkg_errors",
+    "com_github_portainer_agent",
+    "com_github_rancher_dapper",
+    "com_github_rs_cors",
+    "com_github_sirupsen_logrus",
+    "com_github_spf13_pflag",
+    "com_github_stretchr_testify",
+    "com_github_tango_contrib_basicauth",
+    "com_github_tetratelabs_wazero",
+    "com_github_traefik_yaegi",
+    "com_github_urfave_cli",
+    "com_github_v2fly_v2ray_core_v4",
+    "com_github_vojtechvitek_yaml_cli",
+    "com_github_webteleport_utils",
+    "com_github_webteleport_wtf",
+    "in_gopkg_yaml_v3",
+    "io_etcd_go_etcd_client_v3",
+    "io_k0s",
+    "io_k0s_cmd",
+    "io_k0s_pkg_agent",
+    "io_k0s_pkg_apiserver",
+    "io_k0s_pkg_asciitransport",
+    "io_k0s_pkg_cli",
+    "io_k0s_pkg_client",
+    "io_k0s_pkg_hub",
+    "io_k0s_pkg_manager",
+    "io_k0s_pkg_middleware",
+    "io_k0s_pkg_plugin",
+    "io_k0s_pkg_simple",
+    "io_k0s_pkg_tunnel",
+    "io_k0s_pkg_ui",
+    "io_k0s_pkg_utils",
+    "io_k0s_third_party",
+    "io_k8s_api",
+    "io_k8s_apimachinery",
+    "io_k8s_apiserver",
+    "io_k8s_client_go",
+    "io_k8s_klog_v2",
+    "io_k8s_kubectl",
+    "io_nhooyr_websocket",
+    "io_robpike_ivy",
+    "net_starlark_go",
+    "org_golang_google_protobuf",
+    "org_golang_x_crypto",
+    "org_golang_x_mod",
+    "org_golang_x_net",
+    "org_golang_x_sync",
+    "org_golang_x_text",
+    "org_modernc_httpfs",
+    "org_uber_go_automaxprocs",
+    "sh_elv_src",
+)
+
+# Rust toolchain configuration
+########rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
+########rust.toolchain(
+########    edition = "2024",
+########    versions = ["1.87.0"],
+########)
+
+######### Rust crate dependencies
+########crate = use_extension("@rules_rust//crate_universe:extension.bzl", "crate")
+
+######### Load Rust dependencies from Cargo.toml (will generate Cargo.lock if needed)
+########crate.from_cargo(
+########    name = "crates",
+########    manifests = ["//:Cargo.toml"],
+########)
+########use_repo(
+########    crate,
+########    "crates",
+########)
+
+# Python toolchain
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    is_default = True,
+    python_version = "3.11",
+)
+
+# OCI toolchain
+oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
+oci.toolchains(
+    name = "oci",
+    crane_version = "v0.18.0",
+)
+
+# Container images
+oci.pull(
+    name = "base",
+    digest = "sha256:c5b1261d6d3e43071626931fc004f70149baeba2c8ec672bd4f27761f8e1ad6b",  # alpine:latest digest - update as needed
+    image = "docker.io/library/alpine",
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
+)
+use_repo(oci, "base")

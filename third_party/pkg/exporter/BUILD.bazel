@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
@@ -11,7 +11,7 @@ go_library(
     importpath = "k0s.io/third_party/pkg/exporter",
     visibility = ["//visibility:public"],
     deps = select({
-        "@io_bazel_rules_go//go/platform:linux": [
+        "@rules_go//go/platform:linux": [
             "@com_github_alecthomas_kingpin_v2//:go_default_library",
             "@com_github_prometheus_client_golang//prometheus:go_default_library",
             "@com_github_prometheus_client_golang//prometheus/promhttp:go_default_library",
