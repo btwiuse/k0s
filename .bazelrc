@@ -52,4 +52,4 @@ run --stamp --workspace_status_command=./tools/ldflags_bazel
 # TODO: migrate all dependencies from WORKSPACE to MODULE.bazel
 # https://github.com/protocolbuffers/protobuf/issues/14313
 common --enable_bzlmod
-common --enable_workspace
+common --noenable_workspace
