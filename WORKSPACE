@@ -3,9 +3,20 @@
 workspace(name = "com_github_btwiuse_k0s")
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-# load("//toolchain:android_ndk.bzl", "android_ndk")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+git_repository(
+    name = "bazel_features",
+    branch = "main",
+    remote = "https://github.com/bazel-contrib/bazel_features.git",
+)
+
+load("@bazel_features//:deps.bzl", "bazel_features_deps")
+
+bazel_features_deps()
+
+# load("//toolchain:android_ndk.bzl", "android_ndk")
 
 # android_ndk(name = "android_ndk")
 
@@ -68,7 +79,7 @@ go_rules_dependencies()
 
 go_register_toolchains(
     nogo = "@//:nogo",
-    version = "1.24.3",
+    version = "1.24.4",
 )  # nogo is in the top-level BUILD file of this workspace
 
 git_repository(
