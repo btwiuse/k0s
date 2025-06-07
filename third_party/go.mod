@@ -71,7 +71,6 @@ require (
 	k0s.io/pkg/middleware v0.1.18-alpha.8
 	k0s.io/pkg/plugin v0.1.18-alpha.8
 	k0s.io/pkg/tunnel v0.1.18-alpha.8
-	k0s.io/pkg/utils v0.1.18-alpha.8
 	k8s.io/api v0.32.1
 	k8s.io/apimachinery v0.32.1
 	k8s.io/client-go v0.32.1
@@ -88,6 +87,8 @@ require (
 	// sigs.k8s.io/metrics-server v0.4.2
 	src.elv.sh v0.14.1-0.20210218105754-53593c3ab79f
 )
+
+require github.com/btwiuse/wsconn v0.0.3
 
 require (
 	cel.dev/expr v0.19.0 // indirect
@@ -141,7 +142,6 @@ require (
 	github.com/btwiuse/pretty v0.2.1 // indirect
 	github.com/btwiuse/tags v0.0.2 // indirect
 	github.com/btwiuse/version v0.0.1 // indirect
-	github.com/btwiuse/wsconn v0.0.3 // indirect
 	github.com/btwiuse/wsdial v0.0.0 // indirect
 	github.com/buildkite/interpolate v0.0.0-20200526001904-07f35b4ae251 // indirect
 	github.com/buildkite/shellwords v0.0.0-20180315084142-c3f497d1e000 // indirect

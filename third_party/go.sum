@@ -526,7 +526,6 @@ k0s.io/pkg/asciitransport v0.1.18-alpha.8 h1:DIoHwcgp+rvvJjBB+uxf+F5SlnXoN+ZUVe/
 k0s.io/pkg/middleware v0.1.18-alpha.8 h1:1fOw4ZN4Kj55P6zaYEKuZowvfVDo8LwtY/Bf3v+07yE=
 k0s.io/pkg/plugin v0.1.18-alpha.8 h1:4ssBdBm+okudDZRHkTz7UIufXIacWSQDm4+7OeGyMdM=
 k0s.io/pkg/tunnel v0.1.18-alpha.8 h1:ftEi1qmxFHCm98LQZeFjiDq998Q27SZZ+yVsQpEz8fA=
-k0s.io/pkg/utils v0.1.18-alpha.8 h1:FZMy+LtXBa4bEZ0y/X0r+0L8Epr9JkramrhQ9UUOc8Q=
 k8s.io/api v0.32.1 h1:f562zw9cy+GvXzXf0CKlVQ7yHJVYzLfL6JAS4kOAaOc=
 k8s.io/apimachinery v0.32.1 h1:683ENpaCBjma4CYqsmZyhEzrGz6cjn1MY/X2jB2hkZs=
 k8s.io/client-go v0.32.1 h1:otM0AxdhdBIaQh7l1Q0jQpmo7WOFIk5FFa4bg6YMdUU=

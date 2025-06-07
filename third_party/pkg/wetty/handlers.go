@@ -10,7 +10,7 @@ import (
 	"modernc.org/httpfs"
 
 	"github.com/btwiuse/wetty/pkg/assets"
-	"k0s.io/pkg/utils"
+	"github.com/btwiuse/wsconn"
 	asciitransport "k0s.io/third_party/pkg/asciitransport/v2"
 	"k0s.io/third_party/pkg/localcmd"
 	"k0s.io/third_party/pkg/wetty/wetty"
@@ -49,7 +49,7 @@ func (server *Server) terminalHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer conn.Close()
-	wsconn := utils.NetConn(conn)
+	wsc := wsconn.NetConn(conn)
 
 	var term *localcmd.Lc
 	if term0 == nil {
@@ -68,7 +68,7 @@ func (server *Server) terminalHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}),
 		}
-		aserver = asciitransport.Server(wsconn, opts...)
+		aserver = asciitransport.Server(wsc, opts...)
 	)
 
 	<-aserver.Done()

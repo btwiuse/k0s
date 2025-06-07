@@ -9,20 +9,20 @@ import (
 	"time"
 
 	"github.com/btwiuse/rng"
+	"github.com/btwiuse/wsconn"
 	"github.com/containerd/console"
-	"k0s.io/pkg/utils"
 	asciitransport "k0s.io/third_party/pkg/asciitransport/v2"
 	"k0s.io/third_party/pkg/wetty/wetty"
 )
 
 func dial(p string) (conn net.Conn, err error) {
 	dialer := wetty.Dialer
-	wsconn, _, err := dialer.Dial(p, nil)
+	wsc, _, err := dialer.Dial(p, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return utils.NetConn(wsconn), nil
+	return wsconn.NetConn(wsc), nil
 }
 
 func main() {

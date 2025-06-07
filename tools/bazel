@@ -43,10 +43,10 @@ main(){
     //cmd/hub2
     //cmd/agent
     //cmd/client
-    //cmd/wetty
-    //cmd/wetty-cli
     //cmd/chassis
-    //cmd/ameniicsa
+  # //third_party/cmd/wetty
+  # //third_party/cmd/wetty-cli
+    //third_party/cmd/ameniicsa
   )
   if $(is_one "${#}") && $(is_build "${1}"); then
     # bazel build "${DEFAULT_TARGETS[@]}"
