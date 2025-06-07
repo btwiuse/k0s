@@ -216,24 +216,24 @@ use_repo(
 )
 
 # Rust toolchain configuration
-########rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
-########rust.toolchain(
-########    edition = "2024",
-########    versions = ["1.87.0"],
-########)
+rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
+rust.toolchain(
+    edition = "2024",
+    versions = ["1.87.0"],
+)
 
-######### Rust crate dependencies
-########crate = use_extension("@rules_rust//crate_universe:extension.bzl", "crate")
+# Rust crate dependencies
+crate = use_extension("@rules_rust//crate_universe:extension.bzl", "crate")
 
-######### Load Rust dependencies from Cargo.toml (will generate Cargo.lock if needed)
-########crate.from_cargo(
-########    name = "crates",
-########    manifests = ["//:Cargo.toml"],
-########)
-########use_repo(
-########    crate,
-########    "crates",
-########)
+# Load Rust dependencies from Cargo.toml (will generate Cargo.lock if needed)
+crate.from_cargo(
+    name = "crates",
+    manifests = ["//:Cargo.toml"],
+)
+use_repo(
+    crate,
+    "crates",
+)
 
 # Python toolchain
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")

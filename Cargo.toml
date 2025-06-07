@@ -5,7 +5,7 @@ authors = ["btwiuse <btwiuse@gmail.com>"]
 license = "MIT"
 description = "aggregate your personal infrastructure"
 repository = "https://github.com/btwiuse/k0s"
-edition = "2021"
+edition = "2024"
 readme = "README.md"
 
 include = [

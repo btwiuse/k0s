@@ -1,3 +1,4 @@
+load("@crates//:defs.bzl", "all_crate_deps")
 load("@gazelle//:def.bzl", "gazelle")
 load("@rules_clojure//:rules.bzl", "clojure_repl")
 
@@ -8,7 +9,7 @@ load("@rules_go//go:def.bzl", "go_binary", "go_library", "nogo")
 
 # load("@rules_go//go:def.bzl", "go_binary")
 
-load("@rules_rust//rust:defs.bzl", "rust_binary")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_doc")
 
 # bazel rule definition
 gazelle(
@@ -72,51 +73,25 @@ nogo(
 rust_binary(
     name = "k0s_rs",
     srcs = ["src/main.rs"],
-    edition = "2021",
+    edition = "2024",
     visibility = ["//visibility:public"],
-    deps = [
-        "//cargo:rand",
-        "//cargo:serde",
-        "//cargo:serde_json",
-    ],
+    deps = all_crate_deps(normal = True),
 )
 
 rust_binary(
     name = "hub_rs",
     srcs = ["src/hub.rs"],
-    edition = "2021",
+    edition = "2024",
     visibility = ["//visibility:public"],
-    deps = [
-        "//cargo:actix",
-        "//cargo:actix_http",
-        "//cargo:actix_rt",
-        "//cargo:actix_web",
-        "//cargo:actix_web_actors",
-        "//cargo:bytes",
-        "//cargo:log",
-        "//cargo:serde",
-        "//cargo:serde_json",
-        "//cargo:simple_logger",
-    ],
+    deps = all_crate_deps(normal = True),
 )
 
 rust_binary(
     name = "k8s-controller",
     srcs = ["src/k8s-controller.rs"],
-    edition = "2021",
+    edition = "2024",
     visibility = ["//visibility:public"],
-    deps = [
-        "//cargo:serde",
-        "//cargo:serde_json",
-        # "//cargo:serde_derive",
-        "//cargo:kube",
-        "//cargo:kube_runtime",
-        # "//cargo:kube-derive",
-        "//cargo:k8s_openapi",
-        "//cargo:schemars",
-        "//cargo:tokio",
-        "//cargo:futures",
-    ],
+    deps = all_crate_deps(normal = True),
 )
 
 platform(
@@ -125,6 +100,11 @@ platform(
         ":mingw",
     ],
     parents = ["@rules_go//go/toolchain:windows_386_cgo"],
+)
+
+rust_doc(
+    name = "k0s_rs_doc",
+    crate = ":k0s_rs",
 )
 
 platform(
