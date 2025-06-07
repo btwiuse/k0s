@@ -11,7 +11,7 @@ require (
 	github.com/btwiuse/wsdial v0.0.0
 	github.com/containerd/console v1.0.4
 	github.com/junegunn/fzf v0.57.0
-	golang.org/x/crypto v0.31.0
+	golang.org/x/crypto v0.36.0
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.18-alpha.8
 	k0s.io/pkg/agent v0.1.18-alpha.8
@@ -45,10 +45,10 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
-	golang.org/x/term v0.27.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/sync v0.12.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/term v0.30.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/apimachinery v0.32.1 // indirect
 	nhooyr.io/websocket v1.8.17 // indirect

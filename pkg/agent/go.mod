@@ -13,8 +13,8 @@ require (
 	github.com/btwiuse/wsdial v0.0.0
 	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1
-	golang.org/x/sync v0.10.0
-	golang.org/x/text v0.21.0
+	golang.org/x/sync v0.12.0
+	golang.org/x/text v0.23.0
 	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.18-alpha.8
 	k0s.io/pkg/asciitransport v0.1.18-alpha.8
@@ -36,7 +36,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/cors v1.11.1 // indirect
-	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/apimachinery v0.32.1 // indirect
 )

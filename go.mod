@@ -9,5 +9,5 @@ require (
 	github.com/containerd/console v1.0.4 // indirect
 	github.com/lukesampson/figlet v0.0.0-20190211215653-8a3ef4a6ac42 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
 )
