@@ -7,7 +7,7 @@ version: 2
 env:
   - CGO_ENABLED=0
   - GONOSUMDB=*
-  - GOTOOLCHAIN=go1.24.0
+  - GOTOOLCHAIN=go1.25.0
   - GOPROXY=https://proxy.golang.org,https://goproxy.cn,https://goproxy.io,direct
 
 before:

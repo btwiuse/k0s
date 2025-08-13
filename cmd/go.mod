@@ -1,6 +1,6 @@
 module k0s.io/cmd
 
-go 1.24
+go 1.25
 
 require (
 	k0s.io v0.1.18-alpha.8

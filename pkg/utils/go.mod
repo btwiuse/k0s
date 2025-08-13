@@ -1,3 +1,3 @@
 module k0s.io/pkg/utils
 
-go 1.24
+go 1.25

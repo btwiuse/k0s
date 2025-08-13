@@ -1,6 +1,6 @@
 module k0s.io/third_party
 
-go 1.24
+go 1.25
 
 require (
 	github.com/BurntSushi/toml v1.1.0
