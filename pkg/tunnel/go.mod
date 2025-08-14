@@ -4,9 +4,9 @@ go 1.25
 
 require (
 	github.com/btwiuse/wsconn v0.0.3
+	github.com/coder/websocket v1.8.13
 	k0s.io v0.1.18-alpha.8
 	k0s.io/pkg/middleware v0.1.18-alpha.8
-	nhooyr.io/websocket v1.8.17
 )
 
 require (
@@ -14,4 +14,5 @@ require (
 	github.com/gorilla/handlers v1.5.2 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/rs/cors v1.11.1 // indirect
+	nhooyr.io/websocket v1.8.17 // indirect
 )

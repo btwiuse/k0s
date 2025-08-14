@@ -11,6 +11,7 @@ require (
 	github.com/btwiuse/version v0.0.1
 	github.com/btwiuse/wsconn v0.0.3
 	github.com/btwiuse/wsdial v0.0.0
+	github.com/coder/websocket v1.8.13
 	github.com/creack/pty v1.1.21
 	github.com/denisbrodbeck/machineid v1.0.1
 	golang.org/x/sync v0.12.0
@@ -19,7 +20,6 @@ require (
 	k0s.io v0.1.18-alpha.8
 	k0s.io/pkg/asciitransport v0.1.18-alpha.8
 	k0s.io/pkg/middleware v0.1.18-alpha.8
-	nhooyr.io/websocket v1.8.17
 )
 
 require (
@@ -39,4 +39,5 @@ require (
 	golang.org/x/sys v0.31.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/apimachinery v0.32.1 // indirect
+	nhooyr.io/websocket v1.8.17 // indirect
 )

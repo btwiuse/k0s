@@ -1,5 +1,7 @@
 github.com/btwiuse/wsconn v0.0.3 h1:FZNQJfgy8iw2p7nNpmrcrRXXZORDRFeILwiTM8LdrfI=
 github.com/btwiuse/wsconn v0.0.3/go.mod h1:IVNL6CrPBLCwTBVVb9DbXRSzLua4fF0e25w76MrTqeg=
+github.com/coder/websocket v1.8.13 h1:f3QZdXy7uGVz+4uCJy2nTZyM0yTBj8yANEHhqlXZ9FE=
+github.com/coder/websocket v1.8.13/go.mod h1:LNVeNrXQZfe5qhS9ALED3uA+l5pPqvwXg3CKoDBB2gs=
 github.com/felixge/httpsnoop v1.0.4 h1:NFTV2Zj1bL4mc9sqWACXbQFVBBg2W3GPvqp8/ESS2Wg=
 github.com/felixge/httpsnoop v1.0.4/go.mod h1:m8KPJKqk1gH5J9DgRY2ASl2lWCfGKXixSwevea8zH2U=
 github.com/gorilla/handlers v1.5.2 h1:cLTUSsNkgcwhgRqvCNmdbRWG0A3N4F+M2nWKdScwyEE=

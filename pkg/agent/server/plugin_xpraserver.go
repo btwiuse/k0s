@@ -11,7 +11,7 @@ import (
 	"k0s.io"
 	"k0s.io/pkg/agent/config"
 	"k0s.io/pkg/log"
-	"nhooyr.io/websocket"
+	"github.com/coder/websocket"
 )
 
 func StartXpraServer(c *config.Config) chan net.Conn {

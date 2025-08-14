@@ -3,7 +3,7 @@
 package listener
 
 import (
-	"nhooyr.io/websocket"
+	"github.com/coder/websocket"
 )
 
 var opts = &websocket.DialOptions{}

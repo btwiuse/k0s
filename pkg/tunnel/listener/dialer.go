@@ -7,7 +7,7 @@ import (
 
 	portless "k0s.io/pkg/tunnel"
 
-	"nhooyr.io/websocket"
+	"github.com/coder/websocket"
 )
 
 func wscheme(u *url.URL) string {
