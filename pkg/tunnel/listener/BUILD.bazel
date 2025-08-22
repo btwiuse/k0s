@@ -13,6 +13,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/tunnel:go_default_library",
-        "@io_nhooyr_websocket//:go_default_library",
+        "@com_github_coder_websocket//:go_default_library",
     ],
 )

@@ -18,6 +18,7 @@ go_proto_library(
 go_library(
     name = "go_default_library",
     srcs = ["gen.go"],
+    embed = [":asciiproto_go_proto"],
     importpath = "k0s.io/third_party/pkg/asciiproto/generator",
     visibility = ["//visibility:public"],
 )

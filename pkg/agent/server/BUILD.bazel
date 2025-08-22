@@ -30,7 +30,7 @@ go_library(
         "@com_github_btwiuse_pretty//:go_default_library",
         "@com_github_btwiuse_wsconn//:go_default_library",
         "@com_github_btwiuse_wsdial//:go_default_library",
-        "@io_nhooyr_websocket//:go_default_library",
+        "@com_github_coder_websocket//:go_default_library",
         "@org_golang_x_sync//errgroup:go_default_library",
     ],
 )
