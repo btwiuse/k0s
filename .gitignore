@@ -45,3 +45,5 @@ Cargo.lock
 /dist/
 
 *.lock
+
+.DS_Store
