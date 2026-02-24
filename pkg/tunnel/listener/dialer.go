@@ -2,6 +2,7 @@ package listener
 
 import (
 	"context"
+	"log"
 	"net"
 	"net/url"
 
@@ -37,7 +38,7 @@ func Dial(addr string, from string) (conn net.Conn, err error) {
 	ub.RawQuery = values.Encode()
 
 	u := ub.String()
-	println(u)
+	log.Println(u)
 
 	wsconn, _, err := websocket.Dial(context.Background(), u, opts)
 	if err != nil {

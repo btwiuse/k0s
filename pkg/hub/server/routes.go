@@ -226,7 +226,7 @@ func (h *hubServer) handleStreamUpgrade(w http.ResponseWriter, r *http.Request) 
 		p    = api.ProtocolID(vars["protocol"])
 		id   = vars["id"]
 	)
-	println("handleStreamUpgrade", string(p))
+	log.Println("handleStreamUpgrade", string(p))
 
 	if !h.Has(id) {
 		log.Println("no such id", id)

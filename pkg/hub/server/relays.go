@@ -18,7 +18,7 @@ import (
 )
 
 func protocolRelay(protocol api.ProtocolID, ag hub.Agent) http.HandlerFunc {
-	println("protocolRelay", protocol)
+	log.Println("protocolRelay", protocol)
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars   = mux.Vars(r)

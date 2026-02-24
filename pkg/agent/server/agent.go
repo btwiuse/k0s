@@ -83,7 +83,7 @@ func (ag *server) ChannelChan(p api.ProtocolID) chan net.Conn {
 }
 
 func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
-	println("AcceptProtocol", string(p))
+	log.Println("AcceptProtocol", string(p))
 	var (
 		conn  net.Conn
 		err   error
