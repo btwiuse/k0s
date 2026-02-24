@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/pprof"
 	"os"
+	"slices"
 	"strings"
 	"time"
 
@@ -171,18 +172,9 @@ func (h *hubServer) handleVersion(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(pretty.JSONStringLine(h.config.Version)))
 }
 
-func contains(set []string, e string) bool {
-	for _, s := range set {
-		if s == e {
-			return true
-		}
-	}
-	return false
-}
-
 func containsAll(set []string, subset []string) bool {
 	for _, se := range subset {
-		if !contains(set, se) {
+		if !slices.Contains(set, se) {
 			return false
 		}
 	}
