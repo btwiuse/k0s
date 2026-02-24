@@ -7,8 +7,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// FileExists checks if a path exists in the filesystem.
-// It returns true for both files and directories.
+// FileExists checks if a path exists and is a regular file.
+// It returns false for directories or if the path doesn't exist.
 func FileExists(file string) bool {
 	info, err := os.Stat(file)
 	if os.IsNotExist(err) {
