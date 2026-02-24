@@ -12,10 +12,10 @@ import (
 	"strings"
 
 	"github.com/btwiuse/pretty"
-	"gopkg.in/yaml.v3"
 
 	"github.com/btwiuse/version"
 	"k0s.io"
+	"k0s.io/pkg/utils"
 )
 
 type KeyStore map[string]string
@@ -90,27 +90,17 @@ func (c *Config) GetHost() string {
 	return host
 }
 
-func isExist(file string) bool {
-	_, err := os.Stat(file)
-	return !os.IsNotExist(err)
-}
-
 func probeConfigFile() string {
 	var (
 		globalConfig = "/etc/k0s/client.yaml"
 		userConfig   = os.ExpandEnv("${HOME}/.k0s/client.yaml")
 		localConfig  = "client.yaml"
 	)
-	for _, conf := range []string{
+	return utils.ProbeConfigFiles([]string{
 		localConfig,
 		userConfig,
 		globalConfig,
-	} {
-		if isExist(conf) {
-			return conf
-		}
-	}
-	return ""
+	})
 }
 
 func loadConfigFile(file string) *Config {
@@ -119,17 +109,7 @@ func loadConfigFile(file string) *Config {
 		Version:        version.Info,
 		ConfigLocation: file,
 	}
-	if file == "" {
-		return c
-	}
-	f, err := os.Open(file)
-	if err != nil {
-		log.Fatalln(err)
-		return c
-	}
-	dec := yaml.NewDecoder(f)
-	err = dec.Decode(c)
-	if err != nil && err != io.EOF {
+	if err := utils.LoadYAMLConfig(file, c); err != nil {
 		log.Fatalln(err)
 	}
 	return c

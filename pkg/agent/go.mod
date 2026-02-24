@@ -16,10 +16,10 @@ require (
 	github.com/denisbrodbeck/machineid v1.0.1
 	golang.org/x/sync v0.12.0
 	golang.org/x/text v0.23.0
-	gopkg.in/yaml.v3 v3.0.1
 	k0s.io v0.1.18-alpha.8
 	k0s.io/pkg/asciitransport v0.1.18-alpha.8
 	k0s.io/pkg/middleware v0.1.18-alpha.8
+	k0s.io/pkg/utils v0.1.18-alpha.8
 )
 
 require (
