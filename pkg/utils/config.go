@@ -7,10 +7,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// FileExists checks if a file exists and is not a directory.
+// FileExists checks if a path exists in the filesystem.
+// It returns true for both files and directories.
 func FileExists(file string) bool {
-	_, err := os.Stat(file)
-	return !os.IsNotExist(err)
+	info, err := os.Stat(file)
+	if os.IsNotExist(err) {
+		return false
+	}
+	// Return true if path exists, but false if it's a directory
+	// (config files should be regular files, not directories)
+	return err == nil && !info.IsDir()
 }
 
 // ProbeConfigFiles searches for the first existing config file
