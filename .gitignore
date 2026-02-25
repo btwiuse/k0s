@@ -47,3 +47,4 @@ Cargo.lock
 *.lock
 
 .DS_Store
+/ameniicsav1
