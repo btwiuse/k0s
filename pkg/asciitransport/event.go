@@ -9,6 +9,7 @@ import (
 )
 
 type ResizeEvent cast.Header
+type ResizeMsg = ResizeEvent
 type OutputEvent Event
 type PingEvent Event
 type InputEvent Event

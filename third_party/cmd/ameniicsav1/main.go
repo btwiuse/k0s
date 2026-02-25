@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net"
 	"os"
@@ -21,40 +22,32 @@ func server() {
 	var (
 		fac     = factory.New([]string{"bash"})
 		term, _ = fac.MakeTty()
-		opts    = []asciitransport.Opt{
-			asciitransport.WithReader(term),
-			asciitransport.WithWriter(term),
-			/*
-				asciitransport.WithResizeHook(func(w, h uint16){
-					err := term.Resize(int(w), int(h))
-					if err != nil {
-						log.Println(err)
-					}
-				}),
-			*/
-		}
-		server = asciitransport.Server(Server, opts...)
+		session = asciitransport.Server(Server)
 	)
 
+	// Handle resize events
 	go func() {
 		for {
-			var (
-				re = <-server.ResizeEvent()
-				w  = int(re.Width)
-				h  = int(re.Height)
-			)
-			_ = w
-			_ = h
-			err := term.Resize(w, h)
+			re, err := session.NextResize()
 			if err != nil {
-				log.Println(err)
 				break
 			}
+			if resizeErr := term.Resize(int(re.Width), int(re.Height)); resizeErr != nil {
+				log.Println(resizeErr)
+			}
 		}
-		server.Close()
 	}()
 
-	<-server.Done()
+	// Bridge I/O between session and PTY
+	done := make(chan struct{})
+	go func() {
+		io.Copy(term, session)
+		close(done)
+	}()
+	go io.Copy(session, term)
+
+	<-done
+	session.Close()
 	log.Println("detached", term.Close())
 }
 

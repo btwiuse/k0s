@@ -2,11 +2,11 @@ package server
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"os"
 	"os/exec"
-	"sync"
 
 	"k0s.io/pkg/agent"
 	"k0s.io/pkg/agent/config"
@@ -35,36 +35,29 @@ func serveTerminal(ln net.Listener, defaultCmd []string, c *config.Config) {
 			continue
 		}
 		go func() {
-			var (
-				tryCommandOnce = &sync.Once{}
-				cmdCh          = make(chan []string, 1)
-				envCh          = make(chan map[string]string, 1)
-				resizeCh       = make(chan struct{ rows, cols int }, 4)
-			)
+			logname := fmt.Sprintf("/tmp/%s-%d.log", c.ID, nth)
+			logfile, err := os.Create(logname)
 
-			server := asciitransport.Server(conn)
-			// send
-			// case output:
+			var opts []asciitransport.Opt
+			if err == nil {
+				defer func() {
+					exec.Command("dkg-push", logname).Run()
+					log.Println("log written to", logname)
+				}()
+				opts = append(opts, asciitransport.WithLogger(logfile))
+			}
 
-			// recv
-			go func() {
-				for {
-					var (
-						re   = <-server.ResizeEvent()
-						rows = int(re.Height)
-						cols = int(re.Width)
-					)
-					tryCommandOnce.Do(func() {
-						cmdCh <- re.Command
-						envCh <- re.Env
-					})
-					resizeCh <- struct{ rows, cols int }{rows, cols}
-				}
-				server.Close()
-			}()
+			session := asciitransport.Server(conn, opts...)
 
-			cmd := <-cmdCh
-			env := <-envCh
+			// First resize carries command and env
+			re, err := session.NextResize()
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			cmd := re.Command
+			env := re.Env
 
 			if len(cmd) == 0 {
 				cmd = defaultCmd
@@ -76,33 +69,34 @@ func serveTerminal(ln net.Listener, defaultCmd []string, c *config.Config) {
 				return
 			}
 
+			// Apply initial size
+			if resizeErr := term.Resize(int(re.Width), int(re.Height)); resizeErr != nil {
+				log.Println(resizeErr)
+			}
+
+			// Handle future resize events
 			go func() {
 				for {
-					re := <-resizeCh
-					err := term.Resize(re.rows, re.cols)
+					re, err := session.NextResize()
 					if err != nil {
-						log.Println(err)
+						break
+					}
+					if resizeErr := term.Resize(int(re.Width), int(re.Height)); resizeErr != nil {
+						log.Println(resizeErr)
 					}
 				}
 			}()
 
-			logname := fmt.Sprintf("/tmp/%s-%d.log", c.ID, nth)
-			logfile, err := os.Create(logname)
-			if err == nil {
-				defer func() {
-					exec.Command("dkg-push", logname).Run()
-					log.Println("log written to", logname)
-				}()
-			}
+			// Bridge I/O between session and PTY
+			done := make(chan struct{})
+			go func() {
+				io.Copy(term, session)
+				close(done)
+			}()
+			go io.Copy(session, term)
 
-			opts := []asciitransport.Opt{
-				asciitransport.WithReader(term),
-				asciitransport.WithWriter(term),
-				asciitransport.WithLogger(logfile),
-			}
-			server.ApplyOpts(opts...)
-
-			<-server.Done()
+			<-done
+			session.Close()
 			term.Close()
 		}()
 	}
