@@ -1,7 +1,7 @@
 package tunnel
 
 import (
-	"fmt"
+	"errors"
 	"log"
 	"net"
 	"net/http"
@@ -9,6 +9,9 @@ import (
 
 	"github.com/btwiuse/wsconn"
 )
+
+// ErrTunnelClosed is returned when Accept is called on a closed tunnel.
+var ErrTunnelClosed = errors.New("tunnel closed")
 
 func NewTunnel() *Tunnel {
 	return &Tunnel{
@@ -31,7 +34,7 @@ func (t *Tunnel) Accept() (net.Conn, error) {
 	case conn := <-t.cc:
 		return conn, nil
 	case <-t.quit:
-		return nil, fmt.Errorf("tunnel closed")
+		return nil, ErrTunnelClosed
 	}
 }
 

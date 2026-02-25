@@ -223,7 +223,6 @@ func Parse(args []string) *Config {
 	var (
 		fset = flag.NewFlagSet("agent", flag.ExitOnError)
 
-		// fset.StringVar(&id, "id", rng.NewUUID(), "Agent ID, for debugging purpose only")
 		id string = rng.NewUUID()
 
 		hubapi   *string                    = fset.String("hub", k0s.DEFAULT_HUB_ADDRESS, "Hub address.")
@@ -349,14 +348,13 @@ func printHubVersion(c Config) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer resp.Body.Close()
 
 	buf, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer resp.Body.Close()
 
-	// log.Println(string(buf))
 	v, err := version.Decode(buf)
 	if err != nil {
 		log.Fatalln(err)

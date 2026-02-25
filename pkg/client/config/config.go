@@ -147,8 +147,7 @@ func Parse(args []string) *Config {
 		version  *bool   = fset.Bool("version", false, "Show agent/hub version info.")
 		insecure *bool   = fset.Bool("insecure", false, "Allow insecure server connections when using SSL.")
 		record   *bool   = fset.Bool("record", false, "Record terminal events to a log file.")
-		// cc       *bool   = fset.Bool("cc", false, "Cache credentials.")
-		c *string = fset.String("c", probeConfigFile(), "Config file location.")
+		c        *string = fset.String("c", probeConfigFile(), "Config file location.")
 	)
 
 	err := fset.Parse(args)
@@ -161,10 +160,6 @@ func Parse(args []string) *Config {
 	// Apply flags if they were set
 	fset.Visit(func(f *flag.Flag) {
 		switch f.Name {
-		/*
-		   case "cc":
-		       baseConfig.WithCacheCredentials(*cc)
-		*/
 		case "hub":
 			baseConfig.WithHub(*hubapi)
 		case "redir":
@@ -295,14 +290,13 @@ func printHubVersion(c *Config) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer resp.Body.Close()
 
 	buf, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer resp.Body.Close()
 
-	// log.Println(string(buf))
 	v, err := version.Decode(buf)
 	if err != nil {
 		log.Fatalln(err)
@@ -315,16 +309,3 @@ func printHubVersion(c *Config) {
 func (c *Config) String() string {
 	return pretty.JsonStringLine(c)
 }
-
-/*
-func Decode(data []byte) (agent.Info, error) {
-	v := &config{
-		Info: info.EmptyInfo(),
-	}
-	err := json.Unmarshal(data, v)
-	if err != nil {
-		return nil, err
-	}
-	return v, err
-}
-*/

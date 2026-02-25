@@ -47,7 +47,6 @@ func (ss *ServerSession) populate() {
 	ifo, err := info.Decode([]byte(cmd))
 	if err != nil {
 		// TODO: notify client
-		// log.Println(err)
 		return
 	}
 
@@ -72,19 +71,14 @@ func (ss *ServerSession) populate() {
 }
 
 func (ss *ServerSession) plumbing() {
-	defer func() {
-		ss.Close()
-		// println("hub close")
-	}()
+	defer ss.Close()
 	for ss.Scan() {
 		cmd := ss.Text()
 		switch {
 		case cmd == "PONG":
 			// infinite ping/pong loop
-			// ss.Ping()
 		default:
-			// cmd = "UNKNOWN_CMD: " + cmd
-			// log.Println(cmd)
+			_ = cmd
 		}
 	}
 }
