@@ -25,13 +25,6 @@ def _non_module_dependencies_impl(mctx):
         remote = "https://github.com/humphrej/rules_dhall.git",
     )
     
-    # Clojure rules
-    git_repository(
-        name = "rules_clojure", 
-        branch = "master",
-        remote = "https://github.com/simuons/rules_clojure.git",
-    )
-    
     # Grafana rules
     git_repository(
         name = "io_bazel_rules_grafana",

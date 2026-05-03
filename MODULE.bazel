@@ -7,30 +7,30 @@ module(
 )
 
 # Bazel features for feature detection
-bazel_dep(name = "bazel_features", version = "1.38.0")
+bazel_dep(name = "bazel_features", version = "1.42.1")
 
 # Skylib for utility functions (needed by legacy rules)
 bazel_dep(name = "bazel_skylib", version = "1.8.2")
 
 # Go dependencies
-bazel_dep(name = "rules_go", version = "0.58.3")
-bazel_dep(name = "gazelle", version = "0.46.0")
+bazel_dep(name = "rules_go", version = "0.60.0")
+bazel_dep(name = "gazelle", version = "0.50.0")
 
 # Protobuf
-bazel_dep(name = "protobuf", version = "33.0")
+bazel_dep(name = "protobuf", version = "33.4")
 bazel_dep(name = "rules_proto", version = "7.1.0")
 
 # Python
-bazel_dep(name = "rules_python", version = "1.6.3")
+bazel_dep(name = "rules_python", version = "1.7.0")
 
 # Java
-bazel_dep(name = "rules_java", version = "8.16.1")
+bazel_dep(name = "rules_java", version = "9.1.0")
 
 # Rust
-bazel_dep(name = "rules_rust", version = "0.67.0")
+bazel_dep(name = "rules_rust", version = "0.70.0")
 
 # Container and OCI
-bazel_dep(name = "rules_oci", version = "1.8.0")
+bazel_dep(name = "rules_oci", version = "2.3.0")
 
 # Non-module dependencies (legacy rules not in BCR)
 non_module_deps = use_extension("//:extensions.bzl", "non_module_dependencies")
@@ -39,7 +39,6 @@ use_repo(
     # "android_ndk",
     # "io_bazel_rules_docker",  # temporarily commented out
     "io_bazel_rules_grafana",
-    "rules_clojure",
     "rules_dhall",
 )
 
@@ -77,7 +76,7 @@ use_repo(
 
 # Go toolchain configuration
 go = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
-go.download(version = "1.25.3")
+go.download(version = "1.26.2")
 
 # Register Go SDK
 use_repo(go, "go_toolchains")
@@ -245,10 +244,6 @@ python.toolchain(
 
 # OCI toolchain
 oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
-oci.toolchains(
-    name = "oci",
-    crane_version = "v0.18.0",
-)
 
 # Container images
 oci.pull(
@@ -260,4 +255,4 @@ oci.pull(
         "linux/arm64",
     ],
 )
-use_repo(oci, "base")
+use_repo(oci, "base", "base_linux_amd64", "base_linux_arm64")

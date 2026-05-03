@@ -1,6 +1,5 @@
 load("@crates//:defs.bzl", "all_crate_deps")
 load("@gazelle//:def.bzl", "gazelle")
-load("@rules_clojure//:rules.bzl", "clojure_repl")
 
 # TODO: Migrate from rules_docker to rules_oci
 # load("@io_bazel_rules_docker//container:container.bzl", "container_push")
@@ -130,8 +129,6 @@ platform(
     ],
     parents = ["@rules_go//go/toolchain:android_386_cgo"],
 )
-
-clojure_repl(name = "clj_repl")
 
 # load("@com_github_google_rules_install//installer:def.bzl", "installer")
 
