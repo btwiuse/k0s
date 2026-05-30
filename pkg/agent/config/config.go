@@ -16,7 +16,6 @@ import (
 	"github.com/btwiuse/rng"
 	"github.com/btwiuse/tags"
 	"github.com/btwiuse/version"
-	"github.com/denisbrodbeck/machineid"
 	"gopkg.in/yaml.v3"
 
 	"k0s.io"
@@ -288,7 +287,7 @@ func Parse(args []string) *Config {
 
 	// Handle pet mode
 	if baseConfig.Pet {
-		mid, err := machineid.ID()
+		mid, err := getMachineID()
 		if err != nil {
 			log.Println(err)
 			log.Println("Using alternative approach")

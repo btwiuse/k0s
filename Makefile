@@ -203,6 +203,9 @@ build-darwin:   ## Build darwin binaries
 	@ $(BINGO) -tags "$(TAGS)" -ldflags="${LDFLAGS}" \
 		darwin/{amd64,arm64}
 
+build-wasm:     ## Build js/wasm binary
+	@ GOOS=js GOARCH=wasm go build -trimpath -ldflags="${LDFLAGS}" -o bin/js/wasm/k0s.wasm ./cmd/k0s
+
 scratch-build:  ## Build without using existing build cache
 	@ $(BINGO) -d releases/latest -ldflags="${LDFLAGS}" -- -a
 

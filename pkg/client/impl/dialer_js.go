@@ -1,13 +1,14 @@
-//go:build !js
+//go:build js
 
 package impl
 
 import (
+	"context"
 	"net"
 	"net/url"
 
-	"github.com/btwiuse/wsdial"
 	"k0s.io/pkg/client/config"
+	"nhooyr.io/websocket"
 )
 
 type dialer struct {
@@ -19,8 +20,12 @@ func (d *dialer) Dial(p string, userinfo *url.Userinfo) (conn net.Conn, err erro
 		Scheme: d.c.GetSchemeWS(),
 		Host:   d.c.GetAddr(),
 		Path:   p,
-		User:   userinfo,
 	}
 
-	return wsdial.Dial(u)
+	wsconn, _, err := websocket.Dial(context.Background(), u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return websocket.NetConn(context.Background(), wsconn, websocket.MessageBinary), nil
 }
