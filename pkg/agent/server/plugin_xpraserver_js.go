@@ -9,5 +9,11 @@ import (
 )
 
 func StartXpraServer(c *config.Config) chan net.Conn {
-	return make(chan net.Conn)
+	ch := make(chan net.Conn)
+	go func() {
+		for conn := range ch {
+			conn.Close()
+		}
+	}()
+	return ch
 }
