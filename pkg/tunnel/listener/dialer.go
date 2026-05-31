@@ -37,7 +37,6 @@ func Dial(addr string, from string) (conn net.Conn, err error) {
 	ub.RawQuery = values.Encode()
 
 	u := ub.String()
-	println(u)
 
 	wsconn, _, err := websocket.Dial(context.Background(), u, opts)
 	if err != nil {

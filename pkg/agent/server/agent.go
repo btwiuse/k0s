@@ -20,6 +20,11 @@ type ChannelFn = func(*config.Config) chan net.Conn
 
 var (
 	_ agent.Agent = (*server)(nil)
+
+	// ErrHubConnectionClosed is returned when the agent's connection to the hub is closed.
+	ErrHubConnectionClosed = errors.New("agent: connection to hub closed")
+	// ErrServeFailed is returned when the agent's serve loop terminates unexpectedly.
+	ErrServeFailed = errors.New("agent: serve failed")
 )
 
 type server struct {
@@ -83,7 +88,6 @@ func (ag *server) ChannelChan(p api.ProtocolID) chan net.Conn {
 }
 
 func (ag *server) AcceptProtocol(p api.ProtocolID) (net.Conn, error) {
-	println("AcceptProtocol", string(p))
 	var (
 		conn  net.Conn
 		err   error
@@ -126,7 +130,7 @@ func (ag *server) Serve(cs agent.Session) error {
 		}
 	}
 exit:
-	return errors.New("agent: connection to hub closed")
+	return ErrHubConnectionClosed
 }
 
 func (ag *server) ConnectAndServe() error {
@@ -153,7 +157,7 @@ func (ag *server) ConnectAndServe() error {
 		return err
 	}
 
-	return errors.New("agent: serve failed")
+	return ErrServeFailed
 }
 
 func (ag *server) SetProtocolHandler(p api.ProtocolID, fn ChannelFn) {

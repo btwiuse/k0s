@@ -26,6 +26,9 @@ import (
 
 var (
 	_ hub.Hub = (*hubServer)(nil)
+
+	// ErrInvalidPathPrefix is returned when a path prefix does not start with '/'.
+	ErrInvalidPathPrefix = errors.New("invalid path prefix")
 )
 
 type hubServer struct {
@@ -226,7 +229,6 @@ func (h *hubServer) handleStreamUpgrade(w http.ResponseWriter, r *http.Request) 
 		p    = api.ProtocolID(vars["protocol"])
 		id   = vars["id"]
 	)
-	println("handleStreamUpgrade", string(p))
 
 	if !h.Has(id) {
 		log.Println("no such id", id)
@@ -272,7 +274,7 @@ func (h *hubServer) handleAgent(w http.ResponseWriter, r *http.Request) {
 // `$namespace` and `$path`.
 func SplitPathPrefix(key string) (string, string, error) {
 	if len(key) == 0 || key[0] != '/' {
-		return "", "", errors.New("invalid record type")
+		return "", "", ErrInvalidPathPrefix
 	}
 
 	key = key[1:]

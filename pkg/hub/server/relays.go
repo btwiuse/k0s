@@ -18,7 +18,6 @@ import (
 )
 
 func protocolRelay(protocol api.ProtocolID, ag hub.Agent) http.HandlerFunc {
-	println("protocolRelay", protocol)
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			vars   = mux.Vars(r)
@@ -40,18 +39,12 @@ func protocolRelay(protocol api.ProtocolID, ag hub.Agent) http.HandlerFunc {
 			// ensure both copy goroutines are done before returning
 			done := make(chan struct{}, 2)
 			go func() {
-				_, err := io.Copy(conn, wsc)
-				if err != nil {
-					// log.Println(err)
-				}
+				io.Copy(conn, wsc)
 				done <- struct{}{}
 			}()
 
 			go func() {
-				_, err := io.Copy(wsc, conn)
-				if err != nil {
-					// log.Println(err)
-				}
+				io.Copy(wsc, conn)
 				done <- struct{}{}
 			}()
 
