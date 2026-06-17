@@ -18,22 +18,3 @@ use (
 	./pkg/utils
 	./third_party
 )
-
-replace (
-	k0s.io => ./
-	k0s.io/cmd => ./cmd/
-	k0s.io/pkg/agent => ./pkg/agent/
-	k0s.io/pkg/apiserver => ./pkg/apiserver/
-	k0s.io/pkg/asciitransport => ./pkg/asciitransport/
-	k0s.io/pkg/cli => ./pkg/cli/
-	k0s.io/pkg/client => ./pkg/client/
-	k0s.io/pkg/hub => ./pkg/hub/
-	k0s.io/pkg/manager => ./pkg/manager/
-	k0s.io/pkg/middleware => ./pkg/middleware/
-	k0s.io/pkg/plugin => ./pkg/plugin/
-	k0s.io/pkg/simple => ./pkg/simple/
-	k0s.io/pkg/tunnel => ./pkg/tunnel/
-	k0s.io/pkg/ui => ./pkg/ui/
-	k0s.io/pkg/utils => ./pkg/utils/
-	k0s.io/third_party => ./third_party/
-)
