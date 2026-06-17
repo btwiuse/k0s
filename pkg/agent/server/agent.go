@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"os/exec"
+	"sync"
 
 	"github.com/btwiuse/pretty"
 	"golang.org/x/sync/errgroup"
@@ -27,6 +28,7 @@ type server struct {
 	*dialer
 	config           *config.Config
 	protocolHandlers map[api.ProtocolID]chan net.Conn
+	mu               sync.RWMutex
 	// agent.Session
 
 	id   string
@@ -75,6 +77,8 @@ func (ag *server) Config() *config.Config {
 }
 
 func (ag *server) ChannelChan(p api.ProtocolID) chan net.Conn {
+	ag.mu.Lock()
+	defer ag.mu.Unlock()
 	_, ok := ag.protocolHandlers[p]
 	if !ok {
 		ag.protocolHandlers[p] = make(chan net.Conn)
@@ -157,5 +161,7 @@ func (ag *server) ConnectAndServe() error {
 }
 
 func (ag *server) SetProtocolHandler(p api.ProtocolID, fn ChannelFn) {
+	ag.mu.Lock()
+	defer ag.mu.Unlock()
 	ag.protocolHandlers[p] = fn(ag.config)
 }

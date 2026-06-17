@@ -30,7 +30,11 @@ func (am *agentManager) GetAgents() []hub.Agent {
 }
 
 func (am *agentManager) GetAgent(id string) hub.Agent {
-	return am.Manager.Get(id).(hub.Agent)
+	v := am.Manager.Get(id)
+	if v == nil {
+		return nil
+	}
+	return v.(hub.Agent)
 }
 
 func NewAgentManager() hub.AgentManager {

@@ -40,7 +40,10 @@ func (m *manager) Has(id string) bool {
 func (m *manager) Get(id string) k0s.Tider {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	v, _ := m.Map.Get(id)
+	v, ok := m.Map.Get(id)
+	if !ok {
+		return nil
+	}
 	return v.(k0s.Tider)
 }
 

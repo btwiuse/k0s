@@ -3,6 +3,7 @@ package agent
 import (
 	"net"
 	"net/http"
+	"sync"
 	"time"
 
 	auth "github.com/abbot/go-http-auth"
@@ -45,6 +46,7 @@ type agent struct {
 	info *info.Info // `json:"-"`
 
 	protocolHandlers map[api.ProtocolID]chan net.Conn `json:"-"`
+	mu               sync.RWMutex
 	session          hub.Session
 
 	created  time.Time
@@ -89,6 +91,8 @@ func (ag *agent) Name() string {
 }
 
 func (ag *agent) ChannelChan(p api.ProtocolID) chan net.Conn {
+	ag.mu.Lock()
+	defer ag.mu.Unlock()
 	// ensure the channel is not nil
 	_, ok := ag.protocolHandlers[p]
 	if !ok {

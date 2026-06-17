@@ -75,7 +75,9 @@ func (info *Info) populatePublicInfo() {
 	info.Arch = pi.Arch
 	info.Username = pi.Username
 	info.Hostname = pi.Hostname
-	info.GitSummary = pi.Version.GitVersion
+	if pi.Version != nil {
+		info.GitSummary = pi.Version.GitVersion
+	}
 
 	if len(pi.Htpasswd) != 0 {
 		*info.Auth = true
