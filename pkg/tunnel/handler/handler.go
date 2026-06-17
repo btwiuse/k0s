@@ -49,9 +49,9 @@ func keys() []string {
 }
 
 func manageHub(next http.Handler) http.Handler {
-	expvar.Publish("Number of goroutines", expvar.Func(func() interface{} { return runtime.NumGoroutine() }))
-	expvar.Publish("Registered ids", expvar.Func(func() interface{} { return keys() }))
-	expvar.Publish("Registered routes", expvar.Func(func() interface{} { return paths() }))
+	expvar.Publish("Number of goroutines", expvar.Func(func() any { return runtime.NumGoroutine() }))
+	expvar.Publish("Registered ids", expvar.Func(func() any { return keys() }))
+	expvar.Publish("Registered routes", expvar.Func(func() any { return paths() }))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		m := http.NewServeMux()
 		m.Handle("/", next)

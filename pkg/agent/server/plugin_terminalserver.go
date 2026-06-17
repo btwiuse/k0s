@@ -48,9 +48,8 @@ func serveTerminal(ln net.Listener, defaultCmd []string, c *config.Config) {
 
 			// recv
 			go func() {
-				for {
+				for re := range server.ResizeEvent() {
 					var (
-						re   = <-server.ResizeEvent()
 						rows = int(re.Height)
 						cols = int(re.Width)
 					)

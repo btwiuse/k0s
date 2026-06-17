@@ -15,7 +15,7 @@ type InputEvent Event
 type Event cast.Event
 
 func (e *Event) UnmarshalJSON(buf []byte) error {
-	tmp := []interface{}{&e.Time, &e.Type, &e.Data}
+	tmp := []any{&e.Time, &e.Type, &e.Data}
 	wantLen := len(tmp)
 	if err := json.Unmarshal(buf, &tmp); err != nil {
 		return err

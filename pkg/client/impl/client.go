@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -329,7 +328,7 @@ func (cl *clientImpl) runLogin(idd string) error {
 								return
 							}
 
-							err = ioutil.WriteFile(conf, b.Bytes(), 0600)
+							err = os.WriteFile(conf, b.Bytes(), 0600)
 							if err != nil {
 								log.Println(err)
 								return

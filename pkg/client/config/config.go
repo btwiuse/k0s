@@ -295,12 +295,9 @@ func printHubVersion(c *Config) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer resp.Body.Close()
 
 	buf, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	defer resp.Body.Close()
 
 	// log.Println(string(buf))
 	v, err := version.Decode(buf)

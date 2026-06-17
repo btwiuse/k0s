@@ -12,7 +12,7 @@ func WithLogger(w io.WriteCloser) Opt {
 }
 
 type Logger interface {
-	Print(v interface{})
+	Print(v any)
 	Close() error
 }
 
@@ -29,7 +29,7 @@ type logger struct {
 	w io.WriteCloser
 }
 
-func (l *logger) Print(v interface{}) {
+func (l *logger) Print(v any) {
 	l.l.Print(v)
 }
 

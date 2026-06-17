@@ -17,16 +17,13 @@ limitations under the License.
 package kubectl
 
 import (
-	"math/rand"
 	"os"
-	"time"
 
 	"k8s.io/kubectl/pkg/cmd"
 )
 
 func Run(args []string) error {
 	os.Args = append([]string{"kubectl"}, args...)
-	rand.Seed(time.Now().UnixNano())
 
 	command := cmd.NewDefaultKubectlCommand()
 

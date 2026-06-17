@@ -9,7 +9,10 @@ import (
 
 func Run(args []string) error {
 	v := version.Info
-	b, _ := json.MarshalIndent(v, "", "  ")
+	b, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		return err
+	}
 	fmt.Println(string(b))
 	return nil
 }

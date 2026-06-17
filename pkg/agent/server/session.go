@@ -46,7 +46,7 @@ func (cs *ClientSession) plumbing() {
 				if err != nil {
 					log.Println(i, err)
 					// retry on exponential interval
-					time.After(time.Duration(1<<i) * time.Millisecond)
+					time.Sleep(time.Duration(1<<i) * time.Millisecond)
 					continue
 				}
 				break

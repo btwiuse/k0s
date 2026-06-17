@@ -224,7 +224,7 @@ func Encode(writer io.Writer, cast *Cast) (err error) {
 	}
 
 	for _, ev := range cast.EventStream {
-		err = encoder.Encode([]interface{}{ev.Time, ev.Type, ev.Data})
+		err = encoder.Encode([]any{ev.Time, ev.Type, ev.Data})
 		if err != nil {
 			err = errors.Wrapf(err,
 				"failed to encode event")

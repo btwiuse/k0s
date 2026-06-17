@@ -114,7 +114,7 @@ func (c *AsciiTransport) Resize(height, width uint) {
 	c.rech <- ie
 }
 
-func (c *AsciiTransport) log(v interface{}) {
+func (c *AsciiTransport) log(v any) {
 	if c.logger != nil {
 		c.logger.Print(v)
 	}
