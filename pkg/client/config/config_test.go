@@ -39,3 +39,19 @@ func TestParse(t *testing.T) {
 		}
 	}
 }
+
+func TestConfigAccessorsWithoutURI(t *testing.T) {
+	c := &Config{}
+	if got := c.GetScheme(); got != "https" {
+		t.Fatalf("GetScheme() = %q, expected %q", got, "https")
+	}
+	if got := c.GetHost(); got != "127.0.0.1" {
+		t.Fatalf("GetHost() = %q, expected %q", got, "127.0.0.1")
+	}
+	if got := c.GetPort(); got != "443" {
+		t.Fatalf("GetPort() = %q, expected %q", got, "443")
+	}
+	if got := c.GetAddr(); got != "127.0.0.1" {
+		t.Fatalf("GetAddr() = %q, expected %q", got, "127.0.0.1")
+	}
+}

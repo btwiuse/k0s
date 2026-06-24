@@ -38,6 +38,9 @@ type Config struct {
 }
 
 func (c *Config) GetPort() string {
+	if c.uri == nil {
+		return "443"
+	}
 	if c.uri.Port() == "" {
 		switch c.uri.Scheme {
 		case "http":
@@ -76,6 +79,9 @@ func (c *Config) GetSchemeWS() string {
 }
 
 func (c *Config) GetScheme() string {
+	if c.uri == nil {
+		return "https"
+	}
 	if c.uri.Scheme == "http" && c.uri.Hostname() == "" && c.uri.Port() == "443" {
 		return "https"
 	}
@@ -83,6 +89,9 @@ func (c *Config) GetScheme() string {
 }
 
 func (c *Config) GetHost() string {
+	if c.uri == nil {
+		return "127.0.0.1"
+	}
 	host := c.uri.Hostname()
 	if host == "" {
 		return "127.0.0.1"
