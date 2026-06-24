@@ -137,7 +137,7 @@ require (
 	github.com/spf13/cobra v1.8.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tomasen/realip v0.0.0-20180522021738-f0c99a92ddce // indirect
-	github.com/ulikunitz/xz v0.5.11 // indirect
+	github.com/ulikunitz/xz v0.5.14 // indirect
 	github.com/webteleport/auth v0.0.9 // indirect
 	github.com/webteleport/webteleport v0.5.38 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
