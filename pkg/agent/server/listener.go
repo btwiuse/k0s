@@ -3,21 +3,29 @@ package server
 import (
 	"net"
 	"net/http"
+	"sync"
 
 	"github.com/btwiuse/wsconn"
 )
 
 // ChannelListener implements net.Listener
 type ChannelListener struct {
-	Conns chan net.Conn
+	Conns    chan net.Conn
+	closeOnce sync.Once
 }
 
 func (cl *ChannelListener) Accept() (net.Conn, error) {
-	return <-cl.Conns, nil
+	conn, ok := <-cl.Conns
+	if !ok {
+		return nil, net.ErrClosed
+	}
+	return conn, nil
 }
 
 func (cl *ChannelListener) Close() error {
-	// TODO: close Conns
+	cl.closeOnce.Do(func() {
+		close(cl.Conns)
+	})
 	return nil
 }
 

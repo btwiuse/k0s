@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"log"
 	"os"
 	"strings"
 	"sync"
@@ -40,7 +41,7 @@ func run() {
 	ag := server.NewAgent(c)
 
 	for {
-		println("running agent plugin in the background")
+		log.Println("running agent plugin in the background")
 		// _ = agent.Run([]string{"-name", "embedded-client", "-c", "/dev/null", "-tags", "embedded-client"})
 
 		ag.ConnectAndServe()
