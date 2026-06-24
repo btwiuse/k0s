@@ -161,6 +161,8 @@ k0s.io/pkg/asciitransport v0.1.18-alpha.8 h1:DIoHwcgp+rvvJjBB+uxf+F5SlnXoN+ZUVe/
 k0s.io/pkg/asciitransport v0.1.18-alpha.8/go.mod h1:tRznRjmD5yXychcpiYOynFwONRyZf8S1Pv1jx0qUjik=
 k0s.io/pkg/hub v0.1.18-alpha.8 h1:Mj/KoalIG0zfAkIK5QYFKlFaPt7N8T9XICjhaJDd3KM=
 k0s.io/pkg/hub v0.1.18-alpha.8/go.mod h1:bmBycY9Fi6LWKyETVBiPCLLUI0ST5R027OlAoMv3ZiU=
+k0s.io/pkg/utils v0.1.18-alpha.8 h1:FZMy+LtXBa4bEZ0y/X0r+0L8Epr9JkramrhQ9UUOc8Q=
+k0s.io/pkg/utils v0.1.18-alpha.8/go.mod h1:pt2/7sUB80WmMK8RwR0l2DovkwZ0ybSj+rOgRb5MuIw=
 k8s.io/apimachinery v0.32.1 h1:683ENpaCBjma4CYqsmZyhEzrGz6cjn1MY/X2jB2hkZs=
 k8s.io/apimachinery v0.32.1/go.mod h1:GpHVgxoKlTxClKcteaeuF1Ul/lDVb74KpZcxcmLDElE=
 nhooyr.io/websocket v1.8.17 h1:KEVeLJkUywCKVsnLIDlD/5gtayKp8VoCkksHCGGfT9Y=

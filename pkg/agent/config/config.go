@@ -17,10 +17,10 @@ import (
 	"github.com/btwiuse/tags"
 	"github.com/btwiuse/version"
 	"github.com/denisbrodbeck/machineid"
-	"gopkg.in/yaml.v3"
 
 	"k0s.io"
 	"k0s.io/pkg/agent/info"
+	"k0s.io/pkg/utils"
 )
 
 type Config struct {
@@ -174,27 +174,17 @@ func (c *Config) GetHost() string {
 	return host
 }
 
-func isExist(file string) bool {
-	_, err := os.Stat(file)
-	return !os.IsNotExist(err)
-}
-
 func probeConfigFile() string {
 	var (
 		globalConfig = "/etc/k0s/agent.yaml"
 		userConfig   = os.ExpandEnv("${HOME}/.k0s/agent.yaml")
 		localConfig  = "agent.yaml"
 	)
-	for _, conf := range []string{
+	return utils.ProbeConfigFiles([]string{
 		localConfig,
 		userConfig,
 		globalConfig,
-	} {
-		if isExist(conf) {
-			return conf
-		}
-	}
-	return ""
+	})
 }
 
 func loadConfigFile(file string) *Config {
@@ -203,17 +193,7 @@ func loadConfigFile(file string) *Config {
 		Tags:    []string{},
 		Version: version.Info,
 	}
-	if file == "" {
-		return c
-	}
-	f, err := os.Open(file)
-	if err != nil {
-		log.Fatalln(err)
-		return c
-	}
-	dec := yaml.NewDecoder(f)
-	err = dec.Decode(c)
-	if err != nil && err != io.EOF {
+	if err := utils.LoadYAMLConfig(file, c); err != nil {
 		log.Fatalln(err)
 	}
 	return c
